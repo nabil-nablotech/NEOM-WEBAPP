@@ -90,8 +90,21 @@ export function Login() {
           <TextInput className={`login-email`} label="Email Address" value={state.email} onChange={(e) => handleChange(e, 'email')} />
           <TextInput className={`login-pwd`} label="Password" type={"password"} value={state.password} onChange={(e) => handleChange(e, 'password')} />
           <Button className={'sign-in-btn'} label="SIGN IN" disabled={true} onClick={submit} />
+          
         </Grid>
+        <div className="bottomText">
+          <p>Don’t have an account yet or forgot your password?</p>
+          <p>Contact <span>
+            <a
+              href="support@neomheritage.com"
+              target={'_blank'}
+            >
+              support@neomheritage.com
+            </a>
+          </span></p>
+        </div>
       </Grid>
+      
     </Grid>
   );
 };
