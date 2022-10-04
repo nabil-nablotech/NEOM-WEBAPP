@@ -1,20 +1,24 @@
-import React from "react";
+import React, {lazy} from "react";
 import { Outlet, useRoutes } from 'react-router-dom';
+import PrivateRoute from '../utils/routes/PrivateRoute';
+import PublicRoute from '../utils/routes/PublicRoute';
 import { Home } from "../pages/Home";
 import { Login } from "../pages/Login";
 import { Search } from "../pages/Search";
 import { Details } from "../pages/Details";
+
+import {PageNotFound} from '../components/PageNotFound';
 
 
 export const Navigation = () => {
     let routes = useRoutes([
       { 
         path: '/', 
-        element: <Home /> 
+        element: <PrivateRoute path={'/'} component={Home} /> 
       },
       { 
         path: '/login', 
-        element: <Login />,
+        element: <PublicRoute component={Login} /> ,
       },
       { 
         path: '/search', 
@@ -43,6 +47,10 @@ export const Navigation = () => {
             element: <Details />
           }
         ]
+      },
+      { 
+        path: '*', 
+        element: <PageNotFound />,
       },
   ]);
     return routes;

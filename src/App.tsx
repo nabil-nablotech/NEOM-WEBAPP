@@ -3,6 +3,8 @@ import { BrowserRouter } from "react-router-dom";
 import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
 import './App.css';
 import {Navigation} from './navigation';
+import FallbackComponent from './components/Common/FallbackComponent';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // apollo client
 const client = new ApolloClient({
@@ -12,13 +14,18 @@ const client = new ApolloClient({
 
 function App() {
   return (
-    <ApolloProvider client={client}>
-      <div className="App">
-        <BrowserRouter>
-          <Navigation />
-        </BrowserRouter>
-      </div>
-    </ApolloProvider>
+    <ErrorBoundary>
+      <ApolloProvider client={client}>
+        <div className="App">
+          <BrowserRouter>
+            <Suspense fallback={<FallbackComponent />}>
+
+            <Navigation />
+          </Suspense>
+          </BrowserRouter>
+        </div>
+      </ApolloProvider>
+    </ErrorBoundary>
   );
 }
 
