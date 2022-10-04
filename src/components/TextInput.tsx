@@ -17,6 +17,7 @@ type TextInputProps = {
   size?: "small" | "medium";
   type?: string;
   label: string;
+  className?: string;
 };
 
 const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
@@ -29,7 +30,7 @@ const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
   height: 40,
   '&:hover': {
     backgroundColor: grey[700],
-  },
+  }
 }));
 
 export default function ValidationTextFields(props: TextInputProps) {
@@ -42,15 +43,13 @@ export default function ValidationTextFields(props: TextInputProps) {
     errorText,
     size,
     fullWidth,
-    type
+    type,
+    className
   } = props;
   return (
-    <Grid item xs={12} sm={12} md={8} lg={4} xl={4}>
+    <Grid item className={className ? className : ''}>
       <Box
         component="form"
-        sx={{
-          "& .MuiTextField-root": { m: 1, width: "45ch" },
-        }}
         noValidate
         autoComplete="off"
       >

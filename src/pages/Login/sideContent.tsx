@@ -6,7 +6,7 @@ import './style.css';
 
 export const SideContent = () => {
   return (
-    <Grid item sm={6} md={4} lg={4}>
+    <Grid item sm={6} md={2} lg={4} xl={4} className='sideGrid'>
       <div className='bgImgContainer'>
         <img src={login_bg} className="bgImg" />
         <Grid display={'flex'} item alignItems={'center'} justifyContent={'center'}>

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Grid, Typography } from "@mui/material";
+import { Grid, ThemeProvider, Typography } from "@mui/material";
 import { useQuery, gql } from '@apollo/client';
 import {SideContent} from './sideContent';
 import TextInput from '../../components/TextInput';
@@ -48,23 +48,24 @@ export function Login() {
 
   
   return (
-    <Grid className="loginContainer" container direction='row' item xs={12}>
-        <SideContent />
-        <Grid className="contentContainer" display='flex' alignItems="center" justifyContent="center" item sm={8} md={8} lg={8}>
-          <Grid className="content">
-            <Grid className="">
-              <Typography className="header">
+    <Grid className="loginContainer" container direction='row' item xs={12} md={12}>
+      <SideContent />
+      <Grid className="contentContainer" display='flex' alignItems="center" justifyContent="center" item
+        sm={8} md={4} lg={8}>
+        <Grid className="content">
+          <Grid className="">
+            <div className="header">
               Sign in to neom heritage
-              </Typography>
-            </Grid>
-            <Typography className="subHeader">
-            Enter your details below
-            </Typography>
-            <TextInput label="Email Address" value={state.email} onChange={(e) => handleChange(e, 'email')} />
-            <TextInput label="Password" type={"password"} value={state.password} onChange={(e) => handleChange(e, 'password')} />
-            <Button label="SIGN IN" onClick={submit}/>
+            </div>
           </Grid>
+          <div className="subHeader">
+            Enter your details below
+          </div>
+          <TextInput className={`login-email`} label="Email Address" value={state.email} onChange={(e) => handleChange(e, 'email')} />
+          <TextInput className={`login-pwd`} label="Password" type={"password"} value={state.password} onChange={(e) => handleChange(e, 'password')} />
+          <Button className={'sign-in-btn'} label="SIGN IN" disabled={true} onClick={submit} />
         </Grid>
+      </Grid>
     </Grid>
   );
 };

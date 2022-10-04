@@ -1,6 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
 import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
 import './App.css';
+import './variables.css';
 import {Navigation} from './navigation';
 
 // apollo client

@@ -22,14 +22,15 @@ const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
 type CustomButtonProps  = {
   label: string | ''
   disabled?: boolean
-  onClick: () => void
+  onClick: () => void,
+  className?: string
 }
 
 export default function CustomizedButtons(props: CustomButtonProps) {
-  const {label, disabled, onClick} = props; 
+  const {label, disabled, onClick, className} = props; 
   return (
-    <Stack spacing={2} direction="row">
-      <ColorButton onClick={onClick} disabled={disabled} variant="contained">{label}</ColorButton>
+    <Stack spacing={2} direction="row" >
+      <ColorButton className={className ? className : ''} onClick={onClick} disabled={disabled} variant="contained">{label}</ColorButton>
     </Stack>
   );
 }
