@@ -1,0 +1,10 @@
+.login {
+  background-color: var(--spring-wood);
+  border: 1px none;
+  display: flex;
+  height: 100vh;
+  min-height: 931px;
+  min-width: 1440px;
+  width: 100%;
+}
+

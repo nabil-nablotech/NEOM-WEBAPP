@@ -1,0 +1,9 @@
+.landing-page {
+  align-items: flex-start;
+  background-color: var(--spring-wood);
+  border: 1px none;
+  display: flex;
+  min-width: 1440px;
+  position: relative;
+}
+

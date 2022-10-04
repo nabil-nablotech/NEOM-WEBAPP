@@ -1,0 +1,11 @@
+.login-ipad {
+  background-color: var(--spring-wood);
+  border: 1px solid;
+  border-color: var(--licorice);
+  display: flex;
+  height: 100vh;
+  min-height: 1194px;
+  min-width: 834px;
+  width: 100%;
+}
+

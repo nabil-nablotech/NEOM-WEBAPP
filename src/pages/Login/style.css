@@ -1,0 +1,40 @@
+.bgImg {
+  float: left;
+  width: 25vw;
+  background-size: cover;
+  height: 100vh;
+  position: absolute;
+  left: 0;
+}
+
+.logo {
+  position: absolute;
+  bottom: 100px;
+  height: 93px;
+  width: 72px;
+  align-self: center;
+}
+
+.loginContainer {
+  background: #F9F7F2;
+  margin-left: 0!important;
+}
+.loginContainer .contentContainer {
+  height: 100vh;
+}
+
+.content {
+  
+}
+
+.header {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 35px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+}

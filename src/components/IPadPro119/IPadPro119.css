@@ -1,0 +1,10 @@
+.ipad-pro-11-9 {
+  align-items: flex-start;
+  background-color: var(--spring-wood);
+  border: 1px solid;
+  border-color: var(--licorice);
+  display: flex;
+  gap: 63px;
+  width: 834px;
+}
+

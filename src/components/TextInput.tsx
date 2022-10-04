@@ -1,0 +1,72 @@
+import React, { ChangeEvent } from "react";
+import Box from "@mui/material/Box";
+import TextField, {TextFieldProps} from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
+import { styled } from '@mui/material/styles';
+import { grey } from '@mui/material/colors';
+
+type TextInputProps = {
+  error?: boolean;
+  onChange: (
+    e: ChangeEvent<HTMLInputElement>
+  ) => void;
+  value: string | "";
+  defaultValue?: string | "";
+  errorText?: string | "";
+  fullWidth?: boolean;
+  size?: "small" | "medium";
+  type?: string;
+  label: string;
+};
+
+const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
+  // color: theme.palette.getContrastText(grey[500]),
+  fontSize: 12,
+  lineHeight: 20,
+  letterSpacing: 2,
+  textAlign: 'center',
+  padding: '10px, 24px, 10px, 24px',
+  height: 40,
+  '&:hover': {
+    backgroundColor: grey[700],
+  },
+}));
+
+export default function ValidationTextFields(props: TextInputProps) {
+  const {
+    onChange,
+    error,
+    value,
+    label,
+    defaultValue,
+    errorText,
+    size,
+    fullWidth,
+    type
+  } = props;
+  return (
+    <Grid item xs={12} sm={12} md={8} lg={4} xl={4}>
+      <Box
+        component="form"
+        sx={{
+          "& .MuiTextField-root": { m: 1, width: "45ch" },
+        }}
+        noValidate
+        autoComplete="off"
+      >
+        <NeomTextInput
+          error={error}
+          id={error ? "outlined-error" : "outlined-size-small"}
+          size={size ? size : "small"}
+          fullWidth={fullWidth}
+          label={label}
+          value={value}
+          onChange={onChange}
+          defaultValue={defaultValue}
+          helperText={errorText}
+          type={type}
+        />
+      </Box>
+    </Grid>
+  );
+}
