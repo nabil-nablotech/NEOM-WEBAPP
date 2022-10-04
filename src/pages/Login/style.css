@@ -11,6 +11,11 @@
   position: relative;
 }
 
+.content {
+  position: relative;
+  top: -10px;
+}
+
 .logo {
   position: absolute;
   bottom: 15%;
@@ -27,11 +32,6 @@
 
 .loginContainer .contentContainer {
   height: 100vh;
-}
-
-.content {
-  position: relative;
-  top: -5vw;
 }
 
 .header {
@@ -138,6 +138,11 @@
 @media (min-width: 575px) and (max-width: 1025px) {
   .sideGrid.MuiGrid-root {
     max-width: 40vw;
+  }
+
+  .content {
+    position: relative;
+    top: -5vw;
   }
 
   .loginContainer .contentContainer {
