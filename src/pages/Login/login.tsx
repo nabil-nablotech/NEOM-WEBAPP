@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Grid, ThemeProvider, Typography } from "@mui/material";
 import { useQuery, gql } from '@apollo/client';
 import LoginCom from '../../components/Login';
@@ -73,8 +73,25 @@ export function Login() {
       message: ''
     },
   })
+  
   const [snackbarErrorMessage, setSnackbarErrorMessage] = useState<boolean>(false)
+  const [isSignInDisabled, toggleSignInDisabled] = useState<boolean>(true)
   const mailRegex =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+
+  useEffect(() => {
+    if(
+      (formErrors.email.show && state.email) ||
+      (formErrors.password.show && state.password) ||
+      !state.email || 
+      !state.password
+    ) {
+      toggleSignInDisabled(true)
+    } else {
+      toggleSignInDisabled(false)
+    }
+  
+  }, [formErrors, state])
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, name: 'email' | 'password') => {
     const lclState = state;
@@ -134,7 +151,7 @@ export function Login() {
           <TextInput className={`login-email`} label="Email Address" value={state.email} 
           error={formErrors.email.message ? true : false} errorText={formErrors.email.message} onChange={(e) => handleChange(e, 'email')} />
           <TextInput className={`login-pwd`} label="Password" type={"password"} value={state.password} onChange={(e) => handleChange(e, 'password')} />
-          <Button className={'sign-in-btn'} label="SIGN IN" disabled={false} onClick={submit} />
+          <Button className={'sign-in-btn'} label="SIGN IN" disabled={isSignInDisabled} onClick={submit} />
           
         </Grid>
         <div className="bottomText">
