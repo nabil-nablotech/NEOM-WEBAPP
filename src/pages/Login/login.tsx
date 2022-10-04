@@ -74,10 +74,10 @@ export function Login() {
 
   
   return (
-    <Grid className="loginContainer" container direction='row' item xs={12} md={12}>
+    <Grid className="loginContainer" container direction='row' item xs={12}>
       <SideContent />
       <Grid className="contentContainer" display='flex' alignItems="center" justifyContent="center" item
-        sm={8} md={4} lg={8}>
+        sm={6} md={9} lg={9} xl={9}>
         <Grid className="content">
           <Grid className="">
             <div className="header">
