@@ -61,6 +61,7 @@ export default function PositionedSnackbar(props: SnackbarProps) {
         onClose={handleClose}
         key={vertical + horizontal}
         action={action}
+        autoHideDuration={6000}
       >
         <Alert
           icon={false}
