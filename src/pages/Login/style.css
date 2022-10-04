@@ -121,6 +121,7 @@
 .bottomText p {
   font-size: 14px;
   line-height: 24px;
+  line-height: 1.2;
   color: var(--grey-text);
   font-family: 'Roboto-Regular';
   margin-block: 5px;
