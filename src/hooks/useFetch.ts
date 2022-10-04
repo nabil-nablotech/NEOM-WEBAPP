@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { ErrorCallback } from "typescript";
 
 const useFetch = (url: string) => {
   const [data, setData] = useState<any | null>(null);

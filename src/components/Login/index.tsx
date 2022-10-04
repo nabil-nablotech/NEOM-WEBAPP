@@ -5,23 +5,23 @@ import styled from "styled-components";
 import "./Login.css";
 
 type LoginProps = {
-  frame2608166: any, image3: string, group2608847Props: any 
+ loginData: any 
 }
 function Login(props: LoginProps) {
-  const { frame2608166, image3, group2608847Props } = props;
+  const {  loginData } = props;
 
   return (
     <div className="login screen">
       <Frame2608167>
-        <Frame2608166 style={{ backgroundImage: `url(${frame2608166})` }}>
+        <Frame2608166 style={{ backgroundImage: `url(${loginData.overlapGroup1})` }}>
           <OverlapGroup>
-            <Image3 src={image3} alt="image 3" />
+            <Image3 src={loginData.image3} alt="image 3" />
           </OverlapGroup>
         </Frame2608166>
         <Frame2608161>
           <Group2608847
-            textField1Props={group2608847Props.textField1Props}
-            textField2Props={group2608847Props.textField2Props}
+            textField1Props={loginData.textField1Props}
+            textField2Props={loginData.textField2Props}
           />
           <Group2608846 />
         </Frame2608161>
