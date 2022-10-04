@@ -7,10 +7,10 @@ import { grey } from '@mui/material/colors';
 
 type TextInputProps = {
   error?: boolean;
-  onChange: (
+  onChange?: (
     e: ChangeEvent<HTMLInputElement>
   ) => void;
-  value: string | "";
+  value?: string | "";
   defaultValue?: string | "";
   errorText?: string | "";
   fullWidth?: boolean;
@@ -27,9 +27,6 @@ const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
   textAlign: 'center',
   padding: '10px, 24px, 10px, 24px',
   height: 40,
-  '&:hover': {
-    backgroundColor: grey[700],
-  },
 }));
 
 export default function ValidationTextFields(props: TextInputProps) {

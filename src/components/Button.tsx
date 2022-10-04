@@ -22,7 +22,7 @@ const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
 type CustomButtonProps  = {
   label: string | ''
   disabled?: boolean
-  onClick: () => void
+  onClick?: () => void
 }
 
 export default function CustomizedButtons(props: CustomButtonProps) {
