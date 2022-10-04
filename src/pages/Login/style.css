@@ -71,6 +71,7 @@
 .MuiGrid-root.login-email,
 .MuiGrid-root.login-pwd {
   margin-bottom: 15px;
+  position: relative;
 }
 
 .MuiGrid-root.login-email .MuiInputBase-root,
@@ -110,6 +111,14 @@
   line-height: 24px;
   top: auto;
   bottom: 40%;
+}
+.MuiGrid-root.login-email .Mui-error,
+.MuiGrid-root.login-pwd .Mui-error {
+  margin-left: 0;
+}
+.MuiGrid-root.login-email:has(.MuiFormHelperText-root) .MuiFormLabel-root,
+.MuiGrid-root.login-pwd:has(.MuiFormHelperText-root) .MuiFormLabel-root {
+  bottom: initial;
 }
 
 .sign-in-btn.MuiButtonBase-root {

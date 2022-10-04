@@ -63,10 +63,45 @@ export function Login() {
     email: '',
     password: ''
   })
-  const [errorMessage, setError] = useState<boolean>(false)
+  const [formErrors, setFormErrors] = useState<any>({
+    email: {
+      show: false,
+      message: ''
+    },
+    password: {
+      show: false,
+      message: ''
+    },
+  })
+  const [snackbarErrorMessage, setSnackbarErrorMessage] = useState<boolean>(false)
+  const mailRegex =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, name: 'email' | 'password') => {
     const lclState = state;
     lclState[name] = e.target.value;
+
+    if(name === 'email') {
+      /** temporary static email validation */
+      const matchFlag = e.target.value.match(mailRegex)
+
+      if (matchFlag === null) {
+        setFormErrors((state: any) => ({
+          ...state,
+          email: {
+            show: true,
+            message: 'Invalid email address'
+          }
+        }))
+      } else {
+        setFormErrors((state: any) => ({
+          ...state,
+          email: {
+            show: false,
+            message: ''
+          }
+        }))
+      }
+    }
     setState({...state, ...lclState});
   }
 
@@ -77,7 +112,7 @@ export function Login() {
     e.preventDefault()
     /**SImulate floating message */
     if(state.email && state.password) {
-      setError(true)
+      setSnackbarErrorMessage(true)
     }
   }
 
@@ -96,7 +131,8 @@ export function Login() {
           <div className="subHeader">
             Enter your details below
           </div>
-          <TextInput className={`login-email`} label="Email Address" value={state.email} onChange={(e) => handleChange(e, 'email')} />
+          <TextInput className={`login-email`} label="Email Address" value={state.email} 
+          error={formErrors.email.message ? true : false} errorText={formErrors.email.message} onChange={(e) => handleChange(e, 'email')} />
           <TextInput className={`login-pwd`} label="Password" type={"password"} value={state.password} onChange={(e) => handleChange(e, 'password')} />
           <Button className={'sign-in-btn'} label="SIGN IN" disabled={false} onClick={submit} />
           
@@ -116,8 +152,8 @@ export function Login() {
       <PositionedSnackbar
         message={'User not found'}
         severity={'error'} 
-        open={errorMessage} 
-        handleClose={() => setError(false)}
+        open={snackbarErrorMessage} 
+        handleClose={() => setSnackbarErrorMessage(false)}
       />
     </Grid>
   );
