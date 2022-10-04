@@ -28,6 +28,18 @@ const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
   textAlign: 'center',
   padding: '10px, 24px, 10px, 24px',
   height: 40,
+  '& label.Mui-focused': {
+    'legends': {
+      color: 'var(--grey-text)',
+      borderRadius: '2px',
+      width: 'fit-content'
+    }
+  },
+  '& .MuiInput-underline:after': {
+    borderBottomColor: 'var(--grey-text)',
+  },
+  '& .MuiOutlinedInput-root': {
+  }
 }));
 
 export default function ValidationTextFields(props: TextInputProps) {
@@ -61,7 +73,9 @@ export default function ValidationTextFields(props: TextInputProps) {
           defaultValue={defaultValue}
           helperText={errorText}
           type={type}
-        />
+        >
+          {value}
+          </NeomTextInput>
       </Box>
     </Grid>
   );

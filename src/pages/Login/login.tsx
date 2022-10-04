@@ -7,6 +7,7 @@ import Button from '../../components/Button';
 import './style.css';
 import useFetch from '../../hooks/useFetch';
 import { SideContent } from './sideContent';
+import PositionedSnackbar from "../../components/Snackbar";
 
 const LOGINDATA = gql`
   query GetLoginData {
@@ -62,14 +63,22 @@ export function Login() {
     email: '',
     password: ''
   })
+  const [errorMessage, setError] = useState<boolean>(false)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, name: 'email' | 'password') => {
     const lclState = state;
     lclState[name] = e.target.value;
     setState({...state, ...lclState});
   }
 
-  const submit = () => {
+  const submit = (e:any)  => {
+    // console.log('hex: ', state)
+    /** API call to validate */
 
+    e.preventDefault()
+    /**SImulate floating message */
+    if(state.email && state.password) {
+      setError(true)
+    }
   }
 
   
@@ -89,7 +98,7 @@ export function Login() {
           </div>
           <TextInput className={`login-email`} label="Email Address" value={state.email} onChange={(e) => handleChange(e, 'email')} />
           <TextInput className={`login-pwd`} label="Password" type={"password"} value={state.password} onChange={(e) => handleChange(e, 'password')} />
-          <Button className={'sign-in-btn'} label="SIGN IN" disabled={true} onClick={submit} />
+          <Button className={'sign-in-btn'} label="SIGN IN" disabled={false} onClick={submit} />
           
         </Grid>
         <div className="bottomText">
@@ -104,7 +113,12 @@ export function Login() {
           </span></p>
         </div>
       </Grid>
-      
+      <PositionedSnackbar
+        message={'User not found'}
+        severity={'error'} 
+        open={errorMessage} 
+        handleClose={() => setError(false)}
+      />
     </Grid>
   );
 };

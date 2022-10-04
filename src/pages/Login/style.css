@@ -16,6 +16,13 @@
   top: -10px;
 }
 
+.content legend  span{
+ padding-left: 0;
+ padding-right: 0;
+ text-align: left;
+ width: fit-content;
+}
+
 .logo {
   position: absolute;
   bottom: 15%;
@@ -58,7 +65,7 @@
   letter-spacing: 0.5px;
   color: #13100D;
   text-align: left;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .MuiGrid-root.login-email,
