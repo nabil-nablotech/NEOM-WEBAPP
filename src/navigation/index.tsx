@@ -6,9 +6,8 @@ import { Home } from "../pages/Home";
 import { Login } from "../pages/Login";
 import { Search } from "../pages/Search";
 import { Details } from "../pages/Details";
-import { UserManagement } from "../pages/UserManagement";
-
 import {PageNotFound} from '../components/PageNotFound';
+import UserManagement from "../pages/UserManagement/components/UserManagement";
 
 
 export const Navigation = () => {

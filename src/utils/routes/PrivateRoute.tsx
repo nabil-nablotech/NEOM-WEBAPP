@@ -1,9 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, {FC} from 'react';
 import { Navigate } from 'react-router-dom';
+import UserManagement from '../../pages/UserManagement/components/UserManagement';
 import { getToken, removeSession } from '../storage/storage';
 import LandingPage from './../../pages/LandingPage/components/LandingPage/index';
-import { UserManagement } from './../../pages/UserManagement/UserManagement';
+// import { UserManagement } from './../../pages/UserManagement/UserManagement';
 
 type RouteProps = {component: FC, path: string }
 // handle the private routes

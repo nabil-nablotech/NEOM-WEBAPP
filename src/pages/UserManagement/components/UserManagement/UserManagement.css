@@ -1,0 +1,10 @@
+.user-management {
+  align-items: flex-start;
+  background-color: #f9f7f2;
+  border: 1px none;
+  display: flex;
+  flex-direction: column;
+  height: 931px;
+  width: 1440px;
+}
+
