@@ -1,18 +1,23 @@
 import React from "react";
 import styled from "styled-components";
+import { RobotoMediumMerino20px } from "../styledMixins";
 
 
 function UserMenuComponent({
   icon,
   iconSettings,
-  iconUserWhite
+  iconUserWhite,
+  userInitials
 }) {
 
   return (
     <UserMenu>
       <Icon src={icon} alt="icon" />
       <IconSettings src={iconSettings} alt="icon-settings" />
-      <IconUserWhite src={iconUserWhite} alt="icon-user-white" />
+      <InitialsWrapper>
+        <div>{userInitials}</div>
+        <IconUserWhite src={iconUserWhite} alt="icon-user-white" />
+      </InitialsWrapper>
     </UserMenu>
   );
 }
@@ -20,6 +25,18 @@ function UserMenuComponent({
 const IconUserWhite = styled.img`
   width: 40px;
   height: 40px;
+`;
+const InitialsWrapper = styled.div`
+  position: relative;
+  & div:nth-child(1) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    ${RobotoMediumMerino20px};
+    font-size: 20px;
+  }
 `;
 
 const Icon = styled.img`

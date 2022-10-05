@@ -10,6 +10,7 @@ import "./LandingPage.css";
 import "../../globals.css"
 import "../../styleguide.css"
 import UserMenuComponent from "../../../../components/UserMenu";
+import WhiteCircle from "../../WhiteCircle.svg";
 
 const landingPageData = {
   overlapGroup4: "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/rectangle-125-1@1x.png",
@@ -27,7 +28,7 @@ const landingPageData = {
   vector3: "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/vector@1x.png",
   spanText8: "7,930",
   spanText9: "Media Items",
-  iconUserWhite: "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/icon-user-white-1@1x.png",
+  iconUserWhite: WhiteCircle,
   icon: "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/icon@1x.png",
   iconSettings: "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/icon-button-settings@1x.png",
 };
@@ -134,6 +135,7 @@ function LandingPage() {
           icon={icon}
           iconSettings={iconSettings}
           iconUserWhite={iconUserWhite}
+          userInitials={'ST'}
         />
       </div>
     </div>
