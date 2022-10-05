@@ -43,7 +43,7 @@ const IconSettings = styled.img`
 
 const UserMenu = styled.div`
   position: absolute;
-  height: 144px;
+  height: fit-content;
   top: 24px;
   right: 0;
   z-index: 2;
@@ -53,7 +53,10 @@ const UserMenu = styled.div`
   min-width: 175px;
   border: 1px none;
   gap: 10px;
-  margin-right: 2vw
+  margin-right: 2vw;
+  & img {
+    cursor:pointer
+  }
 `;
 
 const UserMenu1 = styled.div`
