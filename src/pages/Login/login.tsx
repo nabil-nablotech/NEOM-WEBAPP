@@ -111,8 +111,17 @@ export function Login() {
   ) => {
     const lclState = state;
     lclState[name] = e.target.value;
+    setFormErrors({
+      ...formErrors,
+      email: {
+        show: false,
+        message: "",
+      }
+    });
 
-
+    if (name === "password") {
+      validateCredentials("password");
+    }
     setState({ ...state, ...lclState });
   };
 
@@ -143,7 +152,7 @@ export function Login() {
       /** temporary static email validation */
       const matchFlag = validatePassword(state.password);
 
-      if (matchFlag) {
+      if (!matchFlag) {
         setFormErrors((state: any) => ({
           ...state,
           password: {

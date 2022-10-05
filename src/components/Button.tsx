@@ -9,7 +9,6 @@ const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
   backgroundColor: '#13100DE5',
   borderRadius: 100,
   fontSize: 12,
-  lineHeight: 20,
   letterSpacing: 2,
   textAlign: 'center',
   padding: '10px, 24px, 10px, 24px',
