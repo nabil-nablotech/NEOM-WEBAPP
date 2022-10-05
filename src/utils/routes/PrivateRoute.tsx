@@ -1,13 +1,15 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, {FC} from 'react';
 import { Navigate } from 'react-router-dom';
+import LandingPage from '../../containers/LandingPage/components/LandingPage';
 import { getToken, removeSession } from '../storage/storage';
 
 type RouteProps = {component: FC, path: string }
 // handle the private routes
 function PrivateRoute({ component: Component, path, ...rest }: RouteProps) {
-  if (getToken()) {
-    return <Component />;
+  // if (getToken()) {
+  if (true) {
+    return <LandingPage />;
   }
   removeSession();
   return <Navigate to="/login" />;

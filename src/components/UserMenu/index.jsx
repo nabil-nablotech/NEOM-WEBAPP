@@ -1,17 +1,60 @@
 import React from "react";
-import IconUserWhite from "../IconUserWhite";
 import styled from "styled-components";
 
 
-function UserMenu(props) {
-  const { className } = props;
+function UserMenuComponent({
+  icon,
+  iconSettings,
+  iconUserWhite
+}) {
 
   return (
-    <UserMenu1 className={`user-menu ${className || ""}`}>
-      <IconUserWhite />
-    </UserMenu1>
+    <UserMenu>
+      <Icon src={icon} alt="icon" />
+      <IconSettings src={iconSettings} alt="icon-settings" />
+      <IconUserWhite src={iconUserWhite} alt="icon-user-white" />
+    </UserMenu>
   );
 }
+
+const IconUserWhite = styled.img`
+  width: 40px;
+  height: 40px;
+`;
+
+const Icon = styled.img`
+  // position: fixed;
+  width: 34px;
+  height: 34px;
+  // top: 25px;
+  // left: 1272px;
+  z-index: 4;
+`;
+
+const IconSettings = styled.img`
+  // position: fixed;
+  width: 40px;
+  height: 40px;
+  // top: 24px;
+  // left: 1317px;
+  z-index: 3;
+`;
+
+
+const UserMenu = styled.div`
+  position: absolute;
+  height: 144px;
+  top: 24px;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  min-width: 175px;
+  border: 1px none;
+  gap: 10px;
+  margin-right: 2vw
+`;
 
 const UserMenu1 = styled.div`
   position: fixed;
@@ -30,4 +73,4 @@ const UserMenu1 = styled.div`
   }
 `;
 
-export default UserMenu;
+export default UserMenuComponent;
