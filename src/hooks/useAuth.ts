@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { UserDetails, loginPayload, LoginData } from "../types/User";
 import client from '../utils/services/axiosClient';
-import {setSession} from '../utils/storage/storage';
+import {setSession, removeSession} from '../utils/storage/storage';
 
 const useAuth = () => {
   const [data, setData] = useState<any | null>(null);
@@ -18,6 +18,10 @@ const useAuth = () => {
     const {data} = await client.post<UserDetails>(`/api/auth/local/`, JSON.stringify(payload));
     setSession(data.jwt, JSON.stringify(data.user.id))
     return data;
+  }
+
+  const clientLogout = async () => {
+    removeSession();
   }
   
   const fetchLoginData = async () => {
@@ -36,7 +40,8 @@ const useAuth = () => {
     error,
     data,
     clientLogin,
-    fetchLoginData
+    fetchLoginData,
+    clientLogout
   };
 };
 
