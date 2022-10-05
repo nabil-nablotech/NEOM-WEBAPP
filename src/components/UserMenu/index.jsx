@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useState} from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import MenuList from "../MenuList";
 import { RobotoMediumMerino20px } from "../styledMixins";
-
 
 function UserMenuComponent({
   icon,
@@ -10,15 +11,43 @@ function UserMenuComponent({
   userInitials
 }) {
 
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  let navigate = useNavigate()
+
+  const handleClick = e => {
+    e.preventDefault()
+    setMenuOpen(state => !state)
+  }
+
   return (
+    <>
     <UserMenu>
       <Icon src={icon} alt="icon" />
       <IconSettings src={iconSettings} alt="icon-settings" />
-      <InitialsWrapper>
+      <InitialsWrapper onClick={e => handleClick(e)}>
         <div>{userInitials}</div>
         <IconUserWhite src={iconUserWhite} alt="icon-user-white" />
+        
       </InitialsWrapper>
+      
+      <MenuList menuOpen={menuOpen} 
+        menuItemsArray={[
+          {
+            label: 'Profile',
+            handleClickMenuItem: (e) => {
+              navigate("users")
+            }
+          },
+          {
+            label: 'Logout',
+            handleClickMenuItem: () => {}
+          },
+        ]}
+      />
     </UserMenu>
+  </>
+
   );
 }
 
