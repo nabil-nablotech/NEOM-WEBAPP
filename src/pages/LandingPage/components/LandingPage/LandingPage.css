@@ -6,3 +6,24 @@
   width: 100%;
 }
 
+.search-field.MuiGrid-root  {
+  margin-top: 40px;
+}
+
+.search-field ,
+.search-field .MuiInputBase-input {
+  background-color: #fff;
+  border-radius: 5px;
+}
+
+.search-field .MuiInputBase-input {
+  min-width: 30ch;
+}
+
+@media (min-width: 575px) and (max-width: 1025px) {
+  .search-field .MuiInputBase-input {
+    min-width: 30ch;
+    max-width: 70vw;
+  }
+}
+

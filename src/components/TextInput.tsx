@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import TextField, {TextFieldProps} from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { styled } from '@mui/material/styles';
-import { grey } from '@mui/material/colors';
 
 type TextInputProps = {
   error?: boolean;
@@ -18,6 +17,9 @@ type TextInputProps = {
   type?: string;
   label: string;
   className?: string;
+  showLabel?: boolean;
+  InputProps?: any;
+  ref?: React.RefObject<HTMLDivElement>;
 };
 
 const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
@@ -40,6 +42,7 @@ const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
   },
   '& .MuiOutlinedInput-root': {
   }
+  
 }));
 
 export default function ValidationTextFields(props: TextInputProps) {
@@ -53,8 +56,12 @@ export default function ValidationTextFields(props: TextInputProps) {
     size,
     fullWidth,
     type,
-    className
+    className,
+    showLabel = true,
+    InputProps,
+    ref 
   } = props;
+
   return (
     <Grid item className={className ? className : ''}>
       <Box
@@ -67,12 +74,17 @@ export default function ValidationTextFields(props: TextInputProps) {
           id={error ? "outlined-error" : "outlined-size-small"}
           size={size ? size : "small"}
           fullWidth={fullWidth}
-          label={label}
+          label={showLabel ? label : ''}
           value={value}
           onChange={onChange}
           defaultValue={defaultValue}
           helperText={errorText}
           type={type}
+          placeholder={label}
+          InputProps={{
+            ...InputProps
+          }}
+          ref={ref ? ref : null}
         >
           {value}
           </NeomTextInput>
