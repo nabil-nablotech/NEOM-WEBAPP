@@ -25,7 +25,8 @@ function UserMenuComponent({
     <UserMenu>
       <Icon src={icon} alt="icon" />
       <IconSettings src={iconSettings} alt="icon-settings" />
-      <InitialsWrapper onClick={e => handleClick(e)}>
+      <InitialsWrapper onClick={e => handleClick(e)}
+      >
         <div>{userInitials}</div>
         <IconUserWhite src={iconUserWhite} alt="icon-user-white" />
         
@@ -57,6 +58,7 @@ const IconUserWhite = styled.img`
 `;
 const InitialsWrapper = styled.div`
   position: relative;
+  cursor: pointer;
   & div:nth-child(1) {
     position: absolute;
     top: 50%;
