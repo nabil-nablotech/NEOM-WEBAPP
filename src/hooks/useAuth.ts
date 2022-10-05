@@ -19,6 +19,7 @@ const useAuth = () => {
     setSession(data.jwt, JSON.stringify(data.user.id))
     return data;
   }
+  
   const fetchLoginData = async () => {
     try {
       const res = await client.get<LoginData>(`/api/login?populate[0]=button&populate[1]=input&populate[2]=backgroundImage.image&populate[4]=bottomText&populate[5]=logo.image`);

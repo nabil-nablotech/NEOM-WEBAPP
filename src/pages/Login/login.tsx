@@ -104,6 +104,7 @@ export function Login() {
     }
   }, [formErrors, state]);
 
+// on input change function
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     name: "email" | "password"
@@ -115,6 +116,7 @@ export function Login() {
     setState({ ...state, ...lclState });
   };
 
+  // Function is responsible for the validation of input fields
   const validateCredentials = (name: "email" | "password") => {
     if (name === "email") {
       /** temporary static email validation */
@@ -161,6 +163,8 @@ export function Login() {
       }
     }
   }
+
+  // Form submission
   const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const data = await clientLogin({
