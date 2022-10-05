@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+
+export const baseUrl = `https://754b-103-179-0-140.in.ngrok.io`;
 const colors = [
   '#f4511e',
   '#bf360c',
@@ -41,4 +43,19 @@ export const capitalize = (s: string) => {
   if (typeof s !== 'string') return '';
   return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
 };
+
+export const validateEmail = (s: string) => {
+  const email_regex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+  return email_regex.test(s)
+} 
+
+/**
+ * Password must contain min 8 letter with at least a symbol, upper and lower case letters and a number
+ * @param s 
+ * @returns 
+ */
+export const validatePassword = (s: string) => {
+  const password_regex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+  return password_regex.test(s)
+} 
 

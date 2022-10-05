@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, FocusEvent } from "react";
 import Box from "@mui/material/Box";
 import TextField, {TextFieldProps} from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
@@ -8,6 +8,9 @@ type TextInputProps = {
   error?: boolean;
   onChange?: (
     e: ChangeEvent<HTMLInputElement>
+  ) => void;
+  onBlur?: (
+    e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   value?: string | "";
   defaultValue?: string | "";
@@ -25,7 +28,7 @@ type TextInputProps = {
 const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
   // color: theme.palette.getContrastText(grey[500]),
   fontSize: 12,
-  lineHeight: 20,
+  // lineHeight: 20,
   letterSpacing: 2,
   textAlign: 'center',
   padding: '10px, 24px, 10px, 24px',
@@ -48,6 +51,7 @@ const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
 export default function ValidationTextFields(props: TextInputProps) {
   const {
     onChange,
+    onBlur,
     error,
     value,
     label,
@@ -71,12 +75,13 @@ export default function ValidationTextFields(props: TextInputProps) {
       >
         <NeomTextInput
           error={error}
-          id={error ? "outlined-error" : "outlined-size-small"}
+          id={error ? `outlined-error ${className}` : `outlined-size-small ${className}`}
           size={size ? size : "small"}
           fullWidth={fullWidth}
           label={showLabel ? label : ''}
           value={value}
           onChange={onChange}
+          onBlur={onBlur}
           defaultValue={defaultValue}
           helperText={errorText}
           type={type}

@@ -4,7 +4,8 @@ import Slide, { SlideProps } from "@mui/material/Slide";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import Button from '@mui/material/Button';
 import { IconButton } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
+// import CloseIcon from '@mui/icons-material/Close';
+// import CloseIcon from '@mui/icons-material/Close';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -45,7 +46,7 @@ export default function PositionedSnackbar(props: SnackbarProps) {
         color="inherit"
         onClick={handleClose}
       >
-        <CloseIcon fontSize="small" />
+        {/* <CloseIcon fontSize="small" /> */}
       </IconButton>
     </React.Fragment>
   );

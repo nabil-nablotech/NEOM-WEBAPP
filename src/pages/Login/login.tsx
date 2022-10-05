@@ -1,22 +1,24 @@
-import React, {useState, useEffect} from "react";
-import { Grid, ThemeProvider, Typography } from "@mui/material";
-import { useQuery, gql } from '@apollo/client';
-import LoginCom from '../../components/Login';
-import TextInput from '../../components/TextInput';
-import Button from '../../components/Button';
-import './style.css';
-import useFetch from '../../hooks/useFetch';
-import { SideContent } from './sideContent';
+import React, { useState, useEffect } from "react";
+import { Grid } from "@mui/material";
+import { useQuery, gql } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
+import TextInput from "../../components/TextInput";
+import Button from "../../components/Button";
+import "./style.css";
+import useAuth from "../../hooks/useAuth";
+import { SideContent } from "./sideContent";
 import PositionedSnackbar from "../../components/Snackbar";
+
+import { validateEmail, validatePassword, baseUrl } from "../../utils/services/helpers";
 
 const LOGINDATA = gql`
   query GetLoginData {
-    login{
-      data{
-        id,
-        attributes{
-          title,
-          laebl,
+    login {
+      data {
+        id
+        attributes {
+          title
+          laebl
           button {
             theme
           }
@@ -24,24 +26,35 @@ const LOGINDATA = gql`
       }
     }
   }
-`
+`;
 
 type stateInput = {
-  email: string
-  password: string
-} 
+  email: string;
+  password: string;
+};
+
+type FormError = {
+  show: boolean;
+  message: string;
+};
+
+type FormErrors = {
+  email: FormError;
+  password: FormError;
+};
+
 export function Login() {
-  const baseUrl = `https://8130-49-204-165-45.in.ngrok.io`;
-  const {error, loading, data} = useFetch(`${baseUrl}/api/login?populate[0]=button&populate[1]=input&populate[2]=backgroundImage.image&populate[4]=bottomText&populate[5]=logo.image`);
-  // const {error, loading, data} = useQuery(LOGINDATA);
-  console.log('login data', data);
+
+  const { clientLogin, fetchLoginData, data, loading } = useAuth();
+
+  const navigate = useNavigate();
 
   const textField1Data = {
     children: "Email Address",
   };
-  
+
   const textField2Data = {
-    children: data?.attributes?.input[1].placeholder || '',
+    children: data?.attributes?.input[1].placeholder || "",
     className: "text-field-1",
   };
 
@@ -60,118 +73,181 @@ export function Login() {
     textField2Props: textField2Data,
   };
   const [state, setState] = useState<stateInput>({
-    email: '',
-    password: ''
-  })
-  const [formErrors, setFormErrors] = useState<any>({
+    email: "",
+    password: "",
+  });
+  const [formErrors, setFormErrors] = useState<FormErrors>({
     email: {
       show: false,
-      message: ''
+      message: "",
     },
     password: {
       show: false,
-      message: ''
+      message: "",
     },
-  })
-  
-  const [snackbarErrorMessage, setSnackbarErrorMessage] = useState<boolean>(false)
-  const [isSignInDisabled, toggleSignInDisabled] = useState<boolean>(true)
-  const mailRegex =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+  });
+
+  const [snackbarErrorMessage, setSnackbarErrorMessage] =
+    useState<boolean>(false);
+  const [isSignInDisabled, toggleSignInDisabled] = useState<boolean>(true);
 
   useEffect(() => {
-    if(
+    if (
       (formErrors.email.show && state.email) ||
       (formErrors.password.show && state.password) ||
-      !state.email || 
+      !state.email ||
       !state.password
     ) {
-      toggleSignInDisabled(true)
+      toggleSignInDisabled(true);
     } else {
-      toggleSignInDisabled(false)
+      toggleSignInDisabled(false);
     }
-  
-  }, [formErrors, state])
-  
+  }, [formErrors, state]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, name: 'email' | 'password') => {
+// on input change function
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    name: "email" | "password"
+  ) => {
     const lclState = state;
     lclState[name] = e.target.value;
+    setFormErrors({
+      ...formErrors,
+      email: {
+        show: false,
+        message: "",
+      }
+    });
 
-    if(name === 'email') {
+    if (name === "password") {
+      validateCredentials("password");
+    }
+    setState({ ...state, ...lclState });
+  };
+
+  // Function is responsible for the validation of input fields
+  const validateCredentials = (name: "email" | "password") => {
+    if (name === "email") {
       /** temporary static email validation */
-      const matchFlag = e.target.value.match(mailRegex)
-
-      if (matchFlag === null) {
+      
+      if (!validateEmail(state.email)) {
         setFormErrors((state: any) => ({
           ...state,
           email: {
             show: true,
-            message: 'Invalid email address'
-          }
-        }))
+            message: "Invalid email",
+          },
+        }));
       } else {
         setFormErrors((state: any) => ({
           ...state,
           email: {
             show: false,
-            message: ''
-          }
-        }))
+            message: "",
+          },
+        }));
       }
     }
-    setState({...state, ...lclState});
-  }
+    if (name === "password") {
+      /** temporary static email validation */
+      const matchFlag = validatePassword(state.password);
 
-  const submit = (e:any)  => {
-    // console.log('hex: ', state)
-    /** API call to validate */
-
-    e.preventDefault()
-    /**SImulate floating message */
-    if(state.email && state.password) {
-      setSnackbarErrorMessage(true)
+      if (!matchFlag) {
+        setFormErrors((state: any) => ({
+          ...state,
+          password: {
+            show: true,
+            message:
+              "Password must contain min 8 letter with at least a symbol, upper and lower case letters and a number",
+          },
+        }));
+      } else {
+        setFormErrors((state: any) => ({
+          ...state,
+          password: {
+            show: false,
+            message: "",
+          },
+        }));
+      }
     }
   }
 
-  
+  // Form submission
+  const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const data = await clientLogin({
+      identifier: state.email,
+      password: state.password,
+    });
+    if (data) {
+      navigate('/');
+    } else {
+      setSnackbarErrorMessage(true);
+    }
+  };
+
   return (
-    <Grid className="loginContainer" container direction='row' item xs={12}>
+    <Grid className="loginContainer" container direction="row" item xs={12}>
       <SideContent />
-      <Grid className="contentContainer" display='flex' alignItems="center" justifyContent="center" item
-        sm={6} md={9} lg={9} xl={9}>
+      <Grid
+        className="contentContainer"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        item
+        sm={6}
+        md={9}
+        lg={9}
+        xl={9}
+      >
         <Grid className="content">
           <Grid className="">
-            <div className="header">
-              Sign in to neom heritage
-            </div>
+            <div className="header">Sign in to neom heritage</div>
           </Grid>
-          <div className="subHeader">
-            Enter your details below
-          </div>
-          <TextInput className={`login-email`} label="Email Address" value={state.email} 
-          error={formErrors.email.message ? true : false} errorText={formErrors.email.message} onChange={(e) => handleChange(e, 'email')} />
-          <TextInput className={`login-pwd`} label="Password" type={"password"} value={state.password} onChange={(e) => handleChange(e, 'password')} />
-          <Button className={'sign-in-btn'} label="SIGN IN" disabled={isSignInDisabled} onClick={submit} />
-          
+          <div className="subHeader">Enter your details below</div>
+          <TextInput
+            className={`login-email`}
+            label="Email Address"
+            value={state.email}
+            error={formErrors.email.message ? true : false}
+            errorText={formErrors.email.message}
+            onChange={(e) => handleChange(e, "email")}
+            onBlur={() => validateCredentials('email')}
+          />
+          <TextInput
+            className={`login-pwd`}
+            label="Password"
+            type={"password"}
+            value={state.password}
+            onChange={(e) => handleChange(e, "password")}
+            onBlur={() => validateCredentials('password')}
+          />
+          <Button
+            className={"sign-in-btn"}
+            label="SIGN IN"
+            disabled={isSignInDisabled}
+            onClick={(e) => submit(e)}
+          />
         </Grid>
         <div className="bottomText">
           <p>Don’t have an account yet or forgot your password?</p>
-          <p>Contact <span>
-            <a
-              href="support@neomheritage.com"
-              target={'_blank'}
-            >
-              support@neomheritage.com
-            </a>
-          </span></p>
+          <p>
+            Contact{" "}
+            <span>
+              <a href="support@neomheritage.com" target={"_blank"}>
+                support@neomheritage.com
+              </a>
+            </span>
+          </p>
         </div>
       </Grid>
       <PositionedSnackbar
-        message={'User not found'}
-        severity={'error'} 
-        open={snackbarErrorMessage} 
+        message={"User not found"}
+        severity={"error"}
+        open={snackbarErrorMessage}
         handleClose={() => setSnackbarErrorMessage(false)}
       />
     </Grid>
   );
-};
+}
