@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
 import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
 import './App.css';
 import './variables.css';
@@ -13,10 +14,13 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
     <ErrorBoundary>
       <ApolloProvider client={client}>
+      <QueryClientProvider client={queryClient}>
         <div className="App">
           <BrowserRouter>
             <Suspense fallback={<FallbackComponent />}>
@@ -25,6 +29,7 @@ function App() {
           </Suspense>
           </BrowserRouter>
         </div>
+      </QueryClientProvider>
       </ApolloProvider>
     </ErrorBoundary>
   );

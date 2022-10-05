@@ -23,7 +23,7 @@ type TextInputProps = {
 const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
   // color: theme.palette.getContrastText(grey[500]),
   fontSize: 12,
-  lineHeight: 20,
+  // lineHeight: 20,
   letterSpacing: 2,
   textAlign: 'center',
   padding: '10px, 24px, 10px, 24px',
@@ -52,7 +52,7 @@ export default function ValidationTextFields(props: TextInputProps) {
       >
         <NeomTextInput
           error={error}
-          id={error ? "outlined-error" : "outlined-size-small"}
+          id={error ? `outlined-error ${className}` : `outlined-size-small ${className}`}
           size={size ? size : "small"}
           fullWidth={fullWidth}
           label={label}
