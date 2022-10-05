@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import TextInput from "../../components/TextInput";
+import TextInput from "../TextInput";
 import { Avatar, InputAdornment } from "@mui/material";
 import SearchIcon from "../SearchField/leading-icon.svg";
 import CrossIcon from "../SearchField/trailing-icon.svg";
 
 
-function CustomSearchField(props) {
+function CustomSearchField(props: {className?: string}) {
   const { className } = props;
 
   const [searchText, setSearchText] = useState('')
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value)
   }
 
@@ -21,7 +21,7 @@ function CustomSearchField(props) {
       <TextInput
         className={`search-field`}
         label="Search" type={"text"}
-        placeholder={false}
+        // placeholder={false}
         showLabel={false}
         value={searchText} onChange={(e) => handleChange(e)}
         InputProps={{
@@ -30,7 +30,7 @@ function CustomSearchField(props) {
               cursor: 'pointer'
             }}
               onClick={() => {
-                searchRef.current && searchRef.current.focus()
+                // searchRef.current && searchRef.current.focus()
               }}>
               <Avatar alt="Search icon" src={SearchIcon} sx={{ width: 16, height: 20 }} />
             </InputAdornment>
@@ -54,7 +54,7 @@ function CustomSearchField(props) {
             backgroundColor: '#fff'
           }
         }}
-        ref={searchRef}
+        // ref={searchRef}
       />
     </>
   );

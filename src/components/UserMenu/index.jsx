@@ -4,6 +4,7 @@ import styled from "styled-components";
 import MenuList from "../MenuList";
 import { RobotoMediumMerino20px } from "../styledMixins";
 import WhiteCircle from "../../assets/images/WhiteCircle.svg";
+import useAuth from "../../hooks/useAuth";
 
 function UserMenuComponent({
   userInitials
@@ -13,9 +14,10 @@ function UserMenuComponent({
   const icon = "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/icon@1x.png";
   const iconSettings = "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/icon-button-settings@1x.png";
 
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false);
+  const {clientLogout} = useAuth()
 
-  let navigate = useNavigate()
+  const navigate = useNavigate()
 
   const handleClick = e => {
     e.preventDefault()
@@ -39,12 +41,12 @@ function UserMenuComponent({
           {
             label: 'Profile',
             handleClickMenuItem: (e) => {
-              navigate("user-management")
+              navigate("/user-management")
             }
           },
           {
             label: 'Logout',
-            handleClickMenuItem: () => {}
+            handleClickMenuItem: () => {clientLogout()}
           },
         ]}
       />
@@ -101,7 +103,7 @@ const UserMenu = styled.div`
   justify-content: flex-end;
   align-items: flex-start;
   min-width: 175px;
-  border: 1px none;
+  // border: 1px none;
   gap: 20px;
   margin-right: 2vw;
   & img {

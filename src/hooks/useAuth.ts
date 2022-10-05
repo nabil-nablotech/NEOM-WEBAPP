@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { UserDetails, loginPayload, LoginData } from "../types/User";
+import { UserDetails, loginPayload, LoginData, User } from "../types/User";
 import client from '../utils/services/axiosClient';
 import {setSession, removeSession} from '../utils/storage/storage';
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/reducers/loginReducers";
 
 const useAuth = () => {
+  const dispatch = useDispatch();
   const [data, setData] = useState<any | null>(null);
   const [error, setError] = useState<String | null>(null);
   const [loading, setLoading] = useState<Boolean>(true);
-
-  const baseUrl = `https://4ee6-103-179-0-140.in.ngrok.io`;
 
   useEffect(() => {
     fetchLoginData();
@@ -16,12 +17,14 @@ const useAuth = () => {
 
   const clientLogin = async (payload: loginPayload) => {
     const {data} = await client.post<UserDetails>(`/api/auth/local/`, JSON.stringify(payload));
+    await dispatch(setUser(data.user))
     setSession(data.jwt, JSON.stringify(data.user.id))
     return data;
   }
 
   const clientLogout = async () => {
     removeSession();
+    window.location.reload();
   }
   
   const fetchLoginData = async () => {

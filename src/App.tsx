@@ -8,6 +8,11 @@ import { Navigation } from "./navigation";
 import FallbackComponent from "./components/Common/FallbackComponent";
 import ErrorBoundary from "./components/ErrorBoundary";
 
+// Redux setup
+import { store } from './store';
+import { Provider } from 'react-redux';
+
+
 // apollo client
 const client = new ApolloClient({
   uri: `https://1cd2-49-204-165-45.in.ngrok.io/graphql`,
@@ -19,6 +24,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <ErrorBoundary>
+      <Provider store={store}>
       <ApolloProvider client={client}>
         <QueryClientProvider client={queryClient}>
           <div className="App">
@@ -30,6 +36,7 @@ function App() {
           </div>
         </QueryClientProvider>
       </ApolloProvider>
+      </Provider>
     </ErrorBoundary>
   );
 }

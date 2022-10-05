@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-export const baseUrl = `https://754b-103-179-0-140.in.ngrok.io`;
+export const baseUrl = `http://localhost:9999`;
 const colors = [
   '#f4511e',
   '#bf360c',

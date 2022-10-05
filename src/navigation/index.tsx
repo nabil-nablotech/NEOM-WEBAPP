@@ -9,12 +9,14 @@ import { Details } from "../pages/Details";
 import {PageNotFound} from '../components/PageNotFound';
 import UserManagement from "../pages/UserManagement";
 
+import LandingPage from '../pages/LandingPage/components/LandingPage/index';
+
 
 export const Navigation = () => {
     let routes = useRoutes([
       { 
         path: '/', 
-        element: <PrivateRoute path={'/'} component={Home} /> 
+        element: <PrivateRoute path={'/'} component={LandingPage} /> 
       },
       { 
         path: '/user-management', 

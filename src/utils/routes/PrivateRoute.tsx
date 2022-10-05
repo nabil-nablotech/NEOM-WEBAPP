@@ -8,12 +8,8 @@ import LandingPage from './../../pages/LandingPage/components/LandingPage/index'
 type RouteProps = {component: FC, path: string }
 // handle the private routes
 function PrivateRoute({ component: Component, path, ...rest }: RouteProps) {
-  // if (getToken()) {
-  if (true) {
-    if(path === '/user-management') {
-      return <UserManagement />
-    } else 
-    return <LandingPage />;
+  if (getToken()) { 
+    return <Component />;
   }
   removeSession();
   return <Navigate to="/login" />;

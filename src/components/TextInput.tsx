@@ -4,7 +4,7 @@ import TextField, {TextFieldProps} from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { styled } from '@mui/material/styles';
 
-type TextInputProps = {
+interface TextInputProps {
   error?: boolean;
   onChange?: (
     e: ChangeEvent<HTMLInputElement>
@@ -22,6 +22,7 @@ type TextInputProps = {
   className?: string;
   showLabel?: boolean;
   InputProps?: any;
+  sx?: any;
   ref?: React.RefObject<HTMLDivElement>;
 };
 
@@ -63,6 +64,7 @@ export default function ValidationTextFields(props: TextInputProps) {
     className,
     showLabel = true,
     InputProps,
+    sx,
     ref 
   } = props;
 
@@ -86,6 +88,7 @@ export default function ValidationTextFields(props: TextInputProps) {
           helperText={errorText}
           type={type}
           placeholder={label}
+          sx={sx}
           InputProps={{
             ...InputProps
           }}

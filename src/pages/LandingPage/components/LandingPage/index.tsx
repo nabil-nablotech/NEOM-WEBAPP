@@ -1,5 +1,5 @@
-import React, {useState} from "react";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
 import {
   RobotoMediumMerino20px,
   RobotoLightMerino50px,
@@ -11,9 +11,8 @@ import "../../globals.css"
 import "../../styleguide.css"
 import UserMenuComponent from "../../../../components/UserMenu";
 import WhiteCircle from "../../../../assets/images/WhiteCircle.svg";
-import TextInput from "../../../../components/TextInput";
-import { Avatar, Input, InputAdornment } from "@mui/material";
 import CustomSearchField from './../../../../components/SearchField/index';
+import { RootState } from "../../../../store";
 
 const landingPageData = {
   overlapGroup4: "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/rectangle-125-1@1x.png",
@@ -57,7 +56,13 @@ function LandingPage() {
     icon,
     iconSettings,
   } = landingPageData;
+  const {data} = useSelector((state: RootState) => state.login);
 
+  function stringAvatar(name: string) {
+    return `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`;
+  }
+
+  if (!data) return null;
   return (
     <div className="container-center-horizontal">
       <div className="landing-page screen">
@@ -144,7 +149,7 @@ function LandingPage() {
           </Frame2608172>
         </OverlapGroup4>
         <UserMenuComponent
-          userInitials={'ST'}
+        userInitials={stringAvatar(`${data.firstName} ${data.lastName}`)}
         />
       </div>
     </div>
