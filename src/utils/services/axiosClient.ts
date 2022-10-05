@@ -1,15 +1,19 @@
-import {setupInterceptorsTo} from "./interceptor";
+import { setupInterceptorsTo } from "./interceptor";
 import axios from "axios";
-import {baseUrl} from './helpers';
+import { baseUrl } from "./helpers";
+import { getToken } from "../storage/storage";
+
+const headers = {
+  "Content-Type": "application/json",
+  Accept: "application/json",
+  "Access-Control-Allow-Origin": "*",
+  Authorization: `${getToken()}`
+};
 
 const client = axios.create({
-    baseURL: baseUrl,
-    headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "Access-Control-Allow-Origin": "*"
-    }
-})
+  baseURL: baseUrl,
+  headers: headers,
+});
 
 setupInterceptorsTo(client);
 

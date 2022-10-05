@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { UserDetails, loginPayload, LoginData, User } from "../types/User";
 import client from '../utils/services/axiosClient';
-import {setSession, removeSession} from '../utils/storage/storage';
+import {setSession, removeSession, getId} from '../utils/storage/storage';
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/reducers/loginReducers";
 
@@ -13,7 +13,16 @@ const useAuth = () => {
 
   useEffect(() => {
     fetchLoginData();
+    fetchSession();
   }, [])
+
+  const fetchSession = async () => {
+    const id = getId();
+    const {data} = await client.get<User>(`/api/users/${id}`);
+
+    await dispatch(setUser(data))
+    return data;
+  }
 
   const clientLogin = async (payload: loginPayload) => {
     const {data} = await client.post<UserDetails>(`/api/auth/local/`, JSON.stringify(payload));
