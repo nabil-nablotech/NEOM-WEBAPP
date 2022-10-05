@@ -10,11 +10,10 @@ import "./LandingPage.css";
 import "../../globals.css"
 import "../../styleguide.css"
 import UserMenuComponent from "../../../../components/UserMenu";
-import WhiteCircle from "../../WhiteCircle.svg";
-import SearchIcon from "../../leading-icon.svg";
-import CrossIcon from "../../trailing-icon.svg";
+import WhiteCircle from "../../../../assets/images/WhiteCircle.svg";
 import TextInput from "../../../../components/TextInput";
 import { Avatar, Input, InputAdornment } from "@mui/material";
+import CustomSearchField from './../../../../components/SearchField/index';
 
 const landingPageData = {
   overlapGroup4: "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/rectangle-125-1@1x.png",
@@ -59,14 +58,6 @@ function LandingPage() {
     iconSettings,
   } = landingPageData;
 
-  const [searchText, setSearchText] = useState('')
-
-  const handleChange = (e) => {
-    setSearchText(e.target.value)
-  }
-
-  const searchRef = React.createRef()
-
   return (
     <div className="container-center-horizontal">
       <div className="landing-page screen">
@@ -84,44 +75,15 @@ function LandingPage() {
                 </LabelText>
               </Content>
             </SearchField> */}
-            <TextInput
-              className={`search-field`}
-              label="Search" type={"text"}
-              placeholder={false}
-              showLabel={false}
-              value={searchText} onChange={(e) => handleChange(e)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start" sx={{
-                    cursor: 'pointer'
-                  }} 
-                  onClick = {() => {
-                    searchRef.current && searchRef.current.focus()
-                  }}>
-                    <Avatar alt="Search icon" src={SearchIcon} sx={{ width: 16, height: 20 }}/>
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="start"
-                    sx={{
-                      cursor: 'pointer',
-                      marginRight: 0
-                    }}
-                    onClick = {() => {
-                      setSearchText('')
-                    }}
-                  >
-                    <Avatar alt="Cross icon" src={CrossIcon} sx={{ width: 16, height: 20 }}/>
-                  </InputAdornment>
-                )
-              }}
-              sx={{
+            
+              {/* sx={{
                 '& .MuiInputBase-input ' : {
                   backgroundColor: '#fff'
                 }
               }}
               ref={searchRef}
-            />
+            /> */}
+            <CustomSearchField />
             <Inventory>
               <Frame2608168>
                 <IconLocationPin src={iconLocation_Pin} alt="icon-location_pin" />
@@ -182,9 +144,6 @@ function LandingPage() {
           </Frame2608172>
         </OverlapGroup4>
         <UserMenuComponent
-          icon={icon}
-          iconSettings={iconSettings}
-          iconUserWhite={iconUserWhite}
           userInitials={'ST'}
         />
       </div>
@@ -194,7 +153,7 @@ function LandingPage() {
 
 const OverlapGroup4 = styled.div`
   width: 100%;
-  height: 931px;
+  height: 100vh;
   z-index: 1;
   position: relative;
   background-size: cover;
@@ -205,12 +164,13 @@ const OverlapGroup4 = styled.div`
 const Rectangle69 = styled.div`
   position: absolute;
   width: 100%;
-  height: 931px;
+  height: 100%;
   top: 0;
   left: 0;
   border: 1px none;
   mix-blend-mode: multiply;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.1899999976158142) 0%, rgb(0, 0, 0) 100%);
+  background-repeat: no-repeat;
 `;
 
 const Frame2608172 = styled.div`

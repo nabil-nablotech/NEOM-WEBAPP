@@ -3,13 +3,15 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import MenuList from "../MenuList";
 import { RobotoMediumMerino20px } from "../styledMixins";
+import WhiteCircle from "../../assets/images/WhiteCircle.svg";
 
 function UserMenuComponent({
-  icon,
-  iconSettings,
-  iconUserWhite,
   userInitials
 }) {
+
+  const iconUserWhite = WhiteCircle;
+  const icon = "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/icon@1x.png";
+  const iconSettings = "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/icon-button-settings@1x.png";
 
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -90,7 +92,7 @@ const IconSettings = styled.img`
 
 
 const UserMenu = styled.div`
-  position: absolute;
+  position: fixed;
   height: fit-content;
   top: 24px;
   right: 0;
@@ -100,7 +102,7 @@ const UserMenu = styled.div`
   align-items: flex-start;
   min-width: 175px;
   border: 1px none;
-  gap: 10px;
+  gap: 20px;
   margin-right: 2vw;
   & img {
     cursor:pointer

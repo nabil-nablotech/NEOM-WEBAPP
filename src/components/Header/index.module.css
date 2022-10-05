@@ -1,5 +1,8 @@
 .header-container {
     background-color: #000;
+    position: fixed;
+    width: 100vw;
+    margin-bottom: 100px;
 }
 
 .logo {
