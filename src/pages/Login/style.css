@@ -16,6 +16,13 @@
   top: -10px;
 }
 
+.content legend  span{
+ padding-left: 0;
+ padding-right: 0;
+ text-align: left;
+ width: fit-content;
+}
+
 .logo {
   position: absolute;
   bottom: 15%;
@@ -42,7 +49,7 @@
   line-height: 35px;
   display: flex;
   align-items: center;
-  letter-spacing: 0.3vw;
+  letter-spacing: 4px;
   text-transform: uppercase;
   margin-bottom: 30px;
   max-width: 23ch;
@@ -58,12 +65,13 @@
   letter-spacing: 0.5px;
   color: #13100D;
   text-align: left;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .MuiGrid-root.login-email,
 .MuiGrid-root.login-pwd {
   margin-bottom: 15px;
+  position: relative;
 }
 
 .MuiGrid-root.login-email .MuiInputBase-root,
@@ -72,7 +80,7 @@
   font-size: 16px;
   border-color: #E8E9E9;
   border-radius: 4px;
-  color: var(--grey-text);
+  color: var(--focused-black-text);
 }
 
 .MuiGrid-root.login-email .MuiFormControl-root:hover,
@@ -103,10 +111,29 @@
   line-height: 24px;
   top: auto;
   bottom: 40%;
+  cursor: text
+  
+}
+.MuiGrid-root.login-email .MuiFormLabel-root[data-shrink="true"],
+.MuiGrid-root.login-pwd .MuiFormLabel-root[data-shrink="true"] {
+  color: var(--focused-black-text);
+  margin-inline: 0;
+  width: fit-content;
+  padding-inline: 3px;
+  padding-block: 0;
+  background-color: #fff;
+}
+.MuiGrid-root.login-email .Mui-error,
+.MuiGrid-root.login-pwd .Mui-error {
+  margin-left: 0;
+}
+.MuiGrid-root.login-email:has(.MuiFormHelperText-root) .MuiFormLabel-root,
+.MuiGrid-root.login-pwd:has(.MuiFormHelperText-root) .MuiFormLabel-root {
+  bottom: initial;
 }
 
 .sign-in-btn.MuiButtonBase-root {
-  padding: 1vw 1.6vw;
+  padding: 1vw 2vw;
   margin-top: 1vw;
 }
 
@@ -151,6 +178,10 @@
 
   .bottomText {
     margin: 4vw;
+  }
+
+  .sign-in-btn.MuiButtonBase-root {
+    padding: 1vw 3.5vw;
   }
 
 }

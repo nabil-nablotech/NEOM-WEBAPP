@@ -11,7 +11,7 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
 }
 
 const onResponse = (response: AxiosResponse): AxiosResponse => {
-  console.info(`[response] [${JSON.stringify(response)}]`);
+  // console.info(`[response] [${JSON.stringify(response)}]`);
   return response;
 }
 

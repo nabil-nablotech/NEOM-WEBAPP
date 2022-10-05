@@ -8,42 +8,56 @@ const useFetch = (url: string, method: string, body: BodyInit | null) => {
   const [error, setError] = useState<String | null>(null);
   const [loading, setLoading] = useState<Boolean>(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
+  const baseUrl = `https://cde1-103-179-0-140.in.ngrok.io`;
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(true);
+  
+  //     const Options: RequestHeaders = {
+  //       method: method,
+  //     };
+  
+  //     try {
+  //       const res = await fetch(`${baseUrl}${url}`, Options);
+  //       const json = await res.json();
+  //       setData(json.data);
+  //       setLoading(false);
+  //       return json;
+  //     } catch (error) {
+  //       console.log('error', error)
+  //       if (error instanceof Error) return error.message;
+  //       else setError(JSON.stringify(error));
+  //       setLoading(false);
+  //     }
+  //   };
+  //   // fetchData();
+  // }, [url]);
 
-      const baseUrl = `https://1761-103-179-0-140.in.ngrok.io`;
-
-      console.log('inside usefetch funcio')
-      const Options: RequestHeaders = {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-        }
-      };
-      // if (method === "GET") {
-      //   delete Options.body;
-      // }
-      try {
-        const res = await fetch(`${baseUrl}${url}`, Options);
-        console.log('response of fetch', res)
-        const json = await res.json();
-        setData(json.data);
-        setLoading(false);
-      } catch (error) {
-        if (error instanceof Error) return error.message;
-        else setError(JSON.stringify(error));
-        setLoading(false);
-      }
+  const client = async (url: string, method: string, body: any) => {
+    setLoading(true);
+    const Options: RequestHeaders = {
+      method: method,
+      body: body ? JSON.stringify(body) : '',
     };
 
-    fetchData();
-  }, [url]);
+    try {
+      const res = await fetch(`${baseUrl}${url}`, Options);
+      const json = await res.json();
+      setLoading(false);
+      return json;
+    } catch (error) {
+      console.log('error', error)
+      if (error instanceof Error) return error.message;
+      else setError(JSON.stringify(error));
+      setLoading(false);
+    }
+  };
 
   return {
     loading,
     error,
     data,
+    client
   };
 };
 

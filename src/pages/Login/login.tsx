@@ -1,14 +1,15 @@
-import React, { useState } from "react";
-import { Grid, ThemeProvider, Typography } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Grid } from "@mui/material";
 import { useQuery, gql } from "@apollo/client";
-import LoginCom from "../../components/Login";
+import { useNavigate } from "react-router-dom";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
 import "./style.css";
-import useFetch from "../../hooks/useFetch";
+import useAuth from "../../hooks/useAuth";
 import { SideContent } from "./sideContent";
-import useLogin from "../../hooks/useLogin";
-import {validateEmail, validatePassword} from '../../utils/services/helpers';
+import PositionedSnackbar from "../../components/Snackbar";
+
+import { validateEmail, validatePassword, baseUrl } from "../../utils/services/helpers";
 
 const LOGINDATA = gql`
   query GetLoginData {
@@ -30,19 +31,23 @@ const LOGINDATA = gql`
 type stateInput = {
   email: string;
   password: string;
-  passwordError: string;
-  emailError: string;
-  disabled: boolean
 };
+
+type FormError = {
+  show: boolean;
+  message: string;
+};
+
+type FormErrors = {
+  email: FormError;
+  password: FormError;
+};
+
 export function Login() {
-  const baseUrl = `https://8130-49-204-165-45.in.ngrok.io`;
-  const { error, loading, data } = useFetch(
-    `/api/login?populate[0]=button&populate[1]=input&populate[2]=backgroundImage.image&populate[4]=bottomText&populate[5]=logo.image`,
-    "GET",
-    null
-  );
-  const {data: loginRes, error: loginErr, loading: loginLoad, fetchData} = useLogin();
-  console.log("login data", data);
+
+  const { clientLogin, fetchLoginData, data, loading } = useAuth();
+
+  const navigate = useNavigate();
 
   const textField1Data = {
     children: "Email Address",
@@ -70,10 +75,34 @@ export function Login() {
   const [state, setState] = useState<stateInput>({
     email: "",
     password: "",
-    passwordError: '',
-    emailError: '',
-    disabled: true
   });
+  const [formErrors, setFormErrors] = useState<FormErrors>({
+    email: {
+      show: false,
+      message: "",
+    },
+    password: {
+      show: false,
+      message: "",
+    },
+  });
+
+  const [snackbarErrorMessage, setSnackbarErrorMessage] =
+    useState<boolean>(false);
+  const [isSignInDisabled, toggleSignInDisabled] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (
+      (formErrors.email.show && state.email) ||
+      (formErrors.password.show && state.password) ||
+      !state.email ||
+      !state.password
+    ) {
+      toggleSignInDisabled(true);
+    } else {
+      toggleSignInDisabled(false);
+    }
+  }, [formErrors, state]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -81,33 +110,70 @@ export function Login() {
   ) => {
     const lclState = state;
     lclState[name] = e.target.value;
-    if (name === "email" && !validatePassword(lclState.email)) {
-      lclState.disabled = true;
-      lclState.emailError = 'Invalid email';
-    }
-    if (name === "password" && !validatePassword(lclState.password)) {
-      lclState.disabled = true;
-      lclState.passwordError = 'Password must contain min 8 letter with at least a symbol, upper and lower case letters and a number';
-    }
-    if (validateEmail(lclState.email)) {
-      lclState.emailError = '';
-    }
-    if (validatePassword(lclState.password)) {
-      lclState.passwordError = '';
-    }
-    if (validateEmail(lclState.email) && validatePassword(lclState.password)) {
-      lclState.disabled = false;
-    }
+
+
     setState({ ...state, ...lclState });
   };
 
-  const submit = async () => {
-    await fetchData({
+  const validateCredentials = (name: "email" | "password") => {
+    if (name === "email") {
+      /** temporary static email validation */
+      
+      if (!validateEmail(state.email)) {
+        setFormErrors((state: any) => ({
+          ...state,
+          email: {
+            show: true,
+            message: "Invalid email",
+          },
+        }));
+      } else {
+        setFormErrors((state: any) => ({
+          ...state,
+          email: {
+            show: false,
+            message: "",
+          },
+        }));
+      }
+    }
+    if (name === "password") {
+      /** temporary static email validation */
+      const matchFlag = validatePassword(state.password);
+
+      if (matchFlag) {
+        setFormErrors((state: any) => ({
+          ...state,
+          password: {
+            show: true,
+            message:
+              "Password must contain min 8 letter with at least a symbol, upper and lower case letters and a number",
+          },
+        }));
+      } else {
+        setFormErrors((state: any) => ({
+          ...state,
+          password: {
+            show: false,
+            message: "",
+          },
+        }));
+      }
+    }
+  }
+  const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const data = await clientLogin({
       identifier: state.email,
-      password: state.password
-    })
+      password: state.password,
+    });
+    if (data) {
+      navigate('/');
+    } else {
+      setSnackbarErrorMessage(true);
+    }
   };
-console.log('login Error', loginErr)
+
   return (
     <Grid className="loginContainer" container direction="row" item xs={12}>
       <SideContent />
@@ -131,24 +197,24 @@ console.log('login Error', loginErr)
             className={`login-email`}
             label="Email Address"
             value={state.email}
-            error={state.emailError.length > 0}
-            errorText={state.emailError}
+            error={formErrors.email.message ? true : false}
+            errorText={formErrors.email.message}
             onChange={(e) => handleChange(e, "email")}
+            onBlur={() => validateCredentials('email')}
           />
           <TextInput
             className={`login-pwd`}
             label="Password"
             type={"password"}
             value={state.password}
-            error={state.passwordError.length > 0}
-            errorText={state.passwordError}
             onChange={(e) => handleChange(e, "password")}
+            onBlur={() => validateCredentials('password')}
           />
           <Button
             className={"sign-in-btn"}
             label="SIGN IN"
-            disabled={state.disabled}
-            onClick={submit}
+            disabled={isSignInDisabled}
+            onClick={(e) => submit(e)}
           />
         </Grid>
         <div className="bottomText">
@@ -163,6 +229,12 @@ console.log('login Error', loginErr)
           </p>
         </div>
       </Grid>
+      <PositionedSnackbar
+        message={"User not found"}
+        severity={"error"}
+        open={snackbarErrorMessage}
+        handleClose={() => setSnackbarErrorMessage(false)}
+      />
     </Grid>
   );
 }

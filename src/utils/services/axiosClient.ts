@@ -1,11 +1,13 @@
 import {setupInterceptorsTo} from "./interceptor";
 import axios from "axios";
+import {baseUrl} from './helpers';
 
 const client = axios.create({
-    baseURL: 'https://1761-103-179-0-140.in.ngrok.io',
+    baseURL: baseUrl,
     headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*"
     }
 })
 

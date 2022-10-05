@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, FocusEvent } from "react";
 import Box from "@mui/material/Box";
 import TextField, {TextFieldProps} from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
@@ -9,6 +9,9 @@ type TextInputProps = {
   error?: boolean;
   onChange?: (
     e: ChangeEvent<HTMLInputElement>
+  ) => void;
+  onBlur?: (
+    e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   value?: string | "";
   defaultValue?: string | "";
@@ -28,11 +31,24 @@ const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
   textAlign: 'center',
   padding: '10px, 24px, 10px, 24px',
   height: 40,
+  '& label.Mui-focused': {
+    'legends': {
+      color: 'var(--grey-text)',
+      borderRadius: '2px',
+      width: 'fit-content'
+    }
+  },
+  '& .MuiInput-underline:after': {
+    borderBottomColor: 'var(--grey-text)',
+  },
+  '& .MuiOutlinedInput-root': {
+  }
 }));
 
 export default function ValidationTextFields(props: TextInputProps) {
   const {
     onChange,
+    onBlur,
     error,
     value,
     label,
@@ -58,10 +74,13 @@ export default function ValidationTextFields(props: TextInputProps) {
           label={label}
           value={value}
           onChange={onChange}
+          onBlur={onBlur}
           defaultValue={defaultValue}
           helperText={errorText}
           type={type}
-        />
+        >
+          {value}
+          </NeomTextInput>
       </Box>
     </Grid>
   );

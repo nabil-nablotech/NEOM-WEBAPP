@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+
+export const baseUrl = `https://754b-103-179-0-140.in.ngrok.io`;
 const colors = [
   '#f4511e',
   '#bf360c',
@@ -53,7 +55,7 @@ export const validateEmail = (s: string) => {
  * @returns 
  */
 export const validatePassword = (s: string) => {
-  const password_regex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;;
+  const password_regex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
   return password_regex.test(s)
 } 
 
