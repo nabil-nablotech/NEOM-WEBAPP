@@ -6,7 +6,7 @@ import { Home } from "../pages/Home";
 import { Login } from "../pages/Login";
 import { Search } from "../pages/Search";
 import { Details } from "../pages/Details";
-import { Users } from "../pages/Users";
+import { UserManagement } from "../pages/UserManagement";
 
 import {PageNotFound} from '../components/PageNotFound';
 
@@ -18,8 +18,8 @@ export const Navigation = () => {
         element: <PrivateRoute path={'/'} component={Home} /> 
       },
       { 
-        path: '/users', 
-        element: <PrivateRoute path={'/users'} component={Users} /> 
+        path: '/user-management', 
+        element: <PrivateRoute path={'/user-management'} component={UserManagement} /> 
       },
       { 
         path: '/login', 

@@ -37,7 +37,7 @@ function UserMenuComponent({
           {
             label: 'Profile',
             handleClickMenuItem: (e) => {
-              navigate("users")
+              navigate("user-management")
             }
           },
           {

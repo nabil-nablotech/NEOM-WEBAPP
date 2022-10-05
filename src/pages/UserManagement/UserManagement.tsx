@@ -1,9 +1,9 @@
 import React from "react";
 
-export function Users() {
+export function UserManagement() {
   return (
     <div>
-      <h1>Users</h1>
+      <h1>User Mgmt</h1>
     </div>
   );
 };
