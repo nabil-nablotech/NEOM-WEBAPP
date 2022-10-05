@@ -198,8 +198,8 @@ export function Login() {
         item
         sm={6}
         md={9}
-        lg={9}
-        xl={9}
+        lg={8}
+        xl={8}
       >
         <Grid className="content">
           <Grid className="">
