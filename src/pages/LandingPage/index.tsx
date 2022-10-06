@@ -258,7 +258,6 @@ const Frame2608168 = styled.div`
   display: flex;
   align-items: flex-start;
   min-width: 176px;
-  gap: 21px;
   border: 1px none;
 `;
 
@@ -304,7 +303,6 @@ const Frame2608169 = styled.div`
   justify-content: flex-end;
   align-items: flex-start;
   min-width: 177px;
-  gap: 22px;
   border: 1px none;
 `;
 
@@ -339,7 +337,6 @@ const Frame2608170 = styled.div`
   justify-content: flex-end;
   align-items: flex-start;
   min-width: 171px;
-  gap: 23px;
   border: 1px none;
 `;
 
@@ -385,7 +382,6 @@ const Frame2608171 = styled.div`
   justify-content: flex-end;
   align-items: flex-start;
   min-width: 179px;
-  gap: 20px;
   border: 1px none;
 `;
 

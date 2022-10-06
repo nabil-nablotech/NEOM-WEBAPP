@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import Button, { ButtonProps } from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { grey } from '@mui/material/colors';
+// import { *asReact, ReactElement } from 'react';
 
 const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
   // color: theme.palette.getContrastText(grey[500]),
@@ -18,18 +19,26 @@ const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
   },
 }));
 
-type CustomButtonProps  = {
+type CustomButtonProps = {
   label: string | ''
   disabled?: boolean
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void,
-  className?: string
+  className?: string,
+  // StartIcon?: ()
 }
 
 export default function CustomizedButtons(props: CustomButtonProps) {
-  const {label, disabled, onClick, className} = props; 
+  const { label, disabled, onClick, className, 
+    // StartIcon
+   } = props;
   return (
     <Stack spacing={2} direction="row" >
-      <ColorButton className={className ? className : ''} onClick={onClick} disabled={disabled} variant="contained">{label}</ColorButton>
-    </Stack>
+      <ColorButton className={className ? className : ''}
+        onClick={onClick} disabled={disabled} variant="contained"
+        // startIcon={<StartIcon />}
+      >
+          { label }
+        </ColorButton>
+    </Stack >
   );
 }
