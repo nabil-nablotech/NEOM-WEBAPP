@@ -4,7 +4,7 @@ import { Avatar, InputAdornment } from "@mui/material";
 import SearchIcon from "../SearchField/leading-icon.svg";
 import CrossIcon from "../SearchField/trailing-icon.svg";
 import styles from './index.module.css'
-
+import CircleSharpIcon from '@mui/icons-material/CircleSharp';
 
 function CustomSearchField(props: {className?: string, handleChange?: (e:ChangeEvent<HTMLInputElement>) => void}) {
   const { className, handleChange } = props;
@@ -47,7 +47,6 @@ function CustomSearchField(props: {className?: string, handleChange?: (e:ChangeE
             </InputAdornment>
           ),
           endAdornment: (
-            (searchText === '') ? null : <>
               <InputAdornment position="start"
                 sx={{
                   cursor: 'pointer',
@@ -57,9 +56,13 @@ function CustomSearchField(props: {className?: string, handleChange?: (e:ChangeE
                   setSearchText('')
                 }}
               >
+              {(searchText === '') ?
+                <CircleSharpIcon style={{
+                  color: '#fff'
+                }} /> :
                 <Avatar alt="Cross icon" src={CrossIcon} sx={{ width: 16, height: 20 }} />
-              </InputAdornment>
-            </>
+              }
+            </InputAdornment>
           )
         }}
         sx={{

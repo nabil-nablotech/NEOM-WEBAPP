@@ -10,6 +10,7 @@ import useAuth from "../../hooks/useAuth";
 import { stringAvatar } from "../../utils/services/helpers";
 import { RootState } from "../../store";
 
+/** Component for top-right header icons */
 function UserMenuComponent() {
   const iconUserWhite = WhiteCircle;
   const icon =
