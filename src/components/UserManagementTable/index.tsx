@@ -14,7 +14,7 @@ import { UseMutationResult } from "react-query";
 import { format } from 'date-fns'
 import type { ColumnsType } from 'antd/es/table';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { useMediaQuery } from 'react-responsive'
+// import { useMediaQuery } from 'react-responsive'
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
@@ -205,27 +205,27 @@ const tableDataJson:DataArray = [
   },
 ]
 export interface IUser {
-  data?: User[]
+  data: User[] | []
   postUser?: () => void
   editUser: any
   showModal: boolean
+  isLoading: boolean
   setShowModal?: () => void
-  handleUser: (payload: User) => void
+  handleUser: (payload: User | null) => void
   userData: User | null
 }
 
 export const UserManagementTable = (props: IUser) => {
-  const {data, setShowModal, handleUser, editUser, userData} = props;
+  const {data, setShowModal, handleUser, editUser, userData, isLoading: loading} = props;
   const [search, setSearch] = useState<string>('');
-  const [dataList, setDataList] = useState<DataArray>(tableDataJson);
+  const [dataList, setDataList] = useState<User[] | []>(data);
   const [modalState, setModalState] = useState<IModalstate>({ visible: false, editing: null });
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   // const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1025px)' })
 
-  const showModal = (editing: User) => {
+  const showModal = (editing: User | null) => {
     form.setFieldsValue(
       editing || {
         description: null,
@@ -253,15 +253,15 @@ export const UserManagementTable = (props: IUser) => {
 
   const handleOk = async (values: any) => {
     form.setFieldsValue({
-      description: null,
-      name: null,
-      value: null,
+      firstName: null,
+      lastName: null,
+      email: null,
     });
     const body = {
       ...values,
     };
     setConfirmLoading(true);
-    if (modalState.editing) saveLOV(body);
+    if (modalState.editing) editUser({...userData, ...values});
   };
 
   const handleCancel = () => {
@@ -288,13 +288,15 @@ export const UserManagementTable = (props: IUser) => {
   const tableHeaderJson: ColumnsType<any> = [
     {
       title: 'Last Name',
-      dataIndex: 'lastname',
+      key: 'lastName',
+      dataIndex: 'lastName',
       sorter: (a, b) => a.lastname.localeCompare(b.lastname),
       sortDirections: ['descend', 'ascend', 'descend'],
     },
     {
       title: 'First Name',
-      dataIndex: 'firstname',
+      key: 'firstName',
+      dataIndex: 'firstName',
     },
     {
       title: 'Email Address',
@@ -304,6 +306,8 @@ export const UserManagementTable = (props: IUser) => {
     {
       title: 'Role Assigned',
       dataIndex: 'role',
+      key: 'role',
+      render: (value, index) => value.name
     },
     {
       title: 'Last Login',
@@ -316,16 +320,15 @@ export const UserManagementTable = (props: IUser) => {
     {
       title: 'Action',
       key: 'action',
-      render: (record) => (
-        <MoreOptionsComponent id = {record}/>
+      render: (value, record: User) => (
+        <MoreOptionsComponent id={record.id} record={record} />
 
       ),
     }
   ]
 
 
-  const MoreOptionsComponent = (record?: any) => {
-
+  const MoreOptionsComponent = ({record, id}: {id: number, record: User}) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
     const handleClick = (e: any) => {
@@ -356,25 +359,25 @@ export const UserManagementTable = (props: IUser) => {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Edit</MenuItem>
+        <MenuItem onClick={() => showModal(record)}>Edit</MenuItem>
       </Menu>
     </>
   }
 
   const filterResults = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let newDatalist = [...tableDataJson]
+    let newDatalist = [...data]
 
     /** filter when search string is not empty */
     if (e.target.value !== '') {
 
-      newDatalist = dataList.filter(obj => {
+      newDatalist = dataList ? dataList.filter(obj => {
         let flag = false
 
         Object.keys(obj).forEach(key => {
 
           /** if any string out of each column item matches, return result */
           if (
-            (obj[key as keyof SingleObj]
+            (obj[key as keyof User]
               .toString()
               .toLowerCase()
               .indexOf(e.target.value.toLowerCase()) !== -1)
@@ -384,16 +387,11 @@ export const UserManagementTable = (props: IUser) => {
         })
 
         return flag
-      })
+      }) : []
 
     }
 
     setDataList(newDatalist)
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    
-      filterResults(e);
   }
 
   return (
@@ -409,13 +407,13 @@ export const UserManagementTable = (props: IUser) => {
               .validateFields()
               .then((values) => {
                 form.resetFields();
-                editUser({...userData, ...values});
+                handleOk(values)
               })
               .catch((info) => {
                 // console.log(info);
               });
           }}
-          // confirmLoading={confirmLoading}
+          confirmLoading={confirmLoading}
           onCancel={handleCancel}
         >
           <Spin spinning={confirmLoading}>
@@ -451,11 +449,13 @@ export const UserManagementTable = (props: IUser) => {
         </StyledModal>
       )}
       <div className={`${styles['add-user-btn']}`}>
-        <Button label="USER" StartIcon={AddIcon}/>
+        <Button label="USER" onClick={() => showModal(null)} StartIcon={AddIcon}/>
       </div>
       <div className={`${styles['custom-search']}`}>
         <CustomSearchField className={`${styles['custom-search-field']}`}
-          handleChange={handleChange}
+          handleChange={e => {
+            filterResults(e)
+          }}
         />
       </div>
       <StyledTable

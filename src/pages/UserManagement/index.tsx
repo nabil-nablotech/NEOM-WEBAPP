@@ -23,7 +23,7 @@ const UserManagement = () => {
           <Container maxWidth="xl">
             {/* <div className={`${styles['title']}`}>USERS</div>
                         <Button label="SIGN IN" /> */}
-            <UserManagementTable data={data} showModal={showModal} handleUser={handleUser} editUser={editUserMutation} userData={userData} />
+            <UserManagementTable isLoading={isLoading} data={data || []} showModal={showModal} handleUser={handleUser} editUser={editUserMutation} userData={userData} />
           </Container>
         </div>
       </div>
