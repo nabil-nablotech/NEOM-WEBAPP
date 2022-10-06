@@ -5,28 +5,27 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 
 const useUser = () => {
-  const [userId, setUserId] = useState<number | null>(null);
-  const [showmodal, setShowModal] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
   const [userData, setUserData] = useState<User | null>(null);
   // Access the client
   const queryClient = useQueryClient();
 
-  const fetchUser = (): Promise<User[]> => client.get('/api/users', ).then(response => response.data)
+  const fetchUser = (): Promise<User[]> => client.get<User[]>('/api/users?populate=*').then(response => response.data)
   const postUser = (payload: UserPayload): Promise<User[]> => client.post('/api/users', payload).then(response => response.data)
-  const editUser = (payload: UserPayload): Promise<User[]> => client.put(`/api/users/${userId}`, payload).then(response => response.data)
+  const editUser = (payload: UserPayload): Promise<User> => client.put(`/api/users/${userData?.id}`, payload).then(response => response.data)
 
   // query
-  const query = useQuery(['users', fetchUser]);
+  const query = useQuery(['users'], fetchUser);
 
    // Mutations
-  const postUserMutation = useMutation(postUser, {
+  const {mutate: postUserMutation} = useMutation(postUser, {
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries(['users'])
     },
   })
   
-  const editUserMutation = useMutation(editUser, {
+  const {mutate: editUserMutation} = useMutation(editUser, {
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries(['users'])
@@ -42,8 +41,7 @@ const useUser = () => {
     query,
     postUserMutation,
     editUserMutation,
-    setUserId,
-    showmodal,
+    showModal,
     setShowModal,
     handleUser,
     userData

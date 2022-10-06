@@ -6,9 +6,11 @@ import { Table, Input, Modal, Form, Spin, Tooltip, message } from 'antd';
 import axiosClient from '../../utils/services/axiosClient';
 import { useDispatch } from 'react-redux';
 import Button from "../../components/Button";
+import { User, UserPayload } from "../../types/User";
 
 import styles from './index.module.css'
 import CustomSearchField from './../SearchField/index';
+import { UseMutationResult } from "react-query";
 
 const StyledModal = styled(Modal)`
   .ant-modal-body {
@@ -54,8 +56,18 @@ export interface IModalstate {
   editing: any | null
 }
 
-const UserManagementTable = () => {
-  const [data, setData] = useState<any[] | null>(null);
+export interface IUser {
+  data?: User[]
+  postUser?: () => void
+  editUser: any
+  showModal: boolean
+  setShowModal?: () => void
+  handleUser: (payload: User) => void
+  userData: User | null
+}
+
+export const UserManagementTable = (props: IUser) => {
+  const {data, setShowModal, handleUser, editUser, userData} = props;
   const [search, setSearch] = useState<string>('');
   const [modalState, setModalState] = useState<IModalstate>({ visible: false, editing: null });
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
@@ -63,7 +75,7 @@ const UserManagementTable = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
-  const showModal = (editing: any) => {
+  const showModal = (editing: User) => {
     form.setFieldsValue(
       editing || {
         description: null,
@@ -72,27 +84,8 @@ const UserManagementTable = () => {
       }
     );
     setModalState({ visible: true, editing: editing });
+    handleUser(editing);
   };
-
-  const getLOVs = async () => {
-    try {
-
-      setModalState({ visible: false, editing: null });
-      setConfirmLoading(false);
-      setLoading(false);
-    } catch (e) {
-      // console.log(e);
-      error('Failed to get lov.');
-      setLoading(false);
-      // setData([]);
-      setModalState({ visible: false, editing: null });
-      setConfirmLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getLOVs();
-  }, []);
 
   const saveLOV = async (values: any) => {
     const data = {
@@ -103,27 +96,6 @@ const UserManagementTable = () => {
     } catch (e) {
       // console.log(e);
       error('Failed to save.');
-      setModalState({ visible: true, editing: null });
-      setConfirmLoading(false);
-    }
-  };
-
-  const addLOV = async (values: any) => {
-    const data = {
-      ...values,
-    };
-    try {
-      const response = await axiosClient({
-        url: `lov`,
-        method: 'post',
-        data: data,
-      });
-      if (response) {
-        getLOVs();
-      }
-    } catch (e) {
-      // console.log(e);
-      error('Failed to create.');
       setModalState({ visible: true, editing: null });
       setConfirmLoading(false);
     }
@@ -140,7 +112,6 @@ const UserManagementTable = () => {
     };
     setConfirmLoading(true);
     if (modalState.editing) saveLOV(body);
-    else addLOV(body);
   };
 
   const handleCancel = () => {
@@ -152,15 +123,8 @@ const UserManagementTable = () => {
     setModalState({ visible: false, editing: null });
   };
 
-  const handleRemove = async (code: number) => {
-    try {
-    } catch (error: any) {
-
-    }
-  };
-
-  const dataToDisplay = data ? data?.filter((el: any) => {
-    return el.name?.toLowerCase()?.includes(search?.toLowerCase());
+  const dataToDisplay = data ? data?.filter((el: User) => {
+    return el.firstName?.toLowerCase()?.includes(search?.toLowerCase());
   }) : [];
 
   return (
@@ -176,8 +140,7 @@ const UserManagementTable = () => {
               .validateFields()
               .then((values) => {
                 form.resetFields();
-                // console.log(values);
-                handleOk(values);
+                editUser({...userData, ...values});
               })
               .catch((info) => {
                 // console.log(info);
@@ -194,23 +157,23 @@ const UserManagementTable = () => {
               name="form_in_modal"
             >
               <Form.Item
-                name="name"
-                label="Name"
-                rules={[{ required: true, message: 'Please input Name' }]}
+                name="firstName"
+                label="Firstname"
+                rules={[{ required: true, message: 'Please input firstname' }]}
               >
                 <Input allowClear />
               </Form.Item>
               <Form.Item
-                name="value"
-                label="Value"
-                rules={[{ required: true, message: 'Please input Value' }]}
+                name="lastName"
+                label="Lastname"
+                rules={[{ required: true, message: 'Please input lastname' }]}
               >
                 <Input allowClear />
               </Form.Item>
               <Form.Item
-                name="description"
-                label="Description"
-                rules={[{ required: true, message: 'Please input Description' }]}
+                name="email"
+                label="Email"
+                rules={[{ required: true, message: 'Please input email' }]}
               >
                 <Input allowClear />
               </Form.Item>
@@ -219,7 +182,7 @@ const UserManagementTable = () => {
         </StyledModal>
       )}
       <div className="topBar">
-        <Button label="SIGN IN" />
+        <Button label="Add User" />
         <CustomSearchField />
 
       </div>
@@ -234,25 +197,25 @@ const UserManagementTable = () => {
       >
         <Column
           width={100}
-          title="Name"
-          dataIndex="name"
-          key="name"
-          render={(name, record) => <div className="tableCell cellnowrap">{name}</div>}
+          title="Firstname"
+          dataIndex="firstName"
+          key="firstName"
+          render={(firstName, record) => <div className="tableCell cellnowrap">{firstName}</div>}
         />
         <Column
           width={120}
-          title="Description"
-          dataIndex="description"
-          key="description"
-          render={(description, record) => (
-            <div className="tableCell cellnowrap">{description}</div>
+          title="Lastname"
+          dataIndex="lastName"
+          key="lastName"
+          render={(value, record) => (
+            <div className="tableCell cellnowrap">{value}</div>
           )}
         />
         <Column
           width={120}
-          title="Value"
-          dataIndex="value"
-          key="value"
+          title="Email"
+          dataIndex="email"
+          key="email"
           render={(value, record) => <div className="tableCell cellnowrap">{value}</div>}
         />
         <Column
@@ -260,13 +223,10 @@ const UserManagementTable = () => {
           title=""
           dataIndex=""
           key="actions"
-          render={(_id, record) => (
+          render={(_id, record: User) => (
             <div className="cellnowrap">
               <Tooltip placement="top" title="Edit List of Value">
                 <Button label="show modal" onClick={() => showModal(record)} />
-              </Tooltip>
-              <Tooltip placement="top" title="Delete List of Value">
-                <Button label="delete value" onClick={() => handleRemove(1)} />
               </Tooltip>
             </div>
           )}
@@ -275,5 +235,3 @@ const UserManagementTable = () => {
     </>
   );
 };
-
-export default UserManagementTable;

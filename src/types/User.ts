@@ -14,7 +14,17 @@ export type User = {
   id: number;
   provider: string;
   updatedAt: Date;
+  role: Role
 };
+
+export type Role = {
+  createdAt: Date
+  description: string
+  id: number
+  name: string
+  type: string
+  updatedAt: Date
+}
 
 export type UserPayload = {
   email: string;
