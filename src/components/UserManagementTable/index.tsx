@@ -273,10 +273,6 @@ export const UserManagementTable = (props: IUser) => {
     setModalState({ visible: false, editing: null });
   };
 
-  const dataToDisplay = data ? data?.filter((el: User) => {
-    return el.firstName?.toLowerCase()?.includes(search?.toLowerCase());
-  }) : [];
-
 
   
   let viewWidths = [
