@@ -33,7 +33,7 @@ const useUser = () => {
     },
   })
 
-  const handleUser = (user: User) => {
+  const handleUser = (user: User | null) => {
     setUserData(user);
   };
   
