@@ -231,9 +231,9 @@ export const UserManagementTable = (props: IUser) => {
   const showModal = (editing: User | null) => {
     form.setFieldsValue(
       editing || {
-        description: null,
-        name: null,
-        value: null,
+        firstName: null,
+        lastName: null,
+        email: null,
       }
     );
     setModalState({ visible: true, editing: editing });
