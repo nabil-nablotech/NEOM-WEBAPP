@@ -13,7 +13,6 @@ const UserManagement = () => {
   const navigate = useNavigate();
   const { query, showModal, handleUser, userData, editUserMutation } = useUser();
   const { data, isLoading } = query;
-
   return (
     <>
       <div>
@@ -23,7 +22,7 @@ const UserManagement = () => {
           <Container maxWidth="xl">
             {/* <div className={`${styles['title']}`}>USERS</div>
                         <Button label="SIGN IN" /> */}
-            <UserManagementTable isLoading={isLoading} data={data || []} showModal={showModal} handleUser={handleUser} editUser={editUserMutation} userData={userData} />
+            <UserManagementTable isLoading={isLoading} data={data|| []} handleUser={handleUser} editUser={editUserMutation} userData={userData} />
           </Container>
         </div>
       </div>

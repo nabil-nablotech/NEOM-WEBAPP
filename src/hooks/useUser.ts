@@ -15,7 +15,11 @@ const useUser = () => {
   const editUser = (payload: UserPayload): Promise<User> => client.put(`/api/users/${userData?.id}`, payload).then(response => response.data)
 
   // query
-  const query = useQuery(['users'], fetchUser);
+  const query = useQuery(['users'], fetchUser, {
+    onSuccess: () => {
+      console.log('user')
+    }
+  });
 
    // Mutations
   const {mutate: postUserMutation} = useMutation(postUser, {

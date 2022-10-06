@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Table, Input, Modal, Form, Spin, Tooltip, message } from 'antd';
 import axiosClient from '../../utils/services/axiosClient';
-import { useDispatch } from 'react-redux';
+import { AnyIfEmpty, useDispatch } from 'react-redux';
 import Button from "../../components/Button";
 import { User, UserPayload } from "../../types/User";
 
@@ -208,22 +208,25 @@ export interface IUser {
   data: User[] | []
   postUser?: () => void
   editUser: any
-  showModal: boolean
   isLoading: boolean
-  setShowModal?: () => void
   handleUser: (payload: User | null) => void
   userData: User | null
 }
 
 export const UserManagementTable = (props: IUser) => {
-  const {data, setShowModal, handleUser, editUser, userData, isLoading: loading} = props;
+  const {data, handleUser, editUser, userData, isLoading: loading} = props;
   const [search, setSearch] = useState<string>('');
-  const [dataList, setDataList] = useState<User[] | []>(data);
+  const [dataList, setDataList] = useState<User[] | []>([]);
   const [modalState, setModalState] = useState<IModalstate>({ visible: false, editing: null });
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+
   // const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1025px)' })
+  
+  useEffect(() => {
+    setDataList(data);
+  }, [data])
 
   const showModal = (editing: User | null) => {
     form.setFieldsValue(
@@ -369,7 +372,10 @@ export const UserManagementTable = (props: IUser) => {
   }
 
   const filterResults = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let newDatalist = [...data]
+    if (data.length > 0) {
+
+  
+      let newDatalist = [...data]
 
     /** filter when search string is not empty */
     if (e.target.value !== '') {
@@ -395,7 +401,8 @@ export const UserManagementTable = (props: IUser) => {
 
     }
 
-    setDataList(newDatalist)
+    setDataList(newDatalist);
+  }
   }
 
   return (
