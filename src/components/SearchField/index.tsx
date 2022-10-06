@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 import TextInput from "../TextInput";
 import { Avatar, InputAdornment } from "@mui/material";
 import SearchIcon from "../SearchField/leading-icon.svg";
@@ -6,13 +6,18 @@ import CrossIcon from "../SearchField/trailing-icon.svg";
 import styles from './index.module.css'
 
 
-function CustomSearchField(props: {className?: string}) {
-  const { className } = props;
+function CustomSearchField(props: {className?: string, handleChange?: (e:ChangeEvent<HTMLInputElement>) => void}) {
+  const { className, handleChange } = props;
 
   const [searchText, setSearchText] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value)
+
+    if(handleChange) {
+      handleChange(e)
+    }
   }
 
   const searchRef = React.createRef()
@@ -24,7 +29,12 @@ function CustomSearchField(props: {className?: string}) {
         label="Search" type={"text"}
         // placeholder={false}
         showLabel={false}
-        value={searchText} onChange={(e) => handleChange(e)}
+        value={searchText}
+        onChange={(e) => {
+          handleTextChange(e)
+          setIsTyping(true)
+        }}
+        onBlur={e => setIsTyping(false)}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start" sx={{
@@ -37,17 +47,19 @@ function CustomSearchField(props: {className?: string}) {
             </InputAdornment>
           ),
           endAdornment: (
-            <InputAdornment position="start"
-              sx={{
-                cursor: 'pointer',
-                marginRight: 0
-              }}
-              onClick={() => {
-                setSearchText('')
-              }}
-            >
-              <Avatar alt="Cross icon" src={CrossIcon} sx={{ width: 16, height: 20 }} />
-            </InputAdornment>
+            (searchText === '') ? null : <>
+              <InputAdornment position="start"
+                sx={{
+                  cursor: 'pointer',
+                  marginRight: 0
+                }}
+                onClick={() => {
+                  setSearchText('')
+                }}
+              >
+                <Avatar alt="Cross icon" src={CrossIcon} sx={{ width: 16, height: 20 }} />
+              </InputAdornment>
+            </>
           )
         }}
         sx={{

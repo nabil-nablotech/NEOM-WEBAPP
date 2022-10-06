@@ -16,6 +16,7 @@ import { useMediaQuery } from 'react-responsive'
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
+import { DataArray, SingleObj } from "../../types/UserManagement";
 
 const StyledModal = styled(Modal)`
   .ant-modal-body {
@@ -127,9 +128,85 @@ export interface IModalstate {
   editing: any | null
 }
 
+const tableDataJson:DataArray = [
+  {
+    key: '1',
+    lastname: 'Zhor',
+    firstname: 'Brown',
+    email: 's.l@mm.com',
+    role: 'Dev',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Active'
+  },
+  {
+    key: '2',
+    lastname: 'Yoshido',
+    firstname: 'Dan',
+    email: 's.sas@mm.com',
+    role: 'Dev',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Inactive'
+  },
+  {
+    key: '3',
+    lastname: 'Brown',
+    firstname: 'Alan',
+    email: 'f.lsed@mm.com',
+    role: 'Tester',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Active'
+  },
+  {
+    key: '4',
+    lastname: 'Cd',
+    firstname: 'serr',
+    email: 'ds.lsed@mm.com',
+    role: 'Tester',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Active'
+  },
+  {
+    key: '5',
+    lastname: 'UIy',
+    firstname: 'figh',
+    email: 'sky.sky@mm.com',
+    role: 'Dev',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Active'
+  },
+  {
+    key: '6',
+    lastname: 'sas',
+    firstname: 'hghg',
+    email: 'sky.sky@mm.com',
+    role: 'Dev',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Active'
+  },
+  {
+    key: '7',
+    lastname: 'wee',
+    firstname: 'hf',
+    email: 'sky.sky@mm.com',
+    role: 'Dev',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Active'
+  },
+  {
+    key: '8',
+    lastname: 'Sam',
+    firstname: 'Ticker',
+    email: 'sky.sky@mm.com',
+    role: 'Dev',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Active'
+  },
+]
+
 const UserManagementTable = () => {
   const [data, setData] = useState<any[] | null>(null);
   const [search, setSearch] = useState<string>('');
+  const [dataList, setDataList] = useState<DataArray>(tableDataJson);
   const [modalState, setModalState] = useState<IModalstate>({ visible: false, editing: null });
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -239,81 +316,7 @@ const UserManagementTable = () => {
   }) : [];
 
 
-  const tableDataJson = [
-    {
-      key: '1',
-      lastname: 'Zhor',
-      firstname: 'Brown',
-      email: 's.l@mm.com',
-      role: 'Dev',
-      lastlogin: format(new Date(), 'yyyy-MM-dd'),
-      status: 'Active'
-    },
-    {
-      key: '2',
-      lastname: 'Yoshido',
-      firstname: 'Dan',
-      email: 's.sas@mm.com',
-      role: 'Dev',
-      lastlogin: format(new Date(), 'yyyy-MM-dd'),
-      status: 'Inactive'
-    },
-    {
-      key: '3',
-      lastname: 'Brown',
-      firstname: 'Alan',
-      email: 'f.lsed@mm.com',
-      role: 'Tester',
-      lastlogin: format(new Date(), 'yyyy-MM-dd'),
-      status: 'Active'
-    },
-    {
-      key: '4',
-      lastname: 'Cd',
-      firstname: 'serr',
-      email: 'ds.lsed@mm.com',
-      role: 'Tester',
-      lastlogin: format(new Date(), 'yyyy-MM-dd'),
-      status: 'Active'
-    },
-    {
-      key: '5',
-      lastname: 'UIy',
-      firstname: 'figh',
-      email: 'sky.sky@mm.com',
-      role: 'Dev',
-      lastlogin: format(new Date(), 'yyyy-MM-dd'),
-      status: 'Active'
-    },
-    {
-      key: '6',
-      lastname: 'sas',
-      firstname: 'hghg',
-      email: 'sky.sky@mm.com',
-      role: 'Dev',
-      lastlogin: format(new Date(), 'yyyy-MM-dd'),
-      status: 'Active'
-    },
-    {
-      key: '7',
-      lastname: 'wee',
-      firstname: 'hf',
-      email: 'sky.sky@mm.com',
-      role: 'Dev',
-      lastlogin: format(new Date(), 'yyyy-MM-dd'),
-      status: 'Active'
-    },
-    {
-      key: '8',
-      lastname: 'Sam',
-      firstname: 'Ticker',
-      email: 'sky.sky@mm.com',
-      role: 'Dev',
-      lastlogin: format(new Date(), 'yyyy-MM-dd'),
-      status: 'Active'
-    },
-  ]
-
+  
   let viewWidths = [
     '15vw',
     '15vw',
@@ -405,6 +408,36 @@ const UserManagementTable = () => {
     </>
   }
 
+  const filterResults = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let newDatalist = [...tableDataJson]
+
+    /** filter when search string is not empty */
+    if (e.target.value !== '') {
+
+      newDatalist = dataList.filter(obj => {
+        let flag = false
+
+        Object.keys(obj).forEach(key => {
+
+          /** if any string out of each column item matches, return result */
+          if (
+            (obj[key as keyof SingleObj]
+              .toString()
+              .toLowerCase()
+              .indexOf(e.target.value.toLowerCase()) !== -1)
+          ) {
+            flag = true
+          }
+        })
+
+        return flag
+      })
+
+    }
+
+    setDataList(newDatalist)
+  }
+
   return (
     <>
       {modalState.visible && (
@@ -464,14 +497,18 @@ const UserManagementTable = () => {
         <Button label="USER" StartIcon={AddIcon}/>
       </div>
       <div className={`${styles['custom-search']}`}>
-        <CustomSearchField className={`${styles['custom-search-field']}`}/>
+        <CustomSearchField className={`${styles['custom-search-field']}`}
+          handleChange={e => {
+            filterResults(e)
+          }}
+        />
       </div>
       <StyledTable
         className={`${styles['table-container']}`}
         rowKey={'_id'}
         size="small"
         columns={tableHeaderJson}
-        dataSource={tableDataJson}
+        dataSource={dataList}
         pagination={false}
         loading={loading ? loading : false}
         bordered
