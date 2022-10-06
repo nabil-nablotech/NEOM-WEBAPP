@@ -15,6 +15,7 @@ const useUser = () => {
   const postUser = (payload: UserPayload): Promise<User[]> => client.post('/api/users', payload).then(response => response.data)
   const editUser = (payload: UserPayload): Promise<User[]> => client.put(`/api/users/${userId}`, payload).then(response => response.data)
 
+  // query
   const query = useQuery(['users', fetchUser]);
 
    // Mutations
@@ -29,6 +30,7 @@ const useUser = () => {
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries(['users'])
+      setUserData(null);
     },
   })
 
