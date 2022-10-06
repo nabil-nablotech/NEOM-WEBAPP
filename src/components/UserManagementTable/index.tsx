@@ -3,14 +3,12 @@ import "antd/dist/antd.css";
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Table, Input, Modal, Form, Spin, Tooltip, message } from 'antd';
-import axiosClient from '../../utils/services/axiosClient';
-import { AnyIfEmpty, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Button from "../../components/Button";
-import { User, UserPayload } from "../../types/User";
+import { User, UserModalstate, UserPayload } from "../../types/User";
 
 import styles from './index.module.css'
 import CustomSearchField from './../SearchField/index';
-import { UseMutationResult } from "react-query";
 import { format } from 'date-fns'
 import type { ColumnsType } from 'antd/es/table';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -19,6 +17,7 @@ import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import { DataArray, SingleObj } from "../../types/UserManagement";
+import { formatDate } from "../../utils/services/helpers";
 
 const StyledModal = styled(Modal)`
   .ant-modal-body {
@@ -125,11 +124,6 @@ const StyledTable = styled(Table)`
   }
 `;
 
-export interface IModalstate {
-  visible: boolean;
-  editing: any | null
-}
-
 const tableDataJson:DataArray = [
   {
     key: '1',
@@ -211,15 +205,21 @@ export interface IUser {
   isLoading: boolean
   handleUser: (payload: User | null) => void
   userData: User | null
+  setConfirmLoading: (e: boolean) => void
+  confirmLoading: boolean
+  updatedUser?: User
+  setModalState: (e: UserModalstate) => void
+  modalState: UserModalstate
 }
 
 export const UserManagementTable = (props: IUser) => {
-  const {data, handleUser, editUser, userData, isLoading: loading} = props;
+  const {data, handleUser, editUser, userData, isLoading: loading, setConfirmLoading,
+    confirmLoading,
+    setModalState,
+    modalState,
+    updatedUser} = props;
   const [search, setSearch] = useState<string>('');
   const [dataList, setDataList] = useState<User[] | []>([]);
-  const [modalState, setModalState] = useState<IModalstate>({ visible: false, editing: null });
-  const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
-  const dispatch = useDispatch();
   const [form] = Form.useForm();
 
   // const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1025px)' })
@@ -260,11 +260,9 @@ export const UserManagementTable = (props: IUser) => {
       lastName: null,
       email: null,
     });
-    const body = {
-      ...values,
-    };
+
     setConfirmLoading(true);
-    if (modalState.editing) editUser({...userData, ...values});
+    if (modalState && modalState.editing) editUser({...userData, ...values});
   };
 
   const handleCancel = () => {
@@ -318,11 +316,14 @@ export const UserManagementTable = (props: IUser) => {
     },
     {
       title: 'Last Login',
-      dataIndex: 'lastlogin',
+      dataIndex: 'updatedAt',
+      key: 'updatedAt',
+      render: (value, index) => `${formatDate(value)}`
     },
     {
       title: 'Status',
-      dataIndex: 'status',
+      dataIndex: 'blocked',
+      render: (value, index) => `${value ? 'ACTIVE' : 'INACTIVE'}`
     },
     {
       title: 'Action',
@@ -429,7 +430,7 @@ export const UserManagementTable = (props: IUser) => {
         >
           <Spin spinning={confirmLoading}>
             <Form
-              initialValues={modalState.editing}
+              initialValues={modalState.editing || undefined}
               form={form}
               layout="vertical"
               name="form_in_modal"

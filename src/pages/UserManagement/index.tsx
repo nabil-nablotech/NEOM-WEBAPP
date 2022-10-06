@@ -5,13 +5,26 @@ import UserMenuComponent from "../../components/UserMenu/index";
 import { useNavigate } from "react-router-dom";
 // import UserMenuComponent from './../../components/UserMenu/index';
 import styles from "./index.module.css";
-import Button from "../../components/Button";
-import {UserManagementTable} from "../../components/UserManagementTable";
+import Snackbar from "../../components/Snackbar";
+import { UserManagementTable } from "../../components/UserManagementTable";
 import useUser from "../../hooks/useUser";
 
 const UserManagement = () => {
   const navigate = useNavigate();
-  const { query, showModal, handleUser, userData, editUserMutation } = useUser();
+  const {
+    query,
+    showModal,
+    handleUser,
+    userData,
+    editUserMutation,
+    setConfirmLoading,
+    confirmLoading,
+    updatedUser,
+    setModalState,
+    modalState,
+    handleSnackbar,
+    showSnackbar
+  } = useUser();
   const { data, isLoading } = query;
   return (
     <>
@@ -22,8 +35,21 @@ const UserManagement = () => {
           <Container maxWidth="xl">
             {/* <div className={`${styles['title']}`}>USERS</div>
                         <Button label="SIGN IN" /> */}
-            <UserManagementTable isLoading={isLoading} data={data|| []} handleUser={handleUser} editUser={editUserMutation} userData={userData} />
+            <UserManagementTable
+              isLoading={isLoading}
+              data={data || []}
+              handleUser={handleUser}
+              editUser={editUserMutation}
+              userData={userData}
+              setConfirmLoading={setConfirmLoading}
+    confirmLoading={confirmLoading}
+
+    updatedUser={updatedUser}
+    setModalState={setModalState}
+    modalState={modalState}
+            />
           </Container>
+          <Snackbar message={showSnackbar.message} open={showSnackbar.open} handleClose={handleSnackbar} />
         </div>
       </div>
     </>
