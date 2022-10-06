@@ -9,12 +9,29 @@ export type User = {
   createdAt: Date;
   email: string;
   firstName: string;
-  id: number;
   lastName: string;
+  username: string;
+  id: number;
   provider: string;
   updatedAt: Date;
-  username: string;
+  role: Role
 };
+
+export type Role = {
+  createdAt: Date
+  description: string
+  id: number
+  name: string
+  type: string
+  updatedAt: Date
+}
+
+export type UserPayload = {
+  email: string;
+  firstName: string;
+  role: string;
+  lastName: string;
+}
 
 export type LoginData = {
   data: {

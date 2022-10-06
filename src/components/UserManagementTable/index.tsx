@@ -6,9 +6,11 @@ import { Table, Input, Modal, Form, Spin, Tooltip, message } from 'antd';
 import axiosClient from '../../utils/services/axiosClient';
 import { useDispatch } from 'react-redux';
 import Button from "../../components/Button";
+import { User, UserPayload } from "../../types/User";
 
 import styles from './index.module.css'
 import CustomSearchField from './../SearchField/index';
+import { UseMutationResult } from "react-query";
 import { format } from 'date-fns'
 import type { ColumnsType } from 'antd/es/table';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -202,9 +204,18 @@ const tableDataJson:DataArray = [
     status: 'Active'
   },
 ]
+export interface IUser {
+  data?: User[]
+  postUser?: () => void
+  editUser: any
+  showModal: boolean
+  setShowModal?: () => void
+  handleUser: (payload: User) => void
+  userData: User | null
+}
 
-const UserManagementTable = () => {
-  const [data, setData] = useState<any[] | null>(null);
+export const UserManagementTable = (props: IUser) => {
+  const {data, setShowModal, handleUser, editUser, userData} = props;
   const [search, setSearch] = useState<string>('');
   const [dataList, setDataList] = useState<DataArray>(tableDataJson);
   const [modalState, setModalState] = useState<IModalstate>({ visible: false, editing: null });
@@ -212,9 +223,9 @@ const UserManagementTable = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1025px)' })
+  // const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1025px)' })
 
-  const showModal = (editing: any) => {
+  const showModal = (editing: User) => {
     form.setFieldsValue(
       editing || {
         description: null,
@@ -223,27 +234,8 @@ const UserManagementTable = () => {
       }
     );
     setModalState({ visible: true, editing: editing });
+    handleUser(editing);
   };
-
-  const getLOVs = async () => {
-    try {
-
-      setModalState({ visible: false, editing: null });
-      setConfirmLoading(false);
-      setLoading(false);
-    } catch (e) {
-      // console.log(e);
-      error('Failed to get lov.');
-      setLoading(false);
-      // setData([]);
-      setModalState({ visible: false, editing: null });
-      setConfirmLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getLOVs();
-  }, []);
 
   const saveLOV = async (values: any) => {
     const data = {
@@ -254,28 +246,6 @@ const UserManagementTable = () => {
     } catch (e) {
       // console.log(e);
       error('Failed to save.');
-      setModalState({ visible: true, editing: null });
-      setConfirmLoading(false);
-    }
-  };
-
-  const addLOV = async (values: any) => {
-    const data = {
-      ...values,
-    };
-    try {
-      const response = await axiosClient({
-        url: `lov`,
-        method: 'post',
-        data: data,
-      });
-
-      if (response) {
-        getLOVs();
-      }
-    } catch (e) {
-      // console.log(e);
-      error('Failed to create.');
       setModalState({ visible: true, editing: null });
       setConfirmLoading(false);
     }
@@ -292,7 +262,6 @@ const UserManagementTable = () => {
     };
     setConfirmLoading(true);
     if (modalState.editing) saveLOV(body);
-    else addLOV(body);
   };
 
   const handleCancel = () => {
@@ -304,15 +273,8 @@ const UserManagementTable = () => {
     setModalState({ visible: false, editing: null });
   };
 
-  const handleRemove = async (code: number) => {
-    try {
-    } catch (error: any) {
-
-    }
-  };
-
-  const dataToDisplay = data ? data?.filter((el: any) => {
-    return el.name?.toLowerCase()?.includes(search?.toLowerCase());
+  const dataToDisplay = data ? data?.filter((el: User) => {
+    return el.firstName?.toLowerCase()?.includes(search?.toLowerCase());
   }) : [];
 
 
@@ -326,11 +288,6 @@ const UserManagementTable = () => {
     '20vw',
     '1vw',
   ]
-
-  if (isTabletOrMobile) {
-
-  }
-
 
   const tableHeaderJson: ColumnsType<any> = [
     {
@@ -438,6 +395,11 @@ const UserManagementTable = () => {
     setDataList(newDatalist)
   }
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    
+      filterResults(e);
+  }
+
   return (
     <>
       {modalState.visible && (
@@ -451,8 +413,7 @@ const UserManagementTable = () => {
               .validateFields()
               .then((values) => {
                 form.resetFields();
-                // console.log(values);
-                handleOk(values);
+                editUser({...userData, ...values});
               })
               .catch((info) => {
                 // console.log(info);
@@ -469,23 +430,23 @@ const UserManagementTable = () => {
               name="form_in_modal"
             >
               <Form.Item
-                name="name"
-                label="Name"
-                rules={[{ required: true, message: 'Please input Name' }]}
+                name="firstName"
+                label="Firstname"
+                rules={[{ required: true, message: 'Please input firstname' }]}
               >
                 <Input allowClear />
               </Form.Item>
               <Form.Item
-                name="value"
-                label="Value"
-                rules={[{ required: true, message: 'Please input Value' }]}
+                name="lastName"
+                label="Lastname"
+                rules={[{ required: true, message: 'Please input lastname' }]}
               >
                 <Input allowClear />
               </Form.Item>
               <Form.Item
-                name="description"
-                label="Description"
-                rules={[{ required: true, message: 'Please input Description' }]}
+                name="email"
+                label="Email"
+                rules={[{ required: true, message: 'Please input email' }]}
               >
                 <Input allowClear />
               </Form.Item>
@@ -498,9 +459,7 @@ const UserManagementTable = () => {
       </div>
       <div className={`${styles['custom-search']}`}>
         <CustomSearchField className={`${styles['custom-search-field']}`}
-          handleChange={e => {
-            filterResults(e)
-          }}
+          handleChange={handleChange}
         />
       </div>
       <StyledTable
@@ -521,5 +480,3 @@ const UserManagementTable = () => {
     </>
   );
 };
-
-export default UserManagementTable;

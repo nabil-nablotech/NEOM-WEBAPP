@@ -3,6 +3,8 @@ import { styled } from '@mui/material/styles';
 import Button, { ButtonProps } from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { grey } from '@mui/material/colors';
+import { IconProps, SvgIconTypeMap } from '@mui/material';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
 // import { *asReact, ReactElement } from 'react';
 
 const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({

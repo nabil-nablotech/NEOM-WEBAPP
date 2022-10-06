@@ -4,7 +4,12 @@ import { Box } from '@mui/material'
 import Logo from '../../pages/UserManagement/img/Logo.svg'
 import UserMenuComponent from './../UserMenu/index';
 
-const Header = () => {
+interface IHeader {
+  onClick: () => void
+}
+
+const Header = (props: IHeader) => {
+  const {onClick} = props;
     return (
 
         <Box
@@ -12,6 +17,7 @@ const Header = () => {
         >
             <Box className={`${styles['logo']}`}>
                 <Box
+                onClick={onClick}
                     component="img"
                     alt="NEOM logo"
                     src={Logo}

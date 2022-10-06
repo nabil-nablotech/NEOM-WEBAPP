@@ -14,12 +14,11 @@ const useAuth = () => {
   useEffect(() => {
     fetchLoginData();
     fetchSession();
-  }, [])
+  }, []);
 
   const fetchSession = async () => {
     const id = getId();
-    const {data} = await client.get<User>(`/api/users/${id}`);
-
+    const {data} = await client.get<User>(`/api/users/me?populate=*`);
     await dispatch(setUser(data))
     return data;
   }
