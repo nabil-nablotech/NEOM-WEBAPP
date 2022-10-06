@@ -6,7 +6,6 @@
 .search-field .MuiInputBase-input {
     background-color: #fff;
     border-radius: 5px;
-    width: fit-content;
     margin-inline: auto;
 }
 

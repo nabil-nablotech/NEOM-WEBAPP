@@ -1,3 +1,21 @@
 .table-container {
     background-color: transparent;
 }
+
+.add-user-btn {
+    margin-left: auto;
+    width: fit-content;
+}
+
+.add-user-btn button {
+    line-height: 2;
+}
+
+.custom-search {
+    width: 50ch;
+}
+
+.custom-search-field,
+.custom-search-field >form > div {
+    width: 100%;
+}

@@ -15,6 +15,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useMediaQuery } from 'react-responsive'
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 
 const StyledModal = styled(Modal)`
   .ant-modal-body {
@@ -284,6 +285,33 @@ const UserManagementTable = () => {
       lastlogin: format(new Date(), 'yyyy-MM-dd'),
       status: 'Active'
     },
+    {
+      key: '6',
+      lastname: 'sas',
+      firstname: 'hghg',
+      email: 'sky.sky@mm.com',
+      role: 'Dev',
+      lastlogin: format(new Date(), 'yyyy-MM-dd'),
+      status: 'Active'
+    },
+    {
+      key: '7',
+      lastname: 'wee',
+      firstname: 'hf',
+      email: 'sky.sky@mm.com',
+      role: 'Dev',
+      lastlogin: format(new Date(), 'yyyy-MM-dd'),
+      status: 'Active'
+    },
+    {
+      key: '8',
+      lastname: 'Sam',
+      firstname: 'Ticker',
+      email: 'sky.sky@mm.com',
+      role: 'Dev',
+      lastlogin: format(new Date(), 'yyyy-MM-dd'),
+      status: 'Active'
+    },
   ]
 
   let viewWidths = [
@@ -432,10 +460,11 @@ const UserManagementTable = () => {
           </Spin>
         </StyledModal>
       )}
-      <div className="topBar">
-        <Button label="SIGN IN" />
-        <CustomSearchField />
-
+      <div className={`${styles['add-user-btn']}`}>
+        <Button label="USER" StartIcon={AddIcon}/>
+      </div>
+      <div className={`${styles['custom-search']}`}>
+        <CustomSearchField className={`${styles['custom-search-field']}`}/>
       </div>
       <StyledTable
         className={`${styles['table-container']}`}

@@ -20,7 +20,7 @@ function CustomSearchField(props: {className?: string}) {
   return (
     <>
       <TextInput
-        className={`${styles['search-field']}`}
+        className={`${styles['search-field']} ${className}`}
         label="Search" type={"text"}
         // placeholder={false}
         showLabel={false}
