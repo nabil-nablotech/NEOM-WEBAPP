@@ -14,6 +14,7 @@ import WhiteCircle from "../../assets/images/WhiteCircle.svg";
 import CustomSearchField from '../../components/SearchField/index';
 import { RootState } from "../../store";
 import useAuth from "../../hooks/useAuth";
+import styles from './index.module.css'
 
 const landingPageData = {
   overlapGroup4: "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/rectangle-125-1@1x.png",
@@ -87,7 +88,7 @@ function LandingPage() {
               }}
               ref={searchRef}
             /> */}
-            <CustomSearchField />
+            <CustomSearchField className={`${styles['custom-search-field']}`}/>
             <Inventory>
               <Frame2608168>
                 <IconLocationPin src={iconLocation_Pin} alt="icon-location_pin" />

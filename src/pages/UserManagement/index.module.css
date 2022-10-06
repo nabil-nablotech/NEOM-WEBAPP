@@ -11,5 +11,5 @@
 .content-section {
     background-color: var(--off-white-background-color);
     padding-top: 150px;
-    height: 400px;
+    height: 100%;
 }

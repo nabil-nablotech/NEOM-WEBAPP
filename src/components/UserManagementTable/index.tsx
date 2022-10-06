@@ -11,6 +11,14 @@ import { User, UserPayload } from "../../types/User";
 import styles from './index.module.css'
 import CustomSearchField from './../SearchField/index';
 import { UseMutationResult } from "react-query";
+import { format } from 'date-fns'
+import type { ColumnsType } from 'antd/es/table';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { useMediaQuery } from 'react-responsive'
+import { Menu } from "@mui/material";
+import { MenuItem } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+import { DataArray, SingleObj } from "../../types/UserManagement";
 
 const StyledModal = styled(Modal)`
   .ant-modal-body {
@@ -44,10 +52,76 @@ const StyledTable = styled(Table)`
     table-layout: fixed;
   }
 
+  .ant-table {
+    font-family: 'Roboto-Regular';
+    margin-block: 50px
+  }
+
+  .ant-table-thead > tr > th,
+  .ant-table {
+    background: transparent;
+  }
+
+  .ant-table-thead > tr > th {
+    border: none;
+  }
+
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > thead > tr > th,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > thead > tr > th,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > thead > tr > th,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tbody > tr > td,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > tbody > tr > td,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > tbody > tr > td,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tfoot > tr > th,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > tfoot > tr > th,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tfoot > tr > th,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > tfoot > tr > th,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tfoot > tr > td,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > tfoot > tr > td,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tfoot > tr > td,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > tfoot > tr > td {
+    border: none
+  }
+
+  .ant-table.ant-table-bordered > .ant-table-container {
+    border: none;
+  }
+
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table {
+    border: none
+  }
+
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table,
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td {
+    border-bottom: 1px solid var(--user-table-border);
+  }
+
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table th {
+    color: var(--grey-text);
+  }
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table td {
+    color: var(--table-black-text);
+  }
+
   .ant-table-tbody > tr > td {
     word-wrap: break-word;
     word-break: break-all;
     min-width: 125px;
+  } 
+
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td.more-icon {
+    border-left: 1px solid var(--user-table-border);
+  }
+
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td.more-icon .cellnowrap {
+    width: fit-content;
+  }
+
+  td.ant-table-cell-row-hover {
+    background: var(--user-table-cell-hover-bg) !important;
   }
 `;
 
@@ -56,6 +130,80 @@ export interface IModalstate {
   editing: any | null
 }
 
+const tableDataJson:DataArray = [
+  {
+    key: '1',
+    lastname: 'Zhor',
+    firstname: 'Brown',
+    email: 's.l@mm.com',
+    role: 'Dev',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Active'
+  },
+  {
+    key: '2',
+    lastname: 'Yoshido',
+    firstname: 'Dan',
+    email: 's.sas@mm.com',
+    role: 'Dev',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Inactive'
+  },
+  {
+    key: '3',
+    lastname: 'Brown',
+    firstname: 'Alan',
+    email: 'f.lsed@mm.com',
+    role: 'Tester',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Active'
+  },
+  {
+    key: '4',
+    lastname: 'Cd',
+    firstname: 'serr',
+    email: 'ds.lsed@mm.com',
+    role: 'Tester',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Active'
+  },
+  {
+    key: '5',
+    lastname: 'UIy',
+    firstname: 'figh',
+    email: 'sky.sky@mm.com',
+    role: 'Dev',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Active'
+  },
+  {
+    key: '6',
+    lastname: 'sas',
+    firstname: 'hghg',
+    email: 'sky.sky@mm.com',
+    role: 'Dev',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Active'
+  },
+  {
+    key: '7',
+    lastname: 'wee',
+    firstname: 'hf',
+    email: 'sky.sky@mm.com',
+    role: 'Dev',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Active'
+  },
+  {
+    key: '8',
+    lastname: 'Sam',
+    firstname: 'Ticker',
+    email: 'sky.sky@mm.com',
+    role: 'Dev',
+    lastlogin: format(new Date(), 'yyyy-MM-dd'),
+    status: 'Active'
+  },
+]
 export interface IUser {
   data?: User[]
   postUser?: () => void
@@ -69,11 +217,13 @@ export interface IUser {
 export const UserManagementTable = (props: IUser) => {
   const {data, setShowModal, handleUser, editUser, userData} = props;
   const [search, setSearch] = useState<string>('');
+  const [dataList, setDataList] = useState<DataArray>(tableDataJson);
   const [modalState, setModalState] = useState<IModalstate>({ visible: false, editing: null });
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  // const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1025px)' })
 
   const showModal = (editing: User) => {
     form.setFieldsValue(
@@ -126,6 +276,129 @@ export const UserManagementTable = (props: IUser) => {
   const dataToDisplay = data ? data?.filter((el: User) => {
     return el.firstName?.toLowerCase()?.includes(search?.toLowerCase());
   }) : [];
+
+
+  
+  let viewWidths = [
+    '15vw',
+    '15vw',
+    '18vw',
+    '15vw',
+    '15vw',
+    '20vw',
+    '1vw',
+  ]
+
+  const tableHeaderJson: ColumnsType<any> = [
+    {
+      title: 'Last Name',
+      dataIndex: 'lastname',
+      sorter: (a, b) => a.lastname.localeCompare(b.lastname),
+      sortDirections: ['descend', 'ascend', 'descend'],
+    },
+    {
+      title: 'First Name',
+      dataIndex: 'firstname',
+    },
+    {
+      title: 'Email Address',
+      dataIndex: 'email',
+      width: viewWidths[2]
+    },
+    {
+      title: 'Role Assigned',
+      dataIndex: 'role',
+    },
+    {
+      title: 'Last Login',
+      dataIndex: 'lastlogin',
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (record) => (
+        <MoreOptionsComponent id = {record}/>
+
+      ),
+    }
+  ]
+
+
+  const MoreOptionsComponent = (record?: any) => {
+
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (e: any) => {
+      setAnchorEl(e.currentTarget);
+    };
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+
+
+    return <>
+      <div className="" onClick={e => {
+        handleClick(e)
+      }}
+
+        style={{
+          position: 'relative',
+          cursor: 'pointer'
+        }}>
+        <MoreHorizIcon />
+      </div>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MenuItem onClick={handleClose}>Edit</MenuItem>
+      </Menu>
+    </>
+  }
+
+  const filterResults = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let newDatalist = [...tableDataJson]
+
+    /** filter when search string is not empty */
+    if (e.target.value !== '') {
+
+      newDatalist = dataList.filter(obj => {
+        let flag = false
+
+        Object.keys(obj).forEach(key => {
+
+          /** if any string out of each column item matches, return result */
+          if (
+            (obj[key as keyof SingleObj]
+              .toString()
+              .toLowerCase()
+              .indexOf(e.target.value.toLowerCase()) !== -1)
+          ) {
+            flag = true
+          }
+        })
+
+        return flag
+      })
+
+    }
+
+    setDataList(newDatalist)
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    
+      filterResults(e);
+  }
 
   return (
     <>
@@ -181,56 +454,28 @@ export const UserManagementTable = (props: IUser) => {
           </Spin>
         </StyledModal>
       )}
-      <div className="topBar">
-        <Button label="Add User" />
-        <CustomSearchField />
-
+      <div className={`${styles['add-user-btn']}`}>
+        <Button label="USER" StartIcon={AddIcon}/>
+      </div>
+      <div className={`${styles['custom-search']}`}>
+        <CustomSearchField className={`${styles['custom-search-field']}`}
+          handleChange={handleChange}
+        />
       </div>
       <StyledTable
+        className={`${styles['table-container']}`}
         rowKey={'_id'}
         size="small"
-        dataSource={dataToDisplay}
+        columns={tableHeaderJson}
+        dataSource={dataList}
         pagination={false}
         loading={loading ? loading : false}
         bordered
         scroll={{ x: true, y: 300 }}
+        style={{
+          background: 'transparent'
+        }}
       >
-        <Column
-          width={100}
-          title="Firstname"
-          dataIndex="firstName"
-          key="firstName"
-          render={(firstName, record) => <div className="tableCell cellnowrap">{firstName}</div>}
-        />
-        <Column
-          width={120}
-          title="Lastname"
-          dataIndex="lastName"
-          key="lastName"
-          render={(value, record) => (
-            <div className="tableCell cellnowrap">{value}</div>
-          )}
-        />
-        <Column
-          width={120}
-          title="Email"
-          dataIndex="email"
-          key="email"
-          render={(value, record) => <div className="tableCell cellnowrap">{value}</div>}
-        />
-        <Column
-          width={90}
-          title=""
-          dataIndex=""
-          key="actions"
-          render={(_id, record: User) => (
-            <div className="cellnowrap">
-              <Tooltip placement="top" title="Edit List of Value">
-                <Button label="show modal" onClick={() => showModal(record)} />
-              </Tooltip>
-            </div>
-          )}
-        />
       </StyledTable>
     </>
   );

@@ -2,4 +2,8 @@
   --grey-text: rgba(19, 16, 13, 0.5);
   --focused-black-text: #49454F;
   --off-white-background-color: #f9f7f2;
+  --user-table-border: #E7E7E7;
+  --user-table-cell-hover-bg: #F3EFE5;
+  --table-black-text: #13100D;
+  --max-z-index: 99
 }
