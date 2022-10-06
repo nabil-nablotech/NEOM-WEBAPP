@@ -12,8 +12,9 @@ import CustomSearchField from './../SearchField/index';
 import { format } from 'date-fns'
 import type { ColumnsType } from 'antd/es/table';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import MenuList from './../MenuList/index';
 import { useMediaQuery } from 'react-responsive'
+import { Menu } from "@mui/material";
+import { MenuItem } from "@mui/material";
 
 const StyledModal = styled(Modal)`
   .ant-modal-body {
@@ -332,44 +333,47 @@ const UserManagementTable = () => {
       title: 'Action',
       key: 'action',
       render: (record) => (
-        // To-do
-        // <MoreOptionsComponent id = {record}/>
+        <MoreOptionsComponent id = {record}/>
 
-        <div>Edit</div>
       ),
     }
   ]
 
-  const [activeMenu, setActiveMenu] = useState(null)
 
+  const MoreOptionsComponent = (record?: any) => {
 
-  const MoreOptionsComponent = (record?:any) => {
-    const [menuOpen, setMenuOpen] = useState(false)
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (e: any) => {
+      setAnchorEl(e.currentTarget);
+    };
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+
 
     return <>
       <div className="" onClick={e => {
-        console.log('hex: ', record)
-
-        if(menuOpen) setMenuOpen(false)
-          setMenuOpen(true)
-          setActiveMenu(record.id.key)
+        handleClick(e)
       }}
-      
-      style={{
-        position: 'relative'
-      }}>
+
+        style={{
+          position: 'relative',
+          cursor: 'pointer'
+        }}>
         <MoreHorizIcon />
       </div>
-      <MenuList
-        menuOpen={menuOpen}
-        menuItemsArray={[
-          {
-            label: "Edit",
-            handleClickMenuItem: () => {
-            },
-          }
-        ]}
-      />
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MenuItem onClick={handleClose}>Edit</MenuItem>
+      </Menu>
     </>
   }
 
