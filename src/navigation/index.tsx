@@ -8,7 +8,6 @@ import { Search } from "../pages/Search";
 import { Details } from "../pages/Details";
 import {PageNotFound} from '../components/PageNotFound';
 import UserManagement from "../pages/UserManagement";
-import User from "../pages/User";
 
 import LandingPage from '../pages/LandingPage';
 
@@ -18,14 +17,12 @@ export const Navigation = () => {
       { 
         path: '/', 
         element: <PrivateRoute path={'/'} component={LandingPage} /> 
+        // element: <PublicRoute component={LandingPage} /> 
       },
       { 
         path: '/user-management', 
         element: <PrivateRoute path={'/user-management'} component={UserManagement} /> 
-      },
-      { 
-        path: '/user', 
-        element: <PrivateRoute path={'/user'} component={User} /> 
+        // element: <PublicRoute component={UserManagement} /> 
       },
       { 
         path: '/login', 

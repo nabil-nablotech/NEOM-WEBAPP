@@ -2,10 +2,13 @@
 import "antd/dist/antd.css";
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Table, TableProps, Input, Button, Modal, Form, Spin, Tooltip, message } from 'antd';
-import { PlusOneOutlined, DeleteOutlined, EditOutlined } from '@mui/icons-material';
+import { Table, Input, Modal, Form, Spin, Tooltip, message } from 'antd';
 import axiosClient from '../../utils/services/axiosClient';
 import { useDispatch } from 'react-redux';
+import Button from "../../components/Button";
+
+import styles from './index.module.css'
+import CustomSearchField from './../SearchField/index';
 
 const StyledModal = styled(Modal)`
   .ant-modal-body {
@@ -48,10 +51,10 @@ const StyledTable = styled(Table)`
 
 export interface IModalstate {
   visible: boolean;
-   editing: any | null
+  editing: any | null
 }
 
-const UserTable = () => {
+const UserManagementTable = () => {
   const [data, setData] = useState<any[] | null>(null);
   const [search, setSearch] = useState<string>('');
   const [modalState, setModalState] = useState<IModalstate>({ visible: false, editing: null });
@@ -73,7 +76,7 @@ const UserTable = () => {
 
   const getLOVs = async () => {
     try {
-      
+
       setModalState({ visible: false, editing: null });
       setConfirmLoading(false);
       setLoading(false);
@@ -96,7 +99,7 @@ const UserTable = () => {
       ...values,
     };
     try {
-      
+
     } catch (e) {
       // console.log(e);
       error('Failed to save.');
@@ -151,7 +154,7 @@ const UserTable = () => {
 
   const handleRemove = async (code: number) => {
     try {
-    } catch(error: any) {
+    } catch (error: any) {
 
     }
   };
@@ -216,16 +219,9 @@ const UserTable = () => {
         </StyledModal>
       )}
       <div className="topBar">
-        <Button type="primary" icon={<PlusOneOutlined />} onClick={() => showModal(null)}>
-          Add List of Value
-        </Button>
-        <Input
-          autoFocus
-          allowClear
-          placeholder="Search"
-          value={search}
-          onChange={({ target: { value } }) => setSearch(value)}
-        />
+        <Button label="SIGN IN" />
+        <CustomSearchField />
+
       </div>
       <StyledTable
         rowKey={'_id'}
@@ -267,20 +263,10 @@ const UserTable = () => {
           render={(_id, record) => (
             <div className="cellnowrap">
               <Tooltip placement="top" title="Edit List of Value">
-                <Button
-                  onClick={() => showModal(record)}
-                  type="link"
-                  icon={<EditOutlined style={{ padding: '4px' }} />}
-                  size="small"
-                />
+                <Button label="show modal" onClick={() => showModal(record)} />
               </Tooltip>
               <Tooltip placement="top" title="Delete List of Value">
-                <Button
-                  onClick={() => handleRemove(1)}
-                  type="link"
-                  icon={<DeleteOutlined style={{ padding: '4px', color: 'red' }} />}
-                  size="small"
-                />
+                <Button label="delete value" onClick={() => handleRemove(1)} />
               </Tooltip>
             </div>
           )}
@@ -290,4 +276,4 @@ const UserTable = () => {
   );
 };
 
-export default UserTable;
+export default UserManagementTable;

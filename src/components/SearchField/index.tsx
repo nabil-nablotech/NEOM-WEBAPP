@@ -3,6 +3,7 @@ import TextInput from "../TextInput";
 import { Avatar, InputAdornment } from "@mui/material";
 import SearchIcon from "../SearchField/leading-icon.svg";
 import CrossIcon from "../SearchField/trailing-icon.svg";
+import styles from './index.module.css'
 
 
 function CustomSearchField(props: {className?: string}) {
@@ -19,7 +20,7 @@ function CustomSearchField(props: {className?: string}) {
   return (
     <>
       <TextInput
-        className={`search-field`}
+        className={`${styles['search-field']}`}
         label="Search" type={"text"}
         // placeholder={false}
         showLabel={false}
@@ -32,7 +33,7 @@ function CustomSearchField(props: {className?: string}) {
               onClick={() => {
                 // searchRef.current && searchRef.current.focus()
               }}>
-              <Avatar alt="Search icon" src={SearchIcon} sx={{ width: 16, height: 20 }} />
+              <Avatar alt="Search icon" src={SearchIcon} sx={{ width: 16, height: 20, backgroundColor: '#fff' }} />
             </InputAdornment>
           ),
           endAdornment: (
