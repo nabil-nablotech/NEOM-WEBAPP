@@ -49,7 +49,7 @@ const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
   
 }));
 
-export default function ValidationTextFields(props: TextInputProps) {
+export default function NTextFields(props: TextInputProps) {
   const {
     onChange,
     onBlur,

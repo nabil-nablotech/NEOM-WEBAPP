@@ -220,6 +220,8 @@ export function Login() {
             label="Password"
             type={"password"}
             value={state.password}
+            error={formErrors.password.message ? true : false}
+            errorText={formErrors.password.message}
             onChange={(e) => handleChange(e, "password")}
             onBlur={() => validateCredentials('password')}
           />
@@ -235,7 +237,7 @@ export function Login() {
           <p>
             Contact{" "}
             <span>
-              <a href="support@neomheritage.com" target={"_blank"}>
+              <a href="mailto: support@neomheritage.com" target={"_blank"}>
                 support@neomheritage.com
               </a>
             </span>

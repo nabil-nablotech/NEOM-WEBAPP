@@ -59,3 +59,7 @@ export const validatePassword = (s: string) => {
   return password_regex.test(s)
 } 
 
+export function stringAvatar(name: string) {
+  return `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`;
+}
+

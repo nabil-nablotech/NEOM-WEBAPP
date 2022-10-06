@@ -5,15 +5,15 @@ import {
   RobotoLightMerino50px,
   RobotoNormalLicorice16px,
   ValignTextMiddle,
-} from "../../styledMixins";
-import "./LandingPage.css";
+} from "./styledMixins";
+import "./style.css";
 import "../../globals.css"
 import "../../styleguide.css"
-import UserMenuComponent from "../../../../components/UserMenu";
-import WhiteCircle from "../../../../assets/images/WhiteCircle.svg";
-import CustomSearchField from './../../../../components/SearchField/index';
-import { RootState } from "../../../../store";
-import useAuth from "../../../../hooks/useAuth";
+import UserMenuComponent from "../../components/UserMenu";
+import WhiteCircle from "../../assets/images/WhiteCircle.svg";
+import CustomSearchField from '../../components/SearchField/index';
+import { RootState } from "../../store";
+import useAuth from "../../hooks/useAuth";
 
 const landingPageData = {
   overlapGroup4: "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/rectangle-125-1@1x.png",
@@ -60,9 +60,6 @@ function LandingPage() {
   const {loading} = useAuth();
   const {data} = useSelector((state: RootState) => state.login);
 
-  function stringAvatar(name: string) {
-    return `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`;
-  }
 
   if (!data) return null;
   return (
@@ -150,9 +147,7 @@ function LandingPage() {
             </Inventory>
           </Frame2608172>
         </OverlapGroup4>
-        <UserMenuComponent
-        userInitials={stringAvatar(`${data.firstName} ${data.lastName}`)}
-        />
+        <UserMenuComponent />
       </div>
     </div>
   );
@@ -249,6 +244,7 @@ const Inventory = styled.div`
   min-width: 868px;
   gap: 50px;
   border: 1px none;
+  color: #ffff;
   @media (min-width: 575px) and (max-width: 1025px) {
     min-width: 500px;
     max-width: 70vw;

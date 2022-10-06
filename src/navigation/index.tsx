@@ -9,7 +9,7 @@ import { Details } from "../pages/Details";
 import {PageNotFound} from '../components/PageNotFound';
 import UserManagement from "../pages/UserManagement";
 
-import LandingPage from '../pages/LandingPage/components/LandingPage/index';
+import LandingPage from '../pages/LandingPage';
 
 
 export const Navigation = () => {
