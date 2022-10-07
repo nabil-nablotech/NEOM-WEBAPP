@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { useSelector } from "react-redux";
-import MenuList from "../MenuList";
 import { RobotoMediumMerino20px } from "../styledMixins";
 import WhiteCircle from "../../assets/images/WhiteCircle.svg";
 import useAuth from "../../hooks/useAuth";
 import { stringAvatar } from "../../utils/services/helpers";
 import { RootState } from "../../store";
+
+import MenuList from "../MenuList";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -18,45 +19,61 @@ function UserMenuComponent() {
   const iconSettings =
     "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/icon-button-settings@1x.png";
 
-  const [menuOpen, setMenuOpen] = useState(false);
   const { clientLogout } = useAuth();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
 
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const navigate = useNavigate();
 
   const { data } = useSelector((state: RootState) => state.login);
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setMenuOpen((state) => !state);
-  };
-
   if (!data) return null;
+
+
+  const menuItems = [
+    {
+      label: "Profile",
+      handleClickMenuItem: () => {
+        navigate("/user-management");
+      },
+    },
+    {
+      label: "Logout",
+      handleClickMenuItem: () => {
+        clientLogout();
+      },
+    },
+  ]
+
+
   return (
     <>
       <UserMenu>
         <Icon src={icon} alt="icon" />
         <IconSettings src={iconSettings} alt="icon-settings" />
-        <InitialsWrapper onClick={(e) => handleClick(e)}>
+        <InitialsWrapper
+          id="long-button"
+          //@ts-ignore
+          onClick={e => handleClick(e)}
+        >
           <div>{stringAvatar(`${data.firstName} ${data.lastName}`)}</div>
           <IconUserWhite src={iconUserWhite} alt="icon-user-white" />
         </InitialsWrapper>
 
         <MenuList
-          menuOpen={menuOpen}
-          menuItemsArray={[
-            {
-              label: "Profile",
-              handleClickMenuItem: () => {
-                navigate("/user-management");
-              },
-            },
-            {
-              label: "Logout",
-              handleClickMenuItem: () => {
-                clientLogout();
-              },
-            },
-          ]}
+          ariaLabelledBy='long-button'
+          anchorEl={anchorEl}
+          open={open}
+          handleClose={handleClose}
+          options={menuItems}
         />
       </UserMenu>
     </>

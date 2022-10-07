@@ -109,7 +109,10 @@ const StyledTable = styled(Table)`
 
   td.ant-table-cell-row-hover {
     background: var(--user-table-cell-hover-bg) !important;
-  }import ModalComponent from './../Modal/index';
+  }
+
+  .ant-table.ant-table-bordered .ant-table-body tr.ant-table-row td:last-of-type {
+  }
 
 `;
 
@@ -310,8 +313,9 @@ export const UserManagementTable = (props: IUser) => {
       render: (value, index) => `${value ? 'ACTIVE' : 'INACTIVE'}`
     },
     {
-      title: 'Action',
+      title: '',
       key: 'action',
+      width: '10px',
       render: (value, record: User) => (
         <MoreOptionsComponent id={record.id} record={record} />
 
@@ -319,7 +323,7 @@ export const UserManagementTable = (props: IUser) => {
     }
   ]
 
-
+  
   const MoreOptionsComponent = ({record, id}: {id: number, record: User}) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
@@ -338,7 +342,11 @@ export const UserManagementTable = (props: IUser) => {
 
         style={{
           position: 'relative',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          textAlign: 'right',
+          borderLeft: '1px solid var(--user-table-border)',
+          width: 'fit-content',
+          marginLeft: 'auto'
         }}>
         <MoreHorizIcon />
       </div>
@@ -351,6 +359,7 @@ export const UserManagementTable = (props: IUser) => {
           'aria-labelledby': 'basic-button',
         }}
       >
+        <MenuItem onClick={() =>{}}>Recover Password</MenuItem>
         <MenuItem onClick={() => showModal(record)}>Edit</MenuItem>
       </Menu>
     </>
