@@ -14,6 +14,7 @@ export type AddUserState = {
     lastname: string
     email: string
     role: string
+    status: string
 }
 
 type AddUserFormError = {
@@ -26,4 +27,5 @@ export type AddUserFormErrors = {
     lastname: AddUserFormError;
     email: AddUserFormError;
     role: AddUserFormError;
+    status: AddUserFormError;
 };

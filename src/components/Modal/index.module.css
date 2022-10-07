@@ -8,12 +8,13 @@
 }
 
 .input-field,
-.role-dropdown {
-    margin-bottom: 1em;
+.role-dropdown ,
+.status-dropdown {
     padding-block: 0.7em;
 }
 
-.role-dropdown {
+.role-dropdown ,
+.status-dropdown {
     padding-block: 10px;
 }
 
@@ -30,10 +31,12 @@
     margin-top: 1em;
 }
 
-.role-dropdown > div {
+.role-dropdown > div ,
+.status-dropdown > div {
     width: 100%;
 }
 
-.role-dropdown > div > div > div:nth-child(1) {
+.role-dropdown > div > div > div:nth-child(1) ,
+.status-dropdown > div > div > div:nth-child(1) {
     padding: 10px;
 }

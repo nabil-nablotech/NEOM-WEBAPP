@@ -109,7 +109,10 @@ const StyledTable = styled(Table)`
 
   td.ant-table-cell-row-hover {
     background: var(--user-table-cell-hover-bg) !important;
-  }import ModalComponent from './../Modal/index';
+  }
+
+  .ant-table.ant-table-bordered .ant-table-body tr.ant-table-row td:last-of-type {
+  }
 
 `;
 interface IUser {
@@ -234,21 +237,17 @@ export const UserManagementTable = (props: IUser) => {
       render: (value, index) => `${value ? "ACTIVE" : "INACTIVE"}`,
     },
     {
-      title: "Action",
-      key: "action",
+      title: '',
+      key: 'action',
+      width: '10px',
       render: (value, record: User) => (
         <MoreOptionsComponent id={record.id} record={record} />
       ),
-    },
-  ];
+    }
+  ]
 
-  const MoreOptionsComponent = ({
-    record,
-    id,
-  }: {
-    id: number;
-    record: User;
-  }) => {
+  
+  const MoreOptionsComponent = ({record, id}: {id: number, record: User}) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
     const handleClick = (e: any) => {
@@ -258,34 +257,36 @@ export const UserManagementTable = (props: IUser) => {
       setAnchorEl(null);
     };
 
-    return (
-      <>
-        <div
-          className=""
-          onClick={(e) => {
-            handleClick(e);
-          }}
-          style={{
-            position: "relative",
-            cursor: "pointer",
-          }}
-        >
-          <MoreHorizIcon />
-        </div>
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            "aria-labelledby": "basic-button",
-          }}
-        >
-          <MenuItem onClick={() => showModal(record)}>Edit</MenuItem>
-        </Menu>
-      </>
-    );
-  };
+
+    return <>
+      <div className="" onClick={e => {
+        handleClick(e)
+      }}
+
+        style={{
+          position: 'relative',
+          cursor: 'pointer',
+          textAlign: 'right',
+          borderLeft: '1px solid var(--user-table-border)',
+          width: 'fit-content',
+          marginLeft: 'auto'
+        }}>
+        <MoreHorizIcon />
+      </div>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MenuItem key={1} onClick={() =>{}}>Recover Password</MenuItem>
+        <MenuItem key={2} onClick={() => showModal(record)}>Edit</MenuItem>
+      </Menu>
+    </>
+  }
 
   const filterResults = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (data.length > 0) {
