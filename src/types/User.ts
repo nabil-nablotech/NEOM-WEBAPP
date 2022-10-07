@@ -43,3 +43,12 @@ export type loginPayload = {
   identifier: string;
   password: string;
 };
+
+export interface UserModalstate {
+  visible: boolean;
+  editing: User | null
+}
+export interface ISnackbar {
+  open: boolean
+  message: string
+}

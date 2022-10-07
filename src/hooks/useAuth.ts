@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ErrorInfo, useEffect, useState } from "react";
 import { UserDetails, loginPayload, LoginData, User } from "../types/User";
 import client from '../utils/services/axiosClient';
 import {setSession, removeSession, getId} from '../utils/storage/storage';
@@ -8,7 +8,7 @@ import { setUser } from "../store/reducers/loginReducers";
 const useAuth = () => {
   const dispatch = useDispatch();
   const [data, setData] = useState<any | null>(null);
-  const [error, setError] = useState<String | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<Boolean>(true);
 
   useEffect(() => {
@@ -18,16 +18,27 @@ const useAuth = () => {
 
   const fetchSession = async () => {
     const id = getId();
-    const {data} = await client.get<User>(`/api/users/me?populate=*`);
-    await dispatch(setUser(data))
-    return data;
+    try {
+      
+      const {data} = await client.get<User>(`/api/users/me?populate=*`);
+      await dispatch(setUser(data))
+      return data;
+    } catch (error) {
+      // console.log('error', error)
+    }
   }
 
   const clientLogin = async (payload: loginPayload) => {
-    const {data} = await client.post<UserDetails>(`/api/auth/local/`, JSON.stringify(payload));
-    await dispatch(setUser(data.user))
-    setSession(data.jwt, JSON.stringify(data.user.id))
-    return data;
+    try {
+      
+      const {data} = await client.post<UserDetails>(`/api/auth/local/`, JSON.stringify(payload));
+      await dispatch(setUser(data.user))
+      setSession(data.jwt, JSON.stringify(data.user.id))
+      return data;
+    } catch (error: any) {
+      setError(error.response.data.error.message);
+      setLoading(false);
+    }
   }
 
   const clientLogout = async () => {

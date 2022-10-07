@@ -45,7 +45,7 @@ type FormErrors = {
 
 export function Login() {
 
-  const { clientLogin, fetchLoginData, data, loading } = useAuth();
+  const { clientLogin, fetchLoginData, data, error, loading } = useAuth();
 
   const navigate = useNavigate();
 
@@ -220,8 +220,8 @@ export function Login() {
             label="Password"
             type={"password"}
             value={state.password}
-            error={formErrors.password.message ? true : false}
-            errorText={formErrors.password.message}
+            // error={formErrors.password.message ? true : false}
+            // errorText={formErrors.password.message}
             onChange={(e) => handleChange(e, "password")}
             onBlur={() => validateCredentials('password')}
           />
@@ -245,7 +245,7 @@ export function Login() {
         </div>
       </Grid>
       <PositionedSnackbar
-        message={"User not found"}
+        message={error || "User not found"}
         severity={"error"}
         open={snackbarErrorMessage}
         handleClose={() => setSnackbarErrorMessage(false)}
