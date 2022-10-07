@@ -7,6 +7,7 @@ export type DropdownCompProps = {
     value: string
     handleChange: (event: SelectChangeEvent<string> | ChangeEvent<HTMLInputElement> , child: React.ReactNode) => void
     itemsList: Array<dropDownItem>
+    name?: string
 }
 
 type dropDownItem = {

@@ -9,6 +9,7 @@ import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
 import DropdownComponent from '../Dropdown';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { UseMutateFunction } from 'react-query';
 
 const StyledModal = styled(Modal)`
     .ant-modal {
@@ -65,8 +66,8 @@ const StyledModal = styled(Modal)`
 `;
 export interface IUser {
     data: User[] | []
-    postUser?: () => void
-    editUser: any
+    postUser: UseMutateFunction
+    editUser: UseMutateFunction
     isLoading: boolean
     handleUser: (payload: User | null) => void
     userData: User | null
@@ -151,7 +152,7 @@ const ModalComponent = ({
                         centered
                         className={`${styles['container']}`}
                         title={modalState.editing ? 'Edit User' : 'Add User'}
-                        visible={modalState.visible}
+                        open={modalState.visible}
                         onOk={() => {
                             form
                                 .validateFields()
@@ -180,6 +181,7 @@ const ModalComponent = ({
                                 <TextInput
                                     className={`${styles['input-field']} ${styles['firstname']}`}
                                     label="First Name"
+                                    name="firstName"
                                     value={state.firstname}
                                     // error={formErrors.firstname.message ? true : false}
                                     // errorText={formErrors.firstname.message}
@@ -190,12 +192,14 @@ const ModalComponent = ({
                                 <TextInput
                                     className={`${styles['input-field']} ${styles['lastname']}`}
                                     label="Last Name"
+                                    name="lastName"
                                     value={state.lastname}
                                     onChange={(e) => handleChange(e, "lastname")}
                                 />
                                 <TextInput
                                     className={`${styles['input-field']} ${styles['email']}`}
                                     label="Email"
+                                    name="email"
                                     value={state.email}
                                     onChange={(e) => handleChange(e, "email")}
                                 />
@@ -209,6 +213,7 @@ const ModalComponent = ({
                                 <DropdownComponent
                                     className={`WEDR ${styles['role-dropdown']}`}
                                     label={'Role'}
+                                    name="role"
                                     value={state.role}
                                     handleChange={(e) => handleChange(e, "role")}
                                     itemsList={roleDataList}

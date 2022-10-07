@@ -10,7 +10,8 @@ const DropdownComponent = ({
     label,
     value,
     handleChange,
-    itemsList
+    itemsList,
+    name
 }: DropdownCompProps) => {
 
     const staticLabel = label ? label : 'select'
@@ -24,6 +25,7 @@ const DropdownComponent = ({
                     labelId={staticLabel}
                     id="simple-select"
                     value={value}
+                    name={name}
                     label={staticLabel}
                     onChange={handleChange}
                     displayEmpty

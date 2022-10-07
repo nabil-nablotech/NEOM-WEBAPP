@@ -1,29 +1,29 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import "antd/dist/antd.css";
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { Table, Input, Modal, Form, Spin, Tooltip, message } from 'antd';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { Table, Input, Modal, Form, Spin, Tooltip, message } from "antd";
+import { useDispatch } from "react-redux";
 import Button from "../../components/Button";
 import { User, UserModalstate, UserPayload } from "../../types/User";
 
-import styles from './index.module.css'
-import CustomSearchField from './../SearchField/index';
-import { format } from 'date-fns'
-import type { ColumnsType } from 'antd/es/table';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import styles from "./index.module.css";
+import CustomSearchField from "./../SearchField/index";
+import { format } from "date-fns";
+import type { ColumnsType } from "antd/es/table";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 // import { useMediaQuery } from 'react-responsive'
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
 import { DataArray, SingleObj } from "../../types/UserManagement";
 import { formatDate } from "../../utils/services/helpers";
 import ModalComponent from "../Modal";
-
+import { UseMutateFunction } from "react-query";
 
 const error = (error: any) => {
   message.error({
-    content: error.toString() || 'Something went wrong!',
+    content: error.toString() || "Something went wrong!",
   });
 };
 const { Column } = Table;
@@ -112,109 +112,42 @@ const StyledTable = styled(Table)`
   }import ModalComponent from './../Modal/index';
 
 `;
-
-const tableDataJson:DataArray = [
-  {
-    key: '1',
-    lastname: 'Zhor',
-    firstname: 'Brown',
-    email: 's.l@mm.com',
-    role: 'Dev',
-    lastlogin: format(new Date(), 'yyyy-MM-dd'),
-    status: 'Active'
-  },
-  {
-    key: '2',
-    lastname: 'Yoshido',
-    firstname: 'Dan',
-    email: 's.sas@mm.com',
-    role: 'Dev',
-    lastlogin: format(new Date(), 'yyyy-MM-dd'),
-    status: 'Inactive'
-  },
-  {
-    key: '3',
-    lastname: 'Brown',
-    firstname: 'Alan',
-    email: 'f.lsed@mm.com',
-    role: 'Tester',
-    lastlogin: format(new Date(), 'yyyy-MM-dd'),
-    status: 'Active'
-  },
-  {
-    key: '4',
-    lastname: 'Cd',
-    firstname: 'serr',
-    email: 'ds.lsed@mm.com',
-    role: 'Tester',
-    lastlogin: format(new Date(), 'yyyy-MM-dd'),
-    status: 'Active'
-  },
-  {
-    key: '5',
-    lastname: 'UIy',
-    firstname: 'figh',
-    email: 'sky.sky@mm.com',
-    role: 'Dev',
-    lastlogin: format(new Date(), 'yyyy-MM-dd'),
-    status: 'Active'
-  },
-  {
-    key: '6',
-    lastname: 'sas',
-    firstname: 'hghg',
-    email: 'sky.sky@mm.com',
-    role: 'Dev',
-    lastlogin: format(new Date(), 'yyyy-MM-dd'),
-    status: 'Active'
-  },
-  {
-    key: '7',
-    lastname: 'wee',
-    firstname: 'hf',
-    email: 'sky.sky@mm.com',
-    role: 'Dev',
-    lastlogin: format(new Date(), 'yyyy-MM-dd'),
-    status: 'Active'
-  },
-  {
-    key: '8',
-    lastname: 'Sam',
-    firstname: 'Ticker',
-    email: 'sky.sky@mm.com',
-    role: 'Dev',
-    lastlogin: format(new Date(), 'yyyy-MM-dd'),
-    status: 'Active'
-  },
-]
 interface IUser {
-  data: User[] | []
-  postUser?: () => void
-  editUser: any
-  isLoading: boolean
-  handleUser: (payload: User | null) => void
-  userData: User | null
-  setConfirmLoading: (e: boolean) => void
-  confirmLoading: boolean
-  updatedUser?: User
-  setModalState: (e: UserModalstate) => void
-  modalState: UserModalstate
+  data: User[] | [];
+  postUser: any;
+  editUser: any;
+  isLoading: boolean;
+  handleUser: (payload: User | null) => void;
+  userData: User | null;
+  setConfirmLoading: (e: boolean) => void;
+  confirmLoading: boolean;
+  updatedUser?: User;
+  setModalState: (e: UserModalstate) => void;
+  modalState: UserModalstate;
 }
 
 export const UserManagementTable = (props: IUser) => {
-  const {data, handleUser, editUser, userData, isLoading: loading, setConfirmLoading,
+  const {
+    data,
+    handleUser,
+    editUser,
+    postUser,
+    userData,
+    isLoading: loading,
+    setConfirmLoading,
     confirmLoading,
     setModalState,
     modalState,
-    updatedUser} = props;
+    updatedUser,
+  } = props;
   const [dataList, setDataList] = useState<User[] | []>([]);
   const [form] = Form.useForm();
 
   // const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1025px)' })
-  
+
   useEffect(() => {
     setDataList(data);
-  }, [data])
+  }, [data]);
 
   const showModal = (editing: User | null) => {
     form.setFieldsValue(
@@ -233,16 +166,15 @@ export const UserManagementTable = (props: IUser) => {
       ...values,
     };
     try {
-
     } catch (e) {
       // console.log(e);
-      error('Failed to save.');
+      error("Failed to save.");
       setModalState({ visible: true, editing: null });
       setConfirmLoading(false);
     }
   };
 
-  const handleOk = async (values: any) => {
+  const handleOk = async (values: FormData) => {
     form.setFieldsValue({
       firstName: null,
       lastName: null,
@@ -250,7 +182,9 @@ export const UserManagementTable = (props: IUser) => {
     });
 
     setConfirmLoading(true);
-    if (modalState && modalState.editing) editUser({...userData, ...values});
+    console.log('values', values);
+    // if (modalState && modalState.editing) editUser({ ...userData, ...values });
+    // else postUser({ ...values });
   };
 
   const handleCancel = () => {
@@ -262,65 +196,59 @@ export const UserManagementTable = (props: IUser) => {
     setModalState({ visible: false, editing: null });
   };
 
-
-  
-  let viewWidths = [
-    '15vw',
-    '15vw',
-    '18vw',
-    '15vw',
-    '15vw',
-    '20vw',
-    '1vw',
-  ]
+  let viewWidths = ["15vw", "15vw", "18vw", "15vw", "15vw", "20vw", "1vw"];
 
   const tableHeaderJson: ColumnsType<any> = [
     {
-      title: 'Last Name',
-      key: 'lastName',
-      dataIndex: 'lastName',
+      title: "Last Name",
+      key: "lastName",
+      dataIndex: "lastName",
       sorter: (a, b) => a.lastname.localeCompare(b.lastname),
-      sortDirections: ['descend', 'ascend', 'descend'],
+      sortDirections: ["descend", "ascend", "descend"],
     },
     {
-      title: 'First Name',
-      key: 'firstName',
-      dataIndex: 'firstName',
+      title: "First Name",
+      key: "firstName",
+      dataIndex: "firstName",
     },
     {
-      title: 'Email Address',
-      dataIndex: 'email',
-      width: viewWidths[2]
+      title: "Email Address",
+      dataIndex: "email",
+      width: viewWidths[2],
     },
     {
-      title: 'Role Assigned',
-      dataIndex: 'role',
-      key: 'role',
-      render: (value, index) => value.name
+      title: "Role Assigned",
+      dataIndex: "role",
+      key: "role",
+      render: (value, index) => value.name,
     },
     {
-      title: 'Last Login',
-      dataIndex: 'updatedAt',
-      key: 'updatedAt',
-      render: (value, index) => `${formatDate(value)}`
+      title: "Last Login",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      render: (value, index) => `${formatDate(value)}`,
     },
     {
-      title: 'Status',
-      dataIndex: 'blocked',
-      render: (value, index) => `${value ? 'ACTIVE' : 'INACTIVE'}`
+      title: "Status",
+      dataIndex: "blocked",
+      render: (value, index) => `${value ? "ACTIVE" : "INACTIVE"}`,
     },
     {
-      title: 'Action',
-      key: 'action',
+      title: "Action",
+      key: "action",
       render: (value, record: User) => (
         <MoreOptionsComponent id={record.id} record={record} />
-
       ),
-    }
-  ]
+    },
+  ];
 
-
-  const MoreOptionsComponent = ({record, id}: {id: number, record: User}) => {
+  const MoreOptionsComponent = ({
+    record,
+    id,
+  }: {
+    id: number;
+    record: User;
+  }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
     const handleClick = (e: any) => {
@@ -330,88 +258,93 @@ export const UserManagementTable = (props: IUser) => {
       setAnchorEl(null);
     };
 
-
-    return <>
-      <div className="" onClick={e => {
-        handleClick(e)
-      }}
-
-        style={{
-          position: 'relative',
-          cursor: 'pointer'
-        }}>
-        <MoreHorizIcon />
-      </div>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
-      >
-        <MenuItem onClick={() => showModal(record)}>Edit</MenuItem>
-      </Menu>
-    </>
-  }
+    return (
+      <>
+        <div
+          className=""
+          onClick={(e) => {
+            handleClick(e);
+          }}
+          style={{
+            position: "relative",
+            cursor: "pointer",
+          }}
+        >
+          <MoreHorizIcon />
+        </div>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem onClick={() => showModal(record)}>Edit</MenuItem>
+        </Menu>
+      </>
+    );
+  };
 
   const filterResults = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (data.length > 0) {
+      let newDatalist = [...data];
 
-  
-      let newDatalist = [...data]
+      /** filter when search string is not empty */
+      if (e.target.value !== "") {
+        newDatalist = dataList
+          ? dataList.filter((obj) => {
+              let flag = false;
 
-    /** filter when search string is not empty */
-    if (e.target.value !== '') {
+              Object.keys(obj).forEach((key) => {
+                /** if any string out of each column item matches, return result */
+                if (
+                  obj[key as keyof User]
+                    .toString()
+                    .toLowerCase()
+                    .indexOf(e.target.value.toLowerCase()) !== -1
+                ) {
+                  flag = true;
+                }
+              });
 
-      newDatalist = dataList ? dataList.filter(obj => {
-        let flag = false
+              return flag;
+            })
+          : [];
+      }
 
-        Object.keys(obj).forEach(key => {
-
-          /** if any string out of each column item matches, return result */
-          if (
-            (obj[key as keyof User]
-              .toString()
-              .toLowerCase()
-              .indexOf(e.target.value.toLowerCase()) !== -1)
-          ) {
-            flag = true
-          }
-        })
-
-        return flag
-      }) : []
-
+      setDataList(newDatalist);
     }
-
-    setDataList(newDatalist);
-  }
-  }
+  };
 
   return (
     <>
       <ModalComponent
-        setModalState = {setModalState}
-        modalState = {modalState}
-        handleOk = {handleOk}
-        handleCancel = {handleCancel}
-        confirmLoading = {confirmLoading}
+        setModalState={setModalState}
+        modalState={modalState}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        confirmLoading={confirmLoading}
       />
-      <div className={`${styles['add-user-btn']}`}>
-        <Button label="USER" onClick={() => showModal(null)} StartIcon={AddIcon}/>
+      <div className={`${styles["add-user-btn"]}`}>
+        <Button
+          label="USER"
+          onClick={() => showModal(null)}
+          StartIcon={AddIcon}
+        />
       </div>
-      <div className={`${styles['custom-search']}`}>
-        <CustomSearchField className={`${styles['custom-search-field']}`}
-          handleChange={e => {
-            filterResults(e)
+      <div className={`${styles["custom-search"]}`}>
+        <CustomSearchField
+          className={`${styles["custom-search-field"]}`}
+          handleChange={(e) => {
+            filterResults(e);
           }}
         />
       </div>
       <StyledTable
-        className={`${styles['table-container']}`}
-        rowKey={'_id'}
+        className={`${styles["table-container"]}`}
+        rowKey={"_id"}
         size="small"
         columns={tableHeaderJson}
         dataSource={dataList}
@@ -420,10 +353,9 @@ export const UserManagementTable = (props: IUser) => {
         bordered
         scroll={{ x: true, y: 300 }}
         style={{
-          background: 'transparent'
+          background: "transparent",
         }}
-      >
-      </StyledTable>
+      ></StyledTable>
     </>
   );
 };

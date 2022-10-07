@@ -14,7 +14,7 @@ const useUser = () => {
   const queryClient = useQueryClient();
 
   const fetchUser = (): Promise<User[]> => client.get<User[]>('/api/users?populate=*').then(response => response.data)
-  const postUser = (payload: UserPayload): Promise<User[]> => client.post('/api/users', payload).then(response => response.data)
+  const postUser = (payload: UserPayload): Promise<User> => client.post('/api/users', payload).then(response => response.data)
   const editUser = (payload: UserPayload): Promise<User> => client.put(`/api/users/${userData?.id}`, payload).then(response => response.data)
 
   // query
