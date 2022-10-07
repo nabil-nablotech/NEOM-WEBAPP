@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import styles from "./index.module.css";
 import styled from "styled-components";
 import { Modal, Form, Spin, Tooltip, message } from "antd";
@@ -82,18 +82,18 @@ export interface IUser {
   modalState: UserModalstate;
 }
 
-const Footer = ({ modalState }: { modalState: UserModalstate }) => {
+const Footer = ({ modalState, handleSubmit, handleCancel }: { modalState: UserModalstate, handleSubmit: () => void, handleCancel: () => void }) => {
   return (
     <div className={`${styles["modal-footer"]}`}>
       <Button
         colors={["#fff", "var(--table-black-text)", "none"]}
         className={`${styles["plain-whitee-btn"]}`}
         label="Cancel"
-        onClick={() => {}}
+        onClick={handleCancel}
       />
       <Button
         label={modalState.editing ? "UPDATE" : "ADD"}
-        onClick={() => {}}
+        onClick={handleSubmit}
       />
     </div>
   );
@@ -116,13 +116,13 @@ const ModalComponent = ({
     },
   ];
 
-  const [form] = Form.useForm();
+  // const [form] = Form.useForm();
   // const [formErrors, setFormErrors] = useState<AddUserFormErrors>({
-  //     firstname: {
+  //     firstName: {
   //         show: false,
   //         message: "",
   //     },
-  //     lastname: {
+  //     lastName: {
   //         show: false,
   //         message: "",
   //     },
@@ -137,22 +137,26 @@ const ModalComponent = ({
   // });
 
   const [state, setState] = useState<AddUserState>({
-    firstname: "",
-    lastname: "",
+    firstName: "",
+    lastName: "",
     email: "",
     role: "",
     status: 'active'
   });
 
+  const handleSubmit = ()=> {
+    handleOk(state);
+  }
+
   const handleChange = (
-    e: SelectChangeEvent<string>,
-    name: "firstname" | "lastname" | "email" | "role"
+    e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<HTMLSelectElement>,
+    name: "firstName" | "lastName" | "email" | "role"
   ) => {
-    console.log("hex", e);
-    setState((state) => ({
-      ...state,
-      role: e.target.value,
-    }));
+    const lclState: any = state;
+    // console.log(e.target.value as string)
+    lclState[name] = e.target.value as string;
+    console.log('lclSTate', lclState);
+    setState({...lclState});
   };
 
   return (
@@ -164,48 +168,39 @@ const ModalComponent = ({
             className={`${styles["container"]}`}
             title={modalState.editing ? "Edit User" : "Add User"}
             open={modalState.visible}
-            onOk={() => {
-              form
-                .validateFields()
-                .then((values) => {
-                  form.resetFields();
-                  handleOk(values);
-                })
-                .catch((info) => {
-                  // console.log(info);
-                });
-            }}
-            confirmLoading={confirmLoading}
             onCancel={handleCancel}
+            confirmLoading={confirmLoading}
             closeIcon={
               <ClearSharpIcon sx={{ width: "1.7em", height: "1.7em" }} />
             }
-            footer={[<Footer modalState={modalState} />]}
+            footer={[<Footer modalState={modalState} handleSubmit={handleSubmit} handleCancel={handleCancel} />]}
           >
             <Spin spinning={confirmLoading}>
-              <Form
+              {/* <Form
                 initialValues={modalState.editing || undefined}
                 form={form}
                 layout="vertical"
                 name="form_in_modal"
-              >
+              > */}
+                {/* <Form.Item name="firstName" label="Firstname"> */}
                 <TextInput
-                  className={`${styles["input-field"]} ${styles["firstname"]}`}
+                  className={`${styles["input-field"]} ${styles["firstName"]}`}
                   label="First Name"
                   name="firstName"
-                  value={state.firstname}
-                  // error={formErrors.firstname.message ? true : false}
-                  // errorText={formErrors.firstname.message}
-                  onChange={(e) => handleChange(e, "firstname")}
+                  value={state.firstName}
+                  // error={formErrors.firstName.message ? true : false}
+                  // errorText={formErrors.firstName.message}
+                  onChange={(e) => handleChange(e, "firstName")}
                   // onBlur={() => validateCredentials('email')}
                   required
                 />
+                {/* </Form.Item> */}
                 <TextInput
-                  className={`${styles["input-field"]} ${styles["lastname"]}`}
+                  className={`${styles["input-field"]} ${styles["lastName"]}`}
                   label="Last Name"
                   name="lastName"
-                  value={state.lastname}
-                  onChange={(e) => handleChange(e, "lastname")}
+                  value={state.lastName}
+                  onChange={(e) => handleChange(e, "lastName")}
                 />
                 <TextInput
                   className={`${styles["input-field"]} ${styles["email"]}`}
@@ -229,7 +224,7 @@ const ModalComponent = ({
                   handleChange={(e) => handleChange(e, "role")}
                   itemsList={roleDataList}
                 />
-              </Form>
+              {/* </Form> */}
             </Spin>
             {!modalState.editing && (
               <div className={`${styles["disclaimer"]}`}>

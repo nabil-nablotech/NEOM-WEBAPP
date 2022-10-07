@@ -21,15 +21,26 @@ function UserMenuComponent() {
 
   const { clientLogout } = useLogout();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorElSettings, setAnchorElSettings] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const openSettings = Boolean(anchorElSettings);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     setAnchorEl(event.currentTarget);
   };
+  const handleSettingsClick = (event: React.MouseEvent<HTMLImageElement>) => {
+    // event.preventDefault()
+    // setAnchorElSettings(event.currentTarget);
+    navigate("/user-management");
+  };
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleSettingsClose = () => {
+    setAnchorElSettings(null);
   };
   const navigate = useNavigate();
 
@@ -40,10 +51,11 @@ function UserMenuComponent() {
 
   const menuItems = [
     {
-      label: "Profile",
-      handleClickMenuItem: () => {
-        navigate("/user-management");
-      },
+      label: "Help & Support",
+      handleClickMenuItem: () => {},
+      render: () => <a href="mailto: support@neomheritage.com?subject = Neom Heritage Support" target={"_blank"}>
+      Help & Support
+      </a>
     },
     {
       label: "Logout",
@@ -53,12 +65,21 @@ function UserMenuComponent() {
     },
   ]
 
+  const menuSettingItems = [
+    {
+      label: "User Management",
+      handleClickMenuItem: () => {
+        navigate("/user-management");
+      },
+    }
+  ]
+
 
   return (
     <>
       <UserMenu>
         <Icon src={icon} alt="icon" />
-        <IconSettings src={iconSettings} alt="icon-settings" />
+        <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />
         <InitialsWrapper
           id="long-button"
           //@ts-ignore
@@ -74,6 +95,13 @@ function UserMenuComponent() {
           open={open}
           handleClose={handleClose}
           options={menuItems}
+        />
+        <MenuList
+          ariaLabelledBy='long-button'
+          anchorEl={anchorElSettings}
+          open={openSettings}
+          handleClose={handleSettingsClose}
+          options={menuSettingItems}
         />
       </UserMenu>
     </>

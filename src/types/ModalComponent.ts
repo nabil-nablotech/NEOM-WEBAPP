@@ -5,15 +5,15 @@ export type ModalComponentProps = {
 
     setModalState: (e: UserModalstate) => void
     modalState: UserModalstate
-    handleOk: (values: FormData) => void
+    handleOk: (values: AddUserState) => void
     handleCancel: () => void
 } & Partial<IUser>
 
 export type AddUserState = {
-    firstname: string
-    lastname: string
+    firstName: string
+    lastName: string
     email: string
-    role: string
+    role: "" | HTMLSelectElement | undefined
     status: string
 }
 
@@ -23,8 +23,8 @@ type AddUserFormError = {
 };
 
 export type AddUserFormErrors = {
-    firstname: AddUserFormError;
-    lastname: AddUserFormError;
+    firstName: AddUserFormError;
+    lastName: AddUserFormError;
     email: AddUserFormError;
     role: AddUserFormError;
     status: AddUserFormError;

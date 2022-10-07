@@ -237,7 +237,7 @@ export function Login() {
           <p>
             Contact{" "}
             <span>
-              <a href="mailto: support@neomheritage.com" target={"_blank"}>
+              <a href="mailto: support@neomheritage.com?subject = Neom Heritage Support" target={"_blank"}>
                 support@neomheritage.com
               </a>
             </span>

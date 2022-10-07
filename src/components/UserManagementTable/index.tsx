@@ -20,6 +20,7 @@ import { DataArray, SingleObj } from "../../types/UserManagement";
 import { formatDate } from "../../utils/services/helpers";
 import ModalComponent from "../Modal";
 import { UseMutateFunction } from "react-query";
+import { AddUserState } from "../../types/ModalComponent";
 
 const error = (error: any) => {
   message.error({
@@ -177,11 +178,13 @@ export const UserManagementTable = (props: IUser) => {
     }
   };
 
-  const handleOk = async (values: FormData) => {
+  const handleOk = async (values: AddUserState) => {
     form.setFieldsValue({
       firstName: null,
       lastName: null,
       email: null,
+      role: '',
+      status: ''
     });
 
     setConfirmLoading(true);
@@ -234,7 +237,7 @@ export const UserManagementTable = (props: IUser) => {
     {
       title: "Status",
       dataIndex: "blocked",
-      render: (value, index) => `${value ? "ACTIVE" : "INACTIVE"}`,
+      render: (value, index) => `${!value ? "ACTIVE" : "INACTIVE"}`,
     },
     {
       title: '',
@@ -345,7 +348,7 @@ export const UserManagementTable = (props: IUser) => {
       </div>
       <StyledTable
         className={`${styles["table-container"]}`}
-        rowKey={"_id"}
+        rowKey={"id"}
         size="small"
         columns={tableHeaderJson}
         dataSource={dataList}

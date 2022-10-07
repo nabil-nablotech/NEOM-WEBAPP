@@ -60,7 +60,7 @@ const MenuList = ({
                 {options.map((option: any) => (
                     <MenuItem key={option.label}
                         onClick={option.handleClickMenuItem}>
-                        {option.label}
+                        {option.render ? option.render() : option.label}
                     </MenuItem>
                 ))}
             </Menu>

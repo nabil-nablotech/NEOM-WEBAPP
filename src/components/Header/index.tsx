@@ -15,9 +15,7 @@ const Header = (props: IHeader) => {
       <Box className={`${styles["logo"]}`}>
         <Box onClick={onClick} component="img" alt="NEOM logo" src={Logo} />
       </Box>
-      <UserMenuComponent
-      // userInitials={'ST'}
-      />
+      <UserMenuComponent />
     </Box>
   );
 };

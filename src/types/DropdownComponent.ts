@@ -4,8 +4,8 @@ import { ChangeEvent } from 'react';
 export type DropdownCompProps = {
     className?: string
     label?: string
-    value: string
-    handleChange: (event: SelectChangeEvent<string> | ChangeEvent<HTMLInputElement> , child: React.ReactNode) => void
+    value: "" | HTMLSelectElement | undefined
+    handleChange: (event: SelectChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLInputElement> , child: React.ReactNode) => void
     itemsList: Array<dropDownItem>
     name?: string
 }
