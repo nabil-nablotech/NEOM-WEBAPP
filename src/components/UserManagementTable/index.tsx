@@ -218,7 +218,6 @@ export const UserManagementTable = (props: IUser) => {
     setModalState,
     modalState,
     updatedUser} = props;
-  const [search, setSearch] = useState<string>('');
   const [dataList, setDataList] = useState<User[] | []>([]);
   const [form] = Form.useForm();
 
