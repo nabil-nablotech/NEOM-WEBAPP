@@ -50,10 +50,22 @@ const MenuList = ({
                 }}
             >
                 {options.map((option) => (
-                    <MenuItem key={option.label}
-                        onClick={option.handleClickMenuItem}>
-                        {option.label}
-                    </MenuItem>
+                    option.anchorTag ?
+                        <>
+                            <MenuItem key={option.label}
+                                onClick={option.handleClickMenuItem}>
+                                <a style={{
+                                    color: 'inherit'
+                                }} href={option.anchorTag} target={"_blank"} rel="noreferrer">
+                                    {option.label}
+                                </a>
+                            </MenuItem>
+                        </>
+                        :
+                        <MenuItem key={option.label}
+                            onClick={option.handleClickMenuItem}>
+                            {option.label}
+                        </MenuItem>
                 ))}
             </Menu>
 

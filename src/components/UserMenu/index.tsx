@@ -40,13 +40,14 @@ function UserMenuComponent() {
 
   const menuItems = [
     {
-      label: "Profile",
+      label: "Support",
       handleClickMenuItem: () => {
         navigate("/user-management");
       },
+      anchorTag: 'mailto: support@neomheritage.com'
     },
     {
-      label: "Logout",
+      label: "Sign Out",
       handleClickMenuItem: () => {
         clientLogout();
       },
