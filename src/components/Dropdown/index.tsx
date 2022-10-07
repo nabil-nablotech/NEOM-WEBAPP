@@ -4,6 +4,7 @@ import { DropdownCompProps } from '../../types/DropdownComponent';
 import { MenuItem } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
+import { useState } from 'react';
 
 const DropdownComponent = ({
     className,
@@ -14,10 +15,12 @@ const DropdownComponent = ({
 }: DropdownCompProps) => {
 
     const staticLabel = label ? label : 'select'
+    const [focused, setFocused] = useState(false)
+
     return (
         <div className={className}>
             <FormControl sx={{ minWidth: 120, }}>
-                {value &&
+                {(focused || value) &&
                     <InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
                 }
                 <Select
@@ -26,6 +29,8 @@ const DropdownComponent = ({
                     value={value}
                     label={staticLabel}
                     onChange={handleChange}
+                    onFocus={e => setFocused(true)}
+                    onBlur={e => setFocused(false)}
                     displayEmpty
                     renderValue={(selected) => {
                         if (selected.length === 0) {

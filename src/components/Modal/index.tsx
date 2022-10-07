@@ -47,7 +47,7 @@ const StyledModal = styled(Modal)`
 
     .ant-modal-body {
         overflow: auto;
-        max-height: 400px;
+        max-height: 500px;
         padding-block: 1em
     }
     .ant-form-item {
@@ -104,6 +104,16 @@ const ModalComponent = ({
             value: 'USER'
         }
     ]
+    const statusDataList = [
+        {
+            label: 'Active',
+            value: 'ACTIVE'
+        },
+        {
+            label: 'Inactive',
+            value: 'INACTIVE'
+        }
+    ]
 
     const [form] = Form.useForm();
     const [formErrors, setFormErrors] = useState<AddUserFormErrors>({
@@ -123,6 +133,10 @@ const ModalComponent = ({
             show: false,
             message: "",
         },
+        status: {
+            show: false,
+            message: "",
+        },
     });
 
     const [state, setState] = useState<AddUserState>({
@@ -130,16 +144,17 @@ const ModalComponent = ({
         lastname: '',
         email: '',
         role: '',
+        status: '',
     })
 
     const handleChange = (
         e: SelectChangeEvent<string>,
-        name: "firstname" | "lastname" | "email" | "role"
+        name: "firstname" | "lastname" | "email" | "role" | "status"
     ) => {
         console.log('hex', e)
         setState(state => ({
             ...state,
-            role: e.target.value
+            [name]: e.target.value
         }))
     }
 
@@ -199,20 +214,20 @@ const ModalComponent = ({
                                     value={state.email}
                                     onChange={(e) => handleChange(e, "email")}
                                 />
-                                {/* <TextInput
-                                    className={`${styles['input-field']} ${styles['role']}`}
-                                    label="Role"
-                                    value={state.role}
-                                    onChange={(e) => handleChange(e, "role")}
-                                /> */}
-                                {/* <StyledDropdown /> */}
                                 <DropdownComponent
-                                    className={`WEDR ${styles['role-dropdown']}`}
+                                    className={`${styles['role-dropdown']}`}
                                     label={'Role'}
                                     value={state.role}
                                     handleChange={(e) => handleChange(e, "role")}
                                     itemsList={roleDataList}
                                 />
+                               {modalState.editing && <DropdownComponent
+                                    className={`${styles['status-dropdown']}`}
+                                    label={'Status'}
+                                    value={state.status}
+                                    handleChange={(e) => handleChange(e, "status")}
+                                    itemsList={statusDataList}
+                                />}
                             </Form>
                         </Spin>
                         {!modalState.editing &&
