@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { UserDetails, loginPayload, LoginData, User } from "../types/User";
 import client from '../utils/services/axiosClient';
-import {setSession, getId, setRole, getToken} from '../utils/storage/storage';
+import {setSession, removeSession, getId, setRole} from '../utils/storage/storage';
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/reducers/loginReducers";
 
@@ -11,20 +11,15 @@ const useAuth = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<Boolean>(true);
 
-  useEffect(() => {
-    fetchLoginData();
-    fetchSession();
-  }, []);
-
   /**
    * get user session details
    */
-  const fetchSession = async () => {
+  const logout = async () => {
+    const id = getId();
     try {
-      
-      const {data} = await client.get<User>(`/api/users/me?populate=*`);
-      await dispatch(setUser(data));
-      setRole(data.role.name);
+      const payload = {}
+      const {data} = await client.put<User>(`/api/users/me`, JSON.stringify(payload));
+      clientLogout();
       return data;
     } catch (error) {
       // console.log('error', error)
@@ -38,15 +33,21 @@ const useAuth = () => {
     try {
       
       const {data} = await client.post<UserDetails>(`/api/auth/local/`, JSON.stringify(payload));
-      await setSession(data.jwt, JSON.stringify(data.user.id));
-      console.log('getToken', getToken());
-      await fetchSession();
       await dispatch(setUser(data.user))
+      setSession(data.jwt, JSON.stringify(data.user.id));
       return data;
     } catch (error: any) {
       setError(error.response.data.error.message);
       setLoading(false);
     }
+  }
+
+  /**
+   * Logout of the user
+   */
+  const clientLogout = async () => {
+    removeSession();
+    window.location.reload();
   }
   
  /**
@@ -71,6 +72,7 @@ const useAuth = () => {
     data,
     clientLogin,
     fetchLoginData,
+    clientLogout
   };
 };
 

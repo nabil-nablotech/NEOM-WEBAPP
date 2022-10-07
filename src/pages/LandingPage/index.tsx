@@ -196,6 +196,7 @@ const Image2 = styled.img`
   width: 72px;
   height: 93px;
   object-fit: cover;
+  margin-bottom: 40px;
 `;
 
 const SearchField = styled.div`

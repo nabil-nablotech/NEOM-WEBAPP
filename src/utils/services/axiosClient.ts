@@ -3,13 +3,25 @@ import axios from "axios";
 import { baseUrl } from "./helpers";
 import { getToken } from "../storage/storage";
 
-const headers = {
+export type Headers = {
+  "Content-Type": "text/HTML" | "application/json"
+  Accept: "text/HTML" | "application/json"
+  "Access-Control-Allow-Origin": string,
+  Authorization?: string
+}
+
+const headers: Headers = {
   "Content-Type": "application/json",
   Accept: "application/json",
   "Access-Control-Allow-Origin": "*",
-  Authorization: `${getToken()}`,
-  "ngrok-skip-browser-warning": "3243r"
+  // "ngrok-skip-browser-warning": "3243r"
 };
+
+const token = getToken();
+console.log('ttoken', token)
+if (token) {
+  headers.Authorization = `Bearer ${getToken()}`;
+}
 
 const client = axios.create({
   baseURL: baseUrl,

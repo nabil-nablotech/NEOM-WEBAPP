@@ -6,9 +6,10 @@ import { useSelector } from "react-redux";
 import MenuList from "../MenuList";
 import { RobotoMediumMerino20px } from "../styledMixins";
 import WhiteCircle from "../../assets/images/WhiteCircle.svg";
-import useAuth from "../../hooks/useAuth";
+import useLogout from "../../hooks/useLogout";
 import { stringAvatar } from "../../utils/services/helpers";
 import { RootState } from "../../store";
+
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -19,7 +20,7 @@ function UserMenuComponent() {
     "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/icon-button-settings@1x.png";
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const { clientLogout } = useAuth();
+  const { clientLogout } = useLogout();
 
   const navigate = useNavigate();
 

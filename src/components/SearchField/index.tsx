@@ -27,7 +27,6 @@ function CustomSearchField(props: {className?: string, handleChange?: (e:ChangeE
       <TextInput
         className={`${styles['search-field']} ${className}`}
         label="Search" type={"text"}
-        // placeholder={false}
         showLabel={false}
         value={searchText}
         onChange={(e) => {
