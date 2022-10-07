@@ -114,6 +114,13 @@ const StyledTable = styled(Table)`
   .ant-table.ant-table-bordered .ant-table-body tr.ant-table-row td:last-of-type {
   }
 
+  td.ant-table-column-sort {
+    background-color: transparent;
+  }
+
+  .ant-table-column-sorter-inner {
+  }
+
 `;
 
 const tableDataJson:DataArray = [
