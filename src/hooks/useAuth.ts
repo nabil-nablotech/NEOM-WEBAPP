@@ -13,7 +13,9 @@ const useAuth = () => {
 
   useEffect(() => {
     fetchLoginData();
-    fetchSession();
+    if (getToken()) {
+      fetchSession();
+    }
   }, []);
 
   /**
@@ -39,7 +41,6 @@ const useAuth = () => {
       
       const {data} = await client.post<UserDetails>(`/api/auth/local/`, JSON.stringify(payload));
       await setSession(data.jwt, JSON.stringify(data.user.id));
-      console.log('getToken', getToken());
       await fetchSession();
       await dispatch(setUser(data.user))
       return data;

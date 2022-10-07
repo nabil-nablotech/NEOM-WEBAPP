@@ -17,12 +17,6 @@ const headers: Headers = {
   // "ngrok-skip-browser-warning": "3243r"
 };
 
-const token = getToken();
-console.log('ttoken', token)
-if (token) {
-  headers.Authorization = `Bearer ${getToken()}`;
-}
-
 const client = axios.create({
   baseURL: baseUrl,
   headers: headers,
