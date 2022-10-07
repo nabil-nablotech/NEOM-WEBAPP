@@ -9,7 +9,6 @@ import { OverridableComponent } from '@mui/material/OverridableComponent';
 
 const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
   // color: theme.palette.getContrastText(grey[500]),
-  backgroundColor: '#13100DE5',
   borderRadius: 100,
   fontSize: 12,
   letterSpacing: 2,
@@ -17,7 +16,7 @@ const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
   padding: '10px, 24px, 10px, 24px',
   height: 40,
   '&:hover': {
-    backgroundColor: grey[700],
+    opacity: 0.8
   },
 }));
 
@@ -26,18 +25,24 @@ type CustomButtonProps = {
   disabled?: boolean
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void,
   className?: string,
-  StartIcon?: any
+  StartIcon?: any,
+  colors?: Array<string>
 }
 
 export default function CustomizedButtons(props: CustomButtonProps) {
   const { label, disabled, onClick, className, 
-    StartIcon
+    StartIcon, colors
    } = props;
   return (
     <Stack spacing={2} direction="row" >
       <ColorButton className={className ? className : ''}
         onClick={onClick} disabled={disabled} variant="contained"
         startIcon={StartIcon ? <StartIcon /> : null}
+        style={{
+          backgroundColor: colors ? colors[0] : '#13100DE5',
+          color: colors ? colors[1] : '#fff',
+          boxShadow: colors ? colors[2] : 'initial',
+        }}
       >
           { label }
         </ColorButton>
