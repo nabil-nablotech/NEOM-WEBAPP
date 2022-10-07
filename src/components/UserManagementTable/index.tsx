@@ -282,8 +282,9 @@ export const UserManagementTable = (props: IUser) => {
       title: 'Last Name',
       key: 'lastName',
       dataIndex: 'lastName',
-      sorter: (a, b) => a.lastname.localeCompare(b.lastname),
-      sortDirections: ['descend', 'ascend', 'descend'],
+      sorter: (a, b) => a.lastName.localeCompare(b.lastName),
+      sortDirections: ['ascend'],
+      defaultSortOrder: 'ascend'
     },
     {
       title: 'First Name',
