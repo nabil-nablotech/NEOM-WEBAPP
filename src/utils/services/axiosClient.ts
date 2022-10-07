@@ -7,7 +7,8 @@ const headers = {
   "Content-Type": "application/json",
   Accept: "application/json",
   "Access-Control-Allow-Origin": "*",
-  Authorization: `${getToken()}`
+  Authorization: `${getToken()}`,
+  "ngrok-skip-browser-warning": "3243r"
 };
 
 const client = axios.create({
