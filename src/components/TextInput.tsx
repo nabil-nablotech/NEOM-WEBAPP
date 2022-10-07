@@ -24,6 +24,7 @@ interface TextInputProps {
   InputProps?: any;
   sx?: any;
   ref?: React.RefObject<HTMLDivElement>;
+  required?: boolean
 };
 
 const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
@@ -65,7 +66,8 @@ export default function NTextFields(props: TextInputProps) {
     showLabel = true,
     InputProps,
     sx,
-    ref 
+    ref,
+    required
   } = props;
 
   return (
@@ -93,6 +95,7 @@ export default function NTextFields(props: TextInputProps) {
             ...InputProps
           }}
           ref={ref ? ref : null}
+          required={required}
         >
           {value}
           </NeomTextInput>

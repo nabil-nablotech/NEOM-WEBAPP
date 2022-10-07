@@ -18,20 +18,8 @@ import { MenuItem } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import { DataArray, SingleObj } from "../../types/UserManagement";
 import { formatDate } from "../../utils/services/helpers";
+import ModalComponent from "../Modal";
 
-const StyledModal = styled(Modal)`
-  .ant-modal-body {
-    padding: 10px 15px;
-    overflow: auto;
-    max-height: 400px;
-  }
-  .ant-form-item {
-    margin-bottom: 7.5px;
-  }
-  .ant-form-item-label {
-    padding: 0 0 4px;
-  }
-`;
 
 const error = (error: any) => {
   message.error({
@@ -121,7 +109,8 @@ const StyledTable = styled(Table)`
 
   td.ant-table-cell-row-hover {
     background: var(--user-table-cell-hover-bg) !important;
-  }
+  }import ModalComponent from './../Modal/index';
+
 `;
 
 const tableDataJson:DataArray = [
@@ -198,7 +187,7 @@ const tableDataJson:DataArray = [
     status: 'Active'
   },
 ]
-export interface IUser {
+interface IUser {
   data: User[] | []
   postUser?: () => void
   editUser: any
@@ -403,58 +392,13 @@ export const UserManagementTable = (props: IUser) => {
 
   return (
     <>
-      {modalState.visible && (
-        <StyledModal
-          // size="small"
-          centered
-          title={modalState.editing ? 'Edit User' : 'Add User'}
-          visible={modalState.visible}
-          onOk={() => {
-            form
-              .validateFields()
-              .then((values) => {
-                form.resetFields();
-                handleOk(values)
-              })
-              .catch((info) => {
-                // console.log(info);
-              });
-          }}
-          confirmLoading={confirmLoading}
-          onCancel={handleCancel}
-        >
-          <Spin spinning={confirmLoading}>
-            <Form
-              initialValues={modalState.editing || undefined}
-              form={form}
-              layout="vertical"
-              name="form_in_modal"
-            >
-              <Form.Item
-                name="firstName"
-                label="Firstname"
-                rules={[{ required: true, message: 'Please input firstname' }]}
-              >
-                <Input allowClear />
-              </Form.Item>
-              <Form.Item
-                name="lastName"
-                label="Lastname"
-                rules={[{ required: true, message: 'Please input lastname' }]}
-              >
-                <Input allowClear />
-              </Form.Item>
-              <Form.Item
-                name="email"
-                label="Email"
-                rules={[{ required: true, message: 'Please input email' }]}
-              >
-                <Input allowClear />
-              </Form.Item>
-            </Form>
-          </Spin>
-        </StyledModal>
-      )}
+      <ModalComponent
+        setModalState = {setModalState}
+        modalState = {modalState}
+        handleOk = {handleOk}
+        handleCancel = {handleCancel}
+        confirmLoading = {confirmLoading}
+      />
       <div className={`${styles['add-user-btn']}`}>
         <Button label="USER" onClick={() => showModal(null)} StartIcon={AddIcon}/>
       </div>
