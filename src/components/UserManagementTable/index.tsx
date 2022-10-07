@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { Table, Input, Modal, Form, Spin, Tooltip, message } from "antd";
 import { useDispatch } from "react-redux";
 import Button from "../../components/Button";
-import { User, UserModalstate, UserPayload } from "../../types/User";
+import { Roles, User, UserModalstate, UserPayload } from "../../types/User";
 
 import styles from "./index.module.css";
 import CustomSearchField from "./../SearchField/index";
@@ -116,7 +116,7 @@ const StyledTable = styled(Table)`
   }
 
 `;
-interface IUser {
+export type IUser = {
   data: User[] | [];
   postUser: any;
   editUser: any;
@@ -128,6 +128,7 @@ interface IUser {
   updatedUser?: User;
   setModalState: (e: UserModalstate) => void;
   modalState: UserModalstate;
+  userRoles?: Roles
 }
 
 export const UserManagementTable = (props: IUser) => {
@@ -143,9 +144,13 @@ export const UserManagementTable = (props: IUser) => {
     setModalState,
     modalState,
     updatedUser,
+    userRoles
   } = props;
   const [dataList, setDataList] = useState<User[] | []>([]);
-  const [form] = Form.useForm();
+  const [form, setForm] = useState({
+
+  });
+  // const [form] = Form.useForm();
 
   // const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1025px)' })
 
@@ -154,50 +159,39 @@ export const UserManagementTable = (props: IUser) => {
   }, [data]);
 
   const showModal = (editing: User | null) => {
-    form.setFieldsValue(
+    setForm(
       editing || {
         firstName: null,
         lastName: null,
         email: null,
+        role: ''
       }
     );
     setModalState({ visible: true, editing: editing });
     handleUser(editing);
   };
 
-  const saveLOV = async (values: any) => {
-    const data = {
-      ...values,
-    };
-    try {
-    } catch (e) {
-      // console.log(e);
-      error("Failed to save.");
-      setModalState({ visible: true, editing: null });
-      setConfirmLoading(false);
-    }
-  };
-
   const handleOk = async (values: AddUserState) => {
-    form.setFieldsValue({
+    setForm({
       firstName: null,
       lastName: null,
       email: null,
       role: '',
-      status: ''
+      blocked: ''
     });
 
     setConfirmLoading(true);
-    console.log('values', values);
-    // if (modalState && modalState.editing) editUser({ ...userData, ...values });
-    // else postUser({ ...values });
+    if (modalState && modalState.editing) editUser({ ...userData, ...values, blocked: values.blocked === 'inactive' ? true : false });
+    else postUser({ ...values, blocked: false, confirmed: true, password: "Test@123", username: values.firstName });
   };
 
   const handleCancel = () => {
-    form.setFieldsValue({
-      description: null,
-      name: null,
-      value: null,
+    setForm({
+      firstName: null,
+      lastName: null,
+      email: null,
+      role: '',
+      blocked: false
     });
     setModalState({ visible: false, editing: null });
   };
@@ -330,6 +324,7 @@ export const UserManagementTable = (props: IUser) => {
         handleOk={handleOk}
         handleCancel={handleCancel}
         confirmLoading={confirmLoading}
+        roles={userRoles}
       />
       <div className={`${styles["add-user-btn"]}`}>
         <Button

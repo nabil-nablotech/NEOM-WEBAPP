@@ -1,5 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from "react-query";
-import { User, UserPayload, UserModalstate, ISnackbar } from "../types/User";
+import { useQuery, useMutation, useQueryClient, useQueries } from "react-query";
+import { User, UserPayload, UserModalstate, ISnackbar, Roles } from "../types/User";
 import client from '../utils/services/axiosClient';
 import { useDispatch } from "react-redux";
 import { useState } from "react";
@@ -14,14 +14,12 @@ const useUser = () => {
   const queryClient = useQueryClient();
 
   const fetchUser = (): Promise<User[]> => client.get<User[]>('/api/users?populate=*').then(response => response.data)
+  const fetchUserRole = (): Promise<Roles> => client.get<Roles>('/api/users-permissions/roles?populate=*').then(response => response.data)
   const postUser = (payload: UserPayload): Promise<User> => client.post('/api/users', payload).then(response => response.data)
   const editUser = (payload: UserPayload): Promise<User> => client.put(`/api/users/${userData?.id}`, payload).then(response => response.data)
 
   // query
-  const query = useQuery(['users'], fetchUser, {
-    // retry: false,
-    // enabled: false
-  });
+  const [query, {data: userRoles}] = useQueries([{queryKey: ['users'], queryFn:fetchUser}, {queryKey: ['roles'], queryFn: fetchUserRole}]);
 
    // Mutations
   const {mutate: postUserMutation} = useMutation(postUser, {
@@ -87,7 +85,8 @@ const useUser = () => {
     setModalState,
     modalState,
     handleSnackbar,
-    showSnackbar
+    showSnackbar,
+    userRoles
   };
 };
 

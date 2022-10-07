@@ -33,14 +33,14 @@ const DropdownComponent = ({
           onFocus={(e) => setFocused(true)}
           onBlur={(e) => setFocused(false)}
           displayEmpty
-          renderValue={(selected) => {
-            if (selected.length === 0) {
-              return <em>{staticLabel}</em>;
-            }
+          // renderValue={(selected) => {
+          //   if (selected.length === 0) {
+          //     return <em>{staticLabel}</em>;
+          //   }
 
-            // @ts-ignore
-            return selected.toString().join(", ");
-          }}
+          //   // @ts-ignore
+          //   // return selected.toString().join(", ");
+          // }}
         >
           <MenuItem disabled value="">
             <em>{staticLabel}</em>

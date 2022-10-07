@@ -1,5 +1,5 @@
 import { IUser } from './../components/Modal/index';
-import { UserModalstate } from './User';
+import { UserModalstate, Roles } from './User';
 
 export type ModalComponentProps = {
 
@@ -7,14 +7,15 @@ export type ModalComponentProps = {
     modalState: UserModalstate
     handleOk: (values: AddUserState) => void
     handleCancel: () => void
+    roles?: Roles
 } & Partial<IUser>
 
 export type AddUserState = {
     firstName: string
     lastName: string
     email: string
-    role: "" | HTMLSelectElement | undefined
-    status: string
+    role: any
+    blocked: any
 }
 
 type AddUserFormError = {

@@ -25,6 +25,7 @@ const UserManagement = () => {
     modalState,
     handleSnackbar,
     showSnackbar,
+    userRoles
   } = useUser();
   const { data, isLoading } = query;
   return (
@@ -48,7 +49,7 @@ const UserManagement = () => {
               updatedUser={updatedUser}
               setModalState={setModalState}
               modalState={modalState}
-
+              userRoles={userRoles}
             />
           </Container>
           <Snackbar

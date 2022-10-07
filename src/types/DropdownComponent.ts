@@ -6,11 +6,11 @@ export type DropdownCompProps = {
     label?: string
     value: "" | HTMLSelectElement | undefined
     handleChange: (event: SelectChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLInputElement> , child: React.ReactNode) => void
-    itemsList: Array<dropDownItem>
+    itemsList: Array<dropDownItem> | []
     name?: string
 }
 
-type dropDownItem = {
+export type dropDownItem = {
     label: string
     value: string
 }
