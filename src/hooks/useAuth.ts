@@ -25,6 +25,7 @@ const useAuth = () => {
       
       const {data} = await client.get<User>(`/api/users/me?populate=*`);
       await dispatch(setUser(data))
+      console.log('adat', data)
       setRole(data.role.name);
       return data;
     } catch (error) {
