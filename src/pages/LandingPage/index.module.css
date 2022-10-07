@@ -1,4 +1,9 @@
 
 .custom-search-field {
     width: fit-content;
+    margin-bottom: 2em !important;
+}
+
+.custom-search-field.landing-page-search-field {
+    width: 45ch;
 }
