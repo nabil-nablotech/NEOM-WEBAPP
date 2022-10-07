@@ -42,7 +42,7 @@ function UserMenuComponent() {
     {
       label: "Support",
       handleClickMenuItem: () => {
-        navigate("/user-management");
+        
       },
       anchorTag: 'mailto: support@neomheritage.com'
     },
@@ -59,7 +59,9 @@ function UserMenuComponent() {
     <>
       <UserMenu>
         <Icon src={icon} alt="icon" />
-        <IconSettings src={iconSettings} alt="icon-settings" />
+        <IconSettings src={iconSettings} alt="icon-settings" onClick={e => {
+          navigate("/user-management");
+        }}/>
         <InitialsWrapper
           id="long-button"
           //@ts-ignore

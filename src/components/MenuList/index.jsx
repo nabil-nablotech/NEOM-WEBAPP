@@ -52,8 +52,7 @@ const MenuList = ({
                 {options.map((option) => (
                     option.anchorTag ?
                         <>
-                            <MenuItem key={option.label}
-                                onClick={option.handleClickMenuItem}>
+                            <MenuItem key={option.label}>
                                 <a style={{
                                     color: 'inherit'
                                 }} href={option.anchorTag} target={"_blank"} rel="noreferrer">
