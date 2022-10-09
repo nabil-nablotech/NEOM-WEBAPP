@@ -17,7 +17,7 @@ export const removeSession = async () => {
 
 // set the token and user on the session storage
 export const setSession = (token: string, uid: string) => {
-  sessionStorage.setItem(TOKEN, `Bearer ${token}`);
+  sessionStorage.setItem(TOKEN, `${token}`);
   sessionStorage.setItem(UID, uid);
 };
 

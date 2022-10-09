@@ -1,12 +1,15 @@
 import {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse} from "axios";
+import { getToken } from "../storage/storage";
 
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
-    // console.info(`[request] [${JSON.stringify(config)}]`);
-    return config;
+  if (getToken() && config.headers) {
+    config.headers['Authorization'] = `Bearer ${getToken()}`
+  }
+  return config;
 }
 
 const onRequestError = (error: AxiosError): Promise<AxiosError> => {
-  console.error(`[request error] [${JSON.stringify(error)}]`);
+  // console.error(`[request error] [${JSON.stringify(error)}]`);
   return Promise.reject(error);
 }
 
@@ -16,7 +19,7 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 }
 
 const onResponseError = (error: AxiosError): Promise<AxiosError> => {
-  console.error(`[response error] [${JSON.stringify(error)}]`);
+  // console.error(`[response error] [${JSON.stringify(error)}]`);
   return Promise.reject(error);
 }
 

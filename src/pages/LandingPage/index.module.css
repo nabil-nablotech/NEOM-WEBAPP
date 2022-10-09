@@ -1,3 +1,6 @@
+.custom-search-field .search-field > form > div {
+  width: fit-content;
+}
 
 .custom-search-field {
     width: fit-content;

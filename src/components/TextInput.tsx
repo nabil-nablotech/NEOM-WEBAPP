@@ -20,6 +20,7 @@ interface TextInputProps {
   type?: string;
   label: string;
   className?: string;
+  name?: string;
   showLabel?: boolean;
   InputProps?: any;
   sx?: any;
@@ -67,7 +68,8 @@ export default function NTextFields(props: TextInputProps) {
     InputProps,
     sx,
     ref,
-    required
+    required,
+    name,
   } = props;
 
   return (
@@ -96,6 +98,7 @@ export default function NTextFields(props: TextInputProps) {
           }}
           ref={ref ? ref : null}
           required={required}
+          name={name}
         >
           {value}
           </NeomTextInput>

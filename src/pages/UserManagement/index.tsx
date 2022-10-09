@@ -17,13 +17,15 @@ const UserManagement = () => {
     handleUser,
     userData,
     editUserMutation,
+    postUserMutation,
     setConfirmLoading,
     confirmLoading,
     updatedUser,
     setModalState,
     modalState,
     handleSnackbar,
-    showSnackbar
+    showSnackbar,
+    userRoles
   } = useUser();
   const { data, isLoading } = query;
   return (
@@ -40,16 +42,21 @@ const UserManagement = () => {
               data={data || []}
               handleUser={handleUser}
               editUser={editUserMutation}
+              postUser={postUserMutation}
               userData={userData}
               setConfirmLoading={setConfirmLoading}
-    confirmLoading={confirmLoading}
-
-    updatedUser={updatedUser}
-    setModalState={setModalState}
-    modalState={modalState}
+              confirmLoading={confirmLoading}
+              updatedUser={updatedUser}
+              setModalState={setModalState}
+              modalState={modalState}
+              userRoles={userRoles}
             />
           </Container>
-          <Snackbar message={showSnackbar.message} open={showSnackbar.open} handleClose={handleSnackbar} />
+          <Snackbar
+            message={showSnackbar.message}
+            open={showSnackbar.open}
+            handleClose={handleSnackbar}
+          />
         </div>
       </div>
     </>

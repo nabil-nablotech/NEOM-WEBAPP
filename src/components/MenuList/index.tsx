@@ -4,13 +4,21 @@ import { Menu } from '@mui/material';
 import { MenuItem } from '@mui/material';
 import './index.css'
 
+export interface MenuListProps {
+    ariaLabelledBy: string
+    anchorEl: HTMLElement | null
+    open: boolean
+    handleClose: () => void
+    options: any
+}
+
 const MenuList = ({
     ariaLabelledBy,
     anchorEl,
     open,
     handleClose,
     options
-}) => {
+}: MenuListProps) => {
 
     return (
         <>
@@ -49,22 +57,11 @@ const MenuList = ({
                     },
                 }}
             >
-                {options.map((option) => (
-                    option.anchorTag ?
-                        <>
-                            <MenuItem key={option.label}>
-                                <a style={{
-                                    color: 'inherit'
-                                }} href={option.anchorTag} target={"_blank"} rel="noreferrer">
-                                    {option.label}
-                                </a>
-                            </MenuItem>
-                        </>
-                        :
-                        <MenuItem key={option.label}
-                            onClick={option.handleClickMenuItem}>
-                            {option.label}
-                        </MenuItem>
+                {options.map((option: any) => (
+                    <MenuItem key={option.label}
+                        onClick={option.handleClickMenuItem}>
+                        {option.render ? option.render() : option.label}
+                    </MenuItem>
                 ))}
             </Menu>
 

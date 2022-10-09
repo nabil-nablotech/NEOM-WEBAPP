@@ -1,20 +1,21 @@
 import { IUser } from './../components/Modal/index';
-import { UserModalstate } from './User';
+import { UserModalstate, Roles } from './User';
 
 export type ModalComponentProps = {
 
     setModalState: (e: UserModalstate) => void
     modalState: UserModalstate
-    handleOk: (values: FormData) => void
+    handleOk: (values: AddUserState) => void
     handleCancel: () => void
+    roles?: Roles
 } & Partial<IUser>
 
 export type AddUserState = {
-    firstname: string
-    lastname: string
+    firstName: string
+    lastName: string
     email: string
-    role: string
-    status: string
+    role: any
+    blocked: any
 }
 
 type AddUserFormError = {
@@ -23,8 +24,8 @@ type AddUserFormError = {
 };
 
 export type AddUserFormErrors = {
-    firstname: AddUserFormError;
-    lastname: AddUserFormError;
+    firstName: AddUserFormError;
+    lastName: AddUserFormError;
     email: AddUserFormError;
     role: AddUserFormError;
     status: AddUserFormError;

@@ -6,10 +6,14 @@ import { getToken, getRole, removeSession } from '../storage/storage';
 type RouteProps = {component: FC, path: string }
 // handle the admin routes
 function AdminRoute({ component: Component, path, ...rest }: RouteProps) {
-  if (getToken() && getRole() === 'Admin') { 
-    return <Component />;
+  if (getToken()) {
+    if (getRole() === 'Admin') {
+      return <Component />;
+    }
+    return <Navigate to="/" />;
   }
-  return <Navigate to="/" />;
+  removeSession();
+  return <Navigate to="/login" />;
 }
 
 export default AdminRoute;
