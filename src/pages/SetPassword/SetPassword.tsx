@@ -13,6 +13,7 @@ import LoginScreenTemplate from "../../components/LoginScreenTemplate";
 import Box from '@mui/material/Box';
 import PasswordValid from '../../assets/images/password-valid.svg'
 import PasswordInalid from '../../assets/images/password-invalid.svg'
+import {cloneDeep} from 'lodash'
 
 type stateInput = {
   confirmPassword: string;
@@ -54,7 +55,7 @@ export const SetPassword = () => {
     useState<boolean>(false);
   const [isSetPasswordDisabled, toggleSetPasswordDisabled] = useState<boolean>(true);
 
-  const [validatorsArray, setValidatorsArray] = useState<Array<validtr>>([
+  const staticValidationScheme = [
     {
       name: '8 characters',
       rule: /^.{8,}$/,
@@ -70,26 +71,54 @@ export const SetPassword = () => {
       rule: /^(?=.*?[#?!@$%^&*-]).{1,}$/,
       fulfilled: false
     }
-  ])
+  ]
 
-  // useEffect(() => {
-  // if (
-  //   (formErrors.password.show && state.password) ||
-  //   (formErrors.confirmPassword.show && state.confirmPassword) ||
-  //   !state.password ||
-  //   !state.confirmPassword
-  // ) {
-  //   console.log('hex')
-  //   toggleSetPasswordDisabled(true);
-  // } else {
-  //   toggleSetPasswordDisabled(false);
-  // }
-  // }, [formErrors, state, validatorsArray]);
+  const [focusedInput, setFocusedInput] = useState<string>('')
+  const [validatorsArray_password, setValidatorsArray_password] = useState<Array<validtr>>(cloneDeep(staticValidationScheme))
+  const [validatorsArray_conf_password, setValidatorsArray_conf_password] = useState<Array<validtr>>(cloneDeep(staticValidationScheme))
+
+  // const allValidationCorrectCondition = validatorsArray_password.some(condtn => !condtn.fulfilled)
+
+  useEffect(() => {
+  if (
+    !state.password ||
+    !state.confirmPassword ||
+    validatorsArray_password.some(condtn => !condtn.fulfilled) ||
+    validatorsArray_conf_password.some(condtn => !condtn.fulfilled)
+  ) {
+    toggleSetPasswordDisabled(true);
+  } else {
+    toggleSetPasswordDisabled(false);
+  }
+  }, [formErrors, state, validatorsArray_password, validatorsArray_conf_password]);
 
   type validtr = {
     name: string
     rule: RegExp
     fulfilled: boolean
+  }
+
+  const checkValidation = ({
+    currentValue, name, setterName, 
+  }: {currentValue: string, name: validtr[], setterName: React.Dispatch<React.SetStateAction<validtr[]>>}) => {
+    let newValidtrArray: Array<validtr> = []
+
+    name.forEach(ruleObj => {
+
+        let tempObj = { ...ruleObj }
+        let flag = currentValue.match(ruleObj.rule)
+
+        tempObj = {
+          name: ruleObj.name,
+          rule: ruleObj.rule,
+          fulfilled: !!flag,
+        }
+
+        newValidtrArray.push(tempObj)
+
+      })
+
+      setterName(newValidtrArray)
   }
 
   // on input change function
@@ -112,36 +141,29 @@ export const SetPassword = () => {
     }
 
     if (name === 'password') {
-      let newValidtrArray: Array<validtr> = []
-
-      validatorsArray.forEach(ruleObj => {
-
-        let tempObj = { ...ruleObj }
-        let flag = e.target.value.match(ruleObj.rule)
-
-        tempObj = {
-          name: ruleObj.name,
-          rule: ruleObj.rule,
-          fulfilled: !!flag,
-        }
-
-        newValidtrArray.push(tempObj)
-
+      checkValidation({
+        currentValue: e.target.value,
+        name: validatorsArray_password, 
+        setterName: setValidatorsArray_password
       })
-
-      setValidatorsArray(newValidtrArray)
+    }
+    if (name === 'confirmPassword') {
+      checkValidation({
+        currentValue: e.target.value,
+        name: validatorsArray_conf_password, 
+        setterName: setValidatorsArray_conf_password
+      })
     }
   };
 
   // Function is responsible for the validation of input fields
   const validateCredentials = (name: "confirmPassword" | "password") => {
-    setFormErrors({
-      ...formErrors,
-      [name]: {
-        show: true,
-        message: "sample",
-      }
-    });
+
+  }
+
+  const handleBlur: (e:React.ChangeEvent<HTMLElement>, name: "confirmPassword" | "password") => void = (e, name) => {
+    // setFocusedInput('')
+    validateCredentials(name)
   }
 
   // Form submission
@@ -166,23 +188,30 @@ export const SetPassword = () => {
             error={formErrors.password.message ? true : false}
             errorText={formErrors.password.message}
             onChange={(e) => handleChange(e, "password")}
-            onBlur={() => validateCredentials('password')}
+            onBlur={(e) => handleBlur(e, "password")}
+            onFocus={e => setFocusedInput("password")}
           />
           <TextInput
             className={`${styles["confirm-password"]}`}
             label="Confirm Password"
             type={"password"}
+            autoComplete="new-password"
             value={state.confirmPassword}
             error={formErrors.confirmPassword.message ? true : false}
             errorText={formErrors.confirmPassword.message}
             onChange={(e) => handleChange(e, "confirmPassword")}
-            onBlur={() => validateCredentials('confirmPassword')}
+            onBlur={(e) => handleBlur(e, 'confirmPassword')}
+            onFocus={e => setFocusedInput("confirmPassword")}
           />
           <div className={`${styles["password-help-section"]}`}>
-            <div className={`${styles["password-help-title"]}`}>Your password must have at least:</div>
+            <div className={`${styles["password-help-title"]}`}>Your {
+              focusedInput === 'confirmPassword' ? 'Confirm Password' : 'Password'
+            } must have at least:</div>
             <section className={`${styles["validtr-list"]}`}>
               {
-                validatorsArray.map(validateConditionObj => {
+                (focusedInput === 'password' ? validatorsArray_password :
+                  validatorsArray_conf_password
+                ).map(validateConditionObj => {
 
                   return <>
                     <div className={`${styles["validate-statement-row"]}`}>
@@ -206,6 +235,7 @@ export const SetPassword = () => {
             className={`${styles["sign-in-btn"]}`}
             label="SET PASSWORD"
             disabled={isSetPasswordDisabled}
+            // disabled={true}
             onClick={(e) => submit(e)}
           />
         </Grid>

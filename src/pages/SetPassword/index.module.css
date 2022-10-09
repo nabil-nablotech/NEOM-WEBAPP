@@ -136,6 +136,7 @@
 .sign-in-btn.MuiButtonBase-root {
   padding: 1vw 2vw;
   margin-top: 1vw;
+  cursor: pointer;
 }
 
 .bottomText {
