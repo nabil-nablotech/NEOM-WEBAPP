@@ -5,5 +5,7 @@
   --user-table-border: #E7E7E7;
   --user-table-cell-hover-bg: #F3EFE5;
   --table-black-text: #13100D;
-  --max-z-index: 99
+  --max-z-index: 99;
+  --clr-gold: #EBC03F;
+  --container-spacing: 2em;
 }

@@ -1,0 +1,10 @@
+.search-results-wrapper {
+    background-color: var(--off-white-background-color);
+    padding-top: 5.5em;
+    font-family: 'Roboto-Regular';
+}
+.tab-titles {
+    font-weight: 500;
+    font-size: 1em;
+    line-height: 1;
+}

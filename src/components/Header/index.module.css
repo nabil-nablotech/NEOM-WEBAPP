@@ -11,3 +11,8 @@
     padding: 1.5em 2em;
     text-align: left;
 }
+.header-lhs-content {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
