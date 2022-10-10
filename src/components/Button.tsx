@@ -18,6 +18,11 @@ const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
   '&:hover': {
     opacity: 0.8
   },
+  '&:disabled': {
+    opacity: 0.8,
+    cursor: 'not-allowed',
+    pointerEvents: 'all'
+  },
 }));
 
 type CustomButtonProps = {
@@ -46,6 +51,6 @@ export default function CustomizedButtons(props: CustomButtonProps) {
       >
           { label }
         </ColorButton>
-    </Stack >
+      </Stack >
   );
 }

@@ -12,6 +12,9 @@ interface TextInputProps {
   onBlur?: (
     e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
+  onFocus?: (
+    e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   value?: string | "";
   defaultValue?: string | "";
   errorText?: string | "";
@@ -25,7 +28,8 @@ interface TextInputProps {
   InputProps?: any;
   sx?: any;
   ref?: React.RefObject<HTMLDivElement>;
-  required?: boolean
+  required?: boolean,
+  autoComplete?: string
 };
 
 const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
@@ -55,6 +59,7 @@ export default function NTextFields(props: TextInputProps) {
   const {
     onChange,
     onBlur,
+    onFocus,
     error,
     value,
     label,
@@ -70,6 +75,7 @@ export default function NTextFields(props: TextInputProps) {
     ref,
     required,
     name,
+    autoComplete
   } = props;
 
   return (
@@ -88,6 +94,7 @@ export default function NTextFields(props: TextInputProps) {
           value={value}
           onChange={onChange}
           onBlur={onBlur}
+          onFocus={onFocus}
           defaultValue={defaultValue}
           helperText={errorText}
           type={type}
@@ -99,6 +106,7 @@ export default function NTextFields(props: TextInputProps) {
           ref={ref ? ref : null}
           required={required}
           name={name}
+          autoComplete={autoComplete}
         >
           {value}
           </NeomTextInput>

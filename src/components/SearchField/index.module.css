@@ -12,6 +12,7 @@
 .search-field > form > div {
     background-color: #fff;
     border-radius: 5px;
+    width: 100%;
 }
 
 .search-field .MuiInputBase-input {

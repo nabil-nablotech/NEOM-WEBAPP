@@ -115,6 +115,13 @@ const StyledTable = styled(Table)`
   .ant-table.ant-table-bordered .ant-table-body tr.ant-table-row td:last-of-type {
   }
 
+  td.ant-table-column-sort {
+    background-color: transparent;
+  }
+
+  .ant-table-column-sorter-inner {
+  }
+
 `;
 export type IUser = {
   data: User[] | [];
@@ -200,11 +207,12 @@ export const UserManagementTable = (props: IUser) => {
 
   const tableHeaderJson: ColumnsType<any> = [
     {
-      title: "Last Name",
-      key: "lastName",
-      dataIndex: "lastName",
-      sorter: (a, b) => a.lastname.localeCompare(b.lastname),
-      sortDirections: ["descend", "ascend", "descend"],
+      title: 'Last Name',
+      key: 'lastName',
+      dataIndex: 'lastName',
+      sorter: (a, b) => a.lastName.localeCompare(b.lastName),
+      sortDirections: ['ascend'],
+      defaultSortOrder: 'ascend'
     },
     {
       title: "First Name",

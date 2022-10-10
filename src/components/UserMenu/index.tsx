@@ -60,7 +60,7 @@ function UserMenuComponent() {
       </a>
     },
     {
-      label: "Logout",
+      label: "Sign Out",
       handleClickMenuItem: () => {
         clientLogout();
       },

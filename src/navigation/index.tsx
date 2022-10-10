@@ -8,6 +8,7 @@ import { Details } from "../pages/Details";
 import { PageNotFound } from "../components/PageNotFound";
 import UserManagement from "../pages/UserManagement";
 import LandingPage from "../pages/LandingPage";
+import { SetPassword } from "../pages/SetPassword";
 
 export const Navigation = () => {
   let routes = useRoutes([
@@ -26,6 +27,10 @@ export const Navigation = () => {
     {
       path: "/login",
       element: <PublicRoute component={Login} />,
+    },
+    {
+      path: "/set-password",
+      element: <PublicRoute component={SetPassword} />,
     },
     {
       path: "/search",

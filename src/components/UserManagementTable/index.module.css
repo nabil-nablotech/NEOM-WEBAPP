@@ -19,3 +19,8 @@
 .custom-search-field >form > div {
     width: 100%;
 }
+
+.table-container .ant-table-column-sorter-inner {
+    content: \2794;
+    display: none;
+}
