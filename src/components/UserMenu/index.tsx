@@ -11,6 +11,7 @@ import { RootState } from "../../store";
 import { getRole } from "../../utils/storage/storage";
 
 import MenuList from "../MenuList";
+import useAuth from "../../hooks/useAuth";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -45,15 +46,15 @@ function UserMenuComponent() {
     setAnchorElSettings(null);
   };
   const navigate = useNavigate();
-
   const { data } = useSelector((state: RootState) => state.login);
 
+  console.log('data', data);
   if (!data) return null;
 
 
   const menuItems = [
     {
-      label: "Help & Support",
+      label: "Support",
       handleClickMenuItem: () => {},
       render: () => <a href="mailto: support@neomheritage.com?subject = Neom Heritage Support" target={"_blank"}>
       Help & Support

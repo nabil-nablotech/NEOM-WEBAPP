@@ -44,7 +44,8 @@ const useSetPassword = () => {
       navigate('/');
     },
     onError: () => {
-
+      handleAlert('Error Occured', 'error')
+      navigate('/');
     }
   })
   
