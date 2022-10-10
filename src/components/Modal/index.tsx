@@ -175,6 +175,13 @@ const ModalComponent = ({
   }, [modalState.editing]);
   const handleSubmit = () => {
     handleOk(state);
+    setState({
+      firstName: '',
+      lastName: '',
+      email: '',
+      role: '',
+      blocked: false
+    });
   };
 
   const handleChange = (

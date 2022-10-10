@@ -6,7 +6,6 @@ export type UserDetails = {
 export type User = {
   blocked: boolean | string;
   confirmed: boolean;
-  createdAt: Date;
   email: string;
   firstName: string;
   lastName: string;

@@ -55,14 +55,10 @@ function LandingPage() {
     vector3,
     spanText8,
     spanText9,
-    iconUserWhite,
-    icon,
-    iconSettings,
   } = landingPageData;
-  const {loading} = useAuth();
+  const {} = useAuth();
   const {data} = useSelector((state: RootState) => state.login);
 
-  
   if (!data) return null;
   return (
     <div className="container-center-horizontal">

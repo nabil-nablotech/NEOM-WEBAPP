@@ -23,7 +23,10 @@ const UserManagement = () => {
     modalState,
     handleSnackbar,
     showSnackbar,
-    userRoles
+    userRoles,
+    copyLink,
+    generateLink,
+    selectedUserLink
   } = useUser();
   
   const { data, isLoading } = query;
@@ -50,6 +53,9 @@ const UserManagement = () => {
               setModalState={setModalState}
               modalState={modalState}
               userRoles={userRoles}
+              copyLink={copyLink}
+              generateLink={generateLink}
+              selectedUserLink={selectedUserLink}
             />
           </Container>
           <Snackbar
