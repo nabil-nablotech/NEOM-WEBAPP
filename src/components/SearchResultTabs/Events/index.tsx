@@ -15,7 +15,7 @@ const EventsTab = ({
     return (
         <Box className={`${styles['main-tab-content']}`}>
             <Box className={`${styles['utility-bar']}`}>
-                <Box>{resultCount} Total Places</Box>
+                <Box>{resultCount} Total Events</Box>
                 <Box>
                 <Button
                     colors={["transparent", "var(--table-black-text)", "var(--table-black-text)"]}
