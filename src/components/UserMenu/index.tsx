@@ -8,8 +8,10 @@ import WhiteCircle from "../../assets/images/WhiteCircle.svg";
 import useLogout from "../../hooks/useLogout";
 import { stringAvatar } from "../../utils/services/helpers";
 import { RootState } from "../../store";
+import { getRole } from "../../utils/storage/storage";
 
 import MenuList from "../MenuList";
+import useAuth from "../../hooks/useAuth";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -23,6 +25,7 @@ function UserMenuComponent() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [anchorElSettings, setAnchorElSettings] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const admin = getRole() === 'Admin';
   const openSettings = Boolean(anchorElSettings);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -43,7 +46,6 @@ function UserMenuComponent() {
     setAnchorElSettings(null);
   };
   const navigate = useNavigate();
-
   const { data } = useSelector((state: RootState) => state.login);
 
   if (!data) return null;
@@ -51,14 +53,14 @@ function UserMenuComponent() {
 
   const menuItems = [
     {
-      label: "Help & Support",
+      label: "Support",
       handleClickMenuItem: () => {},
       render: () => <a href="mailto: support@neomheritage.com?subject = Neom Heritage Support" target={"_blank"}>
       Help & Support
       </a>
     },
     {
-      label: "Logout",
+      label: "Sign Out",
       handleClickMenuItem: () => {
         clientLogout();
       },
@@ -74,12 +76,11 @@ function UserMenuComponent() {
     }
   ]
 
-
   return (
     <>
       <UserMenu>
         <Icon src={icon} alt="icon" />
-        <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />
+        {admin && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
         <InitialsWrapper
           id="long-button"
           //@ts-ignore

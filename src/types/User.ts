@@ -4,9 +4,8 @@ export type UserDetails = {
 };
 
 export type User = {
-  blocked: boolean;
+  blocked: boolean | string;
   confirmed: boolean;
-  createdAt: Date;
   email: string;
   firstName: string;
   lastName: string;
@@ -24,6 +23,8 @@ export type Role = {
   name: string
   type: string
   updatedAt: Date
+  label?: string
+  value?: string | number
 }
 
 export type UserPayload = {
@@ -31,6 +32,7 @@ export type UserPayload = {
   firstName: string;
   role: string;
   lastName: string;
+  recoveryToken?: string;
 }
 
 export type LoginData = {
@@ -52,3 +54,10 @@ export interface ISnackbar {
   open: boolean
   message: string
 }
+
+export type Roles = {
+  roles: Role[]
+}
+
+export type EditUserPayload = {user: UserPayload | {}, id: number}
+export type SetPasswordPayload = {password: string, id: number}

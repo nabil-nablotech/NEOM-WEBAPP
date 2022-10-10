@@ -15,6 +15,7 @@ import CustomSearchField from '../../components/SearchField/index';
 import { RootState } from "../../store";
 import useAuth from "../../hooks/useAuth";
 import styles from './index.module.css'
+import { getRole } from "../../utils/storage/storage";
 
 const landingPageData = {
   overlapGroup4: "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/rectangle-125-1@1x.png",
@@ -54,13 +55,9 @@ function LandingPage() {
     vector3,
     spanText8,
     spanText9,
-    iconUserWhite,
-    icon,
-    iconSettings,
   } = landingPageData;
-  const {loading} = useAuth();
+  const {} = useAuth();
   const {data} = useSelector((state: RootState) => state.login);
-
 
   if (!data) return null;
   return (
@@ -88,7 +85,7 @@ function LandingPage() {
               }}
               ref={searchRef}
             /> */}
-            <CustomSearchField className={`${styles['custom-search-field']}`}/>
+            <CustomSearchField className={`${styles['custom-search-field']} ${styles['landing-page-search-field']}`}/>
             <Inventory>
               <Frame2608168>
                 <IconLocationPin src={iconLocation_Pin} alt="icon-location_pin" />
@@ -196,7 +193,7 @@ const Image2 = styled.img`
   width: 72px;
   height: 93px;
   object-fit: cover;
-  margin-bottom: 40px;
+  margin-bottom: 2em;
 `;
 
 const SearchField = styled.div`
@@ -239,7 +236,6 @@ const LabelText = styled.div`
 `;
 
 const Inventory = styled.div`
-  margin-top: 63px;
   display: flex;
   padding: 0 7.5px;
   align-items: flex-start;
@@ -267,7 +263,7 @@ const IconLocationPin = styled.img`
   width: 32px;
   height: 40px;
   align-self: center;
-  margin-bottom: 18px;
+  margin-bottom: 10px;
 `;
 
 const OverlapGroup = styled.div`
@@ -281,8 +277,8 @@ const Text1 = styled.h1`
   ${ValignTextMiddle}
   ${RobotoLightMerino50px}
             position: absolute;
-  width: 128px;
-  height: 75px;
+  width: 108px;
+  height: 60px;
   top: 0;
   left: 0;
   letter-spacing: 0.5px;
@@ -293,7 +289,7 @@ const Places = styled.div`
   ${RobotoMediumMerino20px}
   position: absolute;
   width: 91px;
-  top: 67px;
+  top: 57px;
   left: 0;
   letter-spacing: 0.5px;
   line-height: 24px;
@@ -326,8 +322,8 @@ const Text2 = styled.div`
   ${ValignTextMiddle}
   ${RobotoLightMerino50px}
             position: absolute;
-  width: 170px;
-  height: 75px;
+  width: 110px;
+  height: 60px;
   top: 0;
   left: 0;
   letter-spacing: 0.5px;
@@ -360,8 +356,8 @@ const Number = styled.div`
   ${ValignTextMiddle}
   ${RobotoLightMerino50px}
             position: absolute;
-  width: 123px;
-  height: 75px;
+  width: 101px;
+  height: 60px;
   top: 0;
   left: 0;
   letter-spacing: 0.5px;
@@ -372,7 +368,7 @@ const LibraryItems = styled.div`
   ${RobotoMediumMerino20px}
   position: absolute;
   width: 150px;
-  top: 67px;
+  top: 57px;
   left: 0;
   letter-spacing: 0.5px;
   line-height: 24px;
@@ -405,8 +401,8 @@ const Text3 = styled.div`
   ${ValignTextMiddle}
   ${RobotoLightMerino50px}
             position: absolute;
-  width: 138px;
-  height: 75px;
+  width: 110px;
+  height: 60px;
   top: 0;
   left: 0;
   letter-spacing: 0.5px;
@@ -417,7 +413,7 @@ const MediaItems = styled.div`
   ${RobotoMediumMerino20px}
   position: absolute;
   width: 129px;
-  top: 67px;
+  top: 57px;
   left: 0;
   letter-spacing: 0.5px;
   line-height: 24px;

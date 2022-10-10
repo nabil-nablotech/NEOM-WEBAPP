@@ -1,3 +1,5 @@
+import { User } from "./User"
+
 export type ColumnComponentTypes = {
     width: number,
     title: string,
@@ -15,5 +17,7 @@ export type SingleObj = {
   lastlogin: string,
   status: string
 }
+
+export type LinkGenerate = {user: User, recovery: boolean}
 
 export type DataArray = Array<SingleObj>

@@ -1,8 +1,8 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
 import styles from "./index.module.css";
 import styled from "styled-components";
 import { Modal, Form, Spin, Tooltip, message } from "antd";
-import { User, UserModalstate } from "../../types/User";
+import { Role, User, UserModalstate } from "../../types/User";
 import {
   AddUserFormErrors,
   AddUserState,
@@ -14,6 +14,7 @@ import Button from "../../components/Button";
 import DropdownComponent from "../Dropdown";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { UseMutateFunction } from "react-query";
+import { dropDownItem } from "../../types/DropdownComponent";
 
 const StyledModal = styled(Modal)`
   .ant-modal {
@@ -82,7 +83,15 @@ export interface IUser {
   modalState: UserModalstate;
 }
 
-const Footer = ({ modalState, handleSubmit, handleCancel }: { modalState: UserModalstate, handleSubmit: () => void, handleCancel: () => void }) => {
+const Footer = ({
+  modalState,
+  handleSubmit,
+  handleCancel,
+}: {
+  modalState: UserModalstate;
+  handleSubmit: () => void;
+  handleCancel: () => void;
+}) => {
   return (
     <div className={`${styles["modal-footer"]}`}>
       <Button
@@ -104,17 +113,17 @@ const ModalComponent = ({
   confirmLoading,
   handleOk,
   handleCancel,
+  roles,
 }: ModalComponentProps & Partial<IUser>) => {
-  const roleDataList = [
-    {
-      label: "Admin",
-      value: "ADMIN",
-    },
-    {
-      label: "User",
-      value: "USER",
-    },
-  ];
+  const roleDataList: any = roles
+    ? roles?.roles?.map((x: Role) => {
+        x.label = x.name;
+        x.value = x.id;
+        return x;
+      })
+    : [];
+
+  const statusDataList = [{value: 'active', label: 'ACTIVE'}, {value: 'inactive', label: 'INACTIVE'}];
 
   // const [form] = Form.useForm();
   // const [formErrors, setFormErrors] = useState<AddUserFormErrors>({
@@ -141,22 +150,47 @@ const ModalComponent = ({
     lastName: "",
     email: "",
     role: "",
-    status: 'active'
+    blocked: '',
   });
 
-  const handleSubmit = ()=> {
+  useEffect(() => {
+    if (modalState.editing) {
+      setState({
+        ...modalState.editing,
+        firstName: modalState.editing.firstName,
+        lastName: modalState.editing.lastName,
+        email: modalState.editing.email,
+        role: modalState.editing.role.id,
+        blocked: modalState.editing.blocked ? 'inactive' : 'active'
+      });
+    } else {
+      setState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        role: '',
+        blocked: false
+      });
+    }
+  }, [modalState.editing]);
+  const handleSubmit = () => {
     handleOk(state);
-  }
+    setState({
+      firstName: '',
+      lastName: '',
+      email: '',
+      role: '',
+      blocked: false
+    });
+  };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<HTMLSelectElement>,
-    name: "firstName" | "lastName" | "email" | "role"
+    name: "firstName" | "lastName" | "email" | "role" | "blocked"
   ) => {
     const lclState: any = state;
-    // console.log(e.target.value as string)
     lclState[name] = e.target.value as string;
-    console.log('lclSTate', lclState);
-    setState({...lclState});
+    setState({ ...lclState });
   };
 
   return (
@@ -173,7 +207,13 @@ const ModalComponent = ({
             closeIcon={
               <ClearSharpIcon sx={{ width: "1.7em", height: "1.7em" }} />
             }
-            footer={[<Footer modalState={modalState} handleSubmit={handleSubmit} handleCancel={handleCancel} />]}
+            footer={[
+              <Footer
+                modalState={modalState}
+                handleSubmit={handleSubmit}
+                handleCancel={handleCancel}
+              />,
+            ]}
           >
             <Spin spinning={confirmLoading}>
               {/* <Form
@@ -182,48 +222,56 @@ const ModalComponent = ({
                 layout="vertical"
                 name="form_in_modal"
               > */}
-                {/* <Form.Item name="firstName" label="Firstname"> */}
-                <TextInput
-                  className={`${styles["input-field"]} ${styles["firstName"]}`}
-                  label="First Name"
-                  name="firstName"
-                  value={state.firstName}
-                  // error={formErrors.firstName.message ? true : false}
-                  // errorText={formErrors.firstName.message}
-                  onChange={(e) => handleChange(e, "firstName")}
-                  // onBlur={() => validateCredentials('email')}
-                  required
-                />
-                {/* </Form.Item> */}
-                <TextInput
-                  className={`${styles["input-field"]} ${styles["lastName"]}`}
-                  label="Last Name"
-                  name="lastName"
-                  value={state.lastName}
-                  onChange={(e) => handleChange(e, "lastName")}
-                />
-                <TextInput
-                  className={`${styles["input-field"]} ${styles["email"]}`}
-                  label="Email"
-                  name="email"
-                  value={state.email}
-                  onChange={(e) => handleChange(e, "email")}
-                />
-                {/* <TextInput
+              {/* <Form.Item name="firstName" label="Firstname"> */}
+              <TextInput
+                className={`${styles["input-field"]} ${styles["firstName"]}`}
+                label="First Name"
+                name="firstName"
+                value={state.firstName}
+                // error={formErrors.firstName.message ? true : false}
+                // errorText={formErrors.firstName.message}
+                onChange={(e) => handleChange(e, "firstName")}
+                // onBlur={() => validateCredentials('email')}
+                required
+              />
+              {/* </Form.Item> */}
+              <TextInput
+                className={`${styles["input-field"]} ${styles["lastName"]}`}
+                label="Last Name"
+                name="lastName"
+                value={state.lastName}
+                onChange={(e) => handleChange(e, "lastName")}
+              />
+              <TextInput
+                className={`${styles["input-field"]} ${styles["email"]}`}
+                label="Email"
+                name="email"
+                value={state.email}
+                onChange={(e) => handleChange(e, "email")}
+              />
+              {/* <TextInput
                                     className={`${styles['input-field']} ${styles['role']}`}
                                     label="Role"
                                     value={state.role}
                                     onChange={(e) => handleChange(e, "role")}
                                 /> */}
-                {/* <StyledDropdown /> */}
-                <DropdownComponent
-                  className={`WEDR ${styles["role-dropdown"]}`}
-                  label={"Role"}
-                  name="role"
-                  value={state.role}
-                  handleChange={(e) => handleChange(e, "role")}
-                  itemsList={roleDataList}
-                />
+              {/* <StyledDropdown /> */}
+              <DropdownComponent
+                className={`WEDR ${styles["role-dropdown"]}`}
+                label={"Role"}
+                name="role"
+                value={state.role}
+                handleChange={(e) => handleChange(e, "role")}
+                itemsList={roleDataList}
+              />
+              {modalState.editing && <DropdownComponent
+                className={`WEDR ${styles["role-dropdown"]}`}
+                label={"Status"}
+                name="blocked"
+                value={state.blocked}
+                handleChange={(e) => handleChange(e, "blocked")}
+                itemsList={statusDataList}
+              />}
               {/* </Form> */}
             </Spin>
             {!modalState.editing && (

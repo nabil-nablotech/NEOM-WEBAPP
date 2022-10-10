@@ -69,3 +69,8 @@ export type LoginPageData = {
     title: string
   }
 }
+
+export type ResetPaswordStateInput = {
+  confirmPassword: string;
+  password: string;
+};
