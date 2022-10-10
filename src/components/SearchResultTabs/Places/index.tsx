@@ -37,7 +37,7 @@ const PlacesTab = ({
             </Box>
             <Box component={'section'} className={`${styles['result-section']}`}>
                 <Grid container spacing={1}>
-                    <Grid item xl={5} lg={6}>
+                    <Grid item xl={6} lg={6}>
                         <GridView />
                     </Grid>
                     {/* To-do: map view */}

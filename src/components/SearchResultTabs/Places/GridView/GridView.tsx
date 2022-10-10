@@ -5,6 +5,7 @@ import { GridViewCard } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'
 import { Grid, Stack } from '@mui/material';
 import { format } from "date-fns";
+import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
 
 /** indicating that we can send html later on wherever we parse */
 import parse from 'html-react-parser';
@@ -20,10 +21,10 @@ const Card = ({
     return <>
         <Box className={`${gridStyles['card-container']}`} key={key}>
             <Grid container spacing={1} className={`${gridStyles['card-grid']}`}>
-                <Grid item xl={4} lg={5}>
+                <Grid item xl={5} lg={5}>
                     <Box className={`${gridStyles['card-image']}`} component="img" alt={""} src={img} />
                 </Grid>
-                <Grid item xl={7} lg={7} className={`${gridStyles['content']}`}>
+                <Grid item xl={6} lg={6} className={`${gridStyles['content']}`}>
                     <div className={`${gridStyles['card-title']}`}>{parse(title)}</div>
                     <div className={`${gridStyles['card-subtitle']}`}>{subTitle}</div>
                     <div className={`${gridStyles['card-date']}`}>{dateString}</div>
@@ -33,6 +34,9 @@ const Card = ({
                                 {item}
                             </div>
                         ))}</div>
+                    <Box className={`${gridStyles['more-icon-span']}`} component={"span"}>
+                        <Box className={`${gridStyles['more-icon']}`} component="img" alt={""} src={MoreIcon}></Box>
+                    </Box>
                 </Grid>
             </Grid>
         </Box>
@@ -52,16 +56,16 @@ const GridView = () => {
     }, [])
 
     return (
-        <Box className={`${gridStyles['left-grid-container']}`}
+        <Box className={`${gridStyles['']}`}
         >
-            <Grid container spacing={1} className={`${gridStyles['']}`}>
+            <Grid container spacing={1} className={`${gridStyles['left-grid-container']}`}>
                 {
                     data?.map((item: any, index: number) => <>
                         <Grid item sm={12} className={`${gridStyles['']}`}>
                             <Card
                                 key={index}
                                 img={item.thumbnailUrl}
-                                title={item.title.substr(0, 10)}
+                                title={item.title.substr(0, 20)}
                                 subTitle={item.title.substr(0, 40) + '...'}
                                 dateString={`Last login on ${format(new Date(), 'yyyy-MM-dd')}`}
                                 keywords={['fist', 'new']}
