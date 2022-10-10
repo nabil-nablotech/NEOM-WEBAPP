@@ -11,6 +11,7 @@ export interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
     value: number;
+    className: string;
 }
 
 export type tabNameProps = 'Places' | 'Events' | 'Library' | 'Media'

@@ -11,10 +11,11 @@ import Media from "../../assets/images/searchResults/Media.svg";
 import { LabelProps, SearchResultTabsProps, tabNameProps, TabPanelProps } from '../../types/SearchResultsTabsProps';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import PlacesTab from './Places';
 
 
 function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
+    const { children, value, index, className, ...other } = props;
 
     return (
         <div
@@ -25,7 +26,7 @@ function TabPanel(props: TabPanelProps) {
             {...other}
         >
             {value === index && (
-                <Box sx={{ p: 3 }}>
+                <Box sx={{ p: 3 }} className={className}>
                     <Typography>{children}</Typography>
                 </Box>
             )}
@@ -142,13 +143,13 @@ const SearchResultTabs = ({
                     }
                 </Tabs>
             </Box>
-            <TabPanel value={value} index={0}>
-                Item 1
+            <TabPanel value={value} index={0} className={`${styles['tab-pannel-wrapper']}`}>
+                <PlacesTab />
             </TabPanel>
-            <TabPanel value={value} index={1}>
+            <TabPanel value={value} index={1} className={`${styles['tab-pannel-wrapper']}`}>
                 Item Two
             </TabPanel>
-            <TabPanel value={value} index={2}>
+            <TabPanel value={value} index={2} className={`${styles['tab-pannel-wrapper']}`}>
                 Item Three
             </TabPanel>
         </div >

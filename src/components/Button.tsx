@@ -31,12 +31,13 @@ type CustomButtonProps = {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void,
   className?: string,
   StartIcon?: any,
-  colors?: Array<string>
+  colors?: Array<string>,
+  style?:  React.CSSProperties | undefined
 }
 
 export default function CustomizedButtons(props: CustomButtonProps) {
   const { label, disabled, onClick, className, 
-    StartIcon, colors
+    StartIcon, colors, style
    } = props;
   return (
     <Stack spacing={2} direction="row" >
@@ -47,6 +48,7 @@ export default function CustomizedButtons(props: CustomButtonProps) {
           backgroundColor: colors ? colors[0] : '#13100DE5',
           color: colors ? colors[1] : '#fff',
           boxShadow: colors ? colors[2] : 'initial',
+          ...style
         }}
       >
           { label }
