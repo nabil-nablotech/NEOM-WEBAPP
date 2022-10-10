@@ -5,10 +5,9 @@ import { useNavigate } from "react-router-dom";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
 import styles from "./index.module.css";
-import useAuth from "../../hooks/useAuth";
+import useSetPassword from "../../hooks/useSetPassword";
 import PositionedSnackbar from "../../components/Snackbar";
 
-import { validateEmail, validatePassword, baseUrl } from "../../utils/services/helpers";
 import LoginScreenTemplate from "../../components/LoginScreenTemplate";
 import Box from '@mui/material/Box';
 import PasswordValid from '../../assets/images/password-valid.svg'
@@ -33,7 +32,7 @@ type FormErrors = {
 export const SetPassword = () => {
 
 
-  const navigate = useNavigate();
+  const {query, resetPasswordMutation} = useSetPassword();
 
   const [state, setState] = useState<stateInput>({
     confirmPassword: "",
@@ -136,7 +135,6 @@ export const SetPassword = () => {
 
     /**static if block setting to debug error message */
     if (!e.target.value) {
-
       validateCredentials(name);
     }
 
@@ -169,7 +167,7 @@ export const SetPassword = () => {
   // Form submission
   const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
+    resetPasswordMutation({password: state.password, id: query.data.id });
   };
 
 
@@ -211,9 +209,9 @@ export const SetPassword = () => {
               {
                 (focusedInput === 'password' ? validatorsArray_password :
                   validatorsArray_conf_password
-                ).map(validateConditionObj => {
+                ).map((validateConditionObj, i) => {
 
-                  return <>
+                  return <div key={i}>
                     <div className={`${styles["validate-statement-row"]}`}>
                       <div>
                         <Box
@@ -226,7 +224,7 @@ export const SetPassword = () => {
                         {validateConditionObj.name} {validateConditionObj.fulfilled}
                       </div>
                     </div>
-                  </>
+                  </div>
                 })
               }
             </section>
@@ -235,7 +233,6 @@ export const SetPassword = () => {
             className={`${styles["sign-in-btn"]}`}
             label="SET PASSWORD"
             disabled={isSetPasswordDisabled}
-            // disabled={true}
             onClick={(e) => submit(e)}
           />
         </Grid>

@@ -38,8 +38,6 @@ const UserManagement = () => {
         <UserMenuComponent />
         <div className={`${styles["content-section"]}`}>
           <Container maxWidth="xl">
-            {/* <div className={`${styles['title']}`}>USERS</div>
-                        <Button label="SIGN IN" /> */}
             <UserManagementTable
               isLoading={isLoading}
               data={data || []}

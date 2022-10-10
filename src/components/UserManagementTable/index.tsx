@@ -294,7 +294,7 @@ export const UserManagementTable = (props: IUser) => {
     userRoles,
     copyLink,
     generateLink,
-    selectedUserLink
+    selectedUserLink,
   } = props;
   const [dataList, setDataList] = useState<User[] | []>([]);
   const [form, setForm] = useState({});
@@ -328,9 +328,12 @@ export const UserManagementTable = (props: IUser) => {
     setConfirmLoading(true);
     if (modalState && modalState.editing)
       editUser({
-        ...userData,
-        ...values,
-        blocked: values.blocked === "inactive" ? true : false,
+        user: {
+          ...userData,
+          ...values,
+          blocked: values.blocked === "inactive" ? true : false,
+        },
+        id: modalState.editing.id,
       });
     else {
       const pass = passwordGenerator();
@@ -421,13 +424,17 @@ export const UserManagementTable = (props: IUser) => {
     const showRecoveryLink = selectedUserLink?.user?.id === record.id;
     return (
       <>
-        {showRecoveryLink ? <div className={`${styles["recovery-button"]}`}>
-          <Button
-            label={`${selectedUserLink.recovery ? 'RECOVERY' : 'ACCESS'} LINK`}
-            onClick={() => copyLink()}
-            StartIcon={ContentCopyOutlinedIcon}
-          />
-          </div> : null}
+        {showRecoveryLink ? (
+          <div className={`${styles["recovery-button"]}`}>
+            <Button
+              label={`${
+                selectedUserLink.recovery ? "RECOVERY" : "ACCESS"
+              } LINK`}
+              onClick={() => copyLink()}
+              StartIcon={ContentCopyOutlinedIcon}
+            />
+          </div>
+        ) : null}
         <div
           className=""
           onClick={(e) => {
@@ -456,7 +463,7 @@ export const UserManagementTable = (props: IUser) => {
           <MenuItem
             key={1}
             onClick={() => {
-              generateLink({user: record, recovery: true});
+              generateLink({ user: record, recovery: true });
             }}
           >
             Recover Password

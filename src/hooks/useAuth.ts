@@ -65,18 +65,13 @@ const useAuth = () => {
         setLoading(false); 
     }
   }
-
-  function decryptUser(str: string) {
-    return decodeURIComponent(window.atob(str));
-  }
  
   return {
     loading,
     error,
     data,
     clientLogin,
-    fetchLoginData,
-    decryptUser,
+    fetchLoginData
   };
 };
 

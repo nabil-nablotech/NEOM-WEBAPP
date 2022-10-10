@@ -32,6 +32,7 @@ export type UserPayload = {
   firstName: string;
   role: string;
   lastName: string;
+  recoveryToken?: string;
 }
 
 export type LoginData = {
@@ -58,3 +59,5 @@ export type Roles = {
   roles: Role[]
 }
 
+export type EditUserPayload = {user: UserPayload | {}, id: number}
+export type SetPasswordPayload = {password: string, id: number}
