@@ -48,7 +48,6 @@ function UserMenuComponent() {
   const navigate = useNavigate();
   const { data } = useSelector((state: RootState) => state.login);
 
-  console.log('data', data);
   if (!data) return null;
 
 

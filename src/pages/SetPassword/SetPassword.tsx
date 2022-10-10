@@ -182,6 +182,7 @@ export const SetPassword = () => {
           <TextInput
             className={`${styles["password"]}`}
             label="Password"
+            type={"password"}
             value={state.password}
             error={formErrors.password.message ? true : false}
             errorText={formErrors.password.message}
