@@ -8,7 +8,7 @@
     font-family: 'Roboto-Regular';
     position: relative;
     padding-inline: 0.5em;
-    gap: 1em;
+    gap: 0.8em;
 }
 
 .content ,
@@ -16,10 +16,11 @@
     text-align: left;
     display: flex;
     flex-direction: column !important;
-    padding-bottom: 0.5em;
+
+    padding: 0;
     justify-content: space-between;
     position: relative;
-
+    gap: 0.5em;
 }
 
 .card-title {
@@ -34,7 +35,6 @@
     font-size: clamp(10px, 1.2vw, 18px);
     line-height: 1;
     font-weight: 400;
-    margin-top: 0.5em;
 }
 
 .card-date {
@@ -42,7 +42,10 @@
     line-height: 1;
     font-weight: 400;
     color: var(--grey-text);
-    margin-block: 0.5em;
+}
+
+.card-image-wrapper {
+    display: flex;
 }
 
 .card-image {
@@ -53,7 +56,7 @@
 
 .keyword-pill {
     border: 1px solid #79747E;
-    border-radius: 10px;
+    border-radius: 0.5em;
     font-size: 16px;
     font-size: clamp(12px, 1.2vw, 14px);
 

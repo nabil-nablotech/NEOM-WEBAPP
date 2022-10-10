@@ -21,7 +21,7 @@ const Card = ({
     return <>
         <Box className={`${gridStyles['card-container']}`} key={key}>
             <Grid container spacing={1} className={`${gridStyles['card-grid']}`}>
-                <Grid item xl={5} lg={5}>
+                <Grid item xl={5} lg={5} className={`${gridStyles['card-image-wrapper']}`}>
                     <Box className={`${gridStyles['card-image']}`} component="img" alt={""} src={img} />
                 </Grid>
                 <Grid item xl={6} lg={6} className={`${gridStyles['content']}`}>
