@@ -120,7 +120,7 @@ const useUser = () => {
     setSelectedUserLink(userData);
     await setUserData(userData.user);
     await editUser({
-      user: {recoveryToken: token},
+      user: {recoveryToken: token, confirmed: false, blocked: true},
       id: userData.user.id
     });
     handleUser(null);
