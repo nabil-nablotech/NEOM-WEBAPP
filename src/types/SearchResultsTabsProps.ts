@@ -15,3 +15,12 @@ export interface TabPanelProps {
 }
 
 export type tabNameProps = 'Places' | 'Events' | 'Library' | 'Media'
+
+export type GridViewCard = {
+    key?: number
+    img: string
+    title: string
+    subTitle: string
+    dateString: string
+    keywords: Array<string>
+}

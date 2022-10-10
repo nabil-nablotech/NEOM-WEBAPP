@@ -1,0 +1,61 @@
+.left-grid-container {
+    gap: 1em;
+}
+.card-grid {
+    justify-content: space-between;
+    font-family: 'Roboto-Regular';
+    position: relative;
+    padding-inline: 0.5em;
+}
+
+.content ,
+.content.MuiGrid-root {
+    text-align: left;
+    display: flex;
+    flex-direction: column !important;
+    padding-bottom: 0.5em;
+    justify-content: space-between;
+}
+
+.card-title {
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: 500;
+}
+
+.card-subtitle {
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 400;
+    margin-top: 0.5em;
+}
+
+.card-date {
+    font-size: 12px;
+    line-height: 1.2;
+    font-weight: 400;
+    color: var(--grey-text);
+    margin-block: 0.5em;
+}
+
+.card-image {
+    width: 100%;
+    aspect-ratio: 3/2;
+    object-fit: cover;
+}
+
+.keyword-pill {
+    border: 1px solid #79747E;
+    border-radius: 10px;
+    font-size: 16px;
+    line-height: 1.2;
+    width: fit-content;
+    padding: 0.5px 10px;
+    color: var(--pill-back-color);
+}
+
+.card-keywords {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}

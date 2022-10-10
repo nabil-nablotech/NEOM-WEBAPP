@@ -5,6 +5,8 @@ import placesStyles from './index.module.css'
 import Button from "../../../components/Button";
 import GridViewOpen from '../../../assets/images/searchResults/GridViewOpen.svg'
 import ListViewClosed from '../../../assets/images/searchResults/ListViewClosed.svg'
+import GridView from './GridView/GridView';
+import { Grid } from '@mui/material';
 
 const PlacesTab = ({
     resultCount = 1053
@@ -34,7 +36,15 @@ const PlacesTab = ({
                 <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={ListViewClosed} />
             </Box>
             <Box component={'section'} className={`${styles['result-section']}`}>
-                
+                <Grid container spacing={1}>
+                    <Grid item xl={5} lg={6}>
+                        <GridView />
+                    </Grid>
+                    {/* To-do: map view */}
+                    {/* <Grid item xs={4}>
+                        <Item>xs=4</Item>
+                    </Grid> */}
+                </Grid>
             </Box>
         </Box>
     );
