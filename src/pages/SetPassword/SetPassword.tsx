@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
-import { useQuery, gql } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
 import styles from "./index.module.css";
 import useSetPassword from "../../hooks/useSetPassword";
-import PositionedSnackbar from "../../components/Snackbar";
 
 import LoginScreenTemplate from "../../components/LoginScreenTemplate";
 import Box from '@mui/material/Box';
@@ -14,41 +11,15 @@ import PasswordValid from '../../assets/images/password-valid.svg'
 import PasswordInalid from '../../assets/images/password-invalid.svg'
 import {cloneDeep} from 'lodash'
 
-type stateInput = {
-  confirmPassword: string;
-  password: string;
-};
-
 type FormError = {
   show: boolean;
   message: string;
 };
 
-type FormErrors = {
-  confirmPassword: FormError;
-  password: FormError;
-};
-
 export const SetPassword = () => {
 
 
-  const {query, resetPasswordMutation} = useSetPassword();
-
-  const [state, setState] = useState<stateInput>({
-    confirmPassword: "",
-    password: "",
-  });
-
-  const [formErrors, setFormErrors] = useState<FormErrors>({
-    confirmPassword: {
-      show: false,
-      message: "",
-    },
-    password: {
-      show: false,
-      message: "",
-    },
-  });
+  const {query, resetPasswordMutation, setState, state} = useSetPassword();
 
   const [snackbarErrorMessage, setSnackbarErrorMessage] =
     useState<boolean>(false);
@@ -89,7 +60,7 @@ export const SetPassword = () => {
   } else {
     toggleSetPasswordDisabled(false);
   }
-  }, [formErrors, state, validatorsArray_password, validatorsArray_conf_password]);
+  }, [state, validatorsArray_password, validatorsArray_conf_password]);
 
   type validtr = {
     name: string
@@ -167,7 +138,7 @@ export const SetPassword = () => {
   // Form submission
   const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    resetPasswordMutation({password: state.password, id: query.data.id });
+    if (query && query.data) resetPasswordMutation({password: state.password, id: query.data.id });
   };
 
 
@@ -184,8 +155,6 @@ export const SetPassword = () => {
             label="Password"
             type={"password"}
             value={state.password}
-            error={formErrors.password.message ? true : false}
-            errorText={formErrors.password.message}
             onChange={(e) => handleChange(e, "password")}
             onBlur={(e) => handleBlur(e, "password")}
             onFocus={e => setFocusedInput("password")}
@@ -196,8 +165,6 @@ export const SetPassword = () => {
             type={"password"}
             autoComplete="new-password"
             value={state.confirmPassword}
-            error={formErrors.confirmPassword.message ? true : false}
-            errorText={formErrors.confirmPassword.message}
             onChange={(e) => handleChange(e, "confirmPassword")}
             onBlur={(e) => handleBlur(e, 'confirmPassword')}
             onFocus={e => setFocusedInput("confirmPassword")}

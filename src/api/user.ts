@@ -5,10 +5,12 @@ import {
   EditUserPayload,
   Roles,
 } from "../types/User";
-import { LinkGenerate } from "../types/UserManagement";
 import client from "../utils/services/axiosClient";
 
-export const fetchUser = (): Promise<User[]> =>
+export const fetchMeUser = (): Promise<User> =>
+  client.get<User>("/api/users/me?populate=*").then((response) => response.data);
+
+  export const fetchUser = (): Promise<User[]> =>
   client.get<User[]>("/api/users?populate=*").then((response) => response.data);
 
 export const fetchUserRole = (): Promise<Roles> =>
@@ -25,3 +27,4 @@ export const editUser = (
   
 ): Promise<User> =>
   client.put(`/api/users/${payload.id}`, payload.user).then((response) => response.data);
+
