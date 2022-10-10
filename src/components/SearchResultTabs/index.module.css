@@ -1,6 +1,6 @@
 .search-results-wrapper {
     background-color: var(--off-white-background-color);
-    padding-top: 5.5em;
+    padding-top: 4.5em;
     font-family: 'Roboto-Regular';
 }
 .tab-pannel-wrapper {
@@ -10,6 +10,7 @@
     font-weight: 500;
     font-size: 1em;
     line-height: 1;
+    min-height: fit-content;
 }
 .main-tab-content {
     min-height: 69vh;

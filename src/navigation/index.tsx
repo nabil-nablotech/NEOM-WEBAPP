@@ -41,6 +41,7 @@ export const Navigation = () => {
     {
       path: "/search-results/:tabName",
       element: <AdminRoute path={"/search-results/:tabName"} component={SearchResults} />,
+      // element: <PublicRoute component={SearchResults} />,
     },
     {
       path: "/search",

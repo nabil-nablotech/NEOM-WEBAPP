@@ -23,6 +23,7 @@ export type GridViewCard_Places = {
     subTitle: string
     dateString: string
     keywords: Array<string>
+    onClick?:((e: React.MouseEvent<Element, React.MouseEvent>) => void) & React.MouseEvent<Element, React.MouseEvent>
 }
 export type GridViewCard_Events = {
     key?: number
@@ -31,4 +32,8 @@ export type GridViewCard_Events = {
     subTitle: string
     dateString: string
     isNew: boolean
+}
+
+export type SearchResultsState2 = {
+    selectedCardIndex: number 
 }

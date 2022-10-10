@@ -1,7 +1,10 @@
 .card-container {
+    cursor: pointer;
 }
 .left-grid-container {
     gap: 1em;
+    max-height: 70vh;
+    overflow-y: scroll;
 }
 .card-grid {
     justify-content: center;
@@ -24,7 +27,7 @@
 }
 
 .card-title {
-    font-size: clamp(15px, 2.2vw, 38px);
+    font-size: clamp(15px, 2vw, 38px);
     line-height: 1;
     font-weight: 500;
     max-width: 96%;
@@ -32,13 +35,13 @@
 }
 
 .card-subtitle {
-    font-size: clamp(10px, 1.2vw, 18px);
+    font-size: clamp(10px, 1.1vw, 18px);
     line-height: 1;
     font-weight: 400;
 }
 
 .card-date {
-    font-size: clamp(10px, 1.1vw, 15px);
+    font-size: clamp(10px, 1vw, 15px);
     line-height: 1;
     font-weight: 400;
     color: var(--grey-text);
@@ -50,7 +53,7 @@
 
 .card-image {
     width: 100%;
-    aspect-ratio: 3/2;
+    aspect-ratio: 3/1.8;
     object-fit: cover;
 }
 
@@ -58,7 +61,7 @@
     border: 1px solid #79747E;
     border-radius: 0.5em;
     font-size: 16px;
-    font-size: clamp(12px, 1.2vw, 14px);
+    font-size: clamp(12px, 1.1vw, 14px);
 
     line-height: 1.2;
     width: fit-content;

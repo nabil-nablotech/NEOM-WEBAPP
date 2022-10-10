@@ -13,6 +13,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import PlacesTab from './Places';
 import EventsTab from './Events';
+import LibraryTab from './Library';
 
 
 function TabPanel(props: TabPanelProps) {
@@ -137,8 +138,10 @@ const SearchResultTabs = ({
                                 />} {...a11yProps(index)}
                                 sx={{
                                     textTransform: 'initial',
-                                    padding: '0.2em 2em'
+                                    padding: '0em 2em',
+                                    minHeight: '35px'
                                 }}
+                                className={`${styles['tab']}`}
                             />
                         ))
                     }
@@ -151,7 +154,10 @@ const SearchResultTabs = ({
                 <EventsTab />
             </TabPanel>
             <TabPanel value={value} index={2} className={`${styles['tab-pannel-wrapper']}`}>
-                Item Three
+                <LibraryTab />
+            </TabPanel>
+            <TabPanel value={value} index={2} className={`${styles['tab-pannel-wrapper']}`}>
+                Media
             </TabPanel>
         </div >
     );

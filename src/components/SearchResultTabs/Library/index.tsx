@@ -1,20 +1,18 @@
 import React, { Component } from 'react'
 import Box from '@mui/material/Box';
 import styles from '../index.module.css'
+// import placesStyles from './index.module.css'
 import Button from "../../../components/Button";
-import GridViewOpen from '../../../assets/images/searchResults/GridViewOpen.svg'
-import ListViewClosed from '../../../assets/images/searchResults/ListViewClosed.svg'
-import GridView from './GridView/GridView';
-import { Grid } from '@mui/material';
+// import { Grid } from '@mui/material';
 
-const EventsTab = ({
+const LibraryTab = ({
     resultCount = 1053
 }) => {
      
     return (
         <Box className={`${styles['main-tab-content']}`}>
             <Box className={`${styles['utility-bar']}`}>
-                <Box>{resultCount} Total Events</Box>
+                <Box>{resultCount} Total Library Items</Box>
                 <Box>
                 <Button
                     colors={["transparent", "var(--table-black-text)", "var(--table-black-text)"]}
@@ -31,22 +29,9 @@ const EventsTab = ({
                     // onClick={handleCancel}
                 />
                 </Box>
-                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={GridViewOpen} />
-                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={ListViewClosed} />
-            </Box>
-            <Box component={'section'} className={`${styles['result-section']}`}>
-                <Grid container spacing={1}>
-                    <Grid item xl={6} lg={6}>
-                        <GridView />
-                    </Grid>
-                    {/* To-do: map view */}
-                    {/* <Grid item xs={4}>
-                        <Item>xs=4</Item>
-                    </Grid> */}
-                </Grid>
             </Box>
         </Box>
     );
 }
  
-export default EventsTab;
+export default LibraryTab;

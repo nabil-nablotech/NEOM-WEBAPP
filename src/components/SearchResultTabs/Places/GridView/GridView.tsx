@@ -6,9 +6,11 @@ import gridStyles from './index.module.css'
 import { Grid, Stack } from '@mui/material';
 import { format } from "date-fns";
 import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
+import { useDispatch } from "react-redux";
 
 /** indicating that we can send html later on wherever we parse */
 import parse from 'html-react-parser';
+import { setSelectedCardIndex } from '../../../../store/reducers/searchResultsReducer';
 
 const Card = ({
     key,
@@ -19,7 +21,8 @@ const Card = ({
     keywords
 }: GridViewCard_Places) => {
     return <>
-        <Box className={`${gridStyles['card-container']}`} key={key}>
+        <Box className={`${gridStyles['card-container']}`} key={key} 
+        >
             <Grid container spacing={1} className={`${gridStyles['card-grid']}`}>
                 <Grid item xl={5} lg={5} className={`${gridStyles['card-image-wrapper']}`}>
                     <Box className={`${gridStyles['card-image']}`} component="img" alt={""} src={img} />
@@ -46,6 +49,7 @@ const Card = ({
 const GridView = () => {
 
     const [data, setData] = useState<any>([])
+    const dispatch = useDispatch();
 
     useEffect(() => {
         fetch('https://jsonplaceholder.typicode.com/photos')
@@ -60,8 +64,10 @@ const GridView = () => {
         >
             <Grid container spacing={1} className={`${gridStyles['left-grid-container']}`}>
                 {
-                    data?.map((item: any, index: number) => <>
-                        <Grid item sm={12} className={`${gridStyles['']}`}>
+                    data?.map((item: any, index: number ) => <>
+                        <Grid item sm={12} className={`${gridStyles['']}`} onClick={e => {
+                            dispatch(setSelectedCardIndex(index))
+                        }}>
                             <Card
                                 key={index}
                                 img={item.thumbnailUrl}

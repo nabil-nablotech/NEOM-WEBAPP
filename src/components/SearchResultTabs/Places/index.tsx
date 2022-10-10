@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box';
 import styles from '../index.module.css'
 import placesStyles from './index.module.css'
@@ -7,11 +7,26 @@ import GridViewOpen from '../../../assets/images/searchResults/GridViewOpen.svg'
 import ListViewClosed from '../../../assets/images/searchResults/ListViewClosed.svg'
 import GridView from './GridView/GridView';
 import { Grid } from '@mui/material';
+import MapImg1 from '../../../assets/images/searchResults/mapImage1.webp'
+import MapImg2 from '../../../assets/images/searchResults/mapImage2.jpg'
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 
 const PlacesTab = ({
     resultCount = 1053
 }) => {
-     
+    const { selectedCardIndex } = useSelector((state: RootState) => state.searchResults);
+    const [img, setimg] = useState(MapImg1)
+    useEffect(() => {
+      console.log('Hex: ', typeof selectedCardIndex)
+    
+      if(selectedCardIndex) {
+        setimg(selectedCardIndex%2 === 0 ? MapImg2 : MapImg1)
+
+      }
+    }, [selectedCardIndex])
+    
+
     return (
         <Box className={`${styles['main-tab-content']}`}>
             <Box className={`${styles['utility-bar']}`}>
@@ -41,9 +56,9 @@ const PlacesTab = ({
                         <GridView />
                     </Grid>
                     {/* To-do: map view */}
-                    {/* <Grid item xs={4}>
-                        <Item>xs=4</Item>
-                    </Grid> */}
+                    <Grid item xl={4} lg={6}>
+                        <Box className={`${placesStyles['map-img']}`} component="img" alt={""} src={img} />
+                    </Grid>
                 </Grid>
             </Box>
         </Box>
