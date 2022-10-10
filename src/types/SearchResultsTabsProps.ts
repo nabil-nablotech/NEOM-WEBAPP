@@ -16,11 +16,19 @@ export interface TabPanelProps {
 
 export type tabNameProps = 'Places' | 'Events' | 'Library' | 'Media'
 
-export type GridViewCard = {
+export type GridViewCard_Places = {
     key?: number
     img: string
     title: string
     subTitle: string
     dateString: string
     keywords: Array<string>
+}
+export type GridViewCard_Events = {
+    key?: number
+    img: string
+    title: string
+    subTitle: string
+    dateString: string
+    isNew: boolean
 }

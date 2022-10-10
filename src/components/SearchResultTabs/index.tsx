@@ -12,6 +12,7 @@ import { LabelProps, SearchResultTabsProps, tabNameProps, TabPanelProps } from '
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import PlacesTab from './Places';
+import EventsTab from './Events';
 
 
 function TabPanel(props: TabPanelProps) {
@@ -147,7 +148,7 @@ const SearchResultTabs = ({
                 <PlacesTab />
             </TabPanel>
             <TabPanel value={value} index={1} className={`${styles['tab-pannel-wrapper']}`}>
-                Item Two
+                <EventsTab />
             </TabPanel>
             <TabPanel value={value} index={2} className={`${styles['tab-pannel-wrapper']}`}>
                 Item Three
