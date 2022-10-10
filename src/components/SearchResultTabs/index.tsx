@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './index.module.css'
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
@@ -8,7 +8,9 @@ import Places from "../../assets/images/searchResults/Places.svg";
 import Events from "../../assets/images/searchResults/Events.svg";
 import Library from "../../assets/images/searchResults/Library.svg";
 import Media from "../../assets/images/searchResults/Media.svg";
-import { LabelProps, SearchResultTabsProps, TabPanelProps } from '../../types/SearchResultsTabsProps';
+import { LabelProps, SearchResultTabsProps, tabNameProps, TabPanelProps } from '../../types/SearchResultsTabsProps';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 function TabPanel(props: TabPanelProps) {
@@ -74,14 +76,37 @@ const Label = ({
     </>
 }
 
+const tabIndexBasedOnName = (tabName: tabNameProps) => {
+    switch (tabName) {
+        case 'Places': return 0
+        case 'Events': return 1
+        case 'Library': return 2
+        case 'Media': return 3
+    }
+}
+
 const SearchResultTabs = ({
     tabIndex
-}:SearchResultTabsProps ) => {
+}: SearchResultTabsProps) => {
     const [value, setValue] = React.useState(0);
+    let { tabName } = useParams<{tabName?: tabNameProps}>();
+
+    const navigate = useNavigate();
+
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
+        let newLabel = TabLabels[newValue].label
+        navigate(`/search-results/${newLabel ? newLabel : 'Places'}`, {replace: true})
     };
+
+    useEffect(() => {
+        if(tabName) {
+            const newTabIndex = tabIndexBasedOnName(tabName)
+            setValue(newTabIndex)
+        }
+    }, [tabName])
+
 
     return (
         <div className={`${styles['search-results-wrapper']}`}>

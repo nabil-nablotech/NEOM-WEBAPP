@@ -12,3 +12,5 @@ export interface TabPanelProps {
     index: number;
     value: number;
 }
+
+export type tabNameProps = 'Places' | 'Events' | 'Library' | 'Media'

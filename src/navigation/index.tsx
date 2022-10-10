@@ -39,6 +39,10 @@ export const Navigation = () => {
       // element: <PublicRoute component={SearchResults} />,
     },
     {
+      path: "/search-results/:tabName",
+      element: <AdminRoute path={"/search-results/:tabName"} component={SearchResults} />,
+    },
+    {
       path: "/search",
       element: <Search />,
       children: [
