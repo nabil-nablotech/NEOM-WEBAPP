@@ -12,7 +12,7 @@ import SearchResults from "../pages/SearchResults";
 import useAuth from "../hooks/useAuth";
 
 export const Navigation = () => {
-  const {} = useAuth();
+  useAuth();
   let routes = useRoutes([
     {
       path: "/",

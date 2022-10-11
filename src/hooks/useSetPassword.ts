@@ -63,7 +63,7 @@ const useSetPassword = () => {
 
   useEffect(() => {
     getUserDetails();
-  }, []);
+  });
 
   const {mutate: resetPasswordMutation} = useMutation(['resetPassword'], resetPassword, {
     onSuccess: async (data: User) => {

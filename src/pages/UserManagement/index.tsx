@@ -9,7 +9,6 @@ import useUser from "../../hooks/useUser";
 const UserManagement = () => {
   const {
     query,
-    showModal,
     handleUser,
     userData,
     editUserMutation,

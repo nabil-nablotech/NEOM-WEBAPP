@@ -14,7 +14,7 @@ const useAuth = () => {
       fetchSession();
       getSearchCount();
     }
-  }, []);
+  });
 
   /**
    * get user session details

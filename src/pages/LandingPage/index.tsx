@@ -57,7 +57,7 @@ function LandingPage() {
     vector3,
     spanText9,
   } = landingPageData;
-  const {} = useAuth();
+  useAuth();
   const { data } = useSelector((state: RootState) => state.login);
   const { totalCounts } = useSelector(
     (state: RootState) => state.searchResults
@@ -81,24 +81,6 @@ function LandingPage() {
           <Rectangle69></Rectangle69>
           <Frame2608172>
             <Image2 src={image2} alt="image 2" />
-            {/* <SearchField>
-              <Content>
-                <IconSearch src={iconSearch} alt="icon-search" />
-                <LabelText>
-                  <span>
-                    <span className="roboto-normal-licorice-16px">{spanText1}</span>
-                  </span>
-                </LabelText>
-              </Content>
-            </SearchField> */}
-
-            {/* sx={{
-                '& .MuiInputBase-input ' : {
-                  backgroundColor: '#fff'
-                }
-              }}
-              ref={searchRef}
-            /> */}
             <CustomSearchField
               className={`${styles["custom-search-field"]} ${styles["landing-page-search-field"]}`}
             />
