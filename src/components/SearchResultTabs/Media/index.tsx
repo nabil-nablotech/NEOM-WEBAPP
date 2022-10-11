@@ -50,11 +50,11 @@ const MediaTab = ({
             </Box>
             <Box component={'section'} className={`${styles['result-section']}`}>
                 <Grid container spacing={1}>
-                    <Grid item xl={6} lg={6}>
+                    <Grid item xl={6} lg={6} md={5} sm={5}>
                         <GridView />
                     </Grid>
                     {/* To-do: map view */}
-                    <Grid item xl={6} lg={6}>
+                    <Grid item xl={6} lg={6} md={7} sm={7}>
                         <Box className={`${placesStyles['map-img']}`} component="img" alt={""} src={img} />
                     </Grid>
                 </Grid>

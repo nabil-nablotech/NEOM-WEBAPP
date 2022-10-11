@@ -61,7 +61,7 @@ const GridView = () => {
             <Grid container spacing={1} className={`${gridStyles['left-grid-container']}`}>
                 {
                     data?.map((item: any, index: number ) => <>
-                        <Grid item sm={5} className={`${gridStyles['card-item']}`} onClick={e => {
+                        <Grid item md={12} lg={5} className={`${gridStyles['card-item']}`} onClick={e => {
                             dispatch(setSelectedCardIndex(index))
                         }}>
                             <Card
