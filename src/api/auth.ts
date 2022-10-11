@@ -1,5 +1,4 @@
 import {
-  User,
   loginPayload,
   UserDetails,
 } from "../types/User";

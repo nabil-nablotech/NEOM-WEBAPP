@@ -1,11 +1,7 @@
-import { createSlice, PayloadAction, SliceCaseReducers } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../../types/User';
 import { LoginData } from '../../types/Login';
-
-export interface CounterState {
-  data: User | null
-  screenData: LoginData | null
-}
+import { CounterState } from '../types';
 
 const initialState: CounterState = {
   data: null,

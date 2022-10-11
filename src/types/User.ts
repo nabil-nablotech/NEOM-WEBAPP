@@ -12,6 +12,7 @@ export type User = {
   username: string;
   id: number;
   provider: string;
+  recoveryToken: string;
   updatedAt: Date;
   role: Role
 };
