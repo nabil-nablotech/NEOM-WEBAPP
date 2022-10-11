@@ -13,7 +13,7 @@ const useLogin = () => {
 
   useEffect(() => {
     fetchLoginData();
-  });
+  }, []);
 
   /**
    * get user session details

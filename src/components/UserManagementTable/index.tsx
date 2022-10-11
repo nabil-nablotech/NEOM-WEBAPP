@@ -269,11 +269,11 @@ export type IUser = {
   setConfirmLoading: (e: boolean) => void;
   confirmLoading: boolean;
   updatedUser?: User;
-  selectedUserLink: LinkGenerate | null;
+  selectedUserLink: LinkGenerate[] | null;
   setModalState: (e: UserModalstate) => void;
   modalState: UserModalstate;
   userRoles?: Roles;
-  copyLink: () => void;
+  copyLink: (str: string, recovery: boolean) => void;
 };
 
 export const UserManagementTable = (props: IUser) => {
@@ -294,33 +294,18 @@ export const UserManagementTable = (props: IUser) => {
     selectedUserLink,
   } = props;
   const [dataList, setDataList] = useState<User[] | []>([]);
-  // const [form, setForm] = useState({});
 
   useEffect(() => {
     setDataList(data);
   }, [data]);
 
   const showModal = (editing: User | null) => {
-    // setForm(
-    //   editing || {
-    //     firstName: null,
-    //     lastName: null,
-    //     email: null,
-    //     role: "",
-    //   }
-    // );
+
     setModalState({ visible: true, editing: editing });
     handleUser(editing);
   };
 
   const handleOk = async (values: AddUserState) => {
-    // setForm({
-    //   firstName: null,
-    //   lastName: null,
-    //   email: null,
-    //   role: "",
-    //   blocked: "",
-    // });
 
     setConfirmLoading(true);
     if (modalState && modalState.editing)
@@ -345,13 +330,7 @@ export const UserManagementTable = (props: IUser) => {
   };
 
   const handleCancel = () => {
-    // setForm({
-    //   firstName: null,
-    //   lastName: null,
-    //   email: null,
-    //   role: "",
-    //   blocked: false,
-    // });
+
     setModalState({ visible: false, editing: null });
   };
 
@@ -419,16 +398,17 @@ export const UserManagementTable = (props: IUser) => {
     const handleClose = () => {
       setAnchorEl(null);
     };
-    const showRecoveryLink = selectedUserLink?.user?.id === record.id;
+    // const showRecoveryLink = selectedUserLink?.find((x: LinkGenerate) => x?.user?.id === record.id);
+    const showRecoveryLink = record.recoveryToken;
     return (
       <>
         {showRecoveryLink ? (
           <div className={`${styles["recovery-button"]}`}>
             <Button
               label={`${
-                selectedUserLink.recovery ? "RECOVERY" : "ACCESS"
+                record.confirmed ? "RECOVERY" : "ACCESS"
               } LINK`}
-              onClick={() => copyLink()}
+              onClick={() => copyLink(record.recoveryToken, record.confirmed)}
               StartIcon={() => <ContentCopyOutlinedIcon fontSize="small" className={`${styles["copy-icon"]}`}/>}
             />
           </div>
@@ -477,7 +457,6 @@ export const UserManagementTable = (props: IUser) => {
   const filterResults = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (data.length > 0) {
       let newDatalist = [...data];
-
       /** filter when search string is not empty */
       if (e.target.value !== "") {
         newDatalist = dataList
@@ -485,14 +464,17 @@ export const UserManagementTable = (props: IUser) => {
               let flag = false;
 
               Object.keys(obj).forEach((key) => {
-                /** if any string out of each column item matches, return result */
-                if (
-                  obj[key as keyof User]
-                    .toString()
-                    .toLowerCase()
-                    .indexOf(e.target.value.toLowerCase()) !== -1
-                ) {
-                  flag = true;
+                if ((key === 'firstName') || (key === 'lastName') || (key === 'email')) {
+
+                  /** if any string out of each column item matches, return result */
+                  if (
+                    obj[key as keyof User]
+                      .toString()
+                      .toLowerCase()
+                      .indexOf(e.target.value.toLowerCase()) !== -1
+                  ) {
+                    flag = true;
+                  }
                 }
               });
 
@@ -500,7 +482,6 @@ export const UserManagementTable = (props: IUser) => {
             })
           : [];
       }
-
       setDataList(newDatalist);
     }
   };

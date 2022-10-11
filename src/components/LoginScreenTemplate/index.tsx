@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Grid } from "@mui/material";
-import { useQuery, gql } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";

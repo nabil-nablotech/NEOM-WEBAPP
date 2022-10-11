@@ -36,24 +36,26 @@ const useSetPassword = () => {
   const getUserDetails = () => {
     const key = location.search.replace('?key=', '');
     try {
-      if (params.new === 'true') {
-        setState({
-          ...state,
-          isNew: true
-        });
+      if (key) {
+        if (params.new === 'true') {
+          setState({
+            ...state,
+            isNew: true
+          });
+        }
+        const user = JSON.parse(decryptUser(key));
+        // check the xpiration if expiry date is greater than the current
+        if (dayjs().isBefore(user.exp)) {
+          setData(user);
+          navigate('/set-password/new');
+        } else {
+          setState({
+            ...state,
+            expired: true
+          })
+        }
+        return user;
       }
-      const user = JSON.parse(decryptUser(key));
-      // check the xpiration if expiry date is greater than the current
-      if (dayjs().isBefore(user.exp)) {
-        setData(user);
-        navigate('/set-password/new');
-      } else {
-        setState({
-          ...state,
-          expired: true
-        })
-      }
-      return user;
     } catch (error) {
       console.log('error 1', error);
       handleAlert('Invalid Link', 'error');
@@ -63,7 +65,7 @@ const useSetPassword = () => {
 
   useEffect(() => {
     getUserDetails();
-  });
+  }, []);
 
   const {mutate: resetPasswordMutation} = useMutation(['resetPassword'], resetPassword, {
     onSuccess: async (data: User) => {

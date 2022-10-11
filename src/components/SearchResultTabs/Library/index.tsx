@@ -198,7 +198,7 @@ const LibraryTab = ({
                 setDataList(res.slice(0, 10))
             })
 
-    });
+    }, []);
 
 
     return (
