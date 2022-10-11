@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import PlacesTab from './Places';
 import EventsTab from './Events';
 import LibraryTab from './Library';
+import MediaTab from './Media/index';
 
 
 function TabPanel(props: TabPanelProps) {
@@ -157,7 +158,7 @@ const SearchResultTabs = ({
                 <LibraryTab />
             </TabPanel>
             <TabPanel value={value} index={3} className={`${styles['tab-pannel-wrapper']}`}>
-                Media
+                <MediaTab />
             </TabPanel>
         </div >
     );
