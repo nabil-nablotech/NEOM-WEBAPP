@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { fetchMeUser } from "../api/user";
 import { setUser } from "../store/reducers/loginReducers";
 import {getToken, setRole} from '../utils/storage/storage';
@@ -8,6 +9,8 @@ const useAuth = () => {
   const [data, setData] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<Boolean>(true);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (getToken()) {
@@ -38,7 +41,3 @@ const useAuth = () => {
 };
 
 export default useAuth;
-function dispatch(arg0: { payload: import("../types/User").User; type: string; }) {
-  throw new Error("Function not implemented.");
-}
-
