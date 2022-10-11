@@ -1,7 +1,6 @@
 import { setupInterceptorsTo } from "./interceptor";
 import axios from "axios";
 import { baseUrl } from "./helpers";
-import { getToken } from "../storage/storage";
 
 export type Headers = {
   "Content-Type": "text/HTML" | "application/json"

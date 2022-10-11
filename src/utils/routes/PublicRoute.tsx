@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, {ElementType, FC, ReactElement } from 'react';
+import { FC } from 'react';
 import { Navigate } from 'react-router-dom';
 import { getToken } from '../storage/storage';
 

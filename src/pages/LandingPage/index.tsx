@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import {
   RobotoMediumMerino20px,
   RobotoLightMerino50px,
-  RobotoNormalLicorice16px,
   ValignTextMiddle,
 } from "./styledMixins";
 import "./style.css";
@@ -15,7 +14,6 @@ import CustomSearchField from '../../components/SearchField/index';
 import { RootState } from "../../store";
 import useAuth from "../../hooks/useAuth";
 import styles from './index.module.css'
-import { getRole } from "../../utils/storage/storage";
 import { useNavigate } from "react-router-dom";
 import { tabNameProps } from "../../types/SearchResultsTabsProps";
 
@@ -206,45 +204,6 @@ const Image2 = styled.img`
   height: 93px;
   object-fit: cover;
   margin-bottom: 2em;
-`;
-
-const SearchField = styled.div`
-  margin-top: 40px;
-  margin-right: 1px;
-  display: flex;
-  padding: 0 14px;
-  align-items: flex-start;
-  min-width: 381px;
-  background-color: #ffffff;
-  border-radius: 4px;
-  border: 1px solid;
-  border-color: #e8e9e9;
-`;
-
-const Content = styled.div`
-  height: 40px;
-  display: flex;
-  padding: 7px 0;
-  align-items: center;
-  min-width: 353px;
-  gap: 9px;
-  border: 1px none;
-`;
-
-const IconSearch = styled.img`
-  width: 24px;
-  height: 24px;
-  align-self: flex-end;
-`;
-
-const LabelText = styled.div`
-  ${ValignTextMiddle}
-  ${RobotoNormalLicorice16px}
-            width: 280px;
-  height: 8px;
-  letter-spacing: 0.5px;
-  line-height: 24px;
-  white-space: nowrap;
 `;
 
 const Inventory = styled.div`

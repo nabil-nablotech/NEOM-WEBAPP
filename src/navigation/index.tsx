@@ -1,9 +1,8 @@
-import { Outlet, useRoutes } from "react-router-dom";
+import { useRoutes } from "react-router-dom";
 import PrivateRoute from "../utils/routes/PrivateRoute";
 import PublicRoute from "../utils/routes/PublicRoute";
 import AdminRoute from "../utils/routes/AdminRoute";
 import { Login } from "../pages/Login";
-import { Search } from "../pages/Search";
 import { Details } from "../pages/Details";
 import { PageNotFound } from "../components/PageNotFound";
 import UserManagement from "../pages/UserManagement";

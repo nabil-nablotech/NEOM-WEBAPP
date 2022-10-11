@@ -1,8 +1,6 @@
 import { Container } from "@mui/material";
-import React, { Component } from "react";
 import Header from "../../components/Header";
 import UserMenuComponent from "../../components/UserMenu/index";
-// import UserMenuComponent from './../../components/UserMenu/index';
 import styles from "./index.module.css";
 import Snackbar from "../../components/Snackbar";
 import { UserManagementTable } from "../../components/UserManagementTable";
