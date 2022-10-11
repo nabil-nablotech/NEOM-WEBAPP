@@ -8,17 +8,31 @@ import CustomSearchField from "../SearchField";
 
 interface IHeader {
   showSearch?: boolean
+  screen?: string
 }
 
 const Header = (props: IHeader) => {
 
   const {
-    showSearch = false
+    showSearch = false,
+    screen 
   } = props
   const navigate = useNavigate();
 
   return (
-    <Box className={`${styles["header-container"]}`}>
+    <>
+    {screen === "landing" ? 
+      <>
+        <Box sx={{
+          position: 'absolute',
+          top: '3%',
+          right: '0'
+        }}>
+          <UserMenuComponent />
+        </Box>
+      </>
+      :
+      <Box className={`${styles["header-container"]}`}>
       <Box className={`${styles["header-lhs-content"]}`}>
         <Box className={`${styles["logo"]}`}>
           <Box component="img" alt="NEOM logo" src={Logo}  onClick={() => navigate("/")} />
@@ -31,7 +45,8 @@ const Header = (props: IHeader) => {
         }
         <UserMenuComponent />
       </Box>
-    </Box>
+    </Box>}
+    </>
   );
 };
 

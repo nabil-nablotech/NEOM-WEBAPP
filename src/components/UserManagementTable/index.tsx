@@ -46,7 +46,7 @@ const StyledTable = styled(Table)`
 
   .ant-table {
     font-family: "Roboto-Regular";
-    margin-block: 50px;
+    margin-block: 2em;
   }
 
   .ant-table-thead > tr > th,

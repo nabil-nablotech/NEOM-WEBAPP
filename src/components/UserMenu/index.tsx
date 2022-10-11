@@ -11,6 +11,7 @@ import { RootState } from "../../store";
 import { getRole } from "../../utils/storage/storage";
 
 import MenuList from "../MenuList";
+import { Box } from "@mui/material";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -80,8 +81,15 @@ function UserMenuComponent() {
 
   return (
     <>
-      <UserMenu>
-        <Icon src={icon} alt="icon" />
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        gap: '0.5em',
+        alignItems: 'center',
+        marginLeft: 'auto',
+        marginRight: '1em'
+      }}>
+        <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }}/>
         {admin && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
         <InitialsWrapper
           id="long-button"
@@ -106,7 +114,7 @@ function UserMenuComponent() {
           handleClose={handleSettingsClose}
           options={menuSettingItems}
         />
-      </UserMenu>
+      </Box>
     </>
   );
 }
@@ -119,6 +127,7 @@ const InitialsWrapper = styled.div`
   position: relative;
   cursor: pointer;
   color: #fffF;
+  z-index: 2;
   & div:nth-child(1) {
     position: absolute;
     top: 50%;
@@ -145,12 +154,13 @@ const IconSettings = styled.img`
   // top: 24px;
   // left: 1317px;
   z-index: 3;
+  cursor: pointer;
 `;
 
 const UserMenu = styled.div`
   position: fixed;
   height: fit-content;
-  top: 24px;
+  top: 5%;
   right: 0;
   z-index: 2;
   display: flex;
