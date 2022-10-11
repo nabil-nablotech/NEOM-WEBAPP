@@ -52,8 +52,8 @@ const useSetPassword = () => {
           ...state,
           expired: true
         })
-        handleAlert('Link expired', 'error');
-        navigate('/');
+        // handleAlert('Link expired', 'error');
+        // navigate('/');
       }
       return user;
     } catch (error) {
@@ -66,7 +66,6 @@ const useSetPassword = () => {
   useEffect(() => {
     getUserDetails();
   }, []);
-
 
   const {mutate: resetPasswordMutation} = useMutation(['resetPassword'], resetPassword, {
     onSuccess: async (data: User) => {

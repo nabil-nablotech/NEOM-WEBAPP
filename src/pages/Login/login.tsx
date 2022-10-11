@@ -51,7 +51,6 @@ type FormErrors = {
 
 export function Login() {
   const { clientLogin, error } = useLogin();
-
   const navigate = useNavigate();
   const screenData  = useSelector((rState: RootState) => rState.login.screenData);
   const data = screenData?.data;
