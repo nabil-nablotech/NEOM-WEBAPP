@@ -163,6 +163,9 @@ const UserMenu = styled.div`
   & img {
     cursor: pointer;
   }
+  @media (min-width: 575px) and (max-width: 1025px) {
+    top: 1%;
+  }
 `;
 
 const UserMenu1 = styled.div`

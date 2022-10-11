@@ -16,3 +16,12 @@
     justify-content: left;
     align-items: center;
 }
+
+@media (min-width: 575px) and (max-width: 1025px) {
+    .logo {
+        width: fit-content;
+    }
+    .header-search {
+        width: 40ch;
+    }
+}
