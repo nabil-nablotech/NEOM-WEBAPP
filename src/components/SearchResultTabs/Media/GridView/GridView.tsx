@@ -53,7 +53,7 @@ const GridView = () => {
             .then(res => setData(res.slice(0, 10)))
 
 
-    }, [])
+    })
 
     return (
         <Box className={`${gridStyles['left-grid-box']}`}

@@ -2,8 +2,8 @@ import {useEffect, useState} from 'react';
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {resetPassword} from '../api/setPassword';
 import dayjs from "dayjs";
-import { useQuery, useMutation } from 'react-query';
-import { ISnackbar, User } from '../types/User';
+import { useMutation } from 'react-query';
+import { User } from '../types/User';
 import useAlert from './useAlert';
 import { ResetPaswordStateInput } from '../types/Login';
 import useLogin from './useLogin';
@@ -14,6 +14,7 @@ const useSetPassword = () => {
     password: "",
     error: '',
     isNew: false,
+    expired: false
   });
   const [data, setData] = useState<User | null>(null);
   const location = useLocation();
@@ -47,21 +48,22 @@ const useSetPassword = () => {
         setData(user);
         navigate('/set-password/new');
       } else {
-        handleAlert('Link expired', 'error')
-        navigate('/');
+        setState({
+          ...state,
+          expired: true
+        })
       }
       return user;
     } catch (error) {
       console.log('error 1', error);
       handleAlert('Invalid Link', 'error');
-      handleAlert('Please contact your administrator', 'info');
+      handleAlert('Please contact your administrator', 'error');
     }
   }
 
   useEffect(() => {
     getUserDetails();
-  }, []);
-
+  });
 
   const {mutate: resetPasswordMutation} = useMutation(['resetPassword'], resetPassword, {
     onSuccess: async (data: User) => {

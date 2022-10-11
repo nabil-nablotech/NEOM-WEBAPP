@@ -1,5 +1,4 @@
 import {
-  EditUserPayload,
   User,
   SetPasswordPayload,
 } from "../types/User";

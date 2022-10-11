@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import { GridViewCard_Events } from '../../../../types/SearchResultsTabsProps'
-import gridStyles from './index.module.css'
-import { Grid, Stack } from '@mui/material';
-import { format } from "date-fns";
-import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
-
 /** indicating that we can send html later on wherever we parse */
 import parse from 'html-react-parser';
-import { setSelectedCardIndex } from '../../../../store/reducers/searchResultsReducer';
 import { useDispatch } from "react-redux";
+import { Grid, Stack } from '@mui/material';
+import { format } from "date-fns";
+import { GridViewCard_Events } from '../../../../types/SearchResultsTabsProps'
+import gridStyles from './index.module.css'
+import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
+
+import { setSelectedCardIndex } from '../../../../store/reducers/searchResultsReducer';
 
 const Card = ({
     key,
@@ -52,7 +52,7 @@ const GridView = () => {
             .then(res => setData(res.slice(0, 10)))
 
 
-    }, [])
+    });
 
     return (
         <Box className={`${gridStyles['']}`}

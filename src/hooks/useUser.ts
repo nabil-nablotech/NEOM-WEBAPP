@@ -38,7 +38,7 @@ const useUser = () => {
   ]);
 
   // Mutations
-  const { mutate: postUserMutation, data: newUser } = useMutation(postUser, {
+  const { mutate: postUserMutation } = useMutation(postUser, {
     onSuccess: (data: User) => {
       // Invalidate and refetch
       queryClient.invalidateQueries(["users"]);

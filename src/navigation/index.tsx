@@ -1,9 +1,8 @@
-import { Outlet, useRoutes } from "react-router-dom";
+import { useRoutes } from "react-router-dom";
 import PrivateRoute from "../utils/routes/PrivateRoute";
 import PublicRoute from "../utils/routes/PublicRoute";
 import AdminRoute from "../utils/routes/AdminRoute";
 import { Login } from "../pages/Login";
-import { Search } from "../pages/Search";
 import { Details } from "../pages/Details";
 import { PageNotFound } from "../components/PageNotFound";
 import UserManagement from "../pages/UserManagement";
@@ -13,7 +12,7 @@ import SearchResults from "../pages/SearchResults";
 import useAuth from "../hooks/useAuth";
 
 export const Navigation = () => {
-  const {} = useAuth();
+  useAuth();
   let routes = useRoutes([
     {
       path: "/",
@@ -35,27 +34,27 @@ export const Navigation = () => {
       path: "/set-password/:new",
       element: <PublicRoute component={SetPassword} />,
     },
+    // {
+    //   path: "/search-results",
+    //   element: <AdminRoute path={"/search-results"} component={SearchResults} />,
+    //   // element: <PublicRoute component={SearchResults} />,
+    // },
+    // {
+    //   path: "/search-results/:tabName",
+    //   element: <AdminRoute path={"/search-results/:tabName"} component={SearchResults} />,
+    //   // element: <PublicRoute component={SearchResults} />,
+    // },
     {
       path: "/search-results",
       element: <AdminRoute path={"/search-results"} component={SearchResults} />,
-      // element: <PublicRoute component={SearchResults} />,
-    },
-    {
-      path: "/search-results/:tabName",
-      element: <AdminRoute path={"/search-results/:tabName"} component={SearchResults} />,
-      // element: <PublicRoute component={SearchResults} />,
-    },
-    {
-      path: "/search",
-      element: <Search />,
       children: [
         {
           path: "",
-          element: <Search />,
+          element: <AdminRoute path={"/search-results"} component={SearchResults} />,
         },
         {
-          path: ":id",
-          element: <Search />,
+          path: ":tabName",
+          element: <AdminRoute path={"/search-results/:tabName"} component={SearchResults} />,
         },
       ],
     },

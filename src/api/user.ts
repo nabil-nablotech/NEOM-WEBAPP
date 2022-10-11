@@ -1,7 +1,6 @@
 import {
   User,
   UserPayload,
-  UserModalstate,
   EditUserPayload,
   Roles,
 } from "../types/User";

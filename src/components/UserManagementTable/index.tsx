@@ -4,11 +4,10 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Table, message } from "antd";
 import Button from "../../components/Button";
-import { Roles, User, UserModalstate, UserPayload } from "../../types/User";
+import { Roles, User, UserModalstate } from "../../types/User";
 
 import styles from "./index.module.css";
 import CustomSearchField from "./../SearchField/index";
-import { format } from "date-fns";
 import type { ColumnsType } from "antd/es/table";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 // import { useMediaQuery } from 'react-responsive'
@@ -17,21 +16,12 @@ import { MenuItem } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import {
-  copyToClipboard,
   formatDate,
   passwordGenerator,
 } from "../../utils/services/helpers";
 import ModalComponent from "../Modal";
-import { UseMutateFunction } from "react-query";
 import { AddUserState } from "../../types/ModalComponent";
 import { LinkGenerate } from "../../types/UserManagement";
-
-const error = (error: any) => {
-  message.error({
-    content: error.toString() || "Something went wrong!",
-  });
-};
-const { Column } = Table;
 
 const StyledTable = styled(Table)`
   th,
@@ -260,6 +250,13 @@ const StyledTable = styled(Table)`
 
   .ant-table-column-sorter-inner {
   }
+
+  .ant-table-cell.more-menu-ant-cell {
+      display: flex;
+      flex-direction: row;
+      align-item: center;
+      gap: 10px;
+  }
 `;
 export type IUser = {
   data: User[] | [];
@@ -297,33 +294,33 @@ export const UserManagementTable = (props: IUser) => {
     selectedUserLink,
   } = props;
   const [dataList, setDataList] = useState<User[] | []>([]);
-  const [form, setForm] = useState({});
+  // const [form, setForm] = useState({});
 
   useEffect(() => {
     setDataList(data);
   }, [data]);
 
   const showModal = (editing: User | null) => {
-    setForm(
-      editing || {
-        firstName: null,
-        lastName: null,
-        email: null,
-        role: "",
-      }
-    );
+    // setForm(
+    //   editing || {
+    //     firstName: null,
+    //     lastName: null,
+    //     email: null,
+    //     role: "",
+    //   }
+    // );
     setModalState({ visible: true, editing: editing });
     handleUser(editing);
   };
 
   const handleOk = async (values: AddUserState) => {
-    setForm({
-      firstName: null,
-      lastName: null,
-      email: null,
-      role: "",
-      blocked: "",
-    });
+    // setForm({
+    //   firstName: null,
+    //   lastName: null,
+    //   email: null,
+    //   role: "",
+    //   blocked: "",
+    // });
 
     setConfirmLoading(true);
     if (modalState && modalState.editing)
@@ -348,13 +345,13 @@ export const UserManagementTable = (props: IUser) => {
   };
 
   const handleCancel = () => {
-    setForm({
-      firstName: null,
-      lastName: null,
-      email: null,
-      role: "",
-      blocked: false,
-    });
+    // setForm({
+    //   firstName: null,
+    //   lastName: null,
+    //   email: null,
+    //   role: "",
+    //   blocked: false,
+    // });
     setModalState({ visible: false, editing: null });
   };
 
@@ -400,6 +397,7 @@ export const UserManagementTable = (props: IUser) => {
       title: "",
       key: "action",
       width: "10px",
+      className: 'more-menu-ant-cell',
       render: (value, record: User) => (
         <MoreOptionsComponent id={record.id} record={record} />
       ),
@@ -431,7 +429,7 @@ export const UserManagementTable = (props: IUser) => {
                 selectedUserLink.recovery ? "RECOVERY" : "ACCESS"
               } LINK`}
               onClick={() => copyLink()}
-              StartIcon={ContentCopyOutlinedIcon}
+              StartIcon={() => <ContentCopyOutlinedIcon fontSize="small" className={`${styles["copy-icon"]}`}/>}
             />
           </div>
         ) : null}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
-import { useQuery, gql } from "@apollo/client";
+// import { gql } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
@@ -11,28 +11,28 @@ import PositionedSnackbar from "../../components/Snackbar";
 import {
   validateEmail,
   validatePassword,
-  baseUrl,
+  // baseUrl,
 } from "../../utils/services/helpers";
 import useLogin from "../../hooks/useLogin";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+// import { useSelector } from "react-redux";
+// import { RootState } from "../../store";
 
-const LOGINDATA = gql`
-  query GetLoginData {
-    login {
-      data {
-        id
-        attributes {
-          title
-          laebl
-          button {
-            theme
-          }
-        }
-      }
-    }
-  }
-`;
+// const LOGINDATA = gql`
+//   query GetLoginData {
+//     login {
+//       data {
+//         id
+//         attributes {
+//           title
+//           laebl
+//           button {
+//             theme
+//           }
+//         }
+//       }
+//     }
+//   }
+// `;
 
 type stateInput = {
   email: string;
@@ -51,33 +51,18 @@ type FormErrors = {
 
 export function Login() {
   const { clientLogin, error } = useLogin();
-
   const navigate = useNavigate();
-  const screenData  = useSelector((rState: RootState) => rState.login.screenData);
-  const data = screenData?.data;
-  const textField1Data = {
-    children: "Email Address",
-  };
+  // const screenData  = useSelector((rState: RootState) => rState.login.screenData);
+  // const data = screenData?.data;
+  // const textField1Data = {
+  //   children: "Email Address",
+  // };
 
-  const textField2Data = {
-    children: data?.attributes?.input[1].placeholder || "",
-    className: "text-field-1",
-  };
+  // const textField2Data = {
+  //   children: data?.attributes?.input[1].placeholder || "",
+  //   className: "text-field-1",
+  // };
 
-  const login1Data = {
-    overlapGroup1: `${baseUrl}${data?.attributes?.backgroundImage.data.attributes.url}`,
-    image3: `${baseUrl}${data?.attributes?.logo.image.data.attributes.url}`,
-    spanText1: data?.attributes?.title,
-    spanText2: data?.attributes.label,
-    spanText3: data?.attributes.button.label,
-    spanText4: data?.attributes.bottomText.title,
-    spanText5: data?.attributes.bottomText.label,
-    spanText6: "support@",
-    spanText7: "neomheritage",
-    spanText8: ".com",
-    textField1Props: textField1Data,
-    textField2Props: textField2Data,
-  };
   const [state, setState] = useState<stateInput>({
     email: "",
     password: "",
@@ -232,6 +217,7 @@ export function Login() {
               <a
                 href="mailto: support@neomheritage.com?subject = Neom Heritage Support"
                 target={"_blank"}
+                rel="noreferrer"
               >
                 support@neomheritage.com
               </a>

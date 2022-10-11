@@ -20,8 +20,6 @@ function CustomSearchField(props: {className?: string, handleChange?: (e:ChangeE
     }
   }
 
-  const searchRef = React.createRef()
-
   return (
     <>
       <TextInput
