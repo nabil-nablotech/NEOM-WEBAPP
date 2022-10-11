@@ -1,40 +1,65 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, FocusEvent } from "react";
 import Box from "@mui/material/Box";
 import TextField, {TextFieldProps} from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { styled } from '@mui/material/styles';
-import { grey } from '@mui/material/colors';
 
-type TextInputProps = {
+interface TextInputProps {
   error?: boolean;
-  onChange: (
+  onChange?: (
     e: ChangeEvent<HTMLInputElement>
   ) => void;
-  value: string | "";
+  onBlur?: (
+    e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  onFocus?: (
+    e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  value?: string | "";
   defaultValue?: string | "";
   errorText?: string | "";
   fullWidth?: boolean;
   size?: "small" | "medium";
   type?: string;
   label: string;
+  className?: string;
+  name?: string;
+  showLabel?: boolean;
+  InputProps?: any;
+  sx?: any;
+  ref?: React.RefObject<HTMLDivElement>;
+  required?: boolean,
+  autoComplete?: string
 };
 
 const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
   // color: theme.palette.getContrastText(grey[500]),
   fontSize: 12,
-  lineHeight: 20,
+  // lineHeight: 20,
   letterSpacing: 2,
   textAlign: 'center',
   padding: '10px, 24px, 10px, 24px',
   height: 40,
-  '&:hover': {
-    backgroundColor: grey[700],
+  '& label.Mui-focused': {
+    'legends': {
+      color: 'var(--grey-text)',
+      borderRadius: '2px',
+      width: 'fit-content'
+    }
   },
+  '& .MuiInput-underline:after': {
+    borderBottomColor: 'var(--grey-text)',
+  },
+  '& .MuiOutlinedInput-root': {
+  }
+  
 }));
 
-export default function ValidationTextFields(props: TextInputProps) {
+export default function NTextFields(props: TextInputProps) {
   const {
     onChange,
+    onBlur,
+    onFocus,
     error,
     value,
     label,
@@ -42,30 +67,49 @@ export default function ValidationTextFields(props: TextInputProps) {
     errorText,
     size,
     fullWidth,
-    type
+    type,
+    className,
+    showLabel = true,
+    InputProps,
+    sx,
+    ref,
+    required,
+    name,
+    autoComplete
   } = props;
+
   return (
-    <Grid item xs={12} sm={12} md={8} lg={4} xl={4}>
+    <Grid item className={className ? className : ''}>
       <Box
         component="form"
-        sx={{
-          "& .MuiTextField-root": { m: 1, width: "45ch" },
-        }}
         noValidate
         autoComplete="off"
       >
         <NeomTextInput
           error={error}
-          id={error ? "outlined-error" : "outlined-size-small"}
+          id={error ? `outlined-error ${className}` : `outlined-size-small ${className}`}
           size={size ? size : "small"}
           fullWidth={fullWidth}
-          label={label}
+          label={showLabel ? label : ''}
           value={value}
           onChange={onChange}
+          onBlur={onBlur}
+          onFocus={onFocus}
           defaultValue={defaultValue}
           helperText={errorText}
           type={type}
-        />
+          placeholder={label}
+          sx={sx}
+          InputProps={{
+            ...InputProps
+          }}
+          ref={ref ? ref : null}
+          required={required}
+          name={name}
+          autoComplete={autoComplete}
+        >
+          {value}
+          </NeomTextInput>
       </Box>
     </Grid>
   );
