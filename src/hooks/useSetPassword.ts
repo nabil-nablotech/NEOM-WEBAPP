@@ -45,7 +45,7 @@ const useSetPassword = () => {
       // check the xpiration if expiry date is greater than the current
       if (dayjs().isBefore(user.exp)) {
         setData(user);
-        navigate('/set-password');
+        navigate('/set-password/new');
       } else {
         handleAlert('Link expired', 'error')
         navigate('/');
