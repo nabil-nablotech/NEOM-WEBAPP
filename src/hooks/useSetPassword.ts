@@ -14,6 +14,7 @@ const useSetPassword = () => {
     password: "",
     error: '',
     isNew: false,
+    expired: false
   });
   const [data, setData] = useState<User | null>(null);
   const location = useLocation();
@@ -47,7 +48,11 @@ const useSetPassword = () => {
         setData(user);
         navigate('/set-password/new');
       } else {
-        handleAlert('Link expired', 'error')
+        setState({
+          ...state,
+          expired: true
+        })
+        handleAlert('Link expired', 'error');
         navigate('/');
       }
       return user;
