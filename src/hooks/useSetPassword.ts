@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {useLocation, useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {resetPassword} from '../api/setPassword';
 import dayjs from "dayjs";
 import { useQuery, useMutation } from 'react-query';
@@ -12,22 +12,37 @@ const useSetPassword = () => {
   const [state, setState] = useState<ResetPaswordStateInput>({
     confirmPassword: "",
     password: "",
+    error: '',
+    isNew: false,
   });
   const [data, setData] = useState<User | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const params = useParams();
 
   const {handleAlert} = useAlert();
   const {clientLogin} = useLogin();
+
+  // decrypt the hashkey
   function decryptUser(str: string) {
     return decodeURIComponent(window.atob(str));
   }
 
+  /**
+   * Get the user hashkey with has the usercrendentials which we uses to internal login
+   * @returns 
+   */
   const getUserDetails = () => {
     const key = location.search.replace('?key=', '');
     try {
-      
+      if (params.new === 'true') {
+        setState({
+          ...state,
+          isNew: true
+        });
+      }
       const user = JSON.parse(decryptUser(key));
+      // check the xpiration if expiry date is greater than the current
       if (dayjs().isBefore(user.exp)) {
         setData(user);
         navigate('/set-password');
@@ -37,15 +52,15 @@ const useSetPassword = () => {
       }
       return user;
     } catch (error) {
-      console.log('error', error);
-      handleAlert('Invalid Link', 'error')
+      console.log('error 1', error);
+      handleAlert('Invalid Link', 'error');
       handleAlert('Please contact your administrator', 'info');
     }
   }
 
   useEffect(() => {
-    getUserDetails()
-  }, [])
+    getUserDetails();
+  }, []);
 
 
   const {mutate: resetPasswordMutation} = useMutation(['resetPassword'], resetPassword, {
@@ -54,7 +69,7 @@ const useSetPassword = () => {
       await navigate('/');
     },
     onError: () => {
-      handleAlert('Error Occured', 'error')
+      handleAlert('Error Occured', 'error');
       navigate('/');
     }
   })

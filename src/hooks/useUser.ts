@@ -109,7 +109,7 @@ const useUser = () => {
       exp: expDate,
     });
     const token = encryptUser(user);
-    const link = `${webUrl}/set-password?key=${token}`;
+    const link = `${webUrl}/set-password/${userData.recovery ? false : true}?key=${token}`;
     setRecoveryLink(link);
     setShowSnackbar({
       open: true,
