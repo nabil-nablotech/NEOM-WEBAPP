@@ -6,7 +6,6 @@ export type UserDetails = {
 export type User = {
   blocked: boolean | string;
   confirmed: boolean;
-  createdAt: Date;
   email: string;
   firstName: string;
   lastName: string;
@@ -33,13 +32,8 @@ export type UserPayload = {
   firstName: string;
   role: string;
   lastName: string;
+  recoveryToken?: string;
 }
-
-export type LoginData = {
-  data: {
-    attributes: any;
-  };
-};
 
 export type loginPayload = {
   identifier: string;
@@ -59,3 +53,5 @@ export type Roles = {
   roles: Role[]
 }
 
+export type EditUserPayload = {user: UserPayload | {}, id: number}
+export type SetPasswordPayload = {password: string, id: number}

@@ -23,7 +23,10 @@ const UserManagement = () => {
     modalState,
     handleSnackbar,
     showSnackbar,
-    userRoles
+    userRoles,
+    copyLink,
+    generateLink,
+    selectedUserLink
   } = useUser();
   
   const { data, isLoading } = query;
@@ -35,8 +38,6 @@ const UserManagement = () => {
         <UserMenuComponent />
         <div className={`${styles["content-section"]}`}>
           <Container maxWidth="xl">
-            {/* <div className={`${styles['title']}`}>USERS</div>
-                        <Button label="SIGN IN" /> */}
             <UserManagementTable
               isLoading={isLoading}
               data={data || []}
@@ -50,6 +51,9 @@ const UserManagement = () => {
               setModalState={setModalState}
               modalState={modalState}
               userRoles={userRoles}
+              copyLink={copyLink}
+              generateLink={generateLink}
+              selectedUserLink={selectedUserLink}
             />
           </Container>
           <Snackbar

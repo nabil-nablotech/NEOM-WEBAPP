@@ -2,8 +2,7 @@
 import "antd/dist/antd.css";
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Table, Input, Modal, Form, Spin, Tooltip, message } from "antd";
-import { useDispatch } from "react-redux";
+import { Table, message } from "antd";
 import Button from "../../components/Button";
 import { Roles, User, UserModalstate, UserPayload } from "../../types/User";
 
@@ -16,11 +15,16 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Menu } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { DataArray, SingleObj } from "../../types/UserManagement";
-import { formatDate } from "../../utils/services/helpers";
+import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
+import {
+  copyToClipboard,
+  formatDate,
+  passwordGenerator,
+} from "../../utils/services/helpers";
 import ModalComponent from "../Modal";
 import { UseMutateFunction } from "react-query";
 import { AddUserState } from "../../types/ModalComponent";
+import { LinkGenerate } from "../../types/UserManagement";
 
 const error = (error: any) => {
   message.error({
@@ -41,8 +45,8 @@ const StyledTable = styled(Table)`
   }
 
   .ant-table {
-    font-family: 'Roboto-Regular';
-    margin-block: 50px
+    font-family: "Roboto-Regular";
+    margin-block: 50px;
   }
 
   .ant-table-thead > tr > th,
@@ -54,43 +58,162 @@ const StyledTable = styled(Table)`
     border: none;
   }
 
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > thead > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > thead > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > thead > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tbody > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > tbody > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > tbody > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tfoot > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > tfoot > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tfoot > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > tfoot > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tfoot > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > tfoot > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tfoot > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > tfoot > tr > td {
-    border: none
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-content
+    > table
+    > thead
+    > tr
+    > th,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-header
+    > table
+    > thead
+    > tr
+    > th,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-body
+    > table
+    > thead
+    > tr
+    > th,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-summary
+    > table
+    > thead
+    > tr
+    > th,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-content
+    > table
+    > tbody
+    > tr
+    > td,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-header
+    > table
+    > tbody
+    > tr
+    > td,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-body
+    > table
+    > tbody
+    > tr
+    > td,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-summary
+    > table
+    > tbody
+    > tr
+    > td,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-content
+    > table
+    > tfoot
+    > tr
+    > th,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-header
+    > table
+    > tfoot
+    > tr
+    > th,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-body
+    > table
+    > tfoot
+    > tr
+    > th,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-summary
+    > table
+    > tfoot
+    > tr
+    > th,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-content
+    > table
+    > tfoot
+    > tr
+    > td,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-header
+    > table
+    > tfoot
+    > tr
+    > td,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-body
+    > table
+    > tfoot
+    > tr
+    > td,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-summary
+    > table
+    > tfoot
+    > tr
+    > td {
+    border: none;
   }
 
   .ant-table.ant-table-bordered > .ant-table-container {
     border: none;
   }
 
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table {
-    border: none
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-content
+    > table,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-header
+    > table {
+    border: none;
   }
 
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td {
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-header
+    > table,
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-body
+    > table
+    > tbody
+    > tr
+    > td {
     border-bottom: 1px solid var(--user-table-border);
   }
 
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table th {
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-header
+    > table
+    th {
     color: var(--grey-text);
   }
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table td {
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-body
+    > table
+    td {
     color: var(--table-black-text);
   }
 
@@ -98,13 +221,26 @@ const StyledTable = styled(Table)`
     word-wrap: break-word;
     word-break: break-all;
     min-width: 125px;
-  } 
+  }
 
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td.more-icon {
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-body
+    > table
+    > tbody
+    > tr
+    > td.more-icon {
     border-left: 1px solid var(--user-table-border);
   }
 
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td.more-icon .cellnowrap {
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-body
+    > table
+    > tbody
+    > tr
+    > td.more-icon
+    .cellnowrap {
     width: fit-content;
   }
 
@@ -112,7 +248,10 @@ const StyledTable = styled(Table)`
     background: var(--user-table-cell-hover-bg) !important;
   }
 
-  .ant-table.ant-table-bordered .ant-table-body tr.ant-table-row td:last-of-type {
+  .ant-table.ant-table-bordered
+    .ant-table-body
+    tr.ant-table-row
+    td:last-of-type {
   }
 
   td.ant-table-column-sort {
@@ -121,7 +260,6 @@ const StyledTable = styled(Table)`
 
   .ant-table-column-sorter-inner {
   }
-
 `;
 export type IUser = {
   data: User[] | [];
@@ -129,14 +267,17 @@ export type IUser = {
   editUser: any;
   isLoading: boolean;
   handleUser: (payload: User | null) => void;
+  generateLink: (payload: LinkGenerate) => void;
   userData: User | null;
   setConfirmLoading: (e: boolean) => void;
   confirmLoading: boolean;
   updatedUser?: User;
+  selectedUserLink: LinkGenerate | null;
   setModalState: (e: UserModalstate) => void;
   modalState: UserModalstate;
-  userRoles?: Roles
-}
+  userRoles?: Roles;
+  copyLink: () => void;
+};
 
 export const UserManagementTable = (props: IUser) => {
   const {
@@ -150,16 +291,13 @@ export const UserManagementTable = (props: IUser) => {
     confirmLoading,
     setModalState,
     modalState,
-    updatedUser,
-    userRoles
+    userRoles,
+    copyLink,
+    generateLink,
+    selectedUserLink,
   } = props;
   const [dataList, setDataList] = useState<User[] | []>([]);
-  const [form, setForm] = useState({
-
-  });
-  // const [form] = Form.useForm();
-
-  // const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1025px)' })
+  const [form, setForm] = useState({});
 
   useEffect(() => {
     setDataList(data);
@@ -171,7 +309,7 @@ export const UserManagementTable = (props: IUser) => {
         firstName: null,
         lastName: null,
         email: null,
-        role: ''
+        role: "",
       }
     );
     setModalState({ visible: true, editing: editing });
@@ -183,13 +321,30 @@ export const UserManagementTable = (props: IUser) => {
       firstName: null,
       lastName: null,
       email: null,
-      role: '',
-      blocked: ''
+      role: "",
+      blocked: "",
     });
 
     setConfirmLoading(true);
-    if (modalState && modalState.editing) editUser({ ...userData, ...values, blocked: values.blocked === 'inactive' ? true : false });
-    else postUser({ ...values, blocked: false, confirmed: true, password: "Test@123", username: values.firstName });
+    if (modalState && modalState.editing)
+      editUser({
+        user: {
+          ...userData,
+          ...values,
+          blocked: values.blocked === "inactive" ? true : false,
+        },
+        id: modalState.editing.id,
+      });
+    else {
+      const pass = passwordGenerator();
+      postUser({
+        ...values,
+        blocked: true,
+        confirmed: false,
+        password: pass,
+        username: values.firstName,
+      });
+    }
   };
 
   const handleCancel = () => {
@@ -197,8 +352,8 @@ export const UserManagementTable = (props: IUser) => {
       firstName: null,
       lastName: null,
       email: null,
-      role: '',
-      blocked: false
+      role: "",
+      blocked: false,
     });
     setModalState({ visible: false, editing: null });
   };
@@ -207,12 +362,12 @@ export const UserManagementTable = (props: IUser) => {
 
   const tableHeaderJson: ColumnsType<any> = [
     {
-      title: 'Last Name',
-      key: 'lastName',
-      dataIndex: 'lastName',
+      title: "Last Name",
+      key: "lastName",
+      dataIndex: "lastName",
       sorter: (a, b) => a.lastName.localeCompare(b.lastName),
-      sortDirections: ['ascend'],
-      defaultSortOrder: 'ascend'
+      sortDirections: ["ascend"],
+      defaultSortOrder: "ascend",
     },
     {
       title: "First Name",
@@ -242,17 +397,22 @@ export const UserManagementTable = (props: IUser) => {
       render: (value, index) => `${!value ? "ACTIVE" : "INACTIVE"}`,
     },
     {
-      title: '',
-      key: 'action',
-      width: '10px',
+      title: "",
+      key: "action",
+      width: "10px",
       render: (value, record: User) => (
         <MoreOptionsComponent id={record.id} record={record} />
       ),
-    }
-  ]
+    },
+  ];
 
-  
-  const MoreOptionsComponent = ({record, id}: {id: number, record: User}) => {
+  const MoreOptionsComponent = ({
+    record,
+    id,
+  }: {
+    id: number;
+    record: User;
+  }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
     const handleClick = (e: any) => {
@@ -261,37 +421,60 @@ export const UserManagementTable = (props: IUser) => {
     const handleClose = () => {
       setAnchorEl(null);
     };
-
-
-    return <>
-      <div className="" onClick={e => {
-        handleClick(e)
-      }}
-
-        style={{
-          position: 'relative',
-          cursor: 'pointer',
-          textAlign: 'right',
-          borderLeft: '1px solid var(--user-table-border)',
-          width: 'fit-content',
-          marginLeft: 'auto'
-        }}>
-        <MoreHorizIcon />
-      </div>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
-      >
-        <MenuItem key={1} onClick={() =>{}}>Recover Password</MenuItem>
-        <MenuItem key={2} onClick={() => showModal(record)}>Edit</MenuItem>
-      </Menu>
-    </>
-  }
+    const showRecoveryLink = selectedUserLink?.user?.id === record.id;
+    return (
+      <>
+        {showRecoveryLink ? (
+          <div className={`${styles["recovery-button"]}`}>
+            <Button
+              label={`${
+                selectedUserLink.recovery ? "RECOVERY" : "ACCESS"
+              } LINK`}
+              onClick={() => copyLink()}
+              StartIcon={ContentCopyOutlinedIcon}
+            />
+          </div>
+        ) : null}
+        <div
+          className=""
+          onClick={(e) => {
+            handleClick(e);
+          }}
+          style={{
+            position: "relative",
+            cursor: "pointer",
+            textAlign: "right",
+            borderLeft: "1px solid var(--user-table-border)",
+            width: "fit-content",
+            marginLeft: "auto",
+          }}
+        >
+          <MoreHorizIcon />
+        </div>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem
+            key={1}
+            onClick={() => {
+              generateLink({ user: record, recovery: true });
+            }}
+          >
+            Recover Password
+          </MenuItem>
+          <MenuItem key={2} onClick={() => showModal(record)}>
+            Edit
+          </MenuItem>
+        </Menu>
+      </>
+    );
+  };
 
   const filterResults = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (data.length > 0) {

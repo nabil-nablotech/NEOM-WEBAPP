@@ -45,7 +45,6 @@ function UserMenuComponent() {
     setAnchorElSettings(null);
   };
   const navigate = useNavigate();
-
   const { data } = useSelector((state: RootState) => state.login);
 
   if (!data) return null;
@@ -56,7 +55,7 @@ function UserMenuComponent() {
 
   const menuItems = [
     {
-      label: "Help & Support",
+      label: "Support",
       handleClickMenuItem: () => {},
       render: () => <a href="mailto: support@neomheritage.com?subject = Neom Heritage Support" target={"_blank"}>
       Help & Support

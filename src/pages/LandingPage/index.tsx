@@ -57,11 +57,8 @@ function LandingPage() {
     vector3,
     spanText8,
     spanText9,
-    iconUserWhite,
-    icon,
-    iconSettings,
   } = landingPageData;
-  const {loading} = useAuth();
+  const {} = useAuth();
   const {data} = useSelector((state: RootState) => state.login);
 
   const navigate = useNavigate();

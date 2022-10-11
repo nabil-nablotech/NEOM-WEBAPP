@@ -24,3 +24,9 @@
     content: \2794;
     display: none;
 }
+
+.recovery-button button {
+    background-color: rgb(19 16 13 / 22%) !important;
+    color: rgb(14 13 13)!important;
+    width: 175px;
+}

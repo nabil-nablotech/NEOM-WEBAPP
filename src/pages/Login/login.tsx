@@ -5,11 +5,17 @@ import { useNavigate } from "react-router-dom";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
 import "./style.css";
-import useAuth from "../../hooks/useAuth";
 import { SideContent } from "./sideContent";
 import PositionedSnackbar from "../../components/Snackbar";
 
-import { validateEmail, validatePassword, baseUrl } from "../../utils/services/helpers";
+import {
+  validateEmail,
+  validatePassword,
+  baseUrl,
+} from "../../utils/services/helpers";
+import useLogin from "../../hooks/useLogin";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 const LOGINDATA = gql`
   query GetLoginData {
@@ -44,11 +50,11 @@ type FormErrors = {
 };
 
 export function Login() {
-
-  const { clientLogin, fetchLoginData, data, error, loading } = useAuth();
+  const { clientLogin, error } = useLogin();
 
   const navigate = useNavigate();
-
+  const screenData  = useSelector((rState: RootState) => rState.login.screenData);
+  const data = screenData?.data;
   const textField1Data = {
     children: "Email Address",
   };
@@ -104,7 +110,7 @@ export function Login() {
     }
   }, [formErrors, state]);
 
-// on input change function
+  // on input change function
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     name: "email" | "password"
@@ -116,62 +122,48 @@ export function Login() {
       email: {
         show: false,
         message: "",
-      }
+      },
     });
 
     if (name === "password") {
-      validateCredentials("password");
+      validateCredentials();
     }
     setState({ ...state, ...lclState });
   };
 
   // Function is responsible for the validation of input fields
-  const validateCredentials = (name: "email" | "password") => {
-    if (name === "email") {
-      /** temporary static email validation */
-      
-      if (!validateEmail(state.email)) {
-        setFormErrors((state: any) => ({
-          ...state,
-          email: {
-            show: true,
-            message: "Invalid email",
-          },
-        }));
-      } else {
-        setFormErrors((state: any) => ({
-          ...state,
-          email: {
-            show: false,
-            message: "",
-          },
-        }));
-      }
+  const validateCredentials = () => {
+    if (!validateEmail(state.email)) {
+      setFormErrors((state: any) => ({
+        ...state,
+        email: {
+          show: true,
+          message: "Invalid email",
+        },
+      }));
+    } else if (!validatePassword(state.password)) {
+      setFormErrors((state: any) => ({
+        ...state,
+        password: {
+          show: true,
+          message:
+            "Password must contain min 8 letter with at least a symbol, upper and lower case letters and a number",
+        },
+      }));
+    } else {
+      setFormErrors((state: any) => ({
+        ...state,
+        email: {
+          show: false,
+          message: "",
+        },
+        password: {
+          show: false,
+          message: "",
+        },
+      }));
     }
-    if (name === "password") {
-      /** temporary static email validation */
-      const matchFlag = validatePassword(state.password);
-
-      if (!matchFlag) {
-        setFormErrors((state: any) => ({
-          ...state,
-          password: {
-            show: true,
-            message:
-              "Password must contain min 8 letter with at least a symbol, upper and lower case letters and a number",
-          },
-        }));
-      } else {
-        setFormErrors((state: any) => ({
-          ...state,
-          password: {
-            show: false,
-            message: "",
-          },
-        }));
-      }
-    }
-  }
+  };
 
   // Form submission
   const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -181,7 +173,7 @@ export function Login() {
       password: state.password,
     });
     if (data) {
-      navigate('/');
+      navigate("/");
     } else {
       setSnackbarErrorMessage(true);
     }
@@ -213,7 +205,7 @@ export function Login() {
             error={formErrors.email.message ? true : false}
             errorText={formErrors.email.message}
             onChange={(e) => handleChange(e, "email")}
-            onBlur={() => validateCredentials('email')}
+            onBlur={() => validateCredentials()}
           />
           <TextInput
             className={`login-pwd`}
@@ -223,7 +215,7 @@ export function Login() {
             // error={formErrors.password.message ? true : false}
             // errorText={formErrors.password.message}
             onChange={(e) => handleChange(e, "password")}
-            onBlur={() => validateCredentials('password')}
+            onBlur={() => validateCredentials()}
           />
           <Button
             className={"sign-in-btn"}
@@ -237,7 +229,10 @@ export function Login() {
           <p>
             Contact{" "}
             <span>
-              <a href="mailto: support@neomheritage.com?subject = Neom Heritage Support" target={"_blank"}>
+              <a
+                href="mailto: support@neomheritage.com?subject = Neom Heritage Support"
+                target={"_blank"}
+              >
                 support@neomheritage.com
               </a>
             </span>

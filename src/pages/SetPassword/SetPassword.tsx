@@ -1,58 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
-import { useQuery, gql } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
 import styles from "./index.module.css";
-import useAuth from "../../hooks/useAuth";
-import PositionedSnackbar from "../../components/Snackbar";
+import useSetPassword from "../../hooks/useSetPassword";
 
-import { validateEmail, validatePassword, baseUrl } from "../../utils/services/helpers";
 import LoginScreenTemplate from "../../components/LoginScreenTemplate";
 import Box from '@mui/material/Box';
 import PasswordValid from '../../assets/images/password-valid.svg'
 import PasswordInalid from '../../assets/images/password-invalid.svg'
 import {cloneDeep} from 'lodash'
 
-type stateInput = {
-  confirmPassword: string;
-  password: string;
-};
-
 type FormError = {
   show: boolean;
   message: string;
 };
 
-type FormErrors = {
-  confirmPassword: FormError;
-  password: FormError;
-};
-
 export const SetPassword = () => {
 
+  const {query, resetPasswordMutation, setState, state} = useSetPassword();
 
-  const navigate = useNavigate();
-
-  const [state, setState] = useState<stateInput>({
-    confirmPassword: "",
-    password: "",
-  });
-
-  const [formErrors, setFormErrors] = useState<FormErrors>({
-    confirmPassword: {
-      show: false,
-      message: "",
-    },
-    password: {
-      show: false,
-      message: "",
-    },
-  });
-
-  const [snackbarErrorMessage, setSnackbarErrorMessage] =
-    useState<boolean>(false);
   const [isSetPasswordDisabled, toggleSetPasswordDisabled] = useState<boolean>(true);
 
   const staticValidationScheme = [
@@ -90,7 +57,7 @@ export const SetPassword = () => {
   } else {
     toggleSetPasswordDisabled(false);
   }
-  }, [formErrors, state, validatorsArray_password, validatorsArray_conf_password]);
+  }, [state, validatorsArray_password, validatorsArray_conf_password]);
 
   type validtr = {
     name: string
@@ -136,7 +103,6 @@ export const SetPassword = () => {
 
     /**static if block setting to debug error message */
     if (!e.target.value) {
-
       validateCredentials(name);
     }
 
@@ -169,7 +135,18 @@ export const SetPassword = () => {
   // Form submission
   const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
+    if (state.password === state.confirmPassword) {
+      setState({
+        ...state,
+        error: ''
+      });
+      if (query && query.data) resetPasswordMutation({password: state.password, id: query.data.id });
+    } else {
+      setState({
+        ...state,
+        error: `Confirm password doesn'\nt match`
+      })
+    }
   };
 
 
@@ -184,9 +161,8 @@ export const SetPassword = () => {
           <TextInput
             className={`${styles["password"]}`}
             label="Password"
+            type={"password"}
             value={state.password}
-            error={formErrors.password.message ? true : false}
-            errorText={formErrors.password.message}
             onChange={(e) => handleChange(e, "password")}
             onBlur={(e) => handleBlur(e, "password")}
             onFocus={e => setFocusedInput("password")}
@@ -197,8 +173,8 @@ export const SetPassword = () => {
             type={"password"}
             autoComplete="new-password"
             value={state.confirmPassword}
-            error={formErrors.confirmPassword.message ? true : false}
-            errorText={formErrors.confirmPassword.message}
+            error={Boolean(state.error)}
+            errorText={state.error}
             onChange={(e) => handleChange(e, "confirmPassword")}
             onBlur={(e) => handleBlur(e, 'confirmPassword')}
             onFocus={e => setFocusedInput("confirmPassword")}
@@ -211,9 +187,9 @@ export const SetPassword = () => {
               {
                 (focusedInput === 'password' ? validatorsArray_password :
                   validatorsArray_conf_password
-                ).map(validateConditionObj => {
+                ).map((validateConditionObj, i) => {
 
-                  return <>
+                  return <div key={i}>
                     <div className={`${styles["validate-statement-row"]}`}>
                       <div>
                         <Box
@@ -226,7 +202,7 @@ export const SetPassword = () => {
                         {validateConditionObj.name} {validateConditionObj.fulfilled}
                       </div>
                     </div>
-                  </>
+                  </div>
                 })
               }
             </section>
@@ -235,7 +211,6 @@ export const SetPassword = () => {
             className={`${styles["sign-in-btn"]}`}
             label="SET PASSWORD"
             disabled={isSetPasswordDisabled}
-            // disabled={true}
             onClick={(e) => submit(e)}
           />
         </Grid>

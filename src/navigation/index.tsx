@@ -10,8 +10,10 @@ import UserManagement from "../pages/UserManagement";
 import LandingPage from "../pages/LandingPage";
 import { SetPassword } from "../pages/SetPassword";
 import SearchResults from "../pages/SearchResults";
+import useAuth from "../hooks/useAuth";
 
 export const Navigation = () => {
+  const {} = useAuth();
   let routes = useRoutes([
     {
       path: "/",
@@ -30,7 +32,7 @@ export const Navigation = () => {
       element: <PublicRoute component={Login} />,
     },
     {
-      path: "/set-password",
+      path: "/set-password/:new",
       element: <PublicRoute component={SetPassword} />,
     },
     {
