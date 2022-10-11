@@ -5,6 +5,7 @@ import placesStyles from './index.module.css'
 import Button from "../../../components/Button";
 import GridViewOpen from '../../../assets/images/searchResults/GridViewOpen.svg'
 import ListViewClosed from '../../../assets/images/searchResults/ListViewClosed.svg'
+import GridViewClosed from '../../../assets/images/searchResults/GridViewClosed.svg'
 import GridView from './GridView/GridView';
 import { Grid } from '@mui/material';
 import MapImg1 from '../../../assets/images/searchResults/mapImage1.webp'
@@ -12,14 +13,14 @@ import MapImg2 from '../../../assets/images/searchResults/mapImage2.jpg'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 
-const PlacesTab = ({
+const MediaTab = ({
     resultCount = 1053
 }) => {
     const { selectedCardIndex } = useSelector((state: RootState) => state.searchResults);
     const [img, setimg] = useState(MapImg1)
-
     useEffect(() => {
-        setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1)
+    
+        setimg(selectedCardIndex%2 === 0 ? MapImg2 : MapImg1)
     }, [selectedCardIndex])
     
 
@@ -44,6 +45,7 @@ const PlacesTab = ({
                 />
                 </Box>
                 <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={GridViewOpen} />
+                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={GridViewClosed} />
                 <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={ListViewClosed} />
             </Box>
             <Box component={'section'} className={`${styles['result-section']}`}>
@@ -61,4 +63,4 @@ const PlacesTab = ({
     );
 }
  
-export default PlacesTab;
+export default MediaTab;

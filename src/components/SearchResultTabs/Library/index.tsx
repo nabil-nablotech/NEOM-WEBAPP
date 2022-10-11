@@ -8,6 +8,7 @@ import { Table } from "antd";
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 
 const StyledTable = styled(Table)`
+  
   th,
   .cellnowrap {
     white-space: nowrap;
@@ -88,9 +89,7 @@ const StyledTable = styled(Table)`
 
   td.ant-table-cell-row-hover {
     background: var(--user-table-cell-hover-bg) !important;
-  }import { styled } from 'styled-components';
-import { useEffect, useState } from 'react';
-
+  }
 
   .ant-table.ant-table-bordered .ant-table-body tr.ant-table-row td:last-of-type {
   }
@@ -100,6 +99,20 @@ import { useEffect, useState } from 'react';
   }
 
   .ant-table-column-sorter-inner {
+  }
+
+  @media (min-width: 575px) and (max-width: 1025px) {
+    .ant-table{
+      margin-block: 1em;
+    }
+
+    .ant-table-cell.name-column ,
+    .ant-table-cell.description-column {
+      min-width: 24ch;
+    }
+    .ant-table-cell.citation-column {
+      min-width: 30ch;
+    }
   }
 
 `;
@@ -115,6 +128,7 @@ const tableHeaderJson: ColumnsType<any> = [
         sorter: (a, b) => a.name.localeCompare(b.name),
         sortDirections: ['ascend'],
         defaultSortOrder: 'ascend',
+        className: 'name-column',
         render: (value, record: any) => (<Box sx={{
             display: 'flex',
             gap: '1em'
@@ -126,6 +140,7 @@ const tableHeaderJson: ColumnsType<any> = [
     {
         title: "DESCRIPTION",
         key: "description",
+        className: 'description-column',
         //   dataIndex: "description",
         dataIndex: "company", // temporary
         render: (value, index) => { // temporary
@@ -134,6 +149,7 @@ const tableHeaderJson: ColumnsType<any> = [
     },
     {
         title: "CITATION",
+        className: 'citation-column',
         //   dataIndex: "citation",
         dataIndex: "company", // temporary
         render: (value, index) => { // temporary

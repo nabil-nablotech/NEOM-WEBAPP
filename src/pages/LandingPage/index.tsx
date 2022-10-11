@@ -8,7 +8,6 @@ import {
 import "./style.css";
 import "../../globals.css"
 import "../../styleguide.css"
-import UserMenuComponent from "../../components/UserMenu";
 import WhiteCircle from "../../assets/images/WhiteCircle.svg";
 import CustomSearchField from '../../components/SearchField/index';
 import { RootState } from "../../store";
@@ -16,6 +15,7 @@ import useAuth from "../../hooks/useAuth";
 import styles from './index.module.css'
 import { useNavigate } from "react-router-dom";
 import { tabNameProps } from "../../types/SearchResultsTabsProps";
+import Header from "../../components/Header";
 
 const landingPageData = {
   overlapGroup4: "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/rectangle-125-1@1x.png",
@@ -72,6 +72,7 @@ function LandingPage() {
   if (!data) return null;
   return (
     <div className="container-center-horizontal">
+      <Header screen= "landing"/>
       <div className="landing-page screen">
         <OverlapGroup4 style={{ backgroundImage: `url(${overlapGroup4})` }}>
           <Rectangle69></Rectangle69>
@@ -155,7 +156,7 @@ function LandingPage() {
             </Inventory>
           </Frame2608172>
         </OverlapGroup4>
-        <UserMenuComponent />
+        {/* <UserMenuComponent /> */}
       </div>
     </div>
   );

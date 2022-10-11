@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
-import { useQuery, gql } from "@apollo/client";
+// import { gql } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
@@ -17,22 +17,22 @@ import useLogin from "../../hooks/useLogin";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 
-const LOGINDATA = gql`
-  query GetLoginData {
-    login {
-      data {
-        id
-        attributes {
-          title
-          laebl
-          button {
-            theme
-          }
-        }
-      }
-    }
-  }
-`;
+// const LOGINDATA = gql`
+//   query GetLoginData {
+//     login {
+//       data {
+//         id
+//         attributes {
+//           title
+//           laebl
+//           button {
+//             theme
+//           }
+//         }
+//       }
+//     }
+//   }
+// `;
 
 type stateInput = {
   email: string;

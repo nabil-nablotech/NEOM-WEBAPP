@@ -23,10 +23,10 @@ const Card = ({
     return <>
         <Box className={`${gridStyles['card-container']}`} key={key}>
             <Grid container spacing={1} className={`${gridStyles['card-grid']}`}>
-                <Grid item xl={4} lg={4} className={`${gridStyles['card-image-wrapper']}`}>
+                <Grid item xl={4} lg={4} md={11} sm={11} className={`${gridStyles['card-image-wrapper']}`}>
                     <Box className={`${gridStyles['card-image']}`} component="img" alt={""} src={img} />
                 </Grid>
-                <Grid item xl={7} lg={7} className={`${gridStyles['content']}`}>
+                <Grid item xl={7} lg={7} md={11} sm={11} className={`${gridStyles['content']}`}>
                     <div className={`${gridStyles['card-title']}`}>{parse(title)} on {dateString}</div>
                     <div className={`${gridStyles['card-subtitle']}`}>{subTitle}</div>
                     {isNew && <div className={`${gridStyles['card-new-flag']}`}>

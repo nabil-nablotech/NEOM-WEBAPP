@@ -24,22 +24,18 @@ const Card = ({
         <Box className={`${gridStyles['card-container']}`} key={key} 
         >
             <Grid container spacing={1} className={`${gridStyles['card-grid']}`}>
-                <Grid item xl={5} lg={5} md={11} sm={11} className={`${gridStyles['card-image-wrapper']}`}>
+                <Grid item sm={12} className={`${gridStyles['card-image-wrapper']}`}>
                     <Box className={`${gridStyles['card-image']}`} component="img" alt={""} src={img} />
                 </Grid>
-                <Grid item xl={6} lg={6} md={11} sm={11} className={`${gridStyles['content']}`}>
-                    <div className={`${gridStyles['card-title']}`}>{parse(title)}</div>
-                    <div className={`${gridStyles['card-subtitle']}`}>{subTitle}</div>
-                    <div className={`${gridStyles['card-date']}`}>{dateString}</div>
-                    <div className={`${gridStyles['card-keywords']}`}>{
-                        keywords.map((item, keyInx) => (
-                            <div key={keyInx} className={`${gridStyles['keyword-pill']}`}>
-                                {item}
-                            </div>
-                        ))}</div>
-                    <Box className={`${gridStyles['more-icon-span']}`} component={"span"}>
-                        <Box className={`${gridStyles['more-icon']}`} component="img" alt={""} src={MoreIcon}></Box>
-                    </Box>
+                <Grid item sm={12} className={`${gridStyles['content']}`}>
+                    <Grid item sm={11}>
+                        <div className={`${gridStyles['card-title']}`}>{parse(title)}</div>
+                    </Grid>
+                    <Grid item sm={1}>
+                        <Box className={`${gridStyles['more-icon-span']}`} component={"span"}>
+                            <Box className={`${gridStyles['more-icon']}`} component="img" alt={""} src={MoreIcon}></Box>
+                        </Box>
+                    </Grid>
                 </Grid>
             </Grid>
         </Box>
@@ -65,7 +61,7 @@ const GridView = () => {
             <Grid container spacing={1} className={`${gridStyles['left-grid-container']}`}>
                 {
                     data?.map((item: any, index: number ) => <>
-                        <Grid item sm={12} className={`${gridStyles['']}`} onClick={e => {
+                        <Grid item md={12} lg={5} className={`${gridStyles['card-item']}`} onClick={e => {
                             dispatch(setSelectedCardIndex(index))
                         }}>
                             <Card

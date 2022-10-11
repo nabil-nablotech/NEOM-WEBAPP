@@ -30,21 +30,21 @@
 }
 
 .card-title {
-    font-size: clamp(15px, 2vw, 38px);
+    font-size: clamp(18px, 2vw, 38px);
     line-height: 1;
-    font-weight: 500;
+    font-weight: bold;
     max-width: 96%;
     margin-left: 0;
 }
 
 .card-subtitle {
-    font-size: clamp(10px, 1.1vw, 18px);
+    font-size: clamp(16px, 1.1vw, 18px);
     line-height: 1;
     font-weight: 400;
 }
 
 .card-date {
-    font-size: clamp(10px, 1vw, 15px);
+    font-size: clamp(15px, 1vw, 15px);
     line-height: 1;
     font-weight: 400;
     color: var(--grey-text);
@@ -83,4 +83,13 @@
     top: 0;
     right: 0;
     cursor: pointer;
+}
+
+@media (min-width: 575px) and (max-width: 1025px) {
+    .left-grid-container {
+        max-height: 77vh;
+    }
+    .card-grid {
+        gap: 5px;
+    }
 }

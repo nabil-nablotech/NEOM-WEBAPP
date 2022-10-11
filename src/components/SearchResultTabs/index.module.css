@@ -37,3 +37,9 @@
 .result-section {
     margin-block: 0.5em;
 }
+@media (min-width: 575px) and (max-width: 1025px) {
+    .tab,
+    .tab-titles {
+        min-height: 41px !important;
+    }
+}

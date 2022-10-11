@@ -1,5 +1,3 @@
-import React, { Component } from "react";
-import styles from "./index.module.css";
 import Box from "@mui/material/Box";
 import Header from "../../components/Header";
 import SearchResultTabs from "../../components/SearchResultTabs";
