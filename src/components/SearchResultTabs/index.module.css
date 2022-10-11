@@ -4,13 +4,13 @@
     font-family: 'Roboto-Regular';
 }
 .tab-pannel-wrapper {
-    padding-block: 10px;
+    padding-block: 10px !important;
 }
 .tab-titles {
     font-weight: 500;
     font-size: 1em;
     line-height: 1;
-    min-height: fit-content;
+    min-height: 36px !important;
 }
 .main-tab-content {
     min-height: 69vh;

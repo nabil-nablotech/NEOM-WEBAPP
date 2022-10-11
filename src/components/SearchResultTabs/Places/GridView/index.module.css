@@ -1,9 +1,12 @@
 .card-container {
     cursor: pointer;
 }
+.left-grid-box {
+    position: relative;
+}
 .left-grid-container {
     gap: 1em;
-    max-height: 70vh;
+    max-height: 100vh;
     overflow-y: scroll;
 }
 .card-grid {

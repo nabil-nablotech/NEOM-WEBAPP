@@ -18,12 +18,8 @@ const PlacesTab = ({
     const { selectedCardIndex } = useSelector((state: RootState) => state.searchResults);
     const [img, setimg] = useState(MapImg1)
     useEffect(() => {
-      console.log('Hex: ', typeof selectedCardIndex)
     
-      if(selectedCardIndex) {
         setimg(selectedCardIndex%2 === 0 ? MapImg2 : MapImg1)
-
-      }
     }, [selectedCardIndex])
     
 
@@ -56,7 +52,7 @@ const PlacesTab = ({
                         <GridView />
                     </Grid>
                     {/* To-do: map view */}
-                    <Grid item xl={4} lg={6}>
+                    <Grid item xl={6} lg={6}>
                         <Box className={`${placesStyles['map-img']}`} component="img" alt={""} src={img} />
                     </Grid>
                 </Grid>

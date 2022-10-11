@@ -9,6 +9,8 @@ import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
 
 /** indicating that we can send html later on wherever we parse */
 import parse from 'html-react-parser';
+import { setSelectedCardIndex } from '../../../../store/reducers/searchResultsReducer';
+import { useDispatch } from "react-redux";
 
 const Card = ({
     key,
@@ -42,6 +44,7 @@ const Card = ({
 const GridView = () => {
 
     const [data, setData] = useState<any>([])
+    const dispatch = useDispatch();
 
     useEffect(() => {
         fetch('https://jsonplaceholder.typicode.com/photos')
@@ -57,7 +60,9 @@ const GridView = () => {
             <Grid container spacing={1} className={`${gridStyles['left-grid-container']}`}>
                 {
                     data?.map((item: any, index: number) => <>
-                        <Grid item sm={12} className={`${gridStyles['']}`}>
+                        <Grid item sm={12} className={`${gridStyles['']}`} onClick={e => {
+                            dispatch(setSelectedCardIndex(index))
+                        }}>
                             <Card
                                 key={index}
                                 img={item.thumbnailUrl}

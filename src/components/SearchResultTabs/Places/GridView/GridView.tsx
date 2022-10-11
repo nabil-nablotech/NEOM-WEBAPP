@@ -60,7 +60,7 @@ const GridView = () => {
     }, [])
 
     return (
-        <Box className={`${gridStyles['']}`}
+        <Box className={`${gridStyles['left-grid-box']}`}
         >
             <Grid container spacing={1} className={`${gridStyles['left-grid-container']}`}>
                 {
