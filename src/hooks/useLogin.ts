@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { loginPayload, User } from "../types/User";
-import client from '../utils/services/axiosClient';
 import {setSession, getId, setRole, getToken} from '../utils/storage/storage';
 import { useDispatch } from "react-redux";
 import { setUser, setScreenData } from "../store/reducers/loginReducers";
