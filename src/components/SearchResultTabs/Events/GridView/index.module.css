@@ -3,7 +3,7 @@
 }
 .left-grid-container {
     gap: 1em;
-    max-height: 100vh;
+    height: 100vh;
     overflow-y: scroll;
 }
 .card-grid {
