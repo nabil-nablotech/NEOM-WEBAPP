@@ -10,6 +10,7 @@ import UserManagement from "../pages/UserManagement";
 import LandingPage from "../pages/LandingPage";
 import { SetPassword } from "../pages/SetPassword";
 import useAuth from "../hooks/useAuth";
+import SearchResults from "../pages/SearchResults";
 
 export const Navigation = () => {
   const {} = useAuth();
@@ -31,20 +32,30 @@ export const Navigation = () => {
       element: <PublicRoute component={Login} />,
     },
     {
-      path: "/set-password",
+      path: "/set-password/:new",
       element: <PublicRoute component={SetPassword} />,
     },
+    // {
+    //   path: "/search-results",
+    //   element: <AdminRoute path={"/search-results"} component={SearchResults} />,
+    //   // element: <PublicRoute component={SearchResults} />,
+    // },
+    // {
+    //   path: "/search-results/:tabName",
+    //   element: <AdminRoute path={"/search-results/:tabName"} component={SearchResults} />,
+    //   // element: <PublicRoute component={SearchResults} />,
+    // },
     {
-      path: "/search",
-      element: <Search />,
+      path: "/search-results",
+      element: <AdminRoute path={"/search-results"} component={SearchResults} />,
       children: [
         {
           path: "",
-          element: <Search />,
+          element: <AdminRoute path={"/search-results"} component={SearchResults} />,
         },
         {
-          path: ":id",
-          element: <Search />,
+          path: ":tabName",
+          element: <AdminRoute path={"/search-results/:tabName"} component={SearchResults} />,
         },
       ],
     },

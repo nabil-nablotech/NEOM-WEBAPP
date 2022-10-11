@@ -1,0 +1,39 @@
+.search-results-wrapper {
+    background-color: var(--off-white-background-color);
+    padding-top: 4.5em;
+    font-family: 'Roboto-Regular';
+}
+.tab-pannel-wrapper {
+    padding-block: 10px !important;
+}
+.tab-titles {
+    font-weight: 500;
+    font-size: 1em;
+    line-height: 1;
+    min-height: 36px !important;
+}
+.main-tab-content {
+    min-height: 69vh;
+}
+.utility-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.utility-bar> div:nth-child(1) {
+    margin-left: 0;
+}
+.utility-bar> div:nth-child(2) {
+    margin-left: auto;
+}
+.export-btn {
+    padding: 10px;
+    line-height: 1;
+    background-color: transparent;
+}
+.view-toggler-icon {
+    margin-left: 1em;
+}
+.result-section {
+    margin-block: 0.5em;
+}

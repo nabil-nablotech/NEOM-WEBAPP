@@ -1,12 +1,11 @@
 import { createSlice, PayloadAction, SliceCaseReducers } from '@reduxjs/toolkit';
 import { User } from '../../types/User';
-
-export interface CounterState {
-  data: User | null
-}
+import { LoginData } from '../../types/Login';
+import { CounterState } from '../types';
 
 const initialState: CounterState = {
   data: null,
+  screenData: null
 }
 
 export const loginSlice = createSlice({
@@ -15,10 +14,13 @@ export const loginSlice = createSlice({
   reducers: {
     setUser: (state, action: PayloadAction<User>) => {
       state.data = action.payload
+    },
+    setScreenData: (state, action: PayloadAction<LoginData | null>) => {
+      state.screenData = action.payload
     }
   },
 })
 
-export const { setUser } = loginSlice.actions
+export const { setUser, setScreenData } = loginSlice.actions
 
 export default loginSlice.reducer

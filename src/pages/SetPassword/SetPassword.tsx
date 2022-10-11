@@ -16,13 +16,28 @@ type FormError = {
   message: string;
 };
 
-export const SetPassword = () => {
+export const LinkExpired = () => {
+  return <Box className={`${styles["expired-link-content"]}`}>
+    <Box>
+      LINK EXPIRED
+    </Box>
+    <Box>
+    Please contact{' '}
+      <a
+        href="mailto: support@neomheritage.com?subject = Neom Heritage Support"
+        target={"_blank"}
+        rel="noreferrer"
+      >
+        support@neomheritage.com
+      </a>
+    </Box>
+  </Box>
+}
 
+export const SetPassword = () => {
 
   const {query, resetPasswordMutation, setState, state} = useSetPassword();
 
-  const [snackbarErrorMessage, setSnackbarErrorMessage] =
-    useState<boolean>(false);
   const [isSetPasswordDisabled, toggleSetPasswordDisabled] = useState<boolean>(true);
 
   const staticValidationScheme = [
@@ -138,72 +153,89 @@ export const SetPassword = () => {
   // Form submission
   const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (query && query.data) resetPasswordMutation({password: state.password, id: query.data.id });
+    if (state.password === state.confirmPassword) {
+      setState({
+        ...state,
+        error: ''
+      });
+      if (query && query.data) resetPasswordMutation({password: state.password, id: query.data.id });
+    } else {
+      setState({
+        ...state,
+        error: `Confirm password doesn'\nt match`
+      })
+    }
   };
 
+ 
 
   return (
     <>
       <LoginScreenTemplate>
-        <Grid className={`${styles["content"]}`}>
-          <Grid className="">
-            <div className={`${styles["header"]}`}>WELCOME to neom heritage</div>
-          </Grid>
-          <div className={`${styles["subHeader"]}`}>Set your password</div>
-          <TextInput
-            className={`${styles["password"]}`}
-            label="Password"
-            type={"password"}
-            value={state.password}
-            onChange={(e) => handleChange(e, "password")}
-            onBlur={(e) => handleBlur(e, "password")}
-            onFocus={e => setFocusedInput("password")}
-          />
-          <TextInput
-            className={`${styles["confirm-password"]}`}
-            label="Confirm Password"
-            type={"password"}
-            autoComplete="new-password"
-            value={state.confirmPassword}
-            onChange={(e) => handleChange(e, "confirmPassword")}
-            onBlur={(e) => handleBlur(e, 'confirmPassword')}
-            onFocus={e => setFocusedInput("confirmPassword")}
-          />
-          <div className={`${styles["password-help-section"]}`}>
-            <div className={`${styles["password-help-title"]}`}>Your {
-              focusedInput === 'confirmPassword' ? 'Confirm Password' : 'Password'
-            } must have at least:</div>
-            <section className={`${styles["validtr-list"]}`}>
-              {
-                (focusedInput === 'password' ? validatorsArray_password :
-                  validatorsArray_conf_password
-                ).map((validateConditionObj, i) => {
+        {state.expired ?
+          <LinkExpired />
+          :
+          <Grid className={`${styles["content"]}`}>
+            <Grid className="">
+              <div className={`${styles["header"]}`}>WELCOME to neom heritage</div>
+            </Grid>
+            <div className={`${styles["subHeader"]}`}>Set your password</div>
+            <TextInput
+              className={`${styles["password"]}`}
+              label="Password"
+              type={"password"}
+              value={state.password}
+              onChange={(e) => handleChange(e, "password")}
+              onBlur={(e) => handleBlur(e, "password")}
+              onFocus={e => setFocusedInput("password")}
+            />
+            <TextInput
+              className={`${styles["confirm-password"]}`}
+              label="Confirm Password"
+              type={"password"}
+              autoComplete="new-password"
+              value={state.confirmPassword}
+              error={Boolean(state.error)}
+              errorText={state.error}
+              onChange={(e) => handleChange(e, "confirmPassword")}
+              onBlur={(e) => handleBlur(e, 'confirmPassword')}
+              onFocus={e => setFocusedInput("confirmPassword")}
+            />
+            <div className={`${styles["password-help-section"]}`}>
+              <div className={`${styles["password-help-title"]}`}>Your {
+                focusedInput === 'confirmPassword' ? 'Confirm Password' : 'Password'
+              } must have at least:</div>
+              <section className={`${styles["validtr-list"]}`}>
+                {
+                  (focusedInput === 'password' ? validatorsArray_password :
+                    validatorsArray_conf_password
+                  ).map((validateConditionObj, i) => {
 
-                  return <div key={i}>
-                    <div className={`${styles["validate-statement-row"]}`}>
-                      <div>
-                        <Box
-                          component="img"
-                          alt="NEOM logo"
-                          src={validateConditionObj.fulfilled ? PasswordValid : PasswordInalid}
-                        />
-                      </div>
-                      <div>
-                        {validateConditionObj.name} {validateConditionObj.fulfilled}
+                    return <div key={i}>
+                      <div className={`${styles["validate-statement-row"]}`}>
+                        <div>
+                          <Box
+                            component="img"
+                            alt="NEOM logo"
+                            src={validateConditionObj.fulfilled ? PasswordValid : PasswordInalid}
+                          />
+                        </div>
+                        <div>
+                          {validateConditionObj.name} {validateConditionObj.fulfilled}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                })
-              }
-            </section>
-          </div>
-          <Button
-            className={`${styles["sign-in-btn"]}`}
-            label="SET PASSWORD"
-            disabled={isSetPasswordDisabled}
-            onClick={(e) => submit(e)}
-          />
-        </Grid>
+                  })
+                }
+              </section>
+            </div>
+            <Button
+              className={`${styles["sign-in-btn"]}`}
+              label="SET PASSWORD"
+              disabled={isSetPasswordDisabled}
+              onClick={(e) => submit(e)}
+            />
+          </Grid>}
       </LoginScreenTemplate>
     </>
   );

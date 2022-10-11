@@ -11,7 +11,6 @@ import { RootState } from "../../store";
 import { getRole } from "../../utils/storage/storage";
 
 import MenuList from "../MenuList";
-import useAuth from "../../hooks/useAuth";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -50,6 +49,9 @@ function UserMenuComponent() {
 
   if (!data) return null;
 
+  // enable below for local run
+  // if (!data) {};
+
 
   const menuItems = [
     {
@@ -86,7 +88,7 @@ function UserMenuComponent() {
           //@ts-ignore
           onClick={e => handleClick(e)}
         >
-          <div>{stringAvatar(`${data.firstName} ${data.lastName}`)}</div>
+          <div>{stringAvatar(`${data?.firstName} ${data?.lastName}`)}</div>
           <IconUserWhite src={iconUserWhite} alt="icon-user-white" />
         </InitialsWrapper>
 
