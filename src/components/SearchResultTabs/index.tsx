@@ -156,7 +156,7 @@ const SearchResultTabs = ({
             <TabPanel value={value} index={2} className={`${styles['tab-pannel-wrapper']}`}>
                 <LibraryTab />
             </TabPanel>
-            <TabPanel value={value} index={2} className={`${styles['tab-pannel-wrapper']}`}>
+            <TabPanel value={value} index={3} className={`${styles['tab-pannel-wrapper']}`}>
                 Media
             </TabPanel>
         </div >
