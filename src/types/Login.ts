@@ -51,7 +51,7 @@ value: string | number | null
 }
 
 export type LoginPageData = {
-  attributes: {
+
     backgroundImage: BackgroundImage
     bottomText: BottomText
     button: Button
@@ -67,10 +67,17 @@ export type LoginPageData = {
     publishedAt: Date
     passwordRegex: string
     title: string
-  }
 }
+
+export type LoginData = {
+  data: {
+    attributes: LoginPageData;
+  };
+};
 
 export type ResetPaswordStateInput = {
   confirmPassword: string;
   password: string;
+  error: string;
+  isNew: boolean;
 };

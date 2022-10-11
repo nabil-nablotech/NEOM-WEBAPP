@@ -2,13 +2,10 @@ import { useMutation, useQueryClient, useQueries } from "react-query";
 import dayjs from "dayjs";
 import {
   User,
-  UserPayload,
   UserModalstate,
   ISnackbar,
-  Roles,
 } from "../types/User";
 import { LinkGenerate } from "../types/UserManagement";
-import client from "../utils/services/axiosClient";
 import { useState } from "react";
 import { copyToClipboard, webUrl } from "../utils/services/helpers";
 import { fetchUser, fetchUserRole, postUser, editUser } from "../api/user";
@@ -37,6 +34,7 @@ const useUser = () => {
   const [query, { data: userRoles }] = useQueries([
     { queryKey: ["users"], queryFn: fetchUser, },
     { queryKey: ["roles"], queryFn: fetchUserRole },
+    { retry: 2}
   ]);
 
   // Mutations
@@ -111,7 +109,7 @@ const useUser = () => {
       exp: expDate,
     });
     const token = encryptUser(user);
-    const link = `${webUrl}/set-password?key=${token}`;
+    const link = `${webUrl}/set-password/${userData.recovery ? false : true}?key=${token}`;
     setRecoveryLink(link);
     setShowSnackbar({
       open: true,
@@ -120,7 +118,7 @@ const useUser = () => {
     setSelectedUserLink(userData);
     await setUserData(userData.user);
     await editUser({
-      user: {recoveryToken: token, confirmed: false, blocked: true},
+      user: {recoveryToken: token},
       id: userData.user.id
     });
     handleUser(null);

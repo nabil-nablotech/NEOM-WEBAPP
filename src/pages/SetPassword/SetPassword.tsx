@@ -18,11 +18,8 @@ type FormError = {
 
 export const SetPassword = () => {
 
-
   const {query, resetPasswordMutation, setState, state} = useSetPassword();
 
-  const [snackbarErrorMessage, setSnackbarErrorMessage] =
-    useState<boolean>(false);
   const [isSetPasswordDisabled, toggleSetPasswordDisabled] = useState<boolean>(true);
 
   const staticValidationScheme = [
@@ -138,7 +135,18 @@ export const SetPassword = () => {
   // Form submission
   const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (query && query.data) resetPasswordMutation({password: state.password, id: query.data.id });
+    if (state.password === state.confirmPassword) {
+      setState({
+        ...state,
+        error: ''
+      });
+      if (query && query.data) resetPasswordMutation({password: state.password, id: query.data.id });
+    } else {
+      setState({
+        ...state,
+        error: `Confirm password doesn'\nt match`
+      })
+    }
   };
 
 
@@ -165,6 +173,8 @@ export const SetPassword = () => {
             type={"password"}
             autoComplete="new-password"
             value={state.confirmPassword}
+            error={Boolean(state.error)}
+            errorText={state.error}
             onChange={(e) => handleChange(e, "confirmPassword")}
             onBlur={(e) => handleBlur(e, 'confirmPassword')}
             onFocus={e => setFocusedInput("confirmPassword")}
