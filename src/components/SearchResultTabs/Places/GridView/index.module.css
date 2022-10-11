@@ -1,0 +1,86 @@
+.card-container {
+    cursor: pointer;
+}
+.left-grid-box {
+    position: relative;
+}
+.left-grid-container {
+    gap: 1em;
+    max-height: 100vh;
+    overflow-y: scroll;
+}
+.card-grid {
+    justify-content: center;
+    font-family: 'Roboto-Regular';
+    position: relative;
+    padding-inline: 0.5em;
+    gap: 0.8em;
+}
+
+.content ,
+.content.MuiGrid-root {
+    text-align: left;
+    display: flex;
+    flex-direction: column !important;
+
+    padding: 0;
+    justify-content: space-between;
+    position: relative;
+    gap: 0.5em;
+}
+
+.card-title {
+    font-size: clamp(15px, 2vw, 38px);
+    line-height: 1;
+    font-weight: 500;
+    max-width: 96%;
+    margin-left: 0;
+}
+
+.card-subtitle {
+    font-size: clamp(10px, 1.1vw, 18px);
+    line-height: 1;
+    font-weight: 400;
+}
+
+.card-date {
+    font-size: clamp(10px, 1vw, 15px);
+    line-height: 1;
+    font-weight: 400;
+    color: var(--grey-text);
+}
+
+.card-image-wrapper {
+    display: flex;
+}
+
+.card-image {
+    width: 100%;
+    aspect-ratio: 3/1.8;
+    object-fit: cover;
+}
+
+.keyword-pill {
+    border: 1px solid #79747E;
+    border-radius: 0.5em;
+    font-size: 16px;
+    font-size: clamp(12px, 1.1vw, 14px);
+
+    line-height: 1.2;
+    width: fit-content;
+    padding: 0.5px 10px;
+    color: var(--pill-back-color);
+}
+
+.card-keywords {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.more-icon-span {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}

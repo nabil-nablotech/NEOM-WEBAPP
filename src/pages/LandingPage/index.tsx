@@ -16,6 +16,8 @@ import { RootState } from "../../store";
 import useAuth from "../../hooks/useAuth";
 import styles from './index.module.css'
 import { getRole } from "../../utils/storage/storage";
+import { useNavigate } from "react-router-dom";
+import { tabNameProps } from "../../types/SearchResultsTabsProps";
 
 const landingPageData = {
   overlapGroup4: "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/rectangle-125-1@1x.png",
@@ -59,6 +61,15 @@ function LandingPage() {
   const {} = useAuth();
   const {data} = useSelector((state: RootState) => state.login);
 
+  const navigate = useNavigate();
+
+  const handleClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    tabName: tabNameProps
+  ) => {
+    navigate(`search-results/${tabName}`)
+  }
+  
   if (!data) return null;
   return (
     <div className="container-center-horizontal">
@@ -87,7 +98,7 @@ function LandingPage() {
             /> */}
             <CustomSearchField className={`${styles['custom-search-field']} ${styles['landing-page-search-field']}`}/>
             <Inventory>
-              <Frame2608168>
+              <Frame2608168 onClick={e => handleClick(e, 'Places')}>
                 <IconLocationPin src={iconLocation_Pin} alt="icon-location_pin" />
                 <OverlapGroup>
                   <Text1>
@@ -100,7 +111,7 @@ function LandingPage() {
                   </Places>
                 </OverlapGroup>
               </Frame2608168>
-              <Frame2608169>
+              <Frame2608169 onClick={e => handleClick(e, 'Events')}>
                 <Vector
                   src="https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d1b90bcf8144ac5b76937/img/vector@1x.png"
                   alt="Vector"
@@ -116,7 +127,7 @@ function LandingPage() {
                   </Places>
                 </OverlapGroup1>
               </Frame2608169>
-              <Frame2608170>
+              <Frame2608170 onClick={e => handleClick(e, 'Library')}>
                 <Vector1 src={vector2} alt="Vector" />
                 <OverlapGroup2>
                   <Number>
@@ -129,7 +140,7 @@ function LandingPage() {
                   </LibraryItems>
                 </OverlapGroup2>
               </Frame2608170>
-              <Frame2608171>
+              <Frame2608171 onClick={e => handleClick(e, 'Media')}>
                 <Vector2 src={vector3} alt="Vector" />
                 <OverlapGroup3>
                   <Text3>
@@ -257,6 +268,7 @@ const Frame2608168 = styled.div`
   align-items: flex-start;
   min-width: 176px;
   border: 1px none;
+  cursor: pointer;
 `;
 
 const IconLocationPin = styled.img`
@@ -302,6 +314,7 @@ const Frame2608169 = styled.div`
   align-items: flex-start;
   min-width: 177px;
   border: 1px none;
+  cursor: pointer;
 `;
 
 const Vector = styled.img`
@@ -336,6 +349,7 @@ const Frame2608170 = styled.div`
   align-items: flex-start;
   min-width: 171px;
   border: 1px none;
+  cursor: pointer;
 `;
 
 const Vector1 = styled.img`
@@ -381,6 +395,7 @@ const Frame2608171 = styled.div`
   align-items: flex-start;
   min-width: 179px;
   border: 1px none;
+  cursor: pointer;
 `;
 
 const Vector2 = styled.img`

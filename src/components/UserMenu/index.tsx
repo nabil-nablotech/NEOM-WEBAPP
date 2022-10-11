@@ -49,6 +49,9 @@ function UserMenuComponent() {
 
   if (!data) return null;
 
+  // enable below for local run
+  // if (!data) {};
+
 
   const menuItems = [
     {
@@ -85,7 +88,7 @@ function UserMenuComponent() {
           //@ts-ignore
           onClick={e => handleClick(e)}
         >
-          <div>{stringAvatar(`${data.firstName} ${data.lastName}`)}</div>
+          <div>{stringAvatar(`${data?.firstName} ${data?.lastName}`)}</div>
           <IconUserWhite src={iconUserWhite} alt="icon-user-white" />
         </InitialsWrapper>
 
