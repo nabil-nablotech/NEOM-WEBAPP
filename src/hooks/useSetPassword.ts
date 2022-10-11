@@ -52,14 +52,12 @@ const useSetPassword = () => {
           ...state,
           expired: true
         })
-        // handleAlert('Link expired', 'error');
-        // navigate('/');
       }
       return user;
     } catch (error) {
       console.log('error 1', error);
       handleAlert('Invalid Link', 'error');
-      handleAlert('Please contact your administrator', 'info');
+      handleAlert('Please contact your administrator', 'error');
     }
   }
 

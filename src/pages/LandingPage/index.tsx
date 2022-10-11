@@ -60,6 +60,7 @@ function LandingPage() {
   } = landingPageData;
   const {} = useAuth();
   const {data} = useSelector((state: RootState) => state.login);
+  const {totalCounts} = useSelector((state: RootState) => state.searchResults);
 
   const navigate = useNavigate();
 
@@ -103,7 +104,7 @@ function LandingPage() {
                 <OverlapGroup>
                   <Text1>
                     <span>
-                      <span className="roboto-light-merino-50px">{spanText2}</span>
+                      <span className="roboto-light-merino-50px">{totalCounts?.places}</span>
                     </span>
                   </Text1>
                   <Places>
@@ -119,7 +120,7 @@ function LandingPage() {
                 <OverlapGroup1>
                   <Text2>
                     <span>
-                      <span className="roboto-light-merino-50px">{spanText4}</span>
+                      <span className="roboto-light-merino-50px">{totalCounts?.events}</span>
                     </span>
                   </Text2>
                   <Places>
@@ -132,7 +133,7 @@ function LandingPage() {
                 <OverlapGroup2>
                   <Number>
                     <span>
-                      <span className="roboto-light-merino-50px">{spanText6}</span>
+                      <span className="roboto-light-merino-50px">{totalCounts?.library}</span>
                     </span>
                   </Number>
                   <LibraryItems>
@@ -145,7 +146,7 @@ function LandingPage() {
                 <OverlapGroup3>
                   <Text3>
                     <span>
-                      <span className="roboto-light-merino-50px">{spanText8}</span>
+                      <span className="roboto-light-merino-50px">{totalCounts?.media}</span>
                     </span>
                   </Text3>
                   <MediaItems>
