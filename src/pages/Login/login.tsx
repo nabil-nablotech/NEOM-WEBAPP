@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
 import "./style.css";
-import useAuth from "../../hooks/useAuth";
 import { SideContent } from "./sideContent";
 import PositionedSnackbar from "../../components/Snackbar";
 
@@ -14,6 +13,9 @@ import {
   validatePassword,
   baseUrl,
 } from "../../utils/services/helpers";
+import useLogin from "../../hooks/useLogin";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 const LOGINDATA = gql`
   query GetLoginData {
@@ -48,10 +50,11 @@ type FormErrors = {
 };
 
 export function Login() {
-  const { clientLogin, fetchLoginData, data, error, loading } = useAuth();
+  const { clientLogin, error } = useLogin();
 
   const navigate = useNavigate();
-
+  const screenData  = useSelector((rState: RootState) => rState.login.screenData);
+  const data = screenData?.data;
   const textField1Data = {
     children: "Email Address",
   };

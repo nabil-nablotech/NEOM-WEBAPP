@@ -2,13 +2,10 @@ import { useMutation, useQueryClient, useQueries } from "react-query";
 import dayjs from "dayjs";
 import {
   User,
-  UserPayload,
   UserModalstate,
   ISnackbar,
-  Roles,
 } from "../types/User";
 import { LinkGenerate } from "../types/UserManagement";
-import client from "../utils/services/axiosClient";
 import { useState } from "react";
 import { copyToClipboard, webUrl } from "../utils/services/helpers";
 import { fetchUser, fetchUserRole, postUser, editUser } from "../api/user";
@@ -37,6 +34,7 @@ const useUser = () => {
   const [query, { data: userRoles }] = useQueries([
     { queryKey: ["users"], queryFn: fetchUser, },
     { queryKey: ["roles"], queryFn: fetchUserRole },
+    { retry: 2}
   ]);
 
   // Mutations

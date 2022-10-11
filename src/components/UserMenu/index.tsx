@@ -11,7 +11,6 @@ import { RootState } from "../../store";
 import { getRole } from "../../utils/storage/storage";
 
 import MenuList from "../MenuList";
-import useAuth from "../../hooks/useAuth";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {

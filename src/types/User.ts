@@ -35,12 +35,6 @@ export type UserPayload = {
   recoveryToken?: string;
 }
 
-export type LoginData = {
-  data: {
-    attributes: any;
-  };
-};
-
 export type loginPayload = {
   identifier: string;
   password: string;

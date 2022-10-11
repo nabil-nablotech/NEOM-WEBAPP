@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
 import styles from "./index.module.css";
-import useAuth from "../../hooks/useAuth";
 import PositionedSnackbar from "../../components/Snackbar";
 import login_bg from '../../assets/images/login_bg.png';
 import logo_with_name from '../../assets/images/logo_with_name.png';
