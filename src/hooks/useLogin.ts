@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { loginPayload, User } from "../types/User";
 import client from '../utils/services/axiosClient';
 import {setSession, getId, setRole, getToken} from '../utils/storage/storage';
 import { useDispatch } from "react-redux";
-import { setUser } from "../store/reducers/loginReducers";
-import { login } from "../api/auth";
+import { setUser, setScreenData } from "../store/reducers/loginReducers";
+import { login, loginScreenData } from "../api/auth";
 import { fetchMeUser } from "../api/user";
 
 const useLogin = () => {
   const dispatch = useDispatch();
-  const [data, setData] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<Boolean>(true);
+
+  useEffect(() => {
+    fetchLoginData();
+  }, []);
 
   /**
    * get user session details
@@ -35,7 +38,6 @@ const useLogin = () => {
     try {
       
       const data = await login(payload);
-      console.log('data', data);
       await setSession(data.jwt, JSON.stringify(data.user.id));
       await fetchSession();
       await dispatch(setUser(data.user))
@@ -46,11 +48,25 @@ const useLogin = () => {
     }
   }
   
+   /**
+  * Login page UI data with images and background
+  * @returns Login state data
+  */
+    const fetchLoginData = async () => {
+      try {
+        const res = await loginScreenData();
+        dispatch(setScreenData(res));
+        setLoading(false);
+      } catch (error) {
+        if (error instanceof Error) return error.message;
+          else setError(JSON.stringify(error));
+          setLoading(false); 
+      }
+    }
  
   return {
     loading,
     error,
-    data,
     clientLogin,
     fetchSession
   };
