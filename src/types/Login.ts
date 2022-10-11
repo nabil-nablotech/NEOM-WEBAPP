@@ -78,4 +78,6 @@ export type LoginData = {
 export type ResetPaswordStateInput = {
   confirmPassword: string;
   password: string;
+  error: string;
+  isNew: boolean;
 };

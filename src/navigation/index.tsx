@@ -31,7 +31,7 @@ export const Navigation = () => {
       element: <PublicRoute component={Login} />,
     },
     {
-      path: "/set-password",
+      path: "/set-password/:new",
       element: <PublicRoute component={SetPassword} />,
     },
     {
