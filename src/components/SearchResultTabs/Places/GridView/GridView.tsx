@@ -78,16 +78,6 @@ const GridView = () => {
                 }
                 scrollableTarget={'places-scrollable-div'}
                 className={`${gridStyles['infinite-scroll-cls']}`}
-            // below props only if you need pull down functionality
-            // refreshFunction={this.refresh}
-            // pullDownToRefresh
-            // pullDownToRefreshThreshold={50}
-            // pullDownToRefreshContent={
-            //     <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
-            // }
-            // releaseToRefreshContent={
-            //     <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
-            // }
             >
                 <Grid container id={'places-scrollable-div'} spacing={1} className={`${gridStyles['left-grid-container']}`}>
 

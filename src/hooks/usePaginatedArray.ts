@@ -17,8 +17,8 @@ export const usePaginatedArray = ({
         fetch(apiUrl)
             .then(res => res.json())
             .then(res => {
-                setResponseData(res)
-                // setResponseData(res.slice(0,15)) //for testing
+                // setResponseData(res)
+                setResponseData(res.slice(0,50)) //for testing
                 setData(res.slice(0, paginationIndex))
             })
 
