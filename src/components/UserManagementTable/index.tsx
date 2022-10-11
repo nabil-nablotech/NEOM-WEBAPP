@@ -260,6 +260,13 @@ const StyledTable = styled(Table)`
 
   .ant-table-column-sorter-inner {
   }
+
+  .ant-table-cell.more-menu-ant-cell {
+      display: flex;
+      flex-direction: row;
+      align-item: center;
+      gap: 10px;
+  }
 `;
 export type IUser = {
   data: User[] | [];
@@ -400,6 +407,7 @@ export const UserManagementTable = (props: IUser) => {
       title: "",
       key: "action",
       width: "10px",
+      className: 'more-menu-ant-cell',
       render: (value, record: User) => (
         <MoreOptionsComponent id={record.id} record={record} />
       ),
@@ -431,7 +439,7 @@ export const UserManagementTable = (props: IUser) => {
                 selectedUserLink.recovery ? "RECOVERY" : "ACCESS"
               } LINK`}
               onClick={() => copyLink()}
-              StartIcon={ContentCopyOutlinedIcon}
+              StartIcon={() => <ContentCopyOutlinedIcon fontSize="small" className={`${styles["copy-icon"]}`}/>}
             />
           </div>
         ) : null}
