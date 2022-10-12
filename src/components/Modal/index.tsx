@@ -1,10 +1,9 @@
-import React, { ChangeEvent, useState, useEffect } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import styles from "./index.module.css";
 import styled from "styled-components";
-import { Modal, Form, Spin, Tooltip, message } from "antd";
+import { Modal, Spin } from "antd";
 import { Role, User, UserModalstate } from "../../types/User";
 import {
-  AddUserFormErrors,
   AddUserState,
   ModalComponentProps,
 } from "../../types/ModalComponent";
@@ -14,7 +13,6 @@ import Button from "../../components/Button";
 import DropdownComponent from "../Dropdown";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { UseMutateFunction } from "react-query";
-import { dropDownItem } from "../../types/DropdownComponent";
 
 const StyledModal = styled(Modal)`
   .ant-modal {

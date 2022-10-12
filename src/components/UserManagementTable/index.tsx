@@ -2,7 +2,7 @@
 import "antd/dist/antd.css";
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Table, message } from "antd";
+import { Table } from "antd";
 import Button from "../../components/Button";
 import { Roles, User, UserModalstate } from "../../types/User";
 
@@ -269,7 +269,6 @@ export type IUser = {
   setConfirmLoading: (e: boolean) => void;
   confirmLoading: boolean;
   updatedUser?: User;
-  selectedUserLink: LinkGenerate[] | null;
   setModalState: (e: UserModalstate) => void;
   modalState: UserModalstate;
   userRoles?: Roles;
@@ -291,7 +290,6 @@ export const UserManagementTable = (props: IUser) => {
     userRoles,
     copyLink,
     generateLink,
-    selectedUserLink,
   } = props;
   const [dataList, setDataList] = useState<User[] | []>([]);
 

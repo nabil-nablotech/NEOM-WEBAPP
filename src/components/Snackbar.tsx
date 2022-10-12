@@ -1,11 +1,9 @@
 import * as React from "react";
-import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
+import Snackbar from "@mui/material/Snackbar";
 import Slide, { SlideProps } from "@mui/material/Slide";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import Button from '@mui/material/Button';
 import { IconButton } from "@mui/material";
-// import CloseIcon from '@mui/icons-material/Close';
-// import CloseIcon from '@mui/icons-material/Close';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -29,11 +27,6 @@ type SnackbarProps = {
 
 export default function PositionedSnackbar(props: SnackbarProps) {
   const { message, severity, open, handleClose } = props;
-  const [state, setState] = React.useState<SnackbarOrigin>({
-    vertical: "top",
-    horizontal: "center",
-  });
-
   
   const action:React.ReactNode = (
     <React.Fragment>
@@ -51,16 +44,16 @@ export default function PositionedSnackbar(props: SnackbarProps) {
     </React.Fragment>
   );
 
-  const { vertical, horizontal } = state;
 
   return (
     <div>
       <Snackbar
-        anchorOrigin={{ vertical, horizontal }}
+        anchorOrigin={{ vertical: "top",
+        horizontal: "center" }}
         TransitionComponent={TransitionDown}
         open={open}
         onClose={handleClose}
-        key={vertical + horizontal}
+        key={"top center"}
         action={action}
         autoHideDuration={6000}
       >

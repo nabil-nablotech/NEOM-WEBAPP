@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, KeyboardEvent } from "react";
 import TextInput from "../TextInput";
 import { Avatar, InputAdornment } from "@mui/material";
 import SearchIcon from "../SearchField/leading-icon.svg";
@@ -6,11 +6,10 @@ import CrossIcon from "../SearchField/trailing-icon.svg";
 import styles from './index.module.css'
 import CircleSharpIcon from '@mui/icons-material/CircleSharp';
 
-function CustomSearchField(props: {className?: string, handleChange?: (e:ChangeEvent<HTMLInputElement>) => void}) {
-  const { className, handleChange } = props;
+function CustomSearchField(props: {className?: string; onKeyDown?: (e:KeyboardEvent<HTMLInputElement>) => void; handleChange?: (e:ChangeEvent<HTMLInputElement>) => void}) {
+  const { className, handleChange, onKeyDown } = props;
 
   const [searchText, setSearchText] = useState('')
-  const [isTyping, setIsTyping] = useState(false)
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value)
@@ -29,9 +28,8 @@ function CustomSearchField(props: {className?: string, handleChange?: (e:ChangeE
         value={searchText}
         onChange={(e) => {
           handleTextChange(e)
-          setIsTyping(true)
         }}
-        onBlur={e => setIsTyping(false)}
+        onKeyDown={onKeyDown}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start" sx={{

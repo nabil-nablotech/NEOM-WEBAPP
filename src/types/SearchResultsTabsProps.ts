@@ -39,4 +39,5 @@ export type GridViewCard_Events = {
 export type SearchResultsState2 = {
     selectedCardIndex: number 
     totalCounts: DashboardResponse | null
+    searchText: string
 }

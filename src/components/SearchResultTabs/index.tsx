@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import styles from './index.module.css'
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Places from "../../assets/images/searchResults/Places.svg";
 import Events from "../../assets/images/searchResults/Events.svg";
@@ -30,7 +31,7 @@ function TabPanel(props: TabPanelProps) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }} className={className}>
-                    <Typography>{children}</Typography>
+                    <Grid>{children}</Grid>
                 </Box>
             )}
         </div>

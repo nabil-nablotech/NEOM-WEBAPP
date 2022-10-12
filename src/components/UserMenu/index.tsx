@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -58,7 +58,7 @@ function UserMenuComponent() {
     {
       label: "Support",
       handleClickMenuItem: () => {},
-      render: () => <a href="mailto: support@neomheritage.com?subject = Neom Heritage Support" target={"_blank"}>
+      render: () => <a href="mailto: support@neomheritage.com?subject = Neom Heritage Support" rel="noreferrer" target={"_blank"}>
       Help & Support
       </a>
     },
@@ -155,44 +155,6 @@ const IconSettings = styled.img`
   // left: 1317px;
   z-index: 3;
   cursor: pointer;
-`;
-
-const UserMenu = styled.div`
-  position: fixed;
-  height: fit-content;
-  top: 5%;
-  right: 0;
-  z-index: 2;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  min-width: 175px;
-  // border: 1px none;
-  gap: 20px;
-  margin-right: 2vw;
-  & img {
-    cursor: pointer;
-  }
-  @media (min-width: 575px) and (max-width: 1025px) {
-    top: 1%;
-  }
-`;
-
-const UserMenu1 = styled.div`
-  position: fixed;
-  height: 144px;
-  top: 24px;
-  left: 637px;
-  z-index: 2;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  min-width: 175px;
-  border: 1px none;
-
-  &.user-menu.user-menu-1 {
-    left: 1238px;
-  }
 `;
 
 export default UserMenuComponent;

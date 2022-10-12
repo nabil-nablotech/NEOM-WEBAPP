@@ -14,11 +14,6 @@ const useUser = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [userData, setUserData] = useState<User | null>(null);
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
-  const [recoveryLink, setRecoveryLink] = useState<string>("");
-  const [selectedUserLink, setSelectedUserLink] = useState<{
-    user: User;
-    recovery: boolean;
-  } [] | null>(null);
   const [modalState, setModalState] = useState<UserModalstate>({
     visible: false,
     editing: null,
@@ -152,7 +147,6 @@ const useUser = () => {
     userRoles,
     generateLink,
     copyLink,
-    selectedUserLink,
   };
 };
 

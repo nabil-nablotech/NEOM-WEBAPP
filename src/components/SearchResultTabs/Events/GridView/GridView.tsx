@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 /** indicating that we can send html later on wherever we parse */
 import parse from 'html-react-parser';
 import { useDispatch } from "react-redux";
-import { Grid, Stack } from '@mui/material';
+import { Grid } from '@mui/material';
 import { format } from "date-fns";
 import { GridViewCard_Events } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'

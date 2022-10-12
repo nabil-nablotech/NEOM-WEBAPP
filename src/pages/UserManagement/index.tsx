@@ -23,7 +23,6 @@ const UserManagement = () => {
     userRoles,
     copyLink,
     generateLink,
-    selectedUserLink
   } = useUser();
   
   const { data, isLoading } = query;
@@ -50,7 +49,6 @@ const UserManagement = () => {
               userRoles={userRoles}
               copyLink={copyLink}
               generateLink={generateLink}
-              selectedUserLink={selectedUserLink}
             />
           </Container>
           <Snackbar
