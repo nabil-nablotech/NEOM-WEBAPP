@@ -134,7 +134,7 @@ const RefinedSearchInputs = () => {
                     ...textInputSxStyles
                 }}
             />
-            <DatePicker placeholderText='Date Range' className={`${styles["date"]}`} selected={null} onChange={(date:Date) => setStartDate(date)} />
+            <DatePicker placeholderText='Date Range' className={`${styles["date"]}`} selected={startDate} onChange={(date:Date) => setStartDate(date)} />
             <Button label="SEARCH" colors={['#fff', '#000', 'none']} style={{
                 padding: '0 2em'
             }} />

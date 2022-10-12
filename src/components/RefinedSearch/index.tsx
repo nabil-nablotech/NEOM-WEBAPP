@@ -1,9 +1,8 @@
-import { Box, Button } from '@mui/material';
 import React from 'react';
-import { Select, MenuItem } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import styled from "styled-components";
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import styles from './index.module.css';
-import styled from "styled-components";
 import { RefinedSearchProps } from '../../types/RefinedSeachTypes';
 
 const RefinedSearch = ({

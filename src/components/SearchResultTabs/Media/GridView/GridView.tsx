@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+
 import Box from '@mui/material/Box';
 import { GridViewCard_Places } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'
@@ -14,7 +14,6 @@ import parse from 'html-react-parser';
 import { setSelectedCardIndex } from '../../../../store/reducers/searchResultsReducer';
 
 const Card = ({
-    key,
     img,
     title,
     subTitle,
@@ -22,8 +21,7 @@ const Card = ({
     keywords
 }: GridViewCard_Places) => {
     return <>
-        <Box className={`${gridStyles['card-container']}`} key={key} 
-        >
+        <Box className={`${gridStyles['card-container']}`} >
             <Grid container spacing={1} className={`${gridStyles['card-grid']}`}>
                 <Grid item sm={12} className={`${gridStyles['card-image-wrapper']}`}>
                     <Box className={`${gridStyles['card-image']}`} component="img" alt={""} src={img} />
@@ -77,12 +75,11 @@ const GridView = () => {
 
             <Grid container spacing={1} id={'media-scrollable-div'} className={`${gridStyles['left-grid-container']}`}>
                 {
-                    data?.map((item: any, index: number ) => <>
+                    data?.map((item: any, index: number ) => <div key={index}>
                         <Grid item md={12} lg={5} className={`${gridStyles['card-item']}`} onClick={e => {
                             dispatch(setSelectedCardIndex(index))
                         }}>
                             <Card
-                                key={index}
                                 img={item.thumbnailUrl}
                                 title={item.title.substr(0, 20)}
                                 subTitle={item.title.substr(0, 40) + '...'}
@@ -90,7 +87,7 @@ const GridView = () => {
                                 keywords={['fist', 'new']}
                             />
                         </Grid>
-                    </>)
+                    </div>)
                 }
             </Grid>
             </InfiniteScroll>
