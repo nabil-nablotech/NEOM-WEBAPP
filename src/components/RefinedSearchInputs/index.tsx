@@ -138,6 +138,10 @@ const RefinedSearchInputs = () => {
             <Button label="SEARCH" colors={['#fff', '#000', 'none']} style={{
                 padding: '0 2em'
             }} />
+            <Button label="Reset" colors={['#000', '#fff', 'none']} style={{
+                padding: '0 2em',
+                textTransform: 'unset'
+            }} />
         </Box>
     );
 }
