@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { GridViewCard_Places } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'
-import { Grid, Stack } from '@mui/material';
+import commonStyles from '../../index.module.css'
+import { Grid } from '@mui/material';
 import { format } from "date-fns";
 import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
 import { useDispatch } from "react-redux";
@@ -72,7 +73,7 @@ const GridView = () => {
                     </p>
                 }
                 scrollableTarget={'media-scrollable-div'}
-                className={`${gridStyles['infinite-scroll-cls']}`}
+                className={`${commonStyles['infinite-scroll-cls']}`}
             >
 
             <Grid container spacing={1} id={'media-scrollable-div'} className={`${gridStyles['left-grid-container']}`}>

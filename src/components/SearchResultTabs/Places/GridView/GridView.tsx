@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import { GridViewCard_Places } from '../../../../types/SearchResultsTabsProps'
-import gridStyles from './index.module.css'
-import { Grid, Stack } from '@mui/material';
+import { useEffect, useState } from "react";
+import Box from "@mui/material/Box";
+import { GridViewCard_Places } from "../../../../types/SearchResultsTabsProps";
+import gridStyles from "./index.module.css";
+import commonStyles from '../../index.module.css'
+import { Grid } from "@mui/material";
 import { format } from "date-fns";
 import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
 import { useDispatch } from "react-redux";
@@ -77,7 +78,7 @@ const GridView = () => {
                     </p>
                 }
                 scrollableTarget={'places-scrollable-div'}
-                className={`${gridStyles['infinite-scroll-cls']}`}
+                className={`${commonStyles['infinite-scroll-cls']}`}
             >
                 <Grid container id={'places-scrollable-div'} spacing={1} className={`${gridStyles['left-grid-container']}`}>
 
