@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import styles from '../index.module.css'
 import placesStyles from './index.module.css'
 import Button from "../../../components/Button";
-import GridViewOpen from '../../../assets/images/searchResults/GridViewOpen.svg'
+import GridViewOpen from '../../../assets/images/searchResults/GridView.svg'
 import ListViewClosed from '../../../assets/images/searchResults/ListViewClosed.svg'
 import GridViewClosed from '../../../assets/images/searchResults/GridViewClosed.svg'
 import GridView from './GridView/GridView';
