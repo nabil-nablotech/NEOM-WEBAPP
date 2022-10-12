@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+
 import Box from "@mui/material/Box";
 import { GridViewCard_Places } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
