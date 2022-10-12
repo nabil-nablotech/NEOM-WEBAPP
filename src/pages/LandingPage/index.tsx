@@ -97,7 +97,7 @@ function LandingPage() {
               }}
               ref={searchRef}
             /> */}
-            <CustomSearchField className={`${styles['custom-search-field']} ${styles['landing-page-search-field']}`}/>
+            <CustomSearchField className={`${styles['custom-search-field']} ${styles['landing-page-search-field']}`} />
             <Inventory>
               <Frame2608168 onClick={e => handleClick(e, 'Places')}>
                 <IconLocationPin src={iconLocation_Pin} alt="icon-location_pin" />
