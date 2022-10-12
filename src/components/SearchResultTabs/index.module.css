@@ -6,6 +6,9 @@
 .tab-pannel-wrapper {
     padding-block: 10px !important;
 }
+.tab-panel-component {
+    position: relative;
+}
 .tab-titles {
     font-weight: 500;
     font-size: 1em;
