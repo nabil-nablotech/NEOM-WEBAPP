@@ -2,6 +2,7 @@
 import Box from '@mui/material/Box';
 import { GridViewCard_Places } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'
+import commonStyles from '../../index.module.css'
 import { Grid } from '@mui/material';
 import { format } from "date-fns";
 import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
@@ -69,13 +70,13 @@ const GridView = () => {
                     </p>
                 }
                 scrollableTarget={'media-scrollable-div'}
-                className={`${gridStyles['infinite-scroll-cls']}`}
+                className={`${commonStyles['infinite-scroll-cls']}`}
             >
 
             <Grid container spacing={1} id={'media-scrollable-div'} className={`${gridStyles['left-grid-container']}`}>
                 {
-                    data?.map((item: any, index: number ) => <div key={index}>
-                        <Grid item md={12} lg={5} className={`${gridStyles['card-item']}`} onClick={e => {
+                    data?.map((item: any, index: number ) => <>
+                        <Grid key={index} item md={12} lg={5} className={`${gridStyles['card-item']}`} onClick={e => {
                             dispatch(setSelectedCardIndex(index))
                         }}>
                             <Card
@@ -86,7 +87,7 @@ const GridView = () => {
                                 keywords={['fist', 'new']}
                             />
                         </Grid>
-                    </div>)
+                    </>)
                 }
             </Grid>
             </InfiniteScroll>

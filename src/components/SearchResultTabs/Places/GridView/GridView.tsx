@@ -1,4 +1,3 @@
-
 import Box from "@mui/material/Box";
 import { Grid } from "@mui/material";
 import { format } from "date-fns";
@@ -8,6 +7,7 @@ import parse from 'html-react-parser';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { GridViewCard_Places } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
+import commonStyles from '../../index.module.css'
 import MoreIcon from "../../../../assets/images/searchResults/MoreMenu.svg";
 import { usePaginatedArray } from '../../../../hooks/usePaginatedArray';
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
@@ -75,8 +75,6 @@ const Card = ({
 };
 
 const GridView = () => {
-  // const [data, setData] = useState<any>([]);
-  // const dispatch = useDispatch();
 
     const {
         data,
@@ -106,7 +104,7 @@ const GridView = () => {
                     </p>
                 }
                 scrollableTarget={'places-scrollable-div'}
-                className={`${gridStyles['infinite-scroll-cls']}`}
+                className={`${commonStyles['infinite-scroll-cls']}`}
             >
                 <Grid container id={'places-scrollable-div'} spacing={1} className={`${gridStyles['left-grid-container']}`}>
 
