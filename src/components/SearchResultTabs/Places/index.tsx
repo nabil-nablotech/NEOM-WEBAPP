@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import styles from '../index.module.css'
 import placesStyles from './index.module.css'
 import Button from "../../../components/Button";
-import GridViewIcon from '../../../assets/images/searchResults/GridView.svg'
+import DetailsView from '../../../assets/images/searchResults/DetailsView.svg'
 import ListView from '../../../assets/images/searchResults/ListView.svg'
 import GridView from './GridView/GridView';
 import { Grid } from '@mui/material';
@@ -19,7 +19,7 @@ const PlacesTab = ({
     const { selectedCardIndex } = useSelector((state: RootState) => state.searchResults);
     const [img, setimg] = useState(MapImg1)
 
-    const {isfirstViewOpen, togglefirstViewOpen} = useToggledView()
+    const {openStates, toggleOpenStates} = useToggledView({count: 2})
 
     useEffect(() => {
     
@@ -47,16 +47,16 @@ const PlacesTab = ({
                     // onClick={handleCancel}
                 />
                 </Box>
-                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={GridViewIcon}
-                    onClick={e => togglefirstViewOpen(true)}
+                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={DetailsView}
+                    onClick={e => toggleOpenStates([true, false])}
                     style={{
-                        opacity: !isfirstViewOpen ? '0.5' : '1'
+                        opacity: openStates[0] ? '1' : '0.5'
                     }}
                 />
                 <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={ListView}
-                    onClick={e => togglefirstViewOpen(false)}
+                    onClick={e => toggleOpenStates([false, true])}
                     style={{
-                        opacity: isfirstViewOpen ? '0.5' : '1'
+                        opacity: openStates[1] ? '1' : '0.5'
                     }}
                 />
             </Box>

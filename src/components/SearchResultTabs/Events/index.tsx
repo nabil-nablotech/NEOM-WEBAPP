@@ -3,14 +3,15 @@ import Box from '@mui/material/Box';
 import styles from '../index.module.css'
 import placesStyles from './index.module.css'
 import Button from "../../../components/Button";
-import GridViewOpen from '../../../assets/images/searchResults/GridView.svg'
-import ListViewClosed from '../../../assets/images/searchResults/ListViewClosed.svg'
+import DetailsView from '../../../assets/images/searchResults/DetailsView.svg'
+import ListView from '../../../assets/images/searchResults/ListView.svg'
 import GridView from './GridView/GridView';
 import { Grid } from '@mui/material';
 import MapImg1 from '../../../assets/images/searchResults/mapImage1.webp'
 import MapImg2 from '../../../assets/images/searchResults/mapImage2.jpg'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
+import { useToggledView } from './../../../hooks/useToggledView';
 
 const PlacesTab = ({
     resultCount = 1053
@@ -22,6 +23,7 @@ const PlacesTab = ({
         setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1)
     }, [selectedCardIndex])
     
+    const {openStates, toggleOpenStates} = useToggledView({count: 2})
 
     return (
         <Box className={`${styles['main-tab-content']}`}>
@@ -43,8 +45,18 @@ const PlacesTab = ({
                     // onClick={handleCancel}
                 />
                 </Box>
-                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={GridViewOpen} />
-                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={ListViewClosed} />
+                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={DetailsView}
+                    onClick={e => toggleOpenStates([true, false])}
+                    style={{
+                        opacity: openStates[0] ? '1' : '0.5'
+                    }}
+                />
+                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={ListView}
+                    onClick={e => toggleOpenStates([false, true])}
+                    style={{
+                        opacity: openStates[1] ? '1' : '0.5'
+                    }}
+                />
             </Box>
             <Box component={'section'} className={`${styles['result-section']}`}>
                 <Grid container spacing={1}>

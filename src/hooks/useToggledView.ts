@@ -1,11 +1,17 @@
 import { useState } from 'react';
 
-export const useToggledView = () => {
-    const [isfirstViewOpen, togglefirstViewOpen] = useState<boolean>(true)
+type toggleType = {
+    count: number
+};
 
+export const useToggledView = (props:toggleType) => {
+    const [isfirstViewOpen, togglefirstViewOpen] = useState<boolean>(true)
+    const [openStates, toggleOpenStates] = useState< Array<boolean>>([true, ...Array(props.count - 1).fill(false)])
 
     return {
         isfirstViewOpen,
         togglefirstViewOpen,
+        openStates,
+        toggleOpenStates
     }
 }
