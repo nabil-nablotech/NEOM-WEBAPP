@@ -11,11 +11,11 @@ import "../../styleguide.css";
 import WhiteCircle from "../../assets/images/WhiteCircle.svg";
 import CustomSearchField from "../../components/SearchField/index";
 import { RootState } from "../../store";
-import useAuth from "../../hooks/useAuth";
 import styles from "./index.module.css";
 import { useNavigate } from "react-router-dom";
 import { tabNameProps } from "../../types/SearchResultsTabsProps";
 import Header from "../../components/Header";
+import useAuth from "../../hooks/useAuth";
 
 const landingPageData = {
   overlapGroup4:

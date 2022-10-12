@@ -18,7 +18,7 @@ const useUser = () => {
   const [selectedUserLink, setSelectedUserLink] = useState<{
     user: User;
     recovery: boolean;
-  } | null>(null);
+  } [] | null>(null);
   const [modalState, setModalState] = useState<UserModalstate>({
     visible: false,
     editing: null,
@@ -32,9 +32,8 @@ const useUser = () => {
 
   // query
   const [query, { data: userRoles }] = useQueries([
-    { queryKey: ["users"], queryFn: fetchUser, },
-    { queryKey: ["roles"], queryFn: fetchUserRole },
-    { retry: 2}
+    { queryKey: ["users"], queryFn: fetchUser },
+    { queryKey: ["roles"], queryFn: fetchUserRole }
   ]);
 
   // Mutations
@@ -58,10 +57,9 @@ const useUser = () => {
     },
   });
 
-  const { mutate: editUserMutation, data: updatedUser } = useMutation(['editUser'],
-    editUser,
+  const { mutate: editUserMutation, data: updatedUser } = useMutation(editUser,
     {
-      onSuccess: () => {
+      onSuccess: (data: User) => {
         // Invalidate and refetch
         queryClient.invalidateQueries(["users"]);
         setConfirmLoading(false);
@@ -69,10 +67,12 @@ const useUser = () => {
           visible: false,
           editing: null,
         });
-        setShowSnackbar({
-          open: true,
-          message: "User updated",
-        });
+        if (!data.recoveryToken) {
+            setShowSnackbar({
+            open: true,
+            message: "User updated",
+          });
+        }
       },
       onError: () => {
         setConfirmLoading(false);
@@ -109,26 +109,25 @@ const useUser = () => {
       exp: expDate,
     });
     const token = encryptUser(user);
-    const link = `${webUrl}/set-password/${userData.recovery ? false : true}?key=${token}`;
-    setRecoveryLink(link);
     setShowSnackbar({
       open: true,
       message: "Password recovery link created",
     });
-    setSelectedUserLink(userData);
     await setUserData(userData.user);
-    await editUser({
+    await editUserMutation({
       user: {recoveryToken: token},
       id: userData.user.id
     });
+
     handleUser(null);
   };
 
   /**
    * copy recovery link
    */
-  const copyLink = () => {
-    copyToClipboard(recoveryLink);
+  const copyLink = (str: string, recovery:boolean) => {
+    const link = `${webUrl}/set-password/${recovery ? false : true}?key=${str}`;
+    copyToClipboard(link);
     setShowSnackbar({
       open: true,
       message: "Password recovery link copied",
