@@ -6,7 +6,7 @@ import { SearchResultTabsProps } from "../../types/SearchResultsTabsProps";
 const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   return (
     <>
-      <Header showSearch={true} />
+      <Header showSearch={true} showRefinedSearch={true}/>
       <Box>
         <SearchResultTabs tabIndex={tabIndex} />
       </Box>
