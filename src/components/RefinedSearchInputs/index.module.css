@@ -1,0 +1,31 @@
+.refined-inputs-container {
+    padding-bottom: 1em;
+    display: flex;
+    gap: 0.5em;
+    padding-inline: 2em;
+    flex-wrap: wrap;
+    justify-content: start;
+    font-family: 'Roboto-Regular';
+}
+.dropdown ,
+.dropdown *{
+    color: #fff !important;
+    border-color: #fff !important;
+    border-radius: 0.3em !important;
+}
+
+.extra-width {
+    flex-grow: 1;
+}
+
+.date {
+    color: #fff;
+    border: 1px solid #fff;
+    background-color: transparent;
+    padding: 0.5em 0.7em;
+    border-radius: 0.3em;
+    height: 100%;
+}
+.date::placeholder {
+    color: #fff;
+}

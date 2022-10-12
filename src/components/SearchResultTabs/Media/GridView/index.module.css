@@ -6,7 +6,7 @@
 }
 .left-grid-container {
     gap: 0.2em;
-    max-height: 100vh;
+    height: 100vh;
     overflow-y: scroll;
     justify-content: center;
 }

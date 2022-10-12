@@ -21,8 +21,9 @@
 @media (min-width: 575px) and (max-width: 1025px) {
     .logo {
         width: fit-content;
+        padding-right: 1em;
     }
     .header-search {
-        width: 40ch;
+        width: 35ch;
     }
 }
