@@ -8,6 +8,7 @@ import { Grid } from '@mui/material';
 import { format } from "date-fns";
 import { GridViewCard_Events } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'
+import commonStyles from '../../index.module.css'
 import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { usePaginatedArray } from '../../../../hooks/usePaginatedArray';
@@ -71,7 +72,7 @@ const GridView = () => {
                     </p>
                 }
                 scrollableTarget={'events-scrollable-div'}
-                className={`${gridStyles['infinite-scroll-cls']}`}
+                className={`${commonStyles['infinite-scroll-cls']}`}
             >
 
                 <Grid container id={'events-scrollable-div'} spacing={1} className={`${gridStyles['left-grid-container']}`}>

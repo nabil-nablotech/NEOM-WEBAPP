@@ -38,6 +38,9 @@
 .result-section {
     margin-block: 0.5em;
 }
+.infinite-scroll-cls {
+    overflow-y: hidden !important;
+}
 @media (min-width: 575px) and (max-width: 1025px) {
     .tab,
     .tab-titles {
