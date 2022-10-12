@@ -16,17 +16,15 @@ function CustomSearchField(props: {className?: string, handleChange?: (e:ChangeE
   const [isTyping, setIsTyping] = useState(false)
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
     let wordsArray = searchText.split(' ');
     if(wordsArray.length>=2){
-      placeRefetch({ search1: wordsArray[0], search2:wordsArray[1]});
-      eventRefetch({ search1: wordsArray[0], search2:wordsArray[1]});
+      placeRefetch({ search_one: wordsArray[0], search_two:wordsArray[1]});
+      eventRefetch({ search_one: wordsArray[0], search_two:wordsArray[1]});
     }
 
-    setSearchText(e.target.value)
-    
     if(handleChange) {
       handleChange(e)
-      
     }
   }
 
