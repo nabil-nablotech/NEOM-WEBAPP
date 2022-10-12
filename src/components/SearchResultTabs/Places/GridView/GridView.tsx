@@ -109,8 +109,8 @@ const GridView = () => {
                 <Grid container id={'places-scrollable-div'} spacing={1} className={`${gridStyles['left-grid-container']}`}>
 
                     {
-                        data?.map((item: any, index: number) => <div key={index}>
-                            <Grid item sm={12} className={`${gridStyles['']}`} onClick={e => {
+                        data?.map((item: any, index: number) => <>
+                            <Grid item key={index} sm={12} className={`${gridStyles['']}`} onClick={e => {
                                 dispatch(setSelectedCardIndex(index))
                             }}>
                                 <Card
@@ -121,7 +121,7 @@ const GridView = () => {
                                     keywords={['fist', 'new']}
                                 />
                             </Grid>
-                        </div>)
+                        </>)
                     }
                 </Grid>
             </InfiniteScroll>
