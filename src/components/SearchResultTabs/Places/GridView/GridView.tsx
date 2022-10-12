@@ -1,14 +1,14 @@
 
 import Box from "@mui/material/Box";
-import { GridViewCard_Places } from "../../../../types/SearchResultsTabsProps";
-import gridStyles from "./index.module.css";
 import { Grid } from "@mui/material";
 import { format } from "date-fns";
-import MoreIcon from "../../../../assets/images/searchResults/MoreMenu.svg";
 import { useDispatch } from "react-redux";
 /** indicating that we can send html later on wherever we parse */
 import parse from 'html-react-parser';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { GridViewCard_Places } from "../../../../types/SearchResultsTabsProps";
+import gridStyles from "./index.module.css";
+import MoreIcon from "../../../../assets/images/searchResults/MoreMenu.svg";
 import { usePaginatedArray } from '../../../../hooks/usePaginatedArray';
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 
