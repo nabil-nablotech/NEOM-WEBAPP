@@ -1,5 +1,4 @@
-import React from "react";
-import Select, {SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 import { DropdownCompProps } from "../../types/DropdownComponent";
 import { MenuItem } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";

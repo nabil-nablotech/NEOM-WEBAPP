@@ -1,9 +1,8 @@
-import * as React from 'react';
 import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { GridViewCard_Places } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'
-import { Grid, Stack } from '@mui/material';
+import { Grid } from '@mui/material';
 import { format } from "date-fns";
 import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
 import { useDispatch } from "react-redux";
@@ -60,12 +59,11 @@ const GridView = () => {
         >
             <Grid container spacing={1} className={`${gridStyles['left-grid-container']}`}>
                 {
-                    data?.map((item: any, index: number ) => <>
+                    data?.map((item: any, index: number ) => <div key={index}>
                         <Grid item md={12} lg={5} className={`${gridStyles['card-item']}`} onClick={e => {
                             dispatch(setSelectedCardIndex(index))
                         }}>
                             <Card
-                                key={index}
                                 img={item.thumbnailUrl}
                                 title={item.title.substr(0, 20)}
                                 subTitle={item.title.substr(0, 40) + '...'}
@@ -73,7 +71,7 @@ const GridView = () => {
                                 keywords={['fist', 'new']}
                             />
                         </Grid>
-                    </>)
+                    </div>)
                 }
             </Grid>
         </Box>

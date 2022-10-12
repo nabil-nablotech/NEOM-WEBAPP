@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 import styles from "./index.module.css";
 import { Box } from "@mui/material";
 import Logo from "../../pages/UserManagement/img/Logo.svg";

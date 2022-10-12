@@ -16,6 +16,9 @@ import { useNavigate } from "react-router-dom";
 import { tabNameProps } from "../../types/SearchResultsTabsProps";
 import Header from "../../components/Header";
 import useAuth from "../../hooks/useAuth";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { setSearchText } from "../../store/reducers/searchResultsReducer";
 
 const landingPageData = {
   overlapGroup4:
@@ -59,17 +62,28 @@ function LandingPage() {
   } = landingPageData;
   useAuth();
   const { data } = useSelector((state: RootState) => state.login);
-  const { totalCounts } = useSelector(
+  const { totalCounts, searchText } = useSelector(
     (state: RootState) => state.searchResults
   );
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     tabName: tabNameProps
   ) => {
     navigate(`search-results/${tabName}`);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setSearchText(e.target.value));
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === 'Enter' && searchText.length > 3) {
+      navigate(`search-results/Places`);
+    }
   };
 
   if (!data) return null;
@@ -82,6 +96,8 @@ function LandingPage() {
           <Frame2608172>
             <Image2 src={image2} alt="image 2" />
             <CustomSearchField
+              handleChange={handleChange}
+              onKeyDown={onKeyDown}
               className={`${styles["custom-search-field"]} ${styles["landing-page-search-field"]}`}
             />
             <Inventory>

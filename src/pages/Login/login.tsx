@@ -150,8 +150,15 @@ export function Login() {
     }
   };
 
+  // onkeydown
+  const onkeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === 'Enter' && !isSignInDisabled) {
+      submit(e);
+    }
+  }
+
   // Form submission
-  const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const submit = async (e: React.KeyboardEvent<HTMLInputElement> | React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     const data = await clientLogin({
       identifier: state.email,
@@ -178,37 +185,41 @@ export function Login() {
         lg={8}
         xl={8}
       >
-        <Grid className="content">
-          <Grid className="">
-            <div className="header">Sign in to neom heritage</div>
+        <form onSubmit={(e) => submit(e)}>
+          <Grid className="content">
+            <Grid className="">
+              <div className="header">Sign in to neom heritage</div>
+            </Grid>
+            <div className="subHeader">Enter your details below</div>
+            <TextInput
+              className={`login-email`}
+              label="Email Address"
+              value={state.email}
+              error={formErrors.email.message ? true : false}
+              errorText={formErrors.email.message}
+              onChange={(e) => handleChange(e, "email")}
+              onBlur={() => validateCredentials()}
+            />
+            <TextInput
+              className={`login-pwd`}
+              label="Password"
+              type={"password"}
+              value={state.password}
+              // error={formErrors.password.message ? true : false}
+              // errorText={formErrors.password.message}
+              onChange={(e) => handleChange(e, "password")}
+              onKeyDown={(e) => onkeydown(e)}
+              onBlur={() => validateCredentials()}
+            />
+            <Button
+              className={"sign-in-btn"}
+              label="SIGN IN"
+              disabled={isSignInDisabled}
+              type='submit'
+              onClick={(e) => submit(e)}
+            />
           </Grid>
-          <div className="subHeader">Enter your details below</div>
-          <TextInput
-            className={`login-email`}
-            label="Email Address"
-            value={state.email}
-            error={formErrors.email.message ? true : false}
-            errorText={formErrors.email.message}
-            onChange={(e) => handleChange(e, "email")}
-            onBlur={() => validateCredentials()}
-          />
-          <TextInput
-            className={`login-pwd`}
-            label="Password"
-            type={"password"}
-            value={state.password}
-            // error={formErrors.password.message ? true : false}
-            // errorText={formErrors.password.message}
-            onChange={(e) => handleChange(e, "password")}
-            onBlur={() => validateCredentials()}
-          />
-          <Button
-            className={"sign-in-btn"}
-            label="SIGN IN"
-            disabled={isSignInDisabled}
-            onClick={(e) => submit(e)}
-          />
-        </Grid>
+        </form>
         <div className="bottomText">
           <p>Don’t have an account yet or forgot your password?</p>
           <p>

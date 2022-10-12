@@ -2,9 +2,6 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Button, { ButtonProps } from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { grey } from '@mui/material/colors';
-import { IconProps, SvgIconTypeMap } from '@mui/material';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
 // import { *asReact, ReactElement } from 'react';
 
 const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
@@ -33,17 +30,20 @@ type CustomButtonProps = {
   StartIcon?: any,
   colors?: Array<string>,
   style?:  React.CSSProperties | undefined
+  type?: 'submit' | 'reset' | 'button'
 }
 
 export default function CustomizedButtons(props: CustomButtonProps) {
   const { label, disabled, onClick, className, 
-    StartIcon, colors, style
+    StartIcon, colors, style,
+    type
    } = props;
   return (
     <Stack spacing={2} direction="row" >
       <ColorButton className={className ? className : ''}
         onClick={onClick} disabled={disabled} variant="contained"
         startIcon={StartIcon ? <StartIcon /> : null}
+        type={type ? type : 'button'}
         style={{
           backgroundColor: colors ? colors[0] : '#13100DE5',
           color: colors ? colors[1] : '#fff',

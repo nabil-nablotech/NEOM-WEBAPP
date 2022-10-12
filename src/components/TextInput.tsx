@@ -12,9 +12,11 @@ interface TextInputProps {
   onBlur?: (
     e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
+  
   onFocus?: (
     e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   value?: string | "";
   defaultValue?: string | "";
   errorText?: string | "";
@@ -60,6 +62,7 @@ export default function NTextFields(props: TextInputProps) {
     onChange,
     onBlur,
     onFocus,
+    onKeyDown,
     error,
     value,
     label,
@@ -95,6 +98,7 @@ export default function NTextFields(props: TextInputProps) {
           onChange={onChange}
           onBlur={onBlur}
           onFocus={onFocus}
+          onKeyDown={onKeyDown}
           defaultValue={defaultValue}
           helperText={errorText}
           type={type}
