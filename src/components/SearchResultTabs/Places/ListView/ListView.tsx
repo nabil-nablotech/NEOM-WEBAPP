@@ -14,23 +14,32 @@ const StyledTableWrapper = styled(StyledAntTable)`
     .ant-table {
         margin-block: 2em;
     }
-    .ant-table-thead > tr > th ,
-    .ant-table-tbody > tr > td {
+    
+    .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell) ,
+    .ant-table-tbody > tr > td:not(.ant-table-tbody > tr > td.more-menu-ant-cell) {
         min-width: 50px;
     }
 
     th.ant-table-cell {
         white-space: break-spaces;
     }
-
-    .cell-recommend {
-        width: 19ch;
+    .cell-number {
+        min-width: 8ch !important;
     }
+    .cell-tourism {
+        min-width: 10ch !important;
+    }
+    .cell-recommend {
+        min-width: 20ch !important;
+    }
+    
     .cell-conserve {
-        width: 16ch;
+        min-width: 15ch !important;
     }
     .ant-table-cell.more-menu-ant-cell {
         vertical-align:middle;
+        min-width: 20px;
+        width: 20px;
     }
     .more-menu-div {
         vertical-align:middle;
@@ -45,7 +54,9 @@ const StyledTableWrapper = styled(StyledAntTable)`
     }
 
     @media (min-width: 575px) and (max-width: 1025px) {
-        .ant-table-tbody > tr > td {
+
+        .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell) ,
+        .ant-table-tbody > tr > td:not(.ant-table-tbody > tr > td.more-menu-ant-cell) {
             min-width: 90px;
         }
 
@@ -56,10 +67,25 @@ const StyledTableWrapper = styled(StyledAntTable)`
 
         th.ant-table-cell ,
         th.ant-table-cell * {
-            font-size: 12px;
         }
         td.ant-table-cell {
-            font-size: 11px;
+        }
+        .cell-research{
+            min-width: 16ch !important;
+        }
+        .cell-tourism {
+            min-width: 14ch !important;
+        }
+        .cell-recommend {
+            min-width: 20ch !important;
+        }
+        
+        .cell-conserve {
+            min-width: 15ch !important;
+        }
+
+        .cell-name {
+            min-width: 25ch !important;
         }
         
     }
@@ -126,29 +152,32 @@ const ListView = () => {
             title: "NAME",
             key: "title",
             dataIndex: "title",
-            sorter: (a, b) => {
+            className: 'cell-name',
+            sorter: (a: { title: string; }, b: { title: any; }) => {
                 return a.title.localeCompare(b.title)
             },
             sortDirections: ["ascend"],
             defaultSortOrder: "ascend",
-            render: (value, index) => value.substring(0, 20)
+            render: (value: string, index: any) => value.substring(0, 20)
         },
         {
             title: "NUMBER",
             key: "albumId",
             dataIndex: "albumId",
+            className: 'cell-number',
         },
         {
             title: "TYPE",
             key: "title",
             dataIndex: "title",
-            render: (value, index) => value.substring(0, 8)
+            render: (value: string, index: any) => value.substring(0, 8)
         },
         {
             title: "RESEARCH VALUE",
             key: "title",
             dataIndex: "title",
-            render: (value, index) => {
+            className: 'cell-research',
+            render: (value: string, index: any) => {
                 return value.substring(0, 8)
             },
         },
@@ -156,40 +185,42 @@ const ListView = () => {
             title: "TOURISM VALUE",
             key: "title",
             dataIndex: "title",
-            render: (value, index) => value.substring(21, 24)
+            className: 'cell-tourism',
+            render: (value: string, index: any) => value.substring(21, 24)
         },
         {
             title: "STATE OF CONSERVATION",
             key: "title",
             dataIndex: "title",
             className: 'cell-conserve',
-            render: (value, index) => "Good"
+            render: (value: any, index: any) => "Good"
         },
         {
             title: "RECOMMENDATION",
             key: "title",
             dataIndex: "title",
             className: 'cell-recommend',
-            render: (value, index) => "Protected"
+            render: (value: any, index: any) => "Protected"
         },
         {
             title: "PERIOD",
             key: "title",
             dataIndex: "title",
-            render: (value, index) => "Neolithic"
+            className: 'cell-period',
+            render: (value: any, index: any) => "Neolithic"
         },
         {
             title: "RISK",
             key: "title",
             dataIndex: "title",
-            render: (value, index) => "None"
+            render: (value: any, index: any) => "None"
         },
         {
             title: "",
             key: "action",
             fixed: 'right',
             className: 'more-menu-ant-cell',
-            render: (value, record: User) => (
+            render: (value: any, record: User) => (
                 <MoreOptionsComponent id={record.id} record={record} />
             ),
         },
@@ -202,7 +233,7 @@ const ListView = () => {
             .then(res => res.json())
             .then(res => {
                 setloading(false)
-                setDataList(res)
+                setDataList(res.slice(0, 100))
             })
 
     }, []);
