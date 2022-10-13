@@ -11,6 +11,8 @@ export const places = gql`
           { siteDescription: { contains: $search_two } }
           { period: { contains: $search_one } }
           { period: { contains: $search_two } }
+          { keywords: { contains: $search_one } }
+          { keywords: { contains: $search_two } }
         ]
       }
     ) {
@@ -20,6 +22,7 @@ export const places = gql`
           placeNameEnglish
           siteDescription
           period
+          keywords
         }
       }
     }
@@ -37,14 +40,78 @@ export const events = gql`
           { siteDescription: { contains: $search_two } }
           { period: { contains: $search_one } }
           { period: { contains: $search_two } }
+          { keywords: { contains: $search_one } }
+          { keywords: { contains: $search_two } }
         ]
       }
     ) {
       data {
         id
         attributes {
-          title
+          placeNameEnglish
+          siteDescription
+          keywords
+          perios
+        }
+      }
+    }
+  }
+`;
+
+export const library = gql`
+  query SearchTitle($search_one: String!, $search_two: String!) {
+    media(
+      filters: {
+        or: [
+          { keywords: { contains: $search_one } }
+          { keywords: { contains: $search_two } }
+          { description: { contains: $search_one } }
+          { description: { contains: $search_two } }
+          { title: { contains: $search_one } }
+          { title: { contains: $search_two } }
+          { mediaType: Documents }
+          { mediaType: References }
+          { mediaType: InlineText }
+        ]
+      }
+    ) {
+      data {
+        id
+        attributes {
+          keywords
           description
+          title
+          mediaType
+        }
+      }
+    }
+  }
+`;
+
+export const media = gql`
+  query SearchTitle($search_one: String!, $search_two: String!) {
+    media(
+      filters: {
+        or: [
+          { keywords: { contains: $search_one } }
+          { keywords: { contains: $search_two } }
+          { description: { contains: $search_one } }
+          { description: { contains: $search_two } }
+          { title: { contains: $search_one } }
+          { title: { contains: $search_two } }
+          { mediaType: Images }
+          { mediaType: Videos }
+          { mediaType: 3Dmodel }
+        ]
+      }
+    ) {
+      data {
+        id
+        attributes {
+          keywords
+          description
+          title
+          mediaType
         }
       }
     }

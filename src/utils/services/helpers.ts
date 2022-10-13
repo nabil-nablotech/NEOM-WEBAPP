@@ -107,5 +107,4 @@ export const antTablePaginationCss = `
   .ant-select:not(.ant-select-customize-input) .ant-select-selector {
     background-color: transparent;
   }
-
 `

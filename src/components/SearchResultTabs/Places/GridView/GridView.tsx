@@ -3,13 +3,13 @@ import { Grid } from "@mui/material";
 import { format } from "date-fns";
 import { useDispatch } from "react-redux";
 /** indicating that we can send html later on wherever we parse */
-import parse from 'html-react-parser';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import parse from "html-react-parser";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { GridViewCard_Places } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
-import commonStyles from '../../index.module.css'
+import commonStyles from "../../index.module.css";
 import MoreIcon from "../../../../assets/images/searchResults/MoreMenu.svg";
-import { usePaginatedArray } from '../../../../hooks/usePaginatedArray';
+import { usePaginatedArray } from "../../../../hooks/usePaginatedArray";
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 
 const Card = ({
@@ -75,58 +75,63 @@ const Card = ({
 };
 
 const GridView = () => {
+  const { data, hasMoreData, fetchData } = usePaginatedArray({
+    apiUrl: "https://jsonplaceholder.typicode.com/photos",
+    step: 10,
+  });
 
-    const {
-        data,
-        hasMoreData,
-        fetchData
-    } = usePaginatedArray({
-        apiUrl: 'https://jsonplaceholder.typicode.com/photos',
-        step: 10
-    })
+  
+  const dispatch = useDispatch();
 
-
-    const dispatch = useDispatch();
-
-
-    return (
-        <Box className={`${gridStyles['left-grid-box']}`}
+  return (
+    <Box className={`${gridStyles["left-grid-box"]}`}>
+      <InfiniteScroll
+        dataLength={data.length} //This is important field to render the next data
+        next={() => fetchData()}
+        hasMore={hasMoreData}
+        loader={<h4>Loading...</h4>}
+        endMessage={
+          <p style={{ textAlign: "center" }}>
+            <b>END OF RESULTS</b>
+          </p>
+        }
+        scrollableTarget={"places-scrollable-div"}
+        className={`${commonStyles["infinite-scroll-cls"]}`}
+      >
+        <Grid
+          container
+          id={"places-scrollable-div"}
+          spacing={1}
+          className={`${gridStyles["left-grid-container"]}`}
         >
-            <InfiniteScroll
-                dataLength={data.length} //This is important field to render the next data
-                next={() => fetchData()}
-
-                hasMore={hasMoreData}
-                loader={<h4>Loading...</h4>}
-                endMessage={
-                    <p style={{ textAlign: 'center' }}>
-                        <b>END OF RESULTS</b>
-                    </p>
-                }
-                scrollableTarget={'places-scrollable-div'}
-                className={`${commonStyles['infinite-scroll-cls']}`}
-            >
-                <Grid container id={'places-scrollable-div'} spacing={1} className={`${gridStyles['left-grid-container']}`}>
-
-                    {
-                        data?.map((item: any, index: number) => <>
-                            <Grid item key={index} sm={12} className={`${gridStyles['']}`} onClick={e => {
-                                dispatch(setSelectedCardIndex(index))
-                            }}>
-                                <Card
-                                    img={item.thumbnailUrl}
-                                    title={item.title.substr(0, 20)}
-                                    subTitle={item.title.substr(0, 40) + '...'}
-                                    dateString={`Last login on ${format(new Date(), 'yyyy-MM-dd')}`}
-                                    keywords={['fist', 'new']}
-                                />
-                            </Grid>
-                        </>)
-                    }
-                </Grid>
-            </InfiniteScroll>
-        </Box>
-    );
-}
+          {data?.map((item: any, index: number) => (
+            <>
+              <Grid
+                item
+                key={index}
+                sm={12}
+                className={`${gridStyles[""]}`}
+                onClick={(e) => {
+                  dispatch(setSelectedCardIndex(index));
+                }}
+              >
+                <Card
+                  img={item.thumbnailUrl}
+                  title={item.title.substr(0, 20)}
+                  subTitle={item.title.substr(0, 40) + "..."}
+                  dateString={`Last login on ${format(
+                    new Date(),
+                    "yyyy-MM-dd"
+                  )}`}
+                  keywords={["fist", "new"]}
+                />
+              </Grid>
+            </>
+          ))}
+        </Grid>
+      </InfiniteScroll>
+    </Box>
+  );
+};
 
 export default GridView;
