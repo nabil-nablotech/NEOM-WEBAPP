@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { PaginatedHookType } from '../types/UsePaginatedArray';
+import client from '../utils/services/axiosClient';
 
 export const usePaginatedArray = ({
     apiUrl,
@@ -12,25 +13,41 @@ export const usePaginatedArray = ({
     const [paginationIndex, setPaginationIndex] = useState<number>(paginationStep)
     const [responseData, setResponseData] = useState<any>([])
     const [hasMoreData, setHasMoreData] = useState<boolean>(true)
+    const [loading, setloading] = useState<boolean>(true)
 
     useEffect(() => {
-        fetch(apiUrl)
-            .then(res => res.json())
+        setloading(true)
+        const controller = new AbortController()
+        client.get(apiUrl, {
+            signal: controller.signal
+        })
             .then(res => {
                 // setResponseData(res)
-                setResponseData(res.slice(0,50)) //for testing
-                setData(res.slice(0, paginationIndex))
+                setloading(false)
+
+                setResponseData(res.data.slice(0, 50)) //for testing
+                setData(res.data.slice(0, paginationIndex))
             })
+            .catch(e => {
+                setloading(false)
+
+                // cancel the request
+                controller.abort()
+            })
+
+        return () => {
+            controller.abort()
+        }
 
     }, [])
 
-    
+
 
     const fetchData = () => {
         const newpaginationIndex = paginationIndex + paginationStep
-        
+
         /** hardcode max limit */
-        if(newpaginationIndex < responseData.length + step) {
+        if (newpaginationIndex + step < responseData.length) {
             setData([...data, ...responseData.slice(paginationIndex, newpaginationIndex)])
             setPaginationIndex(newpaginationIndex)
             setHasMoreData(true)
@@ -48,6 +65,8 @@ export const usePaginatedArray = ({
         setResponseData,
         hasMoreData,
         setHasMoreData,
-        fetchData
+        fetchData,
+        loading,
+        setloading
     }
 }

@@ -6,6 +6,10 @@ import { User } from '../../../../types/User';
 import { StyledAntTable } from '../../../StyledAntTable';
 import styled from "styled-components";
 import { antTablePaginationCss } from '../../../../utils/services/helpers';
+import { usePaginatedArray } from './../../../../hooks/usePaginatedArray';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import commonStyles from '../../index.module.css';
+import { Loader } from '../../../Loader';
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -77,10 +81,10 @@ const StyledTableWrapper = styled(StyledAntTable)`
         .cell-description {
             min-width: 20ch !important;
         }
-        
+
     }
     ${antTablePaginationCss}
-` 
+`
 
 const MoreOptionsComponent = ({
     record,
@@ -133,8 +137,6 @@ const MoreOptionsComponent = ({
 
 
 const ListView = () => {
-    const [dataList, setDataList] = useState<any>([])
-    const [loading, setloading] = useState<boolean>(false)
 
 
     const tableHeaderJson: ColumnsType<any> = [
@@ -149,7 +151,7 @@ const ListView = () => {
                 </Box>
             </>
         },
-        
+
         {
             title: "IMAGE DESCRIPTION",
             key: "title",
@@ -207,34 +209,56 @@ const ListView = () => {
             ),
         },
     ]
-
+    const {
+        data,
+        hasMoreData,
+        fetchData,
+        loading
+    } = usePaginatedArray({
+        apiUrl: 'https://jsonplaceholder.typicode.com/photos',
+        step: 10
+    })
 
     useEffect(() => {
-        setloading(true)
-        fetch('https://jsonplaceholder.typicode.com/photos')
-            .then(res => res.json())
-            .then(res => {
-                setloading(false)
-                setDataList(res.slice(0, 100))
-            })
-
+        /** Needs to be done , since InfiniteSCroll needs a relation with
+         * div being scrolled. Here its tbody of ant table
+         */
+        const ele = document.querySelector('#media-list-parent .ant-table-body')
+        if (ele) {
+            ele.id = "media-list-div"
+        }
     }, []);
-    
+
     return (
-        <Box>
-            <StyledTableWrapper
-                rowKey={"id"}
-                size="small"
-                columns={tableHeaderJson}
-                dataSource={dataList}
-                pagination={{ position: ['bottomCenter'] }}
-                loading={loading ? loading : false}
-                bordered
-                scroll={{ x: true, y: 300 }}
-                style={{
-                    background: "transparent",
-                }}
-            ></StyledTableWrapper>
+        <Box id={'media-list-parent'} >
+            <InfiniteScroll
+                dataLength={data.length} //This is important field to render the next data
+                next={() => fetchData()}
+
+                hasMore={hasMoreData}
+                loader={<Loader />}
+                endMessage={
+                    <p style={{ textAlign: 'center' }}>
+                        <b>END OF RESULTS</b>
+                    </p>
+                }
+                scrollableTarget={'media-list-div'}
+                className={`${commonStyles['infinite-scroll-cls']}`}
+            >
+                <StyledTableWrapper
+                    rowKey={"id"}
+                    size="small"
+                    columns={tableHeaderJson}
+                    dataSource={data}
+                    pagination={false}
+                    loading={loading ? loading : false}
+                    bordered
+                    scroll={{ y: 500, scrollToFirstRowOnChange: true }}
+                    style={{
+                        background: "transparent",
+                    }}
+                ></StyledTableWrapper>
+            </InfiniteScroll>
         </Box>
     );
 }
