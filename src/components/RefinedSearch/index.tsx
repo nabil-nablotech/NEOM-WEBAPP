@@ -6,6 +6,7 @@ import styles from './index.module.css';
 import { RefinedSearchProps } from '../../types/RefinedSeachTypes';
 
 const RefinedSearch = ({
+    className,
     handleClick
 }: RefinedSearchProps) => {
     const [isOpen, setIsOpen] = React.useState(false);
@@ -16,7 +17,7 @@ const RefinedSearch = ({
     };
 
     return (
-        <Box className={`${styles['refined-search-container']}`} sx={{
+        <Box className={`${className} ${styles['refined-search-container']}`} sx={{
             color: '#fff'
         }}>
             <Button

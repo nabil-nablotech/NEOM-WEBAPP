@@ -26,4 +26,7 @@
     .header-search {
         width: 35ch;
     }
+    .header-refined-search button {
+        font-size: 14px;
+    }
 }

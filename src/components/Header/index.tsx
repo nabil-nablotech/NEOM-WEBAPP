@@ -55,6 +55,7 @@ const Header = (props: IHeader) => {
             {
               showRefinedSearch &&
               <RefinedSearch
+                className={`${styles["header-refined-search"]}`}
                 handleClick={toggleSearchFilters}
               />
             }
