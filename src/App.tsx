@@ -16,7 +16,8 @@ import { Provider } from "react-redux";
 
 // apollo client
 const client = new ApolloClient({
-  uri: `https://1cd2-49-204-165-45.in.ngrok.io/graphql`,
+  // uri: `https://1cd2-49-204-165-45.in.ngrok.io/graphql`,
+  uri: `http://localhost:9999/graphql`,
   cache: new InMemoryCache(),
 });
 
