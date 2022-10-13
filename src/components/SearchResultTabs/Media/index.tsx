@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box';
 import styles from '../index.module.css'
-import placesStyles from './index.module.css'
+// import placesStyles from './index.module.css'
 import Button from "../../../components/Button";
-import ListView from '../../../assets/images/searchResults/ListView.svg'
-import DetailsView from '../../../assets/images/searchResults/DetailsView.svg'
+import ListViewIcon from '../../../assets/images/searchResults/ListView.svg'
+// import DetailsView from '../../../assets/images/searchResults/DetailsView.svg'
 import GridViewIcon from '../../../assets/images/searchResults/GridView.svg'
 
 import GridView from './GridView/GridView';
+import ListView from './ListView/ListView';
 import { Grid } from '@mui/material';
 import MapImg1 from '../../../assets/images/searchResults/mapImage1.webp'
 import MapImg2 from '../../../assets/images/searchResults/mapImage2.jpg'
@@ -60,7 +61,7 @@ const MediaTab = ({
                     }}
 
                 />
-                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={ListView}
+                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={ListViewIcon}
                     onClick={e => toggleOpenStates([false, true])}
                     style={{
                         opacity: openStates[1] ? '1' : '0.5'
@@ -69,16 +70,24 @@ const MediaTab = ({
             </Box>
             <Box component={'section'} className={`${styles['result-section']}`}>
                 <Grid container spacing={1}>
-                    {/* <Grid item xl={6} lg={6} md={5} sm={5}>
+                    {/* {openStates[0] &&<Grid item xl={6} lg={6} md={5} sm={5}>
                         <GridView />
-                    </Grid> */}
-                     <Grid item xl={12}>
+                    </Grid>} */}
+                     {openStates[0] &&  <Grid item xl={12}>
                         <GridView />
-                    </Grid>
+                    </Grid>}
                     {/* To-do: map view */}
                     {/* <Grid item xl={6} lg={6} md={7} sm={7}>
                         <Box className={`${placesStyles['map-img']}`} component="img" alt={""} src={img} />
                     </Grid> */}
+                     {
+                        openStates[1] &&
+                        <Box component={'div'} style={{
+                            width: '100%'
+                        }}>
+                            <ListView />
+                        </Box>
+                    }
                 </Grid>
             </Box>
         </Box>
