@@ -18,8 +18,8 @@
 }
 .card-item {
     padding-left: 0 !important;
-    flex-basis: 49% !important;
-    max-width: 49% !important;
+    flex-basis: 24% !important;
+    max-width: 24% !important;
 }
 
 .content ,
@@ -92,8 +92,8 @@
 
 @media (min-width: 575px) and (max-width: 1025px) {
     .card-item {
-        flex-basis: initial !important;
-        max-width: initial !important;
+        flex-basis: 49% !important;
+        max-width: 49% !important;
         flex-grow: 1;
     }
     .left-grid-container {

@@ -25,7 +25,7 @@ const MediaTab = ({
         setimg(selectedCardIndex%2 === 0 ? MapImg2 : MapImg1)
     }, [selectedCardIndex])
     
-    const {openStates, toggleOpenStates} = useToggledView({count: 3})
+    const {openStates, toggleOpenStates} = useToggledView({count: 2})
 
     return (
         <Box className={`${styles['main-tab-content']}`}>
@@ -47,35 +47,38 @@ const MediaTab = ({
                     // onClick={handleCancel}
                 />
                 </Box>
-                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={DetailsView}
+                {/* <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={DetailsView}
                     onClick={e => toggleOpenStates([false, true, false])}
                     style={{
                         opacity: openStates[1] ? '1' : '0.5'
                     }}
-                />
+                /> */}
                 <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={GridViewIcon}
-                    onClick={e => toggleOpenStates([true, false, false])}
+                    onClick={e => toggleOpenStates([true, false])}
                     style={{
                         opacity: openStates[0] ? '1' : '0.5'
                     }}
 
                 />
                 <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={ListView}
-                    onClick={e => toggleOpenStates([false, false, true])}
+                    onClick={e => toggleOpenStates([false, true])}
                     style={{
-                        opacity: openStates[2] ? '1' : '0.5'
+                        opacity: openStates[1] ? '1' : '0.5'
                     }}
                 />
             </Box>
             <Box component={'section'} className={`${styles['result-section']}`}>
                 <Grid container spacing={1}>
-                    <Grid item xl={6} lg={6} md={5} sm={5}>
+                    {/* <Grid item xl={6} lg={6} md={5} sm={5}>
+                        <GridView />
+                    </Grid> */}
+                     <Grid item xl={12}>
                         <GridView />
                     </Grid>
                     {/* To-do: map view */}
-                    <Grid item xl={6} lg={6} md={7} sm={7}>
+                    {/* <Grid item xl={6} lg={6} md={7} sm={7}>
                         <Box className={`${placesStyles['map-img']}`} component="img" alt={""} src={img} />
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Box>
         </Box>
