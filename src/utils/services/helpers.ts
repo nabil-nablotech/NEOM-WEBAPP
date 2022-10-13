@@ -1,20 +1,8 @@
 import dayjs from "dayjs";
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://b47a-59-94-73-204.in.ngrok.io`;
+// export const baseUrl = `https://a353-117-197-251-167.ngrok.io`;
 export const webUrl = `http://localhost:3000`
-const colors = [
-  "#f4511e",
-  "#bf360c",
-  "#ef6c00",
-  "#8d6e63",
-  "#512da8",
-  "#689f38",
-  "#5c6bc0",
-  "#ab47bc",
-  "chocolate",
-  "darkviolet",
-];
 
 export const formatWebDate = (value: string) => {
   if (Date.parse(value)) {
@@ -82,4 +70,42 @@ export function passwordGenerator() {
 
 export function copyToClipboard(str: string) {
   navigator.clipboard.writeText(str);
-}
+};
+
+export const staticValidationScheme = [
+  {
+    name: '8 characters',
+    rule: /^.{8,}$/,
+    fulfilled: false
+  },
+  {
+    name: '1 uppercase letter',
+    rule: /^(?=.*?[A-Z]).{1,}$/,
+    fulfilled: false
+  },
+  {
+    name: '1 special character',
+    rule: /^(?=.*?[#?!@$%^&*-]).{1,}$/,
+    fulfilled: false
+  }
+]
+
+export const antTablePaginationCss = `
+  .ant-pagination {
+    font-family: 'Roboto-Regular';
+  }
+
+  .ant-pagination-item {
+    border-color: var(--light-grey-border);
+  }
+
+  .ant-pagination-item a {
+    color: var(--focused-black-text);
+
+  }
+
+  .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    background-color: transparent;
+  }
+
+`

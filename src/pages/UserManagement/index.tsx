@@ -1,8 +1,6 @@
 import { Container } from "@mui/material";
-import React, { Component } from "react";
 import Header from "../../components/Header";
 import UserMenuComponent from "../../components/UserMenu/index";
-// import UserMenuComponent from './../../components/UserMenu/index';
 import styles from "./index.module.css";
 import Snackbar from "../../components/Snackbar";
 import { UserManagementTable } from "../../components/UserManagementTable";
@@ -11,7 +9,6 @@ import useUser from "../../hooks/useUser";
 const UserManagement = () => {
   const {
     query,
-    showModal,
     handleUser,
     userData,
     editUserMutation,
@@ -26,7 +23,6 @@ const UserManagement = () => {
     userRoles,
     copyLink,
     generateLink,
-    selectedUserLink
   } = useUser();
   
   const { data, isLoading } = query;
@@ -53,7 +49,6 @@ const UserManagement = () => {
               userRoles={userRoles}
               copyLink={copyLink}
               generateLink={generateLink}
-              selectedUserLink={selectedUserLink}
             />
           </Container>
           <Snackbar

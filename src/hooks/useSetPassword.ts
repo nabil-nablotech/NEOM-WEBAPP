@@ -2,8 +2,8 @@ import {useEffect, useState} from 'react';
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {resetPassword} from '../api/setPassword';
 import dayjs from "dayjs";
-import { useQuery, useMutation } from 'react-query';
-import { ISnackbar, User } from '../types/User';
+import { useMutation } from 'react-query';
+import { User } from '../types/User';
 import useAlert from './useAlert';
 import { ResetPaswordStateInput } from '../types/Login';
 import useLogin from './useLogin';
@@ -36,24 +36,26 @@ const useSetPassword = () => {
   const getUserDetails = () => {
     const key = location.search.replace('?key=', '');
     try {
-      if (params.new === 'true') {
-        setState({
-          ...state,
-          isNew: true
-        });
+      if (key) {
+        if (params.new === 'true') {
+          setState({
+            ...state,
+            isNew: true
+          });
+        }
+        const user = JSON.parse(decryptUser(key));
+        // check the xpiration if expiry date is greater than the current
+        if (dayjs().isBefore(user.exp)) {
+          setData(user);
+          navigate('/set-password/new');
+        } else {
+          setState({
+            ...state,
+            expired: true
+          })
+        }
+        return user;
       }
-      const user = JSON.parse(decryptUser(key));
-      // check the xpiration if expiry date is greater than the current
-      if (dayjs().isBefore(user.exp)) {
-        setData(user);
-        navigate('/set-password/new');
-      } else {
-        setState({
-          ...state,
-          expired: true
-        })
-      }
-      return user;
     } catch (error) {
       console.log('error 1', error);
       handleAlert('Invalid Link', 'error');

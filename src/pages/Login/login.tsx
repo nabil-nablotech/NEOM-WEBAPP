@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
-import { useQuery, gql } from "@apollo/client";
+// import { gql } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
@@ -11,28 +11,28 @@ import PositionedSnackbar from "../../components/Snackbar";
 import {
   validateEmail,
   validatePassword,
-  baseUrl,
+  // baseUrl,
 } from "../../utils/services/helpers";
 import useLogin from "../../hooks/useLogin";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+// import { useSelector } from "react-redux";
+// import { RootState } from "../../store";
 
-const LOGINDATA = gql`
-  query GetLoginData {
-    login {
-      data {
-        id
-        attributes {
-          title
-          laebl
-          button {
-            theme
-          }
-        }
-      }
-    }
-  }
-`;
+// const LOGINDATA = gql`
+//   query GetLoginData {
+//     login {
+//       data {
+//         id
+//         attributes {
+//           title
+//           laebl
+//           button {
+//             theme
+//           }
+//         }
+//       }
+//     }
+//   }
+// `;
 
 type stateInput = {
   email: string;
@@ -52,31 +52,17 @@ type FormErrors = {
 export function Login() {
   const { clientLogin, error } = useLogin();
   const navigate = useNavigate();
-  const screenData  = useSelector((rState: RootState) => rState.login.screenData);
-  const data = screenData?.data;
-  const textField1Data = {
-    children: "Email Address",
-  };
+  // const screenData  = useSelector((rState: RootState) => rState.login.screenData);
+  // const data = screenData?.data;
+  // const textField1Data = {
+  //   children: "Email Address",
+  // };
 
-  const textField2Data = {
-    children: data?.attributes?.input[1].placeholder || "",
-    className: "text-field-1",
-  };
+  // const textField2Data = {
+  //   children: data?.attributes?.input[1].placeholder || "",
+  //   className: "text-field-1",
+  // };
 
-  const login1Data = {
-    overlapGroup1: `${baseUrl}${data?.attributes?.backgroundImage.data.attributes.url}`,
-    image3: `${baseUrl}${data?.attributes?.logo.image.data.attributes.url}`,
-    spanText1: data?.attributes?.title,
-    spanText2: data?.attributes.label,
-    spanText3: data?.attributes.button.label,
-    spanText4: data?.attributes.bottomText.title,
-    spanText5: data?.attributes.bottomText.label,
-    spanText6: "support@",
-    spanText7: "neomheritage",
-    spanText8: ".com",
-    textField1Props: textField1Data,
-    textField2Props: textField2Data,
-  };
   const [state, setState] = useState<stateInput>({
     email: "",
     password: "",
@@ -164,8 +150,15 @@ export function Login() {
     }
   };
 
+  // onkeydown
+  const onkeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === 'Enter' && !isSignInDisabled) {
+      submit(e);
+    }
+  }
+
   // Form submission
-  const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const submit = async (e: React.KeyboardEvent<HTMLInputElement> | React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     const data = await clientLogin({
       identifier: state.email,
@@ -192,37 +185,41 @@ export function Login() {
         lg={8}
         xl={8}
       >
-        <Grid className="content">
-          <Grid className="">
-            <div className="header">Sign in to neom heritage</div>
+        <form onSubmit={(e) => submit(e)}>
+          <Grid className="content">
+            <Grid className="">
+              <div className="header">Sign in to neom heritage</div>
+            </Grid>
+            <div className="subHeader">Enter your details below</div>
+            <TextInput
+              className={`login-email`}
+              label="Email Address"
+              value={state.email}
+              error={formErrors.email.message ? true : false}
+              errorText={formErrors.email.message}
+              onChange={(e) => handleChange(e, "email")}
+              onBlur={() => validateCredentials()}
+            />
+            <TextInput
+              className={`login-pwd`}
+              label="Password"
+              type={"password"}
+              value={state.password}
+              // error={formErrors.password.message ? true : false}
+              // errorText={formErrors.password.message}
+              onChange={(e) => handleChange(e, "password")}
+              onKeyDown={(e) => onkeydown(e)}
+              onBlur={() => validateCredentials()}
+            />
+            <Button
+              className={"sign-in-btn"}
+              label="SIGN IN"
+              disabled={isSignInDisabled}
+              type='submit'
+              onClick={(e) => submit(e)}
+            />
           </Grid>
-          <div className="subHeader">Enter your details below</div>
-          <TextInput
-            className={`login-email`}
-            label="Email Address"
-            value={state.email}
-            error={formErrors.email.message ? true : false}
-            errorText={formErrors.email.message}
-            onChange={(e) => handleChange(e, "email")}
-            onBlur={() => validateCredentials()}
-          />
-          <TextInput
-            className={`login-pwd`}
-            label="Password"
-            type={"password"}
-            value={state.password}
-            // error={formErrors.password.message ? true : false}
-            // errorText={formErrors.password.message}
-            onChange={(e) => handleChange(e, "password")}
-            onBlur={() => validateCredentials()}
-          />
-          <Button
-            className={"sign-in-btn"}
-            label="SIGN IN"
-            disabled={isSignInDisabled}
-            onClick={(e) => submit(e)}
-          />
-        </Grid>
+        </form>
         <div className="bottomText">
           <p>Don’t have an account yet or forgot your password?</p>
           <p>
@@ -231,6 +228,7 @@ export function Login() {
               <a
                 href="mailto: support@neomheritage.com?subject = Neom Heritage Support"
                 target={"_blank"}
+                rel="noreferrer"
               >
                 support@neomheritage.com
               </a>

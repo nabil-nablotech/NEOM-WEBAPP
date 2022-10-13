@@ -6,103 +6,8 @@ import styled from 'styled-components';
 import type { ColumnsType } from "antd/es/table";
 import { Table } from "antd";
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
+import { StyledAntTable } from '../../StyledAntTable';
 
-const StyledTable = styled(Table)`
-  th,
-  .cellnowrap {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .ant-table-fixed {
-    table-layout: fixed;
-  }
-
-  .ant-table {
-    font-family: 'Roboto-Regular';
-    margin-block: 50px
-  }
-
-  .ant-table-thead > tr > th,
-  .ant-table {
-    background: transparent;
-  }
-
-  .ant-table-thead > tr > th {
-    border: none;
-  }
-
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > thead > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > thead > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > thead > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tbody > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > tbody > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > tbody > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tfoot > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > tfoot > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tfoot > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > tfoot > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tfoot > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > tfoot > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tfoot > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > tfoot > tr > td {
-    border: none
-  }
-
-  .ant-table.ant-table-bordered > .ant-table-container {
-    border: none;
-  }
-
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table {
-    border: none
-  }
-
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td {
-    border-bottom: 1px solid var(--user-table-border);
-  }
-
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table th {
-    color: var(--grey-text);
-  }
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table td {
-    color: var(--table-black-text);
-  }
-
-  .ant-table-tbody > tr > td {
-    word-wrap: break-word;
-    word-break: break-all;
-    min-width: 125px;
-  } 
-
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td.more-icon {
-    border-left: 1px solid var(--user-table-border);
-  }
-
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td.more-icon .cellnowrap {
-    width: fit-content;
-  }
-
-  td.ant-table-cell-row-hover {
-    background: var(--user-table-cell-hover-bg) !important;
-  }import { styled } from 'styled-components';
-import { useEffect, useState } from 'react';
-
-
-  .ant-table.ant-table-bordered .ant-table-body tr.ant-table-row td:last-of-type {
-  }
-
-  td.ant-table-column-sort {
-    background-color: transparent;
-  }
-
-  .ant-table-column-sorter-inner {
-  }
-
-`;
 let viewWidths = ["20vw", "20vw", "20vw", "20vw", "5vw"];
 
 
@@ -115,6 +20,7 @@ const tableHeaderJson: ColumnsType<any> = [
         sorter: (a, b) => a.name.localeCompare(b.name),
         sortDirections: ['ascend'],
         defaultSortOrder: 'ascend',
+        className: 'name-column',
         render: (value, record: any) => (<Box sx={{
             display: 'flex',
             gap: '1em'
@@ -126,6 +32,7 @@ const tableHeaderJson: ColumnsType<any> = [
     {
         title: "DESCRIPTION",
         key: "description",
+        className: 'description-column',
         //   dataIndex: "description",
         dataIndex: "company", // temporary
         render: (value, index) => { // temporary
@@ -134,6 +41,7 @@ const tableHeaderJson: ColumnsType<any> = [
     },
     {
         title: "CITATION",
+        className: 'citation-column',
         //   dataIndex: "citation",
         dataIndex: "company", // temporary
         render: (value, index) => { // temporary
@@ -182,7 +90,7 @@ const LibraryTab = ({
                 setDataList(res.slice(0, 10))
             })
 
-    }, [])
+    }, []);
 
 
     return (
@@ -207,7 +115,7 @@ const LibraryTab = ({
                 </Box>
             </Box>
             <Box>
-                <StyledTable
+                <StyledAntTable
                     className={`${styles["table-container"]}`}
                     rowKey={"id"}
                     size="small"
@@ -220,7 +128,7 @@ const LibraryTab = ({
                     style={{
                         background: "transparent",
                     }}
-                ></StyledTable>
+                ></StyledAntTable>
             </Box>
         </Box>
     );

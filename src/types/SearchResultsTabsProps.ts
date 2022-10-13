@@ -1,3 +1,4 @@
+import React from 'react';
 import { DashboardResponse } from "./dashboard";
 
 export type SearchResultTabsProps = {
@@ -19,7 +20,6 @@ export interface TabPanelProps {
 export type tabNameProps = 'Places' | 'Events' | 'Library' | 'Media'
 
 export type GridViewCard_Places = {
-    key?: number
     img: string
     title: string
     subTitle: string
@@ -28,7 +28,7 @@ export type GridViewCard_Places = {
     onClick?:((e: React.MouseEvent<Element, React.MouseEvent>) => void) & React.MouseEvent<Element, React.MouseEvent>
 }
 export type GridViewCard_Events = {
-    key?: number
+    // key?: number
     img: string
     title: string
     subTitle: string
@@ -39,4 +39,5 @@ export type GridViewCard_Events = {
 export type SearchResultsState2 = {
     selectedCardIndex: number 
     totalCounts: DashboardResponse | null
+    searchText: string
 }

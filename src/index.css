@@ -77,3 +77,10 @@ html {
   font-size: 14px !important;
   padding: 5px 10px !important;
 }
+.refined-inputs-container .react-datepicker__input-container {
+  height: 100%;
+  display: block;
+}
+.refined-inputs-container .react-datepicker-wrapper {
+  width: fit-content;
+}

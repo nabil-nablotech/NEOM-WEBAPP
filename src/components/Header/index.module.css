@@ -1,7 +1,7 @@
 .header-container {
     background-color: #000;
     position: fixed;
-    width: 100vw;
+    width: 100%;
     margin-bottom: 100px;
     z-index: var(--max-z-index);
 }
@@ -10,9 +10,23 @@
     width: 15vw;
     padding: 1em 2em;
     text-align: left;
+    cursor: pointer;
 }
 .header-lhs-content {
     display: flex;
     justify-content: left;
     align-items: center;
+}
+
+@media (min-width: 575px) and (max-width: 1025px) {
+    .logo {
+        width: fit-content;
+        padding-right: 1em;
+    }
+    .header-search {
+        width: 35ch;
+    }
+    .header-refined-search button {
+        font-size: 14px;
+    }
 }

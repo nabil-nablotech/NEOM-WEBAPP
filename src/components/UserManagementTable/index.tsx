@@ -2,13 +2,12 @@
 import "antd/dist/antd.css";
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Table, message } from "antd";
+import { Table } from "antd";
 import Button from "../../components/Button";
-import { Roles, User, UserModalstate, UserPayload } from "../../types/User";
+import { Roles, User, UserModalstate } from "../../types/User";
 
 import styles from "./index.module.css";
 import CustomSearchField from "./../SearchField/index";
-import { format } from "date-fns";
 import type { ColumnsType } from "antd/es/table";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 // import { useMediaQuery } from 'react-responsive'
@@ -17,21 +16,12 @@ import { MenuItem } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import {
-  copyToClipboard,
   formatDate,
   passwordGenerator,
 } from "../../utils/services/helpers";
 import ModalComponent from "../Modal";
-import { UseMutateFunction } from "react-query";
 import { AddUserState } from "../../types/ModalComponent";
 import { LinkGenerate } from "../../types/UserManagement";
-
-const error = (error: any) => {
-  message.error({
-    content: error.toString() || "Something went wrong!",
-  });
-};
-const { Column } = Table;
 
 const StyledTable = styled(Table)`
   th,
@@ -46,7 +36,7 @@ const StyledTable = styled(Table)`
 
   .ant-table {
     font-family: "Roboto-Regular";
-    margin-block: 50px;
+    margin-block: 2em;
   }
 
   .ant-table-thead > tr > th,
@@ -279,11 +269,10 @@ export type IUser = {
   setConfirmLoading: (e: boolean) => void;
   confirmLoading: boolean;
   updatedUser?: User;
-  selectedUserLink: LinkGenerate | null;
   setModalState: (e: UserModalstate) => void;
   modalState: UserModalstate;
   userRoles?: Roles;
-  copyLink: () => void;
+  copyLink: (str: string, recovery: boolean) => void;
 };
 
 export const UserManagementTable = (props: IUser) => {
@@ -301,36 +290,20 @@ export const UserManagementTable = (props: IUser) => {
     userRoles,
     copyLink,
     generateLink,
-    selectedUserLink,
   } = props;
   const [dataList, setDataList] = useState<User[] | []>([]);
-  const [form, setForm] = useState({});
 
   useEffect(() => {
     setDataList(data);
   }, [data]);
 
   const showModal = (editing: User | null) => {
-    setForm(
-      editing || {
-        firstName: null,
-        lastName: null,
-        email: null,
-        role: "",
-      }
-    );
+
     setModalState({ visible: true, editing: editing });
     handleUser(editing);
   };
 
   const handleOk = async (values: AddUserState) => {
-    setForm({
-      firstName: null,
-      lastName: null,
-      email: null,
-      role: "",
-      blocked: "",
-    });
 
     setConfirmLoading(true);
     if (modalState && modalState.editing)
@@ -355,13 +328,7 @@ export const UserManagementTable = (props: IUser) => {
   };
 
   const handleCancel = () => {
-    setForm({
-      firstName: null,
-      lastName: null,
-      email: null,
-      role: "",
-      blocked: false,
-    });
+
     setModalState({ visible: false, editing: null });
   };
 
@@ -429,16 +396,17 @@ export const UserManagementTable = (props: IUser) => {
     const handleClose = () => {
       setAnchorEl(null);
     };
-    const showRecoveryLink = selectedUserLink?.user?.id === record.id;
+    // const showRecoveryLink = selectedUserLink?.find((x: LinkGenerate) => x?.user?.id === record.id);
+    const showRecoveryLink = record.recoveryToken;
     return (
       <>
         {showRecoveryLink ? (
           <div className={`${styles["recovery-button"]}`}>
             <Button
               label={`${
-                selectedUserLink.recovery ? "RECOVERY" : "ACCESS"
+                record.confirmed ? "RECOVERY" : "ACCESS"
               } LINK`}
-              onClick={() => copyLink()}
+              onClick={() => copyLink(record.recoveryToken, record.confirmed)}
               StartIcon={() => <ContentCopyOutlinedIcon fontSize="small" className={`${styles["copy-icon"]}`}/>}
             />
           </div>
@@ -487,7 +455,6 @@ export const UserManagementTable = (props: IUser) => {
   const filterResults = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (data.length > 0) {
       let newDatalist = [...data];
-
       /** filter when search string is not empty */
       if (e.target.value !== "") {
         newDatalist = dataList
@@ -495,14 +462,17 @@ export const UserManagementTable = (props: IUser) => {
               let flag = false;
 
               Object.keys(obj).forEach((key) => {
-                /** if any string out of each column item matches, return result */
-                if (
-                  obj[key as keyof User]
-                    .toString()
-                    .toLowerCase()
-                    .indexOf(e.target.value.toLowerCase()) !== -1
-                ) {
-                  flag = true;
+                if ((key === 'firstName') || (key === 'lastName') || (key === 'email')) {
+
+                  /** if any string out of each column item matches, return result */
+                  if (
+                    obj[key as keyof User]
+                      .toString()
+                      .toLowerCase()
+                      .indexOf(e.target.value.toLowerCase()) !== -1
+                  ) {
+                    flag = true;
+                  }
                 }
               });
 
@@ -510,7 +480,6 @@ export const UserManagementTable = (props: IUser) => {
             })
           : [];
       }
-
       setDataList(newDatalist);
     }
   };

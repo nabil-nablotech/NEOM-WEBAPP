@@ -1,4 +1,3 @@
-import React from 'react';
 import { Grid } from '@mui/material';
 import login_bg from '../../assets/images/login_bg.png';
 import logo_with_name from '../../assets/images/logo_with_name.png';

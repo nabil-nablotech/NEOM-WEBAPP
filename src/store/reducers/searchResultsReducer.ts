@@ -4,7 +4,8 @@ import { DashboardResponse } from '../../types/dashboard';
 
 const initialState: SearchResultsState2 = {
   selectedCardIndex: 0,
-  totalCounts: null
+  totalCounts: null,
+  searchText: ''
 };
 
 export const searchResultsSlice = createSlice({
@@ -16,10 +17,13 @@ export const searchResultsSlice = createSlice({
     },
     setTotalCounts: (state, action: PayloadAction<DashboardResponse>) => {
       state.totalCounts = action.payload;
+    },
+    setSearchText: (state, action: PayloadAction<string>) => {
+      state.searchText = action.payload;
     }
   },
 });
 
-export const { setSelectedCardIndex, setTotalCounts } = searchResultsSlice.actions;
+export const { setSelectedCardIndex, setTotalCounts, setSearchText } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

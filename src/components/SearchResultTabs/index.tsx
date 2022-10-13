@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import styles from './index.module.css'
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
 import Places from "../../assets/images/searchResults/Places.svg";
 import Events from "../../assets/images/searchResults/Events.svg";
 import Library from "../../assets/images/searchResults/Library.svg";
@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import PlacesTab from './Places';
 import EventsTab from './Events';
 import LibraryTab from './Library';
+import MediaTab from './Media/index';
 
 
 function TabPanel(props: TabPanelProps) {
@@ -21,6 +22,7 @@ function TabPanel(props: TabPanelProps) {
 
     return (
         <div
+            className={`${styles['tab-panel-component']}`}
             role="tabpanel"
             hidden={value !== index}
             id={`simple-tabpanel-${index}`}
@@ -29,7 +31,7 @@ function TabPanel(props: TabPanelProps) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }} className={className}>
-                    <Typography>{children}</Typography>
+                    <Grid>{children}</Grid>
                 </Box>
             )}
         </div>
@@ -157,7 +159,7 @@ const SearchResultTabs = ({
                 <LibraryTab />
             </TabPanel>
             <TabPanel value={value} index={3} className={`${styles['tab-pannel-wrapper']}`}>
-                Media
+                <MediaTab />
             </TabPanel>
         </div >
     );
