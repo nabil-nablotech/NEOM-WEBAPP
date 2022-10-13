@@ -5,7 +5,11 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { User } from "../../../../types/User";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
-import { antTablePaginationCss } from "../../../../utils/services/helpers";
+import { antTablePaginationCss } from '../../../../utils/services/helpers';
+import { usePaginatedArray } from './../../../../hooks/usePaginatedArray';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import commonStyles from '../../index.module.css';
+import { Loader } from '../../../Loader';
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -134,115 +138,142 @@ const MoreOptionsComponent = ({ record, id }: { id: number; record: User }) => {
 };
 
 const ListView = () => {
-  const [dataList, setDataList] = useState<any>([]);
-  const [loading, setloading] = useState<boolean>(false);
 
-  const tableHeaderJson: ColumnsType<any> = [
-    {
-      title: "NAME",
-      key: "title",
-      dataIndex: "title",
-      className: "cell-name",
-      sorter: (a: { title: string }, b: { title: any }) => {
-        return a.title.localeCompare(b.title);
-      },
-      sortDirections: ["ascend"],
-      defaultSortOrder: "ascend",
-      render: (value: string, index: any) => value.substring(0, 20),
-    },
-    {
-      title: "NUMBER",
-      key: "albumId",
-      dataIndex: "albumId",
-      className: "cell-number",
-    },
-    {
-      title: "TYPE",
-      key: "title",
-      dataIndex: "title",
-      render: (value: string, index: any) => value.substring(0, 8),
-    },
-    {
-      title: "RESEARCH VALUE",
-      key: "title",
-      dataIndex: "title",
-      className: "cell-research",
-      render: (value: string, index: any) => {
-        return value.substring(0, 8);
-      },
-    },
-    {
-      title: "TOURISM VALUE",
-      key: "title",
-      dataIndex: "title",
-      className: "cell-tourism",
-      render: (value: string, index: any) => value.substring(21, 24),
-    },
-    {
-      title: "STATE OF CONSERVATION",
-      key: "title",
-      dataIndex: "title",
-      className: "cell-conserve",
-      render: (value: any, index: any) => "Good",
-    },
-    {
-      title: "RECOMMENDATION",
-      key: "title",
-      dataIndex: "title",
-      className: "cell-recommend",
-      render: (value: any, index: any) => "Protected",
-    },
-    {
-      title: "PERIOD",
-      key: "title",
-      dataIndex: "title",
-      className: "cell-period",
-      render: (value: any, index: any) => "Neolithic",
-    },
-    {
-      title: "RISK",
-      key: "title",
-      dataIndex: "title",
-      render: (value: any, index: any) => "None",
-    },
-    {
-      title: "",
-      key: "action",
-      fixed: "right",
-      className: "more-menu-ant-cell",
-      render: (value: any, record: User) => (
-        <MoreOptionsComponent id={record.id} record={record} />
-      ),
-    },
-  ];
+    const tableHeaderJson: ColumnsType<any> = [
+        {
+            title: "NAME",
+            key: "title",
+            dataIndex: "title",
+            className: 'cell-name',
+            sorter: (a: { title: string; }, b: { title: any; }) => {
+                return a.title.localeCompare(b.title)
+            },
+            sortDirections: ["ascend"],
+            defaultSortOrder: "ascend",
+            render: (value: string, index: any) => value.substring(0, 20)
+        },
+        {
+            title: "NUMBER",
+            key: "albumId",
+            dataIndex: "albumId",
+            className: 'cell-number',
+        },
+        {
+            title: "TYPE",
+            key: "title",
+            dataIndex: "title",
+            render: (value: string, index: any) => value.substring(0, 8)
+        },
+        {
+            title: "RESEARCH VALUE",
+            key: "title",
+            dataIndex: "title",
+            className: 'cell-research',
+            render: (value: string, index: any) => {
+                return value.substring(0, 8)
+            },
+        },
+        {
+            title: "TOURISM VALUE",
+            key: "title",
+            dataIndex: "title",
+            className: 'cell-tourism',
+            render: (value: string, index: any) => value.substring(21, 24)
+        },
+        {
+            title: "STATE OF CONSERVATION",
+            key: "title",
+            dataIndex: "title",
+            className: 'cell-conserve',
+            render: (value: any, index: any) => "Good"
+        },
+        {
+            title: "RECOMMENDATION",
+            key: "title",
+            dataIndex: "title",
+            className: 'cell-recommend',
+            render: (value: any, index: any) => "Protected"
+        },
+        {
+            title: "PERIOD",
+            key: "title",
+            dataIndex: "title",
+            className: 'cell-period',
+            render: (value: any, index: any) => "Neolithic"
+        },
+        {
+            title: "RISK",
+            key: "title",
+            dataIndex: "title",
+            render: (value: any, index: any) => "None"
+        },
+        {
+            title: "",
+            key: "action",
+            fixed: 'right',
+            className: 'more-menu-ant-cell',
+            render: (value: any, record: User) => (
+                <MoreOptionsComponent id={record.id} record={record} />
+            ),
+        },
+    ]
 
-  useEffect(() => {
-    setloading(true);
-    fetch("https://jsonplaceholder.typicode.com/photos")
-      .then((res) => res.json())
-      .then((res) => {
-        setloading(false);
-        setDataList(res.slice(0, 100));
-      });
-  }, []);
-  return (
-    <Box>
-      <StyledTableWrapper
-        // className={`${styles["table-container"]}`}
-        rowKey={"id"}
-        size="small"
-        columns={tableHeaderJson}
-        dataSource={dataList}
-        pagination={{ position: ["bottomCenter"] }}
-        loading={loading ? loading : false}
-        bordered
-        scroll={{ x: true, y: 300 }}
-        style={{
-          background: "transparent",
-        }}
-      ></StyledTableWrapper>
-    </Box>
-  );
-};
+    const {
+        data,
+        hasMoreData,
+        fetchData,
+        loading
+    } = usePaginatedArray({
+        apiUrl: 'https://jsonplaceholder.typicode.com/photos',
+        step: 10
+    })
+
+
+
+    useEffect(() => {
+        /** Needs to be done , since InfiniteSCroll needs a relation with
+         * div being scrolled. Here its tbody of ant table
+         */
+        const ele = document.querySelector('#places-list-parent .ant-table-body')
+        if (ele) {
+            ele.id = "places-list-div"
+        }
+ 
+    }, []);
+
+    return (
+        <Box id={'places-list-parent'}>
+            <InfiniteScroll
+                dataLength={data.length} //This is important field to render the next data
+                next={() => fetchData()}
+
+                hasMore={hasMoreData}
+                loader={<Loader />}
+                endMessage={
+                    <p style={{ textAlign: 'center' }}>
+                        <b>END OF RESULTS</b>
+                    </p>
+                }
+                scrollableTarget={'places-list-div'}
+                className={`${commonStyles['infinite-scroll-cls']}`}
+            >
+                <StyledTableWrapper
+                    // className={`${styles["table-container"]}`}
+                    rowKey={"id"}
+                    size="small"
+                    columns={tableHeaderJson}
+                    dataSource={data}
+                    pagination={false}
+                    loading={loading ? loading : false}
+                    bordered
+                    scroll={{ x: true, y: 300 }}
+                    style={{
+                        background: "transparent",
+                    }}
+                ></StyledTableWrapper>
+            </InfiniteScroll>
+        </Box>
+    );
+}
 
 export default ListView;
