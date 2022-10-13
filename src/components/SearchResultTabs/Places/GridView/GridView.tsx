@@ -3,91 +3,34 @@ import { Grid } from "@mui/material";
 import { format } from "date-fns";
 import { useDispatch } from "react-redux";
 /** indicating that we can send html later on wherever we parse */
-import parse from "html-react-parser";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { GridViewCard_Places } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
 import commonStyles from "../../index.module.css";
-import MoreIcon from "../../../../assets/images/searchResults/MoreMenu.svg";
 import { usePaginatedArray } from "../../../../hooks/usePaginatedArray";
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
+import {Card} from './Card';
+import { Place } from "../../../../types/Place";
 
-const Card = ({
-  img,
-  title,
-  subTitle,
-  dateString,
-  keywords,
-}: GridViewCard_Places) => {
-  return (
-    <>
-      <Box className={`${gridStyles["card-container"]}`}>
-        <Grid container spacing={1} className={`${gridStyles["card-grid"]}`}>
-          <Grid
-            item
-            xl={5}
-            lg={5}
-            md={11}
-            sm={11}
-            className={`${gridStyles["card-image-wrapper"]}`}
-          >
-            <Box
-              className={`${gridStyles["card-image"]}`}
-              component="img"
-              alt={""}
-              src={img}
-            />
-          </Grid>
-          <Grid
-            item
-            xl={6}
-            lg={6}
-            md={11}
-            sm={11}
-            className={`${gridStyles["content"]}`}
-          >
-            <div className={`${gridStyles["card-title"]}`}>{parse(title)}</div>
-            <div className={`${gridStyles["card-subtitle"]}`}>{subTitle}</div>
-            <div className={`${gridStyles["card-date"]}`}>{dateString}</div>
-            <div className={`${gridStyles["card-keywords"]}`}>
-              {keywords.map((item, keyInx) => (
-                <div key={keyInx} className={`${gridStyles["keyword-pill"]}`}>
-                  {item}
-                </div>
-              ))}
-            </div>
-            <Box
-              className={`${gridStyles["more-icon-span"]}`}
-              component={"span"}
-            >
-              <Box
-                className={`${gridStyles["more-icon"]}`}
-                component="img"
-                alt={""}
-                src={MoreIcon}
-              ></Box>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
-    </>
-  );
-};
+export type PlacesProps = {
+  data: Place[];
+  fetchPlaces: () => void;
+}
 
-const GridView = () => {
-  const { data, hasMoreData, fetchData } = usePaginatedArray({
+const GridView = (props: PlacesProps) => {
+  const { data, hasMoreData, fetchData: fetchPlaces } = usePaginatedArray({
     apiUrl: "https://jsonplaceholder.typicode.com/photos",
     step: 10,
   });
 
-  
+  // const {data, fetchPlaces} = props;
+
   const dispatch = useDispatch();
 
   return (
     <Box className={`${gridStyles["left-grid-box"]}`}>
       <InfiniteScroll
         dataLength={data.length} //This is important field to render the next data
-        next={() => fetchData()}
+        next={() => fetchPlaces()}
         hasMore={hasMoreData}
         loader={<h4>Loading...</h4>}
         endMessage={

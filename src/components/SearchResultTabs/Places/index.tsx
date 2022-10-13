@@ -13,13 +13,17 @@ import MapImg2 from "../../../assets/images/searchResults/mapImage2.jpg";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { useToggledView } from "./../../../hooks/useToggledView";
+import usePlace from "../../../hooks/usePlace";
 
 const PlacesTab = ({ resultCount = 1053 }) => {
-  const { selectedCardIndex } = useSelector(
+  const { selectedCardIndex, searchText } = useSelector(
     (state: RootState) => state.searchResults
   );
   const [img, setimg] = useState(MapImg1);
 
+  const { data, fetchPlaces } = usePlace();
+
+  console.log('data', data, 'places--------------')
   const { openStates, toggleOpenStates } = useToggledView({ count: 2 });
 
   useEffect(() => {
@@ -76,7 +80,7 @@ const PlacesTab = ({ resultCount = 1053 }) => {
           {openStates[0] && (
             <>
               <Grid item xl={6} lg={6} md={5} sm={5}>
-                <GridView />
+                <GridView data={data} fetchPlaces={fetchPlaces} />
               </Grid>
               {/* To-do: map view */}
               <Grid item xl={6} lg={6} md={7} sm={7}>
