@@ -13,6 +13,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
     .ant-table {
         margin-block: 2em;
     }
+    .ant-table-thead > tr > th ,
     .ant-table-tbody > tr > td {
         min-width: 50px;
     }
@@ -27,10 +28,29 @@ const StyledTableWrapper = styled(StyledAntTable)`
     .cell-conserve {
         width: 16ch;
     }
+    .ant-table-cell.more-menu-ant-cell {
+        vertical-align:middle;
+    }
+    .more-menu-div {
+        vertical-align:middle;
+    }
+    .ant-table-thead > tr > th.ant-table-cell-fix-right,
+    .ant-table-cell-fix-right {
+        background: var(--off-white-background-color);
+    }
+    
+    .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > thead > tr > th.more-menu-ant-cell.ant-table-cell-fix-right {
+        border-left: 1px solid #f0f0f0;
+    }
 
     @media (min-width: 575px) and (max-width: 1025px) {
         .ant-table-tbody > tr > td {
             min-width: 90px;
+        }
+
+        .ant-table-thead > tr > th.more-menu-ant-cell.ant-table-cell-fix-right ,
+        .ant-table-tbody > tr > td.more-menu-ant-cell.ant-table-cell-fix-right {
+            right: -5vw !important;
         }
 
         th.ant-table-cell ,
@@ -40,6 +60,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
         td.ant-table-cell {
             font-size: 11px;
         }
+        
     }
 `
 
@@ -65,7 +86,7 @@ const MoreOptionsComponent = ({
             <div
                 className=""
             >
-                <MoreHorizIcon />
+                <MoreHorizIcon className="more-menu-div" />
             </div>
             <Menu
                 id="basic-menu"
@@ -164,7 +185,7 @@ const ListView = () => {
         {
             title: "",
             key: "action",
-            width: "10px",
+            fixed: 'right',
             className: 'more-menu-ant-cell',
             render: (value, record: User) => (
                 <MoreOptionsComponent id={record.id} record={record} />
