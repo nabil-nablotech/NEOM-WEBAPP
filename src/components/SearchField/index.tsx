@@ -6,11 +6,12 @@ import CrossIcon from "../SearchField/trailing-icon.svg";
 import styles from './index.module.css'
 import CircleSharpIcon from '@mui/icons-material/CircleSharp';
 import { useQuery } from "@apollo/client";
-import { places, events } from "../../api/search";
+import { places, events } from "../../query/search";
 
 function CustomSearchField(props: {className?: string; onKeyDown?: (e:KeyboardEvent<HTMLInputElement>) => void; handleChange?: (e:ChangeEvent<HTMLInputElement>) => void}) {
+  const { loading:placeLoading, error:placeError, data:placeData, refetch:placeRefetch } = useQuery(places);
+  const { loading:loadingEvent, error:erroEvent, data:eventData, refetch:eventRefetch } = useQuery(events);
   const { className, handleChange, onKeyDown } = props;
-
   const [searchText, setSearchText] = useState('')
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
