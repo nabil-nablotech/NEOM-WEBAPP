@@ -6,7 +6,7 @@ import CrossIcon from "../SearchField/trailing-icon.svg";
 import styles from './index.module.css'
 import CircleSharpIcon from '@mui/icons-material/CircleSharp';
 import { useQuery } from "@apollo/client";
-import { places, events } from "../../api/search";
+import { places, events } from "../../query/search";
 
 function CustomSearchField(props: {className?: string; onKeyDown?: (e:KeyboardEvent<HTMLInputElement>) => void; handleChange?: (e:ChangeEvent<HTMLInputElement>) => void}) {
   const { loading:placeLoading, error:placeError, data:placeData, refetch:placeRefetch } = useQuery(places);
@@ -19,7 +19,7 @@ function CustomSearchField(props: {className?: string; onKeyDown?: (e:KeyboardEv
     let wordsArray = searchText.split(' ');
     if(wordsArray.length>=2){
       placeRefetch({ search_one: wordsArray[0], search_two:wordsArray[1]});
-      eventRefetch({ search_one: wordsArray[0], search_two:wordsArray[1]});
+      // eventRefetch({ search_one: wordsArray[0], search_two:wordsArray[1]});
     }
 
     if(handleChange) {
@@ -32,9 +32,9 @@ function CustomSearchField(props: {className?: string; onKeyDown?: (e:KeyboardEv
     {
       console.log('places data ===================>',placeData?.places?.data)
     }
-    {
+    {/* {
       console.log('Events data ===================>',eventData?.events?.data)
-    }
+    } */}
       <TextInput
         className={`${styles['search-field']} ${className}`}
         label="Search" type={"text"}

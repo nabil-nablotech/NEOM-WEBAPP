@@ -1,29 +1,8 @@
-import { useQuery, gql } from "@apollo/client";
 
-export const places = gql`
-query SearchTitle($search_one: String!, $search_two: String!){
-  places(filters: { or:[{title: {contains:$search_one}},{title: {contains:$search_two}}] }) {
-    data {
-      id
-      attributes{
-        title
-        description
-      }
-    }
-  }
-}
-`;
+import client from "../utils/services/axiosClient";
+import { DashboardResponse } from "../types/dashboard";
 
-export const events = gql`
-query SearchTitle($search_one: String!, $search_two: String!){
-  events(filters: { or:[{title: {contains:$search_one}},{title: {contains:$search_two}}] }) {
-    data {
-      id
-      attributes{
-        title
-        description
-      }
-    }
-  }
-}
-`;
+export const fetchSearchCount = (): Promise<DashboardResponse> =>
+  client.get(`/api/custom/search`).then((response) => response.data);
+
+
