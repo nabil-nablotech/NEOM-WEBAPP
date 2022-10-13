@@ -22,11 +22,17 @@ export const usePaginatedArray = ({
             signal: controller.signal
         })
             .then(res => {
-                // setResponseData(res)
                 setloading(false)
 
-                setResponseData(res.data.slice(0, 50)) //for testing
-                setData(res.data.slice(0, paginationIndex))
+                let newData = res.data
+
+                if(newData.length < 20) { /**hardcode repeat of api data */
+                    newData = newData.concat(newData).concat(newData).concat(newData)
+                } 
+
+                setResponseData(newData.slice(0, 50)) //for testing
+                setData(newData.slice(0, paginationIndex))
+
             })
             .catch(e => {
                 setloading(false)
