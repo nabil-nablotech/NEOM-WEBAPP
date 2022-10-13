@@ -4,8 +4,9 @@ import styles from '../index.module.css'
 import placesStyles from './index.module.css'
 import Button from "../../../components/Button";
 import DetailsView from '../../../assets/images/searchResults/DetailsView.svg'
-import ListView from '../../../assets/images/searchResults/ListView.svg'
+import ListViewIcon from '../../../assets/images/searchResults/ListView.svg'
 import GridView from './GridView/GridView';
+import ListView from './ListView/ListView';
 import { Grid } from '@mui/material';
 import MapImg1 from '../../../assets/images/searchResults/mapImage1.webp'
 import MapImg2 from '../../../assets/images/searchResults/mapImage2.jpg'
@@ -51,7 +52,7 @@ const PlacesTab = ({
                         opacity: openStates[0] ? '1' : '0.5'
                     }}
                 />
-                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={ListView}
+                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={ListViewIcon}
                     onClick={e => toggleOpenStates([false, true])}
                     style={{
                         opacity: openStates[1] ? '1' : '0.5'
@@ -60,14 +61,23 @@ const PlacesTab = ({
             </Box>
             <Box component={'section'} className={`${styles['result-section']}`}>
                 <Grid container spacing={1}>
-                    <Grid item xl={6} lg={6} md={5} sm={5}>
+                    {openStates[0] && <><Grid item xl={6} lg={6} md={5} sm={5}>
                         <GridView />
                     </Grid>
                     {/* To-do: map view */}
                     <Grid item xl={6} lg={6} md={7} sm={7}>
                         <Box className={`${placesStyles['map-img']}`} component="img" alt={""} src={img} />
-                    </Grid>
+                    </Grid></>}
+                    {
+                        openStates[1] &&
+                        <Box component={'div'} style={{
+                            width: '100%'
+                        }}>
+                            <ListView />
+                        </Box>
+                    }
                 </Grid>
+                
             </Box>
         </Box>
     );
