@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://b47a-59-94-73-204.in.ngrok.io`;
+// export const baseUrl = `https://a353-117-197-251-167.ngrok.io`;
 export const webUrl = `http://localhost:3000`
 
 export const formatWebDate = (value: string) => {
@@ -89,3 +89,23 @@ export const staticValidationScheme = [
     fulfilled: false
   }
 ]
+
+export const antTablePaginationCss = `
+  .ant-pagination {
+    font-family: 'Roboto-Regular';
+  }
+
+  .ant-pagination-item {
+    border-color: var(--light-grey-border);
+  }
+
+  .ant-pagination-item a {
+    color: var(--focused-black-text);
+
+  }
+
+  .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    background-color: transparent;
+  }
+
+`

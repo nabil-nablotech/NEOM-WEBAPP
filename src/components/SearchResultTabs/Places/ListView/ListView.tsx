@@ -5,6 +5,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { User } from '../../../../types/User';
 import { StyledAntTable } from '../../../StyledAntTable';
 import styled from "styled-components";
+import { antTablePaginationCss } from '../../../../utils/services/helpers';
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -62,7 +63,8 @@ const StyledTableWrapper = styled(StyledAntTable)`
         }
         
     }
-`
+    ${antTablePaginationCss}
+` 
 
 const MoreOptionsComponent = ({
     record,
@@ -200,7 +202,7 @@ const ListView = () => {
             .then(res => res.json())
             .then(res => {
                 setloading(false)
-                setDataList(res.slice(0, 10))
+                setDataList(res)
             })
 
     }, []);
@@ -212,7 +214,7 @@ const ListView = () => {
                 size="small"
                 columns={tableHeaderJson}
                 dataSource={dataList}
-                pagination={false}
+                pagination={{ position: ['bottomCenter'] }}
                 loading={loading ? loading : false}
                 bordered
                 scroll={{ x: true, y: 300 }}
