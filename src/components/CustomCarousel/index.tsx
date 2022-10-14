@@ -1,8 +1,11 @@
 import Carousel from "react-multi-carousel";
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import styles from './index.module.css'
 import { usePaginatedArray } from "../../hooks/usePaginatedArray";
 import { CustomCarouselType } from "../../types/CustomCarouselTypes";
+import NextArrow from '../../assets/images/searchResults/next-arrow.svg';
+import PrevArrow from '../../assets/images/searchResults/prev-arrow.svg';
+import { DetailsPage } from "../SearchResultTabs/Media/DetailsPage";
 
 const responsive = {
     superLargeDesktop: {
@@ -23,15 +26,26 @@ const responsive = {
     }
 };
 
-export const CustomCarousel = () => {
+export const CustomCarousel = ({
+    data,
+    itemClicked
+}: CustomCarouselType) => {
     const {
-        data,
+        // data,
         hasMoreData,
         fetchData
     } = usePaginatedArray({
         apiUrl: 'https://jsonplaceholder.typicode.com/photos',
         step: 10
     })
+
+    const CustomPrevArrow = () => {
+        return <>
+        <IconButton aria-label="prev" className={`${styles['prev-arsrow']}`}>
+            <Box component="img" alt={""} src={PrevArrow} />
+        </IconButton>
+    </>
+    }
 
     return <>
         <Box className={`${styles['custom-carousel-wrapper']}`} style={{}}>
@@ -52,13 +66,11 @@ export const CustomCarousel = () => {
                 // deviceType={this.props.deviceType}
                 dotListClass="custom-dot-list-style"
                 itemClass="carousel-item-padding-40-px"
+                // customLeftArrow={<CustomPrevArrow />}
             >
                 {
                     data.map((item: any, index: number) => (
-                        <Box key={index}>
-                            <Box className={`${styles['']}`} component="img" alt={""} src={item.thumbnailUrl} />
-                            <p className="legend">{item.title}</p>
-                        </Box>
+                        <DetailsPage itemObject={item}/>
                     ))
                 }
             </Carousel>

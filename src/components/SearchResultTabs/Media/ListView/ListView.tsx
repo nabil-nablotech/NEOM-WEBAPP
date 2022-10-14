@@ -11,6 +11,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import { CustomModal } from '../../../CustomModal';
+import { CustomCarousel } from '../../../CustomCarousel';
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -221,6 +222,7 @@ const ListView = () => {
     })
 
     const [isModalOpen, setModalOpen] = useState(false)
+    const [itemClicked, setItemClicked] = useState(0)
 
     useEffect(() => {
         /** Needs to be done , since InfiniteSCroll needs a relation with
@@ -275,7 +277,10 @@ const ListView = () => {
                 open={isModalOpen}
                 handleClose={() => setModalOpen(false)}
             >
-                {<div>Hello</div>}
+                <CustomCarousel
+                    data={data}
+                    itemClicked={itemClicked} 
+                />
             </CustomModal>
         </Box>
     );

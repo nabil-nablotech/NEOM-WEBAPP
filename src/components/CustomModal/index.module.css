@@ -1,4 +1,6 @@
+.dialog-wrapper {
+    background:rgba(19, 16, 13, 0.9);
+}
 .content {
     margin-inline: 1em;
-    background-color: yellow;
 }

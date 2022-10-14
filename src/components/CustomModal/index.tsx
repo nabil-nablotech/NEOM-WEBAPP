@@ -4,8 +4,9 @@ import { CustomModalTypes } from '../../types/CustomModalTypes';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import modalStyles from './index.module.css';
+import styled from 'styled-components';
 
-export const CustomModal = ({
+const CustomModal_ = ({
     open,
     handleClose,
     children
@@ -16,8 +17,22 @@ export const CustomModal = ({
             fullScreen
             open={open}
             onClose={handleClose}
+            className={`${modalStyles['dialog-wrapper']}`}
+            style={{
+                background: 'rgba(19, 16, 13, 0.9)',
+                
+
+            }}
+            PaperProps={{
+                sx: {
+                    '& .MuiDialog-paper': {
+                        backgroundColor: 'rgba(19, 16, 13, 0.9)',
+                    }
+                    // to-do
+                }
+            }}
         >
-            <AppBar sx={{ position: 'relative', background: 'transparent', boxShadow: 'none' }}>
+            <AppBar sx={{ position: 'relative', background: 'rgba(19, 16, 13, 0.9)', boxShadow: 'none' }}>
                 <Toolbar sx={{
                     paddingLeft: '0 !important',
                     paddingRight: '0 !important'
@@ -36,9 +51,17 @@ export const CustomModal = ({
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            <Box className={`${modalStyles['content']}`}>
+            <Box className={`${modalStyles['content']}`} sx={{
+                background: 'rgba(19, 16, 13, 0.9)'
+            }}>
                 {children}
             </Box>
         </Dialog>
     </>
 }
+
+export const CustomModal = styled(CustomModal_)`
+    .MuiPaper-root.MuiPaper-elevation.MuiDialog-paper {
+        background-color: transparent !important;
+    }
+`
