@@ -1,38 +1,33 @@
 import {useQuery} from '@apollo/client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {useSelector} from 'react-redux';
-import { places, getAllPlaces } from "../query/search";
+import { useParams, useLocation } from 'react-router-dom';
+import { places } from "../query/search";
 import { RootState } from '../store';
 
 const usePlace = () => {
+  const [hasMoreData, setHasMoreData] = useState(false);
 
-  const {searchText} = useSelector((state: RootState) => state.searchResults)
+  const {searchText} = useSelector((state: RootState) => state.searchResults);
+  const params = useParams();
+  const {search} = useLocation();
 
   useEffect(() => {
-    if (searchText) {
-      const text = searchText.split(' ');
-      fetchPlaces({search_one: text[0], search_two: text[1]});
-    } else {
-      fetchAllPlaces()
-    }
+    const text = searchText || decodeURIComponent(search.replace('?search=', ''));
+
+    fetchPlaces({search_one: text});
   }, [])
 
   /**
    * fetch places with two words
    */
-  const { loading, error, data: searchResult, refetch:fetchPlaces } = useQuery(places);
-  /**
-   * Fetch all teh places without search text
-   */
-  const { loading: placesLoading, error: allplaceError, data, refetch:fetchAllPlaces } = useQuery(getAllPlaces);
-  
-  console.log('places', data);
-
-
+  const { loading, error, data, refetch:fetchPlaces } = useQuery(places);
+ 
   return {
     loading,
     error,
     data,
+    hasMoreData,
     fetchPlaces
   };
 };

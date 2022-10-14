@@ -20,6 +20,8 @@ import PlacesTab from "./Places";
 import EventsTab from "./Events";
 import LibraryTab from "./Library";
 import MediaTab from "./Media/index";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, className, ...other } = props;
@@ -108,6 +110,7 @@ const SearchResultTabs = ({ tabIndex }: SearchResultTabsProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
   const navigate = useNavigate();
+  const {searchText} = useSelector((state: RootState) => state.searchResults);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -123,6 +126,7 @@ const SearchResultTabs = ({ tabIndex }: SearchResultTabsProps) => {
       setValue(newTabIndex);
     }
   }, [tabName]);
+
 
   return (
     <div className={`${styles["search-results-wrapper"]}`}>

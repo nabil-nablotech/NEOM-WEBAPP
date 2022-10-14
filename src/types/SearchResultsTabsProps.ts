@@ -20,11 +20,11 @@ export interface TabPanelProps {
 export type tabNameProps = 'Places' | 'Events' | 'Library' | 'Media'
 
 export type GridViewCard_Places = {
-    img: string
+    img?: string
     title: string
     subTitle: string
     dateString: string
-    keywords: Array<string>
+    keywords: string[] | null
     onClick?:((e: React.MouseEvent<Element, React.MouseEvent>) => void) & React.MouseEvent<Element, React.MouseEvent>
 }
 export type GridViewCard_Events = {

@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { useToggledView } from "./../../../hooks/useToggledView";
 import usePlace from "../../../hooks/usePlace";
+import { Meta } from "../../../types/Place";
 
 const PlacesTab = ({ resultCount = 1053 }) => {
   const { selectedCardIndex, searchText } = useSelector(
@@ -21,19 +22,22 @@ const PlacesTab = ({ resultCount = 1053 }) => {
   );
   const [img, setimg] = useState(MapImg1);
 
-  const { data, fetchPlaces } = usePlace();
+  const { data, fetchPlaces, hasMoreData, loading } = usePlace();
 
   console.log('data', data, 'places--------------')
+
   const { openStates, toggleOpenStates } = useToggledView({ count: 2 });
 
   useEffect(() => {
     setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1);
   }, [selectedCardIndex]);
 
+  const meta: Meta = data?.places?.meta;
+
   return (
     <Box className={`${styles["main-tab-content"]}`}>
       <Box className={`${styles["utility-bar"]}`}>
-        <Box>{resultCount} Total Places</Box>
+        <Box>{meta?.pagination?.total} Total Places</Box>
         <Box>
           <Button
             colors={[
@@ -80,7 +84,7 @@ const PlacesTab = ({ resultCount = 1053 }) => {
           {openStates[0] && (
             <>
               <Grid item xl={6} lg={6} md={5} sm={5}>
-                <GridView data={data} fetchPlaces={fetchPlaces} />
+                <GridView loading={loading} data={data?.places?.data} fetchPlaces={fetchPlaces} hasMoreData={hasMoreData} />
               </Grid>
               {/* To-do: map view */}
               <Grid item xl={6} lg={6} md={7} sm={7}>
