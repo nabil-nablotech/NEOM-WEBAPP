@@ -15,7 +15,7 @@ import { RootState } from "../../../store";
 import { useToggledView } from "./../../../hooks/useToggledView";
 import usePlace from "../../../hooks/usePlace";
 import { Meta } from "../../../types/Place";
-import GoogleMap from "../GoogleMap/GoogleMap"
+import MapView from "../GoogleMap/MapView";
 
 const PlacesTab = ({ resultCount = 1053 }) => {
   const { selectedCardIndex, places, metaData } = useSelector(
@@ -87,7 +87,7 @@ const PlacesTab = ({ resultCount = 1053 }) => {
               </Grid>
               {/* To-do: map view */}
               <Grid item xl={6} lg={6} md={7} sm={7}>
-                <GoogleMap/>
+                <MapView/>
               </Grid>
             </>
           )}

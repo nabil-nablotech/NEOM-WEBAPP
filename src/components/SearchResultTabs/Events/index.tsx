@@ -15,7 +15,7 @@ import { RootState } from '../../../store';
 import { useToggledView } from './../../../hooks/useToggledView';
 import useEvent from '../../../hooks/useEvent';
 import { Meta } from '../../../types/Place';
-import GoogleMap from '../GoogleMap/GoogleMap';
+import MapView from '../GoogleMap/MapView';
 
 const PlacesTab = ({
     resultCount = 1053
@@ -75,8 +75,8 @@ const PlacesTab = ({
                         <GridView loading={loading} data={events} fetchEvents={fetchEvents} hasMoreData={hasMoreData}  />
                     </Grid>
                     {/* To-do: map view */}
-                    <Grid item xl={6} lg={6} md={7} sm={7}>
-                        <GoogleMap/>
+                    <Grid item xl={6} lg={6} md={7} sm={7}>                     
+                        <MapView/>
                     </Grid></>}
                     {
                         openStates[1] &&
