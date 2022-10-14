@@ -11,6 +11,7 @@ import MapImg1 from '../../../assets/images/searchResults/mapImage1.webp'
 import MapImg2 from '../../../assets/images/searchResults/mapImage2.jpg'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
+import GoogleMap from '../GoogleMap/GoogleMap';
 
 const PlacesTab = ({
     resultCount = 1053
@@ -53,7 +54,8 @@ const PlacesTab = ({
                     </Grid>
                     {/* To-do: map view */}
                     <Grid item xl={6} lg={6}>
-                        <Box className={`${placesStyles['map-img']}`} component="img" alt={""} src={img} />
+                        <GoogleMap/>
+                        {/* <Box className={`${placesStyles['map-img']}`} component="img" alt={""} src={img} /> */}
                     </Grid>
                 </Grid>
             </Box>
