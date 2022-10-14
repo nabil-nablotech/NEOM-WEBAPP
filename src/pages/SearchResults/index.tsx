@@ -17,7 +17,8 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.code === 'Enter' && searchText.length > 3) {
-      navigate(`search-results/${tabName}?search=${encodeURIComponent(searchText)}`);
+      e.preventDefault()
+      navigate(`/search-results/${tabName}?search=${encodeURIComponent(searchText)}`);
     }
   };
 
