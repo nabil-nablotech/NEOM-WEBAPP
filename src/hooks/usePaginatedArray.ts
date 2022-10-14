@@ -16,9 +16,11 @@ export const usePaginatedArray = ({
     useEffect(() => {
         setloading(true)
         const controller = new AbortController()
-        client.get(apiUrl, {
-            signal: controller.signal
-        })
+        client.get(apiUrl,
+            {
+                signal: controller.signal
+            }
+        )
             .then(res => {
                 setloading(false)
 

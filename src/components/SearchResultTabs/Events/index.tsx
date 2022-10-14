@@ -20,7 +20,7 @@ const PlacesTab = ({
     resultCount = 1053
 }) => {
     
-  const { selectedCardIndex, searchText } = useSelector(
+  const { selectedCardIndex, events } = useSelector(
     (state: RootState) => state.searchResults
   );
   const [img, setimg] = useState(MapImg1);
@@ -71,7 +71,7 @@ const PlacesTab = ({
             <Box component={'section'} className={`${styles['result-section']}`}>
                 <Grid container spacing={1}>
                     {openStates[0] && <><Grid item xl={6} lg={6} md={5} sm={5}>
-                        <GridView loading={loading} data={data?.places?.data} fetchEvents={fetchEvents} hasMoreData={hasMoreData}  />
+                        <GridView loading={loading} data={events} fetchEvents={fetchEvents} hasMoreData={hasMoreData}  />
                     </Grid>
                     {/* To-do: map view */}
                     <Grid item xl={6} lg={6} md={7} sm={7}>

@@ -1,5 +1,7 @@
 import React from 'react';
 import { DashboardResponse } from "./dashboard";
+import {Place, Meta} from './Place';
+import {Event} from './Event';
 
 export type SearchResultTabsProps = {
     tabIndex?: number
@@ -40,4 +42,7 @@ export type SearchResultsState2 = {
     selectedCardIndex: number 
     totalCounts: DashboardResponse | null
     searchText: string
+    places: Place[] | []
+    events: Event[] | []
+    metaData: Meta | null
 }

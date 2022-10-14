@@ -1,15 +1,17 @@
 import {useQuery} from '@apollo/client';
 import { useEffect, useState } from 'react';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { places } from "../query/search";
 import { RootState } from '../store';
+import {setPlaces, setMetaData} from '../store/reducers/searchResultsReducer'
 
 const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
 
   const {searchText} = useSelector((state: RootState) => state.searchResults);
   const {search} = useLocation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const text = searchText || decodeURIComponent(search.replace('?search=', ''));
@@ -21,6 +23,17 @@ const usePlace = () => {
    * fetch places with two words
    */
   const { loading, error, data, refetch:fetchPlaces } = useQuery(places);
+
+  useEffect(() => {
+    if (data?.places.meta.pagination.total < 10) {
+      setHasMoreData(false);
+      dispatch(setPlaces(data?.places.data));
+      
+      dispatch(setMetaData(data?.places?.meta));
+    } else {
+      setHasMoreData(true);
+    }
+  }, [data])
  
   return {
     loading,

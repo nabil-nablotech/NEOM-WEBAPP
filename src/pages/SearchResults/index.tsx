@@ -20,10 +20,8 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   const {fetchPlaces} = usePlace();
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log('insdie the on key down', searchText)
-    // e.preventDefault();
-    if (e.code === 'Enter' && searchText.length > 3) {
-    // if (searchText.length > 3) {
+
+    if (e.code === 'Enter') {
       switch (tabName) {
         case 'Places':
           fetchPlaces({search_one: searchText});
@@ -36,18 +34,18 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
           fetchPlaces({search_one: searchText});
           break;
       }
-      // navigate(`${tabName}?search=${encodeURIComponent(searchText)}`);
+      e.preventDefault();
+      navigate(`/search-results/${tabName}?search=${encodeURIComponent(searchText)}`);
     }
   };
 
   return (
     <>
-
       <Header onKeyDown={onKeyDown} showSearch={true} showRefinedSearch={true}/>
       <Box>
         <SearchResultTabs tabIndex={tabIndex} />
       </Box>
-      <Outlet/>
+      {/* <Outlet/> */}
     </>
   );
 };
