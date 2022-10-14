@@ -45,7 +45,7 @@ export const Card = ({
             <div className={`${gridStyles["card-subtitle"]}`}>{subTitle}</div>
             <div className={`${gridStyles["card-date"]}`}>{dateString}</div>
             <div className={`${gridStyles["card-keywords"]}`}>
-              {keywords.map((item, keyInx) => (
+              {keywords && keywords?.map((item, keyInx) => (
                 <div key={keyInx} className={`${gridStyles["keyword-pill"]}`}>
                   {item}
                 </div>

@@ -1,22 +1,26 @@
 import { gql } from "@apollo/client";
 
 export const places = gql`
-  query SearchTitle($search_one: String!, $search_two: String!) {
+  query SearchTitle($search_one: String!) {
     places(
       filters: {
         or: [
           { placeNameEnglish: { contains: $search_one } }
-          { placeNameEnglish: { contains: $search_two } }
           { siteDescription: { contains: $search_one } }
-          { siteDescription: { contains: $search_two } }
           { period: { contains: $search_one } }
-          { period: { contains: $search_two } }
           { keywords: { contains: $search_one } }
-          { keywords: { contains: $search_two } }
         ]
       }
     
     ) {
+      meta {
+        pagination {
+          total
+          pageCount 
+          pageSize
+          page
+        }
+      }
       data {
         id
         attributes {
@@ -34,48 +38,37 @@ export const places = gql`
   }
 `;
 
-export const getAllPlaces = gql`
-query {
-  places {
-    data {
-      id
-      attributes {
-        placeNameEnglish
-        placeNameArabic
-        siteDescription
-        updatedAt
-        keywords
-        placeNumber
-        latitude
-        longitude
-      }
-    }
-  }
-}`
-
 export const events = gql`
-  query SearchTitle($search_one: String!, $search_two: String!) {
+  query SearchTitle($search_one: String!) {
     visit(
       filters: {
         or: [
           { placeNameEnglish: { contains: $search_one } }
-          { placeNameEnglish: { contains: $search_two } }
           { siteDescription: { contains: $search_one } }
-          { siteDescription: { contains: $search_two } }
           { period: { contains: $search_one } }
-          { period: { contains: $search_two } }
           { keywords: { contains: $search_one } }
-          { keywords: { contains: $search_two } }
         ]
       }
     ) {
+      meta {
+        pagination {
+          total
+          pageCount 
+          pageSize
+          page
+        }
+      }
       data {
         id
         attributes {
           placeNameEnglish
+          placeNameArabic
           siteDescription
+          updatedAt
           keywords
-          perios
+          placeNumber
+          latitude
+          longitude
         }
       }
     }

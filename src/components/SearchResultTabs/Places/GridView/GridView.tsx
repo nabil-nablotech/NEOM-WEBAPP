@@ -14,17 +14,23 @@ import { Place } from "../../../../types/Place";
 export type PlacesProps = {
   data: Place[];
   fetchPlaces: () => void;
+  hasMoreData: boolean;
+  loading: boolean;
 }
 
 const GridView = (props: PlacesProps) => {
-  const { data, hasMoreData, fetchData: fetchPlaces } = usePaginatedArray({
-    apiUrl: "https://jsonplaceholder.typicode.com/photos",
-    step: 10,
-  });
+  // const { data, hasMoreData, fetchData: fetchPlaces } = usePaginatedArray({
+  //   apiUrl: "https://jsonplaceholder.typicode.com/photos",
+  //   step: 10,
+  // });
 
-  // const {data, fetchPlaces} = props;
+  const {data, loading, fetchPlaces, hasMoreData} = props;
 
   const dispatch = useDispatch();
+
+  if (!data) {
+    return <h1>loadig....</h1>
+  }
 
   return (
     <Box className={`${gridStyles["left-grid-box"]}`}>
@@ -47,7 +53,7 @@ const GridView = (props: PlacesProps) => {
           spacing={1}
           className={`${gridStyles["left-grid-container"]}`}
         >
-          {data?.map((item: any, index: number) => (
+          {data?.map((item: Place, index: number) => (
             <>
               <Grid
                 item
@@ -59,14 +65,14 @@ const GridView = (props: PlacesProps) => {
                 }}
               >
                 <Card
-                  img={item.thumbnailUrl}
-                  title={item.title.substr(0, 20)}
-                  subTitle={item.title.substr(0, 40) + "..."}
+                  img={item.attributes.thumbnailUrl}
+                  title={item.attributes.placeNameEnglish.substr(0, 20)}
+                  subTitle={item.attributes.placeNameArabic.substr(0, 40) + "..."}
                   dateString={`Last login on ${format(
-                    new Date(),
+                    new Date(item.attributes.updatedAt),
                     "yyyy-MM-dd"
                   )}`}
-                  keywords={["fist", "new"]}
+                  keywords={item.attributes.keywords}
                 />
               </Grid>
             </>

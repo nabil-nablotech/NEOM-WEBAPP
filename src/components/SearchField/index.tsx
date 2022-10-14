@@ -5,24 +5,18 @@ import SearchIcon from "../SearchField/leading-icon.svg";
 import CrossIcon from "../SearchField/trailing-icon.svg";
 import styles from './index.module.css'
 import CircleSharpIcon from '@mui/icons-material/CircleSharp';
+import {useSelector, useDispatch} from 'react-redux'
+import { RootState } from "../../store";
+import {setSearchText} from '../../store/reducers/searchResultsReducer';
 
-function CustomSearchField(props: {className?: string; onKeyDown?: (e:KeyboardEvent<HTMLInputElement>) => void; handleChange?: (e:ChangeEvent<HTMLInputElement>) => void}) {
+function CustomSearchField(props: {className?: string; searchText?: string; onKeyDown?: (e:KeyboardEvent<HTMLInputElement>) => void; handleChange?: (e:ChangeEvent<HTMLInputElement>) => void}) {
+  const { className, onKeyDown } = props;
+  const dispatch = useDispatch();
 
-  // const { loading:loadingEvent, error:erroEvent, data:eventData, refetch:eventRefetch } = useQuery(events);
-  const { className, handleChange, onKeyDown } = props;
-  const [searchText, setSearchText] = useState('')
+  const {searchText} = useSelector((state: RootState) => state.searchResults);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
-    let wordsArray = searchText.split(' ');
-    if(wordsArray.length>=2){
-      // placeRefetch({ search_one: wordsArray[0], search_two:wordsArray[1]});
-      // eventRefetch({ search_one: wordsArray[0], search_two:wordsArray[1]});
-    }
-
-    if(handleChange) {
-      handleChange(e)
-    }
+    dispatch(setSearchText(e.target.value));
   }
 
   return (
