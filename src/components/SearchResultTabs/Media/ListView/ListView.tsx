@@ -10,6 +10,7 @@ import { usePaginatedArray } from './../../../../hooks/usePaginatedArray';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
+import { CustomModal } from '../../../CustomModal';
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -219,6 +220,8 @@ const ListView = () => {
         step: 10
     })
 
+    const [isModalOpen, setModalOpen] = useState(false)
+
     useEffect(() => {
         /** Needs to be done , since InfiniteSCroll needs a relation with
          * div being scrolled. Here its tbody of ant table
@@ -257,8 +260,23 @@ const ListView = () => {
                     style={{
                         background: "transparent",
                     }}
+                    onRow={(record, rowIndex) => {
+                        return {
+                          onClick: event => {
+                            // click row
+                            // console.log('Hex: ', event, record, rowIndex)
+                            setModalOpen(true)
+                          }
+                        };
+                      }}
                 ></StyledTableWrapper>
             </InfiniteScroll>
+            <CustomModal
+                open={isModalOpen}
+                handleClose={() => setModalOpen(false)}
+            >
+                {<div>Hello</div>}
+            </CustomModal>
         </Box>
     );
 }
