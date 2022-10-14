@@ -3,7 +3,7 @@ import {FC} from 'react';
 import { Navigate } from 'react-router-dom';
 import { getToken, getRole, removeSession } from '../storage/storage';
 
-type RouteProps = {component: FC, path: string }
+type RouteProps = {component: FC, path?: string }
 // handle the admin routes
 function AdminRoute({ component: Component, path, ...rest }: RouteProps) {
   if (getToken()) {

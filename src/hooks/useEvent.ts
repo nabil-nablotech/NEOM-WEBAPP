@@ -12,7 +12,7 @@ const useEvent = () => {
   const {search} = useLocation();
 
   useEffect(() => {
-    const text = searchText || decodeURIComponent(search.replace('?search=', ''));
+    const text = searchText.toLowerCase() || decodeURIComponent(search.replace('?search=', '')).toLowerCase();
 
     fetchEvents({search_one: text});
   }, [])

@@ -43,6 +43,7 @@ export const events = gql`
     places(
       filters: {
         or: [
+          { placeNameEnglish: { contains: $search_one } }
           { siteDescription: { contains: $search_one } }
           { period: { contains: $search_one } }
           { keywords: { contains: $search_one } }

@@ -33,10 +33,8 @@ function CustomSearchField(props: {className?: string; searchText?: string; onKe
             <InputAdornment position="start" sx={{
               cursor: 'pointer'
             }}
-              onClick={(e) => {
-                dispatch(setSearchText(''));
-                // searchRef.current && searchRef.current.focus()
-              }}>
+            onClick={() => console.log('clicking on adornment')}
+            >
               <Avatar alt="Search icon" src={SearchIcon} sx={{ width: 16, height: 20, backgroundColor: '#fff' }} />
             </InputAdornment>
           ),
@@ -47,7 +45,7 @@ function CustomSearchField(props: {className?: string; searchText?: string; onKe
                   marginRight: 0
                 }}
                 onClick={() => {
-                  setSearchText('')
+                  dispatch(setSearchText(''));
                 }}
               >
               {(searchText === '') ?
