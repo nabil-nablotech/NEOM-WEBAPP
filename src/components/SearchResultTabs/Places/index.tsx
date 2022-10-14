@@ -24,8 +24,6 @@ const PlacesTab = ({ resultCount = 1053 }) => {
 
   const { data, fetchPlaces, hasMoreData, loading } = usePlace();
 
-  console.log('data', data, 'places--------------')
-
   const { openStates, toggleOpenStates } = useToggledView({ count: 2 });
 
   useEffect(() => {

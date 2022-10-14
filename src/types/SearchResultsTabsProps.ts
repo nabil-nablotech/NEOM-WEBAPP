@@ -29,7 +29,7 @@ export type GridViewCard_Places = {
 }
 export type GridViewCard_Events = {
     // key?: number
-    img: string
+    img?: string
     title: string
     subTitle: string
     dateString: string

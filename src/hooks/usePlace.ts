@@ -1,7 +1,7 @@
 import {useQuery} from '@apollo/client';
 import { useEffect, useState } from 'react';
 import {useSelector} from 'react-redux';
-import { useParams, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { places } from "../query/search";
 import { RootState } from '../store';
 
@@ -9,7 +9,6 @@ const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
 
   const {searchText} = useSelector((state: RootState) => state.searchResults);
-  const params = useParams();
   const {search} = useLocation();
 
   useEffect(() => {

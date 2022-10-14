@@ -26,9 +26,7 @@ function CustomSearchField(props: {className?: string; searchText?: string; onKe
         label="Search" type={"text"}
         showLabel={false}
         value={searchText}
-        onChange={(e) => {
-          handleTextChange(e)
-        }}
+        onChange={handleTextChange}
         onKeyDown={onKeyDown}
         InputProps={{
           startAdornment: (
@@ -36,8 +34,7 @@ function CustomSearchField(props: {className?: string; searchText?: string; onKe
               cursor: 'pointer'
             }}
               onClick={(e) => {
-                console.log(" i am here")
-                
+                dispatch(setSearchText(''));
                 // searchRef.current && searchRef.current.focus()
               }}>
               <Avatar alt="Search icon" src={SearchIcon} sx={{ width: 16, height: 20, backgroundColor: '#fff' }} />

@@ -40,15 +40,15 @@ export const places = gql`
 
 export const events = gql`
   query SearchTitle($search_one: String!) {
-    visit(
+    places(
       filters: {
         or: [
-          { placeNameEnglish: { contains: $search_one } }
           { siteDescription: { contains: $search_one } }
           { period: { contains: $search_one } }
           { keywords: { contains: $search_one } }
         ]
       }
+    
     ) {
       meta {
         pagination {
