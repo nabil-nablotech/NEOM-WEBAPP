@@ -15,16 +15,15 @@ import { RootState } from "../../../store";
 import { useToggledView } from "./../../../hooks/useToggledView";
 import usePlace from "../../../hooks/usePlace";
 import { Meta } from "../../../types/Place";
+import GoogleMap from "../GoogleMap/GoogleMap"
 
 const PlacesTab = ({ resultCount = 1053 }) => {
-  const { selectedCardIndex, searchText } = useSelector(
+  const { selectedCardIndex, places, metaData } = useSelector(
     (state: RootState) => state.searchResults
   );
   const [img, setimg] = useState(MapImg1);
 
   const { data, fetchPlaces, hasMoreData, loading } = usePlace();
-
-  console.log('data', data, 'places--------------')
 
   const { openStates, toggleOpenStates } = useToggledView({ count: 2 });
 
@@ -32,7 +31,7 @@ const PlacesTab = ({ resultCount = 1053 }) => {
     setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1);
   }, [selectedCardIndex]);
 
-  const meta: Meta = data?.places?.meta;
+  const meta: Meta | null = metaData;
 
   return (
     <Box className={`${styles["main-tab-content"]}`}>
@@ -84,16 +83,11 @@ const PlacesTab = ({ resultCount = 1053 }) => {
           {openStates[0] && (
             <>
               <Grid item xl={6} lg={6} md={5} sm={5}>
-                <GridView loading={loading} data={data?.places?.data} fetchPlaces={fetchPlaces} hasMoreData={hasMoreData} />
+                <GridView loading={loading} data={places} fetchPlaces={fetchPlaces} hasMoreData={hasMoreData} />
               </Grid>
               {/* To-do: map view */}
               <Grid item xl={6} lg={6} md={7} sm={7}>
-                <Box
-                  className={`${placesStyles["map-img"]}`}
-                  component="img"
-                  alt={""}
-                  src={img}
-                />
+                <GoogleMap/>
               </Grid>
             </>
           )}

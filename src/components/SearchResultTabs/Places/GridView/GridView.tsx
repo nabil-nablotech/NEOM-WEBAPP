@@ -54,7 +54,6 @@ const GridView = (props: PlacesProps) => {
           className={`${gridStyles["left-grid-container"]}`}
         >
           {data?.map((item: Place, index: number) => (
-            <>
               <Grid
                 item
                 key={index}
@@ -75,7 +74,6 @@ const GridView = (props: PlacesProps) => {
                   keywords={item.attributes.keywords}
                 />
               </Grid>
-            </>
           ))}
         </Grid>
       </InfiniteScroll>

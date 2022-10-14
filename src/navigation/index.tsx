@@ -34,16 +34,6 @@ export const Navigation = () => {
       path: "/set-password/:new",
       element: <PublicRoute component={SetPassword} />,
     },
-    // {
-    //   path: "/search-results",
-    //   element: <AdminRoute path={"/search-results"} component={SearchResults} />,
-    //   // element: <PublicRoute component={SearchResults} />,
-    // },
-    // {
-    //   path: "/search-results/:tabName",
-    //   element: <AdminRoute path={"/search-results/:tabName"} component={SearchResults} />,
-    //   // element: <PublicRoute component={SearchResults} />,
-    // },
     {
       path: "/search-results",
       element: <AdminRoute component={SearchResults} />,

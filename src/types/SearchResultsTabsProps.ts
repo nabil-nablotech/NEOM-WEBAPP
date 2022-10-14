@@ -1,5 +1,7 @@
 import React from 'react';
 import { DashboardResponse } from "./dashboard";
+import {Place, Meta} from './Place';
+import {Event} from './Event';
 
 export type SearchResultTabsProps = {
     tabIndex?: number
@@ -29,7 +31,7 @@ export type GridViewCard_Places = {
 }
 export type GridViewCard_Events = {
     // key?: number
-    img: string
+    img?: string
     title: string
     subTitle: string
     dateString: string
@@ -40,4 +42,7 @@ export type SearchResultsState2 = {
     selectedCardIndex: number 
     totalCounts: DashboardResponse | null
     searchText: string
+    places: Place[] | []
+    events: Event[] | []
+    metaData: Meta | null
 }

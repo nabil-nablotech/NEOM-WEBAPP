@@ -13,12 +13,20 @@ import MapImg2 from '../../../assets/images/searchResults/mapImage2.jpg'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import { useToggledView } from './../../../hooks/useToggledView';
+import useEvent from '../../../hooks/useEvent';
+import { Meta } from '../../../types/Place';
+import GoogleMap from '../GoogleMap/GoogleMap';
 
 const PlacesTab = ({
     resultCount = 1053
 }) => {
-    const { selectedCardIndex } = useSelector((state: RootState) => state.searchResults);
-    const [img, setimg] = useState(MapImg1)
+    
+  const { selectedCardIndex, events, metaData } = useSelector(
+    (state: RootState) => state.searchResults
+  );
+  const [img, setimg] = useState(MapImg1);
+
+  const { data, fetchEvents, hasMoreData, loading } = useEvent();
 
     useEffect(() => {
         setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1)
@@ -26,10 +34,12 @@ const PlacesTab = ({
     
     const {openStates, toggleOpenStates} = useToggledView({count: 2})
 
+    const meta: Meta | null = metaData;
+
     return (
         <Box className={`${styles['main-tab-content']}`}>
             <Box className={`${styles['utility-bar']}`}>
-                <Box>{resultCount} Total Places</Box>
+                <Box>{meta?.pagination?.total} Total Events</Box>
                 <Box>
                 <Button
                     colors={["transparent", "var(--table-black-text)", "var(--table-black-text)"]}
@@ -62,11 +72,11 @@ const PlacesTab = ({
             <Box component={'section'} className={`${styles['result-section']}`}>
                 <Grid container spacing={1}>
                     {openStates[0] && <><Grid item xl={6} lg={6} md={5} sm={5}>
-                        <GridView />
+                        <GridView loading={loading} data={events} fetchEvents={fetchEvents} hasMoreData={hasMoreData}  />
                     </Grid>
                     {/* To-do: map view */}
                     <Grid item xl={6} lg={6} md={7} sm={7}>
-                        <Box className={`${placesStyles['map-img']}`} component="img" alt={""} src={img} />
+                        <GoogleMap/>
                     </Grid></>}
                     {
                         openStates[1] &&
