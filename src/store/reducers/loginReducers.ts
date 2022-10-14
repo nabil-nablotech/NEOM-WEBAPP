@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, SliceCaseReducers } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../../types/User';
 import { LoginData } from '../../types/Login';
 import { CounterState } from '../types';

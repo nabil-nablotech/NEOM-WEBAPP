@@ -1,87 +1,84 @@
-import * as React from 'react';
-import { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import { GridViewCard_Places } from '../../../../types/SearchResultsTabsProps'
-import gridStyles from './index.module.css'
-import { Grid, Stack } from '@mui/material';
+import Box from "@mui/material/Box";
+import { Grid } from "@mui/material";
 import { format } from "date-fns";
-import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
 import { useDispatch } from "react-redux";
-
 /** indicating that we can send html later on wherever we parse */
-import parse from 'html-react-parser';
-import { setSelectedCardIndex } from '../../../../store/reducers/searchResultsReducer';
+import InfiniteScroll from "react-infinite-scroll-component";
+import gridStyles from "./index.module.css";
+import commonStyles from "../../index.module.css";
+import { usePaginatedArray } from "../../../../hooks/usePaginatedArray";
+import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
+import {Card} from './Card';
+import { Place } from "../../../../types/Place";
 
-const Card = ({
-    key,
-    img,
-    title,
-    subTitle,
-    dateString,
-    keywords
-}: GridViewCard_Places) => {
-    return <>
-        <Box className={`${gridStyles['card-container']}`} key={key} 
-        >
-            <Grid container spacing={1} className={`${gridStyles['card-grid']}`}>
-                <Grid item xl={5} lg={5} className={`${gridStyles['card-image-wrapper']}`}>
-                    <Box className={`${gridStyles['card-image']}`} component="img" alt={""} src={img} />
-                </Grid>
-                <Grid item xl={6} lg={6} className={`${gridStyles['content']}`}>
-                    <div className={`${gridStyles['card-title']}`}>{parse(title)}</div>
-                    <div className={`${gridStyles['card-subtitle']}`}>{subTitle}</div>
-                    <div className={`${gridStyles['card-date']}`}>{dateString}</div>
-                    <div className={`${gridStyles['card-keywords']}`}>{
-                        keywords.map((item, keyInx) => (
-                            <div key={keyInx} className={`${gridStyles['keyword-pill']}`}>
-                                {item}
-                            </div>
-                        ))}</div>
-                    <Box className={`${gridStyles['more-icon-span']}`} component={"span"}>
-                        <Box className={`${gridStyles['more-icon']}`} component="img" alt={""} src={MoreIcon}></Box>
-                    </Box>
-                </Grid>
-            </Grid>
-        </Box>
-    </>
+export type PlacesProps = {
+  data: Place[];
+  fetchPlaces: () => void;
+  hasMoreData: boolean;
+  loading: boolean;
 }
 
-const GridView = () => {
+const GridView = (props: PlacesProps) => {
+  // const { data, hasMoreData, fetchData: fetchPlaces } = usePaginatedArray({
+  //   apiUrl: "https://jsonplaceholder.typicode.com/photos",
+  //   step: 10,
+  // });
 
-    const [data, setData] = useState<any>([])
-    const dispatch = useDispatch();
+  const {data, loading, fetchPlaces, hasMoreData} = props;
 
-    useEffect(() => {
-        fetch('https://jsonplaceholder.typicode.com/photos')
-            .then(res => res.json())
-            .then(res => setData(res.slice(0, 10)))
+  const dispatch = useDispatch();
 
+  if (!data) {
+    return <h1>loadig....</h1>
+  }
 
-    }, [])
-
-    return (
-        <Box className={`${gridStyles['left-grid-box']}`}
+  return (
+    <Box className={`${gridStyles["left-grid-box"]}`}>
+      <InfiniteScroll
+        dataLength={data.length} //This is important field to render the next data
+        next={() => fetchPlaces()}
+        hasMore={hasMoreData}
+        loader={<h4>Loading...</h4>}
+        endMessage={
+          <p style={{ textAlign: "center" }}>
+            <b>END OF RESULTS</b>
+          </p>
+        }
+        scrollableTarget={"places-scrollable-div"}
+        className={`${commonStyles["infinite-scroll-cls"]}`}
+      >
+        <Grid
+          container
+          id={"places-scrollable-div"}
+          spacing={1}
+          className={`${gridStyles["left-grid-container"]}`}
         >
-            <Grid container spacing={1} className={`${gridStyles['left-grid-container']}`}>
-                {
-                    data?.map((item: any, index: number ) => <>
-                        <Grid item sm={12} className={`${gridStyles['']}`} onClick={e => {
-                            dispatch(setSelectedCardIndex(index))
-                        }}>
-                            <Card
-                                key={index}
-                                img={item.thumbnailUrl}
-                                title={item.title.substr(0, 20)}
-                                subTitle={item.title.substr(0, 40) + '...'}
-                                dateString={`Last login on ${format(new Date(), 'yyyy-MM-dd')}`}
-                                keywords={['fist', 'new']}
-                            />
-                        </Grid>
-                    </>)
-                }
-            </Grid>
-        </Box>
-    );
-}
+          {data?.map((item: Place, index: number) => (
+              <Grid
+                item
+                key={index}
+                sm={12}
+                className={`${gridStyles[""]}`}
+                onClick={(e) => {
+                  dispatch(setSelectedCardIndex(index));
+                }}
+              >
+                <Card
+                  img={item.attributes.thumbnailUrl}
+                  title={item.attributes.placeNameEnglish.substr(0, 20)}
+                  subTitle={item.attributes.placeNameArabic.substr(0, 40) + "..."}
+                  dateString={`Last login on ${format(
+                    new Date(item.attributes.updatedAt),
+                    "yyyy-MM-dd"
+                  )}`}
+                  keywords={item.attributes.keywords}
+                />
+              </Grid>
+          ))}
+        </Grid>
+      </InfiniteScroll>
+    </Box>
+  );
+};
 
 export default GridView;

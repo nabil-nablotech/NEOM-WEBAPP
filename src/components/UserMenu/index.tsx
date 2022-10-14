@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -11,6 +11,7 @@ import { RootState } from "../../store";
 import { getRole } from "../../utils/storage/storage";
 
 import MenuList from "../MenuList";
+import { Box } from "@mui/material";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -57,7 +58,7 @@ function UserMenuComponent() {
     {
       label: "Support",
       handleClickMenuItem: () => {},
-      render: () => <a href="mailto: support@neomheritage.com?subject = Neom Heritage Support" target={"_blank"}>
+      render: () => <a href="mailto: support@neomheritage.com?subject = Neom Heritage Support" rel="noreferrer" target={"_blank"}>
       Help & Support
       </a>
     },
@@ -80,8 +81,15 @@ function UserMenuComponent() {
 
   return (
     <>
-      <UserMenu>
-        <Icon src={icon} alt="icon" />
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        gap: '0.5em',
+        alignItems: 'center',
+        marginLeft: 'auto',
+        marginRight: '1em'
+      }}>
+        <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }}/>
         {admin && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
         <InitialsWrapper
           id="long-button"
@@ -106,7 +114,7 @@ function UserMenuComponent() {
           handleClose={handleSettingsClose}
           options={menuSettingItems}
         />
-      </UserMenu>
+      </Box>
     </>
   );
 }
@@ -119,6 +127,7 @@ const InitialsWrapper = styled.div`
   position: relative;
   cursor: pointer;
   color: #fffF;
+  z-index: 2;
   & div:nth-child(1) {
     position: absolute;
     top: 50%;
@@ -145,41 +154,7 @@ const IconSettings = styled.img`
   // top: 24px;
   // left: 1317px;
   z-index: 3;
-`;
-
-const UserMenu = styled.div`
-  position: fixed;
-  height: fit-content;
-  top: 24px;
-  right: 0;
-  z-index: 2;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  min-width: 175px;
-  // border: 1px none;
-  gap: 20px;
-  margin-right: 2vw;
-  & img {
-    cursor: pointer;
-  }
-`;
-
-const UserMenu1 = styled.div`
-  position: fixed;
-  height: 144px;
-  top: 24px;
-  left: 637px;
-  z-index: 2;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  min-width: 175px;
-  border: 1px none;
-
-  &.user-menu.user-menu-1 {
-    left: 1238px;
-  }
+  cursor: pointer;
 `;
 
 export default UserMenuComponent;

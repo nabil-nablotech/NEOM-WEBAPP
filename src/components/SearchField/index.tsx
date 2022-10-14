@@ -1,63 +1,40 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, KeyboardEvent } from "react";
 import TextInput from "../TextInput";
 import { Avatar, InputAdornment } from "@mui/material";
 import SearchIcon from "../SearchField/leading-icon.svg";
 import CrossIcon from "../SearchField/trailing-icon.svg";
 import styles from './index.module.css'
 import CircleSharpIcon from '@mui/icons-material/CircleSharp';
-import { useQuery } from "@apollo/client";
-import { places, events } from "../../api/search";
+import {useSelector, useDispatch} from 'react-redux'
+import { RootState } from "../../store";
+import {setSearchText} from '../../store/reducers/searchResultsReducer';
 
-function CustomSearchField(props: {className?: string, handleChange?: (e:ChangeEvent<HTMLInputElement>) => void}) {
-  const { loading:placeLoading, error:placeError, data:placeData, refetch:placeRefetch } = useQuery(places);
-  const { loading:loadingEvent, error:erroEvent, data:eventData, refetch:eventRefetch } = useQuery(events);
-  const { className, handleChange } = props;
-  const [searchText, setSearchText] = useState('')
-  const [isTyping, setIsTyping] = useState(false)
+function CustomSearchField(props: {className?: string; searchText?: string; onKeyDown?: (e:KeyboardEvent<HTMLInputElement>) => void; handleChange?: (e:ChangeEvent<HTMLInputElement>) => void}) {
+  const { className, onKeyDown } = props;
+  const dispatch = useDispatch();
+
+  const {searchText} = useSelector((state: RootState) => state.searchResults);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
-    let wordsArray = searchText.split(' ');
-    if(wordsArray.length>=2){
-      placeRefetch({ search_one: wordsArray[0], search_two:wordsArray[1]});
-      eventRefetch({ search_one: wordsArray[0], search_two:wordsArray[1]});
-    }
-
-    if(handleChange) {
-      handleChange(e)
-    }
+    dispatch(setSearchText(e.target.value));
   }
-
-  const searchRef = React.createRef()
 
   return (
     <>
-    {
-      console.log('places data ===================>',placeData?.places?.data)
-    }
-    {
-      console.log('Events data ===================>',eventData?.events?.data)
-    }
       <TextInput
         className={`${styles['search-field']} ${className}`}
         label="Search" type={"text"}
         showLabel={false}
         value={searchText}
-        onChange={(e) => {
-          handleTextChange(e)
-          setIsTyping(true)
-        }}
-        onBlur={e => setIsTyping(false)}
+        onChange={handleTextChange}
+        onKeyDown={onKeyDown}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start" sx={{
               cursor: 'pointer'
             }}
-              onClick={(e) => {
-                console.log(" i am here")
-                
-                // searchRef.current && searchRef.current.focus()
-              }}>
+            onClick={() => console.log('clicking on adornment')}
+            >
               <Avatar alt="Search icon" src={SearchIcon} sx={{ width: 16, height: 20, backgroundColor: '#fff' }} />
             </InputAdornment>
           ),
@@ -68,7 +45,7 @@ function CustomSearchField(props: {className?: string, handleChange?: (e:ChangeE
                   marginRight: 0
                 }}
                 onClick={() => {
-                  setSearchText('')
+                  dispatch(setSearchText(''));
                 }}
               >
               {(searchText === '') ?

@@ -1,5 +1,4 @@
 import {
-  User,
   loginPayload,
   UserDetails,
 } from "../types/User";
@@ -12,4 +11,5 @@ export const login = (payload: loginPayload): Promise<UserDetails> =>
 
 export const loginScreenData = (): Promise<LoginData> =>
   client.get(`/api/login?populate[0]=button&populate[1]=input&populate[2]=backgroundImage.image&populate[4]=bottomText&populate[5]=logo.image`).then((response) => response.data);
+
 

@@ -6,6 +6,9 @@
 .tab-pannel-wrapper {
     padding-block: 10px !important;
 }
+.tab-panel-component {
+    position: relative;
+}
 .tab-titles {
     font-weight: 500;
     font-size: 1em;
@@ -33,7 +36,17 @@
 }
 .view-toggler-icon {
     margin-left: 1em;
+    cursor: pointer;
 }
 .result-section {
     margin-block: 0.5em;
+}
+.infinite-scroll-cls {
+    overflow-y: hidden !important;
+}
+@media (min-width: 575px) and (max-width: 1025px) {
+    .tab,
+    .tab-titles {
+        min-height: 41px !important;
+    }
 }

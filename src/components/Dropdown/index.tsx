@@ -1,5 +1,4 @@
-import React from "react";
-import Select, {SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 import { DropdownCompProps } from "../../types/DropdownComponent";
 import { MenuItem } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
@@ -9,17 +8,20 @@ import { useState } from "react";
 const DropdownComponent = ({
   className,
   label,
+  placeholder,
   value,
   handleChange,
   itemsList,
   name,
+  selectStylesSx,
+  formControlSx
 }: DropdownCompProps) => {
   const staticLabel = label ? label : "select";
   const [focused, setFocused] = useState(false);
 
   return (
     <div className={className}>
-      <FormControl sx={{ minWidth: 120 }}>
+      <FormControl sx={{ minWidth: 120, ...formControlSx }}>
         {(focused || value) && (
           <InputLabel id="demo-simple-select-helper-label">{label}</InputLabel>
         )}
@@ -29,10 +31,12 @@ const DropdownComponent = ({
           value={value}
           name={name}
           label={staticLabel}
+          placeholder={placeholder}
           onChange={handleChange}
           onFocus={(e) => setFocused(true)}
           onBlur={(e) => setFocused(false)}
           displayEmpty
+          sx={selectStylesSx}
           // renderValue={(selected) => {
           //   if (selected.length === 0) {
           //     return <em>{staticLabel}</em>;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { loginPayload, User } from "../types/User";
-import {setSession, getId, setRole, getToken} from '../utils/storage/storage';
+import { loginPayload } from "../types/User";
+import {setSession, setRole} from '../utils/storage/storage';
 import { useDispatch } from "react-redux";
 import { setUser, setScreenData } from "../store/reducers/loginReducers";
 import { login, loginScreenData } from "../api/auth";

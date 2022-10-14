@@ -1,6 +1,5 @@
-import { User } from "../types/User";
-import client from '../utils/services/axiosClient';
 import {removeSession, getId} from '../utils/storage/storage';
+import { editUser } from "../api/user";
 
 const useLogout = () => {
 
@@ -10,8 +9,7 @@ const useLogout = () => {
   const logout = async () => {
     const id = getId();
     try {
-      const payload = {}
-      const {data} = await client.put<User>(`/api/users/${id}`, JSON.stringify(payload));
+      const data = editUser({user: {}, id: Number(id)});
       return data;
     } catch (error) {
       // console.log('error', error)

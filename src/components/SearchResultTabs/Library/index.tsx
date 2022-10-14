@@ -6,183 +6,99 @@ import styled from 'styled-components';
 import type { ColumnsType } from "antd/es/table";
 import { Table } from "antd";
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
+import { StyledAntTable } from '../../StyledAntTable';
+import { usePaginatedArray } from '../../../hooks/usePaginatedArray';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import commonStyles from '../index.module.css';
+import { Loader } from '../../../components/Loader';
 
-const StyledTable = styled(Table)`
-  th,
-  .cellnowrap {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .ant-table-fixed {
-    table-layout: fixed;
-  }
-
-  .ant-table {
-    font-family: 'Roboto-Regular';
-    margin-block: 50px
-  }
-
-  .ant-table-thead > tr > th,
-  .ant-table {
-    background: transparent;
-  }
-
-  .ant-table-thead > tr > th {
-    border: none;
-  }
-
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > thead > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > thead > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > thead > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tbody > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > tbody > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > tbody > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tfoot > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > tfoot > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tfoot > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > tfoot > tr > th,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tfoot > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > tfoot > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tfoot > tr > td,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-summary > table > tfoot > tr > td {
-    border: none
-  }
-
-  .ant-table.ant-table-bordered > .ant-table-container {
-    border: none;
-  }
-
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table {
-    border: none
-  }
-
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table,
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td {
-    border-bottom: 1px solid var(--user-table-border);
-  }
-
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table th {
-    color: var(--grey-text);
-  }
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table td {
-    color: var(--table-black-text);
-  }
-
-  .ant-table-tbody > tr > td {
-    word-wrap: break-word;
-    word-break: break-all;
-    min-width: 125px;
-  } 
-
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td.more-icon {
-    border-left: 1px solid var(--user-table-border);
-  }
-
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tbody > tr > td.more-icon .cellnowrap {
-    width: fit-content;
-  }
-
-  td.ant-table-cell-row-hover {
-    background: var(--user-table-cell-hover-bg) !important;
-  }import { styled } from 'styled-components';
-import { useEffect, useState } from 'react';
-
-
-  .ant-table.ant-table-bordered .ant-table-body tr.ant-table-row td:last-of-type {
-  }
-
-  td.ant-table-column-sort {
-    background-color: transparent;
-  }
-
-  .ant-table-column-sorter-inner {
-  }
-
-`;
 let viewWidths = ["20vw", "20vw", "20vw", "20vw", "5vw"];
-
-
-const tableHeaderJson: ColumnsType<any> = [
-    {
-        title: 'NAME',
-        key: 'name',
-        dataIndex: 'name',
-        width: viewWidths[0],
-        sorter: (a, b) => a.name.localeCompare(b.name),
-        sortDirections: ['ascend'],
-        defaultSortOrder: 'ascend',
-        render: (value, record: any) => (<Box sx={{
-            display: 'flex',
-            gap: '1em'
-        }}>
-            <InsertDriveFileOutlinedIcon fontSize='small' />
-            <Box>{value}</Box>
-        </Box>)
-    },
-    {
-        title: "DESCRIPTION",
-        key: "description",
-        //   dataIndex: "description",
-        dataIndex: "company", // temporary
-        render: (value, index) => { // temporary
-            return value.name
-        },
-    },
-    {
-        title: "CITATION",
-        //   dataIndex: "citation",
-        dataIndex: "company", // temporary
-        render: (value, index) => { // temporary
-            return value.catchPhrase
-        },
-        //   width: viewWidths[2],
-    },
-    {
-        title: "URL",
-        key: "url",
-        //   dataIndex: "url",
-        dataIndex: "website", // temporary
-        render: (value, index) => (
-            <Box component={'a'} sx={{
-                color: 'initial',
-                textDecoration: 'underline'
-            }}>
-                {value}
-            </Box>
-        ),
-    },
-    {
-        title: "SITE",
-        key: "site",
-        width: viewWidths[4],
-        //   dataIndex: "site",
-        dataIndex: "username", // temporary
-        render: (value, index) => value, // temporary
-    },
-]
 
 
 const LibraryTab = ({
     resultCount = 1053
 }) => {
 
-    const [dataList, setDataList] = useState<any>([])
-    const [loading, setloading] = useState<boolean>(false)
+    const tableHeaderJson: ColumnsType<any> = [
+        {
+            title: 'NAME',
+            key: 'name',
+            dataIndex: 'name',
+            width: viewWidths[0],
+            sorter: (a, b) => a.name.localeCompare(b.name),
+            sortDirections: ['ascend'],
+            defaultSortOrder: 'ascend',
+            className: 'name-column',
+            render: (value, record: any) => (<Box sx={{
+                display: 'flex',
+                gap: '1em'
+            }}>
+                <InsertDriveFileOutlinedIcon fontSize='small' />
+                <Box>{value}</Box>
+            </Box>)
+        },
+        {
+            title: "DESCRIPTION",
+            key: "description",
+            className: 'description-column',
+            //   dataIndex: "description",
+            dataIndex: "company", // temporary
+            render: (value, index) => { // temporary
+                return value.name
+            },
+        },
+        {
+            title: "CITATION",
+            className: 'citation-column',
+            //   dataIndex: "citation",
+            dataIndex: "company", // temporary
+            render: (value, index) => { // temporary
+                return value.catchPhrase
+            },
+            //   width: viewWidths[2],
+        },
+        {
+            title: "URL",
+            key: "url",
+            //   dataIndex: "url",
+            dataIndex: "website", // temporary
+            render: (value, index) => (
+                <Box component={'a'} sx={{
+                    color: 'initial',
+                    textDecoration: 'underline'
+                }}>
+                    {value}
+                </Box>
+            ),
+        },
+        {
+            title: "SITE",
+            key: "site",
+            width: viewWidths[4],
+            //   dataIndex: "site",
+            dataIndex: "username", // temporary
+            render: (value, index) => value, // temporary
+        },
+    ]
+    const {
+        data,
+        hasMoreData,
+        fetchData,
+        loading
+    } = usePaginatedArray({
+        apiUrl: 'https://jsonplaceholder.typicode.com/users',
+        step: 10
+    })
 
     useEffect(() => {
-        setloading(true)
-        fetch('https://jsonplaceholder.typicode.com/users')
-            .then(res => res.json())
-            .then(res => {
-                setloading(false)
-                setDataList(res.slice(0, 10))
-            })
-
-    }, [])
+        /** Needs to be done , since InfiniteSCroll needs a relation with
+         * div being scrolled. Here its tbody of ant table
+         */
+        const ele = document.querySelector('#library-list-parent .ant-table-body')
+        if (ele) {
+            ele.id = "library-list-div"
+        }
+    }, []);
 
 
     return (
@@ -206,21 +122,36 @@ const LibraryTab = ({
                     />
                 </Box>
             </Box>
-            <Box>
-                <StyledTable
-                    className={`${styles["table-container"]}`}
-                    rowKey={"id"}
-                    size="small"
-                    columns={tableHeaderJson}
-                    dataSource={dataList}
-                    pagination={false}
-                    loading={loading ? loading : false}
-                    bordered
-                    scroll={{ x: true, y: 300 }}
-                    style={{
-                        background: "transparent",
-                    }}
-                ></StyledTable>
+            <Box id={'library-list-parent'}>
+                <InfiniteScroll
+                    dataLength={data.length} //This is important field to render the next data
+                    next={() => fetchData()}
+
+                    hasMore={hasMoreData}
+                    loader={<Loader />}
+                    endMessage={
+                        <p style={{ textAlign: 'center' }}>
+                            <b>END OF RESULTS</b>
+                        </p>
+                    }
+                    scrollableTarget={'library-list-div'}
+                    className={`${commonStyles['infinite-scroll-cls']}`}
+                >
+                    <StyledAntTable
+                        className={`${styles["table-container"]}`}
+                        rowKey={"id"}
+                        size="small"
+                        columns={tableHeaderJson}
+                        dataSource={data}
+                        pagination={false}
+                        loading={loading ? loading : false}
+                        bordered
+                        scroll={{ y: 500, scrollToFirstRowOnChange: true }}
+                        style={{
+                            background: "transparent",
+                        }}
+                    ></StyledAntTable>
+                </InfiniteScroll>
             </Box>
         </Box>
     );

@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, {FC} from 'react';
+import {FC} from 'react';
 import { Navigate } from 'react-router-dom';
 import { getToken, removeSession } from '../storage/storage';
 
-type RouteProps = {component: FC, path: string }
+type RouteProps = {component: FC, path?: string }
 // handle the private routes
 function PrivateRoute({ component: Component, path, ...rest }: RouteProps) {
   if (getToken()) { 

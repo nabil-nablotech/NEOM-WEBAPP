@@ -10,53 +10,15 @@ import Box from '@mui/material/Box';
 import PasswordValid from '../../assets/images/password-valid.svg'
 import PasswordInalid from '../../assets/images/password-invalid.svg'
 import {cloneDeep} from 'lodash'
+import { LinkExpired } from './linkExpired';
+import {staticValidationScheme} from '../../utils/services/helpers';
 
-type FormError = {
-  show: boolean;
-  message: string;
-};
-
-export const LinkExpired = () => {
-  return <Box className={`${styles["expired-link-content"]}`}>
-    <Box>
-      LINK EXPIRED
-    </Box>
-    <Box>
-    Please contact{' '}
-      <a
-        href="mailto: support@neomheritage.com?subject = Neom Heritage Support"
-        target={"_blank"}
-        rel="noreferrer"
-      >
-        support@neomheritage.com
-      </a>
-    </Box>
-  </Box>
-}
 
 export const SetPassword = () => {
 
   const {query, resetPasswordMutation, setState, state} = useSetPassword();
 
   const [isSetPasswordDisabled, toggleSetPasswordDisabled] = useState<boolean>(true);
-
-  const staticValidationScheme = [
-    {
-      name: '8 characters',
-      rule: /^.{8,}$/,
-      fulfilled: false
-    },
-    {
-      name: '1 uppercase letter',
-      rule: /^(?=.*?[A-Z]).{1,}$/,
-      fulfilled: false
-    },
-    {
-      name: '1 special character',
-      rule: /^(?=.*?[#?!@$%^&*-]).{1,}$/,
-      fulfilled: false
-    }
-  ]
 
   const [focusedInput, setFocusedInput] = useState<string>('')
   const [validatorsArray_password, setValidatorsArray_password] = useState<Array<validtr>>(cloneDeep(staticValidationScheme))
@@ -167,8 +129,9 @@ export const SetPassword = () => {
     }
   };
 
- 
-
+/**
+ * UI
+ */
   return (
     <>
       <LoginScreenTemplate>
