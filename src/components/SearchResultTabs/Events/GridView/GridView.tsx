@@ -12,10 +12,11 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 import {Card} from './Card';
+import { useSelector } from "react-redux";
 
 export type EventsProps = {
   data: Event[];
-  fetchEvents: () => void;
+  handleNext: () => void;
   hasMoreData: boolean;
   loading: boolean;
 }
@@ -24,7 +25,7 @@ const GridView = (props: EventsProps) => {
 
     const dispatch = useDispatch();
 
-    const {data, fetchEvents, hasMoreData, loading} = props;
+    const {data, handleNext, hasMoreData, loading} = props;
 
     // const {
     //     data,
@@ -41,7 +42,7 @@ const GridView = (props: EventsProps) => {
         >
             <InfiniteScroll
                 dataLength={data.length} //This is important field to render the next data
-                next={() => fetchEvents()}
+                next={() => handleNext()}
 
                 hasMore={hasMoreData}
                 loader={<h4>Loading...</h4>}
@@ -57,7 +58,7 @@ const GridView = (props: EventsProps) => {
                 <Grid container id={'events-scrollable-div'} spacing={1} className={`${gridStyles['left-grid-container']}`}>
                     {
                         data?.map((item: Event, index: number) => 
-                            <Grid item key={index} sm={12} className={`${gridStyles['']}`} onClick={e => {
+                            <Grid item key={index} sm={12} className={`${gridStyles['']}`} onClick={() => {
                                 dispatch(setSelectedCardIndex(index))
                             }}>
                                 <Card

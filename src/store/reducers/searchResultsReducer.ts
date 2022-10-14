@@ -10,7 +10,8 @@ const initialState: SearchResultsState2 = {
   searchText: '',
   places: [],
   events: [],
-  metaData: null
+  placeMetaData: null,
+  eventMetaData: null
 };
 
 export const searchResultsSlice = createSlice({
@@ -32,12 +33,15 @@ export const searchResultsSlice = createSlice({
     setEvents: (state, action: PayloadAction<Event[]>) => {
       state.events = action.payload;
     },
-    setMetaData: (state, action: PayloadAction<Meta>) => {
-      state.metaData = action.payload;
+    setPlaceMetaData: (state, action: PayloadAction<Meta>) => {
+      state.placeMetaData = action.payload;
+    },
+    setEventMetaData: (state, action: PayloadAction<Meta>) => {
+      state.eventMetaData = action.payload;
     }
   },
 });
 
-export const { setSelectedCardIndex, setTotalCounts, setSearchText, setPlaces, setEvents, setMetaData } = searchResultsSlice.actions;
+export const { setSelectedCardIndex, setTotalCounts, setSearchText, setPlaces, setEvents, setPlaceMetaData, setEventMetaData } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

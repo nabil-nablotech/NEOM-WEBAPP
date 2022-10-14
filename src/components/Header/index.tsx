@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import styles from "./index.module.css";
 import { Box } from "@mui/material";
+import styles from "./index.module.css";
 import Logo from "../../pages/UserManagement/img/Logo.svg";
 import UserMenuComponent from "./../UserMenu/index";
 import { useNavigate } from "react-router-dom";

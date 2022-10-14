@@ -4,7 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { places } from "../query/search";
 import { RootState } from '../store';
-import {setPlaces, setMetaData} from '../store/reducers/searchResultsReducer'
+import {setPlaces, setPlaceMetaData} from '../store/reducers/searchResultsReducer'
 
 const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
@@ -15,7 +15,6 @@ const usePlace = () => {
 
   useEffect(() => {
     const text = searchText || decodeURIComponent(search.replace('?search=', ''));
-
     fetchPlaces({search_one: text});
   }, [])
 
@@ -28,8 +27,7 @@ const usePlace = () => {
     if (data?.places.meta.pagination.total < 10) {
       setHasMoreData(false);
       dispatch(setPlaces(data?.places.data));
-      
-      dispatch(setMetaData(data?.places?.meta));
+      dispatch(setPlaceMetaData(data?.places?.meta));
     } else {
       setHasMoreData(true);
     }
