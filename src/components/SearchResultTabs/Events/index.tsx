@@ -15,6 +15,7 @@ import { RootState } from '../../../store';
 import { useToggledView } from './../../../hooks/useToggledView';
 import useEvent from '../../../hooks/useEvent';
 import { Meta } from '../../../types/Place';
+import GoogleMap from '../GoogleMap/GoogleMap';
 
 const PlacesTab = ({
     resultCount = 1053
@@ -75,7 +76,7 @@ const PlacesTab = ({
                     </Grid>
                     {/* To-do: map view */}
                     <Grid item xl={6} lg={6} md={7} sm={7}>
-                        <Box className={`${placesStyles['map-img']}`} component="img" alt={""} src={img} />
+                        <GoogleMap/>
                     </Grid></>}
                     {
                         openStates[1] &&
