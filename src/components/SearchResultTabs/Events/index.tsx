@@ -20,7 +20,7 @@ const PlacesTab = ({
     resultCount = 1053
 }) => {
     
-  const { selectedCardIndex, events } = useSelector(
+  const { selectedCardIndex, events, metaData } = useSelector(
     (state: RootState) => state.searchResults
   );
   const [img, setimg] = useState(MapImg1);
@@ -33,7 +33,7 @@ const PlacesTab = ({
     
     const {openStates, toggleOpenStates} = useToggledView({count: 2})
 
-    const meta: Meta = data?.places?.meta;
+    const meta: Meta | null = metaData;
 
     return (
         <Box className={`${styles['main-tab-content']}`}>

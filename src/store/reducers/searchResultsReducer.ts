@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { SearchResultsState2 } from "../../types/SearchResultsTabsProps";
 import { DashboardResponse } from '../../types/dashboard';
 import { Place, Meta } from "../../types/Place";
+import { Event } from "../../types/Event";
 
 const initialState: SearchResultsState2 = {
   selectedCardIndex: 0,
@@ -28,7 +29,7 @@ export const searchResultsSlice = createSlice({
     setPlaces: (state, action: PayloadAction<Place[]>) => {
       state.places = action.payload;
     },
-    setEvents: (state, action: PayloadAction<Place[]>) => {
+    setEvents: (state, action: PayloadAction<Event[]>) => {
       state.events = action.payload;
     },
     setMetaData: (state, action: PayloadAction<Meta>) => {

@@ -25,10 +25,10 @@ const useEvent = () => {
   const { loading, error, data, refetch:fetchEvents } = useQuery(events);
 
   useEffect(() => {
-    if (data?.places.meta.pagination.total < 10) {
+    if (data?.visits.meta.pagination.total < 10) {
       setHasMoreData(false);
-      dispatch(setEvents(data?.places?.data));
-      dispatch(setMetaData(data?.places?.meta));
+      dispatch(setEvents(data?.visits?.data));
+      dispatch(setMetaData(data?.visits?.meta));
     } else {
       setHasMoreData(true);
     }

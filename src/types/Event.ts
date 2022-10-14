@@ -2,8 +2,8 @@ export type Event = {
   id: string;
   attributes: {
     thumbnailUrl?: string;
-    placeNameEnglish: string;
-    placeNameArabic: string;
+    recordingTeam: string;
+    visitNumber: string;
     siteDescription: string;
     updatedAt: string;
     keywords: string[] | null;

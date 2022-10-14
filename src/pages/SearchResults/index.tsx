@@ -45,7 +45,6 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       <Box>
         <SearchResultTabs tabIndex={tabIndex} />
       </Box>
-      {/* <Outlet/> */}
     </>
   );
 };
