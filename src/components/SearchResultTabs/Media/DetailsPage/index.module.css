@@ -1,3 +1,52 @@
 .details-page-wrapper {
-    margin-inline: 7em;
+    margin-inline: auto;
+    max-width: 65vw;
+    font-family: 'Roboto-Regular';
+    color: #fff;
+    background:rgba(19, 16, 13, 0.9);
+}
+
+.title {
+    text-align: center;
+    font-size: 25px;
+    line-height: 1;
+}
+
+.image {
+    width: 100%;
+    aspect-ratio: 3/2;
+    object-fit: cover;
+    margin-block: 1em;
+}
+
+.desc {
+    margin-bottom: 1.5em;
+}
+
+.star-icon-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.featured-col {
+    display: flex;
+    flex-direction: column;
+    flex: 0;
+}
+
+.bottom-desc-main-grid {
+    gap: 10px;
+}
+.bottom-desc-row-1 {
+    margin-bottom: 1em;
+}
+
+.more-icon-box {
+    cursor: pointer;
+}
+
+.bottom-grid p {
+    opacity: 0.5;
+    margin-bottom: 0.4em;
 }

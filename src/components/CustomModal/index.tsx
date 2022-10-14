@@ -20,14 +20,15 @@ const CustomModal_ = ({
             className={`${modalStyles['dialog-wrapper']}`}
             style={{
                 background: 'rgba(19, 16, 13, 0.9)',
-                
-
             }}
             PaperProps={{
                 sx: {
                     '& .MuiDialog-paper': {
                         backgroundColor: 'rgba(19, 16, 13, 0.9)',
-                    }
+                    },
+                    '&.MuiPaper-root': {
+                        backgroundColor: 'rgba(19, 16, 13, 0.9)',
+                    },
                     // to-do
                 }
             }}
@@ -47,7 +48,7 @@ const CustomModal_ = ({
                             marginRight: '0',
                         }}
                     >
-                        <CloseIcon sx={{ color: '#000' }} />
+                        <CloseIcon fontSize='large' sx={{ color: '#fff' }} />
                     </IconButton>
                 </Toolbar>
             </AppBar>
