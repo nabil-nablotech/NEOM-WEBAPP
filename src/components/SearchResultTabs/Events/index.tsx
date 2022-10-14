@@ -21,7 +21,7 @@ const PlacesTab = ({
     resultCount = 1053
 }) => {
     
-  const { selectedCardIndex, events, metaData } = useSelector(
+  const { selectedCardIndex, events, searchText, eventMetaData } = useSelector(
     (state: RootState) => state.searchResults
   );
   const [img, setimg] = useState(MapImg1);
@@ -34,7 +34,11 @@ const PlacesTab = ({
     
     const {openStates, toggleOpenStates} = useToggledView({count: 2})
 
-    const meta: Meta | null = metaData;
+    const meta: Meta | null = eventMetaData;
+
+    const handleNext = () => {
+      fetchEvents({search_one: searchText})
+    }
 
     return (
         <Box className={`${styles['main-tab-content']}`}>
@@ -72,7 +76,7 @@ const PlacesTab = ({
             <Box component={'section'} className={`${styles['result-section']}`}>
                 <Grid container spacing={1}>
                     {openStates[0] && <><Grid item xl={6} lg={6} md={5} sm={5}>
-                        <GridView loading={loading} data={events} fetchEvents={fetchEvents} hasMoreData={hasMoreData}  />
+                        <GridView loading={loading} data={events} handleNext={handleNext} hasMoreData={hasMoreData}  />
                     </Grid>
                     {/* To-do: map view */}
                     <Grid item xl={6} lg={6} md={7} sm={7}>                     
