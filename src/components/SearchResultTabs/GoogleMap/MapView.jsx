@@ -33,7 +33,7 @@ const markers = [
   },
 ];
 
-const Map = () => {
+const MapView = () => {
   const [centerFirst, setCenterFirst] = useState({
     lat: 38.909529,
     lng: -77.043295,
@@ -109,4 +109,4 @@ const Map = () => {
   );
 };
 
-export default Map;
+export default MapView;
