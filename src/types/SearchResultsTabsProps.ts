@@ -44,5 +44,6 @@ export type SearchResultsState2 = {
     searchText: string
     places: Place[] | []
     events: Event[] | []
-    metaData: Meta | null
+    placeMetaData: Meta | null
+    eventMetaData: Meta | null
 }

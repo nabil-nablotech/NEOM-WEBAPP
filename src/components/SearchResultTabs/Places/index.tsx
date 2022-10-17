@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
+import { Grid } from "@mui/material";
 import styles from "../index.module.css";
-import placesStyles from "./index.module.css";
 import Button from "../../../components/Button";
 import DetailsView from "../../../assets/images/searchResults/DetailsView.svg";
 import ListViewIcon from "../../../assets/images/searchResults/ListView.svg";
 import GridView from "./GridView/GridView";
 import ListView from "./ListView/ListView";
-import { Grid } from "@mui/material";
 import MapImg1 from "../../../assets/images/searchResults/mapImage1.webp";
 import MapImg2 from "../../../assets/images/searchResults/mapImage2.jpg";
 import { useSelector } from "react-redux";
@@ -15,15 +14,15 @@ import { RootState } from "../../../store";
 import { useToggledView } from "./../../../hooks/useToggledView";
 import usePlace from "../../../hooks/usePlace";
 import { Meta } from "../../../types/Place";
-import GoogleMap from "../GoogleMap/GoogleMap"
+import MapView from "../GoogleMap/MapView";
 
-const PlacesTab = ({ resultCount = 1053 }) => {
-  const { selectedCardIndex, places, metaData } = useSelector(
+const PlacesTab = () => {
+  const { selectedCardIndex, places, placeMetaData } = useSelector(
     (state: RootState) => state.searchResults
   );
   const [img, setimg] = useState(MapImg1);
 
-  const { data, fetchPlaces, hasMoreData, loading } = usePlace();
+  const { fetchPlaces, hasMoreData, loading } = usePlace();
 
   const { openStates, toggleOpenStates } = useToggledView({ count: 2 });
 
@@ -31,7 +30,7 @@ const PlacesTab = ({ resultCount = 1053 }) => {
     setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1);
   }, [selectedCardIndex]);
 
-  const meta: Meta | null = metaData;
+  const meta: Meta | null = placeMetaData;
 
   return (
     <Box className={`${styles["main-tab-content"]}`}>
@@ -87,7 +86,7 @@ const PlacesTab = ({ resultCount = 1053 }) => {
               </Grid>
               {/* To-do: map view */}
               <Grid item xl={6} lg={6} md={7} sm={7}>
-                <GoogleMap/>
+                <MapView/>
               </Grid>
             </>
           )}

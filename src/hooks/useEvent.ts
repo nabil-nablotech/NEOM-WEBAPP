@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { events } from "../query/search";
 import { RootState } from '../store';
-import {setEvents, setMetaData} from '../store/reducers/searchResultsReducer'
+import {setEvents, setEventMetaData} from '../store/reducers/searchResultsReducer'
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
@@ -28,7 +28,7 @@ const useEvent = () => {
     if (data?.visits.meta.pagination.total < 10) {
       setHasMoreData(false);
       dispatch(setEvents(data?.visits?.data));
-      dispatch(setMetaData(data?.visits?.meta));
+      dispatch(setEventMetaData(data?.visits?.meta));
     } else {
       setHasMoreData(true);
     }
