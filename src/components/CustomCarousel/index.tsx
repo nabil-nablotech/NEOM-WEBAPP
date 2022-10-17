@@ -72,7 +72,6 @@ export const CustomCarousel = ({
             > */}
                 {
                     // data.map((item: any, index: number) => (
-                        <DetailsPage itemObject={data[itemClicked]}/>
                     // ))
                 }
             {/* </Carousel> */}

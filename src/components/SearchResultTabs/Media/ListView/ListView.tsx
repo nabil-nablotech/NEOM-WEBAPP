@@ -226,8 +226,8 @@ const ListView = () => {
     })
 
     const [isModalOpen, setModalOpen] = useState(false)
-    const [itemClicked, setItemClicked] = useState<number>(0)
-    const [recordClicked, setRecordClicked] = useState<any>(0)
+    const [currentItemIndex, setCurrentItemIndex] = useState<number>(0)
+    const [currentRecord, setCurrentRecord] = useState<any>(0)
 
     useEffect(() => {
         /** Needs to be done , since InfiniteSCroll needs a relation with
@@ -271,11 +271,10 @@ const ListView = () => {
                         return {
                             onClick: event => {
                                 // click row
-                                console.log('Hex: ', record)
                                 setModalOpen(true)
                                 if (typeof rowIndex === 'number') {
-                                    setItemClicked(rowIndex)
-                                    setRecordClicked(record)
+                                    setCurrentItemIndex(rowIndex)
+                                    setCurrentRecord(record)
                                 }
                             }
                         };
@@ -290,12 +289,12 @@ const ListView = () => {
                         justifyContent: 'space-between',
                         alignItems: 'center'
                     }}>
-                        <Grid item sm={6}>{recordClicked?.title?.substring(0,30)}</Grid>
+                        <Grid item sm={6}>{currentRecord?.title?.substring(0,30)}</Grid>
                         <Grid item style={{
                             position: 'absolute',
                             left: '50%',
                             right: '50%',
-                        }}>{itemClicked}/{data.length}</Grid>
+                        }}>{currentItemIndex + 1}/{data.length}</Grid>
                         <Grid item>
                             <IconButton
                                 edge="start"
@@ -314,7 +313,16 @@ const ListView = () => {
                 }
                 handleClose={() => setModalOpen(false)}
             >
-                <DetailsPage itemObject={data[itemClicked]}/>
+                <DetailsPage
+                    data={data}
+                    currentItemIndex={currentItemIndex}
+                    currentRecord={currentRecord}
+                    callBack={(record: any, index: number) => {
+                        setCurrentItemIndex(index)
+                        setCurrentRecord(record)
+                    }
+                    }
+                />
             </CustomModal>
         </Box>
     );

@@ -9,23 +9,51 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export const DetailsPage = ({
-    itemObject
-}: { itemObject: any }) => {
+    currentItemIndex,
+    data,
+    currentRecord,
+    callBack
+}: { currentItemIndex: any, data: any, currentRecord: any, callBack: (record: any, index: number) => void }) => {
 
-    // const [modalOpen, setModalOpen] = useState(false)
+    type handleAction = {
+        e: React.MouseEvent<HTMLElement>
+        action: string
+    }
+
+    const handleNextOrPrevious = (e: handleAction['e'], action: handleAction['action']) => {
+        e.preventDefault()
+
+        let newIndex = currentItemIndex
+
+        if (action === 'next') {
+            if (newIndex + 1 < data.length) {
+                newIndex = newIndex + 1
+            }
+            callBack(data[newIndex], newIndex)
+        }
+
+        if (action === 'previous') {
+            if (newIndex - 1 >= 0) {
+                newIndex = newIndex - 1
+            }
+            callBack(data[newIndex], newIndex)
+        }
+    }
 
     return <>
         <Box className={`${styles['details-page-wrapper']}`}>
             <Box className={`${styles['img-wrapper']}`} >
                 <Box className={`${styles['arrow-icon']} ${styles['arrow-prev']}`}
+                    onClick={e => handleNextOrPrevious(e, 'previous')}
                 >
                     <ArrowBackIosNewIcon className={`${styles['']}`} sx={{ color: '#fff' }} />
                 </Box>
                 <Box className={`${styles['arrow-icon']} ${styles['arrow-next']}`}
+                    onClick={e => handleNextOrPrevious(e, 'next')}
                 >
                     <ArrowForwardIosIcon className={`${styles['']}`} sx={{ color: '#fff' }} />
                 </Box>
-                <Box className={`${styles['image']}`} component="img" alt={""} src={itemObject.thumbnailUrl} />
+                <Box className={`${styles['image']}`} component="img" alt={""} src={currentRecord.thumbnailUrl} />
             </Box>
             <Box className={`${styles['desc']}`} >
                 <Grid container className={`${styles['bottom-desc-main-grid']}`}>
@@ -90,7 +118,7 @@ export const DetailsPage = ({
                             </Box>
                         </Grid>
                         <Grid item lg={6} md={6} sm={7}>
-                            <Box className={`${styles['map-image']}`} component="img" alt={""} src={itemObject.thumbnailUrl} />
+                            <Box className={`${styles['map-image']}`} component="img" alt={""} src={currentRecord.thumbnailUrl} />
                             <Grid container className={`${styles['map-loctn-details']}`} >
                                 <Grid item lg={5} md={5} sm={5}>
                                     <Grid container className={`${styles['map-loctn-line']}`}>
