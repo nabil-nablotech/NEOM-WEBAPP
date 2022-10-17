@@ -15,12 +15,20 @@ import MapImg2 from '../../../assets/images/searchResults/mapImage2.jpg'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import { useToggledView } from './../../../hooks/useToggledView';
+import useMedia from '../../../hooks/useMedia';
+import { Meta } from '../../../types/Place';
 
 const MediaTab = ({
     resultCount = 1053
 }) => {
-    const { selectedCardIndex } = useSelector((state: RootState) => state.searchResults);
-    const [img, setimg] = useState(MapImg1)
+    const { selectedCardIndex, media, mediaMetaData } = useSelector(
+        (state: RootState) => state.searchResults
+      );
+      const [img, setimg] = useState(MapImg1);
+    
+      const { fetchMediaItems, hasMoreData, loading } = useMedia();
+    
+      const meta: Meta | null = mediaMetaData;
     useEffect(() => {
     
         setimg(selectedCardIndex%2 === 0 ? MapImg2 : MapImg1)
@@ -31,7 +39,7 @@ const MediaTab = ({
     return (
         <Box className={`${styles['main-tab-content']}`}>
             <Box className={`${styles['utility-bar']}`}>
-                <Box>{resultCount} Total Places</Box>
+                <Box>{meta?.pagination?.total} Total Places</Box>
                 <Box>
                 <Button
                     colors={["transparent", "var(--table-black-text)", "var(--table-black-text)"]}
@@ -74,7 +82,7 @@ const MediaTab = ({
                         <GridView />
                     </Grid>} */}
                      {openStates[0] &&  <Grid item xl={12}>
-                        <GridView />
+                        <GridView loading={loading} data={media} fetchData={fetchMediaItems} hasMoreData={hasMoreData} />
                     </Grid>}
                     {/* To-do: map view */}
                     {/* <Grid item xl={6} lg={6} md={7} sm={7}>
@@ -85,7 +93,7 @@ const MediaTab = ({
                         <Box component={'div'} style={{
                             width: '100%'
                         }}>
-                            <ListView />
+                            <ListView loading={loading} data={media} fetchData={fetchMediaItems} hasMoreData={hasMoreData} />
                         </Box>
                     }
                 </Grid>

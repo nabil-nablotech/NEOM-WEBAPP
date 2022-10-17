@@ -12,48 +12,32 @@ import { usePaginatedArray } from '../../../../hooks/usePaginatedArray';
 /** indicating that we can send html later on wherever we parse */
 import parse from 'html-react-parser';
 import { setSelectedCardIndex } from '../../../../store/reducers/searchResultsReducer';
+import { Media } from '../../../../types/Media';
+import {Card} from './Card';
 
-const Card = ({
-    img,
-    title,
-    subTitle,
-    dateString,
-    keywords
-}: GridViewCard_Places) => {
-    return <>
-        <Box className={`${gridStyles['card-container']}`} >
-            <Grid container spacing={1} className={`${gridStyles['card-grid']}`}>
-                <Grid item sm={12} className={`${gridStyles['card-image-wrapper']}`}>
-                    <Box className={`${gridStyles['card-image']}`} component="img" alt={""} src={img} />
-                </Grid>
-                <Grid item sm={12} className={`${gridStyles['content']}`}>
-                    <Grid item sm={11}>
-                        <div className={`${gridStyles['card-title']}`}>{parse(title)}</div>
-                    </Grid>
-                    <Grid item sm={1}>
-                        <Box className={`${gridStyles['more-icon-span']}`} component={"span"}>
-                            <Box className={`${gridStyles['more-icon']}`} component="img" alt={""} src={MoreIcon}></Box>
-                        </Box>
-                    </Grid>
-                </Grid>
-            </Grid>
-        </Box>
-    </>
-}
 
-const GridView = () => {
+export type MediaProps = {
+    data: Media[];
+    fetchData: () => void;
+    hasMoreData: boolean;
+    loading: boolean;
+  }
+
+const GridView = (props: MediaProps) => {
 
     // const [data, setData] = useState<any>([])
     const dispatch = useDispatch();
 
-    const {
-        data,
-        hasMoreData,
-        fetchData
-    } = usePaginatedArray({
-        apiUrl: 'https://jsonplaceholder.typicode.com/photos',
-        step: 10
-    })
+    // const {
+    //     data,
+    //     hasMoreData,
+    //     fetchData
+    // } = usePaginatedArray({
+    //     apiUrl: 'https://jsonplaceholder.typicode.com/photos',
+    //     step: 10
+    // })
+
+    const {data, hasMoreData, fetchData, loading} = props;
 
     return (
         <Box className={`${gridStyles['left-grid-box']}`}
@@ -63,7 +47,7 @@ const GridView = () => {
                 next={() => fetchData()}
 
                 hasMore={hasMoreData}
-                loader={<h4>Loading...</h4>}
+                loader={loading ? <h4>Loading...</h4> : null}
                 endMessage={
                     <p style={{ textAlign: 'center' }}>
                         <b>END OF RESULTS</b>

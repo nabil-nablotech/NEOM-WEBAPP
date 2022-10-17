@@ -22,7 +22,7 @@ const LibraryTab = () => {
   const { selectedCardIndex, library, places, searchText, libararyMetaData } =
     useSelector((state: RootState) => state.searchResults);
 
-  const { data, fetchLibraryItems, hasMoreData, loading } = useLibrary();
+  const { fetchLibraryItems, hasMoreData, loading } = useLibrary();
   const tableHeaderJson: ColumnsType<any> = [
     {
       title: "NAME",
@@ -118,7 +118,7 @@ const LibraryTab = () => {
     fetchLibraryItems({ search_one: searchText });
   };
 
-  if (!data) {
+  if (!library) {
     return <h1>No data found</h1>
   }
 
@@ -149,10 +149,10 @@ const LibraryTab = () => {
       </Box>
       <Box id={"library-list-parent"}>
         <InfiniteScroll
-          dataLength={places.length} //This is important field to render the next data
+          dataLength={library.length} //This is important field to render the next data
           next={() => handleNext()}
           hasMore={hasMoreData}
-          loader={<Loader />}
+          loader={loading ? <h4>Loading...</h4>: null}
           endMessage={
             <p style={{ textAlign: "center" }}>
               <b>END OF RESULTS</b>
@@ -166,7 +166,7 @@ const LibraryTab = () => {
             rowKey={"id"}
             size="small"
             columns={tableHeaderJson}
-            dataSource={places}
+            dataSource={library}
             pagination={false}
             loading={loading ? loading : false}
             bordered

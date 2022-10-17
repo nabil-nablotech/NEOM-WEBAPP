@@ -32,7 +32,6 @@ const PlacesTab = () => {
 
   const meta: Meta | null = placeMetaData;
 
-  console.log('places', places);
   return (
     <Box className={`${styles["main-tab-content"]}`}>
       <Box className={`${styles["utility-bar"]}`}>
