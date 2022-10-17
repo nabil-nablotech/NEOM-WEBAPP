@@ -22,9 +22,9 @@
     flex-basis: var(--width-constant) !important;
     flex-shrink: 0;
     border-color: var(--lightest-border);
+    cursor: pointer;
 }
-.dropdown ,
-.dropdown *{
+.dropdown {
     border-radius: 0.3em !important;
 }
 
@@ -32,8 +32,7 @@
 .dropdown::placeholder {
     border: 0;
 }
-.dropdown > div {
-    border: 1px solid var(--lightest-border);
+.dropdown {
 }
 
 .extra-width {

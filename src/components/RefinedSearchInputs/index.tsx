@@ -16,7 +16,6 @@ const RefinedSearchInputs = ({
     const commonSelectSxStyles = {
         textAlign: 'left',
         '& .MuiSelect-select': {
-            borderColor: 'var(--lightest-border)',
             padding: '0.5em 1em',
             color: 'var(--grey-text)'
         }
@@ -26,12 +25,13 @@ const RefinedSearchInputs = ({
         flexGrow: 0,
         '& .MuiInputBase-root': {
             backgroundColor: '#fff',
-            border: 'none'
+            border: '1px solid var(--lightest-border)'
         }
     }
     const textInputSxStyles = {
 
         '& .MuiInputBase-input.MuiOutlinedInput-input': {
+            border: 'none'
         },
         '& .MuiFormLabel-root.MuiInputLabel-root ': {
         },
@@ -39,11 +39,13 @@ const RefinedSearchInputs = ({
             lineHeight: '1.2',
             border: '1.4px solid #fff',
             padding: '0.5em 1em',
-            height: '1.3em',
-            borderRadius: '0.3em'
+            height: '1.4em',
         },
         '& .MuiOutlinedInput-notchedOutline span': {
             opacity: 1
+        },
+        '& .MuiOutlinedInput-notchedOutline legend' : {
+            color: 'transparent'
         }
 
     }
