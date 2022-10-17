@@ -19,6 +19,7 @@ import useAuth from "../../hooks/useAuth";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { setSearchText } from "../../store/reducers/searchResultsReducer";
+import LandingPageImage from '../../assets/images/LandingPage.webp';
 
 const landingPageData = {
   overlapGroup4:
@@ -91,7 +92,7 @@ function LandingPage() {
     <div className="container-center-horizontal">
       <Header screen="landing" />
       <div className="landing-page screen">
-        <OverlapGroup4 style={{ backgroundImage: `url(${overlapGroup4})` }}>
+        <OverlapGroup4 style={{ backgroundImage: `url(${LandingPageImage})` }}>
           <Rectangle69></Rectangle69>
           <Frame2608172>
             <Image2 src={image2} alt="image 2" />
