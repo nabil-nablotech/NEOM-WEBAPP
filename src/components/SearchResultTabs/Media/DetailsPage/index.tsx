@@ -16,7 +16,6 @@ export const DetailsPage = ({
 
     return <>
         <Box className={`${styles['details-page-wrapper']}`}>
-            <Box className={`${styles['title']}`} >{itemObject.title}</Box>
             <Box className={`${styles['img-wrapper']}`} >
                 <Box className={`${styles['arrow-icon']} ${styles['arrow-prev']}`}
                 >
@@ -30,34 +29,46 @@ export const DetailsPage = ({
             </Box>
             <Box className={`${styles['desc']}`} >
                 <Grid container className={`${styles['bottom-desc-main-grid']}`}>
-                    <Grid container className={`${styles['bottom-desc-row-1']}`}>
-                        <Grid item lg={7}>
-                            <Box>Ed ut perspiciatis unde omnis iste natus error sit voluptatem
+                    <Grid container className={`${styles['bottom-desc-row-1']}`} style={{
+                             justifyContent: 'space-between'
+                        }}>
+                        <Grid item sm={12} >
+                            <Grid container style={{ gap: '2em', alignItems: 'center' }}>
+                                <Grid item>
+                                    <Box className={`${styles['overview-title']}`}>Overview of Site
+                                    </Box>
+                                </Grid>
+                                <Grid item>
+                                    <Box>
+                                        <Box className={`${styles['star-icon-box']}`}>
+                                            <Box
+                                                component="img"
+                                                alt={""}
+                                                src={YellowStar}
+                                            ></Box>
+                                            <Box>Featured</Box>
+                                        </Box>
+                                    </Box>
+                                </Grid>
+                                <Grid item sm={1} style={{
+                                    marginLeft: 'auto'
+                                }}>
+                                    <Box className={`${styles['more-icon-box']}`}
+                                    >
+                                        <MoreHorizIcon sx={{ color: '#fff' }} />
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                            <Grid container sm={10} md={8} lg={9} style={{ marginTop: '1em' }}>
+                                Ed ut perspiciatis unde omnis iste natus error sit voluptatem
                                 accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
                                 quae ab illo inventore.
-                            </Box>
-                        </Grid>
-                        <Grid container lg={5}>
-                            <Grid item lg={11}>
-                                <Box className={`${styles['star-icon-box']}`}>
-                                    <Box
-                                        component="img"
-                                        alt={""}
-                                        src={YellowStar}
-                                    ></Box>
-                                    <Box>Featured</Box>
-                                </Box>
-                            </Grid>
-                            <Grid item lg={1}>
-                                <Box className={`${styles['more-icon-box']}`}
-                                >
-                                    <MoreHorizIcon sx={{ color: '#fff' }} />
-                                </Box>
                             </Grid>
                         </Grid>
+                        
                     </Grid>
                     <Grid container >
-                        <Grid item lg={6}>
+                        <Grid item lg={6} md={6} sm={5}>
                             <Box className={`${styles[`bottom-grid`]}`} >
                                 <p>Details</p>
                                 <div>Unit Number: 12345</div>
@@ -70,24 +81,32 @@ export const DetailsPage = ({
                                 <div>By: Harland Ash</div>
                                 <div>Initials: DS</div>
                             </Box>
-                            {/* <Grid item lg={4} className={`${styles[`bottom-grid`]}`} >
-                                <p>Image Location</p>
-                                <div>Latitude: 28.038206</div>
-                                <div>Longitude: 35.231070 </div>
-                                <div>Zone: 36</div>
+                            <Box className={`${styles[`bottom-grid`]}`} >
+                                <p>Metadata</p>
+                                <div>Size: 10MB</div>
+                                <div>Date: 08/04/2022</div>
+                                <div>Dimensions: 1024x768</div>
+                                <div>Extensions: png</div>
+                            </Box>
+                        </Grid>
+                        <Grid item lg={6} md={6} sm={7}>
+                            <Box className={`${styles['map-image']}`} component="img" alt={""} src={itemObject.thumbnailUrl} />
+                            <Grid container className={`${styles['map-loctn-details']}`} >
+                                <Grid item lg={5} md={5} sm={5}>
+                                    <Grid container className={`${styles['map-loctn-line']}`}>
+                                        <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
+                                        <Grid item>28.090884</Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid item lg={5} md={5} sm={6}>
+                                    <Grid container className={`${styles['map-loctn-line']}`}>
+                                        <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
+                                        <Grid item>35.475373</Grid>
+                                    </Grid>
+                                </Grid>
                             </Grid>
-                            <Grid item lg={4} className={`${styles[`bottom-grid`]}`} >
-                                <p>_</p>
-                                <div>Easting: 719318</div>
-                                <div>Northing: 3103443</div>
-                            </Grid> */}
                         </Grid>
-                        <Grid item lg={6}>
-                            <Box className={`${styles['image']}`} component="img" alt={""} src={itemObject.thumbnailUrl} />
-                        </Grid>
-
                     </Grid>
-
                 </Grid>
             </Box>
         </Box>
