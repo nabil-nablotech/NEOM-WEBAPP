@@ -6,16 +6,15 @@ import { places } from "../query/search";
 import { RootState } from '../store';
 import {setPlaces, setPlaceMetaData} from '../store/reducers/searchResultsReducer'
 
-const usePlace = () => {
+const useLibrary = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
 
-  const {searchText, places: placeData} = useSelector((state: RootState) => state.searchResults);
+  const {searchText} = useSelector((state: RootState) => state.searchResults);
   const {search} = useLocation();
   const dispatch = useDispatch();
 
   useEffect(() => {
     const text = searchText || decodeURIComponent(search.replace('?search=', ''));
-    // const splitText = text.split('');
     fetchPlaces({search_one: text});
   }, [])
 
@@ -25,15 +24,14 @@ const usePlace = () => {
   const { loading, error, data, refetch:fetchPlaces } = useQuery(places);
 
   useEffect(() => {
-    if (data?.places.meta.pagination.pageCount !== data?.places.meta.pagination.page) {
-      // const oldPlaces = placeData;
-      setHasMoreData(true);
-      dispatch(setPlaces([...placeData, ...data?.places.data]));
+    if (data?.places.meta.pagination.total < 10) {
+      setHasMoreData(false);
+      dispatch(setPlaces(data?.places.data));
       dispatch(setPlaceMetaData(data?.places?.meta));
     } else {
-      setHasMoreData(false);
+      setHasMoreData(true);
     }
-  }, [data]);
+  }, [data])
  
   return {
     loading,
@@ -44,4 +42,4 @@ const usePlace = () => {
   };
 };
 
-export default usePlace;
+export default useLibrary;

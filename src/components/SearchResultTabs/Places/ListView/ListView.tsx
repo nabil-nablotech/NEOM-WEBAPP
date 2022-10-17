@@ -6,10 +6,11 @@ import { User } from "../../../../types/User";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
 import { antTablePaginationCss } from '../../../../utils/services/helpers';
-import { usePaginatedArray } from './../../../../hooks/usePaginatedArray';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
+import {PlacesProps} from '../GridView/GridView';
+import { Place, FieldOption } from "../../../../types/Place";
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -35,6 +36,10 @@ const StyledTableWrapper = styled(StyledAntTable)`
     min-width: 10ch !important;
   }
   .cell-recommend {
+    min-width: 20ch !important;
+  }
+
+  .cell-period {
     min-width: 20ch !important;
   }
 
@@ -137,75 +142,78 @@ const MoreOptionsComponent = ({ record, id }: { id: number; record: User }) => {
   );
 };
 
-const ListView = () => {
+const ListView = (props: PlacesProps) => {
 
     const tableHeaderJson: ColumnsType<any> = [
         {
             title: "NAME",
-            key: "title",
-            dataIndex: "title",
+            key: `attributes`,
+            dataIndex: "attributes",
             className: 'cell-name',
-            sorter: (a: { title: string; }, b: { title: any; }) => {
-                return a.title.localeCompare(b.title)
+            sorter: (a: { attributes: {placeNameEnglish: string;} }, b: { attributes: {placeNameEnglish: string;} }) => {
+                return a.attributes.placeNameEnglish.localeCompare(b.attributes.placeNameEnglish)
             },
             sortDirections: ["ascend"],
             defaultSortOrder: "ascend",
-            render: (value: string, index: any) => value.substring(0, 20)
+            render: (value: any, index: number) => {
+              return value.placeNameEnglish            
+            }
         },
         {
             title: "NUMBER",
-            key: "albumId",
-            dataIndex: "albumId",
+            key: `attributes`,
+            dataIndex: "attributes",
             className: 'cell-number',
+            render: (value: any, index: number) => value.placeNumber
         },
         {
             title: "TYPE",
-            key: "title",
-            dataIndex: "title",
-            render: (value: string, index: any) => value.substring(0, 8)
+            key: `attributes`,
+            dataIndex: "attributes",
+            render: (value: any, index: number) => value?.type?.substring(0, 8)
         },
         {
             title: "RESEARCH VALUE",
-            key: "title",
-            dataIndex: "title",
+            key: `attributes`,
+            dataIndex: "attributes",
             className: 'cell-research',
-            render: (value: string, index: any) => {
-                return value.substring(0, 8)
+            render: (value: any, index: number) => {
+                return value.researchValue?.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
             },
         },
         {
             title: "TOURISM VALUE",
-            key: "title",
-            dataIndex: "title",
+            key: `attributes`,
+            dataIndex: "attributes",
             className: 'cell-tourism',
-            render: (value: string, index: any) => value.substring(21, 24)
+            render: (value: any, index: number) => value.tourismValue.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
         },
         {
             title: "STATE OF CONSERVATION",
-            key: "title",
-            dataIndex: "title",
+            key: `attributes`,
+            dataIndex: "attributes",
             className: 'cell-conserve',
-            render: (value: any, index: any) => "Good"
+            render: (value: any, index: number) => value.stateOfConservation.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
         },
         {
             title: "RECOMMENDATION",
-            key: "title",
-            dataIndex: "title",
+            key: `attributes`,
+            dataIndex: "attributes",
             className: 'cell-recommend',
-            render: (value: any, index: any) => "Protected"
+            render: (value: any, index: number) => value.recommendations.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
         },
         {
             title: "PERIOD",
-            key: "title",
-            dataIndex: "title",
+            key: `attributes`,
+            dataIndex: "attributes",
             className: 'cell-period',
-            render: (value: any, index: any) => "Neolithic"
+            render: (value: any, index: number) => value.period
         },
         {
             title: "RISK",
-            key: "title",
-            dataIndex: "title",
-            render: (value: any, index: any) => "None"
+            key: `attributes`,
+            dataIndex: "attributes",
+            render: (value: any, index: number) => value.risk.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
         },
         {
             title: "",
@@ -218,16 +226,7 @@ const ListView = () => {
         },
     ]
 
-    const {
-        data,
-        hasMoreData,
-        fetchData,
-        loading
-    } = usePaginatedArray({
-        apiUrl: 'https://jsonplaceholder.typicode.com/photos',
-        step: 10
-    })
-
+    const {data, hasMoreData, fetchData, loading} = props;
 
 
     useEffect(() => {
