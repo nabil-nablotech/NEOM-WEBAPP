@@ -199,7 +199,7 @@ const OverlapGroup4 = styled.div`
   z-index: 1;
   position: relative;
   background-size: cover;
-  background-position: 50% 50%;
+  background-position: top center;
   position: relative;
 `;
 
