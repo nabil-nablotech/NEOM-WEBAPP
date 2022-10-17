@@ -11,7 +11,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import { CustomModal } from '../../../CustomModal';
-import { CustomCarousel } from '../../../CustomCarousel';
+import { CustomCarousel } from './../../../CustomCarousel/index';
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -222,7 +222,8 @@ const ListView = () => {
     })
 
     const [isModalOpen, setModalOpen] = useState(false)
-    const [itemClicked, setItemClicked] = useState(0)
+    const [itemClicked, setItemClicked] = useState<number>(0)
+    const [recordClicked, setRecordClicked] = useState<number>(0)
 
     useEffect(() => {
         /** Needs to be done , since InfiniteSCroll needs a relation with
@@ -239,6 +240,7 @@ const ListView = () => {
             <InfiniteScroll
                 dataLength={data.length} //This is important field to render the next data
                 next={() => fetchData()}
+
 
                 hasMore={hasMoreData}
                 loader={<Loader />}
@@ -263,14 +265,20 @@ const ListView = () => {
                         background: "transparent",
                     }}
                     onRow={(record, rowIndex) => {
+
                         return {
-                          onClick: event => {
-                            // click row
-                            // console.log('Hex: ', event, record, rowIndex)
-                            setModalOpen(true)
-                          }
+                            onClick: event => {
+                                // click row
+                                console.log('Hex: ', record)
+                                setModalOpen(true)
+                                if (typeof rowIndex === 'number') {
+                                    setItemClicked(rowIndex)
+                                    // setRecordClicked(record)
+                                }
+                            }
                         };
-                      }}
+                    }}
+                    //   onC
                 ></StyledTableWrapper>
             </InfiniteScroll>
             <CustomModal

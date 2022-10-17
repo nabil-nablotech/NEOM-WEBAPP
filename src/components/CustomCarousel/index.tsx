@@ -30,6 +30,8 @@ export const CustomCarousel = ({
     data,
     itemClicked
 }: CustomCarouselType) => {
+    // console.log('Hex: in:  ', data[itemClicked])
+
     const {
         // data,
         hasMoreData,
@@ -49,7 +51,7 @@ export const CustomCarousel = ({
 
     return <>
         <Box className={`${styles['custom-carousel-wrapper']}`} style={{}}>
-            <Carousel
+            {/* <Carousel
                 swipeable={false}
                 draggable={false}
                 // showDots={true}
@@ -67,13 +69,13 @@ export const CustomCarousel = ({
                 dotListClass="custom-dot-list-style"
                 itemClass="carousel-item-padding-40-px"
                 // customLeftArrow={<CustomPrevArrow />}
-            >
+            > */}
                 {
-                    data.map((item: any, index: number) => (
-                        <DetailsPage itemObject={item}/>
-                    ))
+                    // data.map((item: any, index: number) => (
+                        <DetailsPage itemObject={data[itemClicked]}/>
+                    // ))
                 }
-            </Carousel>
+            {/* </Carousel> */}
         </Box>
     </>
 };

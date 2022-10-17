@@ -5,6 +5,9 @@ import styles from './index.module.css';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 // import { useState } from 'react';
 
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+
 export const DetailsPage = ({
     itemObject
 }: { itemObject: any }) => {
@@ -14,7 +17,17 @@ export const DetailsPage = ({
     return <>
         <Box className={`${styles['details-page-wrapper']}`}>
             <Box className={`${styles['title']}`} >{itemObject.title}</Box>
-            <Box className={`${styles['image']}`} component="img" alt={""} src={itemObject.thumbnailUrl} />
+            <Box className={`${styles['img-wrapper']}`} >
+                <Box className={`${styles['arrow-icon']} ${styles['arrow-prev']}`}
+                >
+                    <ArrowBackIosNewIcon className={`${styles['']}`} sx={{ color: '#fff' }} />
+                </Box>
+                <Box className={`${styles['arrow-icon']} ${styles['arrow-next']}`}
+                >
+                    <ArrowForwardIosIcon className={`${styles['']}`} sx={{ color: '#fff' }} />
+                </Box>
+                <Box className={`${styles['image']}`} component="img" alt={""} src={itemObject.thumbnailUrl} />
+            </Box>
             <Box className={`${styles['desc']}`} >
                 <Grid container className={`${styles['bottom-desc-main-grid']}`}>
                     <Grid container className={`${styles['bottom-desc-row-1']}`}>
@@ -44,14 +57,20 @@ export const DetailsPage = ({
                         </Grid>
                     </Grid>
                     <Grid container >
-                        <Grid container lg={7}>
-                            <Grid item lg={4} className={`${styles[`bottom-grid`]}`} >
+                        <Grid item lg={6}>
+                            <Box className={`${styles[`bottom-grid`]}`} >
                                 <p>Details</p>
                                 <div>Unit Number: 12345</div>
                                 <div>Type: Artifact</div>
                                 <div>Bearing: Detail</div>
-                            </Grid>
-                            <Grid item lg={4} className={`${styles[`bottom-grid`]}`} >
+                            </Box>
+                            <Box className={`${styles[`bottom-grid`]}`} >
+                                <p>Recorded</p>
+                                <div>Date: 08/04/2022 7:41:10 AM</div>
+                                <div>By: Harland Ash</div>
+                                <div>Initials: DS</div>
+                            </Box>
+                            {/* <Grid item lg={4} className={`${styles[`bottom-grid`]}`} >
                                 <p>Image Location</p>
                                 <div>Latitude: 28.038206</div>
                                 <div>Longitude: 35.231070 </div>
@@ -61,15 +80,10 @@ export const DetailsPage = ({
                                 <p>_</p>
                                 <div>Easting: 719318</div>
                                 <div>Northing: 3103443</div>
-                            </Grid>
+                            </Grid> */}
                         </Grid>
-                        <Grid container lg={5}>
-                            <Grid item lg={12} className={`${styles[`bottom-grid`]}`} >
-                                <p>Recorded</p>
-                                <div>Date: 08/04/2022 7:41:10 AM</div>
-                                <div>By: Harland Ash</div>
-                                <div>Initials: DS</div>
-                            </Grid>
+                        <Grid item lg={6}>
+                            <Box className={`${styles['image']}`} component="img" alt={""} src={itemObject.thumbnailUrl} />
                         </Grid>
 
                     </Grid>
