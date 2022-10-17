@@ -260,7 +260,7 @@ const ListView = (props: EventsProps) => {
                 next={() => fetchData()}
 
                 hasMore={hasMoreData}
-                loader={<Loader />}
+                loader={loading ? <Loader /> : null}
                 endMessage={
                     <p style={{ textAlign: 'center' }}>
                         <b>END OF RESULTS</b>

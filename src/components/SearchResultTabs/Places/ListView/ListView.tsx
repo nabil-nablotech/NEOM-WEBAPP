@@ -247,7 +247,7 @@ const ListView = (props: PlacesProps) => {
                 next={() => fetchData()}
 
                 hasMore={hasMoreData}
-                loader={<Loader />}
+                loader={loading ? <Loader /> : null}
                 endMessage={
                     <p style={{ textAlign: 'center' }}>
                         <b>END OF RESULTS</b>
@@ -269,7 +269,7 @@ const ListView = (props: PlacesProps) => {
                     style={{
                         background: "transparent",
                     }}
-                ></StyledTableWrapper>
+                />
             </InfiniteScroll>
         </Box>
     );

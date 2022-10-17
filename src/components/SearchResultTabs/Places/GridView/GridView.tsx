@@ -38,7 +38,8 @@ const GridView = (props: PlacesProps) => {
         dataLength={data.length} //This is important field to render the next data
         next={() => fetchData()}
         hasMore={hasMoreData}
-        loader={<h4>Loading...</h4>}
+        
+        loader={loading ? <h4>Loading...</h4>: null}
         endMessage={
           <p style={{ textAlign: "center" }}>
             <b>END OF RESULTS</b>

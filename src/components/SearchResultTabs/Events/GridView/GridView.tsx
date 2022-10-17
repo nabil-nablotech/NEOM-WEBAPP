@@ -27,15 +27,9 @@ const GridView = (props: EventsProps) => {
 
     const {data, handleNext, hasMoreData, loading} = props;
 
-    // const {
-    //     data,
-    //     hasMoreData,
-    //     fetchData
-    // } = usePaginatedArray({
-    //     apiUrl: 'https://jsonplaceholder.typicode.com/photos',
-    //     step: 10
-    // })
-    if (!data) return <h1>Loading...</h1>
+    if (!data) {
+        return <h1>Loading...</h1>   
+    }
 
     return (
         <Box className={`${gridStyles['']}`}
@@ -45,7 +39,8 @@ const GridView = (props: EventsProps) => {
                 next={() => handleNext()}
 
                 hasMore={hasMoreData}
-                loader={<h4>Loading...</h4>}
+                
+                loader={loading ? <h4>Loading...</h4>: null}
                 endMessage={
                     <p style={{ textAlign: 'center' }}>
                         <b>END OF RESULTS</b>
