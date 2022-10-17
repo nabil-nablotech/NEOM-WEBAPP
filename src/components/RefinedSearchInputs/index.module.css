@@ -56,3 +56,9 @@
     height: 100%;
     width: 100%;
 }
+
+@media (min-width: 575px) and (max-width: 1025px) {
+    .input-field {
+        --width-constant: 25ch;
+    }
+}
