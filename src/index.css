@@ -83,4 +83,5 @@ html {
 }
 .refined-inputs-container .react-datepicker-wrapper {
   width: fit-content;
+  height: 100%;
 }
