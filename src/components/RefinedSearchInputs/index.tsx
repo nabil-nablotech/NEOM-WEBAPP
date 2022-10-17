@@ -43,6 +43,9 @@ const RefinedSearchInputs = ({
         },
         '& .MuiOutlinedInput-notchedOutline span': {
             opacity: 1
+        },
+        '& .MuiOutlinedInput-notchedOutline legend' : {
+            color: 'transparent'
         }
 
     }

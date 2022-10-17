@@ -22,6 +22,7 @@
     flex-basis: var(--width-constant) !important;
     flex-shrink: 0;
     border-color: var(--lightest-border);
+    cursor: pointer;
 }
 .dropdown {
     border-radius: 0.3em !important;
