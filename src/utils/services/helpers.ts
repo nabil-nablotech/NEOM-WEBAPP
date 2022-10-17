@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
+import { tabNameProps } from "../../types/SearchResultsTabsProps";
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://a353-117-197-251-167.ngrok.io`;
+// export const baseUrl = `https://7e68-117-197-248-242.in.ngrok.io`;
 export const webUrl = `http://localhost:3000`
 
 export const formatWebDate = (value: string) => {
@@ -108,3 +109,34 @@ export const antTablePaginationCss = `
     background-color: transparent;
   }
 `
+
+export const PLACES_TAB_NAME = 'Places'
+export const EVENTS_TAB_NAME = 'Events'
+export const LIBRARY_TAB_NAME = 'Library'
+export const MEDIA_TAB_NAME = 'Media'
+
+export const tabIndexBasedOnName = (tabName: tabNameProps) => {
+  switch (tabName) {
+    case PLACES_TAB_NAME:
+      return 0;
+    case EVENTS_TAB_NAME:
+      return 1;
+    case LIBRARY_TAB_NAME:
+      return 2;
+    case MEDIA_TAB_NAME:
+      return 3;
+  }
+};
+
+export const tabNameBasedOnIndex = (tabIndex: number) => {
+  switch (tabIndex) {
+    case 0:
+      return PLACES_TAB_NAME;
+    case 1:
+      return EVENTS_TAB_NAME;
+    case 2:
+      return LIBRARY_TAB_NAME;
+    case 3:
+      return MEDIA_TAB_NAME;
+  }
+};
