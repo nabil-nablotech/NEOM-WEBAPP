@@ -13,7 +13,7 @@ import { Place } from "../../../../types/Place";
 
 export type PlacesProps = {
   data: Place[];
-  fetchPlaces: () => void;
+  fetchData: () => void;
   hasMoreData: boolean;
   loading: boolean;
 }
@@ -24,7 +24,7 @@ const GridView = (props: PlacesProps) => {
   //   step: 10,
   // });
 
-  const {data, loading, fetchPlaces, hasMoreData} = props;
+  const {data, loading, fetchData, hasMoreData} = props;
 
   const dispatch = useDispatch();
 
@@ -36,7 +36,7 @@ const GridView = (props: PlacesProps) => {
     <Box className={`${gridStyles["left-grid-box"]}`}>
       <InfiniteScroll
         dataLength={data.length} //This is important field to render the next data
-        next={() => fetchPlaces()}
+        next={() => fetchData()}
         hasMore={hasMoreData}
         loader={<h4>Loading...</h4>}
         endMessage={

@@ -2,6 +2,7 @@ import React from 'react';
 import { DashboardResponse } from "./dashboard";
 import {Place, Meta} from './Place';
 import {Event} from './Event';
+import {Media} from './Media';
 
 export type SearchResultTabsProps = {
     tabIndex?: number
@@ -44,6 +45,10 @@ export type SearchResultsState2 = {
     searchText: string
     places: Place[] | []
     events: Event[] | []
+    library: Media[] | []
+    media: Media[] | []
     placeMetaData: Meta | null
     eventMetaData: Meta | null
+    libararyMetaData: Meta | null
+    mediaMetaData: Meta | null
 }

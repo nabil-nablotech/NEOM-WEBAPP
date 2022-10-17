@@ -10,6 +10,13 @@ export type Place = {
     placeNumber: string | null;
     latitude: Number;
     longitude: Number;
+    uniqueId: string;
+    period: string;
+    researchValue: FieldOptions
+    tourismValue: FieldOptions
+    stateOfConservation: FieldOptions
+    recommendations: FieldOptions
+    risk: FieldOptions
   };
 };
 
@@ -21,3 +28,34 @@ export type Meta = {
     page: number;
   };
 };
+
+export type Languages = {
+  data: {
+    attributes: {
+      name: string;
+    };
+  };
+};
+export type Locale = {
+  value: string;
+  languages: Languages;
+};
+export type Translation = {
+  data: {
+    id: string;
+    attributes: {
+      code: string;
+      locale: Locale[];
+    };
+  };
+};
+export type FieldOption = {
+  id: string;
+  attributes: {
+    name: string;
+    translation: Translation;
+  };
+};
+export type FieldOptions = {
+  data: FieldOption[] | []
+}

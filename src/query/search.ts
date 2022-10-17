@@ -11,12 +11,11 @@ export const places = gql`
           { keywords: { contains: $search_one } }
         ]
       }
-    
     ) {
       meta {
         pagination {
           total
-          pageCount 
+          pageCount
           pageSize
           page
         }
@@ -26,12 +25,146 @@ export const places = gql`
         attributes {
           placeNameEnglish
           placeNameArabic
+          type
           siteDescription
           updatedAt
           keywords
           placeNumber
           latitude
           longitude
+          uniqueId
+          period
+          researchValue {
+            data {
+              id
+              attributes {
+                name
+                translation {
+                  data {
+                    id
+                    attributes {
+                      code
+                      locale {
+                        value
+                        languages {
+                          data {
+                            attributes {
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          tourismValue {
+            data {
+              id
+              attributes {
+                name
+                translation {
+                  data {
+                    id
+                    attributes {
+                      code
+                      locale {
+                        value
+                        languages {
+                          data {
+                            attributes {
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          stateOfConservation {
+            data {
+              id
+              attributes {
+                name
+                translation {
+                  data {
+                    id
+                    attributes {
+                      code
+                      locale {
+                        value
+                        languages {
+                          data {
+                            attributes {
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          recommendations {
+            data {
+              id
+              attributes {
+                name
+                translation {
+                  data {
+                    id
+                    attributes {
+                      code
+                      locale {
+                        value
+                        languages {
+                          data {
+                            attributes {
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          risk {
+            data {
+              id
+              attributes {
+                name
+                translation {
+                  data {
+                    id
+                    attributes {
+                      code
+                      locale {
+                        value
+                        languages {
+                          data {
+                            attributes {
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -49,12 +182,11 @@ export const events = gql`
           { keywords: { contains: $search_one } }
         ]
       }
-    
     ) {
       meta {
         pagination {
           total
-          pageCount 
+          pageCount
           pageSize
           page
         }
@@ -69,6 +201,139 @@ export const events = gql`
           visitNumber
           latitude
           longitude
+          uniqueId
+          period
+          type
+          researchValue {
+            data {
+              id
+              attributes {
+                name
+                translation {
+                  data {
+                    id
+                    attributes {
+                      code
+                      locale {
+                        value
+                        languages {
+                          data {
+                            attributes {
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          tourismValue {
+            data {
+              id
+              attributes {
+                name
+                translation {
+                  data {
+                    id
+                    attributes {
+                      code
+                      locale {
+                        value
+                        languages {
+                          data {
+                            attributes {
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          stateOfConservation {
+            data {
+              id
+              attributes {
+                name
+                translation {
+                  data {
+                    id
+                    attributes {
+                      code
+                      locale {
+                        value
+                        languages {
+                          data {
+                            attributes {
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          recommendations {
+            data {
+              id
+              attributes {
+                name
+                translation {
+                  data {
+                    id
+                    attributes {
+                      code
+                      locale {
+                        value
+                        languages {
+                          data {
+                            attributes {
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          risk {
+            data {
+              id
+              attributes {
+                name
+                translation {
+                  data {
+                    id
+                    attributes {
+                      code
+                      locale {
+                        value
+                        languages {
+                          data {
+                            attributes {
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

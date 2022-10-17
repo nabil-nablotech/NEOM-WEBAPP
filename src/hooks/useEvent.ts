@@ -9,7 +9,7 @@ import {setEvents, setEventMetaData} from '../store/reducers/searchResultsReduce
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
 
-  const {searchText} = useSelector((state: RootState) => state.searchResults);
+  const {searchText, events: eventsData} = useSelector((state: RootState) => state.searchResults);
   const {search} = useLocation();
   const dispatch = useDispatch();
 
@@ -25,12 +25,12 @@ const useEvent = () => {
   const { loading, error, data, refetch:fetchEvents } = useQuery(events);
 
   useEffect(() => {
-    if (data?.visits.meta.pagination.total < 10) {
-      setHasMoreData(false);
-      dispatch(setEvents(data?.visits?.data));
+    if (data?.visits?.meta?.pagination.page !== data?.visits?.meta?.pagination.pageCount) {
+      setHasMoreData(true);
+      dispatch(setEvents([...eventsData, ...data?.visits?.data]));
       dispatch(setEventMetaData(data?.visits?.meta));
     } else {
-      setHasMoreData(true);
+      setHasMoreData(false);
     }
   }, [data])
  

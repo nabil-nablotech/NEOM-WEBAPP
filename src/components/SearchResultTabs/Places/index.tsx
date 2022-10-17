@@ -32,6 +32,7 @@ const PlacesTab = () => {
 
   const meta: Meta | null = placeMetaData;
 
+  console.log('places', places);
   return (
     <Box className={`${styles["main-tab-content"]}`}>
       <Box className={`${styles["utility-bar"]}`}>
@@ -82,7 +83,7 @@ const PlacesTab = () => {
           {openStates[0] && (
             <>
               <Grid item xl={6} lg={6} md={5} sm={5}>
-                <GridView loading={loading} data={places} fetchPlaces={fetchPlaces} hasMoreData={hasMoreData} />
+                <GridView loading={loading} data={places} fetchData={fetchPlaces} hasMoreData={hasMoreData} />
               </Grid>
               {/* To-do: map view */}
               <Grid item xl={6} lg={6} md={7} sm={7}>
@@ -97,7 +98,7 @@ const PlacesTab = () => {
                 width: "100%",
               }}
             >
-              <ListView />
+              <ListView loading={loading} data={places} fetchData={fetchPlaces} hasMoreData={hasMoreData} />
             </Box>
           )}
         </Grid>
