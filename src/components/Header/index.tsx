@@ -5,8 +5,6 @@ import Logo from "../../pages/UserManagement/img/Logo.svg";
 import UserMenuComponent from "./../UserMenu/index";
 import { useNavigate } from "react-router-dom";
 import CustomSearchField from "../SearchField";
-import RefinedSearch from './../RefinedSearch/index';
-import RefinedSearchInputs from './../RefinedSearchInputs/index';
 
 interface IHeader {
   showSearch?: boolean
@@ -19,16 +17,10 @@ const Header = (props: IHeader) => {
 
   const {
     showSearch = false,
-    showRefinedSearch = false,
     screen,
     onKeyDown
   } = props
   const navigate = useNavigate();
-  const [areSearchFiltersOpen, setSearchFiltersOpen] = useState<boolean>(false)
-
-  const toggleSearchFilters = (e: React.MouseEvent) => {
-    setSearchFiltersOpen(state => !state)
-  }
 
   return (
     <>
@@ -55,18 +47,8 @@ const Header = (props: IHeader) => {
                 className={`${styles["header-search"]}`}
               />
             }
-            {
-              showRefinedSearch &&
-              <RefinedSearch
-                className={`${styles["header-refined-search"]}`}
-                handleClick={toggleSearchFilters}
-              />
-            }
             <UserMenuComponent />
           </Box>
-          {areSearchFiltersOpen && <Box>
-            <RefinedSearchInputs />
-          </Box>}
         </Box>}
     </>
   );

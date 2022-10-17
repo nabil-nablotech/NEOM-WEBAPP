@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Box, Menu, MenuItem } from '@mui/material';
+import { Box, Menu, MenuItem, Grid } from '@mui/material';
 import { ColumnsType } from 'antd/lib/table';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { User } from '../../../../types/User';
@@ -9,9 +9,13 @@ import { antTablePaginationCss } from '../../../../utils/services/helpers';
 import { usePaginatedArray } from './../../../../hooks/usePaginatedArray';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
+import styles from './index.module.css';
 import { Loader } from '../../../Loader';
 import { CustomModal } from '../../../CustomModal';
-import { CustomCarousel } from '../../../CustomCarousel';
+import { DetailsPage } from './../DetailsPage/index';
+
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -222,7 +226,8 @@ const ListView = () => {
     })
 
     const [isModalOpen, setModalOpen] = useState(false)
-    const [itemClicked, setItemClicked] = useState(0)
+    const [currentItemIndex, setCurrentItemIndex] = useState<number>(0)
+    const [currentRecord, setCurrentRecord] = useState<any>(0)
 
     useEffect(() => {
         /** Needs to be done , since InfiniteSCroll needs a relation with
@@ -239,7 +244,6 @@ const ListView = () => {
             <InfiniteScroll
                 dataLength={data.length} //This is important field to render the next data
                 next={() => fetchData()}
-
                 hasMore={hasMoreData}
                 loader={<Loader />}
                 endMessage={
@@ -263,23 +267,61 @@ const ListView = () => {
                         background: "transparent",
                     }}
                     onRow={(record, rowIndex) => {
+
                         return {
-                          onClick: event => {
-                            // click row
-                            // console.log('Hex: ', event, record, rowIndex)
-                            setModalOpen(true)
-                          }
+                            onClick: event => {
+                                // click row
+                                setModalOpen(true)
+                                if (typeof rowIndex === 'number') {
+                                    setCurrentItemIndex(rowIndex)
+                                    setCurrentRecord(record)
+                                }
+                            }
                         };
-                      }}
+                    }}
+                    //   onC
                 ></StyledTableWrapper>
             </InfiniteScroll>
             <CustomModal
                 open={isModalOpen}
+                titleContent={
+                    <Grid container className={`${styles['modal-title']}`} style={{
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
+                        <Grid item sm={6}>{currentRecord?.title?.substring(0,30)}</Grid>
+                        <Grid item style={{
+                            position: 'absolute',
+                            left: '50%',
+                            right: '50%',
+                        }}>{currentItemIndex + 1}/{data.length}</Grid>
+                        <Grid item>
+                            <IconButton
+                                edge="start"
+                                color="inherit"
+                                onClick={() => setModalOpen(false)}
+                                aria-label="close"
+                                sx={{
+                                    marginLeft: 'auto',
+                                    marginRight: '0',
+                                }}
+                            >
+                                <CloseIcon fontSize='large' sx={{ color: '#fff' }} />
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+                }
                 handleClose={() => setModalOpen(false)}
             >
-                <CustomCarousel
+                <DetailsPage
                     data={data}
-                    itemClicked={itemClicked} 
+                    currentItemIndex={currentItemIndex}
+                    currentRecord={currentRecord}
+                    callBack={(record: any, index: number) => {
+                        setCurrentItemIndex(index)
+                        setCurrentRecord(record)
+                    }
+                    }
                 />
             </CustomModal>
         </Box>

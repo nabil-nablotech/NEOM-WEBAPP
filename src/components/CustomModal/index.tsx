@@ -1,14 +1,13 @@
 import { AppBar, Toolbar, Box } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import { CustomModalTypes } from '../../types/CustomModalTypes';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import modalStyles from './index.module.css';
 import styled from 'styled-components';
 
 const CustomModal_ = ({
     open,
     handleClose,
+    titleContent,
     children
 }: CustomModalTypes) => {
 
@@ -33,23 +32,13 @@ const CustomModal_ = ({
                 }
             }}
         >
-            <AppBar sx={{ position: 'relative', background: 'rgba(19, 16, 13, 0.9)', boxShadow: 'none' }}>
+            <AppBar className={`${modalStyles['modal-header']}`} sx={{ position: 'relative', background: 'rgba(19, 16, 13, 0.9)', boxShadow: 'none' }}>
                 <Toolbar sx={{
-                    paddingLeft: '0 !important',
                     paddingRight: '0 !important'
                 }}>
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        onClick={handleClose}
-                        aria-label="close"
-                        sx={{
-                            marginLeft: 'auto',
-                            marginRight: '0',
-                        }}
-                    >
-                        <CloseIcon fontSize='large' sx={{ color: '#fff' }} />
-                    </IconButton>
+                    {
+                        titleContent
+                    }
                 </Toolbar>
             </AppBar>
             <Box className={`${modalStyles['content']}`} sx={{

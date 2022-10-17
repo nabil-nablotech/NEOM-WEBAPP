@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material';
-import login_bg from '../../assets/images/login_bg.png';
+import login_bg from '../../assets/images/login_bg.webp';
 import logo_with_name from '../../assets/images/logo_with_name.png';
 import './style.css';
 

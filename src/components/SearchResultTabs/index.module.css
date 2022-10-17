@@ -44,6 +44,16 @@
 .infinite-scroll-cls {
     overflow-y: hidden !important;
 }
+.refined-search-box {
+    background-color: var(--search-bar-bg-color);
+}
+.refined-search-wrapper {
+    width: fit-content;
+    font-weight: bold;
+    margin-inline: auto;
+    font-family: 'Roboto-Regular';
+    color: var(--grey-text);
+}
 @media (min-width: 575px) and (max-width: 1025px) {
     .tab,
     .tab-titles {
