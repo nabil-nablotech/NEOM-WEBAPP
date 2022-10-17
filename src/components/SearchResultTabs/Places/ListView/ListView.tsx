@@ -228,7 +228,7 @@ const ListView = (props: PlacesProps) => {
 
     const {data, hasMoreData, fetchData, loading} = props;
 
-
+    console.log('loading', loading)
     useEffect(() => {
         /** Needs to be done , since InfiniteSCroll needs a relation with
          * div being scrolled. Here its tbody of ant table
@@ -263,7 +263,7 @@ const ListView = (props: PlacesProps) => {
                     columns={tableHeaderJson}
                     dataSource={data}
                     pagination={false}
-                    loading={loading ? loading : false}
+                    loading={loading}
                     bordered
                     scroll={{ x: true, y: 300 }}
                     style={{

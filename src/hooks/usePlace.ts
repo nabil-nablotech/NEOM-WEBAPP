@@ -25,10 +25,10 @@ const usePlace = () => {
   const { loading, error, data, refetch:fetchPlaces } = useQuery(places);
 
   useEffect(() => {
-    if (data?.places.meta.pagination.pageCount !== data?.places.meta.pagination.page) {
+    if (placeData.length <= data?.places.meta.pagination.total) {
       // const oldPlaces = placeData;
       setHasMoreData(true);
-      dispatch(setPlaces([...placeData, ...data?.places.data]));
+      dispatch(setPlaces([...data?.places.data]));
       dispatch(setPlaceMetaData(data?.places?.meta));
     } else {
       setHasMoreData(false);

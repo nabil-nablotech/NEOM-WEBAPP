@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box';
 import styles from '../index.module.css'
-import placesStyles from './index.module.css'
 import Button from "../../../components/Button";
 import DetailsView from '../../../assets/images/searchResults/DetailsView.svg'
 import ListViewIcon from '../../../assets/images/searchResults/ListView.svg'
@@ -17,9 +16,7 @@ import useEvent from '../../../hooks/useEvent';
 import { Meta } from '../../../types/Place';
 import MapView from '../GoogleMap/MapView';
 
-const PlacesTab = ({
-    resultCount = 1053
-}) => {
+const PlacesTab = () => {
     
   const { selectedCardIndex, events, searchText, eventMetaData } = useSelector(
     (state: RootState) => state.searchResults
@@ -87,7 +84,7 @@ const PlacesTab = ({
                         <Box component={'div'} style={{
                             width: '100%'
                         }}>
-                            <ListView />
+                            <ListView loading={loading} data={events} handleNext={handleNext} hasMoreData={hasMoreData} />
                         </Box>
                     }
                 </Grid>

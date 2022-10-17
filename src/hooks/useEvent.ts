@@ -25,9 +25,9 @@ const useEvent = () => {
   const { loading, error, data, refetch:fetchEvents } = useQuery(events);
 
   useEffect(() => {
-    if (data?.visits?.meta?.pagination.page !== data?.visits?.meta?.pagination.pageCount) {
+    if (eventsData.length <= data?.visits?.meta?.pagination.total) {
       setHasMoreData(true);
-      dispatch(setEvents([...eventsData, ...data?.visits?.data]));
+      dispatch(setEvents([...data?.visits?.data]));
       dispatch(setEventMetaData(data?.visits?.meta));
     } else {
       setHasMoreData(false);

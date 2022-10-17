@@ -341,61 +341,108 @@ export const events = gql`
 `;
 
 export const library = gql`
+query SearchTitle($search_one: String!) {
+  medias(
+    filters: {
+      and: [
+        {
+          or: [
+            { keywords: { contains: $search_one } }
+            { description: { contains: $search_one } }
+            { title: { contains: $search_one } }
+          ]
+        }
+        {
+          mediaType: {
+            or: [
+              { categoryCode: { eq: "DOCUMENT" } }
+              { categoryCode: { eq: "REFERENCEURL" } }
+              { categoryCode: { eq: "INLINE" } }
+            ]
+          }
+        }
+      ]
+    }
+  ) {
+    meta {
+      pagination {
+        total
+        pageCount
+        pageSize
+        page
+      }
+    }
+    data {
+      id
+      attributes {
+        keywords
+        description
+        title
+        uniqueId
+        mediaType {
+          data {
+            attributes {
+              categoryCode
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
+export const media = gql`
   query SearchTitle($search_one: String!, $search_two: String!) {
-    media(
+    medias(
       filters: {
-        or: [
-          { keywords: { contains: $search_one } }
-          { keywords: { contains: $search_two } }
-          { description: { contains: $search_one } }
-          { description: { contains: $search_two } }
-          { title: { contains: $search_one } }
-          { title: { contains: $search_two } }
-          { mediaType: Documents }
-          { mediaType: References }
-          { mediaType: InlineText }
+        and: [
+          {
+            or: [
+              { keywords: { contains: $search_one } }
+              { keywords: { contains: $search_two } }
+              { description: { contains: $search_one } }
+              { description: { contains: $search_two } }
+              { title: { contains: $search_one } }
+              { title: { contains: $search_two } }
+            ]
+          }
+          {
+            mediaType: {
+              or: [
+                { categoryCode: { eq: "IMAGE" } }
+                { categoryCode: { eq: "VIDEO" } }
+                { categoryCode: { eq: "3DMODEL" } }
+              ]
+            }
+          }
         ]
       }
     ) {
+      meta {
+        pagination {
+          total
+          pageCount
+          pageSize
+          page
+        }
+      }
       data {
         id
         attributes {
           keywords
           description
           title
-          mediaType
+          uniqueId
+          mediaType {
+            data {
+              attributes {
+                categoryCode
+              }
+            }
+          }
         }
       }
     }
   }
 `;
-
-// export const media = gql`
-//   query SearchTitle($search_one: String!, $search_two: String!) {
-//     media(
-//       filters: {
-//         or: [
-//           { keywords: { contains: $search_one } }
-//           { keywords: { contains: $search_two } }
-//           { description: { contains: $search_one } }
-//           { description: { contains: $search_two } }
-//           { title: { contains: $search_one } }
-//           { title: { contains: $search_two } }
-//           { mediaType: Images }
-//           { mediaType: Videos }
-//           { mediaType: 3Dmodel }
-//         ]
-//       }
-//     ) {
-//       data {
-//         id
-//         attributes {
-//           keywords
-//           description
-//           title
-//           mediaType
-//         }
-//       }
-//     }
-//   }
-// `;

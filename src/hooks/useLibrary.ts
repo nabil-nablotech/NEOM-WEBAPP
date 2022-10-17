@@ -2,34 +2,35 @@ import {useQuery} from '@apollo/client';
 import { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { places } from "../query/search";
+import { library } from "../query/search";
 import { RootState } from '../store';
-import {setPlaces, setPlaceMetaData} from '../store/reducers/searchResultsReducer'
+import {setLibrary, setLibraryMetaData} from '../store/reducers/searchResultsReducer'
 
 const useLibrary = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
 
-  const {searchText} = useSelector((state: RootState) => state.searchResults);
+  const {searchText, library: libItem} = useSelector((state: RootState) => state.searchResults);
   const {search} = useLocation();
   const dispatch = useDispatch();
 
   useEffect(() => {
     const text = searchText || decodeURIComponent(search.replace('?search=', ''));
-    fetchPlaces({search_one: text});
+    fetchLibraryItems({search_one: text});
   }, [])
 
   /**
    * fetch places with two words
    */
-  const { loading, error, data, refetch:fetchPlaces } = useQuery(places);
-
+  const { loading, error, data, refetch:fetchLibraryItems } = useQuery(library);
+  console.log('outside effect if----', data)
   useEffect(() => {
-    if (data?.places.meta.pagination.total < 10) {
-      setHasMoreData(false);
-      dispatch(setPlaces(data?.places.data));
-      dispatch(setPlaceMetaData(data?.places?.meta));
-    } else {
+    console.log('inside if----', data)
+    if (libItem.length <= data?.medias.meta.pagination.total) {
       setHasMoreData(true);
+      dispatch(setLibrary(data?.medias.data));
+      dispatch(setLibraryMetaData(data?.medias?.meta));
+    } else {
+      setHasMoreData(false);
     }
   }, [data])
  
@@ -38,7 +39,7 @@ const useLibrary = () => {
     error,
     data,
     hasMoreData,
-    fetchPlaces
+    fetchLibraryItems
   };
 };
 

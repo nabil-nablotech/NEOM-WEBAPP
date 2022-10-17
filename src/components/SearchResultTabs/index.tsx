@@ -110,11 +110,11 @@ const SearchResultTabs = ({ tabIndex }: SearchResultTabsProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
   const navigate = useNavigate();
-  const {searchText} = useSelector((state: RootState) => state.searchResults);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
     let newLabel = TabLabels[newValue].label;
+    event.preventDefault();
     navigate(`/search-results/${newLabel ? newLabel : "Places"}`, {
       replace: true,
     });
