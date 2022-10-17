@@ -2,7 +2,7 @@ import React, { ChangeEvent, FocusEvent } from "react";
 import Box from "@mui/material/Box";
 import TextField, {TextFieldProps} from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
-import { styled } from '@mui/material/styles';
+import { styled, SxProps } from '@mui/material/styles';
 
 interface TextInputProps {
   error?: boolean;
@@ -31,7 +31,8 @@ interface TextInputProps {
   sx?: any;
   ref?: React.RefObject<HTMLDivElement>;
   required?: boolean,
-  autoComplete?: string
+  autoComplete?: string,
+  formControlSx?: SxProps
 };
 
 const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
@@ -78,7 +79,8 @@ export default function NTextFields(props: TextInputProps) {
     ref,
     required,
     name,
-    autoComplete
+    autoComplete,
+    formControlSx
   } = props;
 
   return (
@@ -103,7 +105,10 @@ export default function NTextFields(props: TextInputProps) {
           helperText={errorText}
           type={type}
           placeholder={label}
-          sx={sx}
+          sx={{
+            ...sx,
+            ...formControlSx
+          }}
           InputProps={{
             ...InputProps
           }}

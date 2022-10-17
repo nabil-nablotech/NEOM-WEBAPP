@@ -41,7 +41,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
 
   return (
     <>
-      <Header onKeyDown={onKeyDown} showSearch={true} showRefinedSearch={true}/>
+      <Header onKeyDown={onKeyDown} showSearch={true}/>
       <Box>
         <SearchResultTabs tabIndex={tabIndex} />
       </Box>

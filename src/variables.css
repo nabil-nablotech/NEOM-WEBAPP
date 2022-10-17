@@ -10,4 +10,7 @@
   --container-spacing: 2em;
   --light-grey-border: #D7D7D8;
   --pill-back-color: #49454F;
+  --search-bar-bg-color: rgba(243, 239, 229, 0.5);
+  --black-90-pct: rgba(19, 16, 13, 0.9);
+  --lightest-border : #E8E9E9;
 }
