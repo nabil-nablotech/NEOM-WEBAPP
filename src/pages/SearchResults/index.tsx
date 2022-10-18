@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { setActiveTab, toggleNewItemWindow, toggleShowAddSuccess } from "../../store/reducers/searchResultsReducer";
 import AddNewItem from "../../components/AddNewItem";
 import PositionedSnackbar from "../../components/Snackbar";
+import { PLACES_TAB_NAME } from "../../utils/services/helpers";
 
 const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
@@ -68,7 +69,9 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         <AddNewItem onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))} />
       </CustomDrawer>
       <PositionedSnackbar
-        message={"New Place added"}
+        message={`New ${
+          tabName === PLACES_TAB_NAME ? 'Place' : 'Event'
+        } added`}
         severity={"success"}
         open={showAddSuccess}
         handleClose={() => dispatch(toggleShowAddSuccess(false))}

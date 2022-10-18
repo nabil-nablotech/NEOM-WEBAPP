@@ -127,67 +127,105 @@ const StepContent = ({
                                 }}
                                 formControlSx={commonFormControlSxStyles}
                             />
-                            <DropdownComponent
-                                className={`${styles["site-type"]}`}
-                                label={"Site Type"}
-                                name="site-type"
-                                value={''}
-                                handleChange={(e) => { }}
-                                itemsList={[]}
-                                selectStylesSx={commonSelectSxStyles}
-                                formControlSx={commonFormControlSxStyles}
-                            />
-                            <DropdownComponent
-                                className={`${styles["period"]}`}
-                                label={"Period"}
-                                name="period"
-                                value={''}
-                                handleChange={(e) => { }}
-                                itemsList={[]}
-                                selectStylesSx={commonSelectSxStyles}
-                                formControlSx={commonFormControlSxStyles}
-                            />
-                            <DropdownComponent
-                                className={`${styles["state-of-conservation"]}`}
-                                label={"State of Conservation"}
-                                name="state-of-conservation"
-                                value={''}
-                                handleChange={(e) => { }}
-                                itemsList={[]}
-                                selectStylesSx={commonSelectSxStyles}
-                                formControlSx={commonFormControlSxStyles}
-                            />
-                            <DropdownComponent
-                                className={`${styles["risk"]}`}
-                                label={"Risk"}
-                                name="risk"
-                                value={''}
-                                handleChange={(e) => { }}
-                                itemsList={[]}
-                                selectStylesSx={commonSelectSxStyles}
-                                formControlSx={commonFormControlSxStyles}
-                            />
                         </>
                     }
                     {
                         tabName === EVENTS_TAB_NAME &&
                         <>
-                            {
-                                <CustomSearchField
-                                    handleChangeParent={(e) => {
-                                        setFormState((state: any) => ({
-                                            ...state,
-                                            search: e.target.value
-                                        }))
-                                    }}
-                                    // onKeyDown={onKeyDown}
-                                    className={`${styles["custom-search-field"]}`}
-                                    shouldHandleChangeFromParent={true}
-                                    valueFromParent={formState.search}
-                                />
-                            }
+                            <CustomSearchField
+                                handleChangeParent={(e) => {
+                                    setFormState((state: any) => ({
+                                        ...state,
+                                        search: e.target.value
+                                    }))
+                                }}
+                                // onKeyDown={onKeyDown}
+                                className={`${styles["custom-search-field"]}`}
+                                shouldHandleChangeFromParent={true}
+                                valueFromParent={formState.search}
+                            />
+                            <TextInput
+                                className={`${styles["site-description"]}`}
+                                label="Site Description"
+                                name="site-description"
+                                value={formState.siteDescription}
+                                multiline
+                                minRows={3}
+                                maxRows={3}
+                                onChange={(e) => {
+                                    setFormState((state: any) => ({
+                                        ...state,
+                                        siteDescription: e.target.value
+                                    }))
+                                }}
+                                sx={{
+                                    ...textInputSxStyles,
+                                    marginBottom: '4em'
+                                }}
+                                formControlSx={commonFormControlSxStyles}
+                            />
+                            <TextInput
+                                className={`${styles["field-narrative"]}`}
+                                label="Field Narrative"
+                                name="field-narrative"
+                                value={formState.fieldNarrative}
+                                multiline
+                                minRows={3}
+                                maxRows={3}
+                                onChange={(e) => {
+                                    setFormState((state: any) => ({
+                                        ...state,
+                                        fieldNarrative: e.target.value
+                                    }))
+                                }}
+                                sx={{
+                                    ...textInputSxStyles,
+                                    marginBottom: '4em'
+                                }}
+                                formControlSx={commonFormControlSxStyles}
+                            />
                         </>
                     }
+                    <DropdownComponent
+                        className={`${styles["site-type"]}`}
+                        label={"Site Type"}
+                        name="site-type"
+                        value={''}
+                        handleChange={(e) => { }}
+                        itemsList={[]}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
+                        className={`${styles["period"]}`}
+                        label={"Period"}
+                        name="period"
+                        value={''}
+                        handleChange={(e) => { }}
+                        itemsList={[]}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
+                        className={`${styles["state-of-conservation"]}`}
+                        label={"State of Conservation"}
+                        name="state-of-conservation"
+                        value={''}
+                        handleChange={(e) => { }}
+                        itemsList={[]}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
+                        className={`${styles["risk"]}`}
+                        label={"Risk"}
+                        name="risk"
+                        value={''}
+                        handleChange={(e) => { }}
+                        itemsList={[]}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
                 </>
             }
             {
