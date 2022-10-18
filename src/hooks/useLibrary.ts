@@ -47,7 +47,8 @@ const useLibrary = () => {
   
   const fetchData = (skip: number = libItem.length, local: boolean = false) => {
     const text = local ? searchText : decodeURIComponent(search.replace("?search=", ""));
-    refetchLibraryItems({ search_one: text, limit: limit, skip: skip });
+    const searchWordArray = text.split(' ');
+    refetchLibraryItems({ search_one: searchWordArray[0], search_two:searchWordArray[1], search_three:searchWordArray[2], limit: limit, skip: skip });
   };
  
   return {

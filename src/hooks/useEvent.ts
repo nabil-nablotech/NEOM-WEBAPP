@@ -54,7 +54,8 @@ const useEvent = () => {
 
   const fetchData = (skip: number = eventsData.length, local: boolean = false) => {
     const text = local ? searchText : decodeURIComponent(search.replace("?search=", ""));
-    refetchEvents({ search_one: text, limit: limit, skip: skip });
+    const searchWordArray = text.split(' ');
+    refetchEvents({ search_one: searchWordArray[0], search_two: searchWordArray[1], search_three: searchWordArray[2], limit: limit, skip: skip });
   };
 
   return {

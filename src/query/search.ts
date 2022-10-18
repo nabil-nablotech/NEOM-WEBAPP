@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const places = gql`
-  query SearchTitle($search_one: String!, $limit: Int, $skip: Int) {
+  query SearchTitle($search_one: String, $search_two: String, $search_three: String, $limit: Int, $skip: Int) {
     places(
       pagination: {
         limit: $limit
@@ -9,10 +9,33 @@ export const places = gql`
       }
       filters: {
         or: [
-          { placeNameEnglish: { contains: $search_one } }
-          { siteDescription: { contains: $search_one } }
-          { period: { contains: $search_one } }
-          { keywords: { contains: $search_one } }
+          # {siteType: { containsi: $search_one }}
+          {siteDescription:{containsi:$search_one }}
+          # {period: { containsi: $search_one }}
+          {previousNumber:{containsi:$search_one }}
+          {placeNumber:{containsi:$search_one }}
+          {placeNameEnglish: { containsi: $search_one }}
+          {placeNameArabic:{containsi:$search_one}}
+          {keywords:{containsi:$search_one}}
+          
+                    # {siteType: { containsi: $search_two }}
+          {siteDescription:{containsi:$search_two }}
+          # {period: { containsi: $search_two }}
+          {previousNumber:{containsi:$search_two }}
+          {placeNumber:{containsi:$search_two }}
+          {placeNameEnglish: { containsi: $search_two }}
+          {placeNameArabic:{containsi:$search_two}}
+          {keywords:{containsi:$search_two}}
+
+          
+                    # {siteType: { containsi: $search_three }}
+          {siteDescription:{containsi:$search_three }}
+          # {period: { containsi: $search_three }}
+          {previousNumber:{containsi:$search_three }}
+          {placeNumber:{containsi:$search_three }}
+          {placeNameEnglish: { containsi: $search_three }}
+          {placeNameArabic:{containsi:$search_three}}
+          {keywords:{containsi:$search_three}}
         ]
       }
     ) {
@@ -37,7 +60,14 @@ export const places = gql`
           latitude
           longitude
           uniqueId
-          period
+          period{
+            data{
+              id
+              attributes{
+                name
+              }
+            }
+          }
           researchValue {
             data {
               id
@@ -117,7 +147,7 @@ export const places = gql`
               }
             }
           }
-          recommendations {
+          recommendation {
             data {
               id
               attributes {
@@ -176,7 +206,7 @@ export const places = gql`
 `;
 
 export const events = gql`
-  query SearchTitle($search_one: String!, $limit: Int, $skip: Int) {
+  query SearchTitle($search_one: String,$search_two: String, $search_three: String, $limit: Int, $skip: Int) {
     visits(
       pagination: {
         limit: $limit
@@ -184,10 +214,26 @@ export const events = gql`
       }
       filters: {
         or: [
-          { recordingTeam: { contains: $search_one } }
+          # { siteType: { contains: $search_one } }
           { siteDescription: { contains: $search_one } }
-          { period: { contains: $search_one } }
+          # { period: { contains: $search_one } }
+          { recordingTeam: { contains: $search_one } }
+          { fieldNarrative: { contains: $search_one } }
           { keywords: { contains: $search_one } }
+          
+                    # { siteType: { contains: $search_two } }
+          { siteDescription: { contains: $search_two } }
+          # { period: { contains: $searcht_two } }
+          { recordingTeam: { contains: $search_two } }
+          { fieldNarrative: { contains: $search_two } }
+          { keywords: { contains: $search_one } }
+          
+                    # { siteType: { contains: $search_three } }
+          { siteDescription: { contains: $search_three } }
+          # { period: { contains: $search_three } }
+          { recordingTeam: { contains: $search_three } }
+          { fieldNarrative: { contains: $search_three } }
+          { keywords: { contains: $search_three } }
         ]
       }
     ) {
@@ -210,8 +256,15 @@ export const events = gql`
           latitude
           longitude
           uniqueId
-          period
           type
+          period{
+            data{
+              id
+              attributes{
+                name
+              }
+            }
+          }
           researchValue {
             data {
               id
@@ -290,7 +343,7 @@ export const events = gql`
               }
             }
           }
-          recommendations {
+          recommendation {
             data {
               id
               attributes {
@@ -349,7 +402,7 @@ export const events = gql`
 `;
 
 export const library = gql`
-query SearchTitle($search_one: String!, $limit: Int, $skip: Int) {
+query SearchTitle($search_one: String, $search_two: String, $search_three: String, $limit: Int, $skip: Int) {
   medias(
     pagination: {
       limit: $limit
@@ -359,9 +412,23 @@ query SearchTitle($search_one: String!, $limit: Int, $skip: Int) {
       and: [
         {
           or: [
-            { keywords: { contains: $search_one } }
             { description: { contains: $search_one } }
             { title: { contains: $search_one } }
+            { fileName: { contains: $search_one } }
+            { citation: { contains: $search_one } }
+            { keywords: { contains: $search_one } }
+            
+            { description: { contains: $search_two } }
+            { title: { contains: $search_two } }
+            { fileName: { contains: $search_two } }
+            { citation: { contains: $search_two } }
+            { keywords: { contains: $search_two } }
+            
+            { description: { contains: $search_three } }
+            { title: { contains: $search_three } }
+            { fileName: { contains: $search_three } }
+            { citation: { contains: $search_three } }
+            { keywords: { contains: $search_three } }
           ]
         }
         {
@@ -395,9 +462,6 @@ query SearchTitle($search_one: String!, $limit: Int, $skip: Int) {
         referenceURL
         uniqueId
         updatedAt
-        imageMetadata {
-          fileSize
-        }
         mediaType {
           data {
             attributes {
@@ -412,7 +476,7 @@ query SearchTitle($search_one: String!, $limit: Int, $skip: Int) {
 `;
 
 export const media = gql`
-  query SearchTitle($search_one: String!, $search_two: String, $limit: Int, $skip: Int) {
+  query SearchTitle($search_one: String, $search_two: String, $search_three: String, $limit: Int, $skip: Int) {
     medias(
       pagination: {
         limit: $limit
@@ -422,12 +486,23 @@ export const media = gql`
         and: [
           {
             or: [
-              { keywords: { contains: $search_one } }
-              { keywords: { contains: $search_two } }
               { description: { contains: $search_one } }
-              { description: { contains: $search_two } }
               { title: { contains: $search_one } }
+              { fileName: { contains: $search_one } }
+              { citation: { contains: $search_one } }
+              { keywords: { contains: $search_one } }
+              
+              { description: { contains: $search_two } }
               { title: { contains: $search_two } }
+              { fileName: { contains: $search_two } }
+              { citation: { contains: $search_two } }
+              { keywords: { contains: $search_two } }
+              
+              { description: { contains: $search_three } }
+              { title: { contains: $search_three } }
+              { fileName: { contains: $search_three } }
+              { citation: { contains: $search_three } }
+              { keywords: { contains: $search_three } }
             ]
           }
           {
@@ -464,9 +539,6 @@ export const media = gql`
           bearing
           actionType
           featuredImage
-          imageMetadata {
-            fileSize
-          }
           mediaType {
             data {
               attributes {
