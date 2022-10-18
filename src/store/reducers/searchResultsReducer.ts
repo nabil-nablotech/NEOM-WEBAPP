@@ -17,7 +17,8 @@ const initialState: SearchResultsState2 = {
   libararyMetaData: null,
   mediaMetaData: null,
   activeTab: '',
-  newItemWindowOpen: false
+  newItemWindowOpen: false,
+  showAddSuccess: false,
 };
 
 export const searchResultsSlice = createSlice({
@@ -63,6 +64,9 @@ export const searchResultsSlice = createSlice({
     toggleNewItemWindow: (state, action: PayloadAction<boolean>) => {
       state.newItemWindowOpen = action.payload;
     },
+    toggleShowAddSuccess: (state, action: PayloadAction<boolean>) => {
+      state.showAddSuccess = action.payload;
+    },
   },
 });
 
@@ -79,7 +83,8 @@ export const {
   setLibraryMetaData,
   setMediaMetaData,
   setActiveTab,
-  toggleNewItemWindow
+  toggleNewItemWindow,
+  toggleShowAddSuccess
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

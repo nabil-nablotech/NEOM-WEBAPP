@@ -53,4 +53,5 @@ export type SearchResultsState2 = {
     mediaMetaData: Meta | null
     activeTab: tabNameProps | ''
     newItemWindowOpen: boolean
+    showAddSuccess: boolean
 }

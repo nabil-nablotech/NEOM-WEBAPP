@@ -13,14 +13,15 @@ import usePlace from '../../hooks/usePlace';
 import { useEffect } from "react";
 import CustomDrawer from "../../components/CustomDrawer";
 import { useDispatch } from "react-redux";
-import { setActiveTab, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
+import { setActiveTab, toggleNewItemWindow, toggleShowAddSuccess } from "../../store/reducers/searchResultsReducer";
 import AddNewItem from "../../components/AddNewItem";
+import PositionedSnackbar from "../../components/Snackbar";
 
 const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
   const navigate = useNavigate();
-  const {searchText, activeTab, newItemWindowOpen} = useSelector((state: RootState) => state.searchResults);
+  const {searchText, activeTab, newItemWindowOpen, showAddSuccess} = useSelector((state: RootState) => state.searchResults);
   const {fetchEvents} = useEvent();
   const {fetchPlaces} = usePlace();
 
@@ -66,6 +67,12 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       <CustomDrawer origin="right" isOpen={newItemWindowOpen} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}>
         <AddNewItem onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))} />
       </CustomDrawer>
+      <PositionedSnackbar
+        message={"New Place added"}
+        severity={"success"}
+        open={showAddSuccess}
+        handleClose={() => dispatch(toggleShowAddSuccess(false))}
+      />
     </>
   );
 };

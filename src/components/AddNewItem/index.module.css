@@ -1,6 +1,20 @@
 .add-new-item-container {
-    padding: 1em;
+    padding: 1em 2em;
+    min-width: 45ch;
+    font-family: 'Roboto-Regular';
 }
 
-.step-label {
+.form {
+    margin-block: 2em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.site-description {
+    margin-bottom: 3.5em;
+}
+.stepper {
+    max-width: 60%;
+    margin-inline: auto;
 }

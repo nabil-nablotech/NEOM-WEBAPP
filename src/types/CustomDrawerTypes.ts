@@ -8,3 +8,12 @@ export type CustomDrawerProps = {
 export type AddNewItemProps = {
     onClose: () => void
 }
+
+export type StepContentTypes = {
+    formState: any
+    setFormState: React.SetStateAction<any> 
+    activeStep: number
+    steps: Array<string>
+    handleNext: () => void
+    handleBack:  () => void
+}

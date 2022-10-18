@@ -1,11 +1,54 @@
-import { Box, Button, Step, StepLabel, Stepper, Typography } from '@mui/material';
-import React from 'react';
+import { Box, Button as DefaultButton, Step, StepLabel, Stepper, Typography } from '@mui/material';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { AddNewItemProps } from '../../types/CustomDrawerTypes';
+import { AddNewItemProps, StepContentTypes } from '../../types/CustomDrawerTypes';
 import { tabNameProps } from '../../types/SearchResultsTabsProps';
 import { PLACES_TAB_NAME } from '../../utils/services/helpers';
 import styles from './index.module.css'
+import TextInput from "../../components/TextInput";
+import Button from "../../components/Button";
+import DropdownComponent from './../Dropdown/index';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { toggleShowAddSuccess } from '../../store/reducers/searchResultsReducer';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
+const commonSelectSxStyles = {
+    textAlign: 'left',
+    '& .MuiSelect-select': {
+        padding: '0.5em 1em',
+        color: 'var(--grey-text)'
+    }
+}
+const textInputSxStyles = {
+
+    '& .MuiInputBase-input.MuiOutlinedInput-input': {
+        border: 'none'
+    },
+    '& .MuiFormLabel-root.MuiInputLabel-root ': {
+    },
+    '& .MuiInputBase-input.MuiOutlinedInput-input ': {
+        lineHeight: '1.2',
+        border: '1.4px solid #fff',
+        padding: '0.5em 1em',
+        height: '1.4em',
+    },
+    '& .MuiOutlinedInput-notchedOutline span': {
+        opacity: 1
+    },
+    '& .MuiOutlinedInput-notchedOutline legend': {
+        color: 'transparent'
+    }
+
+}
+const commonFormControlSxStyles = {
+    width: '100%',
+    flexGrow: 0,
+    '& .MuiInputBase-root': {
+        backgroundColor: '#fff',
+    }
+}
 
 export const stepperIconSx = {
     color: '#fff',
@@ -23,13 +66,161 @@ export const stepperIconSx = {
     },
 }
 
+const StepContent = ({
+    formState,
+    setFormState,
+    activeStep,
+    steps,
+    handleNext,
+    handleBack
+}: StepContentTypes) => {
+
+    return <>
+        <Box className={`${styles['form']}`}>
+            {
+                activeStep === 0 &&
+                <>
+                    <TextInput
+                        className={`${styles["english-name"]}`}
+                        label="Name in English"
+                        name="english-name"
+                        value={''}
+                        onChange={(e) => { }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
+                        className={`${styles["arabic-name"]}`}
+                        label="Name in Arabic"
+                        name="arabic-name"
+                        value={''}
+                        onChange={(e) => { }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
+                        className={`${styles["site-description"]}`}
+                        label="Site Description"
+                        name="site-description"
+                        value={formState.siteDescription}
+                        multiline
+                        minRows={3}
+                        maxRows={3}
+                        onChange={(e) => {
+                            setFormState((state: any) => ({
+                                ...state,
+                                siteDescription: e.target.value
+                            }))
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
+                        className={`${styles["site-type"]}`}
+                        label={"Site Type"}
+                        name="site-type"
+                        value={''}
+                        handleChange={(e) => { }}
+                        itemsList={[]}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
+                        className={`${styles["period"]}`}
+                        label={"Period"}
+                        name="period"
+                        value={''}
+                        handleChange={(e) => { }}
+                        itemsList={[]}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
+                        className={`${styles["state-of-conservation"]}`}
+                        label={"State of Conservation"}
+                        name="state-of-conservation"
+                        value={''}
+                        handleChange={(e) => { }}
+                        itemsList={[]}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
+                        className={`${styles["risk"]}`}
+                        label={"Risk"}
+                        name="risk"
+                        value={''}
+                        handleChange={(e) => { }}
+                        itemsList={[]}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                </>
+            }
+            {
+                activeStep === 1 &&
+                <>
+                    <Box>Make your content discoverable</Box>
+                    <TextInput
+                        className={`${styles["english-name"]}`}
+                        label="Add Keywords"
+                        name="english-name"
+                        value={''}
+                        onChange={(e) => { }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                </>
+            }
+            <Box
+                sx={{
+                    display: 'flex', flexDirection: 'row',
+                    justifyContent: 'space-between'
+                }}
+            >
+                <Button
+                    colors={["#fff", "var(--table-black-text)", "none"]}
+                    className={`${styles["plain-whitee-btn"]}`}
+                    label={activeStep === 0 ? 'Cancel' : 'Back'}
+                    onClick={handleBack}
+                />
+                {/* {isStepOptional(activeStep) && (
+                                                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+                                                    Skip
+                                                </Button>
+                                            )} */}
+                <Button
+                    label={activeStep === steps.length - 1 ? 'Add' : 'Next'}
+                    onClick={handleNext}
+                />
+            </Box>
+        </Box>
+    </>
+}
+
+
 const AddNewItem = ({
     onClose
 }: AddNewItemProps) => {
     let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-    const [activeStep, setActiveStep] = React.useState(0);
-    const [skipped, setSkipped] = React.useState(new Set<number>());
+    const {showAddSuccess} = useSelector((state: RootState) => state.searchResults);
+
+    const [activeStep, setActiveStep] = useState(0);
+    const [formState, setFormState] = useState({
+        siteDescription: ''
+    });
+    const [skipped, setSkipped] = useState(new Set<number>());
+
+    const dispatch = useDispatch()
 
     const isStepOptional = (step: number) => {
         return step === 1;
@@ -46,16 +237,27 @@ const AddNewItem = ({
         }
 
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        if(activeStep + 1 === steps.length ) {
+        if (activeStep + 1 === steps.length) {
             onClose()
+            dispatch(toggleShowAddSuccess(true))
         }
         setSkipped(newSkipped);
     };
 
+    useEffect(() => {
+        if(showAddSuccess) {
+            dispatch(toggleShowAddSuccess(true))
+        }
+    }, [showAddSuccess])
+
     const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        if (activeStep === 0) {
+            onClose()
+        } else {
+            setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        }
     };
-    
+
     const handleSkip = () => {
         if (!isStepOptional(activeStep)) {
             // You probably want to guard against something like this,
@@ -76,6 +278,7 @@ const AddNewItem = ({
     };
 
     const steps = ['Item Details', 'Keywords']
+
     return (
         <Box>
             {
@@ -86,17 +289,22 @@ const AddNewItem = ({
                             marginLeft: 'auto',
                             width: 'fit-content'
                         }}>
-                            <Button variant="text" onClick={e => onClose()}
+                            <DefaultButton variant="text" onClick={e => onClose()}
                                 style={{
                                     // paddingInline: 0,
-                                    minWidth: 'fit-content'
+                                    minWidth: 'fit-content',
+                                    padding: 0,
+                                    color: 'var(--table-black-text)'
                                 }}
-                            >Hide</Button>
+                            >Hide</DefaultButton>
                         </Box>
-                        <Typography variant="h4" component="h4">
+                        <Typography variant="h4" component="h4" style={{
+                        }}>
                             Add Place
                         </Typography>
-                        <Stepper activeStep={activeStep} alternativeLabel>
+                        <Stepper activeStep={activeStep} alternativeLabel
+                            className={`${styles['stepper']}`}
+                        >
                             {steps.map((label, index) => {
                                 const stepProps: { completed?: boolean } = {};
                                 const labelProps: {
@@ -123,42 +331,19 @@ const AddNewItem = ({
                                 );
                             })}
                         </Stepper>
-                        {/* {activeStep === steps.length ? (
+                        <>
                             <React.Fragment>
-                                <Typography sx={{ mt: 2, mb: 1 }}>
-                                    All steps completed - you&apos;re finished
-                                </Typography>
-                                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                    <Box sx={{ flex: '1 1 auto' }} />
-                                    <Button onClick={handleReset}>Reset</Button>
-                                </Box>
+                                <StepContent
+                                    formState={formState}
+                                    setFormState={setFormState}
+                                    activeStep={activeStep}
+                                    steps={steps}
+                                    handleNext={handleNext}
+                                    handleBack={handleBack}
+                                />
+
                             </React.Fragment>
-                        ) : ( */}
-                                <>
-                                    <React.Fragment>
-                                        <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-                                        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                            <Button
-                                                color="inherit"
-                                                disabled={activeStep === 0}
-                                                onClick={handleBack}
-                                                sx={{ mr: 1 }}
-                                            >
-                                                Back
-                                            </Button>
-                                            <Box sx={{ flex: '1 1 auto' }} />
-                                            {/* {isStepOptional(activeStep) && (
-                                                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                                                    Skip
-                                                </Button>
-                                            )} */}
-                                            <Button onClick={handleNext}>
-                                                {activeStep === steps.length - 1 ? 'Add' : 'Next'}
-                                            </Button>
-                                        </Box>
-                                    </React.Fragment>
-                            </>
-                        {/* )} */}
+                        </>
                     </Box> :
                     <Box>&&&</Box>
             }
