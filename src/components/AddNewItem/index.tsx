@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AddNewItemProps, StepContentTypes } from '../../types/CustomDrawerTypes';
 import { tabNameProps } from '../../types/SearchResultsTabsProps';
-import { PLACES_TAB_NAME } from '../../utils/services/helpers';
+import { addItemDefaultSteps, MEDIA_TAB_NAME, PLACES_TAB_NAME } from '../../utils/services/helpers';
 import styles from './index.module.css'
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux';
 import { toggleShowAddSuccess } from '../../store/reducers/searchResultsReducer';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { EVENTS_TAB_NAME } from './../../utils/services/helpers';
+import { EVENTS_TAB_NAME, addItemMediaSteps } from './../../utils/services/helpers';
 import CustomSearchField from '../SearchField';
 
 const commonSelectSxStyles = {
@@ -264,7 +264,24 @@ const AddNewItem = ({
     });
     const [skipped, setSkipped] = useState(new Set<number>());
 
+
+    const getSteps = () => {
+        if (tabName === MEDIA_TAB_NAME) {
+            return addItemMediaSteps
+        } else {
+            return addItemDefaultSteps
+        }
+    }
+
+    const [steps, setSteps] = useState<Array<string>>(getSteps())
+
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (showAddSuccess) {
+            dispatch(toggleShowAddSuccess(true))
+        }
+    }, [showAddSuccess])
 
     const isStepOptional = (step: number) => {
         return step === 1;
@@ -287,12 +304,6 @@ const AddNewItem = ({
         }
         setSkipped(newSkipped);
     };
-
-    useEffect(() => {
-        if (showAddSuccess) {
-            dispatch(toggleShowAddSuccess(true))
-        }
-    }, [showAddSuccess])
 
     const handleBack = () => {
         if (activeStep === 0) {
@@ -321,7 +332,6 @@ const AddNewItem = ({
         setActiveStep(0);
     };
 
-    const steps = ['Item Details', 'Keywords']
 
     return (
         <Box>
@@ -352,7 +362,7 @@ const AddNewItem = ({
                         }
                     </Typography>
                     <Stepper activeStep={activeStep} alternativeLabel
-                        className={`${styles['stepper']}`}
+                        className={`${styles['stepper']} ${tabName === MEDIA_TAB_NAME ? styles['add-media-stepper'] : ''}`}
                     >
                         {steps.map((label, index) => {
                             const stepProps: { completed?: boolean } = {};

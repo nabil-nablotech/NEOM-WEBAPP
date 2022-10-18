@@ -39,6 +39,9 @@
     max-width: 60%;
     margin-inline: auto;
 }
+.stepper.add-media-stepper {
+    max-width: 100%;
+}
 
 .step-label > span:nth-child(2) span {
     margin-top: 0.3em !important;
