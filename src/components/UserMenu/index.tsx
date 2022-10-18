@@ -12,6 +12,8 @@ import { getRole } from "../../utils/storage/storage";
 
 import MenuList from "../MenuList";
 import { Box } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -24,9 +26,12 @@ function UserMenuComponent() {
   const { clientLogout } = useLogout();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [anchorElSettings, setAnchorElSettings] = React.useState<null | HTMLElement>(null);
+  const {newItemWindowOpen} = useSelector((state: RootState) => state.searchResults);
+
   const open = Boolean(anchorEl);
   const admin = getRole() === 'Admin';
   const openSettings = Boolean(anchorElSettings);
+  const dispatch = useDispatch()
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
@@ -89,7 +94,9 @@ function UserMenuComponent() {
         marginLeft: 'auto',
         marginRight: '1em'
       }}>
-        <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }}/>
+        <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }} onClick={
+          e => dispatch(toggleNewItemWindow(!newItemWindowOpen))
+        }/>
         {admin && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
         <InitialsWrapper
           id="long-button"
