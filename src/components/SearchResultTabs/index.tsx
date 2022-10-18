@@ -22,6 +22,10 @@ import LibraryTab from "./Library";
 import MediaTab from "./Media/index";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import RefinedSearchInputs from "../RefinedSearchInputs";
+import { tabIndexBasedOnName } from "../../utils/services/helpers";
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, className, ...other } = props;
@@ -92,25 +96,12 @@ const Label = ({ img, label }: LabelProps) => {
   );
 };
 
-const tabIndexBasedOnName = (tabName: tabNameProps) => {
-  switch (tabName) {
-    case "Places":
-      return 0;
-    case "Events":
-      return 1;
-    case "Library":
-      return 2;
-    case "Media":
-      return 3;
-  }
-};
-
 const SearchResultTabs = ({ tabIndex }: SearchResultTabsProps) => {
   const [value, setValue] = React.useState(0);
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
-  const {searchText} = useSelector((state: RootState) => state.searchResults);
 
   const navigate = useNavigate();
+  const { searchText } = useSelector((state: RootState) => state.searchResults);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -162,6 +153,42 @@ const SearchResultTabs = ({ tabIndex }: SearchResultTabsProps) => {
           ))}
         </Tabs>
       </Box>
+      {value !== 2 && <Box className={`${styles["refined-search-box"]}`} sx={{
+        '& .Mui-expanded.MuiPaper-root.MuiAccordion-root': {
+          marginInline: 'auto',
+        },
+        '& .MuiPaper-root.MuiAccordion-root': {
+          backgroundColor: 'transparent',
+          boxShadow: 'none'
+        },
+        '& .MuiAccordionSummary-root': {
+          marginInline: 'auto',
+          width: 'fit-content'
+        }
+      }}>
+        <Accordion className={`${styles["refined-search-wrapper"]}`} sx={{
+          '& .Mui-expanded': {
+          }
+        }}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon sx={{
+              color: 'var(--grey-text)'
+            }} />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <div style={{
+              letterSpacing: '0.1em',
+              color: 'var(--grey-text)'
+            }}>Refine Search</div>
+          </AccordionSummary>
+          <AccordionDetails style={{
+            padding: 0
+          }}>
+            <RefinedSearchInputs activeTabIndex={value} />
+          </AccordionDetails>
+        </Accordion>
+      </Box>}
       <TabPanel
         value={value}
         index={0}
