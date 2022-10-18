@@ -33,6 +33,9 @@ interface TextInputProps {
   required?: boolean,
   autoComplete?: string,
   formControlSx?: SxProps
+  multiline?: boolean
+  minRows?: number
+  maxRows?: number
 };
 
 const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
@@ -80,7 +83,9 @@ export default function NTextFields(props: TextInputProps) {
     required,
     name,
     autoComplete,
-    formControlSx
+    formControlSx,
+    multiline = false,
+    ...rest
   } = props;
 
   return (
@@ -105,6 +110,7 @@ export default function NTextFields(props: TextInputProps) {
           helperText={errorText}
           type={type}
           placeholder={label}
+          multiline={multiline}
           sx={{
             ...sx,
             ...formControlSx
@@ -116,6 +122,7 @@ export default function NTextFields(props: TextInputProps) {
           required={required}
           name={name}
           autoComplete={autoComplete}
+          {...rest}
         >
           {value}
           </NeomTextInput>

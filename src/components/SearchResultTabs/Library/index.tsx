@@ -4,7 +4,7 @@ import styles from "../index.module.css";
 import Button from "../../../components/Button";
 import styled from "styled-components";
 import type { ColumnsType } from "antd/es/table";
-import { Table } from "antd";
+import { Table, Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { StyledAntTable } from "../../StyledAntTable";
 import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
@@ -15,7 +15,9 @@ import useLibrary from "../../../hooks/useLibrary";
 import { Meta } from "../../../types/Place";
 import { RootState } from "../../../store";
 import { useSelector } from "react-redux";
-import {formatWebDate} from '../../../utils/services/helpers'
+import {formatWebDate} from '../../../utils/services/helpers';
+import {MoreOptionsComponent} from '../Media/ListView/MoreOption';
+import { Media } from "../../../types/Media";
 
 let viewWidths = ["20vw", "20vw", "20vw", "20vw", "5vw"];
 
@@ -81,7 +83,9 @@ const LibraryTab = () => {
             textDecoration: "underline",
           }}
         >
-          {value.referenceURL}
+          <Tooltip>
+            {value.referenceURL}
+          </Tooltip>
         </Box>
       ),
     },
@@ -99,16 +103,16 @@ const LibraryTab = () => {
       width: viewWidths[0],
       render: (value, index) => formatWebDate(value.updatedAt), 
     },
+    {
+      title: "",
+      key: "action",
+      fixed: "right",
+      className: "more-menu-ant-cell",
+      render: (value: any, record: Media) => (
+        <MoreOptionsComponent id={record.id} record={record} />
+      ),
+    },
   ];
-  // const {
-  //     data,
-  //     hasMoreData,
-  //     fetchData,
-  //     loading
-  // } = usePaginatedArray({
-  //     apiUrl: 'https://jsonplaceholder.typicode.com/users',
-  //     step: 10
-  // })
 
   useEffect(() => {
     /** Needs to be done , since InfiniteSCroll needs a relation with

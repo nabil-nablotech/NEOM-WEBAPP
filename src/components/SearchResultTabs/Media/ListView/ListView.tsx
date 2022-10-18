@@ -18,6 +18,8 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { MediaProps } from "../GridView/GridView";
 import {formatWebDate} from '../../../../utils/services/helpers'
+import {MoreOptionsComponent} from './MoreOption';
+import { Media } from "../../../../types/Media";
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -103,37 +105,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
   ${antTablePaginationCss}
 `;
 
-const MoreOptionsComponent = ({ record, id }: { id: number; record: User }) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (e: any) => {
-    setAnchorEl(e.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
-  const showRecoveryLink = record.recoveryToken;
-  return (
-    <>
-      <div className="">
-        <MoreHorizIcon className="more-menu-div" />
-      </div>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-      >
-        <MenuItem key={1}>Menu 1</MenuItem>
-        <MenuItem key={2}>Menu 2</MenuItem>
-      </Menu>
-    </>
-  );
-};
 
 const ListView = (props: MediaProps) => {
   const tableHeaderJson: ColumnsType<any> = [
@@ -205,7 +177,7 @@ const ListView = (props: MediaProps) => {
       key: "action",
       fixed: "right",
       className: "more-menu-ant-cell",
-      render: (value: any, record: User) => (
+      render: (value: any, record: Media) => (
         <MoreOptionsComponent id={record.id} record={record} />
       ),
     },
