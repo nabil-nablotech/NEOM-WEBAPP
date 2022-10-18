@@ -138,16 +138,16 @@ const ListView = (props: MediaProps) => {
   const tableHeaderJson: ColumnsType<any> = [
     {
       title: "Image",
-      key: "thumbnailUrl",
-      dataIndex: "thumbnailUrl",
+      key: "attributes",
+      dataIndex: "attributes",
       className: "cell-image",
-      render: (value: string, index: any) => (
+      render: (value: any, index: any) => (
         <>
           <Box
             className={`media-table-image`}
             component="img"
             alt={""}
-            src={value}
+            src={value.thumbnailUrl}
           ></Box>
         </>
       ),
@@ -155,50 +155,51 @@ const ListView = (props: MediaProps) => {
 
     {
       title: "IMAGE DESCRIPTION",
-      key: "title",
-      dataIndex: "title",
+      key: "attributes",
+      dataIndex: "attributes",
       className: "cell-description",
-      render: (value: string, index: any) => value.substring(0, 8),
+      render: (value: any, index: any) => value.description?.substring(0, 8),
     },
     {
       title: "SITE",
-      key: "title",
-      dataIndex: "title",
+      key: "attributes",
+      dataIndex: "attributes",
       className: "cell-site",
       sorter: (a: { title: string }, b: { title: any }) => {
-        return a.title.localeCompare(b.title);
+        return a.title?.localeCompare(b.title);
       },
       sortDirections: ["ascend"],
       defaultSortOrder: "ascend",
-      render: (value: string, index: any) => value.substring(0, 8),
+      // render: (value: string, index: any) => value.substring(0, 8),
+      render: (value: any, index: any) => value.title?.substring(0, 8), // need to remove once ste is confrmed
     },
     {
       title: "NUMBER",
-      key: "id",
-      dataIndex: "id",
+      key: "attributes",
+      dataIndex: "attributes",
       className: "cell-id",
-      render: (value: string, index: any) => value,
+      render: (value: any, index: any) => value.uniqueId,
     },
     {
       title: "TYPE",
-      key: "title",
-      dataIndex: "title",
+      key: "attributes",
+      dataIndex: "attributes",
       className: "cell-type",
-      render: (value: string, index: any) => value.substring(0, 10),
+      render: (value: any, index: any) => value.actionType?.substring(0, 10),
     },
     {
       title: "BEARING",
-      key: "title",
-      dataIndex: "title",
+      key: "attributes",
+      dataIndex: "attributes",
       className: "cell-bearing",
-      render: (value: string, index: any) => value.substring(0, 2),
+      render: (value: any, index: any) => value.bearing?.substring(0, 2),
     },
     {
       title: "FEATURED",
-      key: "title",
-      dataIndex: "title",
+      key: "attributes",
+      dataIndex: "attributes",
       className: "cell-bearing",
-      render: (value: string, index: any) => value.substring(2, 5),
+      render: (value: any, index: any) => value.featuredImg?.substring(2, 5),
     },
     {
       title: "",
@@ -210,10 +211,8 @@ const ListView = (props: MediaProps) => {
       ),
     },
   ];
-  const { data, hasMoreData, fetchData, loading } = usePaginatedArray({
-    apiUrl: "https://jsonplaceholder.typicode.com/photos",
-    step: 10,
-  });
+  
+  const {data, hasMoreData, fetchData, loading} = props;
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [currentItemIndex, setCurrentItemIndex] = useState<number>(0);
@@ -235,7 +234,7 @@ const ListView = (props: MediaProps) => {
         dataLength={data.length} //This is important field to render the next data
         next={() => fetchData()}
         hasMore={hasMoreData}
-        loader={<Loader />}
+        loader={loading ? <Loader />: null}
         endMessage={
           <p style={{ textAlign: "center" }}>
             <b>END OF RESULTS</b>

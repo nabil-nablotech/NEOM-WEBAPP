@@ -24,14 +24,14 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
     if (e.code === 'Enter') {
       switch (tabName) {
         case 'Places':
-          fetchPlaces({search_one: searchText});
+          fetchPlaces(0);
           break;
         case 'Events':
           fetchEvents({search_one: searchText});
           break;
       
         default:
-          fetchPlaces({search_one: searchText});
+          fetchPlaces(0);
           break;
       }
       e.preventDefault();

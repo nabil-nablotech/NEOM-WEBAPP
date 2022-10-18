@@ -2,12 +2,16 @@ export type Media = {
   id: string;
   attributes: {
     thumbnailUrl?: string;
-    recordingTeam: string;
-    visitNumber: string;
-    siteDescription: string;
-    updatedAt: string;
+    title: string;
+    description: string;
+    referanceUrl: string;
+    fileName: string;
+    bearing: string;
+    actionType: string;
+    featuredImage: boolean;
+    updatedAt: Date;
     keywords: string[] | null;
-    placeNumber: string | null;
+    citation: string;
     latitude: Number;
     longitude: Number;
   };

@@ -3,6 +3,7 @@ import { SearchResultsState2 } from "../../types/SearchResultsTabsProps";
 import { DashboardResponse } from "../../types/dashboard";
 import { Place, Meta } from "../../types/Place";
 import { Event } from "../../types/Event";
+import { Media } from "../../types/Media";
 
 const initialState: SearchResultsState2 = {
   selectedCardIndex: 0,
@@ -37,22 +38,22 @@ export const searchResultsSlice = createSlice({
     setEvents: (state, action: PayloadAction<Event[]>) => {
       state.events = action.payload;
     },
-    setLibrary: (state, action: PayloadAction<Event[]>) => {
+    setLibrary: (state, action: PayloadAction<Media[]>) => {
       state.library = action.payload;
     },
-    setMedia: (state, action: PayloadAction<Event[]>) => {
+    setMedia: (state, action: PayloadAction<Media[]>) => {
       state.media = action.payload;
     },
-    setPlaceMetaData: (state, action: PayloadAction<Meta>) => {
+    setPlaceMetaData: (state, action: PayloadAction<Meta | null>) => {
       state.placeMetaData = action.payload;
     },
-    setEventMetaData: (state, action: PayloadAction<Meta>) => {
+    setEventMetaData: (state, action: PayloadAction<Meta | null>) => {
       state.eventMetaData = action.payload;
     },
-    setLibraryMetaData: (state, action: PayloadAction<Meta>) => {
+    setLibraryMetaData: (state, action: PayloadAction<Meta | null>) => {
       state.libararyMetaData = action.payload;
     },
-    setMediaMetaData: (state, action: PayloadAction<Meta>) => {
+    setMediaMetaData: (state, action: PayloadAction<Meta | null>) => {
       state.mediaMetaData = action.payload;
     },
   },

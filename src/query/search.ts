@@ -1,8 +1,12 @@
 import { gql } from "@apollo/client";
 
 export const places = gql`
-  query SearchTitle($search_one: String!) {
+  query SearchTitle($search_one: String!, $limit: Int, $skip: Int) {
     places(
+      pagination: {
+        limit: $limit
+        start: $skip
+      }
       filters: {
         or: [
           { placeNameEnglish: { contains: $search_one } }
@@ -172,8 +176,12 @@ export const places = gql`
 `;
 
 export const events = gql`
-  query SearchTitle($search_one: String!) {
+  query SearchTitle($search_one: String!, $limit: Int, $skip: Int) {
     visits(
+      pagination: {
+        limit: $limit
+        start: $skip
+      }
       filters: {
         or: [
           { recordingTeam: { contains: $search_one } }
@@ -378,7 +386,11 @@ query SearchTitle($search_one: String!) {
         keywords
         description
         title
+        fileName
+        citation
+        referenceURL
         uniqueId
+        updatedAt
         mediaType {
           data {
             attributes {
@@ -393,7 +405,7 @@ query SearchTitle($search_one: String!) {
 `;
 
 export const media = gql`
-  query SearchTitle($search_one: String!, $search_two: String!) {
+  query SearchTitle($search_one: String!, $search_two: String) {
     medias(
       filters: {
         and: [
@@ -433,7 +445,14 @@ export const media = gql`
           keywords
           description
           title
+          fileName
+          citation
+          referenceURL
           uniqueId
+          updatedAt
+          bearing
+          actionType
+          featuredImage
           mediaType {
             data {
               attributes {

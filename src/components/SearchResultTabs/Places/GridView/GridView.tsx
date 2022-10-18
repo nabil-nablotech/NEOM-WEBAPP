@@ -19,10 +19,6 @@ export type PlacesProps = {
 }
 
 const GridView = (props: PlacesProps) => {
-  // const { data, hasMoreData, fetchData: fetchPlaces } = usePaginatedArray({
-  //   apiUrl: "https://jsonplaceholder.typicode.com/photos",
-  //   step: 10,
-  // });
 
   const {data, loading, fetchData, hasMoreData} = props;
 

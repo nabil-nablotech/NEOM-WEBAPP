@@ -25,23 +25,40 @@ const LibraryTab = () => {
   const { fetchLibraryItems, hasMoreData, loading } = useLibrary();
   const tableHeaderJson: ColumnsType<any> = [
     {
+      title: "",
+      key: "attributes",
+      dataIndex: "attributes",
+      width: viewWidths[4],
+      className: "name-column",
+      render: (value: any, record: any) => (
+        <Box
+          sx={{
+            display: "flex",
+            // gap: "1em",
+          }}
+        >
+          <InsertDriveFileOutlinedIcon fontSize="small" />
+        </Box>
+      ),
+    },
+    {
       title: "NAME",
       key: "attributes",
       dataIndex: "attributes",
       width: viewWidths[0],
-      // sorter: (a, b) => a.name.localeCompare(b.name),
-      // sortDirections: ["ascend"],
-      // defaultSortOrder: "ascend",
+      sorter: (a, b) => a.title.localeCompare(b.title),
+      sortDirections: ["ascend"],
+      defaultSortOrder: "ascend",
       className: "name-column",
-      render: (value, record: any) => (
+      render: (value: any, record: any) => (
         <Box
           sx={{
             display: "flex",
             gap: "1em",
           }}
         >
-          <InsertDriveFileOutlinedIcon fontSize="small" />
-          <Box>{'value'}</Box>
+          {/* <InsertDriveFileOutlinedIcon fontSize="small" /> */}
+          <Box>{value.title}</Box>
         </Box>
       ),
     },
@@ -51,9 +68,9 @@ const LibraryTab = () => {
       className: "description-column",
       //   dataIndex: "description",
       dataIndex: "attributes", // temporary
-      render: (value, index) => {
+      render: (value: any, index) => {
         // temporary
-        return `value.name`;
+        return value.description;
       },
     },
     {
@@ -61,9 +78,9 @@ const LibraryTab = () => {
       className: "citation-column",
       //   dataIndex: "citation",
       dataIndex: "attributes", // temporary
-      render: (value, index) => {
+      render: (value: any, index) => {
         // temporary
-        return `value.catchPhrase`;
+        return value.citation;
       },
       //   width: viewWidths[2],
     },
@@ -80,17 +97,16 @@ const LibraryTab = () => {
             textDecoration: "underline",
           }}
         >
-          {`value`}
+          {value.referenceURL}
         </Box>
       ),
     },
     {
       title: "SITE",
       key: "attributes",
-      width: viewWidths[4],
-      //   dataIndex: "site",
-      dataIndex: "attributes", // temporary
-      render: (value, index) => `value`, // temporary
+      width: viewWidths[0],
+      dataIndex: "attributes",
+      render: (value, index) => value.fileName, 
     },
   ];
   // const {
