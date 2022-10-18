@@ -1,3 +1,5 @@
+import { tabNameProps } from "./SearchResultsTabsProps"
+
 export type CustomDrawerProps = {
     origin: "top" | "right" | "bottom" | "left" | undefined
     isOpen: boolean
@@ -10,6 +12,7 @@ export type AddNewItemProps = {
 }
 
 export type StepContentTypes = {
+    tabName: tabNameProps | undefined
     formState: any
     setFormState: React.SetStateAction<any> 
     activeStep: number

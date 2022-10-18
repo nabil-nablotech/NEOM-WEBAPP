@@ -13,6 +13,8 @@ import { useDispatch } from 'react-redux';
 import { toggleShowAddSuccess } from '../../store/reducers/searchResultsReducer';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
+import { EVENTS_TAB_NAME } from './../../utils/services/helpers';
+import CustomSearchField from '../SearchField';
 
 const commonSelectSxStyles = {
     textAlign: 'left',
@@ -67,6 +69,7 @@ export const stepperIconSx = {
 }
 
 const StepContent = ({
+    tabName,
     formState,
     setFormState,
     activeStep,
@@ -80,87 +83,111 @@ const StepContent = ({
             {
                 activeStep === 0 &&
                 <>
-                    <TextInput
-                        className={`${styles["english-name"]}`}
-                        label="Name in English"
-                        name="english-name"
-                        value={''}
-                        onChange={(e) => { }}
-                        sx={{
-                            ...textInputSxStyles
-                        }}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <TextInput
-                        className={`${styles["arabic-name"]}`}
-                        label="Name in Arabic"
-                        name="arabic-name"
-                        value={''}
-                        onChange={(e) => { }}
-                        sx={{
-                            ...textInputSxStyles
-                        }}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <TextInput
-                        className={`${styles["site-description"]}`}
-                        label="Site Description"
-                        name="site-description"
-                        value={formState.siteDescription}
-                        multiline
-                        minRows={3}
-                        maxRows={3}
-                        onChange={(e) => {
-                            setFormState((state: any) => ({
-                                ...state,
-                                siteDescription: e.target.value
-                            }))
-                        }}
-                        sx={{
-                            ...textInputSxStyles
-                        }}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <DropdownComponent
-                        className={`${styles["site-type"]}`}
-                        label={"Site Type"}
-                        name="site-type"
-                        value={''}
-                        handleChange={(e) => { }}
-                        itemsList={[]}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <DropdownComponent
-                        className={`${styles["period"]}`}
-                        label={"Period"}
-                        name="period"
-                        value={''}
-                        handleChange={(e) => { }}
-                        itemsList={[]}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <DropdownComponent
-                        className={`${styles["state-of-conservation"]}`}
-                        label={"State of Conservation"}
-                        name="state-of-conservation"
-                        value={''}
-                        handleChange={(e) => { }}
-                        itemsList={[]}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <DropdownComponent
-                        className={`${styles["risk"]}`}
-                        label={"Risk"}
-                        name="risk"
-                        value={''}
-                        handleChange={(e) => { }}
-                        itemsList={[]}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    />
+                    {tabName === PLACES_TAB_NAME &&
+                        <>
+                            <TextInput
+                                className={`${styles["english-name"]}`}
+                                label="Name in English"
+                                name="english-name"
+                                value={''}
+                                onChange={(e) => { }}
+                                sx={{
+                                    ...textInputSxStyles
+                                }}
+                                formControlSx={commonFormControlSxStyles}
+                            />
+                            <TextInput
+                                className={`${styles["arabic-name"]}`}
+                                label="Name in Arabic"
+                                name="arabic-name"
+                                value={''}
+                                onChange={(e) => { }}
+                                sx={{
+                                    ...textInputSxStyles
+                                }}
+                                formControlSx={commonFormControlSxStyles}
+                            />
+                            <TextInput
+                                className={`${styles["site-description"]}`}
+                                label="Site Description"
+                                name="site-description"
+                                value={formState.siteDescription}
+                                multiline
+                                minRows={3}
+                                maxRows={3}
+                                onChange={(e) => {
+                                    setFormState((state: any) => ({
+                                        ...state,
+                                        siteDescription: e.target.value
+                                    }))
+                                }}
+                                sx={{
+                                    ...textInputSxStyles,
+                                    marginBottom: '4em'
+                                }}
+                                formControlSx={commonFormControlSxStyles}
+                            />
+                            <DropdownComponent
+                                className={`${styles["site-type"]}`}
+                                label={"Site Type"}
+                                name="site-type"
+                                value={''}
+                                handleChange={(e) => { }}
+                                itemsList={[]}
+                                selectStylesSx={commonSelectSxStyles}
+                                formControlSx={commonFormControlSxStyles}
+                            />
+                            <DropdownComponent
+                                className={`${styles["period"]}`}
+                                label={"Period"}
+                                name="period"
+                                value={''}
+                                handleChange={(e) => { }}
+                                itemsList={[]}
+                                selectStylesSx={commonSelectSxStyles}
+                                formControlSx={commonFormControlSxStyles}
+                            />
+                            <DropdownComponent
+                                className={`${styles["state-of-conservation"]}`}
+                                label={"State of Conservation"}
+                                name="state-of-conservation"
+                                value={''}
+                                handleChange={(e) => { }}
+                                itemsList={[]}
+                                selectStylesSx={commonSelectSxStyles}
+                                formControlSx={commonFormControlSxStyles}
+                            />
+                            <DropdownComponent
+                                className={`${styles["risk"]}`}
+                                label={"Risk"}
+                                name="risk"
+                                value={''}
+                                handleChange={(e) => { }}
+                                itemsList={[]}
+                                selectStylesSx={commonSelectSxStyles}
+                                formControlSx={commonFormControlSxStyles}
+                            />
+                        </>
+                    }
+                    {
+                        tabName === EVENTS_TAB_NAME &&
+                        <>
+                            {
+                                <CustomSearchField
+                                    handleChangeParent={(e) => {
+                                        setFormState((state: any) => ({
+                                            ...state,
+                                            search: e.target.value
+                                        }))
+                                    }}
+                                    // onKeyDown={onKeyDown}
+                                    className={`${styles["custom-search-field"]}`}
+                                    shouldHandleChangeFromParent={true}
+                                    valueFromParent={formState.search}
+                                />
+                            }
+                        </>
+                    }
                 </>
             }
             {
@@ -212,7 +239,7 @@ const AddNewItem = ({
 }: AddNewItemProps) => {
     let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-    const {showAddSuccess} = useSelector((state: RootState) => state.searchResults);
+    const { showAddSuccess } = useSelector((state: RootState) => state.searchResults);
 
     const [activeStep, setActiveStep] = useState(0);
     const [formState, setFormState] = useState({
@@ -245,7 +272,7 @@ const AddNewItem = ({
     };
 
     useEffect(() => {
-        if(showAddSuccess) {
+        if (showAddSuccess) {
             dispatch(toggleShowAddSuccess(true))
         }
     }, [showAddSuccess])
@@ -281,72 +308,73 @@ const AddNewItem = ({
 
     return (
         <Box>
-            {
-                tabName === PLACES_TAB_NAME ?
-                    <Box className={`${styles['add-new-item-container']}`}>
-                        <Box style={{
-                            marginRight: 0,
-                            marginLeft: 'auto',
-                            width: 'fit-content'
-                        }}>
-                            <DefaultButton variant="text" onClick={e => onClose()}
-                                style={{
-                                    // paddingInline: 0,
-                                    minWidth: 'fit-content',
-                                    padding: 0,
-                                    color: 'var(--table-black-text)'
-                                }}
-                            >Hide</DefaultButton>
-                        </Box>
-                        <Typography variant="h4" component="h4" style={{
-                        }}>
-                            Add Place
-                        </Typography>
-                        <Stepper activeStep={activeStep} alternativeLabel
-                            className={`${styles['stepper']}`}
-                        >
-                            {steps.map((label, index) => {
-                                const stepProps: { completed?: boolean } = {};
-                                const labelProps: {
-                                    optional?: React.ReactNode;
-                                } = {};
-                                // if (isStepOptional(index)) {
-                                //     labelProps.optional = (
-                                //         <Typography variant="caption">Optional</Typography>
-                                //     );
-                                // }
-                                // if (isStepSkipped(index)) {
-                                //     stepProps.completed = false;
-                                // }
-                                return (
-                                    <Step key={label} {...stepProps}>
-                                        <StepLabel {...labelProps} className={`${styles['step-label']}`}
-                                            StepIconProps={{
-                                                sx: {
-                                                    ...stepperIconSx
-                                                }
-                                            }}
-                                        >{label}</StepLabel>
-                                    </Step>
-                                );
-                            })}
-                        </Stepper>
-                        <>
-                            <React.Fragment>
-                                <StepContent
-                                    formState={formState}
-                                    setFormState={setFormState}
-                                    activeStep={activeStep}
-                                    steps={steps}
-                                    handleNext={handleNext}
-                                    handleBack={handleBack}
-                                />
+            <Box className={`${styles['add-new-item-container']}`}>
+                <Box style={{
+                    marginRight: 0,
+                    marginLeft: 'auto',
+                    width: 'fit-content'
+                }}>
+                    <DefaultButton variant="text" onClick={e => onClose()}
+                        style={{
+                            // paddingInline: 0,
+                            minWidth: 'fit-content',
+                            padding: 0,
+                            color: 'var(--table-black-text)'
+                        }}
+                    >Hide</DefaultButton>
+                </Box>
+                <Typography variant="h4" component="h4" style={{
+                }}>
+                    Add {
+                        tabName === PLACES_TAB_NAME ?
+                            'Place' :
+                            'Event'
+                    }
+                </Typography>
+                <Stepper activeStep={activeStep} alternativeLabel
+                    className={`${styles['stepper']}`}
+                >
+                    {steps.map((label, index) => {
+                        const stepProps: { completed?: boolean } = {};
+                        const labelProps: {
+                            optional?: React.ReactNode;
+                        } = {};
+                        // if (isStepOptional(index)) {
+                        //     labelProps.optional = (
+                        //         <Typography variant="caption">Optional</Typography>
+                        //     );
+                        // }
+                        // if (isStepSkipped(index)) {
+                        //     stepProps.completed = false;
+                        // }
+                        return (
+                            <Step key={label} {...stepProps}>
+                                <StepLabel {...labelProps} className={`${styles['step-label']}`}
+                                    StepIconProps={{
+                                        sx: {
+                                            ...stepperIconSx
+                                        }
+                                    }}
+                                >{label}</StepLabel>
+                            </Step>
+                        );
+                    })}
+                </Stepper>
+                <>
+                    <React.Fragment>
+                        <StepContent
+                            tabName={tabName}
+                            formState={formState}
+                            setFormState={setFormState}
+                            activeStep={activeStep}
+                            steps={steps}
+                            handleNext={handleNext}
+                            handleBack={handleBack}
+                        />
 
-                            </React.Fragment>
-                        </>
-                    </Box> :
-                    <Box>&&&</Box>
-            }
+                    </React.Fragment>
+                </>
+            </Box>
         </Box>
     );
 }
