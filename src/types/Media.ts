@@ -14,5 +14,8 @@ export type Media = {
     citation: string;
     latitude: Number;
     longitude: Number;
+    imageMetadata: {
+      fileSize: Number;
+    }
   };
 };

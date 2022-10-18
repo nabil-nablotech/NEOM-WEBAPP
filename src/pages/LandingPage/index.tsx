@@ -82,7 +82,7 @@ function LandingPage() {
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.code === 'Enter' && searchText.length > 3) {
+    if (e.code === 'Enter' && searchText.length >= 3) {
       navigate(`search-results/Places?search=${encodeURIComponent(searchText)}`);
     }
   };

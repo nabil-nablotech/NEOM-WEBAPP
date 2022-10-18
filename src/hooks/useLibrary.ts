@@ -4,7 +4,8 @@ import {useSelector, useDispatch} from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { library } from "../query/search";
 import { RootState } from '../store';
-import {setLibrary, setLibraryMetaData} from '../store/reducers/searchResultsReducer'
+import {setLibrary, setLibraryMetaData} from '../store/reducers/searchResultsReducer';
+import {limit} from '../utils/services/helpers';
 
 const useLibrary = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
@@ -14,31 +15,47 @@ const useLibrary = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const text = searchText || decodeURIComponent(search.replace('?search=', ''));
-    fetchLibraryItems({search_one: text});
-  }, [])
+    resetLib();
+    fetchData(0);
+  }, []);
+
+  const resetLib = async () => {
+    await dispatch(setLibrary([]));
+    await dispatch(setLibraryMetaData(null));
+  };
 
   /**
    * fetch places with two words
    */
-  const { loading, error, data, refetch:fetchLibraryItems } = useQuery(library);
+  const { loading, error, data, refetch:refetchLibraryItems } = useQuery(library);
 
   useEffect(() => {
-    if (libItem.length <= data?.medias.meta.pagination.total) {
-      setHasMoreData(true);
-      dispatch(setLibrary(data?.medias.data));
+    if (data?.medias) {
+      // update the data for the pagination
+      if (data?.medias.meta.pagination.page === 1 && data?.medias.data.length > 0) {
+        dispatch(setLibrary([...data?.medias?.data]));
+      } else if (data?.medias.data.length > 0) {
+        dispatch(setLibrary([...libItem, ...data?.medias?.data]));
+      }
+      // update the meta data
       dispatch(setLibraryMetaData(data?.medias?.meta));
-    } else {
-      setHasMoreData(false);
+      // this flag decides to fetch next set of data 
+      setHasMoreData(data?.medias?.meta.pagination.pageCount !==
+        data?.medias.meta.pagination.page);
     }
   }, [data])
+  
+  const fetchData = (skip: number = libItem.length, local: boolean = false) => {
+    const text = local ? searchText : decodeURIComponent(search.replace("?search=", ""));
+    refetchLibraryItems({ search_one: text, limit: limit, skip: skip });
+  };
  
   return {
     loading,
     error,
     data,
     hasMoreData,
-    fetchLibraryItems
+    fetchLibraryItems: fetchData
   };
 };
 

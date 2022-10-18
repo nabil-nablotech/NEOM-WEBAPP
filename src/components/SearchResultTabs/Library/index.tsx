@@ -15,6 +15,7 @@ import useLibrary from "../../../hooks/useLibrary";
 import { Meta } from "../../../types/Place";
 import { RootState } from "../../../store";
 import { useSelector } from "react-redux";
+import {formatWebDate} from '../../../utils/services/helpers'
 
 let viewWidths = ["20vw", "20vw", "20vw", "20vw", "5vw"];
 
@@ -25,28 +26,11 @@ const LibraryTab = () => {
   const { fetchLibraryItems, hasMoreData, loading } = useLibrary();
   const tableHeaderJson: ColumnsType<any> = [
     {
-      title: "",
-      key: "attributes",
-      dataIndex: "attributes",
-      width: viewWidths[4],
-      className: "name-column",
-      render: (value: any, record: any) => (
-        <Box
-          sx={{
-            display: "flex",
-            // gap: "1em",
-          }}
-        >
-          <InsertDriveFileOutlinedIcon fontSize="small" />
-        </Box>
-      ),
-    },
-    {
       title: "NAME",
       key: "attributes",
       dataIndex: "attributes",
       width: viewWidths[0],
-      sorter: (a, b) => a.title.localeCompare(b.title),
+      sorter: (a, b) => a?.title?.localeCompare(b?.title),
       sortDirections: ["ascend"],
       defaultSortOrder: "ascend",
       className: "name-column",
@@ -57,7 +41,7 @@ const LibraryTab = () => {
             gap: "1em",
           }}
         >
-          {/* <InsertDriveFileOutlinedIcon fontSize="small" /> */}
+          <InsertDriveFileOutlinedIcon fontSize="small" />
           <Box>{value.title}</Box>
         </Box>
       ),
@@ -102,11 +86,18 @@ const LibraryTab = () => {
       ),
     },
     {
-      title: "SITE",
+      title: "SIZE",
       key: "attributes",
-      width: viewWidths[0],
       dataIndex: "attributes",
-      render: (value, index) => value.fileName, 
+      width: viewWidths[0],
+      render: (value, index) => value.imageMetadata.fileSize, 
+    },
+    {
+      title: "UPDATED",
+      key: "attributes",
+      dataIndex: "attributes",
+      width: viewWidths[0],
+      render: (value, index) => formatWebDate(value.updatedAt), 
     },
   ];
   // const {
@@ -131,7 +122,7 @@ const LibraryTab = () => {
   const meta: Meta | null = libararyMetaData;
 
   const handleNext = () => {
-    fetchLibraryItems({ search_one: searchText });
+    fetchLibraryItems();
   };
 
   if (!library) {

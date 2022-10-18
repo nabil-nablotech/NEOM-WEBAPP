@@ -395,6 +395,9 @@ query SearchTitle($search_one: String!, $limit: Int, $skip: Int) {
         referenceURL
         uniqueId
         updatedAt
+        imageMetadata {
+          fileSize
+        }
         mediaType {
           data {
             attributes {
@@ -461,6 +464,9 @@ export const media = gql`
           bearing
           actionType
           featuredImage
+          imageMetadata {
+            fileSize
+          }
           mediaType {
             data {
               attributes {

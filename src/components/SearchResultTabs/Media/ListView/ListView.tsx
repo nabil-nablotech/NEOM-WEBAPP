@@ -17,6 +17,7 @@ import { DetailsPage } from "./../DetailsPage/index";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { MediaProps } from "../GridView/GridView";
+import {formatWebDate} from '../../../../utils/services/helpers'
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -174,18 +175,16 @@ const ListView = (props: MediaProps) => {
       render: (value: any, index: any) => value.title?.substring(0, 8), // need to remove once ste is confrmed
     },
     {
-      title: "NUMBER",
+      title: "SIZE",
       key: "attributes",
       dataIndex: "attributes",
-      className: "cell-id",
-      render: (value: any, index: any) => value.uniqueId,
+      render: (value, index) => value.imageMetadata.fileSize, 
     },
     {
-      title: "TYPE",
+      title: "UPDATED",
       key: "attributes",
       dataIndex: "attributes",
-      className: "cell-type",
-      render: (value: any, index: any) => value.actionType?.substring(0, 10),
+      render: (value, index) => formatWebDate(value.updatedAt), 
     },
     {
       title: "BEARING",
