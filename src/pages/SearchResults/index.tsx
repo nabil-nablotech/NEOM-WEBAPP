@@ -44,7 +44,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   }, [])
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.code === 'Enter' && searchText.length >= 3) {
+    if (e.code === 'Enter' && searchText.trim().length >= 3) {
       switch (tabName) {
         case 'Places':
           fetchPlaces(0, true);
