@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import CustomDrawer from "../../components/CustomDrawer";
 import { useDispatch } from "react-redux";
 import { setActiveTab, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
+import AddNewItem from "../../components/AddNewItem";
 
 const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
@@ -62,7 +63,9 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       <Box>
         <SearchResultTabs tabIndex={tabIndex} />
       </Box>
-      <CustomDrawer origin="right" isOpen = {newItemWindowOpen} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}/>
+      <CustomDrawer origin="right" isOpen={newItemWindowOpen} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}>
+        <AddNewItem onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))} />
+      </CustomDrawer>
     </>
   );
 };

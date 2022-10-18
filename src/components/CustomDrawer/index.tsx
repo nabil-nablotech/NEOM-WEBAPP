@@ -5,9 +5,10 @@ import { CustomDrawerProps } from '../../types/CustomDrawerTypes';
 const CustomDrawer = ({
     origin,
     isOpen,
-    onClose
+    onClose,
+    children
 }: CustomDrawerProps) => {
-    
+
     return (
         <Box style={{
             zIndex: '33'
@@ -17,7 +18,7 @@ const CustomDrawer = ({
                 open={isOpen}
                 onClose={onClose}
                 >
-                    Hello
+                    {children}
                 </Drawer>
         </Box>
     );
