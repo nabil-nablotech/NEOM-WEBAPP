@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { EVENTS_TAB_NAME, addItemMediaSteps } from './../../utils/services/helpers';
 import CustomSearchField from '../SearchField';
+import CustomUpload from '../Upload';
 
 const commonSelectSxStyles = {
     textAlign: 'left',
@@ -83,149 +84,185 @@ const StepContent = ({
             {
                 activeStep === 0 &&
                 <>
-                    {tabName === PLACES_TAB_NAME &&
+                    {
+                        (tabName === PLACES_TAB_NAME || tabName === EVENTS_TAB_NAME) &&
                         <>
-                            <TextInput
-                                className={`${styles["english-name"]}`}
-                                label="Name in English"
-                                name="english-name"
+                            {tabName === PLACES_TAB_NAME &&
+                                <>
+                                    <TextInput
+                                        className={`${styles["english-name"]}`}
+                                        label="Name in English"
+                                        name="english-name"
+                                        value={''}
+                                        onChange={(e) => { }}
+                                        sx={{
+                                            ...textInputSxStyles
+                                        }}
+                                        formControlSx={commonFormControlSxStyles}
+                                    />
+                                    <TextInput
+                                        className={`${styles["arabic-name"]}`}
+                                        label="Name in Arabic"
+                                        name="arabic-name"
+                                        value={''}
+                                        onChange={(e) => { }}
+                                        sx={{
+                                            ...textInputSxStyles
+                                        }}
+                                        formControlSx={commonFormControlSxStyles}
+                                    />
+                                    <TextInput
+                                        className={`${styles["site-description"]}`}
+                                        label="Site Description"
+                                        name="site-description"
+                                        value={formState.siteDescription}
+                                        multiline
+                                        minRows={3}
+                                        maxRows={3}
+                                        onChange={(e) => {
+                                            setFormState((state: any) => ({
+                                                ...state,
+                                                siteDescription: e.target.value
+                                            }))
+                                        }}
+                                        sx={{
+                                            ...textInputSxStyles,
+                                            marginBottom: '4em'
+                                        }}
+                                        formControlSx={commonFormControlSxStyles}
+                                    />
+                                </>
+                            }
+                            {
+                                tabName === EVENTS_TAB_NAME &&
+                                <>
+                                    <CustomSearchField
+                                        handleChangeParent={(e) => {
+                                            setFormState((state: any) => ({
+                                                ...state,
+                                                search: e.target.value
+                                            }))
+                                        }}
+                                        // onKeyDown={onKeyDown}
+                                        className={`${styles["custom-search-field"]}`}
+                                        shouldHandleChangeFromParent={true}
+                                        valueFromParent={formState.search}
+                                    />
+                                    <TextInput
+                                        className={`${styles["site-description"]}`}
+                                        label="Site Description"
+                                        name="site-description"
+                                        value={formState.siteDescription}
+                                        multiline
+                                        minRows={3}
+                                        maxRows={3}
+                                        onChange={(e) => {
+                                            setFormState((state: any) => ({
+                                                ...state,
+                                                siteDescription: e.target.value
+                                            }))
+                                        }}
+                                        sx={{
+                                            ...textInputSxStyles,
+                                            marginBottom: '4em'
+                                        }}
+                                        formControlSx={commonFormControlSxStyles}
+                                    />
+                                    <TextInput
+                                        className={`${styles["field-narrative"]}`}
+                                        label="Field Narrative"
+                                        name="field-narrative"
+                                        value={formState.fieldNarrative}
+                                        multiline
+                                        minRows={3}
+                                        maxRows={3}
+                                        onChange={(e) => {
+                                            setFormState((state: any) => ({
+                                                ...state,
+                                                fieldNarrative: e.target.value
+                                            }))
+                                        }}
+                                        sx={{
+                                            ...textInputSxStyles,
+                                            marginBottom: '4em'
+                                        }}
+                                        formControlSx={commonFormControlSxStyles}
+                                    />
+                                </>
+                            }
+                            <DropdownComponent
+                                className={`${styles["site-type"]}`}
+                                label={"Site Type"}
+                                name="site-type"
                                 value={''}
-                                onChange={(e) => { }}
-                                sx={{
-                                    ...textInputSxStyles
-                                }}
+                                handleChange={(e) => { }}
+                                itemsList={[]}
+                                selectStylesSx={commonSelectSxStyles}
                                 formControlSx={commonFormControlSxStyles}
                             />
-                            <TextInput
-                                className={`${styles["arabic-name"]}`}
-                                label="Name in Arabic"
-                                name="arabic-name"
+                            <DropdownComponent
+                                className={`${styles["period"]}`}
+                                label={"Period"}
+                                name="period"
                                 value={''}
-                                onChange={(e) => { }}
-                                sx={{
-                                    ...textInputSxStyles
-                                }}
+                                handleChange={(e) => { }}
+                                itemsList={[]}
+                                selectStylesSx={commonSelectSxStyles}
                                 formControlSx={commonFormControlSxStyles}
                             />
-                            <TextInput
-                                className={`${styles["site-description"]}`}
-                                label="Site Description"
-                                name="site-description"
-                                value={formState.siteDescription}
-                                multiline
-                                minRows={3}
-                                maxRows={3}
-                                onChange={(e) => {
-                                    setFormState((state: any) => ({
-                                        ...state,
-                                        siteDescription: e.target.value
-                                    }))
-                                }}
-                                sx={{
-                                    ...textInputSxStyles,
-                                    marginBottom: '4em'
-                                }}
+                            <DropdownComponent
+                                className={`${styles["state-of-conservation"]}`}
+                                label={"State of Conservation"}
+                                name="state-of-conservation"
+                                value={''}
+                                handleChange={(e) => { }}
+                                itemsList={[]}
+                                selectStylesSx={commonSelectSxStyles}
+                                formControlSx={commonFormControlSxStyles}
+                            />
+                            <DropdownComponent
+                                className={`${styles["risk"]}`}
+                                label={"Risk"}
+                                name="risk"
+                                value={''}
+                                handleChange={(e) => { }}
+                                itemsList={[]}
+                                selectStylesSx={commonSelectSxStyles}
                                 formControlSx={commonFormControlSxStyles}
                             />
                         </>
                     }
                     {
-                        tabName === EVENTS_TAB_NAME &&
+                        tabName === MEDIA_TAB_NAME &&
                         <>
-                            <CustomSearchField
-                                handleChangeParent={(e) => {
-                                    setFormState((state: any) => ({
-                                        ...state,
-                                        search: e.target.value
-                                    }))
-                                }}
-                                // onKeyDown={onKeyDown}
-                                className={`${styles["custom-search-field"]}`}
-                                shouldHandleChangeFromParent={true}
-                                valueFromParent={formState.search}
-                            />
-                            <TextInput
-                                className={`${styles["site-description"]}`}
-                                label="Site Description"
-                                name="site-description"
-                                value={formState.siteDescription}
-                                multiline
-                                minRows={3}
-                                maxRows={3}
-                                onChange={(e) => {
-                                    setFormState((state: any) => ({
-                                        ...state,
-                                        siteDescription: e.target.value
-                                    }))
-                                }}
-                                sx={{
-                                    ...textInputSxStyles,
-                                    marginBottom: '4em'
-                                }}
+                            <DropdownComponent
+                                className={`${styles["media-type"]}`}
+                                label={"Media Type"}
+                                name="media-type"
+                                value={formState.mediaType}
+                                handleChange={(e) => setFormState((state: any) => ({
+                                    ...state,
+                                    mediaType: e.target.value
+                                }))}
+                                itemsList={[
+                                    {
+                                        label: 'Image',
+                                        value: 'Image'
+                                    }
+                                ]}
+                                selectStylesSx={commonSelectSxStyles}
                                 formControlSx={commonFormControlSxStyles}
                             />
-                            <TextInput
-                                className={`${styles["field-narrative"]}`}
-                                label="Field Narrative"
-                                name="field-narrative"
-                                value={formState.fieldNarrative}
-                                multiline
-                                minRows={3}
-                                maxRows={3}
-                                onChange={(e) => {
-                                    setFormState((state: any) => ({
-                                        ...state,
-                                        fieldNarrative: e.target.value
-                                    }))
-                                }}
-                                sx={{
-                                    ...textInputSxStyles,
-                                    marginBottom: '4em'
-                                }}
-                                formControlSx={commonFormControlSxStyles}
-                            />
+                            {
+                                formState.mediaType === 'Image' &&
+                                <>
+                                    <CustomUpload
+                                        title={'Drag and drop you file here'}
+                                    />
+                                </>
+                            }
                         </>
                     }
-                    <DropdownComponent
-                        className={`${styles["site-type"]}`}
-                        label={"Site Type"}
-                        name="site-type"
-                        value={''}
-                        handleChange={(e) => { }}
-                        itemsList={[]}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <DropdownComponent
-                        className={`${styles["period"]}`}
-                        label={"Period"}
-                        name="period"
-                        value={''}
-                        handleChange={(e) => { }}
-                        itemsList={[]}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <DropdownComponent
-                        className={`${styles["state-of-conservation"]}`}
-                        label={"State of Conservation"}
-                        name="state-of-conservation"
-                        value={''}
-                        handleChange={(e) => { }}
-                        itemsList={[]}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <DropdownComponent
-                        className={`${styles["risk"]}`}
-                        label={"Risk"}
-                        name="risk"
-                        value={''}
-                        handleChange={(e) => { }}
-                        itemsList={[]}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    />
                 </>
             }
             {
