@@ -349,8 +349,12 @@ export const events = gql`
 `;
 
 export const library = gql`
-query SearchTitle($search_one: String!) {
+query SearchTitle($search_one: String!, $limit: Int, $skip: Int) {
   medias(
+    pagination: {
+      limit: $limit
+      start: $skip
+    }
     filters: {
       and: [
         {
@@ -405,8 +409,12 @@ query SearchTitle($search_one: String!) {
 `;
 
 export const media = gql`
-  query SearchTitle($search_one: String!, $search_two: String) {
+  query SearchTitle($search_one: String!, $search_two: String, $limit: Int, $skip: Int) {
     medias(
+      pagination: {
+        limit: $limit
+        start: $skip
+      }
       filters: {
         and: [
           {

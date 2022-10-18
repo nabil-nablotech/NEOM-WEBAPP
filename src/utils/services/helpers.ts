@@ -3,7 +3,8 @@ import { tabNameProps } from "../../types/SearchResultsTabsProps";
 
 export const baseUrl = `http://localhost:9999`;
 // export const baseUrl = `https://7e68-117-197-248-242.in.ngrok.io`;
-export const webUrl = `http://localhost:3000`
+export const webUrl = `http://localhost:3000`;
+export const limit = 5;
 
 export const formatWebDate = (value: string) => {
   if (Date.parse(value)) {

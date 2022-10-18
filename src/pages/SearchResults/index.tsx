@@ -26,7 +26,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
           fetchPlaces(0, true);
           break;
         case 'Events':
-          fetchEvents(0);
+          fetchEvents(0, true);
           break;
       
         default:

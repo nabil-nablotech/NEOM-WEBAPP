@@ -8,6 +8,7 @@ import {
   setPlaces,
   setPlaceMetaData,
 } from "../store/reducers/searchResultsReducer";
+import {limit} from '../utils/services/helpers';
 
 const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -15,7 +16,6 @@ const usePlace = () => {
   const {
     searchText,
     places: placeData,
-    placeMetaData,
   } = useSelector((state: RootState) => state.searchResults);
   const { search } = useLocation();
   const dispatch = useDispatch();
@@ -52,11 +52,9 @@ const usePlace = () => {
     }
   }, [data]);
 
-  console.log('has more data in hooks', hasMoreData);
-
   const fetchData = (skip: number = placeData.length, local: boolean = false) => {
     const text = local ? searchText : decodeURIComponent(search.replace("?search=", ""));
-    refetchPlaces({ search_one: text, limit: 5, skip: skip });
+    refetchPlaces({ search_one: text, limit: limit, skip: skip });
   };
 
   return {

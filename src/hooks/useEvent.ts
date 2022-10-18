@@ -8,6 +8,7 @@ import {
   setEvents,
   setEventMetaData,
 } from "../store/reducers/searchResultsReducer";
+import {limit} from '../utils/services/helpers';
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -15,20 +16,18 @@ const useEvent = () => {
   const {
     searchText,
     events: eventsData,
-    eventMetaData,
   } = useSelector((state: RootState) => state.searchResults);
   const { search } = useLocation();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('inside effect');
-    resetPlaces();
+    resetEvents();
+    fetchData(0);
   }, []);
 
-  const resetPlaces = async () => {
+  const resetEvents = async () => {
     await dispatch(setEvents([]));
     await dispatch(setEventMetaData(null));
-    await fetchData(0);
   };
 
   /**
@@ -38,32 +37,24 @@ const useEvent = () => {
 
   useEffect(() => {
     if (data?.visits) {
-      // const oldPlaces = placeData;
-
-      if (
-        eventMetaData?.pagination.pageCount !==
-          data?.visits.meta.pagination.page &&
-        hasMoreData
-      ) {
+      // update the data for the pagination
+      if (data?.visits.meta.pagination.page === 1 && data?.visits.data.length > 0) {
+        dispatch(setEvents([...data?.visits?.data]));
+      } else if (data?.visits.data.length > 0) {
         dispatch(setEvents([...eventsData, ...data?.visits?.data]));
-        setHasMoreData(true);
-        dispatch(setEventMetaData(data?.visits?.meta));
-      } else if (
-        eventMetaData?.pagination.pageCount ===
-        data?.visits.meta.pagination.page
-      ) {
-        dispatch(setEvents([...eventsData, ...data?.visits?.data]));
-        dispatch(setEventMetaData(data?.visits?.meta));
-        setHasMoreData(false);
       }
+      // update the meta data
+      dispatch(setEventMetaData(data?.visits?.meta));
+      // this flag decides to fetch next set of data 
+      setHasMoreData(data?.visits?.meta.pagination.pageCount !==
+        data?.visits.meta.pagination.page);
     }
+
   }, [data]);
 
-  const fetchData = (skip: number = eventsData.length) => {
-    const text =
-      searchText || decodeURIComponent(search.replace("?search=", ""));
-    // const splitText = text.split('');
-    refetchEvents({ search_one: text || "", limit: 5, skip: skip });
+  const fetchData = (skip: number = eventsData.length, local: boolean = false) => {
+    const text = local ? searchText : decodeURIComponent(search.replace("?search=", ""));
+    refetchEvents({ search_one: text, limit: limit, skip: skip });
   };
 
   return {
