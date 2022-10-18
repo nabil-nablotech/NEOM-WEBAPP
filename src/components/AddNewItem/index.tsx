@@ -245,28 +245,7 @@ const StepContent = ({
                     />
                 </>
             }
-            <Box
-                sx={{
-                    display: 'flex', flexDirection: 'row',
-                    justifyContent: 'space-between'
-                }}
-            >
-                <Button
-                    colors={["#fff", "var(--table-black-text)", "none"]}
-                    className={`${styles["plain-whitee-btn"]}`}
-                    label={activeStep === 0 ? 'Cancel' : 'Back'}
-                    onClick={handleBack}
-                />
-                {/* {isStepOptional(activeStep) && (
-                                                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                                                    Skip
-                                                </Button>
-                                            )} */}
-                <Button
-                    label={activeStep === steps.length - 1 ? 'Add' : 'Next'}
-                    onClick={handleNext}
-                />
-            </Box>
+            
         </Box>
     </>
 }
@@ -347,71 +326,101 @@ const AddNewItem = ({
     return (
         <Box>
             <Box className={`${styles['add-new-item-container']}`}>
-                <Box style={{
-                    marginRight: 0,
-                    marginLeft: 'auto',
-                    width: 'fit-content'
-                }}>
-                    <DefaultButton variant="text" onClick={e => onClose()}
+                
+                <Box className={`${styles['content-section']}`}>
+                    <Box className={`${styles['hide-btn']}`}
                         style={{
-                            // paddingInline: 0,
-                            minWidth: 'fit-content',
-                            padding: 0,
-                            color: 'var(--table-black-text)'
-                        }}
-                    >Hide</DefaultButton>
-                </Box>
-                <Typography variant="h4" component="h4" style={{
-                }}>
-                    Add {
-                        tabName === PLACES_TAB_NAME ?
-                            'Place' :
-                            'Event'
-                    }
-                </Typography>
-                <Stepper activeStep={activeStep} alternativeLabel
-                    className={`${styles['stepper']}`}
-                >
-                    {steps.map((label, index) => {
-                        const stepProps: { completed?: boolean } = {};
-                        const labelProps: {
-                            optional?: React.ReactNode;
-                        } = {};
-                        // if (isStepOptional(index)) {
-                        //     labelProps.optional = (
-                        //         <Typography variant="caption">Optional</Typography>
-                        //     );
-                        // }
-                        // if (isStepSkipped(index)) {
-                        //     stepProps.completed = false;
-                        // }
-                        return (
-                            <Step key={label} {...stepProps}>
-                                <StepLabel {...labelProps} className={`${styles['step-label']}`}
-                                    StepIconProps={{
-                                        sx: {
-                                            ...stepperIconSx
-                                        }
-                                    }}
-                                >{label}</StepLabel>
-                            </Step>
-                        );
-                    })}
-                </Stepper>
-                <>
-                    <React.Fragment>
-                        <StepContent
-                            tabName={tabName}
-                            formState={formState}
-                            setFormState={setFormState}
-                            activeStep={activeStep}
-                            steps={steps}
-                            handleNext={handleNext}
-                            handleBack={handleBack}
-                        />
+                        marginRight: 0,
+                        marginLeft: 'auto',
+                        width: 'fit-content'
+                    }}>
+                        <DefaultButton variant="text" onClick={e => onClose()}
+                            style={{
+                                // paddingInline: 0,
+                                minWidth: 'fit-content',
+                                padding: 0,
+                                color: 'var(--table-black-text)'
+                            }}
+                        >Hide</DefaultButton>
+                    </Box>
+                    <Typography className={`${styles['add-title']}`} variant="h4" component="h4" style={{
+                    }}>
+                        Add {
+                            tabName === PLACES_TAB_NAME ?
+                                'Place' :
+                                'Event'
+                        }
+                    </Typography>
+                    <Stepper activeStep={activeStep} alternativeLabel
+                        className={`${styles['stepper']}`}
+                    >
+                        {steps.map((label, index) => {
+                            const stepProps: { completed?: boolean } = {};
+                            const labelProps: {
+                                optional?: React.ReactNode;
+                            } = {};
+                            // if (isStepOptional(index)) {
+                            //     labelProps.optional = (
+                            //         <Typography variant="caption">Optional</Typography>
+                            //     );
+                            // }
+                            // if (isStepSkipped(index)) {
+                            //     stepProps.completed = false;
+                            // }
+                            return (
+                                <Step key={label} {...stepProps}>
+                                    <StepLabel {...labelProps} className={`${styles['step-label']}`}
+                                        StepIconProps={{
+                                            sx: {
+                                                ...stepperIconSx
+                                            }
+                                        }}
+                                    >{label}</StepLabel>
+                                </Step>
+                            );
+                        })}
+                    </Stepper>
+                    <>
+                        <React.Fragment>
+                            <StepContent
+                                tabName={tabName}
+                                formState={formState}
+                                setFormState={setFormState}
+                                activeStep={activeStep}
+                                steps={steps}
+                                handleNext={handleNext}
+                                handleBack={handleBack}
+                            />
 
-                    </React.Fragment>
-                </>
+                        </React.Fragment>
+                    </>
+                </Box>
+                <Box
+                    className={`${styles["btn-row"]}`}
+                    sx={{
+                        display: 'flex', flexDirection: 'row',
+                        justifyContent: 'space-between'
+                    }}
+                >
+                    <Button
+                        colors={["#fff", "var(--table-black-text)", "none"]}
+                        className={`${styles["plain-whitee-btn"]}`}
+                        label={activeStep === 0 ? 'Cancel' : 'Back'}
+                        onClick={handleBack}
+                        style={{
+                            paddingInline: 0
+                        }}
+                    />
+                    {/* {isStepOptional(activeStep) && (
+                                                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+                                                    Skip
+                                                </Button>
+                                            )} */}
+                    <Button
+                        label={activeStep === steps.length - 1 ? 'Add' : 'Next'}
+                        onClick={handleNext}
+                    />
+                </Box>
             </Box>
         </Box>
     );
