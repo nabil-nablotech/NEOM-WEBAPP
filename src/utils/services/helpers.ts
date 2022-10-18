@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { tabNameProps } from "../../types/SearchResultsTabsProps";
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://7e68-117-197-248-242.in.ngrok.io`;
+// export const baseUrl = `https://d1fc-59-94-74-58.ngrok.io`;
 export const webUrl = `http://localhost:3000`
 
 export const formatWebDate = (value: string) => {
@@ -140,3 +140,7 @@ export const tabNameBasedOnIndex = (tabIndex: number) => {
       return MEDIA_TAB_NAME;
   }
 };
+
+export const addItemDefaultSteps = ['Item Details', 'Keywords']
+
+export const addItemMediaSteps = ['Media', 'Item Details', 'Associations', 'Keywords']
