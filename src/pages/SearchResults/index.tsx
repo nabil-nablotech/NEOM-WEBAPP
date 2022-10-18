@@ -20,18 +20,17 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   const {fetchPlaces} = usePlace();
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-
     if (e.code === 'Enter') {
       switch (tabName) {
         case 'Places':
-          fetchPlaces(0);
+          fetchPlaces(0, true);
           break;
         case 'Events':
-          fetchEvents({search_one: searchText});
+          fetchEvents(0);
           break;
       
         default:
-          fetchPlaces(0);
+          fetchPlaces(0, true);
           break;
       }
       e.preventDefault();

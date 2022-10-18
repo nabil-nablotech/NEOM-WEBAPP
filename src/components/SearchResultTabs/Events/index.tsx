@@ -34,7 +34,7 @@ const PlacesTab = () => {
     const meta: Meta | null = eventMetaData;
 
     const handleNext = () => {
-      fetchEvents({search_one: searchText})
+      fetchEvents();
     }
 
     return (

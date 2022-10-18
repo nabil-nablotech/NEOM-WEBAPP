@@ -1,45 +1,77 @@
-import {useQuery} from '@apollo/client';
-import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { events } from "../query/search";
-import { RootState } from '../store';
-import {setEvents, setEventMetaData} from '../store/reducers/searchResultsReducer'
+import { RootState } from "../store";
+import {
+  setEvents,
+  setEventMetaData,
+} from "../store/reducers/searchResultsReducer";
 
 const useEvent = () => {
-  const [hasMoreData, setHasMoreData] = useState(false);
+  const [hasMoreData, setHasMoreData] = useState(true);
 
-  const {searchText, events: eventsData} = useSelector((state: RootState) => state.searchResults);
-  const {search} = useLocation();
+  const {
+    searchText,
+    events: eventsData,
+    eventMetaData,
+  } = useSelector((state: RootState) => state.searchResults);
+  const { search } = useLocation();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const text = searchText.toLowerCase() || decodeURIComponent(search.replace('?search=', '')).toLowerCase();
+    console.log('inside effect');
+    resetPlaces();
+  }, []);
 
-    fetchEvents({search_one: text});
-  }, [])
+  const resetPlaces = async () => {
+    await dispatch(setEvents([]));
+    await dispatch(setEventMetaData(null));
+    await fetchData(0);
+  };
 
   /**
    * fetch places with two words
    */
-  const { loading, error, data, refetch:fetchEvents } = useQuery(events);
+  const { loading, error, data, refetch: refetchEvents } = useQuery(events);
 
   useEffect(() => {
-    if (eventsData.length <= data?.visits?.meta?.pagination.total) {
-      setHasMoreData(true);
-      dispatch(setEvents([...data?.visits?.data]));
-      dispatch(setEventMetaData(data?.visits?.meta));
-    } else {
-      setHasMoreData(false);
+    if (data?.visits) {
+      // const oldPlaces = placeData;
+
+      if (
+        eventMetaData?.pagination.pageCount !==
+          data?.visits.meta.pagination.page &&
+        hasMoreData
+      ) {
+        dispatch(setEvents([...eventsData, ...data?.visits?.data]));
+        setHasMoreData(true);
+        dispatch(setEventMetaData(data?.visits?.meta));
+      } else if (
+        eventMetaData?.pagination.pageCount ===
+        data?.visits.meta.pagination.page
+      ) {
+        dispatch(setEvents([...eventsData, ...data?.visits?.data]));
+        dispatch(setEventMetaData(data?.visits?.meta));
+        setHasMoreData(false);
+      }
     }
-  }, [data])
- 
+  }, [data]);
+
+  const fetchData = (skip: number = eventsData.length) => {
+    const text =
+      searchText || decodeURIComponent(search.replace("?search=", ""));
+    // const splitText = text.split('');
+    refetchEvents({ search_one: text || "", limit: 5, skip: skip });
+  };
+
   return {
     loading,
     error,
     data,
     hasMoreData,
-    fetchEvents
+    fetchEvents: fetchData,
   };
 };
 

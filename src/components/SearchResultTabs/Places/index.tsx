@@ -24,6 +24,8 @@ const PlacesTab = () => {
 
   const { fetchPlaces, hasMoreData, loading } = usePlace();
 
+  console.log('hasMoreData', hasMoreData);
+
   const { openStates, toggleOpenStates } = useToggledView({ count: 2 });
 
   useEffect(() => {
