@@ -20,3 +20,7 @@ export type StepContentTypes = {
     handleNext: () => void
     handleBack:  () => void
 }
+
+export type CustomUploadProps = {
+    title?: string
+}
