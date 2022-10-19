@@ -25,17 +25,7 @@ export type MediaProps = {
 
 const GridView = (props: MediaProps) => {
 
-    // const [data, setData] = useState<any>([])
     const dispatch = useDispatch();
-
-    // const {
-    //     data,
-    //     hasMoreData,
-    //     fetchData
-    // } = usePaginatedArray({
-    //     apiUrl: 'https://jsonplaceholder.typicode.com/photos',
-    //     step: 10
-    // })
 
     const {data, hasMoreData, fetchData, loading} = props;
 

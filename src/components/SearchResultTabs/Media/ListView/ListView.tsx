@@ -1,23 +1,14 @@
 import { useState, useEffect } from "react";
-import { Box, Menu, MenuItem, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 import { ColumnsType } from "antd/lib/table";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { User } from "../../../../types/User";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
 import { antTablePaginationCss } from "../../../../utils/services/helpers";
-import { usePaginatedArray } from "./../../../../hooks/usePaginatedArray";
 import InfiniteScroll from "react-infinite-scroll-component";
 import commonStyles from "../../index.module.css";
-import styles from "./index.module.css";
 import { Loader } from "../../../Loader";
-import { CustomModal } from "../../../CustomModal";
-import { DetailsPage } from "./../DetailsPage/index";
-
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 import { MediaProps } from "../GridView/GridView";
-import {formatWebDate} from '../../../../utils/services/helpers'
+import {formatWebDate, formatBytes} from '../../../../utils/services/helpers'
 import {MoreOptionsComponent} from './MoreOption';
 import { Media } from "../../../../types/Media";
 
@@ -105,8 +96,6 @@ const StyledTableWrapper = styled(StyledAntTable)`
   ${antTablePaginationCss}
 `;
 
-
-
 const ListView = (props: MediaProps) => {
   const tableHeaderJson: ColumnsType<any> = [
     {
@@ -150,7 +139,7 @@ const ListView = (props: MediaProps) => {
       title: "SIZE",
       key: "attributes",
       dataIndex: "attributes",
-      render: (value, index) => value.imageMetadata.fileSize, 
+      render: (value, index) => formatBytes(value.imageMetadata.fileSize), 
     },
     {
       title: "UPDATED",

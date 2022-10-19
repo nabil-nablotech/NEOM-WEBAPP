@@ -15,7 +15,7 @@ import useLibrary from "../../../hooks/useLibrary";
 import { Meta } from "../../../types/Place";
 import { RootState } from "../../../store";
 import { useSelector } from "react-redux";
-import {formatWebDate} from '../../../utils/services/helpers';
+import {formatWebDate, formatBytes} from '../../../utils/services/helpers';
 import {MoreOptionsComponent} from '../Media/ListView/MoreOption';
 import { Media } from "../../../types/Media";
 
@@ -94,7 +94,7 @@ const LibraryTab = () => {
       key: "attributes",
       dataIndex: "attributes",
       width: viewWidths[0],
-      render: (value, index) => value.imageMetadata.fileSize, 
+      render: (value, index) => formatBytes(value.imageMetadata.fileSize), 
     },
     {
       title: "UPDATED",

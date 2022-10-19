@@ -181,15 +181,16 @@ const RefinedSearchInputs = ({
     const MediaInputs = () => {
 
         return <>
-            <Grid item sm={2} className={`${styles["input-field"]}`}>
-                <DropdownComponent
-                    className={`${styles["dropdown"]} ${styles["extra-width"]}`}
-                    label={"Artifacts"}
-                    name="artifacts"
-                    value={selectedValue.artifacts}
-                    handleChange={handleChange}
-                    itemsList={options?.artifacts ||[]}
-                    selectStylesSx={commonSelectSxStyles}
+            <Grid item sm={2} className={`${styles["location-grid-item"]}`}>
+                <TextInput
+                    className={`${styles["location"]}`}
+                    label="Location"
+                    name="location"
+                    value={''}
+                    onChange={(e) => { }}
+                    sx={{
+                        ...textInputSxStyles
+                    }}
                     formControlSx={commonFormControlSxStyles}
                 />
             </Grid>

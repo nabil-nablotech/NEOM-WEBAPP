@@ -1,23 +1,6 @@
-import { useState, useEffect } from "react";
-import { Box, Menu, MenuItem, Grid } from "@mui/material";
-import { ColumnsType } from "antd/lib/table";
+import { useState } from "react";
+import { Menu, MenuItem } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { User } from "../../../../types/User";
-import { StyledAntTable } from "../../../StyledAntTable";
-import styled from "styled-components";
-import { antTablePaginationCss } from "../../../../utils/services/helpers";
-import { usePaginatedArray } from "./../../../../hooks/usePaginatedArray";
-import InfiniteScroll from "react-infinite-scroll-component";
-import commonStyles from "../../index.module.css";
-import styles from "./index.module.css";
-import { Loader } from "../../../Loader";
-import { CustomModal } from "../../../CustomModal";
-import { DetailsPage } from "./../DetailsPage/index";
-
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
-import { MediaProps } from "../GridView/GridView";
-import {formatWebDate} from '../../../../utils/services/helpers'
 import { Media } from "../../../../types/Media";
 
 export const MoreOptionsComponent = ({ record, id }: { id: string; record: Media }) => {

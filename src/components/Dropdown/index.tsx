@@ -29,6 +29,7 @@ const DropdownComponent = ({
           labelId={staticLabel}
           id="simple-select"
           value={value}
+          // multiple={true}
           name={name}
           label={staticLabel}
           placeholder={placeholder}
