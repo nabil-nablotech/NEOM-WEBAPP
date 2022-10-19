@@ -7,12 +7,12 @@ import { RootState } from "../store";
 import {
   setPlaces,
   setPlaceMetaData,
+  setSearchText
 } from "../store/reducers/searchResultsReducer";
 import {limit} from '../utils/services/helpers';
 
 const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
-
   const {
     searchText,
     places: placeData,
@@ -40,6 +40,7 @@ const usePlace = () => {
 
   useEffect(() => {
     if (data?.places) {
+      dispatch(setSearchText(decodeURIComponent(search.replace("?search=", ""))))
       // update the data for the pagination
       if (data?.places.meta.pagination.page === 1 && data?.places.data.length > 0) {
         dispatch(setPlaces([...data?.places.data]));

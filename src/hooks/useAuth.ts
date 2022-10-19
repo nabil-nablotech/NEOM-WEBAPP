@@ -24,7 +24,7 @@ const useAuth = () => {
       
       const data = await fetchMeUser();
       await dispatch(setUser(data));
-      await dispatch(setSearchText(''));
+      // await dispatch(setSearchText(''));
       setRole(data.role.name);
       return data;
     } catch (error) {
