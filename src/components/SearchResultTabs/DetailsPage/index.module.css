@@ -113,3 +113,21 @@
 .map-loctn-line {
     gap: 0.5em;
 }
+
+.heading-title {
+    margin-top: 2em;
+    margin-bottom: 1em;
+    display: flex;
+    align-items: baseline;
+    gap: 1em;
+}
+
+.heading-title> div:nth-child(1) {
+    font-size: 30px;
+    font-weight: bold;
+}
+.heading-title> div:nth-child(2) {
+    font-size: 1em;
+    font-weight: bold;
+    color: var(--grey-text);
+}

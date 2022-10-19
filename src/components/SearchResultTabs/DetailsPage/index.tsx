@@ -11,12 +11,97 @@ import { Place } from "../../../types/Place";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import MenuList from "../../MenuList";
 import { useAnchor } from "../../../hooks/useAnchor";
+import { StyledAntTable } from "../../StyledAntTable";
+import { ColumnsType } from "antd/lib/table";
+// import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
+// import useLibrary from "../../../hooks/useLibrary";
+import { MoreOptionsComponent } from "../Media/ListView/MoreOption";
+import { antTablePaginationCss, formatWebDate } from "../../../utils/services/helpers";
+import { Tooltip } from "antd";
+import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
+import { Media } from "../../../types/Media";
+import styled from "styled-components";
 
+const StyledTableWrapper = styled(StyledAntTable)`
+    
+    .ant-table-container {
+    }
+    .ant-table {
+        margin-block: 2em;
+    }
+    
+    .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell) ,
+    .ant-table-tbody > tr > td:not(.ant-table-tbody > tr > td.more-menu-ant-cell) {
+        min-width: 50px;
+    }
+
+    th.ant-table-cell {
+        white-space: break-spaces;
+    }
+    .cell-citation {
+        min-width: 18ch !important;
+    }
+
+    .ant-table-cell.more-menu-ant-cell {
+        vertical-align:middle;
+        min-width: 20px;
+        width: 20px;
+    }
+    .more-menu-div {
+        vertical-align:middle;
+    }
+    .ant-table-thead > tr > th.ant-table-cell-fix-right,
+    .ant-table-cell-fix-right {
+        background: var(--off-white-background-color);
+    }
+    
+    .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > thead > tr > th.more-menu-ant-cell.ant-table-cell-fix-right {
+        border-left: 1px solid #f0f0f0;
+    }
+
+    @media (min-width: 575px) and (max-width: 1025px) {
+
+        .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell) ,
+        .ant-table-tbody > tr > td:not(.ant-table-tbody > tr > td.more-menu-ant-cell) {
+            min-width: 90px;
+        }
+
+        .ant-table-thead > tr > th.more-menu-ant-cell.ant-table-cell-fix-right ,
+        .ant-table-tbody > tr > td.more-menu-ant-cell.ant-table-cell-fix-right {
+            right: -5vw !important;
+        }
+
+        th.ant-table-cell ,
+        th.ant-table-cell * {
+        }
+        td.ant-table-cell {
+        }
+        .cell-research{
+            min-width: 16ch !important;
+        }
+        .cell-tourism {
+            min-width: 14ch !important;
+        }
+        .cell-recommend {
+            min-width: 20ch !important;
+        }
+        
+        .cell-conserve {
+            min-width: 15ch !important;
+        }
+
+        .cell-name {
+            min-width: 25ch !important;
+        }
+        
+    }
+    ${antTablePaginationCss}
+` 
 const DetailsPage = () => {
     let { tabName, itemId } = useParams<{ tabName?: tabNameProps, itemId: string }>();
     const navigate = useNavigate();
 
-    const { places } = useSelector(
+    const { places, library } = useSelector(
         (state: RootState) => state.searchResults
     );
 
@@ -24,9 +109,11 @@ const DetailsPage = () => {
 
     const {
         placeNameEnglish, placeNameArabic, placeNumber,
-        siteDescription
+        siteDescription, 
     } = selectedPlaceObj.attributes
 
+    const {latitude, longitude} = selectedPlaceObj
+console.log('hex: ', library)
     // get from api
     let [images, setImages] = useState<any>([
         'https://via.placeholder.com/150/92c952',
@@ -54,6 +141,8 @@ const DetailsPage = () => {
         },
     ]
 
+    // const { fetchLibraryItems, hasMoreData, loading } = useLibrary();
+
     const {
         anchorEl,
         open,
@@ -61,6 +150,86 @@ const DetailsPage = () => {
         handleClose,
         handleSettingsClose
     } = useAnchor()
+
+    const tableHeaderJson: ColumnsType<any> = [
+        {
+          title: "NAME",
+          key: "attributes",
+          dataIndex: "attributes",
+          sorter: (a, b) => a?.title?.localeCompare(b?.title),
+          sortDirections: ["ascend"],
+          defaultSortOrder: "ascend",
+          className: "name-column",
+          render: (value: any, record: any) => (
+            <Box
+              sx={{
+                display: "flex",
+                gap: "1em",
+              }}
+            >
+              <InsertDriveFileOutlinedIcon fontSize="small" />
+              <Box>{value.title}</Box>
+            </Box>
+          ),
+        },
+        {
+          title: "DESCRIPTION",
+          key: "attributes",
+          className: "description-column",
+          dataIndex: "attributes", // temporary
+          render: (value: any, index) => {
+            return value.description;
+          },
+        },
+        {
+          title: "CITATION",
+          className: "citation-column cell-citation",
+          dataIndex: "attributes", // temporary
+          render: (value: any, index) => {
+            return value.citation;
+          },
+        },
+        {
+          title: "URL",
+          key: "attributes",
+          dataIndex: "attributes", // temporary
+          render: (value, index) => (
+            <Box
+              component={"a"}
+              sx={{
+                color: "initial",
+                textDecoration: "underline",
+              }}
+            >
+              <Tooltip>
+                {value.referenceURL}
+              </Tooltip>
+            </Box>
+          ),
+        },
+        {
+          title: "SIZE",
+          key: "attributes",
+          dataIndex: "attributes",
+          render: (value, index) => value?.imageMetadata?.fileSize ?? 'Temp', 
+        },
+        {
+          title: "UPDATED",
+          key: "attributes",
+          dataIndex: "attributes",
+          render: (value, index) => formatWebDate(value.updatedAt), 
+        },
+        {
+          title: "",
+          key: "action",
+          fixed: "right",
+          className: "more-menu-ant-cell",
+          render: (value: any, record: Media) => (
+            <MoreOptionsComponent id={record.id} record={record} />
+          ),
+        },
+      ];
+    
 
     return (
         <Box className={`${styles['details-container']}`}>
@@ -294,13 +463,13 @@ const DetailsPage = () => {
                                     <Grid item lg={5} md={5} sm={5}>
                                         <Grid container className={`${styles['map-loctn-line']}`}>
                                             <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                            <Grid item>28.090884</Grid>
+                                            <Grid item>{latitude}</Grid>
                                         </Grid>
                                     </Grid>
                                     <Grid item lg={5} md={5} sm={6}>
                                         <Grid container className={`${styles['map-loctn-line']}`}>
                                             <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                            <Grid item>35.475373</Grid>
+                                            <Grid item>{longitude}</Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -308,8 +477,27 @@ const DetailsPage = () => {
                         </Grid>
 
                     </Box>
-                    <Box className={`${styles['library-section']}`}>
-
+                    <Box className={`${styles['heading']} ${styles['text-left']}`}>
+                        <Box className={`${styles['heading-title']}`}>
+                            <Box>Library</Box>
+                            <Box>3 Items</Box>
+                        </Box>
+                        <Box>
+                            <StyledTableWrapper
+                                className={`${styles["table-container"]}`}
+                                rowKey={"id"}
+                                size="small"
+                                columns={tableHeaderJson}
+                                dataSource={library}
+                                pagination={false}
+                                loading={false}
+                                bordered
+                                scroll={{ x: true, y: 300 }}
+                                style={{
+                                    background: "transparent",
+                                }}
+                            ></StyledTableWrapper>
+                        </Box>
                     </Box>
                     <Box className={`${styles['events-section']}`}>
 

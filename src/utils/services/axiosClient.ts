@@ -16,7 +16,7 @@ const headers: Headers = {
   "Content-Type": "application/json",
   Accept: "application/json",
   "Access-Control-Allow-Origin": "*",
-  Language: 'English'
+  Language: 'English',
   // un-comment below for local run
   // "ngrok-skip-browser-warning": "3243r"
 };
