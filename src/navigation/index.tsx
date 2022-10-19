@@ -52,7 +52,7 @@ export const Navigation = () => {
             },
             {
               path: ":itemId",
-              element: <AdminRoute component={SearchResults} />,
+              element: <PrivateRoute component={SearchResults} />,
             }
           ]
         },
