@@ -20,6 +20,7 @@ const initialState: SearchResultsState2 = {
   activeTab: '',
   newItemWindowOpen: false,
   showAddSuccess: false,
+  // activePlaceItem: {}
 };
 
 export const searchResultsSlice = createSlice({
@@ -68,6 +69,9 @@ export const searchResultsSlice = createSlice({
     toggleShowAddSuccess: (state, action: PayloadAction<boolean>) => {
       state.showAddSuccess = action.payload;
     },
+    // setActivePlaceItem: (state, action: PayloadAction<Object>) => {
+    //   state.activePlaceItem = action.payload;
+    // },
   },
 });
 

@@ -28,6 +28,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import RefinedSearchInputs from "../RefinedSearchInputs";
 import { tabIndexBasedOnName } from "../../utils/services/helpers";
+import DetailsPage from "./DetailsPage";
 import { useDispatch } from "react-redux";
 import {setSelectedValue} from '../../store/reducers/refinedSearchReducer';
 
@@ -113,7 +114,7 @@ const initialState = {
 }
 const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => {
   const [value, setValue] = React.useState(0);
-  let { tabName } = useParams<{ tabName?: tabNameProps }>();
+  let { tabName, itemId } = useParams<{ tabName?: tabNameProps, itemId: string }>();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -159,6 +160,17 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
       replace: true,
     });
   };
+
+  /** If get itedId, means its details page
+   * Hence replace tabs view and open normal view
+   */
+  if(itemId) {
+    return <>
+      <div className={`${styles["search-results-wrapper"]}`}>
+        <DetailsPage />
+      </div>
+    </>
+  }
 
   return (
     <div className={`${styles["search-results-wrapper"]}`}>

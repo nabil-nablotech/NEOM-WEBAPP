@@ -55,4 +55,20 @@ export type SearchResultsState2 = {
     activeTab: tabNameProps | ''
     newItemWindowOpen: boolean
     showAddSuccess: boolean
+    // activePlaceItem: Object
+}
+
+export type FileDataType = {
+    src: string
+    alt?: string
+    className: string
+}
+
+export type RenderFileDataProps = {
+    fileType: "image"
+    fileData: FileDataType
+}
+
+export type CommentSectionProps = {
+    SelfIcon: () => JSX.Element
 }

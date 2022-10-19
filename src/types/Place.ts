@@ -1,5 +1,7 @@
 export type Place = {
   id: string;
+  latitude: number
+  longitude: number
   attributes: {
     thumbnailUrl?: string;
     placeNameEnglish: string;

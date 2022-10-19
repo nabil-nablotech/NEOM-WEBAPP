@@ -3,7 +3,7 @@ import { MenuItem } from '@mui/material';
 import './index.css'
 
 export interface MenuListProps {
-    ariaLabelledBy: string
+    ariaLabelledBy?: string
     anchorEl: HTMLElement | null
     open: boolean
     handleClose: () => void

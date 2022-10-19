@@ -14,6 +14,7 @@ export const Card = ({
   dateString,
   keywords,
 }: GridViewCard_Places) => {
+
   return (
     <>
       <Box className={`${gridStyles["card-container"]}`}>
