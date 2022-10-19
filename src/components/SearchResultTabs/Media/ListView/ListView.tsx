@@ -170,7 +170,7 @@ const ListView = (props: MediaProps) => {
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-bearing",
-      render: (value: any, index: any) => value.featuredImg?.substring(2, 5),
+      render: (value: any, index: any) => value.featuredImg ? 'Yes' : 'No',
     },
     {
       title: "",

@@ -19,10 +19,11 @@ import { setActiveTab, toggleNewItemWindow, toggleShowAddSuccess } from "../../s
 import AddNewItem from "../../components/AddNewItem";
 import PositionedSnackbar from "../../components/Snackbar";
 import { PLACES_TAB_NAME } from "../../utils/services/helpers";
+import useRefinedSearch from "../../hooks/useRefinedSearchOptions";
 
 const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
-
+  const {data} = useRefinedSearch();
   const navigate = useNavigate();
   const {searchText, activeTab, newItemWindowOpen, showAddSuccess} = useSelector((state: RootState) => state.searchResults);
   const {fetchEvents} = useEvent();
@@ -43,26 +44,30 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
     }
   }, [])
 
+  const handleSubmit = () => {
+    switch (tabName) {
+      case 'Places':
+        fetchPlaces(0, true);
+        break;
+      case 'Events':
+        fetchEvents(0, true);
+        break;
+      case 'Library':
+        fetchLibraryItems(0, true);
+        break;
+      case 'Media':
+        fetchMediaItems(0, true);
+        break;
+    
+      default:
+        fetchPlaces(0, true);
+        break;
+    }
+  }
+
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.code === 'Enter' && searchText.trim().length >= 3) {
-      switch (tabName) {
-        case 'Places':
-          fetchPlaces(0, true);
-          break;
-        case 'Events':
-          fetchEvents(0, true);
-          break;
-        case 'Library':
-          fetchLibraryItems(0, true);
-          break;
-        case 'Media':
-          fetchMediaItems(0, true);
-          break;
-      
-        default:
-          fetchPlaces(0, true);
-          break;
-      }
+      handleSubmit();
       e.preventDefault();
       navigate(`/search-results/${tabName}?search=${encodeURIComponent(searchText)}`);
     }
@@ -72,7 +77,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
     <>
       <Header onKeyDown={onKeyDown} showSearch={true}/>
       <Box>
-        <SearchResultTabs tabIndex={tabIndex} />
+        <SearchResultTabs handleSubmit={handleSubmit} tabIndex={tabIndex} />
       </Box>
       <CustomDrawer origin="right" isOpen={newItemWindowOpen} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}>
         <AddNewItem onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))} />

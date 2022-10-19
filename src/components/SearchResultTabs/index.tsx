@@ -4,6 +4,8 @@ import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Grid from "@mui/material/Grid";
+import { SelectChangeEvent } from "@mui/material/Select";
+
 import Places from "../../assets/images/searchResults/Places.svg";
 import Events from "../../assets/images/searchResults/Events.svg";
 import Library from "../../assets/images/searchResults/Library.svg";
@@ -26,6 +28,8 @@ import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import RefinedSearchInputs from "../RefinedSearchInputs";
 import { tabIndexBasedOnName } from "../../utils/services/helpers";
+import { useDispatch } from "react-redux";
+import {setSelectedValue} from '../../store/reducers/refinedSearchReducer';
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, className, ...other } = props;
@@ -96,29 +100,64 @@ const Label = ({ img, label }: LabelProps) => {
   );
 };
 
-const SearchResultTabs = ({ tabIndex }: SearchResultTabsProps) => {
+const initialState = {
+  stateOfConservation: '',
+  period: '',
+  recommendation: '',
+  researchValue: '',
+  tourismValue: '',
+  risk: '',
+  assessmentType: '',
+  artifacts: '',
+}
+const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => {
   const [value, setValue] = React.useState(0);
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { searchText } = useSelector((state: RootState) => state.searchResults);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-    let newLabel = TabLabels[newValue].label;
-    event.preventDefault();
-    navigate(`/search-results/${newLabel ? newLabel : "Places"}?search=${searchText}`, {
-      replace: true,
-    });
-  };
+  const { options, selectedValue } = useSelector((state: RootState) => state.refinedSearch);
 
   useEffect(() => {
     if (tabName) {
       const newTabIndex = tabIndexBasedOnName(tabName);
       setValue(newTabIndex);
+      dispatch(setSelectedValue(initialState));
     }
   }, [tabName]);
 
+  const handleSelectChange =(e: SelectChangeEvent<HTMLSelectElement>) => {
+    const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
+    selectedValueCopy[e.target.name] = e.target.value;
+    e.preventDefault();
+    dispatch(setSelectedValue(selectedValueCopy));
+  }
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+    let newLabel = TabLabels[newValue].label;
+    event.preventDefault();
+    navigate(`/search-results/${newLabel ? newLabel : "Places"}${searchText ? '?search=' : ''}${searchText}`, {
+      replace: true,
+    });
+  };
+
+  const handleButtonSubmit = (event: React.SyntheticEvent) => {
+    event.preventDefault();
+    const copiedValue = JSON.parse(JSON.stringify(selectedValue));
+    Object.keys(copiedValue).map(x => {
+      if (copiedValue[x].length === 0) {delete copiedValue[x];}
+      return x;
+    });
+    if (handleSubmit) {
+      handleSubmit();
+    }
+    const searchParams = new URLSearchParams(copiedValue);
+    navigate(`/search-results/${tabName}${searchText ? '?search=' : ''}${searchText}?${searchParams}`, {
+      replace: true,
+    });
+  };
 
   return (
     <div className={`${styles["search-results-wrapper"]}`}>
@@ -185,7 +224,7 @@ const SearchResultTabs = ({ tabIndex }: SearchResultTabsProps) => {
           <AccordionDetails style={{
             padding: 0
           }}>
-            <RefinedSearchInputs activeTabIndex={value} />
+            <RefinedSearchInputs handleChange={handleSelectChange} handleSubmit={handleButtonSubmit} selectedValue={selectedValue} options={options} activeTabIndex={value} />
           </AccordionDetails>
         </Accordion>
       </Box>}
