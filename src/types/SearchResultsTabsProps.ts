@@ -68,3 +68,7 @@ export type RenderFileDataProps = {
     fileType: "image"
     fileData: FileDataType
 }
+
+export type CommentSectionProps = {
+    SelfIcon: () => JSX.Element
+}

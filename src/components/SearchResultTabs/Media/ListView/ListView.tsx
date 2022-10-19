@@ -241,7 +241,7 @@ const ListView = (props: MediaProps) => {
           //   onC
         ></StyledTableWrapper>
       </InfiniteScroll>
-      {/* <CustomModal
+      <CustomModal
         open={isModalOpen}
         titleContent={
           <Grid
@@ -292,7 +292,7 @@ const ListView = (props: MediaProps) => {
             setCurrentRecord(record);
           }}
         />
-      </CustomModal> */}
+      </CustomModal>
     </Box>
   );
 };

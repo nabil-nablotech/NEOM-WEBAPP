@@ -16,13 +16,15 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../Media/ListView/MoreOption";
-import { antTablePaginationCss, formatWebDate } from "../../../utils/services/helpers";
+import { antTablePaginationCss, formatWebDate, stringAvatar } from "../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../types/Media";
 import styled from "styled-components";
 import { format } from "date-fns";
 import useMedia from "../../../hooks/useMedia";
+import CommentsSection from "../../CommentsSection";
+import RenderInitials from "../../RenderInitials";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -110,6 +112,7 @@ const DetailsPage = () => {
     const { places, library, events, media } = useSelector(
         (state: RootState) => state.searchResults
     );
+    const { data } = useSelector((state: RootState) => state.login);
 
     const selectedPlaceObj = places.filter((placeItem: Place) => placeItem.attributes.uniqueId === itemId)[0]
 
@@ -300,7 +303,13 @@ const DetailsPage = () => {
 
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
 
-
+    const commentsJson = [
+        {
+            commentor: 'Mark',
+            comment: 'Sed ut perspiciatis unde omnis iste natus error sign ut sai gon perspiciatis unde omnis iste ut',
+            nestedComments: 0
+        }
+    ]
     return (
         <Box className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -339,7 +348,6 @@ const DetailsPage = () => {
                                 />
                             </Grid>
                             <Grid item md={6} className={`${styles['image-grid-gap']} ${styles["image-side-grid"]}`}
-                                spacing={1}
                             >
                                 <Grid container className={`${styles['image-grid-gap']} ${styles['row-1']}`}
                                     spacing={1}
@@ -591,8 +599,13 @@ const DetailsPage = () => {
                             ></StyledTableWrapper>
                         </Box>
                     </Box>
-                    <Box className={`${styles['remarks-section']}`}>
-
+                    <Box className={`${styles['remarks-section']}  ${styles['heading']} ${styles['text-left']}`}>
+                    <Box className={`${styles['heading-title']}`}>
+                            <Box>Remarks</Box>
+                        </Box>
+                        <CommentsSection
+                            SelfIcon = {() => <RenderInitials firstName={data?.firstName} lastName={data?.lastName}/>}
+                        />
                     </Box>
                 </Box>
             </Grid>

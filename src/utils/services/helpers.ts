@@ -231,3 +231,39 @@ export const StyledTableWrapper = styled(StyledAntTable)`
   }
 ${antTablePaginationCss}
 `;
+
+export const commonSelectSxStyles = {
+  textAlign: 'left',
+  '& .MuiSelect-select': {
+      padding: '0.5em 1em',
+      color: 'var(--grey-text)'
+  }
+}
+export const textInputSxStyles = {
+
+  '& .MuiInputBase-input.MuiOutlinedInput-input': {
+      border: 'none'
+  },
+  '& .MuiFormLabel-root.MuiInputLabel-root ': {
+  },
+  '& .MuiInputBase-input.MuiOutlinedInput-input ': {
+      lineHeight: '1.2',
+      border: '1.4px solid #fff',
+      padding: '0.5em 1em',
+      height: '1.4em',
+  },
+  '& .MuiOutlinedInput-notchedOutline span': {
+      opacity: 1
+  },
+  '& .MuiOutlinedInput-notchedOutline legend': {
+      color: 'transparent'
+  }
+
+}
+export const commonFormControlSxStyles = {
+  width: '100%',
+  flexGrow: 0,
+  '& .MuiInputBase-root': {
+      backgroundColor: '#fff',
+  }
+}
