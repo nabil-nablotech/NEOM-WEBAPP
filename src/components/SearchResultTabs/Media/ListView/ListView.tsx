@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Grid, IconButton } from "@mui/material";
 import { ColumnsType } from "antd/lib/table";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
@@ -11,6 +11,10 @@ import { MediaProps } from "../GridView/GridView";
 import {formatWebDate, formatBytes} from '../../../../utils/services/helpers'
 import {MoreOptionsComponent} from './MoreOption';
 import { Media } from "../../../../types/Media";
+import {CustomModal} from '../../../CustomModal';
+import {DetailsPage} from '../DetailsPage';
+import styles from './index.module.css';
+import CloseIcon from '@mui/icons-material/CloseOutlined';
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
