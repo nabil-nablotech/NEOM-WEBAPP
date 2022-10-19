@@ -6,6 +6,7 @@ import {Media} from './Media';
 
 export type SearchResultTabsProps = {
     tabIndex?: number
+    handleSubmit?: () => void
 }
 
 export type LabelProps = {

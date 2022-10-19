@@ -462,6 +462,9 @@ query SearchTitle($search_one: String, $search_two: String, $search_three: Strin
         referenceURL
         uniqueId
         updatedAt
+        imageMetadata {
+          fileSize
+        }
         mediaType {
           data {
             attributes {
@@ -538,6 +541,7 @@ export const media = gql`
           updatedAt
           bearing
           actionType
+          
           featuredImage
           mediaType {
             data {
@@ -545,6 +549,9 @@ export const media = gql`
                 categoryCode
               }
             }
+          }
+          imageMetadata {
+            fileSize
           }
         }
       }
