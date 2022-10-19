@@ -7,14 +7,16 @@ export type Headers = {
   Accept: "text/HTML" | "application/json"
   "Access-Control-Allow-Origin": string,
   Authorization?: string,
+  Language: 'English' | 'Arabic';
   // un-comment below for local run
-  // "ngrok-skip-browser-warning"?: string
+  // "ngrok-skip-browser-warning"?: string  
 }
 
 const headers: Headers = {
   "Content-Type": "application/json",
   Accept: "application/json",
   "Access-Control-Allow-Origin": "*",
+  Language: 'English'
   // un-comment below for local run
   // "ngrok-skip-browser-warning": "3243r"
 };

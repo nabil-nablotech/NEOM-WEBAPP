@@ -206,7 +206,7 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-recommend',
-            render: (value: any, index: number) => value.recommendations.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
+            render: (value: any, index: number) => value.recommendation.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
         },
         {
             title: "PERIOD",

@@ -17,6 +17,9 @@ const usePlace = () => {
     searchText,
     places: placeData,
   } = useSelector((state: RootState) => state.searchResults);
+  const {
+    selectedValue
+  } = useSelector((state: RootState) => state.refinedSearch);
   const { search } = useLocation();
   const dispatch = useDispatch();
 
@@ -55,6 +58,13 @@ const usePlace = () => {
 
   const fetchData = (skip: number = placeData.length, local: boolean = false) => {
     const text = local ? searchText : decodeURIComponent(search.replace("?search=", ""));
+    const copiedValue = JSON.parse(JSON.stringify(selectedValue));
+    Object.keys(copiedValue).map(x => {
+      if (copiedValue[x].length === 0) {delete copiedValue[x];}
+      return x;
+    });
+    const searchParams = new URLSearchParams(copiedValue);
+    console.log('decodeURIComponent', decodeURIComponent(searchParams.toString()))
     const searchWordArray = text.split(' ');
     refetchPlaces({ search_one: searchWordArray[0], search_two: searchWordArray[1], search_three: searchWordArray[2], limit: limit, skip: skip });
   };

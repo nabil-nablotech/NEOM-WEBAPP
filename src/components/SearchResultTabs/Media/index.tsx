@@ -18,9 +18,7 @@ import { useToggledView } from './../../../hooks/useToggledView';
 import useMedia from '../../../hooks/useMedia';
 import { Meta } from '../../../types/Place';
 
-const MediaTab = ({
-    resultCount = 1053
-}) => {
+const MediaTab = () => {
     const { selectedCardIndex, media, mediaMetaData } = useSelector(
         (state: RootState) => state.searchResults
       );

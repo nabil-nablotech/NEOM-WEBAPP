@@ -11,7 +11,7 @@ import { RefinedSearchInputProps } from '../../types/RefinedSeachTypes';
 import { EVENTS_TAB_NAME, MEDIA_TAB_NAME, tabNameBasedOnIndex } from '../../utils/services/helpers';
 
 const RefinedSearchInputs = ({
-    activeTabIndex
+    activeTabIndex, options, handleChange, selectedValue, handleSubmit
 }: RefinedSearchInputProps) => {
     const commonSelectSxStyles = {
         textAlign: 'left',
@@ -61,10 +61,10 @@ const RefinedSearchInputs = ({
                 <DropdownComponent
                     className={`${styles["dropdown"]}`}
                     label={"State of Conservation"}
-                    name="conservation"
-                    value={''}
-                    handleChange={(e) => { }}
-                    itemsList={[]}
+                    name="stateOfConservation"
+                    value={selectedValue.stateOfConservation}
+                    handleChange={handleChange}
+                    itemsList={options?.stateOfConservation || []}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
                 />
@@ -74,9 +74,9 @@ const RefinedSearchInputs = ({
                     className={`${styles["dropdown"]} ${styles["extra-width"]}`}
                     label={"Period"}
                     name="period"
-                    value={''}
-                    handleChange={(e) => { }}
-                    itemsList={[]}
+                    value={selectedValue.period}
+                    handleChange={handleChange}
+                    itemsList={options?.period ||[]}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
                 />
@@ -86,9 +86,9 @@ const RefinedSearchInputs = ({
                     className={`${styles["dropdown"]}`}
                     label={"Recommendation"}
                     name="recommendation"
-                    value={''}
-                    handleChange={(e) => { }}
-                    itemsList={[]}
+                    value={selectedValue.recommendation}
+                    handleChange={handleChange}
+                    itemsList={options?.recommendation || []}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
                 />
@@ -97,10 +97,10 @@ const RefinedSearchInputs = ({
                 <DropdownComponent
                     className={`${styles["dropdown"]}`}
                     label={"Research Value"}
-                    name="research Value"
-                    value={''}
-                    handleChange={(e) => { }}
-                    itemsList={[]}
+                    name="researchValue"
+                    value={selectedValue.researchValue}
+                    handleChange={handleChange}
+                    itemsList={options?.researchValue ||[]}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
                 />
@@ -109,10 +109,10 @@ const RefinedSearchInputs = ({
                 <DropdownComponent
                     className={`${styles["dropdown"]} ${styles["extra-width"]}`}
                     label={"Tourism Value"}
-                    name="tourism Value"
-                    value={''}
-                    handleChange={(e) => { }}
-                    itemsList={[]}
+                    name="tourismValue"
+                    value={selectedValue.tourismValue}
+                    handleChange={handleChange}
+                    itemsList={options?.tourismValue ||[]}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
                 />
@@ -122,9 +122,9 @@ const RefinedSearchInputs = ({
                     className={`${styles["dropdown"]} ${styles["extra-width"]}`}
                     label={"Risk"}
                     name="risk"
-                    value={''}
-                    handleChange={(e) => { }}
-                    itemsList={[]}
+                    value={selectedValue.risk}
+                    handleChange={handleChange}
+                    itemsList={options?.risk ||[]}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
                 />
@@ -135,10 +135,10 @@ const RefinedSearchInputs = ({
                     <DropdownComponent
                         className={`${styles["dropdown"]}`}
                         label={"Assessment"}
-                        name="Assessment"
-                        value={''}
-                        handleChange={(e) => { }}
-                        itemsList={[]}
+                        name="assessmentType"
+                        value={selectedValue.assessmentType}
+                        handleChange={handleChange}
+                        itemsList={options?.assessmentType ||[]}
                         selectStylesSx={{
                             ...commonSelectSxStyles
                         }}
@@ -165,9 +165,9 @@ const RefinedSearchInputs = ({
                     className={`${styles["dropdown"]} ${styles["extra-width"]}`}
                     label={"Artifacts"}
                     name="artifacts"
-                    value={''}
-                    handleChange={(e) => { }}
-                    itemsList={[]}
+                    value={selectedValue.artifacts}
+                    handleChange={handleChange}
+                    itemsList={options?.artifacts ||[]}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
                 />
@@ -181,15 +181,16 @@ const RefinedSearchInputs = ({
     const MediaInputs = () => {
 
         return <>
-            <Grid item sm={2} className={`${styles["input-field"]}`}>
-                <DropdownComponent
-                    className={`${styles["dropdown"]} ${styles["extra-width"]}`}
-                    label={"Artifacts"}
-                    name="artifacts"
+            <Grid item sm={2} className={`${styles["location-grid-item"]}`}>
+                <TextInput
+                    className={`${styles["location"]}`}
+                    label="Location"
+                    name="location"
                     value={''}
-                    handleChange={(e) => { }}
-                    itemsList={[]}
-                    selectStylesSx={commonSelectSxStyles}
+                    onChange={(e) => { }}
+                    sx={{
+                        ...textInputSxStyles
+                    }}
                     formControlSx={commonFormControlSxStyles}
                 />
             </Grid>
@@ -198,9 +199,9 @@ const RefinedSearchInputs = ({
                     className={`${styles["dropdown"]} ${styles["extra-width"]}`}
                     label={"Artifacts"}
                     name="artifacts"
-                    value={''}
-                    handleChange={(e) => { }}
-                    itemsList={[]}
+                    value={selectedValue.artifacts}
+                    handleChange={handleChange}
+                    itemsList={options?.artifacts ||[]}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
                 />
@@ -232,7 +233,7 @@ const RefinedSearchInputs = ({
                     <MediaInputs />
                 }
                 <Grid item>
-                    <Button label="SEARCH" colors={['transparent', 'var(--black-90-pct)', 'rgb(0 0 0) 0px 0px 2px -1px']} style={{
+                    <Button label="SEARCH" onClick={handleSubmit} colors={['transparent', 'var(--black-90-pct)', 'rgb(0 0 0) 0px 0px 2px -1px']} style={{
                         padding: '0 2em',
                         width: '100%'
                     }} />
