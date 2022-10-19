@@ -21,6 +21,8 @@ import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../types/Media";
 import styled from "styled-components";
+import { format } from "date-fns";
+import useMedia from "../../../hooks/useMedia";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -57,6 +59,10 @@ const StyledTableWrapper = styled(StyledAntTable)`
     
     .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > thead > tr > th.more-menu-ant-cell.ant-table-cell-fix-right {
         border-left: 1px solid #f0f0f0;
+    }
+
+    .events-table-more-menu > div:nth-child(1) {
+        text-align: right;
     }
 
     @media (min-width: 575px) and (max-width: 1025px) {
@@ -101,7 +107,7 @@ const DetailsPage = () => {
     let { tabName, itemId } = useParams<{ tabName?: tabNameProps, itemId: string }>();
     const navigate = useNavigate();
 
-    const { places, library } = useSelector(
+    const { places, library, events, media } = useSelector(
         (state: RootState) => state.searchResults
     );
 
@@ -113,7 +119,7 @@ const DetailsPage = () => {
     } = selectedPlaceObj.attributes
 
     const {latitude, longitude} = selectedPlaceObj
-console.log('hex: ', library)
+// console.log('hex: ', events)
     // get from api
     let [images, setImages] = useState<any>([
         'https://via.placeholder.com/150/92c952',
@@ -153,83 +159,147 @@ console.log('hex: ', library)
 
     const tableHeaderJson: ColumnsType<any> = [
         {
-          title: "NAME",
-          key: "attributes",
-          dataIndex: "attributes",
-          sorter: (a, b) => a?.title?.localeCompare(b?.title),
-          sortDirections: ["ascend"],
-          defaultSortOrder: "ascend",
-          className: "name-column",
-          render: (value: any, record: any) => (
-            <Box
-              sx={{
-                display: "flex",
-                gap: "1em",
-              }}
-            >
-              <InsertDriveFileOutlinedIcon fontSize="small" />
-              <Box>{value.title}</Box>
-            </Box>
-          ),
+            title: "NAME",
+            key: "attributes",
+            dataIndex: "attributes",
+            sorter: (a, b) => a?.title?.localeCompare(b?.title),
+            sortDirections: ["ascend"],
+            defaultSortOrder: "ascend",
+            className: "name-column",
+            render: (value: any, record: any) => (
+                <Box
+                    sx={{
+                        display: "flex",
+                        gap: "1em",
+                    }}
+                >
+                    <InsertDriveFileOutlinedIcon fontSize="small" />
+                    <Box>{value.title}</Box>
+                </Box>
+            ),
         },
         {
-          title: "DESCRIPTION",
-          key: "attributes",
-          className: "description-column",
-          dataIndex: "attributes", // temporary
-          render: (value: any, index) => {
-            return value.description;
-          },
+            title: "DESCRIPTION",
+            key: "attributes",
+            className: "description-column",
+            dataIndex: "attributes", // temporary
+            render: (value: any, index) => {
+                return value.description;
+            },
         },
         {
-          title: "CITATION",
-          className: "citation-column cell-citation",
-          dataIndex: "attributes", // temporary
-          render: (value: any, index) => {
-            return value.citation;
-          },
+            title: "CITATION",
+            className: "citation-column cell-citation",
+            dataIndex: "attributes", // temporary
+            render: (value: any, index) => {
+                return value.citation;
+            },
         },
         {
-          title: "URL",
-          key: "attributes",
-          dataIndex: "attributes", // temporary
-          render: (value, index) => (
-            <Box
-              component={"a"}
-              sx={{
-                color: "initial",
-                textDecoration: "underline",
-              }}
-            >
-              <Tooltip>
-                {value.referenceURL}
-              </Tooltip>
-            </Box>
-          ),
+            title: "URL",
+            key: "attributes",
+            dataIndex: "attributes", // temporary
+            render: (value, index) => (
+                <Box
+                    component={"a"}
+                    sx={{
+                        color: "initial",
+                        textDecoration: "underline",
+                    }}
+                >
+                    <Tooltip>
+                        {value.referenceURL}
+                    </Tooltip>
+                </Box>
+            ),
         },
         {
-          title: "SIZE",
-          key: "attributes",
-          dataIndex: "attributes",
-          render: (value, index) => value?.imageMetadata?.fileSize ?? 'Temp', 
+            title: "SIZE",
+            key: "attributes",
+            dataIndex: "attributes",
+            render: (value, index) => value?.imageMetadata?.fileSize ?? 'Temp',
         },
         {
-          title: "UPDATED",
-          key: "attributes",
-          dataIndex: "attributes",
-          render: (value, index) => formatWebDate(value.updatedAt), 
+            title: "UPDATED",
+            key: "attributes",
+            dataIndex: "attributes",
+            render: (value, index) => formatWebDate(value.updatedAt),
         },
         {
-          title: "",
-          key: "action",
-          fixed: "right",
-          className: "more-menu-ant-cell",
-          render: (value: any, record: Media) => (
-            <MoreOptionsComponent id={record.id} record={record} />
-          ),
+            title: "",
+            key: "action",
+            fixed: "right",
+            className: "more-menu-ant-cell",
+            render: (value: any, record: Media) => (
+                <MoreOptionsComponent id={record.id} record={record} />
+            ),
         },
-      ];
-    
+    ];
+
+    const tableHeaderJson_media: ColumnsType<any> = [
+        {
+            title: "",
+            key: "attributes",
+            dataIndex: "attributes",
+            className: "cell-image",
+            render: (value: any, index: any) => (
+                <>
+                    <Box
+                        className={`media-table-image`}
+                        component="img"
+                        alt={""}
+                        src={value.thumbnailUrl}
+                    ></Box>
+                </>
+            ),
+        },
+        {
+            title: "",
+            key: "new",
+            dataIndex: "new",
+            className: "cell-new",
+            render: (value: any, index: any) => "New",
+        },
+        {
+            title: "Type",
+            key: "attributes",
+            dataIndex: "attributes",
+            render: (value, index) => "render_type"
+        },
+        {
+            title: "Date of Event",
+            key: "attributes",
+            dataIndex: "attributes",
+            // sorter: (a: { title: string }, b: { title: any }) => {
+            //     return a.title?.localeCompare(b.title);
+            //   },
+            render: (value, index) => format(
+                new Date(
+                    // item.attributes.updatedAt
+                    ),
+                "MM-dd-yyyy"
+              ),
+        },
+        {
+            title: "Participants",
+            key: "attributes",
+            dataIndex: "attributes",
+            className: "cell-bearing",
+            render: (value: any, index: any) => "Adam Biernaski, Julian Jansen van Rensburg",
+        },
+        {
+            title: "",
+            key: "action",
+            fixed: "right",
+            className: "more-menu-ant-cell events-table-more-menu",
+            render: (value: any, record: Media) => (
+                <MoreOptionsComponent id={record.id} record={record} />
+            ),
+        },
+    ];
+
+    const { fetchMediaItems, hasMoreData, loading } = useMedia();
+
 
     return (
         <Box className={`${styles['details-container']}`}>
@@ -499,8 +569,27 @@ console.log('hex: ', library)
                             ></StyledTableWrapper>
                         </Box>
                     </Box>
-                    <Box className={`${styles['events-section']}`}>
-
+                    {/* Currently showing only 1 events oit of available list */}
+                    <Box className={`${styles['events-section']} ${styles['heading']} ${styles['text-left']}`}>
+                        <Box className={`${styles['heading-title']}`}>
+                            <Box>Events</Box>
+                            <Box>1 Item</Box>
+                        </Box>
+                        <Box>
+                            <StyledTableWrapper
+                                rowKey={"id"}
+                                size="small"
+                                columns={tableHeaderJson_media}
+                                dataSource={events.slice(0,1)}
+                                pagination={false}
+                                loading={loading ? loading : false}
+                                bordered
+                                scroll={{ y: 500, scrollToFirstRowOnChange: true }}
+                                style={{
+                                    background: "transparent",
+                                }}
+                            ></StyledTableWrapper>
+                        </Box>
                     </Box>
                     <Box className={`${styles['remarks-section']}`}>
 
