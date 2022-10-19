@@ -200,7 +200,7 @@ const ListView = (props: PlacesProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-recommend',
-            render: (value: any, index: number) => value.recommendations.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
+            render: (value: any, index: number) => value.recommendation.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
         },
         {
             title: "PERIOD",
@@ -228,7 +228,6 @@ const ListView = (props: PlacesProps) => {
 
     const {data, hasMoreData, fetchData, loading} = props;
 
-    console.log('loading', loading)
     useEffect(() => {
         /** Needs to be done , since InfiniteSCroll needs a relation with
          * div being scrolled. Here its tbody of ant table

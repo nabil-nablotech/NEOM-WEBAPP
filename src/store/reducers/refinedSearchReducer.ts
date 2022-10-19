@@ -9,6 +9,7 @@ export type SelectedValue = {
   risk: string;
   assessmentType: string;
   artifacts: string;
+  location: string;
 }
 const initialSelectedValue = {
   stateOfConservation: '',
@@ -19,6 +20,7 @@ const initialSelectedValue = {
   risk: '',
   assessmentType: '',
   artifacts: '',
+  location: '',
 }
 
 export type RefinedSearchState = {

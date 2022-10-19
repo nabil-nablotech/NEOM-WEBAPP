@@ -9,7 +9,7 @@ export type Headers = {
   Authorization?: string,
   Language: 'English' | 'Arabic';
   // un-comment below for local run
-  // "ngrok-skip-browser-warning"?: string
+  // "ngrok-skip-browser-warning"?: string  
 }
 
 const headers: Headers = {
