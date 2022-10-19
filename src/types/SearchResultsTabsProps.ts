@@ -56,3 +56,14 @@ export type SearchResultsState2 = {
     showAddSuccess: boolean
     // activePlaceItem: Object
 }
+
+export type FileDataType = {
+    src: string
+    alt?: string
+    className: string
+}
+
+export type RenderFileDataProps = {
+    fileType: "image"
+    fileData: FileDataType
+}

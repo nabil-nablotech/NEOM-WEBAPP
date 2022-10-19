@@ -1,0 +1,34 @@
+.details-container {
+    padding-inline: 2em;
+    font-family: 'Roboto-Regular';
+}
+.content-section {
+    max-width: 1200px;
+    /* margin-inline: auto; */
+}
+
+.single-image {
+    width: 100%;
+    object-fit: cover;
+    aspect-ratio: 1/1;
+}
+.left-image {
+    height: 85%;
+}
+.image-grid-gap {
+    gap: 0.5em;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.image-side-grid {
+    flex-wrap: wrap;
+}
+
+.side-grid-image {
+}
+.row-1 {
+    margin-bottom: 0.5em;
+}
