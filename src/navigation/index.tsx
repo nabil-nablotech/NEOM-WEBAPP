@@ -49,6 +49,10 @@ export const Navigation = () => {
             {
               path: "?search=",
               element: <AdminRoute component={SearchResults} />,
+            },
+            {
+              path: ":itemId",
+              element: <AdminRoute component={SearchResults} />,
             }
           ]
         },

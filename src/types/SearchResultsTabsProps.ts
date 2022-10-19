@@ -54,4 +54,5 @@ export type SearchResultsState2 = {
     activeTab: tabNameProps | ''
     newItemWindowOpen: boolean
     showAddSuccess: boolean
+    // activePlaceItem: Object
 }
