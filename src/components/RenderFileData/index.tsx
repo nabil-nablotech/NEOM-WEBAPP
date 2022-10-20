@@ -35,6 +35,10 @@ const RenderFileData = ({
                             src={fileData.thumbNail}
                         />
                         <PlayCircleFilledWhiteIcon
+                            sx={{
+                                width: 1 / 4,
+                                height: 1 / 4,
+                            }}
                             fontSize="large" className={`${styles['video-play-icon']}`}
                             onClick={e => {
                                 e.preventDefault()

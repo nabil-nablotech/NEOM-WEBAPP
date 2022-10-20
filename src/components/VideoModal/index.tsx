@@ -12,12 +12,12 @@ const VideoModal = ({
     return (
         <Dialog  fullWidth onClose={toggleModal} open={isModalOpen} sx={{
             '& .MuiPaper-root.MuiDialog-paper' : {
-                width: 'fit-content',
-                height: 'fit-content'
+                minWidth: 'fit-content',
+                minHeight: 'fit-content'
             }
         }}>
-            <Box className={`${styles['']}`}>
-                <ReactPlayer url={videoSrc} />
+            <Box className={`${styles['video-player-box']}`}>
+                <ReactPlayer playing={isModalOpen} url={videoSrc} />
             </Box>
         </Dialog>
     );
