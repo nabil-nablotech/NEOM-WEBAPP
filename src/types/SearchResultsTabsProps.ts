@@ -62,10 +62,11 @@ export type FileDataType = {
     src: string
     alt?: string
     className: string
+    thumbNail?: string
 }
 
 export type RenderFileDataProps = {
-    fileType: "image"
+    fileType: "image" | "video"
     fileData: FileDataType
 }
 

@@ -1,16 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Options } from "../../types/RefinedSeachTypes";
-export type SelectedValue = {
-  stateOfConservation: string[] | [];
-  period: string[] | [];
-  recommendation: string[] |[];
-  researchValue: string[]| [];
-  tourismValue: string[] | [];
-  risk: string[] | [];
-  assessmentType: string[] | [];
-  artifacts: string[] | [];
-  location: string;
-}
+
 const initialSelectedValue = {
   stateOfConservation: [],
   period: [],
@@ -20,12 +10,14 @@ const initialSelectedValue = {
   risk: [],
   assessmentType: [],
   artifacts: [],
-  location: '',
+  siteType: [],
+  latitude: '',
+  longitude: '',
 }
 
 export type RefinedSearchState = {
   options: Options | null; 
-  selectedValue: SelectedValue
+  selectedValue: Options
 }
 
 const initialState: RefinedSearchState = {
@@ -40,7 +32,7 @@ export const refinedSearchSlice = createSlice({
     setOptions: (state, action: PayloadAction<Options>) => {
       state.options = action.payload;
     },
-    setSelectedValue: (state, action: PayloadAction<SelectedValue>) => {
+    setSelectedValue: (state, action: PayloadAction<Options>) => {
       state.selectedValue = action.payload;
     },
   },

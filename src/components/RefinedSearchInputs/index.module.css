@@ -45,7 +45,7 @@
 }
 
 .location-grid-item {
-    max-width: var(--width-constant) !important;
+    max-width: calc(2 *  var(--width-constant)) !important;
 }
 
 .date {
@@ -56,8 +56,27 @@
     width: 100%;
 }
 
+.location-popup-container {
+    position: relative;
+    margin-top: 0.5em;
+    border-radius: 10px;
+    min-width: 30ch;
+}
+
+.location-popup-close {
+    position: absolute;
+    top: -15%;
+    right: -3%;
+    z-index: 33;
+    background-color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+}
 @media (min-width: 575px) and (max-width: 1025px) {
     .input-field {
         --width-constant: 25ch;
+    }
+    .location-grid-item {
+        min-width: 40vw !important;
     }
 }

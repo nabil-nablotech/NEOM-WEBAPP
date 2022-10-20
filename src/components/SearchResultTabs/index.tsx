@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { ChangeEvent, useEffect } from "react";
 import styles from "./index.module.css";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
@@ -110,7 +110,8 @@ const initialState = {
   risk: [],
   assessmentType: [],
   artifacts: [],
-  location: '',
+  latitude: '',
+  longitude: '',
 }
 const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => {
   const [value, setValue] = React.useState(0);
@@ -129,7 +130,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     }
   }, [tabName]);
 
-  const handleSelectChange =(e: SelectChangeEvent<string | string[]>) => {
+  const handleSelectChange =(e: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>) => {
     const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
     selectedValueCopy[e.target.name] = e.target.value;
     e.preventDefault();
