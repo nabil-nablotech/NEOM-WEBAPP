@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { ChangeEvent, useEffect } from "react";
 import styles from "./index.module.css";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
@@ -102,15 +102,16 @@ const Label = ({ img, label }: LabelProps) => {
 };
 
 const initialState = {
-  stateOfConservation: '',
-  period: '',
-  recommendation: '',
-  researchValue: '',
-  tourismValue: '',
-  risk: '',
-  assessmentType: '',
-  artifacts: '',
-  location: '',
+  stateOfConservation: [],
+  period: [],
+  recommendation: [],
+  researchValue: [],
+  tourismValue: [],
+  risk: [],
+  assessmentType: [],
+  artifacts: [],
+  latitude: '',
+  longitude: '',
 }
 const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => {
   const [value, setValue] = React.useState(0);
@@ -129,7 +130,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     }
   }, [tabName]);
 
-  const handleSelectChange =(e: SelectChangeEvent<HTMLSelectElement>) => {
+  const handleSelectChange =(e: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>) => {
     const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
     selectedValueCopy[e.target.name] = e.target.value;
     e.preventDefault();
@@ -159,6 +160,16 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     navigate(`/search-results/${tabName}${searchText ? '?search=' : ''}${searchText}?${searchParams}`, {
       replace: true,
     });
+  };
+
+  const handleClear = (e: any, name?: string) => {
+    const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
+    console.log('e...........', name);
+    if (name) {
+      selectedValueCopy[name] = name === 'location' ? '' : [];
+      e.preventDefault();
+      dispatch(setSelectedValue(selectedValueCopy));
+    }
   };
 
   /** If get itedId, means its details page
@@ -237,7 +248,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
           <AccordionDetails style={{
             padding: 0
           }}>
-            <RefinedSearchInputs handleChange={handleSelectChange} handleSubmit={handleButtonSubmit} selectedValue={selectedValue} options={options} activeTabIndex={value} />
+            <RefinedSearchInputs handleClear={handleClear} handleChange={handleSelectChange} handleSubmit={handleButtonSubmit} selectedValue={selectedValue} options={options} activeTabIndex={value} />
           </AccordionDetails>
         </Accordion>
       </Box>}
