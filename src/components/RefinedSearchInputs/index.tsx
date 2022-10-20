@@ -13,12 +13,350 @@ import styles from "./index.module.css";
 import DatePicker from "react-datepicker";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import "react-datepicker/dist/react-datepicker.css";
-import { RefinedSearchInputProps } from "../../types/RefinedSeachTypes";
+import { BaseInputProps, MediaInputProps, RefinedSearchInputProps } from "../../types/RefinedSeachTypes";
 import {
   EVENTS_TAB_NAME,
   MEDIA_TAB_NAME,
   tabNameBasedOnIndex,
 } from "../../utils/services/helpers";
+
+const BaseInputs = ({
+  activeTab,
+  selectedValue,
+  handleChange,
+  options,
+  commonSelectSxStyles,
+  commonFormControlSxStyles,
+  handleClear,
+  textInputSxStyles
+}: BaseInputProps) => {
+  const [locationModalOpen, toggleLocationModal] = useState<boolean>(false);
+  const [latitudeInput, setLatiInput] = useState<string>("");
+  const [longitudeInput, setLongiInput] = useState<string>("");
+  const [startDate, setStartDate] = useState(new Date());
+
+  return (
+    <>
+      <Grid item sm={2} className={`${styles["input-field"]}`}>
+        <DropdownComponent
+          className={`${styles["dropdown"]}`}
+          label={"State of Conservation"}
+          name="stateOfConservation"
+          value={selectedValue.stateOfConservation}
+          multiple={true}
+          handleChange={handleChange}
+          handleClear={(e) => handleClear(e, "stateOfConservation")}
+          itemsList={options?.stateOfConservation || []}
+          selectStylesSx={commonSelectSxStyles}
+          formControlSx={commonFormControlSxStyles}
+        />
+      </Grid>
+      <Grid item sm={2} className={`${styles["input-field"]}`}>
+        <DropdownComponent
+          className={`${styles["dropdown"]} ${styles["extra-width"]}`}
+          label={"Period"}
+          name="period"
+          value={selectedValue.period}
+          multiple={true}
+          handleChange={handleChange}
+          handleClear={(e) => handleClear(e, "period")}
+          itemsList={options?.period || []}
+          selectStylesSx={commonSelectSxStyles}
+          formControlSx={commonFormControlSxStyles}
+        />
+      </Grid>
+      <Grid item sm={2} className={`${styles["input-field"]}`}>
+        <DropdownComponent
+          className={`${styles["dropdown"]}`}
+          label={"Recommendation"}
+          name="recommendation"
+          value={selectedValue.recommendation}
+          multiple={true}
+          handleChange={handleChange}
+          handleClear={(e) => handleClear(e, "recommendation")}
+          itemsList={options?.recommendation || []}
+          selectStylesSx={commonSelectSxStyles}
+          formControlSx={commonFormControlSxStyles}
+        />
+      </Grid>
+      <Grid item sm={2} className={`${styles["input-field"]}`}>
+        <DropdownComponent
+          className={`${styles["dropdown"]}`}
+          label={"Research Value"}
+          name="researchValue"
+          value={selectedValue.researchValue}
+          multiple={true}
+          handleChange={handleChange}
+          handleClear={(e) => handleClear(e, "researchValue")}
+          itemsList={options?.researchValue || []}
+          selectStylesSx={commonSelectSxStyles}
+          formControlSx={commonFormControlSxStyles}
+        />
+      </Grid>
+      <Grid item sm={2} className={`${styles["input-field"]}`}>
+        <DropdownComponent
+          className={`${styles["dropdown"]} ${styles["extra-width"]}`}
+          label={"Tourism Value"}
+          name="tourismValue"
+          value={selectedValue.tourismValue}
+          multiple={true}
+          handleChange={handleChange}
+          handleClear={(e) => handleClear(e, "tourismValue")}
+          itemsList={options?.tourismValue || []}
+          selectStylesSx={commonSelectSxStyles}
+          formControlSx={commonFormControlSxStyles}
+        />
+      </Grid>
+      <Grid item sm={2} className={`${styles["input-field"]}`}>
+        <DropdownComponent
+          className={`${styles["dropdown"]} ${styles["extra-width"]}`}
+          label={"Risk"}
+          name="risk"
+          value={selectedValue.risk}
+          multiple={true}
+          handleChange={handleChange}
+          handleClear={(e) => handleClear(e, "risk")}
+          itemsList={options?.risk || []}
+          selectStylesSx={commonSelectSxStyles}
+          formControlSx={commonFormControlSxStyles}
+        />
+      </Grid>
+      {activeTab === EVENTS_TAB_NAME && (
+        <Grid item sm={2} className={`${styles["input-field"]}`}>
+          <DropdownComponent
+            className={`${styles["dropdown"]}`}
+            label={"Assessment"}
+            name="assessmentType"
+            value={selectedValue.assessmentType}
+            multiple={true}
+            handleChange={handleChange}
+            handleClear={(e) => handleClear(e, "assessmentType")}
+            itemsList={options?.assessmentType || []}
+            selectStylesSx={{
+              ...commonSelectSxStyles,
+            }}
+            formControlSx={commonFormControlSxStyles}
+          />
+        </Grid>
+      )}
+      <Grid item sm={4} className={`${styles["location-grid-item"]}`}>
+        <Box>
+          <Box
+            onClick={(e) => {
+              e.preventDefault();
+              toggleLocationModal(!locationModalOpen);
+            }}
+          >
+            <TextInput
+              className={`${styles["location"]}`}
+              label="Location"
+              name="location"
+              value={`${selectedValue.latitude}${
+                  selectedValue.latitude ? "," : ""
+              }${selectedValue.longitude}`}
+              onChange={(e) => {}}
+              sx={{
+                ...textInputSxStyles,
+              }}
+              formControlSx={commonFormControlSxStyles}
+            />
+          </Box>
+          {locationModalOpen && (
+            <>
+              <Grid
+                container
+                className={`${styles["location-popup-container"]}`}
+              >
+                {/* <HighlightOffIcon
+                  className={`${styles["location-popup-close"]}`}
+                  style={{}}
+                  // onClick={(e) => {
+                  //   e.preventDefault();
+                  //   toggleLocationModal(false);
+                  // }}
+                /> */}
+                <Grid item sm={6}>
+                  <TextInput
+                    className={`${styles["latitude"]}`}
+                    label="Latitude"
+                    name="latitude"
+                    type="number"
+                    value={selectedValue.latitude}
+                    onChange={handleChange}
+                    sx={{
+                      ...textInputSxStyles,
+                    }}
+                    formControlSx={commonFormControlSxStyles}
+                  />
+                </Grid>
+                <Grid item sm={6}>
+                  <TextInput
+                    className={`${styles["longitude"]}`}
+                    label="Longitude"
+                    name="longitude"
+                    type="number"
+                    value={selectedValue.longitude}
+                    onChange={handleChange}
+                    sx={{
+                      ...textInputSxStyles,
+                    }}
+                    formControlSx={commonFormControlSxStyles}
+                  />
+                </Grid>
+                <Grid item></Grid>
+              </Grid>
+            </>
+          )}
+        </Box>
+      </Grid>
+      <Grid item sm={2} className={`${styles["input-field"]}`}>
+        <DropdownComponent
+          className={`${styles["dropdown"]} ${styles["extra-width"]}`}
+          label={"Artifacts"}
+          name="artifacts"
+          value={selectedValue.artifacts}
+          multiple={true}
+          handleChange={handleChange}
+          handleClear={(e) => handleClear(e, "artifacts")}
+          itemsList={options?.artifacts || []}
+          selectStylesSx={commonSelectSxStyles}
+          formControlSx={commonFormControlSxStyles}
+        />
+      </Grid>
+      {activeTab === EVENTS_TAB_NAME && (
+        <Grid item sm={2} className={`${styles["date-grid-item"]}`}>
+          <DatePicker
+            placeholderText="Date Range"
+            className={`${styles["date"]}`}
+            selected={startDate}
+            onChange={(date: Date) => setStartDate(date)}
+          />
+        </Grid>
+      )}
+    </>
+  );
+};
+
+const MediaInputs = ({
+  selectedValue,
+  handleChange,
+  options,
+  commonSelectSxStyles,
+  commonFormControlSxStyles,
+  handleClear,
+  textInputSxStyles
+}: MediaInputProps) => {
+  const [locationModalOpen, toggleLocationModal] = useState<boolean>(false);
+  
+  return (
+    <>
+      <Grid item sm={4} className={`${styles["location-grid-item"]}`}>
+        <Box>
+          <Box
+            onClick={(e) => {
+              e.preventDefault();
+              toggleLocationModal(!locationModalOpen);
+            }}
+          >
+            <TextInput
+              className={`${styles["location"]}`}
+              label="Location"
+              name="location"
+              value={`${selectedValue.latitude}${selectedValue.latitude ? "," : ""
+                }${selectedValue.longitude}`}
+              onChange={(e) => { }}
+              sx={{
+                ...textInputSxStyles,
+              }}
+              formControlSx={commonFormControlSxStyles}
+            />
+          </Box>
+          {locationModalOpen && (
+            <>
+              <Grid
+                container
+                className={`${styles["location-popup-container"]}`}
+              >
+                {/* <HighlightOffIcon
+                  className={`${styles["location-popup-close"]}`}
+                  style={{}}
+                  // onClick={(e) => {
+                  //   e.preventDefault();
+                  //   toggleLocationModal(false);
+                  // }}
+                /> */}
+                <Grid item sm={6}>
+                  <TextInput
+                    className={`${styles["latitude"]}`}
+                    label="Latitude"
+                    name="latitude"
+                    type="number"
+                    value={selectedValue.latitude}
+                    onChange={handleChange}
+                    sx={{
+                      ...textInputSxStyles,
+                    }}
+                    formControlSx={commonFormControlSxStyles}
+                  />
+                </Grid>
+                <Grid item sm={6}>
+                  <TextInput
+                    className={`${styles["longitude"]}`}
+                    label="Longitude"
+                    name="longitude"
+                    type="number"
+                    value={selectedValue.longitude}
+                    onChange={handleChange}
+                    sx={{
+                      ...textInputSxStyles,
+                    }}
+                    formControlSx={commonFormControlSxStyles}
+                  />
+                </Grid>
+                <Grid item></Grid>
+              </Grid>
+            </>
+          )}
+        </Box>
+      </Grid>
+      <Grid item sm={2} className={`${styles["input-field"]}`}>
+        <DropdownComponent
+          className={`${styles["dropdown"]} ${styles["extra-width"]}`}
+          label={"Artifacts"}
+          name="artifacts"
+          value={selectedValue.artifacts}
+          multiple={true}
+          handleChange={handleChange}
+          handleClear={(e) => handleClear(e, "artifacts")}
+          itemsList={options?.artifacts || []}
+          selectStylesSx={commonSelectSxStyles}
+          formControlSx={commonFormControlSxStyles}
+        />
+      </Grid>
+      <Grid item sm={2} className={`${styles["input-field"]}`}>
+        <FormGroup className={`${styles["black-90-pct"]}`}>
+          <FormControlLabel
+            style={{
+              accentColor: "red",
+            }}
+            control={
+              <Checkbox
+                sx={{
+                  color: "var(--grey-text)",
+                  "&.Mui-checked": {
+                    color: "var(--grey-text)",
+                  },
+                }}
+              />
+            }
+            label="Featured Image"
+          />
+        </FormGroup>
+      </Grid>
+    </>
+  );
+};
+
 
 const RefinedSearchInputs = ({
   activeTabIndex,
@@ -62,278 +400,37 @@ const RefinedSearchInputs = ({
     },
   };
 
-  const [startDate, setStartDate] = useState(new Date());
 
   const activeTab = tabNameBasedOnIndex(activeTabIndex);
-
-  const BaseInputs = () => {
-    const [locationModalOpen, toggleLocationModal] = useState<boolean>(false);
-    const [latitudeInput, setLatiInput] = useState<string>("");
-    const [longitudeInput, setLongiInput] = useState<string>("");
-
-    return (
-      <>
-        <Grid item sm={2} className={`${styles["input-field"]}`}>
-          <DropdownComponent
-            className={`${styles["dropdown"]}`}
-            label={"State of Conservation"}
-            name="stateOfConservation"
-            value={selectedValue.stateOfConservation}
-            multiple={true}
-            handleChange={handleChange}
-            handleClear={(e) => handleClear(e, "stateOfConservation")}
-            itemsList={options?.stateOfConservation || []}
-            selectStylesSx={commonSelectSxStyles}
-            formControlSx={commonFormControlSxStyles}
-          />
-        </Grid>
-        <Grid item sm={2} className={`${styles["input-field"]}`}>
-          <DropdownComponent
-            className={`${styles["dropdown"]} ${styles["extra-width"]}`}
-            label={"Period"}
-            name="period"
-            value={selectedValue.period}
-            multiple={true}
-            handleChange={handleChange}
-            handleClear={(e) => handleClear(e, "period")}
-            itemsList={options?.period || []}
-            selectStylesSx={commonSelectSxStyles}
-            formControlSx={commonFormControlSxStyles}
-          />
-        </Grid>
-        <Grid item sm={2} className={`${styles["input-field"]}`}>
-          <DropdownComponent
-            className={`${styles["dropdown"]}`}
-            label={"Recommendation"}
-            name="recommendation"
-            value={selectedValue.recommendation}
-            multiple={true}
-            handleChange={handleChange}
-            handleClear={(e) => handleClear(e, "recommendation")}
-            itemsList={options?.recommendation || []}
-            selectStylesSx={commonSelectSxStyles}
-            formControlSx={commonFormControlSxStyles}
-          />
-        </Grid>
-        <Grid item sm={2} className={`${styles["input-field"]}`}>
-          <DropdownComponent
-            className={`${styles["dropdown"]}`}
-            label={"Research Value"}
-            name="researchValue"
-            value={selectedValue.researchValue}
-            multiple={true}
-            handleChange={handleChange}
-            handleClear={(e) => handleClear(e, "researchValue")}
-            itemsList={options?.researchValue || []}
-            selectStylesSx={commonSelectSxStyles}
-            formControlSx={commonFormControlSxStyles}
-          />
-        </Grid>
-        <Grid item sm={2} className={`${styles["input-field"]}`}>
-          <DropdownComponent
-            className={`${styles["dropdown"]} ${styles["extra-width"]}`}
-            label={"Tourism Value"}
-            name="tourismValue"
-            value={selectedValue.tourismValue}
-            multiple={true}
-            handleChange={handleChange}
-            handleClear={(e) => handleClear(e, "tourismValue")}
-            itemsList={options?.tourismValue || []}
-            selectStylesSx={commonSelectSxStyles}
-            formControlSx={commonFormControlSxStyles}
-          />
-        </Grid>
-        <Grid item sm={2} className={`${styles["input-field"]}`}>
-          <DropdownComponent
-            className={`${styles["dropdown"]} ${styles["extra-width"]}`}
-            label={"Risk"}
-            name="risk"
-            value={selectedValue.risk}
-            multiple={true}
-            handleChange={handleChange}
-            handleClear={(e) => handleClear(e, "risk")}
-            itemsList={options?.risk || []}
-            selectStylesSx={commonSelectSxStyles}
-            formControlSx={commonFormControlSxStyles}
-          />
-        </Grid>
-        {activeTab === EVENTS_TAB_NAME && (
-          <Grid item sm={2} className={`${styles["input-field"]}`}>
-            <DropdownComponent
-              className={`${styles["dropdown"]}`}
-              label={"Assessment"}
-              name="assessmentType"
-              value={selectedValue.assessmentType}
-              multiple={true}
-              handleChange={handleChange}
-              handleClear={(e) => handleClear(e, "assessmentType")}
-              itemsList={options?.assessmentType || []}
-              selectStylesSx={{
-                ...commonSelectSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-          </Grid>
-        )}
-        <Grid item sm={4} className={`${styles["location-grid-item"]}`}>
-          <Box>
-            <Box
-              onClick={(e) => {
-                e.preventDefault();
-                toggleLocationModal(!locationModalOpen);
-              }}
-            >
-              <TextInput
-                className={`${styles["location"]}`}
-                label="Location"
-                name="location"
-                value={`${selectedValue.latitude}${
-                    selectedValue.latitude ? "," : ""
-                }${selectedValue.longitude}`}
-                onChange={(e) => {}}
-                sx={{
-                  ...textInputSxStyles,
-                }}
-                formControlSx={commonFormControlSxStyles}
-              />
-            </Box>
-            {locationModalOpen && (
-              <>
-                <Grid
-                  container
-                  className={`${styles["location-popup-container"]}`}
-                >
-                  {/* <HighlightOffIcon
-                    className={`${styles["location-popup-close"]}`}
-                    style={{}}
-                    // onClick={(e) => {
-                    //   e.preventDefault();
-                    //   toggleLocationModal(false);
-                    // }}
-                  /> */}
-                  <Grid item sm={6}>
-                    <TextInput
-                      className={`${styles["latitude"]}`}
-                      label="Latitude"
-                      name="latitude"
-                      type="number"
-                      value={selectedValue.latitude}
-                      onChange={handleChange}
-                      sx={{
-                        ...textInputSxStyles,
-                      }}
-                      formControlSx={commonFormControlSxStyles}
-                    />
-                  </Grid>
-                  <Grid item sm={6}>
-                    <TextInput
-                      className={`${styles["longitude"]}`}
-                      label="Longitude"
-                      name="longitude"
-                      type="number"
-                      value={selectedValue.longitude}
-                      onChange={handleChange}
-                      sx={{
-                        ...textInputSxStyles,
-                      }}
-                      formControlSx={commonFormControlSxStyles}
-                    />
-                  </Grid>
-                  <Grid item></Grid>
-                </Grid>
-              </>
-            )}
-          </Box>
-        </Grid>
-        <Grid item sm={2} className={`${styles["input-field"]}`}>
-          <DropdownComponent
-            className={`${styles["dropdown"]} ${styles["extra-width"]}`}
-            label={"Artifacts"}
-            name="artifacts"
-            value={selectedValue.artifacts}
-            multiple={true}
-            handleChange={handleChange}
-            handleClear={(e) => handleClear(e, "artifacts")}
-            itemsList={options?.artifacts || []}
-            selectStylesSx={commonSelectSxStyles}
-            formControlSx={commonFormControlSxStyles}
-          />
-        </Grid>
-        {activeTab === EVENTS_TAB_NAME && (
-          <Grid item sm={2} className={`${styles["date-grid-item"]}`}>
-            <DatePicker
-              placeholderText="Date Range"
-              className={`${styles["date"]}`}
-              selected={startDate}
-              onChange={(date: Date) => setStartDate(date)}
-            />
-          </Grid>
-        )}
-      </>
-    );
-  };
-
-  const MediaInputs = () => {
-    return (
-      <>
-        <Grid item sm={2} className={`${styles["location-grid-item"]}`}>
-          <TextInput
-            className={`${styles["location"]}`}
-            label="Location"
-            name="location"
-            value={""}
-            onChange={(e) => {}}
-            sx={{
-              ...textInputSxStyles,
-            }}
-            formControlSx={commonFormControlSxStyles}
-          />
-        </Grid>
-        <Grid item sm={2} className={`${styles["input-field"]}`}>
-          <DropdownComponent
-            className={`${styles["dropdown"]} ${styles["extra-width"]}`}
-            label={"Artifacts"}
-            name="artifacts"
-            value={selectedValue.artifacts}
-            multiple={true}
-            handleChange={handleChange}
-            handleClear={(e) => handleClear(e, "artifacts")}
-            itemsList={options?.artifacts || []}
-            selectStylesSx={commonSelectSxStyles}
-            formControlSx={commonFormControlSxStyles}
-          />
-        </Grid>
-        <Grid item sm={2} className={`${styles["input-field"]}`}>
-          <FormGroup className={`${styles["black-90-pct"]}`}>
-            <FormControlLabel
-              style={{
-                accentColor: "red",
-              }}
-              control={
-                <Checkbox
-                  sx={{
-                    color: "var(--grey-text)",
-                    "&.Mui-checked": {
-                      color: "var(--grey-text)",
-                    },
-                  }}
-                />
-              }
-              label="Featured Image"
-            />
-          </FormGroup>
-        </Grid>
-      </>
-    );
-  };
-
+  
   return (
     <Box
       className={`refined-inputs-container ${styles["refined-inputs-container"]}`}
     >
       <Grid container className={`${styles["refined-inputs-grid"]}`}>
-        {activeTab !== MEDIA_TAB_NAME && <BaseInputs />}
-        {activeTab === MEDIA_TAB_NAME && <MediaInputs />}
+        {activeTab !== MEDIA_TAB_NAME &&
+          <BaseInputs
+            activeTab={activeTab}
+            selectedValue={selectedValue}
+            handleChange={handleChange}
+            options={options}
+            commonSelectSxStyles={commonSelectSxStyles}
+            commonFormControlSxStyles={commonFormControlSxStyles}
+            handleClear={handleClear}
+            textInputSxStyles={textInputSxStyles}
+          />
+        }
+        {activeTab === MEDIA_TAB_NAME &&
+          <MediaInputs
+            selectedValue={selectedValue}
+            handleChange={handleChange}
+            options={options}
+            commonSelectSxStyles={commonSelectSxStyles}
+            commonFormControlSxStyles={commonFormControlSxStyles}
+            handleClear={handleClear}
+            textInputSxStyles={textInputSxStyles}
+          />
+        }
         <Grid item>
           <Button
             label="SEARCH"

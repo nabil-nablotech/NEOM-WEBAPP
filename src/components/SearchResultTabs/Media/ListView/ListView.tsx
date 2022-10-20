@@ -11,10 +11,11 @@ import { MediaProps } from "../GridView/GridView";
 import {formatWebDate, formatBytes} from '../../../../utils/services/helpers'
 import {MoreOptionsComponent} from './MoreOption';
 import { Media } from "../../../../types/Media";
-import {CustomModal} from '../../../CustomModal';
-import {DetailsPage} from '../DetailsPage';
-import styles from './index.module.css';
-import CloseIcon from '@mui/icons-material/CloseOutlined';
+// import {CustomModal} from '../../../CustomModal';
+// import {MediaDetailsPage} from '../DetailsPage';
+// import styles from './index.module.css';
+// import CloseIcon from '@mui/icons-material/CloseOutlined';
+import { MediaDetailsModal } from "../DetailsPage";
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -234,7 +235,7 @@ const ListView = (props: MediaProps) => {
           //   onC
         ></StyledTableWrapper>
       </InfiniteScroll>
-      <CustomModal
+      {/* <CustomModal
         open={isModalOpen}
         titleContent={
           <Grid
@@ -276,7 +277,7 @@ const ListView = (props: MediaProps) => {
         }
         handleClose={() => setModalOpen(false)}
       >
-        <DetailsPage
+        <MediaDetailsPage
           data={data}
           currentItemIndex={currentItemIndex}
           currentRecord={currentRecord}
@@ -285,7 +286,19 @@ const ListView = (props: MediaProps) => {
             setCurrentRecord(record);
           }}
         />
-      </CustomModal>
+      </CustomModal> */}
+      <MediaDetailsModal
+        data={data}
+        currentItemIndex={currentItemIndex}
+        currentRecord={currentRecord}
+        callBack={(record: any, index: number) => {
+          setCurrentItemIndex(index);
+          setCurrentRecord(record);
+        }}
+        isModalOpen={isModalOpen}
+        setModalOpen={() => setModalOpen(true)}
+        setModalClose={() => setModalOpen(false)}
+      />
     </Box>
   );
 };

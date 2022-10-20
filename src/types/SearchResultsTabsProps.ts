@@ -73,3 +73,16 @@ export type RenderFileDataProps = {
 export type CommentSectionProps = {
     SelfIcon: () => JSX.Element
 }
+
+export type VideoModalProps = {
+    videoSrc: string
+    isModalOpen: boolean
+    toggleModal: () => void
+}
+
+export type MediaDetailsPageProps = {
+    currentItemIndex: any
+    data: any
+    currentRecord: any
+    callBack: (record: any, index: number) => void
+}
