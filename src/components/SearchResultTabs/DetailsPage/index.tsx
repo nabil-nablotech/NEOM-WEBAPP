@@ -355,11 +355,11 @@ const DetailsPage = () => {
                                     <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}>
                                         <RenderFileData
                                             fileData={{
-                                                alt: "",
-                                                src: images[1],
-                                                className: `${styles["single-image"]} ${styles["right-image"]}`
+                                                src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
+                                                className: `${styles["single-image"]} ${styles["right-image"]}`,
+                                                thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg"
                                             }}
-                                            fileType="image"
+                                            fileType="video"
                                         />
                                     </Grid>
                                     <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}>
