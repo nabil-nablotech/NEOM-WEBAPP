@@ -293,6 +293,9 @@ const DetailsPage = () => {
             title: "Date of Event",
             key: "attributes",
             dataIndex: "attributes",
+            // to-do
+            // Events will be sorted by Date of Event newest to oldest
+            
             // sorter: (a: { title: string }, b: { title: any }) => {
             //     return a.title?.localeCompare(b.title);
             //   },
@@ -523,6 +526,12 @@ const DetailsPage = () => {
                                             Period
                                         </Grid>
                                         <Grid item>
+                                            {/* 
+                                            to-do::
+                                            Site type and period will act as a link to a quick search. For example if 
+                                            the Site Type says  “Building”, when the user clicks on it, the user will 
+                                            be redirected to the search results page where they will see the list of 
+                                            all places where the site type = building. */}
                                             <Box component={"a"} href="#" className={`${styles['anchor']}`}>
                                                 Modern,Ottoman
                                             </Box>
@@ -581,11 +590,10 @@ const DetailsPage = () => {
                                             URL
                                         </Grid>
                                         <Grid item>
-                                            <Box component={"a"} href="https://www.neomheritage.com/place/N00381"
-                                                className={`${styles['anchor']}`}
-                                            >
+                                            {/* to-do */}
+                                            {/* When clicking on the URL link, the link should be copied to the clip board. 
+                                            A success message will be displayed with the message “URL copied to clipboard” */}
                                                 https://www.neomheritage.com/place/N00381
-                                            </Box>
                                         </Grid>
                                     </Grid>
                                 </Box>
