@@ -86,7 +86,7 @@ const PlacesTab = () => {
               </Grid>
               {/* To-do: map view */}
               <Grid item xl={6} lg={6} md={7} sm={7}>
-                {mapPlaces? <MapView marker={mapPlaces}/>:<></>}
+                {mapPlaces !== null ? <MapView marker={mapPlaces}/>:<></>}
               </Grid>
             </>
           )}

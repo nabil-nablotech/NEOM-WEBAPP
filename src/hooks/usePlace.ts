@@ -13,7 +13,7 @@ import {limit} from '../utils/services/helpers';
 
 const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
-  const [mapPlaces, setMapPlaces]= useState([]);
+  const [mapPlaces, setMapPlaces]= useState(null);
   const {
     searchText,
     places: placeData,

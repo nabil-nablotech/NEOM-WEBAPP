@@ -44,7 +44,7 @@ const MapView = ({marker}) => {
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      zoom={25}
+      zoom={25}      
       options={{ styles: MapStyles.dark }}
       onLoad={handleOnLoad}
       onUnmount={onUnmount}
