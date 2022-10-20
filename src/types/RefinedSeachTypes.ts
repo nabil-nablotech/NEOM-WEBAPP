@@ -1,3 +1,4 @@
+import { SxProps } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import React, {ChangeEvent} from "react";
 
@@ -13,6 +14,25 @@ export type RefinedSearchInputProps = {
     handleChange: (event: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>) => void;
     handleSubmit: (e: React.MouseEvent) => void;
     handleClear: (e: React.MouseEvent<HTMLButtonElement>, name?: string) => void;
+}
+export type BaseInputProps = {
+  activeTab: string
+  commonSelectSxStyles: SxProps
+  commonFormControlSxStyles: SxProps
+  textInputSxStyles: SxProps
+  options: Options | null;
+  selectedValue: any;
+  handleChange: (event: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>) => void;
+  handleClear: (e: React.MouseEvent<HTMLButtonElement>, name?: string) => void;
+}
+export type MediaInputProps = {
+  commonSelectSxStyles: SxProps
+  commonFormControlSxStyles: SxProps
+  textInputSxStyles: SxProps
+  options: Options | null;
+  selectedValue: any;
+  handleChange: (event: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>) => void;
+  handleClear: (e: React.MouseEvent<HTMLButtonElement>, name?: string) => void;
 }
 export type Translation = {
 
