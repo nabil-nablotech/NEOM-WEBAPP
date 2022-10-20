@@ -23,7 +23,7 @@ const PlacesTab = () => {
   );
   const [img, setimg] = useState(MapImg1);
 
-  const { data, fetchEvents, hasMoreData, loading } = useEvent();
+  const { fetchEvents, hasMoreData, loading, mapEvents } = useEvent();
 
     useEffect(() => {
         setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1)
@@ -77,7 +77,7 @@ const PlacesTab = () => {
                     </Grid>
                     {/* To-do: map view */}
                     <Grid item xl={6} lg={6} md={7} sm={7}>                     
-                        <MapView/>
+                        {mapEvents?<MapView marker={mapEvents}/>:<></>}
                     </Grid></>}
                     {
                         openStates[1] &&
