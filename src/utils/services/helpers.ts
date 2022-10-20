@@ -141,6 +141,8 @@ export const tabNameBasedOnIndex = (tabIndex: number) => {
       return LIBRARY_TAB_NAME;
     case 3:
       return MEDIA_TAB_NAME;
+    default: 
+      return PLACES_TAB_NAME
   }
 };
 

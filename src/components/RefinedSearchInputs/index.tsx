@@ -401,7 +401,7 @@ const RefinedSearchInputs = ({
   };
 
 
-  const activeTab = tabNameBasedOnIndex(activeTabIndex);
+  const activeTab: string = tabNameBasedOnIndex(activeTabIndex);
   
   return (
     <Box
