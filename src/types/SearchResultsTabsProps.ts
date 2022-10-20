@@ -55,6 +55,8 @@ export type SearchResultsState2 = {
     activeTab: tabNameProps | ''
     newItemWindowOpen: boolean
     showAddSuccess: boolean
+    activePlaceItem: Place | null
+    activePlaceItemIndex: number
     activeMediaItem: Media | null
     activeMediaItemIndex: number
 }

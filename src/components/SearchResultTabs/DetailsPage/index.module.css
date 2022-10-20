@@ -2,6 +2,9 @@
     padding-inline: 2em;
     font-family: 'Roboto-Regular';
 }
+.images-section {
+    position: relative;
+}
 .content-section {
     max-width: 1200px;
     margin-inline: auto;

@@ -26,7 +26,8 @@ import useMedia from "../../../hooks/useMedia";
 import CommentsSection from "../../CommentsSection";
 import RenderInitials from "../../RenderInitials";
 import { useDispatch } from "react-redux";
-import { setActiveMediaItem, setActiveMediaItemIndex } from "../../../store/reducers/searchResultsReducer";
+import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex } from "../../../store/reducers/searchResultsReducer";
+import { CustomMoreOptionsComponent } from "../../CustomMoreOptionsComponent";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -116,14 +117,31 @@ const DetailsPage = () => {
     );
     const { data } = useSelector((state: RootState) => state.login);
 
-    const selectedPlaceObj = places.filter((placeItem: Place) => placeItem.attributes.uniqueId === itemId)[0]
+    let selectedPlaceObjIndex: number = 0
+    let selectedPlaceObj: Place = places[0]
+
+
+    useEffect(() => {
+        if(selectedPlaceObj) {
+            dispatch(setActivePlaceItem(selectedPlaceObj))
+            dispatch(setActivePlaceItemIndex(selectedPlaceObjIndex))
+        }
+    }, [])
+
+    places.forEach((placeItem: Place, inx: number) => {
+        if (placeItem.attributes.uniqueId === itemId) {
+            selectedPlaceObj = placeItem
+            selectedPlaceObjIndex = inx
+        }
+    })
 
     const {
         placeNameEnglish, placeNameArabic, placeNumber,
-        siteDescription, 
+        siteDescription,
     } = selectedPlaceObj.attributes
 
     const {latitude, longitude} = selectedPlaceObj
+
 // console.log('hex: ', media)
     // get from api
     let [images, setImages] = useState<any>([
@@ -138,16 +156,16 @@ const DetailsPage = () => {
     const menuItems = [
         {
             label: "Share",
-            handleClickMenuItem: () => { },
+            action: () => { },
         },
         {
             label: "Edit",
-            handleClickMenuItem: () => {
+            action: () => {
             },
         },
         {
             label: "Delete",
-            handleClickMenuItem: () => {
+            action: () => {
             },
         },
     ]
@@ -329,7 +347,8 @@ const DetailsPage = () => {
                     <Button variant="text" type="button"
                         startIcon={<KeyboardArrowLeftIcon fontSize="small" />}
                         style={{
-                            color: 'var(--table-black-text)'
+                            color: 'var(--table-black-text)',
+                            textTransform: 'none'
                         }}
                         onClick={e => {
                             e.preventDefault()
@@ -341,6 +360,27 @@ const DetailsPage = () => {
                 </Grid>
                 <Box className={`${styles['content-section']}`}>
                     <Box className={`${styles['images-section']}`}>
+                        <Box style={{
+                            position: 'absolute',
+                            right: 0,
+                            bottom: 0
+                        }}>
+                            <Button variant="contained" type="button"
+                                style={{
+                                    color: '#fff',
+                                    backgroundColor: 'var(--black-90-pct)',
+                                    borderRadius: '2em',
+                                    margin: '1em',
+                                    padding: '0.4em 1.2em'
+                                }}
+                                onClick={e => {
+                                    e.preventDefault()
+                                    navigate(`/search-results/Media`, { replace: true })
+                                }}
+                            >
+                                View all
+                            </Button>
+                        </Box>
                         <Grid container className={`${styles['justify-center']} ${styles['image-grid-gap']}`}
                             spacing={1}
                         >
@@ -451,15 +491,8 @@ const DetailsPage = () => {
                             <Grid item className={`${styles['title-section-grid']}`}>
                                 <Box className={`${styles['more-icon-box']}`}
                                 >
-                                    <Box onClick={e => handleClick(e)}>
-                                        <MoreHorizIcon />
-
-                                    </Box>
-                                    <MenuList
-                                        anchorEl={anchorEl}
-                                        open={open}
-                                        handleClose={handleClose}
-                                        options={menuItems}
+                                    <CustomMoreOptionsComponent
+                                        menuActions={menuItems}
                                     />
                                 </Box>
                             </Grid>
