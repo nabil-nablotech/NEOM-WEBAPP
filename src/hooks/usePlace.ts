@@ -71,7 +71,34 @@ const usePlace = () => {
       return x;
     });
     const searchParams = new URLSearchParams(copiedValue);
-    const searchWordArray = text.split(' ');
+    // console.log(
+    //   "decodeURIComponent",
+    //   decodeURIComponent(searchParams.toString())
+    // );
+    const searchWordArray = text.split(" ");
+    const obj: any = {
+      // researchValue: copiedValue.researchValue ? copiedValue?.researchValue[0] : "",
+      // tourismValue: copiedValue.tourismValue ? copiedValue?.tourismValue[0] : "",
+      // stateOfConservation: copiedValue.stateOfConservation ? copiedValue?.stateOfConservation[0] : "",
+      // recommendation: copiedValue?.recommendation > 0 ? copiedValue?.recommendation[0] : "",
+      // risk: copiedValue?.risk[0] || "",
+      // period: copiedValue?.period[0] || "",
+      // latitude: copiedValue?.latitude,
+      // longitude: copiedValue?.longitude,
+      // language: Object.keys(copiedValue).length > 0 ? "English" : "",
+      
+    };
+    if (Object.keys(copiedValue).length > 0) {
+      obj.language = "English";
+    }
+    console.log('obj', obj);
+    refetchPlaces({
+      ...obj,
+      search_one: searchWordArray[0],
+      search_two: searchWordArray[1],
+      search_three: searchWordArray[2],
+      limit: limit,
+      skip: skip,});
     refetchPlaces({ search_one: searchWordArray[0], search_two: searchWordArray[1], search_three: searchWordArray[2], limit: limit, skip: skip });
   };
 
