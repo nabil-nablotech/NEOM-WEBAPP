@@ -7,13 +7,17 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import {CustomModal} from '../../../CustomModal';
+import { MediaDetailsPageProps } from '../../../../types/SearchResultsTabsProps';
+import { IconButton } from "@mui/material";
+import CloseIcon from '@mui/icons-material/CloseOutlined';
 
-export const DetailsPage = ({
+const MediaDetailsPage = ({
     currentItemIndex,
     data,
     currentRecord,
     callBack
-}: { currentItemIndex: any, data: any, currentRecord: any, callBack: (record: any, index: number) => void }) => {
+}: MediaDetailsPageProps) => {
 
     type handleAction = {
         e: React.MouseEvent<HTMLElement>
@@ -138,5 +142,73 @@ export const DetailsPage = ({
                 </Grid>
             </Box>
         </Box>
+    </>
+}
+
+export const MediaDetailsModal = ({
+    currentItemIndex,
+    data,
+    currentRecord,
+    callBack,
+    isModalOpen,
+    setModalOpen,
+    setModalClose
+}: MediaDetailsPageProps & { isModalOpen: boolean, setModalOpen: () => void, setModalClose: () => void}) => {
+
+    return <>
+        <CustomModal
+            open={isModalOpen}
+            titleContent={
+                <Grid
+                    container
+                    className={`${styles["modal-title"]}`}
+                    style={{
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                    }}
+                >
+                    <Grid item sm={6}>
+                        {currentRecord?.title?.substring(0, 30)}
+                    </Grid>
+                    <Grid
+                        item
+                        style={{
+                            position: "absolute",
+                            left: "50%",
+                            right: "50%",
+                        }}
+                    >
+                        {currentItemIndex + 1}/{data.length}
+                    </Grid>
+                    <Grid item>
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            // onClick={() => setModalOpen(false)}
+                            onClick={() => setModalOpen()}
+                            aria-label="close"
+                            sx={{
+                                marginLeft: "auto",
+                                marginRight: "0",
+                            }}
+                        >
+                            <CloseIcon fontSize="large" sx={{ color: "#fff" }} />
+                        </IconButton>
+                    </Grid>
+                </Grid>
+            }
+            handleClose={() => setModalClose()}
+        >
+            <MediaDetailsPage
+                data={data}
+                currentItemIndex={currentItemIndex}
+                currentRecord={currentRecord}
+                // callBack={(record: any, index: number) => {
+                //     setCurrentItemIndex(index);
+                //     setCurrentRecord(record);
+                // }}
+                callBack={callBack}
+            />
+        </CustomModal>
     </>
 }

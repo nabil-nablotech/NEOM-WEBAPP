@@ -79,3 +79,10 @@ export type VideoModalProps = {
     isModalOpen: boolean
     toggleModal: () => void
 }
+
+export type MediaDetailsPageProps = {
+    currentItemIndex: any
+    data: any
+    currentRecord: any
+    callBack: (record: any, index: number) => void
+}

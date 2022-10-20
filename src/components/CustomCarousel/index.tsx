@@ -1,11 +1,8 @@
-import Carousel from "react-multi-carousel";
 import { Box, IconButton } from "@mui/material";
 import styles from './index.module.css'
 import { usePaginatedArray } from "../../hooks/usePaginatedArray";
 import { CustomCarouselType } from "../../types/CustomCarouselTypes";
-import NextArrow from '../../assets/images/searchResults/next-arrow.svg';
 import PrevArrow from '../../assets/images/searchResults/prev-arrow.svg';
-import { DetailsPage } from "../SearchResultTabs/Media/DetailsPage";
 
 const responsive = {
     superLargeDesktop: {
