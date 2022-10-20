@@ -17,6 +17,17 @@ const RenderFileData = ({
                     src={fileData.src}
                 />
             }
+            {
+                fileType === 'video' &&
+                <>
+                    <Box
+                        className={fileData.className}
+                        component="img"
+                        alt={fileData.alt ? fileData.alt : ''}
+                        src={fileData.thumbNail}
+                    />
+                </>
+            }
         </>
     );
 }
