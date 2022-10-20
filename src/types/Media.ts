@@ -16,6 +16,7 @@ export type Media = {
     longitude: Number;
     imageMetadata: {
       fileSize: Number;
-    }
+    },
+    uniqueId: string
   };
 };

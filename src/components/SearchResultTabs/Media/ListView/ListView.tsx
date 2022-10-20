@@ -230,7 +230,7 @@ const ListView = (props: MediaProps) => {
               onClick: (event) => {
                 // click row
                 setModalOpen(true);
-
+                
                 if (typeof rowIndex === "number") {
                   dispatch(setActiveMediaItem(record))
                   dispatch(setActiveMediaItemIndex(rowIndex))

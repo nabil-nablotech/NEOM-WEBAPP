@@ -25,6 +25,8 @@ import { format } from "date-fns";
 import useMedia from "../../../hooks/useMedia";
 import CommentsSection from "../../CommentsSection";
 import RenderInitials from "../../RenderInitials";
+import { useDispatch } from "react-redux";
+import { setActiveMediaItem, setActiveMediaItemIndex } from "../../../store/reducers/searchResultsReducer";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -302,7 +304,7 @@ const DetailsPage = () => {
     ];
 
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
-
+    const dispatch = useDispatch()
     const commentsJson = [
         {
             commentor: 'Mark',
@@ -310,6 +312,18 @@ const DetailsPage = () => {
             nestedComments: 0
         }
     ]
+
+    const handleClickMediaItem = (e: React.MouseEvent, itemIndex: number) => {
+        /** itemIndex used to track which item being clicked out of 5;
+         * 1st , 2nd etc.
+         */
+        e.preventDefault()
+        if(media.length >= itemIndex) {
+            navigate(`/search-results/Media/${media[itemIndex - 1].attributes.uniqueId}`, {replace: true})
+            dispatch(setActiveMediaItem(media[itemIndex - 1]))
+            dispatch(setActiveMediaItemIndex(itemIndex - 1))
+        }
+    }
     return (
         <Box className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -337,7 +351,11 @@ const DetailsPage = () => {
                         <Grid container className={`${styles['justify-center']} ${styles['image-grid-gap']}`}
                             spacing={1}
                         >
-                            <Grid item md={6} className={`${styles["grid-item"]}`}>
+                            <Grid item md={6} className={`${styles["grid-item"]}`}
+                                onClick={e=> {
+                                    handleClickMediaItem(e, 1)
+                                }}
+                            >
                                 <RenderFileData
                                     fileData={{
                                         alt: "",
@@ -348,11 +366,16 @@ const DetailsPage = () => {
                                 />
                             </Grid>
                             <Grid item md={6} className={`${styles['image-grid-gap']} ${styles["image-side-grid"]}`}
+                                
                             >
                                 <Grid container className={`${styles['image-grid-gap']} ${styles['row-1']}`}
                                     spacing={1}
                                 >
-                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}>
+                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                        onClick={e=> {
+                                            handleClickMediaItem(e, 2)
+                                        }}
+                                    >
                                         <RenderFileData
                                             fileData={{
                                                 src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
@@ -363,7 +386,11 @@ const DetailsPage = () => {
                                             fileType="video"
                                         />
                                     </Grid>
-                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}>
+                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                        onClick={e=> {
+                                            handleClickMediaItem(e, 3)
+                                        }}
+                                    >
                                         <RenderFileData
                                             fileData={{
                                                 alt: "",
@@ -377,7 +404,11 @@ const DetailsPage = () => {
                                 <Grid container className={`${styles['image-grid-gap']}`}
                                     spacing={1}
                                 >
-                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}>
+                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                        onClick={e=> {
+                                            handleClickMediaItem(e, 4)
+                                        }}
+                                    >
                                         <RenderFileData
                                             fileData={{
                                                 alt: "",
@@ -387,7 +418,11 @@ const DetailsPage = () => {
                                             fileType="image"
                                         />
                                     </Grid>
-                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}>
+                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                        onClick={e=> {
+                                            handleClickMediaItem(e, 5)
+                                        }}
+                                    >
                                         <RenderFileData
                                             fileData={{
                                                 alt: "",
