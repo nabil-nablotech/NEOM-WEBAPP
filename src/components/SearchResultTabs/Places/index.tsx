@@ -22,7 +22,7 @@ const PlacesTab = () => {
   );
   const [img, setimg] = useState(MapImg1);
 
-  const { fetchPlaces, hasMoreData, loading } = usePlace();
+  const { fetchPlaces, hasMoreData, loading, mapPlaces } = usePlace();
 
   const { openStates, toggleOpenStates } = useToggledView({ count: 2 });
 
@@ -86,7 +86,7 @@ const PlacesTab = () => {
               </Grid>
               {/* To-do: map view */}
               <Grid item xl={6} lg={6} md={7} sm={7}>
-                <MapView/>
+                {mapPlaces? <MapView marker={mapPlaces}/>:<></>}
               </Grid>
             </>
           )}

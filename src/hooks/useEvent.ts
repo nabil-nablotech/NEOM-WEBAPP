@@ -12,7 +12,7 @@ import {limit} from '../utils/services/helpers';
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
-
+  const [mapEvents, setMapEvents]= useState([]);
   const {
     searchText,
     events: eventsData,
@@ -48,6 +48,12 @@ const useEvent = () => {
       // this flag decides to fetch next set of data 
       setHasMoreData(data?.visits?.meta.pagination.pageCount !==
         data?.visits.meta.pagination.page);
+        
+        let dummyArray:any = [];
+        for (let i = 0; i < data?.visits?.data?.length; i++) {
+            dummyArray.push({id:i,name:data?.visits?.data[i].attributes['recordingTeam'],position:{lat:data?.visits?.data[i].attributes['latitude'],lng:data?.visits?.data[i].attributes['longitude']}})
+        }
+          setMapEvents(dummyArray)
     }
 
   }, [data]);
@@ -62,6 +68,7 @@ const useEvent = () => {
     loading,
     error,
     data,
+    mapEvents,
     hasMoreData,
     fetchEvents: fetchData,
   };
