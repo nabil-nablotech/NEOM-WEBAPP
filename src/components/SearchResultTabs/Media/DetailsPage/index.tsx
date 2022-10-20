@@ -184,8 +184,7 @@ export const MediaDetailsModal = ({
                         <IconButton
                             edge="start"
                             color="inherit"
-                            // onClick={() => setModalOpen(false)}
-                            onClick={() => setModalOpen()}
+                            onClick={() => setModalClose()}
                             aria-label="close"
                             sx={{
                                 marginLeft: "auto",
@@ -203,10 +202,6 @@ export const MediaDetailsModal = ({
                 data={data}
                 currentItemIndex={currentItemIndex}
                 currentRecord={currentRecord}
-                // callBack={(record: any, index: number) => {
-                //     setCurrentItemIndex(index);
-                //     setCurrentRecord(record);
-                // }}
                 callBack={callBack}
             />
         </CustomModal>

@@ -235,58 +235,6 @@ const ListView = (props: MediaProps) => {
           //   onC
         ></StyledTableWrapper>
       </InfiniteScroll>
-      {/* <CustomModal
-        open={isModalOpen}
-        titleContent={
-          <Grid
-            container
-            className={`${styles["modal-title"]}`}
-            style={{
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Grid item sm={6}>
-              {currentRecord?.title?.substring(0, 30)}
-            </Grid>
-            <Grid
-              item
-              style={{
-                position: "absolute",
-                left: "50%",
-                right: "50%",
-              }}
-            >
-              {currentItemIndex + 1}/{data.length}
-            </Grid>
-            <Grid item>
-              <IconButton
-                edge="start"
-                color="inherit"
-                onClick={() => setModalOpen(false)}
-                aria-label="close"
-                sx={{
-                  marginLeft: "auto",
-                  marginRight: "0",
-                }}
-              >
-                <CloseIcon fontSize="large" sx={{ color: "#fff" }} />
-              </IconButton>
-            </Grid>
-          </Grid>
-        }
-        handleClose={() => setModalOpen(false)}
-      >
-        <MediaDetailsPage
-          data={data}
-          currentItemIndex={currentItemIndex}
-          currentRecord={currentRecord}
-          callBack={(record: any, index: number) => {
-            setCurrentItemIndex(index);
-            setCurrentRecord(record);
-          }}
-        />
-      </CustomModal> */}
       <MediaDetailsModal
         data={data}
         currentItemIndex={currentItemIndex}
