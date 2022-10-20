@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Grid, IconButton } from "@mui/material";
 import { ColumnsType } from "antd/lib/table";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
@@ -11,6 +11,14 @@ import { MediaProps } from "../GridView/GridView";
 import {formatWebDate, formatBytes} from '../../../../utils/services/helpers'
 import {MoreOptionsComponent} from './MoreOption';
 import { Media } from "../../../../types/Media";
+// import {CustomModal} from '../../../CustomModal';
+// import {MediaDetailsPage} from '../DetailsPage';
+// import styles from './index.module.css';
+// import CloseIcon from '@mui/icons-material/CloseOutlined';
+import { MediaDetailsModal } from "../DetailsPage";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setActiveMediaItem, setActiveMediaItemIndex } from "../../../../store/reducers/searchResultsReducer";
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -177,6 +185,8 @@ const ListView = (props: MediaProps) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [currentItemIndex, setCurrentItemIndex] = useState<number>(0);
   const [currentRecord, setCurrentRecord] = useState<any>(0);
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   useEffect(() => {
     /** Needs to be done , since InfiniteSCroll needs a relation with
@@ -215,14 +225,16 @@ const ListView = (props: MediaProps) => {
           style={{
             background: "transparent",
           }}
-          onRow={(record, rowIndex) => {
+          onRow={(record: any, rowIndex: number | undefined) => {
             return {
               onClick: (event) => {
                 // click row
                 setModalOpen(true);
+                
                 if (typeof rowIndex === "number") {
-                  setCurrentItemIndex(rowIndex);
-                  setCurrentRecord(record);
+                  dispatch(setActiveMediaItem(record))
+                  dispatch(setActiveMediaItemIndex(rowIndex))
+                  navigate(`/search-results/Media/${record.attributes.uniqueId}`, {replace: true})
                 }
               },
             };
@@ -230,58 +242,8 @@ const ListView = (props: MediaProps) => {
           //   onC
         ></StyledTableWrapper>
       </InfiniteScroll>
-      {/* <CustomModal
-        open={isModalOpen}
-        titleContent={
-          <Grid
-            container
-            className={`${styles["modal-title"]}`}
-            style={{
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Grid item sm={6}>
-              {currentRecord?.title?.substring(0, 30)}
-            </Grid>
-            <Grid
-              item
-              style={{
-                position: "absolute",
-                left: "50%",
-                right: "50%",
-              }}
-            >
-              {currentItemIndex + 1}/{data.length}
-            </Grid>
-            <Grid item>
-              <IconButton
-                edge="start"
-                color="inherit"
-                onClick={() => setModalOpen(false)}
-                aria-label="close"
-                sx={{
-                  marginLeft: "auto",
-                  marginRight: "0",
-                }}
-              >
-                <CloseIcon fontSize="large" sx={{ color: "#fff" }} />
-              </IconButton>
-            </Grid>
-          </Grid>
-        }
-        handleClose={() => setModalOpen(false)}
-      >
-        <DetailsPage
-          data={data}
-          currentItemIndex={currentItemIndex}
-          currentRecord={currentRecord}
-          callBack={(record: any, index: number) => {
-            setCurrentItemIndex(index);
-            setCurrentRecord(record);
-          }}
-        />
-      </CustomModal> */}
+      <MediaDetailsModal
+      />
     </Box>
   );
 };

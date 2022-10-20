@@ -6,6 +6,9 @@ import { styled, SxProps } from '@mui/material/styles';
 
 interface TextInputProps {
   error?: boolean;
+  onClick?: (
+    e: React.MouseEvent<HTMLInputElement>
+  ) => void;
   onChange?: (
     e: ChangeEvent<HTMLInputElement>
   ) => void;
@@ -63,6 +66,7 @@ const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
 
 export default function NTextFields(props: TextInputProps) {
   const {
+    onClick,
     onChange,
     onBlur,
     onFocus,

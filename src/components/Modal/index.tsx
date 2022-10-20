@@ -183,11 +183,17 @@ const ModalComponent = ({
   };
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<HTMLSelectElement>,
+    e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string | string[]>,
     name: "firstName" | "lastName" | "email" | "role" | "blocked"
   ) => {
     const lclState: any = state;
     lclState[name] = e.target.value as string;
+    setState({ ...lclState });
+  };
+
+  const handleClear = (e: React.MouseEvent<HTMLButtonElement>, name: string) => {
+    const lclState: any = state;
+    lclState[name] = '';
     setState({ ...lclState });
   };
 
@@ -260,6 +266,7 @@ const ModalComponent = ({
                 name="role"
                 value={state.role}
                 handleChange={(e) => handleChange(e, "role")}
+                handleClear={(e) => handleClear(e, 'role')}
                 itemsList={roleDataList}
               />
               {modalState.editing && <DropdownComponent
@@ -268,6 +275,7 @@ const ModalComponent = ({
                 name="blocked"
                 value={state.blocked}
                 handleChange={(e) => handleChange(e, "blocked")}
+                handleClear={(e) => handleClear(e, 'blocked')}
                 itemsList={statusDataList}
               />}
               {/* </Form> */}

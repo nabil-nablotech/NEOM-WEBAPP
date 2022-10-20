@@ -55,4 +55,59 @@ export type SearchResultsState2 = {
     activeTab: tabNameProps | ''
     newItemWindowOpen: boolean
     showAddSuccess: boolean
+    activePlaceItem: Place | null
+    activePlaceItemIndex: number
+    activeMediaItem: Media | null
+    activeMediaItemIndex: number
+}
+
+export type FileDataType = {
+    src: string
+    alt?: string
+    className: string
+    thumbNail?: string
+    isOpened?: boolean // to directly render video or embedded code, instead of displaying play icon
+}
+
+export type RenderFileDataProps = {
+    fileType: "image" | "video"
+    fileData: FileDataType
+}
+
+export type CommentSectionProps = {
+    SelfIcon: () => JSX.Element
+}
+
+export type  commentType = {
+    commentor: string,
+    comment: string,
+    timeStamp: string,
+    nestedCommentsCount: number
+    nestedComments?: Array<commentType>
+    nestingLevel: number
+}
+export type SingleCommentProps = {
+    SelfIcon: () => JSX.Element
+    commentObj: commentType
+}
+
+export type VideoModalProps = {
+    videoSrc: string
+    isModalOpen: boolean
+    toggleModal: () => void
+}
+
+export type MediaDetailsPageProps = {
+    currentItemIndex: any
+    data: any
+    currentRecord: any
+}
+
+type menuAction = {
+    label: string
+    action: () => void
+}
+
+export type CustomMoreOptionsComponentProps = {
+    menuActions: Array<menuAction>
 }

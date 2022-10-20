@@ -49,6 +49,10 @@ export const Navigation = () => {
             {
               path: "?search=",
               element: <PrivateRoute component={SearchResults} />,
+            },
+            {
+              path: ":itemId",
+              element: <PrivateRoute component={SearchResults} />,
             }
           ]
         },

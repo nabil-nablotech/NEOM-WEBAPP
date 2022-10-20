@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { ChangeEvent, useEffect } from "react";
 import styles from "./index.module.css";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
@@ -27,9 +27,11 @@ import { RootState } from "../../store";
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import RefinedSearchInputs from "../RefinedSearchInputs";
-import { tabIndexBasedOnName } from "../../utils/services/helpers";
+import { MEDIA_TAB_NAME, PLACES_TAB_NAME, tabIndexBasedOnName } from "../../utils/services/helpers";
+import DetailsPage from "./DetailsPage";
 import { useDispatch } from "react-redux";
 import {setSelectedValue} from '../../store/reducers/refinedSearchReducer';
+import { MediaDetailsModal } from "./Media/DetailsPage";
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, className, ...other } = props;
@@ -101,19 +103,20 @@ const Label = ({ img, label }: LabelProps) => {
 };
 
 const initialState = {
-  stateOfConservation: '',
-  period: '',
-  recommendation: '',
-  researchValue: '',
-  tourismValue: '',
-  risk: '',
-  assessmentType: '',
-  artifacts: '',
-  location: '',
+  stateOfConservation: [],
+  period: [],
+  recommendation: [],
+  researchValue: [],
+  tourismValue: [],
+  risk: [],
+  assessmentType: [],
+  artifacts: [],
+  latitude: '',
+  longitude: '',
 }
 const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => {
   const [value, setValue] = React.useState(0);
-  let { tabName } = useParams<{ tabName?: tabNameProps }>();
+  let { tabName, itemId } = useParams<{ tabName?: tabNameProps, itemId: string }>();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -128,7 +131,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     }
   }, [tabName]);
 
-  const handleSelectChange =(e: SelectChangeEvent<HTMLSelectElement>) => {
+  const handleSelectChange =(e: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>) => {
     const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
     selectedValueCopy[e.target.name] = e.target.value;
     e.preventDefault();
@@ -159,6 +162,37 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
       replace: true,
     });
   };
+
+  const handleClear = (e: any, name?: string) => {
+    const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
+    console.log('e...........', name);
+    if (name) {
+      selectedValueCopy[name] = name === 'location' ? '' : [];
+      e.preventDefault();
+      dispatch(setSelectedValue(selectedValueCopy));
+    }
+  };
+
+  /** If get itedId, means its details page
+   * Hence replace tabs view and open normal view
+   */
+  if(itemId) {
+    if(tabName === PLACES_TAB_NAME) {
+      return <>
+        <div className={`${styles["search-results-wrapper"]}`}>
+          <DetailsPage />
+        </div>
+      </>
+    }
+
+    if(tabName === MEDIA_TAB_NAME) {
+      return <>
+        <div className={`${styles["search-results-wrapper"]}`}>
+          <MediaDetailsModal />
+        </div>
+      </>
+    }
+  }
 
   return (
     <div className={`${styles["search-results-wrapper"]}`}>
@@ -225,7 +259,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
           <AccordionDetails style={{
             padding: 0
           }}>
-            <RefinedSearchInputs handleChange={handleSelectChange} handleSubmit={handleButtonSubmit} selectedValue={selectedValue} options={options} activeTabIndex={value} />
+            <RefinedSearchInputs handleClear={handleClear} handleChange={handleSelectChange} handleSubmit={handleButtonSubmit} selectedValue={selectedValue} options={options} activeTabIndex={value} />
           </AccordionDetails>
         </Accordion>
       </Box>}

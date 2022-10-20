@@ -10,6 +10,7 @@ import { usePaginatedArray } from "../../../../hooks/usePaginatedArray";
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 import {Card} from './Card';
 import { Place } from "../../../../types/Place";
+import { useNavigate } from "react-router-dom";
 
 export type PlacesProps = {
   data: Place[];
@@ -23,6 +24,7 @@ const GridView = (props: PlacesProps) => {
   const {data, loading, fetchData, hasMoreData} = props;
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   if (!data) {
     return <h1>loadig....</h1>
@@ -58,6 +60,7 @@ const GridView = (props: PlacesProps) => {
                 className={`${gridStyles[""]}`}
                 onClick={(e) => {
                   dispatch(setSelectedCardIndex(index));
+                  navigate(`/search-results/Places/${item.attributes.uniqueId}`, {replace: true})
                 }}
               >
                 <Card
