@@ -20,7 +20,8 @@ const initialState: SearchResultsState2 = {
   activeTab: '',
   newItemWindowOpen: false,
   showAddSuccess: false,
-  // activePlaceItem: {}
+  activeMediaItem: null,
+  activeMediaItemIndex: 0
 };
 
 export const searchResultsSlice = createSlice({
@@ -69,9 +70,12 @@ export const searchResultsSlice = createSlice({
     toggleShowAddSuccess: (state, action: PayloadAction<boolean>) => {
       state.showAddSuccess = action.payload;
     },
-    // setActivePlaceItem: (state, action: PayloadAction<Object>) => {
-    //   state.activePlaceItem = action.payload;
-    // },
+    setActiveMediaItem: (state, action: PayloadAction<Object | any>) => {
+      state.activeMediaItem = action.payload;
+    },
+    setActiveMediaItemIndex: (state, action: PayloadAction<number>) => {
+      state.activeMediaItemIndex = action.payload;
+    },
   },
 });
 
@@ -89,7 +93,9 @@ export const {
   setMediaMetaData,
   setActiveTab,
   toggleNewItemWindow,
-  toggleShowAddSuccess
+  toggleShowAddSuccess,
+  setActiveMediaItem,
+  setActiveMediaItemIndex
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

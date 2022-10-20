@@ -122,7 +122,7 @@ const DetailsPage = () => {
     } = selectedPlaceObj.attributes
 
     const {latitude, longitude} = selectedPlaceObj
-// console.log('hex: ', events)
+// console.log('hex: ', media)
     // get from api
     let [images, setImages] = useState<any>([
         'https://via.placeholder.com/150/92c952',

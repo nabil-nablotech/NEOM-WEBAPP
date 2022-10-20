@@ -27,10 +27,11 @@ import { RootState } from "../../store";
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import RefinedSearchInputs from "../RefinedSearchInputs";
-import { tabIndexBasedOnName } from "../../utils/services/helpers";
+import { MEDIA_TAB_NAME, PLACES_TAB_NAME, tabIndexBasedOnName } from "../../utils/services/helpers";
 import DetailsPage from "./DetailsPage";
 import { useDispatch } from "react-redux";
 import {setSelectedValue} from '../../store/reducers/refinedSearchReducer';
+import { MediaDetailsModal } from "./Media/DetailsPage";
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, className, ...other } = props;
@@ -176,11 +177,21 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
    * Hence replace tabs view and open normal view
    */
   if(itemId) {
-    return <>
-      <div className={`${styles["search-results-wrapper"]}`}>
-        <DetailsPage />
-      </div>
-    </>
+    if(tabName === PLACES_TAB_NAME) {
+      return <>
+        <div className={`${styles["search-results-wrapper"]}`}>
+          <DetailsPage />
+        </div>
+      </>
+    }
+
+    if(tabName === MEDIA_TAB_NAME) {
+      return <>
+        <div className={`${styles["search-results-wrapper"]}`}>
+          <MediaDetailsModal />
+        </div>
+      </>
+    }
   }
 
   return (
