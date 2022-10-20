@@ -13,12 +13,14 @@ import { limit } from "../utils/services/helpers";
 
 const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
-  const { searchText, places: placeData } = useSelector(
-    (state: RootState) => state.searchResults
-  );
-  const { selectedValue } = useSelector(
-    (state: RootState) => state.refinedSearch
-  );
+  const [mapPlaces, setMapPlaces]= useState([]);
+  const {
+    searchText,
+    places: placeData,
+  } = useSelector((state: RootState) => state.searchResults);
+  const {
+    selectedValue
+  } = useSelector((state: RootState) => state.refinedSearch);
   const { search } = useLocation();
   const dispatch = useDispatch();
 
@@ -53,11 +55,16 @@ const usePlace = () => {
       }
       // update the meta data
       dispatch(setPlaceMetaData(data?.places?.meta));
-      // this flag decides to fetch next set of data
-      setHasMoreData(
-        data?.places?.meta.pagination.pageCount !==
-          data?.places.meta.pagination.page
-      );
+      // this flag decides to fetch next set of data 
+      setHasMoreData(data?.places?.meta.pagination.pageCount !==
+        data?.places.meta.pagination.page);
+
+
+        let dummyArray:any = [];
+        for (let i = 0; i < data?.places?.data?.length; i++) {
+            dummyArray.push({id:i,name:data?.places?.data[i].attributes['placeNameEnglish'],position:{lat:data?.places?.data[i].attributes['latitude'],lng:data?.places?.data[i].attributes['longitude']}})
+        }
+          setMapPlaces(dummyArray)
     }
   }, [data]);
 
@@ -105,12 +112,14 @@ const usePlace = () => {
       search_three: searchWordArray[2],
       limit: limit,
       skip: skip,});
+    refetchPlaces({ search_one: searchWordArray[0], search_two: searchWordArray[1], search_three: searchWordArray[2], limit: limit, skip: skip });
   };
 
   return {
     loading,
     error,
     data,
+    mapPlaces,
     hasMoreData,
     fetchPlaces: fetchData,
   };
