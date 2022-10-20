@@ -152,6 +152,7 @@ const DetailsPage = () => {
         'https://via.placeholder.com/150/f66b97',
     ])
     const [isMoreTitleMenuOpen, setMoreTitleMenuOpen] = useState<false>(false)
+    const [isSeeMore, toggleSeeMore] = useState<boolean>(false)
 
     const menuItems = [
         {
@@ -295,7 +296,7 @@ const DetailsPage = () => {
             dataIndex: "attributes",
             // to-do
             // Events will be sorted by Date of Event newest to oldest
-            
+
             // sorter: (a: { title: string }, b: { title: any }) => {
             //     return a.title?.localeCompare(b.title);
             //   },
@@ -508,7 +509,12 @@ const DetailsPage = () => {
                         >
                             <Grid item md={7} className={`${styles['text-left']} ${styles['section-left']}`}>
                                 <Box className={`${styles['site-desc']}`}>
-                                    {siteDescription}
+                                    <Box className={`${styles['site-desc-condensed']}`}>
+                                        {siteDescription.substring(0, !isSeeMore ? 500 : siteDescription.length-1)}
+                                    </Box>
+                                    {/* <Box onClick={e => {
+                                        toggleSeeMore(state => !state)
+                                    }}>See {isSeeMore ? 'More' : 'Less'}</Box> */}
                                 </Box>
                                 <Box className={`${styles['table']}`}>
                                     <Grid container className={`${styles['table-row']}`}>

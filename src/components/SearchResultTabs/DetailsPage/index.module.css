@@ -70,6 +70,10 @@
 }
 
 .site-desc {
+    display: inline-block;
+}
+
+.site-desc-condensed {
     display: -webkit-box;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;

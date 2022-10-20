@@ -34,7 +34,7 @@ const RenderFileData = ({
                             alt={fileData.alt ? fileData.alt : ''}
                             src={fileData.thumbNail}
                         />
-                        <PlayCircleFilledWhiteIcon
+                        {!fileData.isOpened ? <PlayCircleFilledWhiteIcon
                             sx={{
                                 width: 1 / 4,
                                 height: 1 / 4,
@@ -44,12 +44,12 @@ const RenderFileData = ({
                                 e.preventDefault()
                                 toggleVideoModal(true)
                             }}
-                        />
+                        /> :
                         <VideoModal
                             videoSrc={fileData.src}
                             isModalOpen={openVideoModal}
                             toggleModal={() => toggleVideoModal(false)}
-                        />
+                        />}
                     </Box>
                 </>
             }

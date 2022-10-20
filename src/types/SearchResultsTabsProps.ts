@@ -66,6 +66,7 @@ export type FileDataType = {
     alt?: string
     className: string
     thumbNail?: string
+    isOpened?: boolean // to directly render video or embedded code, instead of displaying play icon
 }
 
 export type RenderFileDataProps = {
