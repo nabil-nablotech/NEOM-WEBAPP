@@ -2,7 +2,7 @@ import {useQuery} from '@apollo/client';
 import { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { library } from "../query/search";
+import { library } from "../query/library";
 import { RootState } from '../store';
 import {setLibrary, setLibraryMetaData} from '../store/reducers/searchResultsReducer';
 import {limit} from '../utils/services/helpers';

@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { events } from "../query/search";
+import { events } from "../query/events";
 import { RootState } from "../store";
 import {
   setEvents,
