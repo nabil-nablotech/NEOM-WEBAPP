@@ -7,22 +7,28 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import {CustomModal} from '../../../CustomModal';
+import { CustomModal } from '../../../CustomModal';
 import { MediaDetailsPageProps } from '../../../../types/SearchResultsTabsProps';
 import { IconButton } from "@mui/material";
 import CloseIcon from '@mui/icons-material/CloseOutlined';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../store';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setActiveMediaItemIndex, setActiveMediaItem } from '../../../../store/reducers/searchResultsReducer';
+import { useNavigate } from 'react-router-dom';
 
 const MediaDetailsPage = ({
     currentItemIndex,
     data,
     currentRecord,
-    callBack
 }: MediaDetailsPageProps) => {
 
     type handleAction = {
         e: React.MouseEvent<HTMLElement>
         action: string
     }
+    const dispatch = useDispatch()
 
     const handleNextOrPrevious = (e: handleAction['e'], action: handleAction['action']) => {
         e.preventDefault()
@@ -33,14 +39,16 @@ const MediaDetailsPage = ({
             if (newIndex + 1 < data.length) {
                 newIndex = newIndex + 1
             }
-            callBack(data[newIndex], newIndex)
+            dispatch(setActiveMediaItem(data[newIndex]))
+            dispatch(setActiveMediaItemIndex(newIndex))
         }
 
         if (action === 'previous') {
             if (newIndex - 1 >= 0) {
                 newIndex = newIndex - 1
             }
-            callBack(data[newIndex], newIndex)
+            dispatch(setActiveMediaItem(data[newIndex]))
+            dispatch(setActiveMediaItemIndex(newIndex))
         }
     }
 
@@ -62,8 +70,8 @@ const MediaDetailsPage = ({
             <Box className={`${styles['desc']}`} >
                 <Grid container className={`${styles['bottom-desc-main-grid']}`}>
                     <Grid container className={`${styles['bottom-desc-row-1']}`} style={{
-                             justifyContent: 'space-between'
-                        }}>
+                        justifyContent: 'space-between'
+                    }}>
                         <Grid item sm={12} >
                             <Grid container style={{ gap: '2em', alignItems: 'center' }}>
                                 <Grid item>
@@ -97,7 +105,7 @@ const MediaDetailsPage = ({
                                 quae ab illo inventore.
                             </Grid>
                         </Grid>
-                        
+
                     </Grid>
                     <Grid container >
                         <Grid item lg={6} md={6} sm={5}>
@@ -145,15 +153,19 @@ const MediaDetailsPage = ({
     </>
 }
 
-export const MediaDetailsModal = ({
-    currentItemIndex,
-    data,
-    currentRecord,
-    callBack,
-    isModalOpen,
-    setModalOpen,
-    setModalClose
-}: MediaDetailsPageProps & { isModalOpen: boolean, setModalOpen: () => void, setModalClose: () => void}) => {
+export const MediaDetailsModal = () => {
+
+    const [isModalOpen, setModalOpen] = useState<boolean>(true)
+
+    const { media, activeMediaItem, activeMediaItemIndex } = useSelector(
+        (state: RootState) => state.searchResults
+    )
+
+    const navigate = useNavigate()
+
+    if (!activeMediaItem) {
+        return <>Error display</>
+    }
 
     return <>
         <CustomModal
@@ -168,7 +180,7 @@ export const MediaDetailsModal = ({
                     }}
                 >
                     <Grid item sm={6}>
-                        {currentRecord?.title?.substring(0, 30)}
+                        {activeMediaItem.attributes.title.substring(0, 30)}
                     </Grid>
                     <Grid
                         item
@@ -178,13 +190,16 @@ export const MediaDetailsModal = ({
                             right: "50%",
                         }}
                     >
-                        {currentItemIndex + 1}/{data.length}
+                        {activeMediaItemIndex + 1}/{media.length}
                     </Grid>
                     <Grid item>
                         <IconButton
                             edge="start"
                             color="inherit"
-                            onClick={() => setModalClose()}
+                            onClick={() => {
+                                setModalOpen(false)
+                                navigate(`/search-results/Media`, { replace: true })
+                            }}
                             aria-label="close"
                             sx={{
                                 marginLeft: "auto",
@@ -196,13 +211,12 @@ export const MediaDetailsModal = ({
                     </Grid>
                 </Grid>
             }
-            handleClose={() => setModalClose()}
+            handleClose={() => setModalOpen(false)}
         >
             <MediaDetailsPage
-                data={data}
-                currentItemIndex={currentItemIndex}
-                currentRecord={currentRecord}
-                callBack={callBack}
+                data={media}
+                currentItemIndex={activeMediaItemIndex}
+                currentRecord={activeMediaItem}
             />
         </CustomModal>
     </>

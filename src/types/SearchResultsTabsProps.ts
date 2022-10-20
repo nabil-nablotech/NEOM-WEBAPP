@@ -55,7 +55,8 @@ export type SearchResultsState2 = {
     activeTab: tabNameProps | ''
     newItemWindowOpen: boolean
     showAddSuccess: boolean
-    // activePlaceItem: Object
+    activeMediaItem: Media | null
+    activeMediaItemIndex: number
 }
 
 export type FileDataType = {
@@ -84,5 +85,4 @@ export type MediaDetailsPageProps = {
     currentItemIndex: any
     data: any
     currentRecord: any
-    callBack: (record: any, index: number) => void
 }
