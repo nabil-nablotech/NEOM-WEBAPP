@@ -25,6 +25,9 @@ import { format } from "date-fns";
 import useMedia from "../../../hooks/useMedia";
 import CommentsSection from "../../CommentsSection";
 import RenderInitials from "../../RenderInitials";
+import { useDispatch } from "react-redux";
+import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex } from "../../../store/reducers/searchResultsReducer";
+import { CustomMoreOptionsComponent } from "../../CustomMoreOptionsComponent";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -114,14 +117,31 @@ const DetailsPage = () => {
     );
     const { data } = useSelector((state: RootState) => state.login);
 
-    const selectedPlaceObj = places.filter((placeItem: Place) => placeItem.attributes.uniqueId === itemId)[0]
+    let selectedPlaceObjIndex: number = 0
+    let selectedPlaceObj: Place = places[0]
+
+
+    useEffect(() => {
+        if(selectedPlaceObj) {
+            dispatch(setActivePlaceItem(selectedPlaceObj))
+            dispatch(setActivePlaceItemIndex(selectedPlaceObjIndex))
+        }
+    }, [])
+
+    places.forEach((placeItem: Place, inx: number) => {
+        if (placeItem.attributes.uniqueId === itemId) {
+            selectedPlaceObj = placeItem
+            selectedPlaceObjIndex = inx
+        }
+    })
 
     const {
         placeNameEnglish, placeNameArabic, placeNumber,
-        siteDescription, 
+        siteDescription,
     } = selectedPlaceObj.attributes
 
     const {latitude, longitude} = selectedPlaceObj
+
 // console.log('hex: ', media)
     // get from api
     let [images, setImages] = useState<any>([
@@ -132,20 +152,21 @@ const DetailsPage = () => {
         'https://via.placeholder.com/150/f66b97',
     ])
     const [isMoreTitleMenuOpen, setMoreTitleMenuOpen] = useState<false>(false)
+    const [isSeeMore, toggleSeeMore] = useState<boolean>(false)
 
     const menuItems = [
         {
             label: "Share",
-            handleClickMenuItem: () => { },
+            action: () => { },
         },
         {
             label: "Edit",
-            handleClickMenuItem: () => {
+            action: () => {
             },
         },
         {
             label: "Delete",
-            handleClickMenuItem: () => {
+            action: () => {
             },
         },
     ]
@@ -273,6 +294,9 @@ const DetailsPage = () => {
             title: "Date of Event",
             key: "attributes",
             dataIndex: "attributes",
+            // to-do
+            // Events will be sorted by Date of Event newest to oldest
+
             // sorter: (a: { title: string }, b: { title: any }) => {
             //     return a.title?.localeCompare(b.title);
             //   },
@@ -302,14 +326,19 @@ const DetailsPage = () => {
     ];
 
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
+    const dispatch = useDispatch()
 
-    const commentsJson = [
-        {
-            commentor: 'Mark',
-            comment: 'Sed ut perspiciatis unde omnis iste natus error sign ut sai gon perspiciatis unde omnis iste ut',
-            nestedComments: 0
+    const handleClickMediaItem = (e: React.MouseEvent, itemIndex: number) => {
+        /** itemIndex used to track which item being clicked out of 5;
+         * 1st , 2nd etc.
+         */
+        e.preventDefault()
+        if(media.length >= itemIndex) {
+            navigate(`/search-results/Media/${media[itemIndex - 1].attributes.uniqueId}`, {replace: true})
+            dispatch(setActiveMediaItem(media[itemIndex - 1]))
+            dispatch(setActiveMediaItemIndex(itemIndex - 1))
         }
-    ]
+    }
     return (
         <Box className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -322,7 +351,8 @@ const DetailsPage = () => {
                     <Button variant="text" type="button"
                         startIcon={<KeyboardArrowLeftIcon fontSize="small" />}
                         style={{
-                            color: 'var(--table-black-text)'
+                            color: 'var(--table-black-text)',
+                            textTransform: 'none'
                         }}
                         onClick={e => {
                             e.preventDefault()
@@ -334,10 +364,35 @@ const DetailsPage = () => {
                 </Grid>
                 <Box className={`${styles['content-section']}`}>
                     <Box className={`${styles['images-section']}`}>
+                        <Box style={{
+                            position: 'absolute',
+                            right: 0,
+                            bottom: 0
+                        }}>
+                            <Button variant="contained" type="button"
+                                style={{
+                                    color: '#fff',
+                                    backgroundColor: 'var(--black-90-pct)',
+                                    borderRadius: '2em',
+                                    margin: '1em',
+                                    padding: '0.4em 1.2em'
+                                }}
+                                onClick={e => {
+                                    e.preventDefault()
+                                    navigate(`/search-results/Media`, { replace: true })
+                                }}
+                            >
+                                View all
+                            </Button>
+                        </Box>
                         <Grid container className={`${styles['justify-center']} ${styles['image-grid-gap']}`}
                             spacing={1}
                         >
-                            <Grid item md={6} className={`${styles["grid-item"]}`}>
+                            <Grid item md={6} className={`${styles["grid-item"]}`}
+                                onClick={e=> {
+                                    handleClickMediaItem(e, 1)
+                                }}
+                            >
                                 <RenderFileData
                                     fileData={{
                                         alt: "",
@@ -348,11 +403,16 @@ const DetailsPage = () => {
                                 />
                             </Grid>
                             <Grid item md={6} className={`${styles['image-grid-gap']} ${styles["image-side-grid"]}`}
+                                
                             >
                                 <Grid container className={`${styles['image-grid-gap']} ${styles['row-1']}`}
                                     spacing={1}
                                 >
-                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}>
+                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                        onClick={e=> {
+                                            handleClickMediaItem(e, 2)
+                                        }}
+                                    >
                                         <RenderFileData
                                             fileData={{
                                                 src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
@@ -363,7 +423,11 @@ const DetailsPage = () => {
                                             fileType="video"
                                         />
                                     </Grid>
-                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}>
+                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                        onClick={e=> {
+                                            handleClickMediaItem(e, 3)
+                                        }}
+                                    >
                                         <RenderFileData
                                             fileData={{
                                                 alt: "",
@@ -377,7 +441,11 @@ const DetailsPage = () => {
                                 <Grid container className={`${styles['image-grid-gap']}`}
                                     spacing={1}
                                 >
-                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}>
+                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                        onClick={e=> {
+                                            handleClickMediaItem(e, 4)
+                                        }}
+                                    >
                                         <RenderFileData
                                             fileData={{
                                                 alt: "",
@@ -387,7 +455,11 @@ const DetailsPage = () => {
                                             fileType="image"
                                         />
                                     </Grid>
-                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}>
+                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                        onClick={e=> {
+                                            handleClickMediaItem(e, 5)
+                                        }}
+                                    >
                                         <RenderFileData
                                             fileData={{
                                                 alt: "",
@@ -423,15 +495,8 @@ const DetailsPage = () => {
                             <Grid item className={`${styles['title-section-grid']}`}>
                                 <Box className={`${styles['more-icon-box']}`}
                                 >
-                                    <Box onClick={e => handleClick(e)}>
-                                        <MoreHorizIcon />
-
-                                    </Box>
-                                    <MenuList
-                                        anchorEl={anchorEl}
-                                        open={open}
-                                        handleClose={handleClose}
-                                        options={menuItems}
+                                    <CustomMoreOptionsComponent
+                                        menuActions={menuItems}
                                     />
                                 </Box>
                             </Grid>
@@ -444,7 +509,12 @@ const DetailsPage = () => {
                         >
                             <Grid item md={7} className={`${styles['text-left']} ${styles['section-left']}`}>
                                 <Box className={`${styles['site-desc']}`}>
-                                    {siteDescription}
+                                    <Box className={`${styles['site-desc-condensed']}`}>
+                                        {siteDescription.substring(0, !isSeeMore ? 500 : siteDescription.length-1)}
+                                    </Box>
+                                    {/* <Box onClick={e => {
+                                        toggleSeeMore(state => !state)
+                                    }}>See {isSeeMore ? 'More' : 'Less'}</Box> */}
                                 </Box>
                                 <Box className={`${styles['table']}`}>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -462,6 +532,12 @@ const DetailsPage = () => {
                                             Period
                                         </Grid>
                                         <Grid item>
+                                            {/* 
+                                            to-do::
+                                            Site type and period will act as a link to a quick search. For example if 
+                                            the Site Type says  “Building”, when the user clicks on it, the user will 
+                                            be redirected to the search results page where they will see the list of 
+                                            all places where the site type = building. */}
                                             <Box component={"a"} href="#" className={`${styles['anchor']}`}>
                                                 Modern,Ottoman
                                             </Box>
@@ -520,11 +596,10 @@ const DetailsPage = () => {
                                             URL
                                         </Grid>
                                         <Grid item>
-                                            <Box component={"a"} href="https://www.neomheritage.com/place/N00381"
-                                                className={`${styles['anchor']}`}
-                                            >
+                                            {/* to-do */}
+                                            {/* When clicking on the URL link, the link should be copied to the clip board. 
+                                            A success message will be displayed with the message “URL copied to clipboard” */}
                                                 https://www.neomheritage.com/place/N00381
-                                            </Box>
                                         </Grid>
                                     </Grid>
                                 </Box>
@@ -601,11 +676,11 @@ const DetailsPage = () => {
                         </Box>
                     </Box>
                     <Box className={`${styles['remarks-section']}  ${styles['heading']} ${styles['text-left']}`}>
-                    <Box className={`${styles['heading-title']}`}>
+                        <Box className={`${styles['heading-title']}`}>
                             <Box>Remarks</Box>
                         </Box>
                         <CommentsSection
-                            SelfIcon = {() => <RenderInitials firstName={data?.firstName} lastName={data?.lastName}/>}
+                            SelfIcon={() => <RenderInitials firstName={data?.firstName} lastName={data?.lastName} />}
                         />
                     </Box>
                 </Box>

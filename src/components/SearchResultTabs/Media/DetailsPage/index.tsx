@@ -17,6 +17,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setActiveMediaItemIndex, setActiveMediaItem } from '../../../../store/reducers/searchResultsReducer';
 import { useNavigate } from 'react-router-dom';
+import RenderFileData from '../../../RenderFileData';
 
 const MediaDetailsPage = ({
     currentItemIndex,
@@ -28,6 +29,10 @@ const MediaDetailsPage = ({
         e: React.MouseEvent<HTMLElement>
         action: string
     }
+    const {media, activeMediaItemIndex } = useSelector(
+        (state: RootState) => state.searchResults
+    );
+
     const dispatch = useDispatch()
 
     const handleNextOrPrevious = (e: handleAction['e'], action: handleAction['action']) => {
@@ -65,7 +70,25 @@ const MediaDetailsPage = ({
                 >
                     <ArrowForwardIosIcon className={`${styles['']}`} sx={{ color: '#fff' }} />
                 </Box>
-                <Box className={`${styles['image']}`} component="img" alt={""} src={currentRecord.thumbnailUrl} />
+
+                {/* actual content */}
+                {/* <Box className={`${styles['image']}`} component="img" alt={""} src={currentRecord.thumbnailUrl} /> */}
+
+                {/* static image or video */}
+                {
+                    // activeMediaItemIndex%2 ===0 &&
+                    true &&
+                    <RenderFileData
+                        fileData={{
+                            src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
+                            className: `${styles["single-image"]}`,
+                            // thumbnail URL for youtube
+                            thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
+                            isOpened: true
+                        }}
+                        fileType="video"
+                    />
+                }
             </Box>
             <Box className={`${styles['desc']}`} >
                 <Grid container className={`${styles['bottom-desc-main-grid']}`}>

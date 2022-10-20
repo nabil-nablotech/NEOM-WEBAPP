@@ -20,6 +20,8 @@ const initialState: SearchResultsState2 = {
   activeTab: '',
   newItemWindowOpen: false,
   showAddSuccess: false,
+  activePlaceItem: null,
+  activePlaceItemIndex: 0,
   activeMediaItem: null,
   activeMediaItemIndex: 0
 };
@@ -76,6 +78,12 @@ export const searchResultsSlice = createSlice({
     setActiveMediaItemIndex: (state, action: PayloadAction<number>) => {
       state.activeMediaItemIndex = action.payload;
     },
+    setActivePlaceItem: (state, action: PayloadAction<Object | any>) => {
+      state.activePlaceItem = action.payload;
+    },
+    setActivePlaceItemIndex: (state, action: PayloadAction<number>) => {
+      state.activePlaceItemIndex = action.payload;
+    },
   },
 });
 
@@ -94,6 +102,8 @@ export const {
   setActiveTab,
   toggleNewItemWindow,
   toggleShowAddSuccess,
+  setActivePlaceItem,
+  setActivePlaceItemIndex,
   setActiveMediaItem,
   setActiveMediaItemIndex
 } = searchResultsSlice.actions;
