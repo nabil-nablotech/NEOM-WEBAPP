@@ -1,25 +1,25 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Options } from "../../types/RefinedSeachTypes";
 export type SelectedValue = {
-  stateOfConservation: string;
-  period: string;
-  recommendation: string;
-  researchValue: string;
-  tourismValue: string;
-  risk: string;
-  assessmentType: string;
-  artifacts: string;
+  stateOfConservation: string[] | [];
+  period: string[] | [];
+  recommendation: string[] |[];
+  researchValue: string[]| [];
+  tourismValue: string[] | [];
+  risk: string[] | [];
+  assessmentType: string[] | [];
+  artifacts: string[] | [];
   location: string;
 }
 const initialSelectedValue = {
-  stateOfConservation: '',
-  period: '',
-  recommendation: '',
-  researchValue: '',
-  tourismValue: '',
-  risk: '',
-  assessmentType: '',
-  artifacts: '',
+  stateOfConservation: [],
+  period: [],
+  recommendation: [],
+  researchValue: [],
+  tourismValue: [],
+  risk: [],
+  assessmentType: [],
+  artifacts: [],
   location: '',
 }
 

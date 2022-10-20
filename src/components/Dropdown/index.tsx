@@ -1,6 +1,8 @@
 import Select from "@mui/material/Select";
+import Chip from '@mui/material/Chip';
 import { DropdownCompProps } from "../../types/DropdownComponent";
-import { MenuItem } from "@mui/material";
+import { MenuItem, Box, IconButton } from "@mui/material";
+import { ClearOutlined } from '@mui/icons-material';
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { useState } from "react";
@@ -9,12 +11,14 @@ const DropdownComponent = ({
   className,
   label,
   placeholder,
-  value,
+  value: values,
   handleChange,
   itemsList,
   name,
   selectStylesSx,
-  formControlSx
+  formControlSx,
+  multiple,
+  handleClear
 }: DropdownCompProps) => {
   const staticLabel = label ? label : "select";
   const [focused, setFocused] = useState(false);
@@ -22,14 +26,14 @@ const DropdownComponent = ({
   return (
     <div className={className}>
       <FormControl sx={{ minWidth: 120, ...formControlSx }}>
-        {(focused || value) && (
+        {(focused || values) && (
           <InputLabel id="demo-simple-select-helper-label">{label}</InputLabel>
         )}
         <Select
           labelId={staticLabel}
           id="simple-select"
-          value={value}
-          // multiple={true}
+          multiple={multiple}
+          value={values}
           name={name}
           label={staticLabel}
           placeholder={placeholder}
@@ -38,14 +42,14 @@ const DropdownComponent = ({
           onBlur={(e) => setFocused(false)}
           displayEmpty
           sx={selectStylesSx}
-          // renderValue={(selected) => {
-          //   if (selected.length === 0) {
-          //     return <em>{staticLabel}</em>;
-          //   }
-
-          //   // @ts-ignore
-          //   // return selected.toString().join(", ");
-          // }}
+          renderValue={(selected: any) => (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+              {selected?.map((value: any) => (
+                <Chip key={value} label={value} />
+              ))}
+            </Box>
+          )}
+          endAdornment={<IconButton sx={{display: values.length>0 ? "visible": "none"}} onClick={handleClear} ><ClearOutlined fontSize={"small"} /></IconButton>}
         >
           <MenuItem disabled value="">
             <em>{staticLabel}</em>

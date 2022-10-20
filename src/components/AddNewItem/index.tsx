@@ -196,6 +196,7 @@ const StepContent = ({
                                 name="site-type"
                                 value={''}
                                 handleChange={(e) => { }}
+                                handleClear={(e) => { }}
                                 itemsList={[]}
                                 selectStylesSx={commonSelectSxStyles}
                                 formControlSx={commonFormControlSxStyles}
@@ -206,6 +207,7 @@ const StepContent = ({
                                 name="period"
                                 value={''}
                                 handleChange={(e) => { }}
+                                handleClear={(e) => { }}
                                 itemsList={[]}
                                 selectStylesSx={commonSelectSxStyles}
                                 formControlSx={commonFormControlSxStyles}
@@ -216,6 +218,7 @@ const StepContent = ({
                                 name="state-of-conservation"
                                 value={''}
                                 handleChange={(e) => { }}
+                                handleClear={(e) => { }}
                                 itemsList={[]}
                                 selectStylesSx={commonSelectSxStyles}
                                 formControlSx={commonFormControlSxStyles}
@@ -226,6 +229,7 @@ const StepContent = ({
                                 name="risk"
                                 value={''}
                                 handleChange={(e) => { }}
+                                handleClear={(e) => { }}
                                 itemsList={[]}
                                 selectStylesSx={commonSelectSxStyles}
                                 formControlSx={commonFormControlSxStyles}
@@ -244,6 +248,8 @@ const StepContent = ({
                                     ...state,
                                     mediaType: e.target.value
                                 }))}
+                                
+                                handleClear={(e) => { }}
                                 itemsList={[
                                     {
                                         label: 'Image',

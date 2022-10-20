@@ -11,7 +11,7 @@ import { RefinedSearchInputProps } from '../../types/RefinedSeachTypes';
 import { EVENTS_TAB_NAME, MEDIA_TAB_NAME, tabNameBasedOnIndex } from '../../utils/services/helpers';
 
 const RefinedSearchInputs = ({
-    activeTabIndex, options, handleChange, selectedValue, handleSubmit
+    activeTabIndex, options, handleChange, selectedValue, handleSubmit, handleClear
 }: RefinedSearchInputProps) => {
     const commonSelectSxStyles = {
         textAlign: 'left',
@@ -63,7 +63,9 @@ const RefinedSearchInputs = ({
                     label={"State of Conservation"}
                     name="stateOfConservation"
                     value={selectedValue.stateOfConservation}
+                    multiple={true}
                     handleChange={handleChange}
+                    handleClear={(e) => handleClear(e, 'stateOfConservation')}
                     itemsList={options?.stateOfConservation || []}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
@@ -75,7 +77,9 @@ const RefinedSearchInputs = ({
                     label={"Period"}
                     name="period"
                     value={selectedValue.period}
+                    multiple={true}
                     handleChange={handleChange}
+                    handleClear={(e) => handleClear(e, 'period')}
                     itemsList={options?.period ||[]}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
@@ -87,7 +91,9 @@ const RefinedSearchInputs = ({
                     label={"Recommendation"}
                     name="recommendation"
                     value={selectedValue.recommendation}
+                    multiple={true}
                     handleChange={handleChange}
+                    handleClear={(e) => handleClear(e, 'recommendation')}
                     itemsList={options?.recommendation || []}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
@@ -99,7 +105,9 @@ const RefinedSearchInputs = ({
                     label={"Research Value"}
                     name="researchValue"
                     value={selectedValue.researchValue}
+                    multiple={true}
                     handleChange={handleChange}
+                    handleClear={(e) => handleClear(e, 'researchValue')}
                     itemsList={options?.researchValue ||[]}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
@@ -111,7 +119,9 @@ const RefinedSearchInputs = ({
                     label={"Tourism Value"}
                     name="tourismValue"
                     value={selectedValue.tourismValue}
+                    multiple={true}
                     handleChange={handleChange}
+                    handleClear={(e) => handleClear(e, 'tourismValue')}
                     itemsList={options?.tourismValue ||[]}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
@@ -123,7 +133,9 @@ const RefinedSearchInputs = ({
                     label={"Risk"}
                     name="risk"
                     value={selectedValue.risk}
+                    multiple={true}
                     handleChange={handleChange}
+                    handleClear={(e) => handleClear(e, 'risk')}
                     itemsList={options?.risk ||[]}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
@@ -137,7 +149,9 @@ const RefinedSearchInputs = ({
                         label={"Assessment"}
                         name="assessmentType"
                         value={selectedValue.assessmentType}
+                        multiple={true}
                         handleChange={handleChange}
+                        handleClear={(e) => handleClear(e, 'assessmentType')}
                         itemsList={options?.assessmentType ||[]}
                         selectStylesSx={{
                             ...commonSelectSxStyles
@@ -151,8 +165,8 @@ const RefinedSearchInputs = ({
                     className={`${styles["location"]}`}
                     label="Location"
                     name="location"
-                    value={''}
-                    onChange={(e) => { }}
+                    value={selectedValue.location}
+                    onChange={() => {}}
                     // onBlur={() => validateCredentials('email')}
                     sx={{
                         ...textInputSxStyles
@@ -166,7 +180,9 @@ const RefinedSearchInputs = ({
                     label={"Artifacts"}
                     name="artifacts"
                     value={selectedValue.artifacts}
+                    multiple={true}
                     handleChange={handleChange}
+                    handleClear={(e) => handleClear(e, 'artifacts')}
                     itemsList={options?.artifacts ||[]}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
@@ -200,7 +216,9 @@ const RefinedSearchInputs = ({
                     label={"Artifacts"}
                     name="artifacts"
                     value={selectedValue.artifacts}
+                    multiple={true}
                     handleChange={handleChange}
+                    handleClear={(e) => handleClear(e, 'artifacts')}
                     itemsList={options?.artifacts ||[]}
                     selectStylesSx={commonSelectSxStyles}
                     formControlSx={commonFormControlSxStyles}
