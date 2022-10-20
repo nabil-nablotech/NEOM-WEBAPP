@@ -131,3 +131,7 @@
     font-weight: bold;
     color: var(--grey-text);
 }
+
+.remarks-section .heading-title {
+    margin-bottom: 3em;
+}

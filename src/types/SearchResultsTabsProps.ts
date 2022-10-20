@@ -75,6 +75,19 @@ export type CommentSectionProps = {
     SelfIcon: () => JSX.Element
 }
 
+export type  commentType = {
+    commentor: string,
+    comment: string,
+    timeStamp: string,
+    nestedCommentsCount: number
+    nestedComments?: Array<commentType>
+    nestingLevel: number
+}
+export type SingleCommentProps = {
+    SelfIcon: () => JSX.Element
+    commentObj: commentType
+}
+
 export type VideoModalProps = {
     videoSrc: string
     isModalOpen: boolean
@@ -85,4 +98,13 @@ export type MediaDetailsPageProps = {
     currentItemIndex: any
     data: any
     currentRecord: any
+}
+
+type menuAction = {
+    label: string
+    action: () => void
+}
+
+export type CustomMoreOptionsComponentProps = {
+    menuActions: Array<menuAction>
 }

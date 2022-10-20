@@ -305,13 +305,6 @@ const DetailsPage = () => {
 
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
     const dispatch = useDispatch()
-    const commentsJson = [
-        {
-            commentor: 'Mark',
-            comment: 'Sed ut perspiciatis unde omnis iste natus error sign ut sai gon perspiciatis unde omnis iste ut',
-            nestedComments: 0
-        }
-    ]
 
     const handleClickMediaItem = (e: React.MouseEvent, itemIndex: number) => {
         /** itemIndex used to track which item being clicked out of 5;
@@ -636,11 +629,11 @@ const DetailsPage = () => {
                         </Box>
                     </Box>
                     <Box className={`${styles['remarks-section']}  ${styles['heading']} ${styles['text-left']}`}>
-                    <Box className={`${styles['heading-title']}`}>
+                        <Box className={`${styles['heading-title']}`}>
                             <Box>Remarks</Box>
                         </Box>
                         <CommentsSection
-                            SelfIcon = {() => <RenderInitials firstName={data?.firstName} lastName={data?.lastName}/>}
+                            SelfIcon={() => <RenderInitials firstName={data?.firstName} lastName={data?.lastName} />}
                         />
                     </Box>
                 </Box>
