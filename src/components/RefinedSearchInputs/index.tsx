@@ -5,7 +5,7 @@ import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
 import styles from './index.module.css';
 import DatePicker from "react-datepicker";
-
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import "react-datepicker/dist/react-datepicker.css";
 import { RefinedSearchInputProps } from '../../types/RefinedSeachTypes';
 import { EVENTS_TAB_NAME, MEDIA_TAB_NAME, tabNameBasedOnIndex } from '../../utils/services/helpers';
@@ -51,10 +51,13 @@ const RefinedSearchInputs = ({
     }
 
     const [startDate, setStartDate] = useState(new Date());
-
+    
     const activeTab = tabNameBasedOnIndex(activeTabIndex)
-
+    
     const BaseInputs = () => {
+        const [locationModalOpen, toggleLocationModal] = useState<boolean>(false)
+        const [latitudeInput, setLatiInput] = useState<string>('')
+        const [longitudeInput, setLongiInput] = useState<string>('')
 
         return <>
             <Grid item sm={2} className={`${styles["input-field"]}`}>
@@ -146,19 +149,74 @@ const RefinedSearchInputs = ({
                     />
                 </Grid>
             }
-            <Grid item sm={2} className={`${styles["location-grid-item"]}`}>
-                <TextInput
-                    className={`${styles["location"]}`}
-                    label="Location"
-                    name="location"
-                    value={''}
-                    onChange={(e) => { }}
-                    // onBlur={() => validateCredentials('email')}
-                    sx={{
-                        ...textInputSxStyles
-                    }}
-                    formControlSx={commonFormControlSxStyles}
-                />
+            <Grid item sm={4} className={`${styles["location-grid-item"]}`}>
+                <Box  >
+                    <Box onClick={(e) => {
+                        e.preventDefault()
+                        toggleLocationModal(true)
+                    }}>
+                        <TextInput
+                            className={`${styles["location"]}`}
+                            label="Location"
+                            name="location"
+                            value={`${latitudeInput}${latitudeInput ? ',' : ''}${longitudeInput}`}
+                            onChange={(e) => { }}
+                            sx={{
+                                ...textInputSxStyles
+                            }}
+                            formControlSx={commonFormControlSxStyles}
+                        />
+                    </Box>
+                    {
+                        locationModalOpen && <>
+
+                            <Grid container className={`${styles["location-popup-container"]}`} >
+                                <HighlightOffIcon className={`${styles["location-popup-close"]}`} style={{
+
+                                }} onClick={(e) => {
+                                    e.preventDefault()
+                                    toggleLocationModal(false)
+                                }} />
+                                <Grid item sm={6}>
+                                    <TextInput
+                                        className={`${styles["latitude"]}`}
+                                        label="Latitude"
+                                        type="number"
+                                        name="latitude"
+                                        value={latitudeInput}
+                                        onChange={(e) => {
+                                            e.preventDefault()
+                                            console.log('hex: ', e.target.value)
+                                            setLatiInput(e.target.value)
+                                        }}
+                                        sx={{
+                                            ...textInputSxStyles
+                                        }}
+                                        formControlSx={commonFormControlSxStyles}
+                                    />
+                                </Grid>
+                                <Grid item sm={6}>
+                                    <TextInput
+                                        className={`${styles["longitude"]}`}
+                                        label="Longitude"
+                                        type="number"
+                                        name="longitude"
+                                        value={longitudeInput}
+                                        onChange={(e) => {
+                                            e.preventDefault()
+                                            setLongiInput(e.target.value)
+                                        }}
+                                        sx={{
+                                            ...textInputSxStyles
+                                        }}
+                                        formControlSx={commonFormControlSxStyles}
+                                    />
+                                </Grid>
+                                <Grid item></Grid>
+                            </Grid>
+                        </>
+                    }
+                </Box>
             </Grid>
             <Grid item sm={2} className={`${styles["input-field"]}`}>
                 <DropdownComponent
