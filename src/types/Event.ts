@@ -1,3 +1,5 @@
+import { MediaAssociates } from "./Place";
+
 export type Event = {
   id: string;
   attributes: {
@@ -10,5 +12,6 @@ export type Event = {
     placeNumber: string | null;
     latitude: Number;
     longitude: Number;
+    media_associates: MediaAssociates;
   };
 };

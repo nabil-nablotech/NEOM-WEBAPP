@@ -50,15 +50,16 @@ const GridView = (props: MediaProps) => {
             <Grid container spacing={1} id={'media-scrollable-div'} className={`${gridStyles['left-grid-container']}`}>
                 {
                     data?.map((item: Media, index: number ) => 
-                        <Grid key={index} item lg={3} md={5} className={`${gridStyles['card-item']}`} onClick={e => {
-                            dispatch(setSelectedCardIndex(index))
-                        }}>
+                    <Grid key={index} item lg={3} md={5} className={`${gridStyles['card-item']}`} onClick={e => {
+                        dispatch(setSelectedCardIndex(index))
+                    }}>
                             <Card
-                                img={item.attributes.thumbnailUrl}
-                                title={item.attributes.title.substr(0, 20)}
+                                img={item.attributes.object.data.attributes.url}
+                                title={item.attributes.media_associate.data.attributes.placeUniqueId?.data !== null ? `${item.attributes.media_associate.data.attributes.placeUniqueId?.data?.attributes?.placeNameEnglish}${item.attributes.media_associate.data.attributes.placeUniqueId?.data?.attributes?.placeNameArabic}` : item.attributes.title}
                                 subTitle={item.attributes.description.substr(0, 40) + '...'}
                                 dateString={`Last login on ${format(new Date(item.attributes.updatedAt), 'yyyy-MM-dd')}`}
                             />
+                            
                         </Grid>
                     )
                 }

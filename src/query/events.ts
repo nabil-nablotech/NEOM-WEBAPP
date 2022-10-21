@@ -1,12 +1,15 @@
 import { gql } from "@apollo/client";
 
 export const events = gql`
-  query SearchTitle($search_one: String,$search_two: String, $search_three: String, $limit: Int, $skip: Int) {
+  query SearchTitle(
+    $search_one: String
+    $search_two: String
+    $search_three: String
+    $limit: Int
+    $skip: Int
+  ) {
     visits(
-      pagination: {
-        limit: $limit
-        start: $skip
-      }
+      pagination: { limit: $limit, start: $skip }
       filters: {
         or: [
           # { siteType: { contains: $search_one } }
@@ -15,15 +18,13 @@ export const events = gql`
           { recordingTeam: { contains: $search_one } }
           { fieldNarrative: { contains: $search_one } }
           { keywords: { contains: $search_one } }
-          
-                    # { siteType: { contains: $search_two } }
+          # { siteType: { contains: $search_two } }
           { siteDescription: { contains: $search_two } }
           # { period: { contains: $searcht_two } }
           { recordingTeam: { contains: $search_two } }
           { fieldNarrative: { contains: $search_two } }
           { keywords: { contains: $search_one } }
-          
-                    # { siteType: { contains: $search_three } }
+          # { siteType: { contains: $search_three } }
           { siteDescription: { contains: $search_three } }
           # { period: { contains: $search_three } }
           { recordingTeam: { contains: $search_three } }
@@ -52,11 +53,29 @@ export const events = gql`
           longitude
           uniqueId
           type
-          period{
-            data{
+          period {
+            data {
               id
-              attributes{
+              attributes {
                 name
+                translation {
+                  data {
+                    id
+                    attributes {
+                      code
+                      locale {
+                        value
+                        languages {
+                          data {
+                            attributes {
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -181,6 +200,25 @@ export const events = gql`
                             attributes {
                               name
                             }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          media_associates {
+            data {
+              attributes {
+                mediaUniqueId {
+                  data {
+                    attributes {
+                      object {
+                        data {
+                          attributes {
+                            url
                           }
                         }
                       }
