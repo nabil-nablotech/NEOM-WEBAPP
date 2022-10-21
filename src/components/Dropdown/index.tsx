@@ -54,6 +54,7 @@ const DropdownComponent = ({
                   },
                   '& .MuiFilledInput-root.MuiInputBase-sizeSmall': {
                     paddingLeft: '0.5em',
+                    paddingTop: '0.55em',
                     borderRadius: '0.3em'
                   },
                   '& .MuiFormControl-fullWidth.MuiTextField-root': {
@@ -61,6 +62,10 @@ const DropdownComponent = ({
                   },
                   '& .MuiFormLabel-root.MuiInputLabel-root': {
                     paddingLeft: '1em',
+                  },
+                  '& .MuiFormLabel-root.MuiInputLabel-root[data-shrink="true"]': {
+                    top: '-15%',
+                    background: 'rgba(0,0,0,0.02)'
                   }
                 }}
               />
