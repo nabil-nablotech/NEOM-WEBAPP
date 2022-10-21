@@ -34,9 +34,9 @@ export const media = gql`
           {
             mediaType: {
               or: [
-                { categoryCode: { eq: "IMAGE" } }
-                { categoryCode: { eq: "VIDEO" } }
-                { categoryCode: { eq: "3DMODEL" } }
+                { typeCode: { eq: "IMAGE" } }
+                { typeCode: { eq: "VIDEO" } }
+                { typeCode: { eq: "3DMODEL" } }
               ]
             }
           }
@@ -69,7 +69,7 @@ export const media = gql`
           mediaType {
             data {
               attributes {
-                categoryCode
+                typeCode
               }
             }
           }

@@ -27,7 +27,7 @@ export const Card = ({
                 </Grid>
                 <Grid item sm={12} className={`${gridStyles['content']}`}>
                     <Grid item sm={11}>
-                        <div className={`${gridStyles['card-title']}`}>{parse(title)}</div>
+                        <div className={`${gridStyles['card-title']}`}>{title}</div>
                     </Grid>
                     <Grid item sm={1}>
                         <Box className={`${gridStyles['more-icon-span']}`} component={"span"}>
