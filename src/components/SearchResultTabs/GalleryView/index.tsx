@@ -41,7 +41,6 @@ const GalleryView = () => {
         // console.log('hex: ', activeMediaItem)
         if(activeMediaItem) {
             navigate(`/search-results/Media/${activeMediaItem.attributes.uniqueId}`, { replace: true })
-            dispatch(toggleGalleryView(false))
         }
 
     }, [activeMediaItem])
