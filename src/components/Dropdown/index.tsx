@@ -54,6 +54,7 @@ const DropdownComponent = ({
                   },
                   '& .MuiFilledInput-root.MuiInputBase-sizeSmall': {
                     paddingLeft: '0.5em',
+                    paddingTop: '0.55em',
                     borderRadius: '0.3em'
                   },
                   '& .MuiFormControl-fullWidth.MuiTextField-root': {
