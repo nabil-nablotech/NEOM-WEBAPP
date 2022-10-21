@@ -1,7 +1,7 @@
 export type Place = {
   id: string;
-  latitude: number
-  longitude: number
+  latitude: number;
+  longitude: number;
   attributes: {
     thumbnailUrl?: string;
     placeNameEnglish: string;
@@ -13,13 +13,34 @@ export type Place = {
     latitude: Number;
     longitude: Number;
     uniqueId: string;
-    period: string;
-    researchValue: FieldOptions
-    tourismValue: FieldOptions
-    stateOfConservation: FieldOptions
-    recommendations: FieldOptions
-    risk: FieldOptions
+    period: FieldOptions;
+    researchValue: FieldOptions;
+    tourismValue: FieldOptions;
+    stateOfConservation: FieldOptions;
+    recommendations: FieldOptions;
+    risk: FieldOptions;
+    media_associates: MediaAssociates;
   };
+};
+
+export type MediaAssociates = {
+  data: {
+    attributes: {
+      mediaUniqueId: {
+        data: {
+          attributes: {
+            object: {
+              data: {
+                attributes: {
+                  url: string;
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+  }[];
 };
 
 export type Meta = {
@@ -59,5 +80,5 @@ export type FieldOption = {
   };
 };
 export type FieldOptions = {
-  data: FieldOption[] | []
-}
+  data: FieldOption[] | [];
+};

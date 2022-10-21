@@ -142,6 +142,7 @@ const MoreOptionsComponent = ({ record, id }: { id: number; record: User }) => {
   );
 };
 
+function displayMultiple(value: any, index: number, key: string) { return value[key].data.map((x: FieldOption) => `${x.attributes.translation.data.attributes.locale[0].value}; `) }
 const ListView = (props: PlacesProps) => {
 
     const tableHeaderJson: ColumnsType<any> = [
@@ -207,7 +208,7 @@ const ListView = (props: PlacesProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-period',
-            render: (value: any, index: number) => value.period
+            render: (value: any, index: number) => displayMultiple(value,index,'period')
         },
         {
             title: "RISK",

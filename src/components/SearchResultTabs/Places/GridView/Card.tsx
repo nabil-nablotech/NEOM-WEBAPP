@@ -6,13 +6,14 @@ import parse from "html-react-parser";
 import { GridViewCard_Places } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
 import MoreIcon from "../../../../assets/images/searchResults/MoreMenu.svg";
+import {baseUrl} from "../../../../utils/services/helpers";
 
 export const Card = ({
   img,
   title,
   subTitle,
   dateString,
-  keywords,
+  period,
 }: GridViewCard_Places) => {
 
   return (
@@ -31,7 +32,7 @@ export const Card = ({
               className={`${gridStyles["card-image"]}`}
               component="img"
               alt={""}
-              src={img}
+              src={`${baseUrl}${img}`}
             />
           </Grid>
           <Grid
@@ -46,9 +47,9 @@ export const Card = ({
             <div className={`${gridStyles["card-subtitle"]}`}>{subTitle}</div>
             <div className={`${gridStyles["card-date"]}`}>{dateString}</div>
             <div className={`${gridStyles["card-keywords"]}`}>
-              {keywords && keywords?.map((item, keyInx) => (
+              {period && period.data?.map((item, keyInx) => (
                 <div key={keyInx} className={`${gridStyles["keyword-pill"]}`}>
-                  {item}
+                  {item.attributes.translation.data.attributes.locale[0].value}
                 </div>
               ))}
             </div>

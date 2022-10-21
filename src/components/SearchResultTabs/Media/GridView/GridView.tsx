@@ -58,7 +58,6 @@ const GridView = (props: MediaProps) => {
                                 title={item.attributes.title.substr(0, 20)}
                                 subTitle={item.attributes.description.substr(0, 40) + '...'}
                                 dateString={`Last login on ${format(new Date(item.attributes.updatedAt), 'yyyy-MM-dd')}`}
-                                keywords={['fist', 'new']}
                             />
                         </Grid>
                     )

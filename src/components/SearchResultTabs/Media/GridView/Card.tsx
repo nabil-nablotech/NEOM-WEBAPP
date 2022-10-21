@@ -16,14 +16,13 @@ export const Card = ({
     img,
     title,
     subTitle,
-    dateString,
-    keywords
+    dateString
 }: GridViewCard_Places) => {
     return <>
         <Box className={`${gridStyles['card-container']}`} >
             <Grid container spacing={1} className={`${gridStyles['card-grid']}`}>
                 <Grid item sm={12} className={`${gridStyles['card-image-wrapper']}`}>
-                    <Box className={`${gridStyles['card-image']}`} component="img" alt={""} src={img} />
+                    <Box className={`${gridStyles['card-image']}`} component="img" alt={""} src={`${img}`} />
                 </Grid>
                 <Grid item sm={12} className={`${gridStyles['content']}`}>
                     <Grid item sm={11}>
