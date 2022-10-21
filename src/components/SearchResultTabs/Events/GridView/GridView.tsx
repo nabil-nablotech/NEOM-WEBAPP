@@ -60,7 +60,7 @@ const GridView = (props: EventsProps) => {
                                     key={index}
                                     img={item.attributes.media_associates.data[0].attributes.mediaUniqueId.data.attributes.object.data.attributes.url}
                                     title={item.attributes.recordingTeam.substr(0, 20)}
-                                    subTitle={item.attributes.siteDescription.substr(0, 40) + "..."}
+                                    subTitle={item.attributes.siteDescription}
                                     dateString={`Last login on ${format(
                                       new Date(item.attributes.updatedAt),
                                       "yyyy-MM-dd"

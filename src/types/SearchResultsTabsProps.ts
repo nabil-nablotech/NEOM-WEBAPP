@@ -111,4 +111,5 @@ type menuAction = {
 
 export type CustomMoreOptionsComponentProps = {
   menuActions: Array<menuAction>;
+  moreIconClassName?: string
 };

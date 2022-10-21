@@ -7,6 +7,7 @@ import { GridViewCard_Places } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
 import MoreIcon from "../../../../assets/images/searchResults/MoreMenu.svg";
 import {baseUrl} from "../../../../utils/services/helpers";
+import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 
 export const Card = ({
   img,
@@ -15,6 +16,23 @@ export const Card = ({
   dateString,
   period,
 }: GridViewCard_Places) => {
+
+  const menuItems = [
+    {
+      label: "Share",
+      action: () => { },
+    },
+    {
+      label: "Edit",
+      action: () => {
+      },
+    },
+    {
+      label: "Delete",
+      action: () => {
+      },
+    },
+  ]
 
   return (
     <>
@@ -58,12 +76,10 @@ export const Card = ({
               className={`${gridStyles["more-icon-span"]}`}
               component={"span"}
             >
-              <Box
-                className={`${gridStyles["more-icon"]}`}
-                component="img"
-                alt={""}
-                src={MoreIcon}
-              ></Box>
+              <CustomMoreOptionsComponent
+                moreIconClassName={`${gridStyles["more-icon"]}`}
+                menuActions={menuItems}
+              />
             </Box>
           </Grid>
         </Grid>
