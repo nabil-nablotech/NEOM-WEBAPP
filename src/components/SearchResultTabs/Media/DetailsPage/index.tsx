@@ -18,6 +18,7 @@ import { useDispatch } from 'react-redux';
 import { setActiveMediaItemIndex, setActiveMediaItem } from '../../../../store/reducers/searchResultsReducer';
 import { useNavigate } from 'react-router-dom';
 import RenderFileData from '../../../RenderFileData';
+import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
 
 const MediaDetailsPage = ({
     currentItemIndex,
@@ -56,6 +57,23 @@ const MediaDetailsPage = ({
             dispatch(setActiveMediaItemIndex(newIndex))
         }
     }
+
+    const menuItems = [
+        {
+            label: "Share",
+            action: () => { },
+        },
+        {
+            label: "Edit",
+            action: () => {
+            },
+        },
+        {
+            label: "Delete",
+            action: () => {
+            },
+        },
+    ]
 
     return <>
         <Box className={`${styles['details-page-wrapper']}`}>
@@ -113,13 +131,13 @@ const MediaDetailsPage = ({
                                         </Box>
                                     </Box>
                                 </Grid>
-                                <Grid item sm={1} style={{
+                                <Grid item sm={1} className={`${styles['more-icon-grid-item']}`} style={{
                                     marginLeft: 'auto'
                                 }}>
-                                    <Box className={`${styles['more-icon-box']}`}
-                                    >
-                                        <MoreHorizIcon sx={{ color: '#fff' }} />
-                                    </Box>
+                                    <CustomMoreOptionsComponent
+                                        moreIconClassName={`${styles['more-icon']}`}
+                                        menuActions={menuItems}
+                                    />
                                 </Grid>
                             </Grid>
                             <Grid container sm={10} md={8} lg={9} style={{ marginTop: '1em' }}>
