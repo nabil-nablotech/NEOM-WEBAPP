@@ -37,9 +37,7 @@ export const CustomMoreOptionsComponent = ({
             >
                 {
                     menuActions.map((item, inx) => (
-                        <>
-                            <MenuItem key={inx} onClick={e => item.action()}>{item.label}</MenuItem>
-                        </>
+                        <MenuItem key={inx} onClick={e => item.action()}>{item.label}</MenuItem>
                     ))
                 }
             </Menu>
