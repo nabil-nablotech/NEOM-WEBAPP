@@ -213,7 +213,7 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-period',
-            render: (value: any, index: number) => value.period
+            render: (value: any, index: number) => value.period.data.map((x: FieldOption) => `${x.attributes.translation.data.attributes.locale[0].value}; `)
         },
         {
             title: "RISK",

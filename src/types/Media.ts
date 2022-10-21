@@ -1,3 +1,12 @@
+import { NullValueNode } from "graphql";
+import { Place } from "./Place";
+
+export type PlaceUnique = {
+  placeUniqueId: {
+    data: Place | null;
+  };
+};
+
 export type Media = {
   id: string;
   attributes: {
@@ -16,7 +25,19 @@ export type Media = {
     longitude: Number;
     imageMetadata: {
       fileSize: Number;
-    },
-    uniqueId: string
-  };
+    };
+    uniqueId: string;
+    object: {
+      data: {
+        attributes: {
+          url: string;
+        };
+      };
+    };
+    media_associate: {
+      data: {
+      attributes: PlaceUnique;
+    }
+    }
+  }
 };
