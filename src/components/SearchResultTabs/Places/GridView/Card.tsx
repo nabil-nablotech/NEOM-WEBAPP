@@ -6,14 +6,33 @@ import parse from "html-react-parser";
 import { GridViewCard_Places } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
 import MoreIcon from "../../../../assets/images/searchResults/MoreMenu.svg";
+import {baseUrl} from "../../../../utils/services/helpers";
+import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 
 export const Card = ({
   img,
   title,
   subTitle,
   dateString,
-  keywords,
+  period,
 }: GridViewCard_Places) => {
+
+  const menuItems = [
+    {
+      label: "Share",
+      action: () => { },
+    },
+    {
+      label: "Edit",
+      action: () => {
+      },
+    },
+    {
+      label: "Delete",
+      action: () => {
+      },
+    },
+  ]
 
   return (
     <>
@@ -31,7 +50,7 @@ export const Card = ({
               className={`${gridStyles["card-image"]}`}
               component="img"
               alt={""}
-              src={img}
+              src={`${baseUrl}${img}`}
             />
           </Grid>
           <Grid
@@ -46,22 +65,21 @@ export const Card = ({
             <div className={`${gridStyles["card-subtitle"]}`}>{subTitle}</div>
             <div className={`${gridStyles["card-date"]}`}>{dateString}</div>
             <div className={`${gridStyles["card-keywords"]}`}>
-              {keywords && keywords?.map((item, keyInx) => (
-                <div key={keyInx} className={`${gridStyles["keyword-pill"]}`}>
-                  {item}
-                </div>
+              {period && period.data?.map((item, keyInx) => (
+               <> {2 > keyInx ? <div key={keyInx} className={`${gridStyles["keyword-pill"]}`}>
+                  {item.attributes.translation.data.attributes.locale[0].value}
+                </div> : null}
+                </>
               ))}
             </div>
             <Box
               className={`${gridStyles["more-icon-span"]}`}
               component={"span"}
             >
-              <Box
-                className={`${gridStyles["more-icon"]}`}
-                component="img"
-                alt={""}
-                src={MoreIcon}
-              ></Box>
+              <CustomMoreOptionsComponent
+                moreIconClassName={`${gridStyles["more-icon"]}`}
+                menuActions={menuItems}
+              />
             </Box>
           </Grid>
         </Grid>

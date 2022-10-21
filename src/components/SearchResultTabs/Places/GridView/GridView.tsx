@@ -1,16 +1,15 @@
 import Box from "@mui/material/Box";
 import { Grid } from "@mui/material";
-import { format } from "date-fns";
 import { useDispatch } from "react-redux";
 /** indicating that we can send html later on wherever we parse */
 import InfiniteScroll from "react-infinite-scroll-component";
 import gridStyles from "./index.module.css";
 import commonStyles from "../../index.module.css";
-import { usePaginatedArray } from "../../../../hooks/usePaginatedArray";
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 import {Card} from './Card';
 import { Place } from "../../../../types/Place";
 import { useNavigate } from "react-router-dom";
+import {formatDateTime} from '../../../../utils/services/helpers';
 
 export type PlacesProps = {
   data: Place[];
@@ -64,14 +63,11 @@ const GridView = (props: PlacesProps) => {
                 }}
               >
                 <Card
-                  img={item.attributes.thumbnailUrl}
-                  title={item.attributes.placeNameEnglish.substr(0, 20)}
-                  subTitle={item.attributes.placeNameArabic.substr(0, 40) + "..."}
-                  dateString={`Last login on ${format(
-                    new Date(item.attributes.updatedAt),
-                    "yyyy-MM-dd"
-                  )}`}
-                  keywords={item.attributes.keywords}
+                  img={item.attributes.media_associates.data[0].attributes.mediaUniqueId.data.attributes.object.data.attributes.url}
+                  title={`${item.attributes.placeNameEnglish.substr(0, 20)}${item.attributes.placeNameArabic.substr(0, 20)} - ${item.attributes.placeNumber}`}
+                  subTitle={item.attributes.siteDescription}
+                  dateString={`Last login on ${formatDateTime(item.attributes.updatedAt)}`}
+                  period={item.attributes.period}
                 />
               </Grid>
           ))}

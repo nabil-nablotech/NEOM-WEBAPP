@@ -3,7 +3,7 @@ import { Box, Grid, IconButton } from "@mui/material";
 import { ColumnsType } from "antd/lib/table";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
-import { antTablePaginationCss } from "../../../../utils/services/helpers";
+import { antTablePaginationCss, baseUrl } from "../../../../utils/services/helpers";
 import InfiniteScroll from "react-infinite-scroll-component";
 import commonStyles from "../../index.module.css";
 import { Loader } from "../../../Loader";
@@ -117,7 +117,7 @@ const ListView = (props: MediaProps) => {
             className={`media-table-image`}
             component="img"
             alt={""}
-            src={value.thumbnailUrl}
+            src={`${baseUrl}${value.object.data.attributes.url}`}
           ></Box>
         </>
       ),

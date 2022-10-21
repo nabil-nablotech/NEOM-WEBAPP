@@ -5,6 +5,7 @@ import { Grid } from "@mui/material";
 import { GridViewCard_Events } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'
 import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
+import { baseUrl } from "../../../../utils/services/helpers";
 
 export const Card = ({
   img,
@@ -29,7 +30,7 @@ export const Card = ({
               className={`${gridStyles["card-image"]}`}
               component="img"
               alt={""}
-              src={img}
+              src={`${baseUrl}${img}`}
             />
           </Grid>
           <Grid

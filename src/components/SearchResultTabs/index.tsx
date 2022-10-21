@@ -32,6 +32,7 @@ import DetailsPage from "./DetailsPage";
 import { useDispatch } from "react-redux";
 import {setSelectedValue} from '../../store/reducers/refinedSearchReducer';
 import { MediaDetailsModal } from "./Media/DetailsPage";
+import GalleryView from './GalleryView/index';
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, className, ...other } = props;
@@ -120,7 +121,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { searchText } = useSelector((state: RootState) => state.searchResults);
+  const { searchText, isOpenGalleryView } = useSelector((state: RootState) => state.searchResults);
   const { options, selectedValue } = useSelector((state: RootState) => state.refinedSearch);
 
   useEffect(() => {
@@ -178,6 +179,13 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
    */
   if(itemId) {
     if(tabName === PLACES_TAB_NAME) {
+
+      if (isOpenGalleryView) {
+        return <div className={`${styles["search-results-wrapper"]}`}>
+          <GalleryView />
+        </div>
+      }
+
       return <>
         <div className={`${styles["search-results-wrapper"]}`}>
           <DetailsPage />

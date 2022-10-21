@@ -33,9 +33,9 @@ query SearchTitle($search_one: String, $search_two: String, $search_three: Strin
         {
           mediaType: {
             or: [
-              { categoryCode: { eq: "DOCUMENT" } }
-              { categoryCode: { eq: "REFERENCEURL" } }
-              { categoryCode: { eq: "INLINE" } }
+              { typeCode: { eq: "DOCUMENT" } }
+              { typeCode: { eq: "REFERENCEURL" } }
+              { typeCode: { eq: "INLINE" } }
             ]
           }
         }
@@ -67,7 +67,7 @@ query SearchTitle($search_one: String, $search_two: String, $search_three: Strin
         mediaType {
           data {
             attributes {
-              categoryCode
+              typeCode
             }
           }
         }

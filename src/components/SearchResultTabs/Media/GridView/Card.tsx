@@ -11,23 +11,23 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { usePaginatedArray } from '../../../../hooks/usePaginatedArray';
 /** indicating that we can send html later on wherever we parse */
 import parse from 'html-react-parser';
+import { baseUrl } from '../../../../utils/services/helpers';
 
 export const Card = ({
     img,
     title,
     subTitle,
-    dateString,
-    keywords
+    dateString
 }: GridViewCard_Places) => {
     return <>
         <Box className={`${gridStyles['card-container']}`} >
             <Grid container spacing={1} className={`${gridStyles['card-grid']}`}>
                 <Grid item sm={12} className={`${gridStyles['card-image-wrapper']}`}>
-                    <Box className={`${gridStyles['card-image']}`} component="img" alt={""} src={img} />
+                    <Box className={`${gridStyles['card-image']}`} component="img" alt={""} src={`${baseUrl}${img}`} />
                 </Grid>
                 <Grid item sm={12} className={`${gridStyles['content']}`}>
                     <Grid item sm={11}>
-                        <div className={`${gridStyles['card-title']}`}>{parse(title)}</div>
+                        <div className={`${gridStyles['card-title']}`}>{title}</div>
                     </Grid>
                     <Grid item sm={1}>
                         <Box className={`${gridStyles['more-icon-span']}`} component={"span"}>

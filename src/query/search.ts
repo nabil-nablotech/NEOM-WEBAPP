@@ -1,12 +1,15 @@
 import { gql } from "@apollo/client";
 
 export const media = gql`
-  query SearchTitle($search_one: String, $search_two: String, $search_three: String, $limit: Int, $skip: Int) {
+  query SearchTitle(
+    $search_one: String
+    $search_two: String
+    $search_three: String
+    $limit: Int
+    $skip: Int
+  ) {
     medias(
-      pagination: {
-        limit: $limit
-        start: $skip
-      }
+      pagination: { limit: $limit, start: $skip }
       filters: {
         and: [
           {
@@ -16,13 +19,11 @@ export const media = gql`
               { fileName: { contains: $search_one } }
               { citation: { contains: $search_one } }
               { keywords: { contains: $search_one } }
-              
               { description: { contains: $search_two } }
               { title: { contains: $search_two } }
               { fileName: { contains: $search_two } }
               { citation: { contains: $search_two } }
               { keywords: { contains: $search_two } }
-              
               { description: { contains: $search_three } }
               { title: { contains: $search_three } }
               { fileName: { contains: $search_three } }
@@ -33,9 +34,9 @@ export const media = gql`
           {
             mediaType: {
               or: [
-                { categoryCode: { eq: "IMAGE" } }
-                { categoryCode: { eq: "VIDEO" } }
-                { categoryCode: { eq: "3DMODEL" } }
+                { typeCode: { eq: "IMAGE" } }
+                { typeCode: { eq: "VIDEO" } }
+                { typeCode: { eq: "3DMODEL" } }
               ]
             }
           }
@@ -63,17 +64,39 @@ export const media = gql`
           updatedAt
           bearing
           actionType
-          
+
           featuredImage
           mediaType {
             data {
               attributes {
-                categoryCode
+                typeCode
               }
             }
           }
           imageMetadata {
             fileSize
+          }
+          object {
+            data {
+              id
+              attributes {
+                url
+              }
+            }
+          }
+          media_associate {
+            data {
+              attributes {
+                placeUniqueId {
+                  data {
+                    attributes {
+                      placeNameArabic
+                      placeNameEnglish
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

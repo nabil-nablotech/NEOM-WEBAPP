@@ -26,7 +26,7 @@ import useMedia from "../../../hooks/useMedia";
 import CommentsSection from "../../CommentsSection";
 import RenderInitials from "../../RenderInitials";
 import { useDispatch } from "react-redux";
-import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex } from "../../../store/reducers/searchResultsReducer";
+import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../CustomMoreOptionsComponent";
 
 const StyledTableWrapper = styled(StyledAntTable)`
@@ -379,7 +379,7 @@ const DetailsPage = () => {
                                 }}
                                 onClick={e => {
                                     e.preventDefault()
-                                    navigate(`/search-results/Media`, { replace: true })
+                                    dispatch(toggleGalleryView(true))
                                 }}
                             >
                                 View all
@@ -509,12 +509,14 @@ const DetailsPage = () => {
                         >
                             <Grid item md={7} className={`${styles['text-left']} ${styles['section-left']}`}>
                                 <Box className={`${styles['site-desc']}`}>
-                                    <Box className={`${styles['site-desc-condensed']}`}>
-                                        {siteDescription.substring(0, !isSeeMore ? 500 : siteDescription.length-1)}
+                                    <Box
+                                        className={`${styles['site-desc-condensed']} ${isSeeMore ? styles['see-more-active'] : ''}`}
+                                    >
+                                        {siteDescription.substring(0, !isSeeMore ? 500 : siteDescription.length - 1)}
                                     </Box>
-                                    {/* <Box onClick={e => {
+                                    <Box className={`${styles['see-more-box']}`} onClick={e => {
                                         toggleSeeMore(state => !state)
-                                    }}>See {isSeeMore ? 'More' : 'Less'}</Box> */}
+                                    }}>{!isSeeMore ? '...See More' : 'See Less'}</Box>
                                 </Box>
                                 <Box className={`${styles['table']}`}>
                                     <Grid container className={`${styles['table-row']}`}>
