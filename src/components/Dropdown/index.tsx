@@ -62,6 +62,10 @@ const DropdownComponent = ({
                   },
                   '& .MuiFormLabel-root.MuiInputLabel-root': {
                     paddingLeft: '1em',
+                  },
+                  '& .MuiFormLabel-root.MuiInputLabel-root[data-shrink="true"]': {
+                    top: '-15%',
+                    background: 'rgba(0,0,0,0.02)'
                   }
                 }}
               />
