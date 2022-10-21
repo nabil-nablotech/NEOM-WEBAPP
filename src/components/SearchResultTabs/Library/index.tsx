@@ -2,15 +2,12 @@ import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import styles from "../index.module.css";
 import Button from "../../../components/Button";
-import styled from "styled-components";
 import type { ColumnsType } from "antd/es/table";
-import { Table, Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
+import LinkIcon from "@mui/icons-material/Link";
 import { StyledAntTable } from "../../StyledAntTable";
-import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 import InfiniteScroll from "react-infinite-scroll-component";
 import commonStyles from "../index.module.css";
-import { Loader } from "../../../components/Loader";
 import useLibrary from "../../../hooks/useLibrary";
 import { Meta } from "../../../types/Place";
 import { RootState } from "../../../store";
@@ -18,6 +15,8 @@ import { useSelector } from "react-redux";
 import {formatWebDate, formatBytes} from '../../../utils/services/helpers';
 import {MoreOptionsComponent} from '../Media/ListView/MoreOption';
 import { Media } from "../../../types/Media";
+import {HtmlTooltip} from '../../../components/Tooltip';
+import { Typography } from "@mui/material";
 
 let viewWidths = ["20vw", "20vw", "20vw", "20vw", "5vw"];
 
@@ -83,9 +82,18 @@ const LibraryTab = () => {
             textDecoration: "underline",
           }}
         >
-          <Tooltip>
-            {value.referenceURL}
-          </Tooltip>
+          <HtmlTooltip
+        title={
+          <div className={`${styles["reference-url"]}`}>
+            <div className={`${styles["link"]}`}>
+              <LinkIcon sx={{color: 'white'}} />
+            </div>
+            <a href={value.referenceURL} target="_blank"><Typography style={{fontSize: 12, margin: 1}} color="white">{value.referenceURL}</Typography></a>
+          </div>
+        }
+      >
+            <Typography color="inherit">{value.referenceURL}</Typography>
+          </HtmlTooltip>
         </Box>
       ),
     },

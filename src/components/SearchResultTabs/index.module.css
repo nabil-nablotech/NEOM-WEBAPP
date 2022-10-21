@@ -54,6 +54,16 @@
     font-family: 'Roboto-Regular';
     color: var(--grey-text);
 }
+.reference-url {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: 'pointer',
+}
+.link {
+    transform: rotateY(0deg) rotate(45deg);
+    margin: 1px;
+}
 @media (min-width: 575px) and (max-width: 1025px) {
     .tab,
     .tab-titles {
