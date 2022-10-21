@@ -520,9 +520,9 @@ const DetailsPage = () => {
                                     >
                                         {siteDescription.substring(0, !isSeeMore ? 500 : siteDescription.length - 1)}
                                     </Box>
-                                    <Box className={`${styles['see-more-box']}`} onClick={e => {
+                                    {!isSeeMore && <Box className={`${styles['see-more-box']}`} onClick={e => {
                                         toggleSeeMore(state => !state)
-                                    }}>{!isSeeMore ? '...See More' : 'See Less'}</Box>
+                                    }}>{!isSeeMore ? '...See More' : ''}</Box>}
                                 </Box>
                                 <Box className={`${styles['table']}`}>
                                     <Grid container className={`${styles['table-row']}`}>
