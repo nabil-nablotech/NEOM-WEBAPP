@@ -14,7 +14,7 @@ const RenderInitials = ({
                 {
                     firstName && lastName &&
                     <Box style={{
-                        padding: '12px 8px',
+                        padding: '0.8em 0.6em',
                         border: '1px solid black',
                         borderRadius: '50%',
                         width: 'fit-content'
@@ -23,7 +23,7 @@ const RenderInitials = ({
                 {
                     (!firstName || !lastName) &&
                     <Box style={{
-                        padding: '12px 8px',
+                        padding: '0.8em 0.6em',
                         border: '1px solid black',
                         borderRadius: '50%',
                         width: 'fit-content'
