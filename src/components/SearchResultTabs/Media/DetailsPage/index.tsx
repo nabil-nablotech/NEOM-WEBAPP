@@ -91,11 +91,11 @@ const MediaDetailsPage = ({
                 </Box>
 
                 {/* actual content */}
-                {/* <Box className={`${styles['image']}`} component="img" alt={""} src={currentRecord.thumbnailUrl} /> */}
+                <Box className={`${styles['image']}`} component="img" alt={""} src={currentRecord.thumbnailUrl} />
 
-                {/* static image */}
-                {/* {
-                    true &&
+                {/* static video */}
+                {
+                    false &&
                     <RenderFileData
                         fileData={{
                             src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
@@ -105,19 +105,19 @@ const MediaDetailsPage = ({
                         }}
                         fileType="video"
                     />
-                } */}
+                }
                 {/* static embedded */}
                 {
-                    true &&
-                    <RenderFileData
-                        fileData={{
-                            src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
-                            className: `${styles["single-image"]}`,
-                            thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
-                            isOpened: true
-                        }}
-                        fileType="video"
-                    />
+                    // false &&
+                    // <RenderFileData
+                    //     fileData={{
+                    //         src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
+                    //         className: `${styles["single-image"]}`,
+                    //         thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
+                    //         isOpened: true
+                    //     }}
+                    //     fileType="video"
+                    // />
 
                     // <ModelViewer
                     // />
@@ -155,7 +155,7 @@ const MediaDetailsPage = ({
                                     />
                                 </Grid>
                             </Grid>
-                            <Grid container sm={10} md={8} lg={9} style={{ marginTop: '1em' }}>
+                            <Grid item sm={10} md={8} lg={9} style={{ marginTop: '1em' }}>
                                 Ed ut perspiciatis unde omnis iste natus error sit voluptatem
                                 accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
                                 quae ab illo inventore.

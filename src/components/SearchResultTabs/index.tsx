@@ -33,6 +33,7 @@ import { useDispatch } from "react-redux";
 import {setSelectedValue} from '../../store/reducers/refinedSearchReducer';
 import { MediaDetailsModal } from "./Media/DetailsPage";
 import GalleryView from './GalleryView/index';
+import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex } from "../../store/reducers/searchResultsReducer";
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, className, ...other } = props;
@@ -143,6 +144,13 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     setValue(newValue);
     let newLabel = TabLabels[newValue].label;
     event.preventDefault();
+
+    /** resetters */
+    dispatch(setActivePlaceItem(null))
+    dispatch(setActivePlaceItemIndex(0))
+    dispatch(setActiveMediaItem(null))
+    dispatch(setActiveMediaItemIndex(0))
+
     navigate(`/search-results/${newLabel ? newLabel : "Places"}${searchText ? '?search=' : ''}${searchText}`, {
       replace: true,
     });
