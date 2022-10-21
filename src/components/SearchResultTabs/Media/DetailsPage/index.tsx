@@ -19,6 +19,7 @@ import { setActiveMediaItemIndex, setActiveMediaItem } from '../../../../store/r
 import { useNavigate } from 'react-router-dom';
 import RenderFileData from '../../../RenderFileData';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
+import ModelViewer from '../../../Model';
 
 const MediaDetailsPage = ({
     currentItemIndex,
@@ -92,20 +93,34 @@ const MediaDetailsPage = ({
                 {/* actual content */}
                 {/* <Box className={`${styles['image']}`} component="img" alt={""} src={currentRecord.thumbnailUrl} /> */}
 
-                {/* static image or video */}
-                {
-                    // activeMediaItemIndex%2 ===0 &&
+                {/* static image */}
+                {/* {
                     true &&
                     <RenderFileData
                         fileData={{
                             src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
                             className: `${styles["single-image"]}`,
-                            // thumbnail URL for youtube
+                            thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg", // thumbnail URL for youtube
+                            isOpened: true
+                        }}
+                        fileType="video"
+                    />
+                } */}
+                {/* static embedded */}
+                {
+                    true &&
+                    <RenderFileData
+                        fileData={{
+                            src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
+                            className: `${styles["single-image"]}`,
                             thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
                             isOpened: true
                         }}
                         fileType="video"
                     />
+
+                    // <ModelViewer
+                    // />
                 }
             </Box>
             <Box className={`${styles['desc']}`} >
