@@ -13,6 +13,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 import {Card} from './Card';
 import { useSelector } from "react-redux";
+import dayjs from "dayjs";
 
 export type EventsProps = {
   data: Event[];
@@ -29,6 +30,11 @@ const GridView = (props: EventsProps) => {
 
     if (!data) {
         return <h1>Loading...</h1>   
+    }
+    
+    const checkIsNew = (updatedDate: string) => {
+        const expDate = dayjs(updatedDate).add(30, "d").toDate();
+        return dayjs().isBefore(expDate);
     }
 
     return (
@@ -65,7 +71,7 @@ const GridView = (props: EventsProps) => {
                                       new Date(item.attributes.updatedAt),
                                       "MM/dd/yyyy"
                                     )}`}
-                                    isNew={index % 2 === 0 ? true : false}
+                                    isNew={checkIsNew(item.attributes.createdAt)}
                                 />
                             </Grid>
                        )

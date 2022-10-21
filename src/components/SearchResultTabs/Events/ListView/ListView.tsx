@@ -12,6 +12,7 @@ import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import {EventsProps} from '../GridView/GridView';
 import { FieldOption } from '../../../../types/Place';
+import { VisitAssociate } from '../../../../types/Event';
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -156,13 +157,13 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-name',
-            sorter: (a: { attributes: {recordingTeam: string;} }, b: { attributes: {recordingTeam: string;} }) => {
-                return a.attributes.recordingTeam.localeCompare(b.attributes.recordingTeam)
+            sorter: (a: { attributes: {visit_associate: VisitAssociate} }, b: { attributes: {visit_associate: VisitAssociate} }) => {
+                return a.attributes.visit_associate.data.attributes.placeUniqueId.data.attributes.placeNameEnglish.localeCompare(b.attributes.visit_associate.data.attributes.placeUniqueId.data.attributes.placeNameEnglish);
             },
             sortDirections: ["ascend"],
             defaultSortOrder: "ascend",
             render: (value: any, index: number) => {
-              return value.recordingTeam            
+              return `${value.visit_associate.data.attributes.placeUniqueId.data.attributes.placeNameEnglish}${value.visit_associate.data.attributes.placeUniqueId.data.attributes.placeNameArabic}`            
             }
         },
         {
@@ -170,7 +171,7 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-number',
-            render: (value: any, index: number) => value.visitNumber
+            render: (value: any, index: number) => value.visit_associate.data.attributes.placeUniqueId.data.attributes.placeNumber
         },
         {
             title: "TYPE",

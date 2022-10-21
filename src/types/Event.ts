@@ -16,6 +16,7 @@ export type Event = {
     visitNumber: string;
     siteDescription: string;
     updatedAt: string;
+    createdAt: string;
     keywords: string[] | null;
     placeNumber: string | null;
     latitude: Number;

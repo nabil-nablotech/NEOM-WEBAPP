@@ -77,6 +77,7 @@ export const events = gql`
           recordingTeam
           siteDescription
           updatedAt
+          createdAt
           keywords
           visitNumber
           latitude

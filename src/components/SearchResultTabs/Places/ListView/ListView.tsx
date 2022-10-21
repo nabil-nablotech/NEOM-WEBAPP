@@ -157,7 +157,7 @@ const ListView = (props: PlacesProps) => {
             sortDirections: ["ascend"],
             defaultSortOrder: "ascend",
             render: (value: any, index: number) => {
-              return value.placeNameEnglish            
+              return `${value.placeNameEnglish}${value.placeNameArabic}`            
             }
         },
         {
