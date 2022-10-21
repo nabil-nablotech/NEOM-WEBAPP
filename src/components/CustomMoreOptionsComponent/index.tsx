@@ -4,12 +4,14 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { CustomMoreOptionsComponentProps } from "../../types/SearchResultsTabsProps";
 
 export const CustomMoreOptionsComponent = ({
-    menuActions
+    menuActions,
+    moreIconClassName
 }: CustomMoreOptionsComponentProps) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
 
     const handleClick = (e: any) => {
+        e.preventDefault()
         setAnchorEl(e.currentTarget);
     };
     const handleClose = () => {
@@ -19,7 +21,7 @@ export const CustomMoreOptionsComponent = ({
     return (
         <>
             <div className="">
-                <MoreHorizIcon className="more-menu-div"
+                <MoreHorizIcon className={`more-menu-div ${moreIconClassName ? moreIconClassName : ''}`}
                     style={{
                         cursor: 'pointer'
                     }}

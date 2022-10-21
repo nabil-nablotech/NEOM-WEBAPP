@@ -61,6 +61,8 @@
 
 .card-image {
     width: 100%;
+    min-width: 15vw;
+    min-height: 12vw;
     aspect-ratio: 3/2;
     object-fit: cover;
 }
@@ -101,6 +103,10 @@
     }
     .card-grid {
         gap: 5px;
+    }
+    .card-image {
+        min-width: 12vw;
+        min-height: 10vw;
     }
     
 }
