@@ -16,7 +16,7 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../Media/ListView/MoreOption";
-import { antTablePaginationCss, formatWebDate, stringAvatar } from "../../../utils/services/helpers";
+import { antTablePaginationCss, copyToClipboard, formatWebDate, stringAvatar } from "../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../types/Media";
@@ -28,6 +28,7 @@ import RenderInitials from "../../RenderInitials";
 import { useDispatch } from "react-redux";
 import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../CustomMoreOptionsComponent";
+import PositionedSnackbar from "../../Snackbar";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -153,6 +154,7 @@ const DetailsPage = () => {
     ])
     const [isMoreTitleMenuOpen, setMoreTitleMenuOpen] = useState<false>(false)
     const [isSeeMore, toggleSeeMore] = useState<boolean>(false)
+    const [isCopyDone, setCopyDone] = useState<boolean>(false)
 
     const menuItems = [
         {
@@ -607,7 +609,23 @@ const DetailsPage = () => {
                                             {/* to-do */}
                                             {/* When clicking on the URL link, the link should be copied to the clip board. 
                                             A success message will be displayed with the message “URL copied to clipboard” */}
+                                            <Box
+                                                style={{
+                                                    cursor: 'pointer'
+                                                }}
+                                                onClick={e => {
+                                                    setCopyDone(true)
+                                                    copyToClipboard('https://www.neomheritage.com/place/N00381')
+                                                }}
+                                            >
                                                 https://www.neomheritage.com/place/N00381
+                                            </Box>
+                                            <PositionedSnackbar
+                                                message={"Copied to clipboard"}
+                                                severity={"success"}
+                                                open={isCopyDone}
+                                                handleClose={() => setCopyDone(false)}
+                                            />
                                         </Grid>
                                     </Grid>
                                 </Box>
