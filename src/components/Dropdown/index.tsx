@@ -60,7 +60,9 @@ const DropdownComponent = ({
                   '& .MuiFormControl-fullWidth.MuiTextField-root': {
                     position: 'relative'
                   },
-                  '& .MuiFormLabel-root.MuiInputLabel-root': {
+                  '& .MuiFormLabel-root.MuiInputLabel-root[data-shrink="false"]': {
+                    top: '50%',
+                    transform: 'translate(2%, -50%)',
                     paddingLeft: '1em',
                   },
                   '& .MuiFormLabel-root.MuiInputLabel-root[data-shrink="true"]': {
