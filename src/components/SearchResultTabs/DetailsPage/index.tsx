@@ -356,6 +356,12 @@ const DetailsPage = () => {
                         }}
                         onClick={e => {
                             e.preventDefault()
+                            /** resetters */
+                            dispatch(setActivePlaceItem(null))
+                            dispatch(setActivePlaceItemIndex(0))
+                            dispatch(setActiveMediaItem(null))
+                            dispatch(setActiveMediaItemIndex(0))
+                            
                             navigate(`/search-results/${tabName}`, { replace: true })
                         }}
                     >

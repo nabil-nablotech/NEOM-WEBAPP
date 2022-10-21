@@ -2,17 +2,18 @@ import { Box, Grid, Button } from "@mui/material";
 import styles from "./index.module.css";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useDispatch, useSelector } from "react-redux";
-import { toggleGalleryView } from "../../../store/reducers/searchResultsReducer";
+import { setActiveMediaItem, setActiveMediaItemIndex, toggleGalleryView } from "../../../store/reducers/searchResultsReducer";
 import { RootState } from "../../../store";
 import RenderFileData from "../../RenderFileData";
 import YellowStar from '../../../assets/images/searchResults/YellowStar.svg'
 import { CustomMoreOptionsComponent } from "../../CustomMoreOptionsComponent";
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from "react";
 
 const GalleryView = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { media, places, activePlaceItem } = useSelector(
+    const { media, places, activePlaceItem, activeMediaItem } = useSelector(
         (state: RootState) => state.searchResults
     );
     
@@ -34,6 +35,16 @@ const GalleryView = () => {
             action: () => { }
         }
     ]
+
+    useEffect(() => {
+
+        // console.log('hex: ', activeMediaItem)
+        if(activeMediaItem) {
+            navigate(`/search-results/Media/${activeMediaItem.attributes.uniqueId}`, { replace: true })
+            dispatch(toggleGalleryView(false))
+        }
+
+    }, [activeMediaItem])
 
     return (
         <Box className={`${styles["gallery-container"]}`} style={{
@@ -66,7 +77,8 @@ const GalleryView = () => {
                     places && places.map((itemObj, inx) => (
                         <Grid item md={3} lg={4} key={inx} className={`${styles['media-grid-item']}`}
                             onClick = {e => {
-                                navigate(`/search-results/Media`, { replace: true })
+                                dispatch(setActiveMediaItem(media[inx]))
+                                dispatch(setActiveMediaItemIndex(inx))
                             }}
                         >
                             <RenderFileData

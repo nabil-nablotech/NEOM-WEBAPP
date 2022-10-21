@@ -45,8 +45,12 @@
 .overview-title {
     font-size: 1.5em;
 }
+.more-icon-grid-item {
+    width: fit-content;
+    max-width: fit-content;
+}
 
-.more-icon-box {
+.more-icon {
     cursor: pointer;
     width: fit-content;
     margin-left: auto;

@@ -7,8 +7,8 @@
     aspect-ratio: 3/2;
 }
 .media-grid-item {
-    flex-basis: 31vw;
-    max-width: 31vw;
+    flex-basis: 31vw !important;
+    max-width: 31vw !important;
     cursor: pointer;
 }
 .media-grid {
@@ -38,7 +38,7 @@
 }
 @media (min-width: 575px) and (max-width: 1025px) {
     .media-grid-item {
-        flex-basis: 46vw;
-        max-width: 46vw;
+        flex-basis: 46vw !important;
+        max-width: 46vw !important;
     }
 }

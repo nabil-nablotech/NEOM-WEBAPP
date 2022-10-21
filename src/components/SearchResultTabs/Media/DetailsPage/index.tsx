@@ -18,6 +18,8 @@ import { useDispatch } from 'react-redux';
 import { setActiveMediaItemIndex, setActiveMediaItem } from '../../../../store/reducers/searchResultsReducer';
 import { useNavigate } from 'react-router-dom';
 import RenderFileData from '../../../RenderFileData';
+import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
+import ModelViewer from '../../../Model';
 
 const MediaDetailsPage = ({
     currentItemIndex,
@@ -57,6 +59,23 @@ const MediaDetailsPage = ({
         }
     }
 
+    const menuItems = [
+        {
+            label: "Share",
+            action: () => { },
+        },
+        {
+            label: "Edit",
+            action: () => {
+            },
+        },
+        {
+            label: "Delete",
+            action: () => {
+            },
+        },
+    ]
+
     return <>
         <Box className={`${styles['details-page-wrapper']}`}>
             <Box className={`${styles['img-wrapper']}`} >
@@ -72,22 +91,36 @@ const MediaDetailsPage = ({
                 </Box>
 
                 {/* actual content */}
-                {/* <Box className={`${styles['image']}`} component="img" alt={""} src={currentRecord.thumbnailUrl} /> */}
+                <Box className={`${styles['image']}`} component="img" alt={""} src={currentRecord.thumbnailUrl} />
 
-                {/* static image or video */}
+                {/* static video */}
                 {
-                    // activeMediaItemIndex%2 ===0 &&
-                    true &&
+                    false &&
                     <RenderFileData
                         fileData={{
                             src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
                             className: `${styles["single-image"]}`,
-                            // thumbnail URL for youtube
-                            thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
+                            thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg", // thumbnail URL for youtube
                             isOpened: true
                         }}
                         fileType="video"
                     />
+                }
+                {/* static embedded */}
+                {
+                    // false &&
+                    // <RenderFileData
+                    //     fileData={{
+                    //         src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
+                    //         className: `${styles["single-image"]}`,
+                    //         thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
+                    //         isOpened: true
+                    //     }}
+                    //     fileType="video"
+                    // />
+
+                    // <ModelViewer
+                    // />
                 }
             </Box>
             <Box className={`${styles['desc']}`} >
@@ -113,16 +146,16 @@ const MediaDetailsPage = ({
                                         </Box>
                                     </Box>
                                 </Grid>
-                                <Grid item sm={1} style={{
+                                <Grid item sm={1} className={`${styles['more-icon-grid-item']}`} style={{
                                     marginLeft: 'auto'
                                 }}>
-                                    <Box className={`${styles['more-icon-box']}`}
-                                    >
-                                        <MoreHorizIcon sx={{ color: '#fff' }} />
-                                    </Box>
+                                    <CustomMoreOptionsComponent
+                                        moreIconClassName={`${styles['more-icon']}`}
+                                        menuActions={menuItems}
+                                    />
                                 </Grid>
                             </Grid>
-                            <Grid container sm={10} md={8} lg={9} style={{ marginTop: '1em' }}>
+                            <Grid item sm={10} md={8} lg={9} style={{ marginTop: '1em' }}>
                                 Ed ut perspiciatis unde omnis iste natus error sit voluptatem
                                 accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
                                 quae ab illo inventore.

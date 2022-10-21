@@ -193,6 +193,7 @@ const ListView = (props: EventsProps) => {
             dataIndex: "attributes",
             className: 'cell-tourism',
             render: (value: any, index: number) => value.tourismValue.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
+            // render: (value: any, index: number) => "Temp"
         },
         {
             title: "STATE OF CONSERVATION",
@@ -207,6 +208,7 @@ const ListView = (props: EventsProps) => {
             dataIndex: "attributes",
             className: 'cell-recommend',
             render: (value: any, index: number) => value.recommendation.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
+            // render: (value: any, index: number) => "temp"
         },
         {
             title: "PERIOD",
