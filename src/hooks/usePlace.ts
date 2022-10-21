@@ -7,9 +7,9 @@ import { RootState } from "../store";
 import {
   setPlaces,
   setPlaceMetaData,
-  setSearchText,
+  setSearchText
 } from "../store/reducers/searchResultsReducer";
-import { limit } from "../utils/services/helpers";
+import {limit} from '../utils/services/helpers';
 
 const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -40,14 +40,9 @@ const usePlace = () => {
 
   useEffect(() => {
     if (data?.places) {
-      dispatch(
-        setSearchText(decodeURIComponent(search.replace("?search=", "")))
-      );
+      dispatch(setSearchText(decodeURIComponent(search.replace("?search=", ""))))
       // update the data for the pagination
-      if (
-        data?.places.meta.pagination.page === 1 &&
-        data?.places.data.length > 0
-      ) {
+      if (data?.places.meta.pagination.page === 1 && data?.places.data.length > 0) {
         dispatch(setPlaces([...data?.places.data]));
       } else if (data?.places.data.length > 0) {
         dispatch(setPlaces([...placeData, ...data?.places.data]));
@@ -75,18 +70,11 @@ const usePlace = () => {
     }
   }, [data]);
 
-  const fetchData = (
-    skip: number = placeData.length,
-    local: boolean = false
-  ) => {
-    const text = local
-      ? searchText
-      : decodeURIComponent(search.replace("?search=", ""));
+  const fetchData = (skip: number = placeData.length, local: boolean = false) => {
+    const text = local ? searchText : decodeURIComponent(search.replace("?search=", ""));
     const copiedValue = JSON.parse(JSON.stringify(selectedValue));
-    Object.keys(copiedValue).map((x) => {
-      if (copiedValue[x].length === 0) {
-        delete copiedValue[x];
-      }
+    Object.keys(copiedValue).map(x => {
+      if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
     // console.log('copiedValue', copiedValue)

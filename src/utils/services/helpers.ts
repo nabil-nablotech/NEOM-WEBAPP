@@ -16,7 +16,7 @@ export const formatWebDate = (value: string) => {
 };
 export const formatDate = (value: string) => {
   if (Date.parse(value)) {
-    return dayjs(value).format("MM/DD/YY hh:mm A");
+    return dayjs(value).format("MM/DD/YY");
   }
   return "";
 };

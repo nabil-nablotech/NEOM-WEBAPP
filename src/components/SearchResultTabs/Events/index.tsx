@@ -77,7 +77,7 @@ const PlacesTab = () => {
                     </Grid>
                     {/* To-do: map view */}
                     <Grid item xl={6} lg={6} md={7} sm={7}>                     
-                        {mapEvents?<MapView marker={mapEvents}/>:<></>}
+                        {mapEvents !== null ? <MapView marker={mapEvents}/>:<></>}
                     </Grid></>}
                     {
                         openStates[1] &&
