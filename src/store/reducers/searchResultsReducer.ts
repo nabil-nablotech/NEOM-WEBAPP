@@ -23,7 +23,8 @@ const initialState: SearchResultsState2 = {
   activePlaceItem: null,
   activePlaceItemIndex: 0,
   activeMediaItem: null,
-  activeMediaItemIndex: 0
+  activeMediaItemIndex: 0,
+  isOpenGalleryView: false
 };
 
 export const searchResultsSlice = createSlice({
@@ -84,6 +85,9 @@ export const searchResultsSlice = createSlice({
     setActivePlaceItemIndex: (state, action: PayloadAction<number>) => {
       state.activePlaceItemIndex = action.payload;
     },
+    toggleGalleryView: (state, action: PayloadAction<boolean>) => {
+      state.isOpenGalleryView = action.payload;
+    },
   },
 });
 
@@ -105,7 +109,8 @@ export const {
   setActivePlaceItem,
   setActivePlaceItemIndex,
   setActiveMediaItem,
-  setActiveMediaItemIndex
+  setActiveMediaItemIndex,
+  toggleGalleryView
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

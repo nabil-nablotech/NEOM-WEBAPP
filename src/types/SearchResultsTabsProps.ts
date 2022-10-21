@@ -60,6 +60,7 @@ export type SearchResultsState2 = {
   activePlaceItemIndex: number;
   activeMediaItem: Media | null;
   activeMediaItemIndex: number;
+  isOpenGalleryView: boolean
 };
 
 export type FileDataType = {

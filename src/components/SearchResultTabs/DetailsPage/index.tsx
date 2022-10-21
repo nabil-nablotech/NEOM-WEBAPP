@@ -26,7 +26,7 @@ import useMedia from "../../../hooks/useMedia";
 import CommentsSection from "../../CommentsSection";
 import RenderInitials from "../../RenderInitials";
 import { useDispatch } from "react-redux";
-import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex } from "../../../store/reducers/searchResultsReducer";
+import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../CustomMoreOptionsComponent";
 
 const StyledTableWrapper = styled(StyledAntTable)`
@@ -379,7 +379,7 @@ const DetailsPage = () => {
                                 }}
                                 onClick={e => {
                                     e.preventDefault()
-                                    navigate(`/search-results/Media`, { replace: true })
+                                    dispatch(toggleGalleryView(true))
                                 }}
                             >
                                 View all
