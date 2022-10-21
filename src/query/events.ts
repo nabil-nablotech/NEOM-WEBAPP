@@ -30,6 +30,36 @@ export const events = gql`
           { recordingTeam: { contains: $search_three } }
           { fieldNarrative: { contains: $search_three } }
           { keywords: { contains: $search_three } }
+          {
+            visit_associate: {
+              placeUniqueId: { placeNameEnglish: { contains: $search_one } }
+            }
+          }
+          {
+            visit_associate: {
+              placeUniqueId: { placeNameEnglish: { contains: $search_two } }
+            }
+          }
+          {
+            visit_associate: {
+              placeUniqueId: { placeNameEnglish: { contains: $search_three } }
+            }
+          }
+          {
+            visit_associate: {
+              placeUniqueId: { placeNameArabic: { contains: $search_one } }
+            }
+          }
+          {
+            visit_associate: {
+              placeUniqueId: { placeNameArabic: { contains: $search_two } }
+            }
+          }
+          {
+            visit_associate: {
+              placeUniqueId: { placeNameArabic: { contains: $search_three } }
+            }
+          }
         ]
       }
     ) {
@@ -222,6 +252,22 @@ export const events = gql`
                           }
                         }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          visit_associate {
+            data {
+              id
+              attributes {
+                placeUniqueId {
+                  data {
+                    attributes {
+                      placeNumber
+                      placeNameEnglish
+                      placeNameArabic
                     }
                   }
                 }

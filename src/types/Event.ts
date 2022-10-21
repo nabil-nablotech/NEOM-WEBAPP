@@ -1,4 +1,12 @@
-import { MediaAssociates } from "./Place";
+import { MediaAssociates, Place } from "./Place";
+export type VisitAssociate = {
+  data: {
+    id: number
+    attributes: {
+      placeUniqueId: {data: Place}
+    }
+  }
+}
 
 export type Event = {
   id: string;
@@ -13,5 +21,6 @@ export type Event = {
     latitude: Number;
     longitude: Number;
     media_associates: MediaAssociates;
+    visit_associate: VisitAssociate
   };
 };

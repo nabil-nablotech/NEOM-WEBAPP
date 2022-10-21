@@ -59,11 +59,11 @@ const GridView = (props: EventsProps) => {
                                 <Card
                                     key={index}
                                     img={item.attributes.media_associates.data[0].attributes.mediaUniqueId.data.attributes.object.data.attributes.url}
-                                    title={`${item.attributes.recordingTeam}`}
+                                    title={`${item.attributes.visit_associate.data.attributes.placeUniqueId.data.attributes.placeNameEnglish}${item.attributes.visit_associate.data.attributes.placeUniqueId.data.attributes.placeNameArabic} - ${item.attributes.visit_associate.data.attributes.placeUniqueId.data.attributes.placeNumber}`}
                                     subTitle={item.attributes.siteDescription}
-                                    dateString={`Last login on ${format(
+                                    dateString={`${format(
                                       new Date(item.attributes.updatedAt),
-                                      "yyyy-MM-dd"
+                                      "MM/dd/yyyy"
                                     )}`}
                                     isNew={index % 2 === 0 ? true : false}
                                 />
