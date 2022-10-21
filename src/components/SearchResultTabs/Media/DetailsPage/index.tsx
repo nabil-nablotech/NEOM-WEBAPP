@@ -254,7 +254,6 @@ export const MediaDetailsModal = () => {
                             color="inherit"
                             onClick={() => {
                                 setModalOpen(false)
-                                navigate(`/search-results/Media`, { replace: true })
                             }}
                             aria-label="close"
                             sx={{
