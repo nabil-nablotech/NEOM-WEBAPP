@@ -133,11 +133,20 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     }
   }, [tabName]);
 
-  const handleSelectChange =(e: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>) => {
+  const handleTextChange =(e: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
     selectedValueCopy[e.target.name] = e.target.value;
-    e.preventDefault();
     dispatch(setSelectedValue(selectedValueCopy));
+  }
+  
+  const handleSelectChange =(e: React.SyntheticEvent, value: string[] | [], reason?: string) => {
+    if (reason) {
+      const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
+      selectedValueCopy[reason] = value;
+      e.preventDefault();
+      dispatch(setSelectedValue(selectedValueCopy));
+    }
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -163,18 +172,22 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
-    const searchParams = new URLSearchParams(copiedValue);
+    const searchParams: string = encodeURIComponent(JSON.stringify({
+      search: searchText,
+      ...copiedValue
+    }));
     if (handleSubmit) {
       handleSubmit();
     }
-    navigate(`/search-results/${tabName}${searchText ? '?search=' : ''}${searchText}?${searchParams}`, {
-      replace: true,
+    // navigate(`/search-results/${tabName}${searchText ? '?search=' : ''}${searchText}?${searchParams}`, {
+    navigate({
+      pathname: `/search-results/${tabName}`,
+      search: searchParams
     });
   };
 
   const handleClear = (e: any, name?: string) => {
     const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
-    console.log('e...........', name);
     if (name) {
       selectedValueCopy[name] = name === 'location' ? '' : [];
       e.preventDefault();
@@ -275,7 +288,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
           <AccordionDetails style={{
             padding: 0
           }}>
-            <RefinedSearchInputs handleClear={handleClear} handleChange={handleSelectChange} handleSubmit={handleButtonSubmit} selectedValue={selectedValue} options={options} activeTabIndex={value} />
+            <RefinedSearchInputs handleSelectChange={handleSelectChange} handleClear={handleClear} handleChange={handleTextChange} handleSubmit={handleButtonSubmit} selectedValue={selectedValue} options={options} activeTabIndex={value} />
           </AccordionDetails>
         </Accordion>
       </Box>}

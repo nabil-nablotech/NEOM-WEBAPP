@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { places } from "../query/places";
 import { RootState } from "../store";
 import {
@@ -24,6 +24,11 @@ const usePlace = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const searchParams = decodeURIComponent(search).replace('?', '');
+    
+    if (searchParams.length > 2) {
+      dispatch(setSearchText(JSON.parse(searchParams).search))
+    }
     resetPlaces();
     fetchData(0);
   }, []);
@@ -40,7 +45,7 @@ const usePlace = () => {
 
   useEffect(() => {
     if (data?.places) {
-      dispatch(setSearchText(decodeURIComponent(search.replace("?search=", ""))))
+  
       // update the data for the pagination
       if (data?.places.meta.pagination.page === 1 && data?.places.data.length > 0) {
         dispatch(setPlaces([...data?.places.data]));

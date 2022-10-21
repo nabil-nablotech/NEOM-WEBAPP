@@ -7,6 +7,7 @@ import {
   Grid,
 } from "@mui/material";
 import DropdownComponent from "./../Dropdown/index";
+import AutoComplete from "./../AutoComplete";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
 import styles from "./index.module.css";
@@ -28,6 +29,7 @@ const BaseInputs = ({
   commonSelectSxStyles,
   commonFormControlSxStyles,
   handleClear,
+  handleSelectChange,
   textInputSxStyles
 }: BaseInputProps) => {
   const [locationModalOpen, toggleLocationModal] = useState<boolean>(false);
@@ -38,13 +40,14 @@ const BaseInputs = ({
   return (
     <>
       <Grid item sm={2} className={`${styles["input-field"]}`}>
-        <DropdownComponent
+        <AutoComplete
           className={`${styles["dropdown"]}`}
           label={"State of Conservation"}
           name="stateOfConservation"
           value={selectedValue.stateOfConservation}
           multiple={true}
-          handleChange={handleChange}
+          handleSelectChange={(e, value) => handleSelectChange(e, value, 'stateOfConservation')}
+          handleChange={() => {}}
           handleClear={(e) => handleClear(e, "stateOfConservation")}
           itemsList={options?.stateOfConservation || []}
           selectStylesSx={commonSelectSxStyles}
@@ -52,13 +55,14 @@ const BaseInputs = ({
         />
       </Grid>
       <Grid item sm={2} className={`${styles["input-field"]}`}>
-        <DropdownComponent
+        <AutoComplete
           className={`${styles["dropdown"]} ${styles["extra-width"]}`}
           label={"Period"}
           name="period"
           value={selectedValue.period}
           multiple={true}
-          handleChange={handleChange}
+          handleSelectChange={(e, val) => handleSelectChange(e, val, 'period')}
+          handleChange={() => {}}
           handleClear={(e) => handleClear(e, "period")}
           itemsList={options?.period || []}
           selectStylesSx={commonSelectSxStyles}
@@ -66,13 +70,14 @@ const BaseInputs = ({
         />
       </Grid>
       <Grid item sm={2} className={`${styles["input-field"]}`}>
-        <DropdownComponent
+        <AutoComplete
           className={`${styles["dropdown"]}`}
           label={"Recommendation"}
           name="recommendation"
           value={selectedValue.recommendation}
           multiple={true}
-          handleChange={handleChange}
+          handleSelectChange={(e, val) => handleSelectChange(e, val, 'recommendation')}
+          handleChange={() => {}}
           handleClear={(e) => handleClear(e, "recommendation")}
           itemsList={options?.recommendation || []}
           selectStylesSx={commonSelectSxStyles}
@@ -80,13 +85,14 @@ const BaseInputs = ({
         />
       </Grid>
       <Grid item sm={2} className={`${styles["input-field"]}`}>
-        <DropdownComponent
+        <AutoComplete
           className={`${styles["dropdown"]}`}
           label={"Research Value"}
           name="researchValue"
           value={selectedValue.researchValue}
           multiple={true}
-          handleChange={handleChange}
+          handleSelectChange={(e, val) => handleSelectChange(e, val, 'researchValue')}
+          handleChange={() => {}}
           handleClear={(e) => handleClear(e, "researchValue")}
           itemsList={options?.researchValue || []}
           selectStylesSx={commonSelectSxStyles}
@@ -94,13 +100,14 @@ const BaseInputs = ({
         />
       </Grid>
       <Grid item sm={2} className={`${styles["input-field"]}`}>
-        <DropdownComponent
+        <AutoComplete
           className={`${styles["dropdown"]} ${styles["extra-width"]}`}
           label={"Tourism Value"}
           name="tourismValue"
           value={selectedValue.tourismValue}
           multiple={true}
-          handleChange={handleChange}
+          handleSelectChange={(e, val) => handleSelectChange(e, val, 'tourismValue')}
+          handleChange={() => {}}
           handleClear={(e) => handleClear(e, "tourismValue")}
           itemsList={options?.tourismValue || []}
           selectStylesSx={commonSelectSxStyles}
@@ -108,13 +115,14 @@ const BaseInputs = ({
         />
       </Grid>
       <Grid item sm={2} className={`${styles["input-field"]}`}>
-        <DropdownComponent
+        <AutoComplete
           className={`${styles["dropdown"]} ${styles["extra-width"]}`}
           label={"Risk"}
           name="risk"
           value={selectedValue.risk}
           multiple={true}
-          handleChange={handleChange}
+          handleSelectChange={(e, val) => handleSelectChange(e, val, 'risk')}
+          handleChange={() => {}}
           handleClear={(e) => handleClear(e, "risk")}
           itemsList={options?.risk || []}
           selectStylesSx={commonSelectSxStyles}
@@ -123,13 +131,14 @@ const BaseInputs = ({
       </Grid>
       {activeTab === EVENTS_TAB_NAME && (
         <Grid item sm={2} className={`${styles["input-field"]}`}>
-          <DropdownComponent
+          <AutoComplete
             className={`${styles["dropdown"]}`}
             label={"Assessment"}
             name="assessmentType"
             value={selectedValue.assessmentType}
             multiple={true}
-            handleChange={handleChange}
+            handleSelectChange={(e, val) => handleSelectChange(e, val, 'assessmentType')}
+            handleChange={() => {}}
             handleClear={(e) => handleClear(e, "assessmentType")}
             itemsList={options?.assessmentType || []}
             selectStylesSx={{
@@ -210,13 +219,14 @@ const BaseInputs = ({
         </Box>
       </Grid>
       <Grid item sm={2} className={`${styles["input-field"]}`}>
-        <DropdownComponent
+        <AutoComplete
           className={`${styles["dropdown"]} ${styles["extra-width"]}`}
           label={"Artifacts"}
           name="artifacts"
           value={selectedValue.artifacts}
           multiple={true}
-          handleChange={handleChange}
+          handleSelectChange={(e, val) => handleSelectChange(e, val, 'artifacts')}
+          handleChange={() => {}}
           handleClear={(e) => handleClear(e, "artifacts")}
           itemsList={options?.artifacts || []}
           selectStylesSx={commonSelectSxStyles}
@@ -244,6 +254,7 @@ const MediaInputs = ({
   commonSelectSxStyles,
   commonFormControlSxStyles,
   handleClear,
+  handleSelectChange,
   textInputSxStyles
 }: MediaInputProps) => {
   const [locationModalOpen, toggleLocationModal] = useState<boolean>(false);
@@ -288,7 +299,7 @@ const MediaInputs = ({
                 <Grid item sm={6}>
                   <TextInput
                     className={`${styles["latitude"]}`}
-                    label="Latitude"
+                    label="Latitude1"
                     name="latitude"
                     type="number"
                     value={selectedValue.latitude}
@@ -302,7 +313,7 @@ const MediaInputs = ({
                 <Grid item sm={6}>
                   <TextInput
                     className={`${styles["longitude"]}`}
-                    label="Longitude"
+                    label="Longitude1"
                     name="longitude"
                     type="number"
                     value={selectedValue.longitude}
@@ -320,13 +331,14 @@ const MediaInputs = ({
         </Box>
       </Grid>
       <Grid item sm={2} className={`${styles["input-field"]}`}>
-        <DropdownComponent
+        <AutoComplete
           className={`${styles["dropdown"]} ${styles["extra-width"]}`}
           label={"Artifacts"}
           name="artifacts"
           value={selectedValue.artifacts}
           multiple={true}
-          handleChange={handleChange}
+          handleSelectChange={(e, val) => handleSelectChange(e, val, 'artifacts')}
+          handleChange={() => {}}
           handleClear={(e) => handleClear(e, "artifacts")}
           itemsList={options?.artifacts || []}
           selectStylesSx={commonSelectSxStyles}
@@ -365,6 +377,7 @@ const RefinedSearchInputs = ({
   selectedValue,
   handleSubmit,
   handleClear,
+  handleSelectChange
 }: RefinedSearchInputProps) => {
   const commonSelectSxStyles = {
     textAlign: "left",
@@ -413,6 +426,7 @@ const RefinedSearchInputs = ({
             activeTab={activeTab}
             selectedValue={selectedValue}
             handleChange={handleChange}
+            handleSelectChange={handleSelectChange}
             options={options}
             commonSelectSxStyles={commonSelectSxStyles}
             commonFormControlSxStyles={commonFormControlSxStyles}
@@ -428,6 +442,7 @@ const RefinedSearchInputs = ({
             commonSelectSxStyles={commonSelectSxStyles}
             commonFormControlSxStyles={commonFormControlSxStyles}
             handleClear={handleClear}
+            handleSelectChange={handleSelectChange}
             textInputSxStyles={textInputSxStyles}
           />
         }

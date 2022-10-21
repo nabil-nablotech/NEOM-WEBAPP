@@ -4,7 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { library } from "../query/library";
 import { RootState } from '../store';
-import {setLibrary, setLibraryMetaData} from '../store/reducers/searchResultsReducer';
+import {setLibrary, setLibraryMetaData, setSearchText} from '../store/reducers/searchResultsReducer';
 import {limit} from '../utils/services/helpers';
 
 const useLibrary = () => {
@@ -15,6 +15,11 @@ const useLibrary = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const searchParams = decodeURIComponent(search).replace('?', '');
+    
+    if (searchParams.length > 2) {
+      dispatch(setSearchText(JSON.parse(searchParams).search))
+    }
     resetLib();
     fetchData(0);
   }, []);

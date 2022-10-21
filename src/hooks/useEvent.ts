@@ -7,6 +7,7 @@ import { RootState } from "../store";
 import {
   setEvents,
   setEventMetaData,
+  setSearchText,
 } from "../store/reducers/searchResultsReducer";
 import {limit} from '../utils/services/helpers';
 
@@ -21,6 +22,11 @@ const useEvent = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const searchParams = decodeURIComponent(search).replace('?', '');
+    
+    if (searchParams.length > 2) {
+      dispatch(setSearchText(JSON.parse(searchParams).search))
+    }
     resetEvents();
     fetchData(0);
   }, []);

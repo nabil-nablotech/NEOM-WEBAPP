@@ -1,4 +1,4 @@
-import { SxProps } from "@mui/material";
+import { AutocompleteChangeDetails, AutocompleteChangeReason, SxProps } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import React, {ChangeEvent} from "react";
 
@@ -12,6 +12,7 @@ export type RefinedSearchInputProps = {
     options: Options | null;
     selectedValue: any;
     handleChange: (event: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>) => void;
+    handleSelectChange: ((event: React.SyntheticEvent<Element, Event>, value: string[], reason?: string, details?: AutocompleteChangeDetails<string> | undefined) => void);
     handleSubmit: (e: React.MouseEvent) => void;
     handleClear: (e: React.MouseEvent<HTMLButtonElement>, name?: string) => void;
 }
@@ -22,7 +23,8 @@ export type BaseInputProps = {
   textInputSxStyles: SxProps
   options: Options | null;
   selectedValue: any;
-  handleChange: (event: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>) => void;
+  handleSelectChange: ((event: React.SyntheticEvent<Element, Event>, value: string[], reason?: string, details?: AutocompleteChangeDetails<string> | undefined) => void);
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleClear: (e: React.MouseEvent<HTMLButtonElement>, name?: string) => void;
 }
 export type MediaInputProps = {
@@ -31,6 +33,7 @@ export type MediaInputProps = {
   textInputSxStyles: SxProps
   options: Options | null;
   selectedValue: any;
+  handleSelectChange: ((event: React.SyntheticEvent<Element, Event>, value: string[], reason?: string, details?: AutocompleteChangeDetails<string> | undefined) => void);
   handleChange: (event: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>) => void;
   handleClear: (e: React.MouseEvent<HTMLButtonElement>, name?: string) => void;
 }
