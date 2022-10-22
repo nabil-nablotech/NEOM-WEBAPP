@@ -22,10 +22,9 @@ const useEvent = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const searchParams = decodeURIComponent(search).replace('?', '');
-    
+    const searchParams = decodeURIComponent(search).replace('?search=', '');
     if (searchParams.length > 2) {
-      dispatch(setSearchText(JSON.parse(searchParams).search))
+      dispatch(setSearchText(searchParams))
     }
     resetEvents();
     fetchData(0);
