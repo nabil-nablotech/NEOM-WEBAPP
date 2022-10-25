@@ -74,6 +74,37 @@ const usePlace = () => {
     }
   }, [data]);
 
+  useEffect(() => {
+    if (refinePlaceData?.places) {
+      // update the data for the pagination
+      if (refinePlaceData?.places.meta.pagination.page === 1 && refinePlaceData?.places.data.length > 0) {
+        dispatch(setPlaces([...refinePlaceData?.places.data]));
+      } else if (refinePlaceData?.places.data.length > 0) {
+        dispatch(setPlaces([...placeData, ...refinePlaceData?.places.data]));
+      }
+      // update the meta data
+      dispatch(setPlaceMetaData(refinePlaceData?.places?.meta));
+      // this flag decides to fetch next set of data
+      setHasMoreData(
+        refinePlaceData?.places?.meta.pagination.pageCount !==
+        refinePlaceData?.places.meta.pagination.page
+      );
+
+      let dummyArray: any = [];
+      for (let i = 0; i < data?.places?.data?.length; i++) {
+        dummyArray.push({
+          id: i,
+          name: data?.places?.data[i].attributes["placeNameEnglish"],
+          position: {
+            lat: data?.places?.data[i].attributes["latitude"],
+            lng: data?.places?.data[i].attributes["longitude"],
+          },
+        });
+      }
+      setMapPlaces(dummyArray);
+    }
+  }, [refinePlaceData]);
+
   const fetchData = (skip: number = placeData.length, local: boolean = false) => {
     const searchData = getQueryObj(search);
     const text = local ? searchText : searchData?.search;
@@ -86,18 +117,18 @@ const usePlace = () => {
     // const searchParams = new URLSearchParams(copiedValue);
     const searchWordArray = text?.split(" ") || [];
     const obj: any = {
-      researchValue: copiedValue&&copiedValue?.researchValue ? copiedValue?.researchValue[0] : "",
-      tourismValue: copiedValue&&copiedValue.tourismValue ? copiedValue?.tourismValue[0] : "",
-      stateOfConservation: copiedValue&&copiedValue?.stateOfConservation ? copiedValue?.stateOfConservation[0] : "",
-      recommendation: copiedValue&&copiedValue?.recommendation > 0 ? copiedValue?.recommendation[0] : "",
-      risk: copiedValue&&copiedValue?.risk ? copiedValue?.risk[0]: "",
-      period: copiedValue&&copiedValue?.period ? copiedValue?.period[0] : "",
-      latitude: copiedValue&&copiedValue?.latitude?parseFloat(copiedValue?.latitude):0,
-      longitude: copiedValue&&copiedValue?.longitude?parseFloat(copiedValue?.longitude):0,
-      artifacts: copiedValue&&copiedValue?.artifacts ? copiedValue?.artifacts[0] : "",
-      search_one: searchWordArray[0] || '',
-      search_two: searchWordArray[1] || '',
-      search_three: searchWordArray[2] || '',
+      researchValue: copiedValue&&copiedValue?.researchValue && copiedValue?.researchValue,
+      tourismValue: copiedValue&&copiedValue.tourismValue && copiedValue?.tourismValue,
+      stateOfConservation: copiedValue&&copiedValue?.stateOfConservation && copiedValue?.stateOfConservation,
+      recommendation: copiedValue&&copiedValue?.recommendation && copiedValue?.recommendation,
+      risk: copiedValue&&copiedValue?.risk && copiedValue?.risk,
+      period: copiedValue&&copiedValue?.period && copiedValue?.period,
+      latitude: copiedValue&&copiedValue?.latitude && parseFloat(copiedValue?.latitude),
+      longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
+      artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts,
+      search_one: searchWordArray[0],
+      search_two: searchWordArray[1],
+      search_three: searchWordArray[2],
       limit: limit,
       skip: skip,
     };

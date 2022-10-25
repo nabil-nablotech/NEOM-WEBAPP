@@ -162,7 +162,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     dispatch(setActiveMediaItemIndex(0))
 
     navigate({
-      pathname: `/search-results/${tabName}`,
+      pathname: `/search-results/${newLabel ? newLabel : "Places"}`,
       search: encodeURIComponent(JSON.stringify({
         search: searchText
       }))
