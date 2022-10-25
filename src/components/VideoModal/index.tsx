@@ -16,7 +16,7 @@ const VideoModal = ({
                 minHeight: 'fit-content'
             }
         }}>
-            <Box className={`${styles['video-player-box']}`}>
+            <Box component="div" className={`${styles['video-player-box']}`}>
                 <ReactPlayer playing={isModalOpen} url={videoSrc} />
             </Box>
         </Dialog>

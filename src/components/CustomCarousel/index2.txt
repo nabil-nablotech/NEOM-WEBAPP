@@ -27,13 +27,13 @@ const CarouselComponent = () => {
     const CustomPrevArrow: typeFn = (clickHandler, bool, label ) => {
         return <>
         <IconButton aria-label="prev" className={`${styles['prev-arrow']}`}>
-            <Box component="img" alt={""} src={PrevArrow} />
+            <Box component="div" component="img" alt={""} src={PrevArrow} />
         </IconButton>
     </>
     }
 
     return (<>
-        <Box className={`custom-carousel-wrapper ${styles['custom-carousel-wrapper']}`} style={{
+        <Box component="div" className={`custom-carousel-wrapper ${styles['custom-carousel-wrapper']}`} style={{
             position: 'relative'
         }}>
             <Carousel
@@ -46,8 +46,8 @@ const CarouselComponent = () => {
                 {
                     data?.map((item: any, index: number) => (
                         <>
-                            <Box key={index}>
-                                <Box className={`${styles['']}`} component="img" alt={""} src={item.thumbnailUrl} />
+                            <Box component="div" key={index}>
+                                <Box component="div" className={`${styles['']}`} component="img" alt={""} src={item.thumbnailUrl} />
                                 <p className="legend">{item.title}</p>
                             </Box>
                         </>

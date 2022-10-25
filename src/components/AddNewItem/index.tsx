@@ -80,7 +80,7 @@ const StepContent = ({
 }: StepContentTypes) => {
 
     return <>
-        <Box className={`${styles['form']}`}>
+        <Box component="div" className={`${styles['form']}`}>
             {
                 activeStep === 0 &&
                 <>
@@ -274,7 +274,7 @@ const StepContent = ({
             {
                 activeStep === 1 &&
                 <>
-                    <Box>Make your content discoverable</Box>
+                    <Box component="div">Make your content discoverable</Box>
                     <TextInput
                         className={`${styles["english-name"]}`}
                         label="Add Keywords"
@@ -377,11 +377,11 @@ const AddNewItem = ({
 
 
     return (
-        <Box>
-            <Box className={`${styles['add-new-item-container']}`}>
+        <Box component="div">
+            <Box component="div" className={`${styles['add-new-item-container']}`}>
                 
-                <Box className={`${styles['content-section']}`}>
-                    <Box className={`${styles['hide-btn']}`}
+                <Box component="div" className={`${styles['content-section']}`}>
+                    <Box component="div" className={`${styles['hide-btn']}`}
                         style={{
                         marginRight: 0,
                         marginLeft: 'auto',
@@ -448,7 +448,7 @@ const AddNewItem = ({
                         </React.Fragment>
                     </>
                 </Box>
-                <Box
+                <Box component="div"
                     className={`${styles["btn-row"]}`}
                     sx={{
                         display: 'flex', flexDirection: 'row',

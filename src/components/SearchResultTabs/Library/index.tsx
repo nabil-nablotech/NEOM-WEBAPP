@@ -36,14 +36,14 @@ const LibraryTab = () => {
       defaultSortOrder: "ascend",
       className: "name-column",
       render: (value: any, record: any) => (
-        <Box
+        <Box component="div"
           sx={{
             display: "flex",
             gap: "1em",
           }}
         >
           <InsertDriveFileOutlinedIcon fontSize="small" />
-          <Box>{value.title}</Box>
+          <Box component="div">{value.title}</Box>
         </Box>
       ),
     },
@@ -142,10 +142,10 @@ const LibraryTab = () => {
   }
 
   return (
-    <Box className={`${styles["main-tab-content"]}`}>
-      <Box className={`${styles["utility-bar"]}`}>
-        <Box>{meta?.pagination?.total} Total Library Items</Box>
-        <Box>
+    <Box component="div" className={`${styles["main-tab-content"]}`}>
+      <Box component="div" className={`${styles["utility-bar"]}`}>
+        <Box component="div">{meta?.pagination?.total} Total Library Items</Box>
+        <Box component="div">
           <Button
             colors={[
               "transparent",
@@ -166,7 +166,7 @@ const LibraryTab = () => {
           />
         </Box>
       </Box>
-      <Box id={"library-list-parent"}>
+      <Box component="div" id={"library-list-parent"}>
         <InfiniteScroll
           dataLength={library.length} //This is important field to render the next data
           next={() => handleNext()}

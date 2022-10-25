@@ -76,7 +76,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   return (
     <>
       <Header onKeyDown={onKeyDown} showSearch={true}/>
-      <Box>
+      <Box component="div">
         <SearchResultTabs handleSubmit={handleSubmit} tabIndex={tabIndex} />
       </Box>
       <CustomDrawer origin="right" isOpen={newItemWindowOpen} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}>

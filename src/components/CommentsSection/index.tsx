@@ -23,7 +23,7 @@ const SingleComment = ({
     ]
 
     return <>
-        <Box>
+        <Box component="div">
             <Grid container style={{
                 justifyContent: 'start',
                 alignItems: 'start',
@@ -35,16 +35,16 @@ const SingleComment = ({
                     <SelfIcon />
                 </Grid>
                 <Grid item sm={8}>
-                    <Box style={{
+                    <Box component="div" style={{
                         display: 'inline-block',
                         lineHeight: '1.2'
                     }}>
-                        <Box style={{
+                        <Box component="div" style={{
                             fontWeight: 'bold',
                             float: 'left',
                             marginRight: '0.5em'
                         }}>{commentObj.commentor}</Box>
-                        <Box>{commentObj.comment}</Box>
+                        <Box component="div">{commentObj.comment}</Box>
                     </Box>
                     <Grid container style={{
                         color: 'var(--medium-gray)',
@@ -117,7 +117,7 @@ const CommentsSection = ({
     ]
 
     return (
-        <Box className={`${styles['comments-container']}`}>
+        <Box component="div" className={`${styles['comments-container']}`}>
             <Grid container style={{
                 justifyContent: 'start',
                 alignItems: 'center',
@@ -148,7 +148,7 @@ const CommentsSection = ({
                     />
                 </Grid>
             </Grid>
-            <Box className={`${styles['comments-list-parent-box']}`}>
+            <Box component="div" className={`${styles['comments-list-parent-box']}`}>
                 {
                     commentsJson.map(singleCommentItem => (
                         <>

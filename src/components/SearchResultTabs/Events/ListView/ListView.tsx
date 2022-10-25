@@ -257,7 +257,7 @@ const ListView = (props: EventsProps) => {
     }, []);
 
     return (
-        <Box id={'events-list-parent'}>
+        <Box component="div" id={'events-list-parent'}>
             <InfiniteScroll
                 dataLength={data.length} //This is important field to render the next data
                 next={() => fetchData()}

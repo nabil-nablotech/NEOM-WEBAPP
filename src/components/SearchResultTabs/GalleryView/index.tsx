@@ -46,9 +46,9 @@ const GalleryView = () => {
     }, [activeMediaItem])
 
     return (
-        <Box className={`${styles["gallery-container"]}`} style={{
+        <Box component="div" className={`${styles["gallery-container"]}`} style={{
         }}>
-            <Box style={{
+            <Box component="div" style={{
                 width: 'fit-content',
                 float: 'left'
             }}>
@@ -90,7 +90,7 @@ const GalleryView = () => {
                             />
                             <Grid container className={`${styles['media-grid-item-options-row']}`}>
                                 <Grid item>
-                                    <Box>
+                                    <Box component="div">
                                         <Grid container className={`${styles['star-icon-box']}`}>
                                             <Grid item>
                                                 <Box

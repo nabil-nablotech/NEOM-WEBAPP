@@ -55,8 +55,24 @@
     width: fit-content;
     margin-left: auto;
 }
-.bottom-grid {
+
+.line-height-1dot5 {
+    line-height: 1.5;
+}
+
+.bottom-grid,
+.video-title-grid ,
+.video-desc,
+.three-d-model-title-grid ,
+.three-d-model-desc,
+.threeD-model-wrapper {
     margin-bottom: 1em;
+}
+
+.video-title ,
+.three-d-model-title {
+    font-size: 25px;
+    line-height: 1.2;
 }
 
 .bottom-grid p {
@@ -66,6 +82,13 @@
 
 .bottom-grid > div {
     line-height: 1.2;
+}
+
+.video-info-grid ,
+.three-d-model-info-grid {
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .arrow-icon {

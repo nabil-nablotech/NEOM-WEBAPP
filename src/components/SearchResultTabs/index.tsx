@@ -49,7 +49,7 @@ function TabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }} className={className}>
+        <Box component="div" sx={{ p: 3 }} className={className}>
           <Grid>{children}</Grid>
         </Box>
       )}
@@ -84,7 +84,7 @@ const TabLabels = [
 const Label = ({ img, label }: LabelProps) => {
   return (
     <>
-      <Box
+      <Box component="div"
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -93,7 +93,7 @@ const Label = ({ img, label }: LabelProps) => {
         }}
       >
         <Box component="img" alt={""} src={img} />
-        <Box
+        <Box component="div"
           sx={{
             color: "initial",
           }}
@@ -235,7 +235,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
 
   return (
     <div className={`${styles["search-results-wrapper"]}`}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Box component="div" sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           className={`${styles["tab-titles"]}`}
           value={value}
@@ -266,7 +266,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
           ))}
         </Tabs>
       </Box>
-      {value !== 2 && <Box className={`${styles["refined-search-box"]}`} sx={{
+      {value !== 2 && <Box component="div" className={`${styles["refined-search-box"]}`} sx={{
         '& .Mui-expanded.MuiPaper-root.MuiAccordion-root': {
           marginInline: 'auto',
         },

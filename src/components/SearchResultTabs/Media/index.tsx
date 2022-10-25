@@ -35,10 +35,10 @@ const MediaTab = () => {
     const {openStates, toggleOpenStates} = useToggledView({count: 2})
 
     return (
-        <Box className={`${styles['main-tab-content']}`}>
-            <Box className={`${styles['utility-bar']}`}>
-                <Box>{meta?.pagination?.total} Total Places</Box>
-                <Box>
+        <Box component="div" className={`${styles['main-tab-content']}`}>
+            <Box component="div" className={`${styles['utility-bar']}`}>
+                <Box component="div">{meta?.pagination?.total} Total Places</Box>
+                <Box component="div">
                 <Button
                     colors={["transparent", "var(--table-black-text)", "var(--table-black-text)"]}
                     className={`${styles["export-btn"]}`}
@@ -54,7 +54,7 @@ const MediaTab = () => {
                     // onClick={handleCancel}
                 />
                 </Box>
-                {/* <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={DetailsView}
+                {/* <Box component="div" className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={DetailsView}
                     onClick={e => toggleOpenStates([false, true, false])}
                     style={{
                         opacity: openStates[1] ? '1' : '0.5'
@@ -84,7 +84,7 @@ const MediaTab = () => {
                     </Grid>}
                     {/* To-do: map view */}
                     {/* <Grid item xl={6} lg={6} md={7} sm={7}>
-                        <Box className={`${placesStyles['map-img']}`} component="img" alt={""} src={img} />
+                        <Box component="div" className={`${placesStyles['map-img']}`} component="img" alt={""} src={img} />
                     </Grid> */}
                      {
                         openStates[1] &&

@@ -29,7 +29,7 @@ const AutoCompleteComponent = ({
       <FormControl sx={{ minWidth: 120, ...formControlSx }}>
         {
           multiple && <>
-            <Box className={`${styles['autocmplt-container']}`}>
+            <Box component="div" className={`${styles['autocmplt-container']}`}>
               <Autocomplete
                 multiple
                 id="tags-filled"
@@ -96,7 +96,7 @@ const AutoCompleteComponent = ({
               displayEmpty
               sx={selectStylesSx}
             // renderValue={(selected: any) => (
-            //   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            //   <Box component="div" sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
             //     {selected?.map((value: any) => (
             //       <Chip key={value} label={value} />
             //     ))}
