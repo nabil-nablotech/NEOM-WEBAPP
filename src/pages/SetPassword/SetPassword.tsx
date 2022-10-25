@@ -94,6 +94,17 @@ export const SetPassword = () => {
       })
     }
     if (name === 'confirmPassword') {
+      if (state.password !== state.confirmPassword) { 
+        setState({
+          ...state,
+          error: `Confirm password doesn'\nt match`
+        });
+      }else {
+        setState({
+          ...state,
+          error: ``
+        });
+      }
       checkValidation({
         currentValue: e.target.value,
         name: validatorsArray_conf_password, 
