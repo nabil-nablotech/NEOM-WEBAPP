@@ -111,7 +111,7 @@ export const refineMedia = gql`
     $search_three: String
     $latitude: Float
     $longitude: Float
-    $artifacts: Array
+    $artifacts: [String]
     $limit: Int
     $skip: Int
   ) {
