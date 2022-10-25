@@ -72,7 +72,7 @@ export type FileDataType = {
 };
 
 export type RenderFileDataProps = {
-  fileType: "image" | "video";
+  fileType: "image" | "video" | "3d";
   fileData: FileDataType;
 };
 
