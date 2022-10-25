@@ -256,13 +256,13 @@ export const refineEvents = gql`
     $search_one: String
     $search_two: String
     $search_three: String
-    $researchValue: Array
-    $tourismValue: Array
-    $stateOfConservation: Array
-    $recommendation: Array
-    $risk: Array
-    $period: Array
-    $assessmentType: Array
+    $researchValue: [String]
+    $tourismValue: [String]
+    $stateOfConservation: [String]
+    $recommendation: [String]
+    $risk: [String]
+    $period: [String]
+    $assessmentType: [String]
     $latitude: Float
     $longitude: Float
     $artifacts: [String]

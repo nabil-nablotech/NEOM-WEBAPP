@@ -243,57 +243,21 @@ export const places = gql`
 `;
 
 export const refinePlaces = gql`
-query SearchTitle(
-  $search_one: String
-  $search_two: String
-  $search_three: String
-  $researchValue: Array
-  $tourismValue: Array
-  $stateOfConservation: Array
-  $recommendation: Array
-  $risk: Array
-  $period: Array
-  $latitude: Float
-  $longitude: Float
-  $artifacts: Array
-  $limit: Int
-  $skip: Int
-) {
-  places(
-    pagination: { limit: $limit, start: $skip }
-    filters: {
-          or: [
-            { siteDescription: { containsi: $search_one } }
-            { previousNumber: { containsi: $search_one } }
-            { placeNumber: { containsi: $search_one } }
-            { placeNameEnglish: { containsi: $search_one } }
-            { placeNameArabic: { containsi: $search_one } }
-            { keywords: { containsi: $search_one } }
-            { siteDescription: { containsi: $search_two } }
-            { previousNumber: { containsi: $search_two } }
-            { placeNumber: { containsi: $search_two } }
-            { placeNameEnglish: { containsi: $search_two } }
-            { placeNameArabic: { containsi: $search_two } }
-            { keywords: { containsi: $search_two } }
-            { siteDescription: { containsi: $search_three } }
-            { previousNumber: { containsi: $search_three } }
-            { placeNumber: { containsi: $search_three } }
-            { placeNameEnglish: { containsi: $search_three } }
-            { placeNameArabic: { containsi: $search_three } }
-            { keywords: { containsi: $search_three } }
-          ]
-          and:[
-            {	stateOfConservation: { name: {in: $stateOfConservation}}}
-            {	period: { name: {in: $period}}}
-            {	researchValue: { name: {in: $researchValue}}}
-            {	tourismValue: { name: {in: $tourismValue}}}
-            {	recommendation: { name: {in: $recommendation}}}
-            {	risk: { name: {in: $risk}}}
-            {	artifacts: { name: {in: $artifacts}}}
-            {	latitude: { eq: $latitude }}
-            {	longitude: { eq: $longitude }}
-        ] 
-    }
+  query SearchTitle(
+    $search_one: String
+    $search_two: String
+    $search_three: String
+    $researchValue: [String]
+    $tourismValue: [String]
+    $stateOfConservation: [String]
+    $recommendation: [String]
+    $risk: [String]
+    $period: [String]
+    $latitude: Float
+    $longitude: Float
+    $artifacts: [String]
+    $limit: Int
+    $skip: Int
   ) {
     places(
       pagination: { limit: $limit, start: $skip }
