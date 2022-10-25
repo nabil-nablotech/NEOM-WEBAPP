@@ -221,9 +221,17 @@ export const MediaDetailsModal = () => {
     )
 
     const navigate = useNavigate()
+    const dispatch = useDispatch();
 
     if (!activeMediaItem) {
         return <>Error display</>
+    }
+
+    const handleClose = () => {
+        setModalOpen(false)
+        dispatch(setActiveMediaItem(null))
+        dispatch(setActiveMediaItemIndex(0))
+        navigate(`/search-results/Media`, { replace: true })
     }
 
     return <>
@@ -256,7 +264,7 @@ export const MediaDetailsModal = () => {
                             edge="start"
                             color="inherit"
                             onClick={() => {
-                                setModalOpen(false)
+                                handleClose()
                             }}
                             aria-label="close"
                             sx={{
@@ -269,7 +277,7 @@ export const MediaDetailsModal = () => {
                     </Grid>
                 </Grid>
             }
-            handleClose={() => setModalOpen(false)}
+            handleClose={() => handleClose()}
         >
             <MediaDetailsPage
                 data={media}
