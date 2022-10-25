@@ -2,18 +2,16 @@
 import Box from '@mui/material/Box';
 import { GridViewCard_Places } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'
-import commonStyles from '../../index.module.css'
+import styles from './index.module.css'
 import { Grid } from '@mui/material';
-import { format } from "date-fns";
 import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
-import { useDispatch } from "react-redux";
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { usePaginatedArray } from '../../../../hooks/usePaginatedArray';
+// import { usePaginatedArray } from '../../../../hooks/usePaginatedArray';
 /** indicating that we can send html later on wherever we parse */
-import parse from 'html-react-parser';
 import { baseUrl } from '../../../../utils/services/helpers';
+import RenderFileData from '../../../RenderFileData';
 
 export const Card = ({
+    itemIndex,
     img,
     title,
     subTitle,
@@ -23,7 +21,41 @@ export const Card = ({
         <Box component="div" className={`${gridStyles['card-container']}`} >
             <Grid container spacing={1} className={`${gridStyles['card-grid']}`}>
                 <Grid item sm={12} className={`${gridStyles['card-image-wrapper']}`}>
-                    <Box className={`${gridStyles['card-image']}`} component="img" alt={""} src={`${baseUrl}${img}`} />
+                    
+                    {
+                        itemIndex === 1 ?
+                            <>
+                                <RenderFileData
+                                    fileData={{
+                                        src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
+                                        className: `${styles['video-card-parent']}`,
+                                        // thumbnail URL for youtube
+                                        thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg"
+                                    }}
+                                    fileType="video"
+                                />
+                            </> :
+                            itemIndex === 2 ?
+                                <>
+                                    <RenderFileData
+                                        fileData={{
+                                            alt: "",
+                                            // src: images[2],
+                                            thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
+                                            className: `${styles['three-d-card-parent']}`
+                                        }}
+                                        fileType="3d"
+                                    />
+                                </> :
+                                <RenderFileData
+                                    fileData={{
+                                        alt: "",
+                                        src: `${baseUrl}${img}`,
+                                        className: `${gridStyles['card-image']}`
+                                    }}
+                                    fileType="image"
+                                />
+                    }
                 </Grid>
                 <Grid item sm={12} className={`${gridStyles['content']}`}>
                     <Grid item sm={11}>

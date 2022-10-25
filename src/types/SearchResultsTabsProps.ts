@@ -24,6 +24,7 @@ export interface TabPanelProps {
 export type tabNameProps = "Places" | "Events" | "Library" | "Media";
 
 export type GridViewCard_Places = {
+  itemIndex?: number;
   img?: string;
   title: string;
   subTitle: string;
