@@ -1,25 +1,26 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import { useSelector } from "react-redux";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { RootState } from "../../store";
 import {
   SearchResultTabsProps,
   tabNameProps,
 } from "../../types/SearchResultsTabsProps";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Header from "../../components/Header";
 import SearchResultTabs from "../../components/SearchResultTabs";
 import useEvent from '../../hooks/useEvent';
 import usePlace from '../../hooks/usePlace';
 import useLibrary from "../../hooks/useLibrary";
 import useMedia from "../../hooks/useMedia";
-import { useEffect } from "react";
 import CustomDrawer from "../../components/CustomDrawer";
-import { useDispatch } from "react-redux";
 import { setActiveTab, toggleNewItemWindow, toggleShowAddSuccess } from "../../store/reducers/searchResultsReducer";
 import AddNewItem from "../../components/AddNewItem";
 import PositionedSnackbar from "../../components/Snackbar";
 import { PLACES_TAB_NAME } from "../../utils/services/helpers";
 import useRefinedSearch from "../../hooks/useRefinedSearchOptions";
+import {setSearchText} from '../../store/reducers/searchResultsReducer';
 
 const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
@@ -32,7 +33,6 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   const {fetchMediaItems} = useMedia();
 
   const dispatch = useDispatch()
-  const location = useLocation()
 
   useEffect(() => {
 
@@ -78,9 +78,14 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
     }
   };
 
+  const handleClearSearchText = () => {
+    dispatch(setSearchText(''));
+    handleSubmit();
+  }
+
   return (
     <>
-      <Header onKeyDown={onKeyDown} showSearch={true}/>
+      <Header onKeyDown={onKeyDown} handleClearSearchText={handleClearSearchText} showSearch={true}/>
       <Box component="div">
         <SearchResultTabs handleSubmit={handleSubmit} tabIndex={tabIndex} />
       </Box>

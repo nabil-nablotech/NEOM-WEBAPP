@@ -252,7 +252,7 @@ export const events = gql`
 `;
 
 export const refineEvents = gql`
-  query SearchTitle(
+  mutation SearchTitle(
     $search_one: String
     $search_two: String
     $search_three: String

@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { Grid } from "@mui/material";
 import styles from "../index.module.css";
@@ -7,8 +6,6 @@ import DetailsView from "../../../assets/images/searchResults/DetailsView.svg";
 import ListViewIcon from "../../../assets/images/searchResults/ListView.svg";
 import GridView from "./GridView/GridView";
 import ListView from "./ListView/ListView";
-import MapImg1 from "../../../assets/images/searchResults/mapImage1.webp";
-import MapImg2 from "../../../assets/images/searchResults/mapImage2.jpg";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { useToggledView } from "./../../../hooks/useToggledView";
@@ -17,25 +14,20 @@ import { Meta } from "../../../types/Place";
 import MapView from "../GoogleMap/MapView";
 
 const PlacesTab = () => {
-  const { selectedCardIndex, places, placeMetaData } = useSelector(
+  const { selectedCardIndex, places, placeMetaData, totalCounts } = useSelector(
     (state: RootState) => state.searchResults
   );
-  const [img, setimg] = useState(MapImg1);
 
   const { fetchPlaces, hasMoreData, loading, mapPlaces } = usePlace();
 
   const { openStates, toggleOpenStates } = useToggledView({ count: 2 });
-
-  useEffect(() => {
-    setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1);
-  }, [selectedCardIndex]);
 
   const meta: Meta | null = placeMetaData;
 
   return (
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
-        <Box component="div">{meta?.pagination?.total} Total Places</Box>
+        <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.places} Total Places</Box>
         <Box component="div">
           <Button
             colors={[

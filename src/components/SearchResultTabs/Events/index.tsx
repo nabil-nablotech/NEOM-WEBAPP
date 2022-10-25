@@ -18,7 +18,7 @@ import MapView from '../GoogleMap/MapView';
 
 const PlacesTab = () => {
     
-  const { selectedCardIndex, events, searchText, eventMetaData } = useSelector(
+  const { selectedCardIndex, events, totalCounts, eventMetaData } = useSelector(
     (state: RootState) => state.searchResults
   );
   const [img, setimg] = useState(MapImg1);
@@ -40,7 +40,7 @@ const PlacesTab = () => {
     return (
         <Box component="div" className={`${styles['main-tab-content']}`}>
             <Box component="div" className={`${styles['utility-bar']}`}>
-                <Box component="div">{meta?.pagination?.total} Total Events</Box>
+                <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.events} Total Events</Box>
                 <Box component="div">
                 <Button
                     colors={["transparent", "var(--table-black-text)", "var(--table-black-text)"]}

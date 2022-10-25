@@ -13,12 +13,13 @@ function CustomSearchField(props: {
   className?: string;
   searchText?: string;
   onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
+  handleClearSearchText?: () => void;
   handleChange?: (e: ChangeEvent<HTMLInputElement>) => void
   handleChangeParent?: (e: ChangeEvent<HTMLInputElement>) => void
   shouldHandleChangeFromParent?: boolean,
   valueFromParent?: string
 }) {
-  const { className, onKeyDown, handleChangeParent, 
+  const { className, onKeyDown, handleChangeParent, handleClearSearchText,
     shouldHandleChangeFromParent, valueFromParent } = props;
   const dispatch = useDispatch();
 
@@ -60,9 +61,7 @@ function CustomSearchField(props: {
               cursor: 'pointer',
               marginRight: 0
             }}
-            onClick={() => {
-              dispatch(setSearchText(''));
-            }}
+            onClick={handleClearSearchText}
           >
             {(searchText === '') ?
               <CircleSharpIcon style={{
