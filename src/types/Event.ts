@@ -22,6 +22,7 @@ export type Event = {
     latitude: Number;
     longitude: Number;
     media_associates: MediaAssociates;
-    visit_associate: VisitAssociate
+    visit_associate: VisitAssociate,
+    uniqueId: string
   };
 };
