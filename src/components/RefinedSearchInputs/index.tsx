@@ -149,8 +149,8 @@ const BaseInputs = ({
         </Grid>
       )}
       <Grid item sm={4} className={`${styles["location-grid-item"]}`}>
-        <Box>
-          <Box
+        <Box component="div">
+          <Box component="div"
             onClick={(e) => {
               e.preventDefault();
               toggleLocationModal(!locationModalOpen);
@@ -262,8 +262,8 @@ const MediaInputs = ({
   return (
     <>
       <Grid item sm={4} className={`${styles["location-grid-item"]}`}>
-        <Box>
-          <Box
+        <Box component="div">
+          <Box component="div"
             onClick={(e) => {
               e.preventDefault();
               toggleLocationModal(!locationModalOpen);
@@ -417,7 +417,7 @@ const RefinedSearchInputs = ({
   const activeTab: string = tabNameBasedOnIndex(activeTabIndex);
   
   return (
-    <Box
+    <Box component="div"
       className={`refined-inputs-container ${styles["refined-inputs-container"]}`}
     >
       <Grid container className={`${styles["refined-inputs-grid"]}`}>

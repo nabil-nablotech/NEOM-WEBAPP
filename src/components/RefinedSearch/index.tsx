@@ -17,7 +17,7 @@ const RefinedSearch = ({
     };
 
     return (
-        <Box className={`${className} ${styles['refined-search-container']}`} sx={{
+        <Box component="div" className={`${className} ${styles['refined-search-container']}`} sx={{
             color: '#fff'
         }}>
             <Button

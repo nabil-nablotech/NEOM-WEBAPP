@@ -199,7 +199,7 @@ const ListView = (props: MediaProps) => {
   }, []);
 
   return (
-    <Box id={"media-list-parent"}>
+    <Box component="div" id={"media-list-parent"}>
       <InfiniteScroll
         dataLength={data.length} //This is important field to render the next data
         next={() => fetchData()}

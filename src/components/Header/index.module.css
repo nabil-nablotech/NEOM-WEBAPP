@@ -29,4 +29,8 @@
     .header-refined-search button {
         font-size: 14px;
     }
+
+    .header-container {
+        width: 100vw;
+    }
 }

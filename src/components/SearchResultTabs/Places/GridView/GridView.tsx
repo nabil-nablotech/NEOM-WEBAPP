@@ -30,7 +30,7 @@ const GridView = (props: PlacesProps) => {
   }
 
   return (
-    <Box className={`${gridStyles["left-grid-box"]}`}>
+    <Box component="div" className={`${gridStyles["left-grid-box"]}`}>
       <InfiniteScroll
         dataLength={data.length} //This is important field to render the next data
         next={() => fetchData()}

@@ -12,54 +12,24 @@ export const events = gql`
       pagination: { limit: $limit, start: $skip }
       filters: {
         or: [
-          # { siteType: { contains: $search_one } }
+          {	siteType: { name:{in: [$search_one]} }}
           { siteDescription: { contains: $search_one } }
-          # { period: { contains: $search_one } }
+          {	period: { name: {in: [$search_one]}}}
           { recordingTeam: { contains: $search_one } }
           { fieldNarrative: { contains: $search_one } }
           { keywords: { contains: $search_one } }
-          # { siteType: { contains: $search_two } }
+          { siteType: { name:{in:[$search_two]}} }
           { siteDescription: { contains: $search_two } }
-          # { period: { contains: $searcht_two } }
+          {	period: { name: {in: [$search_two]}}}
           { recordingTeam: { contains: $search_two } }
           { fieldNarrative: { contains: $search_two } }
           { keywords: { contains: $search_one } }
-          # { siteType: { contains: $search_three } }
+          {	siteType: { name:{in: [$search_three]} }}
           { siteDescription: { contains: $search_three } }
-          # { period: { contains: $search_three } }
+          {	period: { name: {in: [$search_three]}}}
           { recordingTeam: { contains: $search_three } }
           { fieldNarrative: { contains: $search_three } }
           { keywords: { contains: $search_three } }
-          {
-            visit_associate: {
-              placeUniqueId: { placeNameEnglish: { contains: $search_one } }
-            }
-          }
-          {
-            visit_associate: {
-              placeUniqueId: { placeNameEnglish: { contains: $search_two } }
-            }
-          }
-          {
-            visit_associate: {
-              placeUniqueId: { placeNameEnglish: { contains: $search_three } }
-            }
-          }
-          {
-            visit_associate: {
-              placeUniqueId: { placeNameArabic: { contains: $search_one } }
-            }
-          }
-          {
-            visit_associate: {
-              placeUniqueId: { placeNameArabic: { contains: $search_two } }
-            }
-          }
-          {
-            visit_associate: {
-              placeUniqueId: { placeNameArabic: { contains: $search_three } }
-            }
-          }
         ]
       }
     ) {
@@ -286,13 +256,13 @@ export const refineEvents = gql`
     $search_one: String
     $search_two: String
     $search_three: String
-    $researchValue: [String]
-    $tourismValue: [String]
-    $stateOfConservation: [String]
-    $recommendation: [String]
-    $risk: [String]
-    $period: [String]
-    $assessmentType: [String]
+    $researchValue: Array
+    $tourismValue: Array
+    $stateOfConservation: Array
+    $recommendation: Array
+    $risk: Array
+    $period: Array
+    $assessmentType: Array
     $latitude: Float
     $longitude: Float
     $artifacts: [String]
@@ -303,49 +273,37 @@ export const refineEvents = gql`
       pagination: { limit: $limit, start: $skip }
       filters: {
         or: [
-          {
-            visit_associate: {
-              placeUniqueId: { placeNameEnglish: { contains: $search_one } }
-            }
-          }
-          {
-            visit_associate: {
-              placeUniqueId: { placeNameEnglish: { contains: $search_two } }
-            }
-          }
-          {
-            visit_associate: {
-              placeUniqueId: { placeNameEnglish: { contains: $search_three } }
-            }
-          }
-          {
-            visit_associate: {
-              placeUniqueId: { placeNameArabic: { contains: $search_one } }
-            }
-          }
-          {
-            visit_associate: {
-              placeUniqueId: { placeNameArabic: { contains: $search_two } }
-            }
-          }
-          {
-            visit_associate: {
-              placeUniqueId: { placeNameArabic: { contains: $search_three } }
-            }
-          }
+          {	siteType: { name:{in: [$search_one]} }}
+          { siteDescription: { contains: $search_one } }
+          {	period: { name: {in: [$search_one]}}}
+          { recordingTeam: { contains: $search_one } }
+          { fieldNarrative: { contains: $search_one } }
+          { keywords: { contains: $search_one } }
+          { siteType: { name:{in:[$search_two]}} }
+          { siteDescription: { contains: $search_two } }
+          {	period: { name: {in: [$search_two]}}}
+          { recordingTeam: { contains: $search_two } }
+          { fieldNarrative: { contains: $search_two } }
+          { keywords: { contains: $search_one } }
+          {	siteType: { name:{in: [$search_three]} }}
+          { siteDescription: { contains: $search_three } }
+          {	period: { name: {in: [$search_three]}}}
+          { recordingTeam: { contains: $search_three } }
+          { fieldNarrative: { contains: $search_three } }
+          { keywords: { contains: $search_three } }
         ]
-        and: [
-          { researchValue: { name: { in: $researchValue } } }
-          { tourismValue: { name: { in: $tourismValue } } }
-          { stateOfConservation: { name: { in: $stateOfConservation } } }
-          { recommendation: { name: { in: $recommendation } } }
-          { risk: { name: { in: $risk } } }
-          { artifacts: { name: { in: $artifacts } } }
-          { period: { name: { in: $period } } }
-          { assessmentType: { name: { in: $assessmentType } } }
-          { latitude: { containsi: $latitude } }
-          { longitude: { containsi: $longitude } }
-        ]
+        and:[
+          {	stateOfConservation: { name: {in: $stateOfConservation}}}
+          {	period: { name: {in: $period}}}
+          {	researchValue: { name: {in: $researchValue}}}
+          {	tourismValue: { name: {in: $tourismValue}}}
+          {	recommendation: { name: {in: $recommendation}}}
+          {	risk: { name: {in: $risk}}}
+          {	artifacts: { name: {in: $artifacts}}}
+          { assessmentType: {name: {in: $assessmentType}}}
+          {	latitude: { eq: $latitude }}
+          {	longitude: { eq: $longitude }}
+      ] 
       }
     ) {
       meta {

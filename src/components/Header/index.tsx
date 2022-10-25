@@ -26,7 +26,7 @@ const Header = (props: IHeader) => {
     <>
       {screen === "landing" ?
         <>
-          <Box sx={{
+          <Box component="div" sx={{
             position: 'absolute',
             top: '3%',
             right: '0'
@@ -35,9 +35,9 @@ const Header = (props: IHeader) => {
           </Box>
         </>
         :
-        <Box className={`${styles["header-container"]}`}>
-          <Box className={`${styles["header-lhs-content"]}`}>
-            <Box className={`${styles["logo"]}`}>
+        <Box component="div" className={`${styles["header-container"]}`}>
+          <Box component="div" className={`${styles["header-lhs-content"]}`}>
+            <Box component="div" className={`${styles["logo"]}`}>
               <Box component="img" alt="NEOM logo" src={Logo} onClick={() => navigate("/")} />
             </Box>
             {

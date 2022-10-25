@@ -24,6 +24,7 @@ export interface TabPanelProps {
 export type tabNameProps = "Places" | "Events" | "Library" | "Media";
 
 export type GridViewCard_Places = {
+  itemIndex?: number;
   img?: string;
   title: string;
   subTitle: string;
@@ -64,7 +65,7 @@ export type SearchResultsState2 = {
 };
 
 export type FileDataType = {
-  src: string;
+  src?: string;
   alt?: string;
   className: string;
   thumbNail?: string;
@@ -72,7 +73,7 @@ export type FileDataType = {
 };
 
 export type RenderFileDataProps = {
-  fileType: "image" | "video";
+  fileType: "image" | "video" | "3d";
   fileData: FileDataType;
 };
 

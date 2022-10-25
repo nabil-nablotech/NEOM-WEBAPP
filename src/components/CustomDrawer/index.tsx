@@ -10,7 +10,7 @@ const CustomDrawer = ({
 }: CustomDrawerProps) => {
 
     return (
-        <Box style={{
+        <Box component="div" style={{
             zIndex: '33'
         }}>
             <Drawer

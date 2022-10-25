@@ -28,6 +28,7 @@ import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setAct
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
 import YellowStar from '../../../../assets/images/searchResults/YellowStar.svg'
+import { useMediaQuery } from 'react-responsive'
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -71,6 +72,10 @@ const StyledTableWrapper = styled(StyledAntTable)`
     }
 
     @media (min-width: 575px) and (max-width: 1025px) {
+
+        .ant-table {
+            margin-block: 1em;
+        }
 
         .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell) ,
         .ant-table-tbody > tr > td:not(.ant-table-tbody > tr > td.more-menu-ant-cell) {
@@ -118,8 +123,13 @@ const EventDetailsPage = () => {
     const { data } = useSelector((state: RootState) => state.login);
     const [mediaGridActiveItems, setMediaGridActiveItems] = useState<number>(0)
 
-    console.log('hex: ', places)
-    const mediaList = mediaGridActiveItems + 8 <= places.length ? places.slice(0, mediaGridActiveItems + 8) :
+    let mediaCount = 8
+    const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
+    if(isTablet) {
+        mediaCount = 6
+    }
+
+    const mediaList = mediaGridActiveItems + mediaCount <= places.length ? places.slice(0, mediaGridActiveItems + mediaCount) :
         places.slice(
             0,
             mediaGridActiveItems + (places.length - mediaGridActiveItems)
@@ -150,7 +160,7 @@ const EventDetailsPage = () => {
 
     const { latitude, longitude } = selectedPlaceObj
 
-    // console.log('hex: ', media)
+    console.log('hex: ', library)
     // get from api
     let [images, setImages] = useState<any>([
         'https://via.placeholder.com/150/92c952',
@@ -200,14 +210,14 @@ const EventDetailsPage = () => {
             defaultSortOrder: "ascend",
             className: "name-column",
             render: (value: any, record: any) => (
-                <Box
+                <Box component="div"
                     sx={{
                         display: "flex",
                         gap: "1em",
                     }}
                 >
                     <InsertDriveFileOutlinedIcon fontSize="small" />
-                    <Box>{value.title}</Box>
+                    <Box component="div">{value.title}</Box>
                 </Box>
             ),
         },
@@ -368,7 +378,7 @@ const EventDetailsPage = () => {
         }
     }
     return (
-        <Box className={`${styles['details-container']}`}>
+        <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
                 flexDirection: 'column'
             }}>
@@ -396,39 +406,39 @@ const EventDetailsPage = () => {
                         Back
                     </Button>
                 </Grid>
-                <Box className={`${styles['content-section']}`}>
-                    <Box className={`${styles['title-section']}`}>
+                <Box component="div" className={`${styles['content-section']}`}>
+                    <Box component="div" className={`${styles['title-section']}`}>
                         <Grid container className={`${styles['title-section-grid']}`}>
                             <Grid item className={`${styles['title-section-left-item']}`}>
                                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
                                 {true && <Grid container>
                                     <Grid item>
-                                        <Box className={`${styles['item-name']}`}>
+                                        <Box component="div" className={`${styles['item-name']}`}>
                                             Al-Muwaylih   Al-Muwaylih
                                         </Box>
                                     </Grid>
                                     {true && <Grid item>
-                                        <Box className={`${styles['item-name-arabic']}`}>
+                                        <Box component="div" className={`${styles['item-name-arabic']}`}>
                                             الُموَيْلح - الحي التراثي
                                         </Box>
                                     </Grid>}
                                     {true && <Grid item>
-                                        <Box className={`${styles['item-number']}`}>
+                                        <Box component="div" className={`${styles['item-number']}`}>
                                             - N00381
                                         </Box>
                                     </Grid>}
                                 </Grid>}
-                                <Box className={`${styles['visited-by-main-box']}`}>
+                                <Box component="div" className={`${styles['visited-by-main-box']}`}>
                                     <Box component="span">Visited on 7 September, 2022 by </Box>
                                     <Box component="span">Adam Biernaski, Julian Jansen van Rensburg</Box>
                                 </Box>
-                                <Box className={`${styles['visit-count']}`}>
+                                <Box component="div" className={`${styles['visit-count']}`}>
                                     VISIT 1
                                 </Box>
                             </Grid>
                             <Grid item className={`${styles['title-section-grid']}`}>
-                                <Box className={`${styles['more-icon-box']}`}
+                                <Box component="div" className={`${styles['more-icon-box']}`}
                                 >
                                     <CustomMoreOptionsComponent
                                         menuActions={menuItems}
@@ -438,22 +448,22 @@ const EventDetailsPage = () => {
                         </Grid>
 
                     </Box>
-                    <Box className={`${styles['details-section']}`}>
+                    <Box component="div" className={`${styles['details-section']}`}>
                         <Grid container className={`${styles['details-section-main-grid']}`}
                             rowSpacing={2}
                         >
-                            <Grid item md={7} className={`${styles['text-left']} ${styles['section-left']}`}>
-                                <Box className={`${styles['site-desc']}`}>
+                            <Grid item sm={7} className={`${styles['text-left']} ${styles['section-left']}`}>
+                                <Box component="div" className={`${styles['site-desc']}`}>
                                     {/* If needed See More functionality in future, copy from PlaceDetails */}
-                                    <Box
+                                    <Box component="div"
                                         className={`${styles['site-desc-condensed']} ${styles['see-more-active']}`}
                                     >
                                         {siteDescription.substring(0, 200)}
                                     </Box>
                                 </Box>
-                                <Box className={`${styles['table']}`}>
+                                <Box component="div" className={`${styles['table']}`}>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']} `}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']} `}>
                                             Site Type
                                         </Grid>
                                         <Grid item>
@@ -463,7 +473,7 @@ const EventDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Period
                                         </Grid>
                                         <Grid item>
@@ -479,17 +489,17 @@ const EventDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Field Narrative
                                         </Grid>
-                                        <Grid item>
+                                        <Grid item sm={8} className={`${styles['table-parameter-value']}`}>
                                             {
                                                 `The site is west of highway 55, on a terrace overlooking a Wadi Sh site has one feature (F001). F001 is a rectangular rock alignment w concentration with an open center that is roughly square in the south`
                                             }
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             State of Conservation
                                         </Grid>
                                         <Grid item>
@@ -497,7 +507,7 @@ const EventDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Risk
                                         </Grid>
                                         <Grid item>
@@ -505,15 +515,15 @@ const EventDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Tourism Value
                                         </Grid>
-                                        <Grid item md={8} className={`${styles['table-parameter-value']}`}>
+                                        <Grid item sm={8} md={7} className={`${styles['table-parameter-value']}`}>
                                             Local - Only of local interest, although could provide the basis for an overnight stop
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Research Value
                                         </Grid>
                                         <Grid item>
@@ -521,7 +531,7 @@ const EventDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Recommendation
                                         </Grid>
                                         <Grid item>
@@ -529,14 +539,14 @@ const EventDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             URL
                                         </Grid>
                                         <Grid item>
                                             {/* to-do */}
                                             {/* When clicking on the URL link, the link should be copied to the clip board. 
                                             A success message will be displayed with the message “URL copied to clipboard” */}
-                                            <Box
+                                            <Box component="div"
                                                 style={{
                                                     cursor: 'pointer'
                                                 }}
@@ -557,7 +567,7 @@ const EventDetailsPage = () => {
                                     </Grid>
                                 </Box>
                             </Grid>
-                            <Grid item md={5}>
+                            <Grid item sm={5}>
                                 <RenderFileData
                                     fileData={{
                                         alt: "",
@@ -584,12 +594,12 @@ const EventDetailsPage = () => {
                         </Grid>
 
                     </Box>
-                    <Box className={`${styles['heading']} ${styles['text-left']}`}>
-                        <Box className={`${styles['heading-title']}`}>
-                            <Box>Library</Box>
-                            <Box>3 Items</Box>
+                    <Box component="div" className={`${styles['heading']} ${styles['text-left']}`}>
+                        <Box component="div" className={`${styles['heading-title']}`}>
+                            <Box component="div">Library</Box>
+                            <Box component="div">3 Items</Box>
                         </Box>
-                        <Box>
+                        <Box component="div">
                             <StyledTableWrapper
                                 className={`${styles["table-container"]}`}
                                 rowKey={"id"}
@@ -607,19 +617,20 @@ const EventDetailsPage = () => {
                         </Box>
                     </Box>
                     {/* Currently showing only 1 events oit of available list */}
-                    <Box className={`${styles['events-section']} ${styles['heading']} ${styles['text-left']}`}>
-                        <Box className={`${styles['heading-title']}`}>
-                            <Box>Media Gallery</Box>
-                            <Box>12 Items</Box>
+                    <Box component="div" className={`${styles['events-section']} ${styles['heading']} ${styles['text-left']}`}>
+                        <Box component="div" className={`${styles['heading-title']}`}>
+                            <Box component="div">Media Gallery</Box>
+                            <Box component="div">12 Items</Box>
                         </Box>
-                        <Box>
+                        <Box component="div">
                             <Grid container className={`${styles['media-grid']}`}>
                                 {
                                     mediaList && mediaList.map((itemObj, inx) => (
-                                        <Grid item md={3} lg={3} key={inx} className={`${styles['media-grid-item']}`}
+                                        <Grid item lg={3} md={4} sm={4} key={inx} className={`${styles['media-grid-item']}`}
                                             onClick={e => {
                                                 dispatch(setActiveMediaItem(media[inx]))
                                                 dispatch(setActiveMediaItemIndex(inx))
+                                                navigate(`/search-results/Media/${media[inx].attributes.uniqueId}`, { replace: true, state: {from: 'events'} })
                                             }}
                                         >
                                             <RenderFileData
@@ -630,11 +641,11 @@ const EventDetailsPage = () => {
                                                 }}
                                                 fileType="image"
                                             />
-                                            <Box>
+                                            <Box component="div">
                                                 <Grid container className={`${styles['media-grid-item-options-row']}`}>
                                                     <Grid item>
                                                         {/* To-do: modify featured image flag */}
-                                                        {inx === 0 && <Box>
+                                                        {inx === 0 && <Box component="div">
                                                             <Grid container className={`${styles['star-icon-grid']}`}>
                                                                 <Grid item>
                                                                     <Box
@@ -694,9 +705,9 @@ const EventDetailsPage = () => {
                             </Grid>
                         </Grid>
                     </Box>
-                    <Box className={`${styles['remarks-section']}  ${styles['heading']} ${styles['text-left']}`}>
-                        <Box className={`${styles['heading-title']}`}>
-                            <Box>Remarks</Box>
+                    <Box component="div" className={`${styles['remarks-section']}  ${styles['heading']} ${styles['text-left']}`}>
+                        <Box component="div" className={`${styles['heading-title']}`}>
+                            <Box component="div">Remarks</Box>
                         </Box>
                         <CommentsSection
                             SelfIcon={() => <RenderInitials firstName={data?.firstName} lastName={data?.lastName} />}

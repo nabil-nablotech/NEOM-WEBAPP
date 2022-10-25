@@ -9,11 +9,11 @@ const RenderInitials = ({
     lastName?: string
 }) => {
     return (
-        <Box>
+        <Box component="div">
             <>
                 {
                     firstName && lastName &&
-                    <Box style={{
+                    <Box component="div" style={{
                         padding: '0.8em 0.6em',
                         border: '1px solid black',
                         borderRadius: '50%',
@@ -22,7 +22,7 @@ const RenderInitials = ({
                 }
                 {
                     (!firstName || !lastName) &&
-                    <Box style={{
+                    <Box component="div" style={{
                         padding: '0.8em 0.6em',
                         border: '1px solid black',
                         borderRadius: '50%',

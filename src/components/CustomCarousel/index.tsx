@@ -47,7 +47,7 @@ export const CustomCarousel = ({
     }
 
     return <>
-        <Box className={`${styles['custom-carousel-wrapper']}`} style={{}}>
+        <Box component="div" className={`${styles['custom-carousel-wrapper']}`} style={{}}>
             {/* <Carousel
                 swipeable={false}
                 draggable={false}

@@ -33,10 +33,10 @@ const PlacesTab = () => {
   const meta: Meta | null = placeMetaData;
 
   return (
-    <Box className={`${styles["main-tab-content"]}`}>
-      <Box className={`${styles["utility-bar"]}`}>
-        <Box>{meta?.pagination?.total} Total Places</Box>
-        <Box>
+    <Box component="div" className={`${styles["main-tab-content"]}`}>
+      <Box component="div" className={`${styles["utility-bar"]}`}>
+        <Box component="div">{meta?.pagination?.total} Total Places</Box>
+        <Box component="div">
           <Button
             colors={[
               "transparent",
