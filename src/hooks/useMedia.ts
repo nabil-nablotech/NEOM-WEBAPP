@@ -4,7 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { media } from "../query/search";
 import { RootState } from '../store';
-import {setMedia, setMediaMetaData} from '../store/reducers/searchResultsReducer'
+import {setMedia, setMediaMetaData, setSearchText} from '../store/reducers/searchResultsReducer'
 import {limit} from '../utils/services/helpers';
 
 const useMedia = () => {
@@ -15,6 +15,11 @@ const useMedia = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const searchParams = decodeURIComponent(search).replace('?search=', '');
+    
+    if (searchParams.length > 2) {
+      dispatch(setSearchText(searchParams))
+    }
     resetMedia();
     fetchData(0);
   }, []);

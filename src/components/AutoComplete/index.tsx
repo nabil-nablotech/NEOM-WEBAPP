@@ -1,13 +1,13 @@
 import Select from "@mui/material/Select";
 import Chip from '@mui/material/Chip';
-import { DropdownCompProps } from "../../types/DropdownComponent";
+import { AutoCompleteProps, DropdownCompProps } from "../../types/DropdownComponent";
 import { MenuItem, Box, Autocomplete, TextField } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { useState } from "react";
 import styles from './index.module.css';
 
-const DropdownComponent = ({
+const AutoCompleteComponent = ({
   className,
   label,
   placeholder,
@@ -20,14 +20,14 @@ const DropdownComponent = ({
   formControlSx,
   multiple,
   handleClear
-}: DropdownCompProps) => {
+}: AutoCompleteProps) => {
   const staticLabel = label ? label : "select";
   const [focused, setFocused] = useState(false);
 
   return (
     <div className={className}>
       <FormControl sx={{ minWidth: 120, ...formControlSx }}>
-        {/* {
+        {
           multiple && <>
             <Box className={`${styles['autocmplt-container']}`}>
               <Autocomplete
@@ -76,7 +76,7 @@ const DropdownComponent = ({
               />
             </Box>
           </>
-        } */}
+        }
         {
           !multiple && <>
             {(focused || values) && (
@@ -118,4 +118,4 @@ const DropdownComponent = ({
   );
 };
 
-export default DropdownComponent;
+export default AutoCompleteComponent;

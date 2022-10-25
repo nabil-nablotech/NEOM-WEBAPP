@@ -4,17 +4,24 @@ import {useSelector, useDispatch} from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { library } from "../query/library";
 import { RootState } from '../store';
-import {setLibrary, setLibraryMetaData} from '../store/reducers/searchResultsReducer';
+import {setLibrary, setLibraryMetaData, setSearchText} from '../store/reducers/searchResultsReducer';
 import {limit} from '../utils/services/helpers';
 
 const useLibrary = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
 
   const {searchText, library: libItem} = useSelector((state: RootState) => state.searchResults);
+  const { selectedValue } = useSelector(
+    (state: RootState) => state.refinedSearch
+  );
   const {search} = useLocation();
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const searchParams = decodeURIComponent(search).replace('?search=', '');
+    if (searchParams.length > 2) {
+      dispatch(setSearchText(searchParams))
+    }
     resetLib();
     fetchData(0);
   }, []);
@@ -28,6 +35,7 @@ const useLibrary = () => {
    * fetch places with two words
    */
   const { loading, error, data, refetch:refetchLibraryItems } = useQuery(library);
+  // const { loading:refineLoading, error:refineErrorData, data:refineLibraryData, refetch: refineSearchLibrary } = useQuery(refineLibrary);
 
   useEffect(() => {
     if (data?.medias) {
@@ -48,7 +56,21 @@ const useLibrary = () => {
   const fetchData = (skip: number = libItem.length, local: boolean = false) => {
     const text = local ? searchText : decodeURIComponent(search.replace("?search=", ""));
     const searchWordArray = text.split(' ');
-    refetchLibraryItems({ search_one: searchWordArray[0], search_two:searchWordArray[1], search_three:searchWordArray[2], limit: limit, skip: skip });
+    const copiedValue = JSON.parse(JSON.stringify(selectedValue));
+    Object.keys(copiedValue).map(x => {
+      if (copiedValue[x].length === 0) {delete copiedValue[x];}
+      return x;
+    });
+    const obj: any = {
+      latitude: copiedValue&&copiedValue?.latitude?parseFloat(copiedValue?.latitude):0,
+      longitude: copiedValue&&copiedValue?.longitude?parseFloat(copiedValue?.longitude):0,
+      search_one: searchWordArray[0],
+      search_two: searchWordArray[1],
+      search_three: searchWordArray[2],
+      limit: limit,
+      skip: skip,
+    };
+      refetchLibraryItems(obj);
   };
  
   return {

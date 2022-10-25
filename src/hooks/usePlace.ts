@@ -1,8 +1,8 @@
 import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
-import { places } from "../query/places";
+import { useLocation, useSearchParams } from "react-router-dom";
+import { places, refinePlaces } from "../query/places";
 import { RootState } from "../store";
 import {
   setPlaces,
@@ -24,6 +24,10 @@ const usePlace = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const searchParams = decodeURIComponent(search).replace('?search=', '');
+    if (searchParams.length > 2) {
+      dispatch(setSearchText(searchParams))
+    }
     resetPlaces();
     fetchData(0);
   }, []);
@@ -37,10 +41,10 @@ const usePlace = () => {
    * fetch places with two words
    */
   const { loading, error, data, refetch: refetchPlaces } = useQuery(places);
+  const { loading:refineLoading, error:refineErrorData, data:refinePlaceData, refetch: refineSearchPlaces } = useQuery(refinePlaces);
 
   useEffect(() => {
     if (data?.places) {
-      dispatch(setSearchText(decodeURIComponent(search.replace("?search=", ""))))
       // update the data for the pagination
       if (data?.places.meta.pagination.page === 1 && data?.places.data.length > 0) {
         dispatch(setPlaces([...data?.places.data]));
@@ -77,43 +81,36 @@ const usePlace = () => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
-    // console.log('copiedValue', copiedValue)
+
     const searchParams = new URLSearchParams(copiedValue);
-    // console.log(
-    //   "decodeURIComponent",
-    //   decodeURIComponent(searchParams.toString())
-    // );
     const searchWordArray = text.split(" ");
     const obj: any = {
-      // researchValue: copiedValue.researchValue ? copiedValue?.researchValue[0] : "",
-      // tourismValue: copiedValue.tourismValue ? copiedValue?.tourismValue[0] : "",
-      // stateOfConservation: copiedValue.stateOfConservation ? copiedValue?.stateOfConservation[0] : "",
-      // recommendation: copiedValue?.recommendation > 0 ? copiedValue?.recommendation[0] : "",
-      // risk: copiedValue?.risk[0] || "",
-      // period: copiedValue?.period[0] || "",
-      // latitude: copiedValue?.latitude,
-      // longitude: copiedValue?.longitude,
-      // language: Object.keys(copiedValue).length > 0 ? "English" : "",
+      researchValue: copiedValue&&copiedValue?.researchValue ? copiedValue?.researchValue[0] : "",
+      tourismValue: copiedValue&&copiedValue.tourismValue ? copiedValue?.tourismValue[0] : "",
+      stateOfConservation: copiedValue&&copiedValue?.stateOfConservation ? copiedValue?.stateOfConservation[0] : "",
+      recommendation: copiedValue&&copiedValue?.recommendation > 0 ? copiedValue?.recommendation[0] : "",
+      risk: copiedValue&&copiedValue?.risk ? copiedValue?.risk[0]: "",
+      period: copiedValue&&copiedValue?.period ? copiedValue?.period[0] : "",
+      latitude: copiedValue&&copiedValue?.latitude?parseFloat(copiedValue?.latitude):0,
+      longitude: copiedValue&&copiedValue?.longitude?parseFloat(copiedValue?.longitude):0,
+      artifacts: copiedValue&&copiedValue?.artifacts ? copiedValue?.artifacts[0] : "",
+      search_one: searchWordArray[0],
+      search_two: searchWordArray[1],
+      search_three: searchWordArray[2],
+      limit: limit,
+      skip: skip,
     };
-    if (Object.keys(copiedValue).length > 0) {
-      obj.language = "English";
+    if(Object.keys(copiedValue).length !== 0){
+      refineSearchPlaces(obj)
+    }else{
+      refetchPlaces({
+        search_one: searchWordArray[0],
+        search_two: searchWordArray[1],
+        search_three: searchWordArray[2],
+        limit: limit,
+        skip: skip,
+      });
     }
-    // console.log('obj', obj);
-    refetchPlaces({
-      ...obj,
-      search_one: searchWordArray[0],
-      search_two: searchWordArray[1],
-      search_three: searchWordArray[2],
-      limit: limit,
-      skip: skip,
-    });
-    refetchPlaces({
-      search_one: searchWordArray[0],
-      search_two: searchWordArray[1],
-      search_three: searchWordArray[2],
-      limit: limit,
-      skip: skip,
-    });
   };
 
   return {
