@@ -79,6 +79,7 @@ export type ResetPaswordStateInput = {
   confirmPassword: string;
   password: string;
   error: string;
+  success: string;
   isNew: boolean;
   expired: boolean;
 };

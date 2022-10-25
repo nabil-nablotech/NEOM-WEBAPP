@@ -99,6 +99,21 @@ export const SetPassword = () => {
         name: validatorsArray_conf_password, 
         setterName: setValidatorsArray_conf_password
       })
+      if (state.password !== state.confirmPassword) { 
+        setState({
+          ...state,
+          success: '',
+          error: `Both passwords must match`
+        });
+      }else {
+        
+        setState({
+          ...state,
+          error: ``,
+          success: `Both passwords match`
+        });
+      }
+      
     }
   };
 
@@ -160,6 +175,13 @@ export const SetPassword = () => {
               value={state.confirmPassword}
               error={Boolean(state.error)}
               errorText={state.error}
+              success={Boolean(state.success)}
+              successText={state.success}
+              FormHelperTextProps={
+                {
+                  sx: {color: Boolean(state.success) ? 'green' : '',}
+                }
+              }
               onChange={(e) => handleChange(e, "confirmPassword")}
               onBlur={(e) => handleBlur(e, 'confirmPassword')}
               onFocus={e => setFocusedInput("confirmPassword")}

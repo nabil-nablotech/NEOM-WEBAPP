@@ -3,9 +3,11 @@ import Box from "@mui/material/Box";
 import TextField, {TextFieldProps} from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { styled, SxProps } from '@mui/material/styles';
+import { FormHelperTextProps } from "@mui/material";
 
 interface TextInputProps {
   error?: boolean;
+  success?: boolean;
   onClick?: (
     e: React.MouseEvent<HTMLInputElement>
   ) => void;
@@ -23,6 +25,7 @@ interface TextInputProps {
   value?: string | "";
   defaultValue?: string | "";
   errorText?: string | "";
+  successText?: string | "";
   fullWidth?: boolean;
   size?: "small" | "medium";
   type?: string;
@@ -36,6 +39,7 @@ interface TextInputProps {
   required?: boolean,
   autoComplete?: string,
   formControlSx?: SxProps
+  FormHelperTextProps?: FormHelperTextProps
   multiline?: boolean
   minRows?: number
   maxRows?: number
@@ -71,6 +75,8 @@ export default function NTextFields(props: TextInputProps) {
     onBlur,
     onFocus,
     onKeyDown,
+    success, 
+    successText,
     error,
     value,
     label,
@@ -88,6 +94,7 @@ export default function NTextFields(props: TextInputProps) {
     name,
     autoComplete,
     formControlSx,
+    FormHelperTextProps,
     multiline = false,
     ...rest
   } = props;
@@ -111,7 +118,8 @@ export default function NTextFields(props: TextInputProps) {
           onFocus={onFocus}
           onKeyDown={onKeyDown}
           defaultValue={defaultValue}
-          helperText={errorText}
+          helperText={Boolean(success) ? successText : errorText}
+          FormHelperTextProps={FormHelperTextProps}
           type={type}
           placeholder={label}
           multiline={multiline}
