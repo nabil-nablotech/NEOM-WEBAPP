@@ -105,13 +105,13 @@ export const media = gql`
 `;
 
 export const refineMedia = gql`
-  query SearchTitle(
+query SearchTitle(
     $search_one: String
     $search_two: String
     $search_three: String
     $latitude: Float
     $longitude: Float
-    $artifacts: [String]
+    # $artifacts: [String]
     $limit: Int
     $skip: Int
   ) {
@@ -136,9 +136,9 @@ export const refineMedia = gql`
           { keywords: { contains: $search_three } }
         ]
         and: [
-          {	artifacts: { name: {in: $artifacts}}}
-          {	latitude: { eq: $latitude }}
-          {	longitude: { eq: $longitude }}
+          {	latitude: { gte: $latitude }}
+          {	longitude: { lte: $longitude }}
+          { featuredImage:{eq: false}}
           {
             mediaType: {
               or: [

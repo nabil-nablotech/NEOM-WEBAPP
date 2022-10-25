@@ -243,7 +243,7 @@ export const places = gql`
 `;
 
 export const refinePlaces = gql`
-  mutation SearchTitle(
+  query SearchTitle(
     $search_one: String
     $search_two: String
     $search_three: String
@@ -279,8 +279,8 @@ export const refinePlaces = gql`
           { risk: { name: { in: $risk } } }
           { artifacts: { name: { in: $artifacts } } }
           { period: { name: { in: $period } } }
-          { latitude: { containsi: $latitude } }
-          { longitude: { containsi: $longitude } }
+          {	latitude: { gte: $latitude }}
+          {	longitude: { lte: $longitude }}
         ]
       }
     ) {
