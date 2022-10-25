@@ -4,11 +4,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { places, refinePlaces } from "../query/places";
 import { RootState } from "../store";
+import { initialSelectedValue, setSelectedValue } from "../store/reducers/refinedSearchReducer";
 import {
   setPlaces,
   setPlaceMetaData,
   setSearchText
 } from "../store/reducers/searchResultsReducer";
+
 import {limit, getQueryObj} from '../utils/services/helpers';
 
 const usePlace = () => {
@@ -27,6 +29,12 @@ const usePlace = () => {
     const searchData = getQueryObj(search);
     if (searchData) {
       dispatch(setSearchText(searchData.search))
+      if (searchData.refinedSearch) {
+        dispatch(setSelectedValue({
+          ...initialSelectedValue,
+          ...searchData.refinedSearch
+        }))
+      }
     }
     resetPlaces();
     fetchData(0);

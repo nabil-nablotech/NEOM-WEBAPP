@@ -167,9 +167,6 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
         search: searchText
       }))
     });
-    // navigate(`/search-results/${newLabel ? newLabel : "Places"}${searchText ? '?search=' : ''}${searchText}`, {
-    //   replace: true,
-    // });
   };
 
   const handleButtonSubmit = (event: React.SyntheticEvent) => {
@@ -181,7 +178,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     });
     const searchParams: string = encodeURIComponent(JSON.stringify({
       search: searchText,
-      ...copiedValue
+      refinedSearch: {...copiedValue}
     }));
     if (handleSubmit) {
       handleSubmit();

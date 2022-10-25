@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Options } from "../../types/RefinedSeachTypes";
 
-const initialSelectedValue = {
+export const initialSelectedValue = {
   stateOfConservation: [],
   period: [],
   recommendation: [],

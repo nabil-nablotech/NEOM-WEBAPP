@@ -286,16 +286,16 @@ export const refineEvents = gql`
     $search_one: String
     $search_two: String
     $search_three: String
-    $researchValue: String
-    $tourismValue: String
-    $stateOfConservation: String
-    $recommendation: String
-    $risk: String
-    $period: String
-    $assessmentType: String
+    $researchValue: [String]
+    $tourismValue: [String]
+    $stateOfConservation: [String]
+    $recommendation: [String]
+    $risk: [String]
+    $period: [String]
+    $assessmentType: [String]
     $latitude: Float
     $longitude: Float
-    $artifacts: String
+    $artifacts: [String]
     $limit: Int
     $skip: Int
   ) {
@@ -303,64 +303,48 @@ export const refineEvents = gql`
       pagination: { limit: $limit, start: $skip }
       filters: {
         or: [
-          {	stateOfConservation: { name: {containsi: $stateOfConservation}}}
-          {	recommendation: { name: {containsi: $recommendation}}}
-          {	risk: { name: {containsi: $risk}}}
-          {	researchValue: { name: {containsi: $researchValue}}}
-          {	tourismValue: { name: {containsi: $tourismValue}}}
-          { assessmentType: {name: {containsi: $assessmentType}}}
-          {	latitude: { containsi: $latitude }}
-          {	longitude: { containsi: $longitude }}
-          {	period: { name: {containsi: $period}}}
-          {	artifacts: { name: {containsi: $artifacts}}}
-          {	siteType: { name:{containsi: $search_one} }}
-          { siteDescription: { containsi: $search_one } }
-          {	period: { name: {containsi: $search_one}}}
-          { recordingTeam: { containsi: $search_one } }
-          { fieldNarrative: { containsi: $search_one } }
-          { keywords: { containsi: $search_one } }
-          {	siteType: { name:{containsi: $search_two} }}
-          { siteDescription: { containsi: $search_two } }
-          {	period: { name: {containsi: $search_two}}}
-          { recordingTeam: { containsi: $search_two } }
-          { fieldNarrative: { containsi: $search_two } }
-          { keywords: { containsi: $search_two } }
-          {	siteType: { name:{containsi: $search_three} }}
-          { siteDescription: { containsi: $search_three } }
-          {	period: { name: {containsi: $search_three}}}
-          { recordingTeam: { containsi: $search_three } }
-          { fieldNarrative: { containsi: $search_three } }
-          { keywords: { containsi: $search_three } }
           {
             visit_associate: {
-              placeUniqueId: { placeNameEnglish: { containsi: $search_one } }
+              placeUniqueId: { placeNameEnglish: { contains: $search_one } }
             }
           }
           {
             visit_associate: {
-              placeUniqueId: { placeNameEnglish: { containsi: $search_two } }
+              placeUniqueId: { placeNameEnglish: { contains: $search_two } }
             }
           }
           {
             visit_associate: {
-              placeUniqueId: { placeNameEnglish: { containsi: $search_three } }
+              placeUniqueId: { placeNameEnglish: { contains: $search_three } }
             }
           }
           {
             visit_associate: {
-              placeUniqueId: { placeNameArabic: { containsi: $search_one } }
+              placeUniqueId: { placeNameArabic: { contains: $search_one } }
             }
           }
           {
             visit_associate: {
-              placeUniqueId: { placeNameArabic: { containsi: $search_two } }
+              placeUniqueId: { placeNameArabic: { contains: $search_two } }
             }
           }
           {
             visit_associate: {
-              placeUniqueId: { placeNameArabic: { containsi: $search_three } }
+              placeUniqueId: { placeNameArabic: { contains: $search_three } }
             }
           }
+        ]
+        and: [
+          { researchValue: { name: { in: $researchValue } } }
+          { tourismValue: { name: { in: $tourismValue } } }
+          { stateOfConservation: { name: { in: $stateOfConservation } } }
+          { recommendation: { name: { in: $recommendation } } }
+          { risk: { name: { in: $risk } } }
+          { artifacts: { name: { in: $artifacts } } }
+          { period: { name: { in: $period } } }
+          { assessmentType: { name: { in: $assessmentType } } }
+          { latitude: { containsi: $latitude } }
+          { longitude: { containsi: $longitude } }
         ]
       }
     ) {
