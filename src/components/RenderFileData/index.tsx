@@ -4,6 +4,7 @@ import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite
 import styles from './index.module.css';
 import { useState } from "react";
 import ReactPlayer from "react-player";
+import ThreeDIcon from '../../assets/images/icon-3d-model.svg';
 
 /** component created to erender normal image -video - blob based on props */
 const RenderFileData = ({
@@ -57,6 +58,33 @@ const RenderFileData = ({
                                 />
                             </Box>
                         }
+                    </Box>
+                </>
+            }
+            {
+                fileType === '3d' &&
+                <>
+                    <Box component="div" style={{
+                        position: 'relative'
+                    }}>
+                        <Box
+                            className={fileData.className}
+                            component="img"
+                            alt={fileData.alt ? fileData.alt : ''}
+                            src={fileData.thumbNail}
+                        />
+                        <Box
+                            component="img"
+                            src={ThreeDIcon}
+                            sx={{
+                                width: 1 / 4,
+                                height: 1 / 4,
+                            }}
+                            className={`${styles['video-play-icon']}`}
+                            onClick={e => {
+                                e.preventDefault()
+                            }}
+                        />
                     </Box>
                 </>
             }

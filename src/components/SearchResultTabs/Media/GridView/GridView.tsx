@@ -66,6 +66,7 @@ const GridView = (props: MediaProps) => {
                         navigate(`/search-results/Media/${media[index].attributes.uniqueId}`, { replace: true })
                     }}>
                             <Card
+                                itemIndex={index}
                                 img={item.attributes.object.data.attributes.url}
                                 title={item.attributes.media_associate.data.attributes.placeUniqueId?.data !== null ? `${item.attributes.media_associate.data.attributes.placeUniqueId?.data?.attributes?.placeNameEnglish}${item.attributes.media_associate.data.attributes.placeUniqueId?.data?.attributes?.placeNameArabic}` : item.attributes.title}
                                 subTitle={item.attributes.description.substr(0, 40) + '...'}

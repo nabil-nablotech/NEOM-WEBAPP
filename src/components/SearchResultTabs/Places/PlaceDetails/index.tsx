@@ -443,9 +443,10 @@ const PlaceDetailsPage = () => {
                                             fileData={{
                                                 alt: "",
                                                 src: images[2],
+                                                thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
                                                 className: `${styles["single-image"]} ${styles["right-image"]}`
                                             }}
-                                            fileType="image"
+                                            fileType="3d"
                                         />
                                     </Grid>
                                 </Grid>

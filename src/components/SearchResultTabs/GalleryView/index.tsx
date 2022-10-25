@@ -80,17 +80,45 @@ const GalleryView = () => {
                                 dispatch(setActiveMediaItemIndex(inx))
                             }}
                         >
-                            <RenderFileData
-                                fileData={{
-                                    alt: "",
-                                    src: itemObj.attributes.media_associates.data[0].attributes.mediaUniqueId.data.attributes.object.data.attributes.url,
-                                    className: styles['image']
-                                }}
-                                fileType="image"
-                            />
+                            {/* to-do: api based flag to show featured */}
+                            {
+                                inx === 1 ?
+                                    <>
+                                        <RenderFileData
+                                            fileData={{
+                                                src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
+                                                className: `${styles["single-image"]} ${styles["right-image"]}`,
+                                                // thumbnail URL for youtube
+                                                thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg"
+                                            }}
+                                            fileType="video"
+                                        />
+                                    </> :
+                                    inx === 2 ?
+                                        <>
+                                            <RenderFileData
+                                                fileData={{
+                                                    alt: "",
+                                                    // src: images[2],
+                                                    thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
+                                                    className: `${styles["single-image"]} ${styles["right-image"]}`
+                                                }}
+                                                fileType="3d"
+                                            />
+                                        </> :
+                                        <RenderFileData
+                                            fileData={{
+                                                alt: "",
+                                                src: itemObj.attributes.media_associates.data[0].attributes.mediaUniqueId.data.attributes.object.data.attributes.url,
+                                                className: styles['image']
+                                            }}
+                                            fileType="image"
+                                        />
+                            }
                             <Grid container className={`${styles['media-grid-item-options-row']}`}>
                                 <Grid item>
-                                    <Box component="div">
+                                    {/* to-do: api based flag to show featured */}
+                                    {inx === 0 && <Box component="div">
                                         <Grid container className={`${styles['star-icon-box']}`}>
                                             <Grid item>
                                                 <Box
@@ -101,7 +129,7 @@ const GalleryView = () => {
                                             </Grid>
                                             <Grid item>Featured</Grid>
                                         </Grid>
-                                    </Box>
+                                    </Box>}
                                 </Grid>
                                 <Grid item>
                                     <CustomMoreOptionsComponent

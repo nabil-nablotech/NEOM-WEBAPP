@@ -92,6 +92,14 @@
     cursor: pointer;
 }
 
+
+.video-card-parent,
+.three-d-card-parent ,
+div > :has(.video-card-parent),
+div > :has(.three-d-card-parent) {
+    width: 100%;
+}
+
 @media (min-width: 575px) and (max-width: 1025px) {
     .card-item {
         flex-basis: 49% !important;
