@@ -15,7 +15,7 @@ import { Media } from "../../../../types/Media";
 // import {MediaDetailsPage} from '../DetailsPage';
 // import styles from './index.module.css';
 // import CloseIcon from '@mui/icons-material/CloseOutlined';
-import { MediaDetailsModal } from "../DetailsPage";
+import { MediaDetailsModal } from "../MediaDetails";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setActiveMediaItem, setActiveMediaItemIndex } from "../../../../store/reducers/searchResultsReducer";

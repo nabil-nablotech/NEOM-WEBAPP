@@ -27,13 +27,14 @@ import { RootState } from "../../store";
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import RefinedSearchInputs from "../RefinedSearchInputs";
-import { MEDIA_TAB_NAME, PLACES_TAB_NAME, tabIndexBasedOnName } from "../../utils/services/helpers";
-import DetailsPage from "./DetailsPage";
+import { EVENTS_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME, tabIndexBasedOnName } from "../../utils/services/helpers";
 import { useDispatch } from "react-redux";
 import {setSelectedValue} from '../../store/reducers/refinedSearchReducer';
-import { MediaDetailsModal } from "./Media/DetailsPage";
+import { MediaDetailsModal } from "./Media/MediaDetails";
 import GalleryView from './GalleryView/index';
 import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex } from "../../store/reducers/searchResultsReducer";
+import PlaceDetailsPage from "./Places/PlaceDetails";
+import EventDetailsPage from "./Events/EventDetails";
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, className, ...other } = props;
@@ -209,7 +210,16 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
 
       return <>
         <div className={`${styles["search-results-wrapper"]}`}>
-          <DetailsPage />
+          <PlaceDetailsPage />
+        </div>
+      </>
+    }
+
+    if(tabName === EVENTS_TAB_NAME) {
+
+      return <>
+        <div className={`${styles["search-results-wrapper"]}`}>
+          <EventDetailsPage />
         </div>
       </>
     }
