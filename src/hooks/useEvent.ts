@@ -9,7 +9,7 @@ import {
   setEventMetaData,
   setSearchText,
 } from "../store/reducers/searchResultsReducer";
-import {limit} from '../utils/services/helpers';
+import {limit, getQueryObj} from '../utils/services/helpers';
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -25,10 +25,10 @@ const useEvent = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const searchParams = decodeURIComponent(search).replace('?search=', '');
-    if (searchParams.length > 2) {
-      dispatch(setSearchText(searchParams))
-    }
+    // const searchParams = decodeURIComponent(search).replace('?search=', '');
+    // if (searchParams.length > 2) {
+    //   dispatch(setSearchText(searchParams))
+    // }
     resetEvents();
     fetchData(0);
   }, []);
@@ -68,8 +68,9 @@ const useEvent = () => {
   }, [data]);
 
   const fetchData = (skip: number = eventsData.length, local: boolean = false) => {
-    const text = local ? searchText : decodeURIComponent(search.replace("?search=", ""));
-    const searchWordArray = text.split(' ');
+    const searchData = getQueryObj(search);
+    const text = local ? searchText : searchData?.search;
+    const searchWordArray = text?.split(' ') || [];
     const copiedValue = JSON.parse(JSON.stringify(selectedValue));
     Object.keys(copiedValue).map(x => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
@@ -86,9 +87,9 @@ const useEvent = () => {
       longitude: copiedValue&&copiedValue?.longitude?parseFloat(copiedValue?.longitude):0,
       artifacts: copiedValue&&copiedValue?.artifacts ? copiedValue?.artifacts[0] : "",
       assessmentType: copiedValue&&copiedValue?.assessmentType ? copiedValue?.assessmentType[0] : "",
-      search_one: searchWordArray[0],
-      search_two: searchWordArray[1],
-      search_three: searchWordArray[2],
+      search_one: searchWordArray[0] || '',
+      search_two: searchWordArray[1] || '',
+      search_three: searchWordArray[2] || '',
       limit: limit,
       skip: skip,
     };

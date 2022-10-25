@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { library } from "../query/library";
 import { RootState } from '../store';
 import {setLibrary, setLibraryMetaData, setSearchText} from '../store/reducers/searchResultsReducer';
-import {limit} from '../utils/services/helpers';
+import {limit, getQueryObj} from '../utils/services/helpers';
 
 const useLibrary = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
@@ -18,10 +18,10 @@ const useLibrary = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const searchParams = decodeURIComponent(search).replace('?search=', '');
-    if (searchParams.length > 2) {
-      dispatch(setSearchText(searchParams))
-    }
+    // const searchParams = decodeURIComponent(search).replace('?search=', '');
+    // if (searchParams.length > 2) {
+    //   dispatch(setSearchText(searchParams))
+    // }
     resetLib();
     fetchData(0);
   }, []);
@@ -54,8 +54,9 @@ const useLibrary = () => {
   }, [data])
   
   const fetchData = (skip: number = libItem.length, local: boolean = false) => {
-    const text = local ? searchText : decodeURIComponent(search.replace("?search=", ""));
-    const searchWordArray = text.split(' ');
+    const searchData = getQueryObj(search);
+    const text = local ? searchText : searchData?.search;
+    const searchWordArray = text?.split(' ') || [];
     const copiedValue = JSON.parse(JSON.stringify(selectedValue));
     Object.keys(copiedValue).map(x => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}

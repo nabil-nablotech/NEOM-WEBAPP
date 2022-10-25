@@ -69,7 +69,12 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
     if (e.code === 'Enter' && searchText.trim().length >= 3) {
       handleSubmit();
       e.preventDefault();
-      navigate(`/search-results/${tabName}?search=${encodeURIComponent(searchText)}`);
+      navigate({
+        pathname: `/search-results/${tabName}`,
+        search: encodeURIComponent(JSON.stringify({
+          search: searchText
+        }))
+      });
     }
   };
 

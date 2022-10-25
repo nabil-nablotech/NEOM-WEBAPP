@@ -9,7 +9,7 @@ import {
   setPlaceMetaData,
   setSearchText
 } from "../store/reducers/searchResultsReducer";
-import {limit} from '../utils/services/helpers';
+import {limit, getQueryObj} from '../utils/services/helpers';
 
 const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -24,9 +24,9 @@ const usePlace = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const searchParams = decodeURIComponent(search).replace('?search=', '');
-    if (searchParams.length > 2) {
-      dispatch(setSearchText(searchParams))
+    const searchData = getQueryObj(search);
+    if (searchData) {
+      dispatch(setSearchText(searchData.search))
     }
     resetPlaces();
     fetchData(0);
@@ -75,15 +75,16 @@ const usePlace = () => {
   }, [data]);
 
   const fetchData = (skip: number = placeData.length, local: boolean = false) => {
-    const text = local ? searchText : decodeURIComponent(search.replace("?search=", ""));
+    const searchData = getQueryObj(search);
+    const text = local ? searchText : searchData?.search;
     const copiedValue = JSON.parse(JSON.stringify(selectedValue));
     Object.keys(copiedValue).map(x => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
 
-    const searchParams = new URLSearchParams(copiedValue);
-    const searchWordArray = text.split(" ");
+    // const searchParams = new URLSearchParams(copiedValue);
+    const searchWordArray = text?.split(" ") || [];
     const obj: any = {
       researchValue: copiedValue&&copiedValue?.researchValue ? copiedValue?.researchValue[0] : "",
       tourismValue: copiedValue&&copiedValue.tourismValue ? copiedValue?.tourismValue[0] : "",
@@ -94,9 +95,9 @@ const usePlace = () => {
       latitude: copiedValue&&copiedValue?.latitude?parseFloat(copiedValue?.latitude):0,
       longitude: copiedValue&&copiedValue?.longitude?parseFloat(copiedValue?.longitude):0,
       artifacts: copiedValue&&copiedValue?.artifacts ? copiedValue?.artifacts[0] : "",
-      search_one: searchWordArray[0],
-      search_two: searchWordArray[1],
-      search_three: searchWordArray[2],
+      search_one: searchWordArray[0] || '',
+      search_two: searchWordArray[1] || '',
+      search_three: searchWordArray[2] || '',
       limit: limit,
       skip: skip,
     };

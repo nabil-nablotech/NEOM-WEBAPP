@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { media } from "../query/search";
 import { RootState } from '../store';
 import {setMedia, setMediaMetaData, setSearchText} from '../store/reducers/searchResultsReducer'
-import {limit} from '../utils/services/helpers';
+import {limit, getQueryObj} from '../utils/services/helpers';
 
 const useMedia = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
@@ -14,12 +14,14 @@ const useMedia = () => {
   const {search} = useLocation();
   const dispatch = useDispatch();
 
+  
+
   useEffect(() => {
-    const searchParams = decodeURIComponent(search).replace('?search=', '');
+    // const searchParams = decodeURIComponent(search).replace('?search=', '');
     
-    if (searchParams.length > 2) {
-      dispatch(setSearchText(searchParams))
-    }
+    // if (searchParams.length > 2) {
+    //   dispatch(setSearchText(searchParams))
+    // }
     resetMedia();
     fetchData(0);
   }, []);
@@ -51,8 +53,9 @@ const useMedia = () => {
   }, [data]);
 
   const fetchData = (skip: number = mediaItem.length, local: boolean = false) => {
-    const text = local ? searchText : decodeURIComponent(search.replace("?search=", ""));
-    const searchWordArray = text.split(' ');
+    const searchData = getQueryObj(search);
+    const text = local ? searchText : searchData?.search;
+    const searchWordArray = text?.split(' ') || [];
     refetchMediaItems({ search_one: searchWordArray[0], search_two: searchWordArray[1], search_three: searchWordArray[2], limit: limit, skip: skip });
   };
  

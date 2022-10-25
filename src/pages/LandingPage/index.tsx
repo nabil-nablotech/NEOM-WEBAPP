@@ -83,7 +83,12 @@ function LandingPage() {
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.code === 'Enter' && searchText.trim().length >= 3) {
-      navigate(`search-results/Places?search=${encodeURIComponent(searchText)}`);
+      navigate({
+        pathname: `/search-results/Places`,
+        search: encodeURIComponent(JSON.stringify({
+          search: searchText
+        }))
+      });
     }
   };
 

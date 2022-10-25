@@ -280,3 +280,11 @@ export function formatBytes(bytes: number, decimals = 2) {
 
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
 }
+
+export const getQueryObj = (search: string) => {
+  const searchParams = decodeURIComponent(search).replace('?', '');
+  if (Boolean(searchParams)) {
+    return JSON.parse(searchParams);
+  }
+  return null
+}

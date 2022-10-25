@@ -161,9 +161,15 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     dispatch(setActiveMediaItem(null))
     dispatch(setActiveMediaItemIndex(0))
 
-    navigate(`/search-results/${newLabel ? newLabel : "Places"}${searchText ? '?search=' : ''}${searchText}`, {
-      replace: true,
+    navigate({
+      pathname: `/search-results/${tabName}`,
+      search: encodeURIComponent(JSON.stringify({
+        search: searchText
+      }))
     });
+    // navigate(`/search-results/${newLabel ? newLabel : "Places"}${searchText ? '?search=' : ''}${searchText}`, {
+    //   replace: true,
+    // });
   };
 
   const handleButtonSubmit = (event: React.SyntheticEvent) => {
@@ -180,7 +186,6 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     if (handleSubmit) {
       handleSubmit();
     }
-    // navigate(`/search-results/${tabName}${searchText ? '?search=' : ''}${searchText}?${searchParams}`, {
     navigate({
       pathname: `/search-results/${tabName}`,
       search: searchParams

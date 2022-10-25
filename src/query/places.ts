@@ -262,7 +262,7 @@ query SearchTitle(
   places(
     pagination: { limit: $limit, start: $skip }
     filters: {
-          or: [
+          and: [
             {	stateOfConservation: { name: {containsi: $stateOfConservation}}}
             {	recommendation: { name: {containsi: $recommendation}}}
             {	risk: { name: {containsi: $risk}}}
