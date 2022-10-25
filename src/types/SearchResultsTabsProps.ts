@@ -64,7 +64,7 @@ export type SearchResultsState2 = {
 };
 
 export type FileDataType = {
-  src: string;
+  src?: string;
   alt?: string;
   className: string;
   thumbNail?: string;
