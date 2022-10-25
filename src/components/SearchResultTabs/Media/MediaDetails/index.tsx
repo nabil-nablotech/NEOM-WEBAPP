@@ -82,19 +82,19 @@ const MediaDetailsPage = ({
     useEffect(() => {
         /** To-do: make this flag based on a api variable */
         // setMediaType("image")
-        setMediaType("video")
-        // setMediaType("3d")
+        // setMediaType("video")
+        setMediaType("3d")
     },[])
 
     return <>
-        <Box className={`${styles['details-page-wrapper']}`}>
-            <Box className={`${styles['img-wrapper']}`} >
-                <Box className={`${styles['arrow-icon']} ${styles['arrow-prev']}`}
+        <Box component="div" className={`${styles['details-page-wrapper']}`}>
+            <Box component="div" className={`${styles['img-wrapper']}`} >
+                <Box component="div" className={`${styles['arrow-icon']} ${styles['arrow-prev']}`}
                     onClick={e => handleNextOrPrevious(e, 'previous')}
                 >
                     <ArrowBackIosNewIcon className={`${styles['']}`} sx={{ color: '#fff' }} />
                 </Box>
-                <Box className={`${styles['arrow-icon']} ${styles['arrow-next']}`}
+                <Box component="div" className={`${styles['arrow-icon']} ${styles['arrow-next']}`}
                     onClick={e => handleNextOrPrevious(e, 'next')}
                 >
                     <ArrowForwardIosIcon className={`${styles['']}`} sx={{ color: '#fff' }} />
@@ -118,24 +118,15 @@ const MediaDetailsPage = ({
                         fileType="video"
                     />
                 }
-                {/* static embedded */}
                 {
                     mediaType === '3d' &&
-                    // <RenderFileData
-                    //     fileData={{
-                    //         src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
-                    //         className: `${styles["single-image"]}`,
-                    //         thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
-                    //         isOpened: true
-                    //     }}
-                    //     fileType="video"
-                    // />
-
-                    <ModelViewer
-                    />
+                    <Box component="div" className={`${styles['threeD-model-wrapper']}`}>
+                        <ModelViewer
+                        />
+                    </Box>
                 }
             </Box>
-            <Box className={`${styles['desc']}`} >
+            <Box component="div" className={`${styles['desc']}`} >
                 {
                     mediaType === 'image' &&
                     <Grid container className={`${styles['bottom-desc-main-grid']}`}>
@@ -145,18 +136,18 @@ const MediaDetailsPage = ({
                             <Grid item sm={12} >
                                 <Grid container style={{ gap: '2em', alignItems: 'center' }}>
                                     <Grid item>
-                                        <Box className={`${styles['overview-title']}`}>Overview of Site
+                                        <Box component="div" className={`${styles['overview-title']}`}>Overview of Site
                                         </Box>
                                     </Grid>
                                     <Grid item>
-                                        <Box>
-                                            <Box className={`${styles['star-icon-box']}`}>
+                                        <Box component="div">
+                                            <Box component="div" className={`${styles['star-icon-box']}`}>
                                                 <Box
                                                     component="img"
                                                     alt={""}
                                                     src={YellowStar}
                                                 ></Box>
-                                                <Box>Featured</Box>
+                                                <Box component="div">Featured</Box>
                                             </Box>
                                         </Box>
                                     </Grid>
@@ -179,25 +170,25 @@ const MediaDetailsPage = ({
                         </Grid>
                         <Grid container >
                             <Grid item lg={6} md={6} sm={5}>
-                                <Box className={`${styles[`bottom-grid`]}`} >
+                                <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                     <p>Details</p>
                                     <div>Unit Number: 12345</div>
                                     <div>Type: Artifact</div>
                                     <div>Bearing: Detail</div>
                                 </Box>
-                                <Box className={`${styles[`bottom-grid`]}`} >
+                                <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                     <p>Recorded</p>
                                     <div>Date: 08/04/2022 7:41:10 AM</div>
                                     <div>By: Harland Ash</div>
                                 </Box>
-                                <Box className={`${styles[`bottom-grid`]}`} >
+                                <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                     <p>Metadata</p>
                                     <div>Size: 10MB</div>
                                     <div>Date: 08/04/2022</div>
                                     <div>Dimensions: 1024x768</div>
                                     <div>Extensions: png</div>
                                 </Box>
-                                <Box className={`${styles[`bottom-grid`]}`} >
+                                <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                     <p>Assiciations</p>
                                     <div>Al-Muwaylih بئر فُحَيْماَن</div>
                                 </Box>
@@ -224,7 +215,7 @@ const MediaDetailsPage = ({
                 }
                 {
                     mediaType === 'video' &&
-                    <Box className={`${styles[`line-height-1dot5`]}`}>
+                    <Box component="div" className={`${styles[`line-height-1dot5`]}`}>
                         <Grid container className={`${styles[`video-title-grid`]}`} style={{
                             alignItems: 'start'
                         }}>
@@ -240,26 +231,72 @@ const MediaDetailsPage = ({
                                 />
                             </Grid>
                         </Grid>
-                        <Box className={`${styles[`video-desc`]}`}>
+                        <Box component="div" className={`${styles[`video-desc`]}`}>
                             This panel not only contains a rich assortment of unique medicine bags, but an intricate eagle is depicted to the left of center here at Little Petroglyph Canyon in California.
                         </Box>
-                        <Box>
-                            <Box className={`${styles[`bottom-grid`]}`} >
+                        <Box component="div">
+                            <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                 <p>Details</p>
                                 <div className={`${styles[`video-info-grid`]}`}>
-                                    <Box>URL:</Box>
+                                    <Box component="div">URL:</Box>
                                     <Box component={"a"} href="#" className={`${styles['anchor']}`}>
                                         https://sketchfab.com/3d-models/medicine-bag-panel-2-8037cae6290b4e5284a92c23a99c9499
                                     </Box>
                                 </div>
                                 <div className={`${styles[`video-info-grid`]}`}>
-                                    <Box>Citation:</Box>
-                                    <Box>
+                                    <Box component="div">Citation:</Box>
+                                    <Box component="div">
                                         PaleoWest - Medicine Bag Panel 2
                                     </Box>
                                 </div>
                             </Box>
-                            <Box className={`${styles[`bottom-grid`]}`} >
+                            <Box component="div" className={`${styles[`bottom-grid`]}`} >
+                                <p>Associations</p>
+                                <div>Al-Muwaylih بئر فُحَيْماَن</div>
+                                <div>Al-Muwaylih بئر فُحَيْماَن Visit 2</div>
+                                <div>Aynuna لوكِي كٌومي</div>
+                            </Box>
+                        </Box>
+                    </Box>
+                }
+                {
+                    mediaType === '3d' &&
+                    <Box component="div" className={`${styles[`line-height-1dot5`]}`}>
+                        <Grid container className={`${styles[`three-d-model-title-grid`]}`} style={{
+                            alignItems: 'start'
+                        }}>
+                            <Grid item sm={9} className={`${styles[`three-d-model-title`]}`}>
+                                Roadside 3d model
+                            </Grid>
+                            <Grid item sm={1} className={`${styles['more-icon-grid-item']}`} style={{
+                                marginLeft: 'auto'
+                            }}>
+                                <CustomMoreOptionsComponent
+                                    moreIconClassName={`${styles['more-icon']}`}
+                                    menuActions={menuItems}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Box component="div" className={`${styles[`three-d-modeldesc`]}`}>
+                            This panel not only contains a rich assortment of unique medicine bags, but an intricate eagle is depicted to the left of center here at Little Petroglyph Canyon in California.
+                        </Box>
+                        <Box component="div">
+                            <Box component="div" className={`${styles[`bottom-grid`]}`} >
+                                <p>Details</p>
+                                <div className={`${styles[`three-d-modelinfo-grid`]}`}>
+                                    <Box component="div">URL:</Box>
+                                    <Box component={"a"} href="#" className={`${styles['anchor']}`}>
+                                        https://sketchfab.com/3d-models/medicine-bag-panel-2-8037cae6290b4e5284a92c23a99c9499
+                                    </Box>
+                                </div>
+                                <div className={`${styles[`three-d-modelinfo-grid`]}`}>
+                                    <Box component="div">Citation:</Box>
+                                    <Box component="div">
+                                        PaleoWest - Medicine Bag Panel 2
+                                    </Box>
+                                </div>
+                            </Box>
+                            <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                 <p>Associations</p>
                                 <div>Al-Muwaylih بئر فُحَيْماَن</div>
                                 <div>Al-Muwaylih بئر فُحَيْماَن Visit 2</div>

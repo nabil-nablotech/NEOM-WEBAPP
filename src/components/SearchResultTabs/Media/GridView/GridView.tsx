@@ -38,7 +38,7 @@ const GridView = (props: MediaProps) => {
     );
 
     return (
-        <Box className={`${gridStyles['left-grid-box']}`}
+        <Box component="div" className={`${gridStyles['left-grid-box']}`}
         >
             {/* to-do: infinite scroll based on data length */}
              <InfiniteScroll

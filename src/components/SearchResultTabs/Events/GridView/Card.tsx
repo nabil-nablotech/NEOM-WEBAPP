@@ -16,7 +16,7 @@ export const Card = ({
 }: GridViewCard_Events) => {
   return (
     <>
-      <Box className={`${gridStyles["card-container"]}`}>
+      <Box component="div" className={`${gridStyles["card-container"]}`}>
         <Grid container spacing={1} className={`${gridStyles["card-grid"]}`}>
           <Grid
             item

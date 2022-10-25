@@ -41,7 +41,7 @@ const CustomModal_ = ({
                     }
                 </Toolbar>
             </AppBar>
-            <Box className={`${modalStyles['content']}`} sx={{
+            <Box component="div" className={`${modalStyles['content']}`} sx={{
                 background: 'rgba(19, 16, 13, 0.9)'
             }}>
                 {children}

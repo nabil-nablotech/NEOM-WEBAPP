@@ -241,7 +241,7 @@ const ListView = (props: PlacesProps) => {
     }, []);
 
     return (
-        <Box id={'places-list-parent'}>
+        <Box component="div" id={'places-list-parent'}>
             <InfiniteScroll
                 dataLength={data.length} //This is important field to render the next data
                 next={() => fetchData()}

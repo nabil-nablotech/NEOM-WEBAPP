@@ -62,11 +62,15 @@
 
 .bottom-grid,
 .video-title-grid ,
-.video-desc {
+.video-desc,
+.three-d-model-title-grid ,
+.three-d-model-desc,
+.threeD-model-wrapper {
     margin-bottom: 1em;
 }
 
-.video-title {
+.video-title ,
+.three-d-model-title {
     font-size: 25px;
     line-height: 1.2;
 }
@@ -80,7 +84,8 @@
     line-height: 1.2;
 }
 
-.video-info-grid {
+.video-info-grid ,
+.three-d-model-info-grid {
     display: flex;
     align-items: center;
     gap: 4px;

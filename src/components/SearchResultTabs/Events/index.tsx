@@ -38,10 +38,10 @@ const PlacesTab = () => {
     }
 
     return (
-        <Box className={`${styles['main-tab-content']}`}>
-            <Box className={`${styles['utility-bar']}`}>
-                <Box>{meta?.pagination?.total} Total Events</Box>
-                <Box>
+        <Box component="div" className={`${styles['main-tab-content']}`}>
+            <Box component="div" className={`${styles['utility-bar']}`}>
+                <Box component="div">{meta?.pagination?.total} Total Events</Box>
+                <Box component="div">
                 <Button
                     colors={["transparent", "var(--table-black-text)", "var(--table-black-text)"]}
                     className={`${styles["export-btn"]}`}

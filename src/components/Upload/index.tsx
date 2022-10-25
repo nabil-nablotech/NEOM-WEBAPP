@@ -60,7 +60,7 @@ const CustomUpload_basic = ({
     const uploadButton = (
         <div>
             {loading ? <LoadingOutlined /> : <PlusOutlined />}
-            <Box>
+            <Box component="div">
 
             </Box>
             <div style={{ marginTop: 8 }}>{title}</div>

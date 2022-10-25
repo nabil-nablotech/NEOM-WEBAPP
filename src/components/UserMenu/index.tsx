@@ -86,7 +86,7 @@ function UserMenuComponent() {
 
   return (
     <>
-      <Box sx={{
+      <Box component="div" sx={{
         display: 'flex',
         justifyContent: 'center',
         gap: '0.5em',

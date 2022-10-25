@@ -25,7 +25,7 @@ const RenderFileData = ({
             {
                 fileType === 'video' &&
                 <>
-                    <Box style={{
+                    <Box component="div" style={{
                         position: 'relative'
                     }}>
                         {!fileData.isOpened ? <>
@@ -47,7 +47,7 @@ const RenderFileData = ({
                                 }}
                             />
                         </> :
-                            <Box className={`${styles['video-player-box']}`}>
+                            <Box component="div" className={`${styles['video-player-box']}`}>
                                 <ReactPlayer
                                     width="100%" height="auto"
                                     playing={fileData.isOpened} url={fileData.src}
