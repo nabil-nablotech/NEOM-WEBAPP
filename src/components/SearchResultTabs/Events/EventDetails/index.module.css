@@ -249,6 +249,9 @@
     .media-grid {
         margin-top: 1em;
     }
+    .table-row {
+        gap: 4px;
+    }
 
     .media-grid-item {
         flex-basis: 29vw !important;

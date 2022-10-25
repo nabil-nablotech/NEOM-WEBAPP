@@ -518,7 +518,7 @@ const EventDetailsPage = () => {
                                         <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Tourism Value
                                         </Grid>
-                                        <Grid item sm={9} md={8} className={`${styles['table-parameter-value']}`}>
+                                        <Grid item sm={8} md={7} className={`${styles['table-parameter-value']}`}>
                                             Local - Only of local interest, although could provide the basis for an overnight stop
                                         </Grid>
                                     </Grid>
