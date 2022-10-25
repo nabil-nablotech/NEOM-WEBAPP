@@ -11,6 +11,7 @@ interface IHeader {
   showRefinedSearch?: boolean
   screen?: string
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
+  handleClearSearchText?: () => void
 }
 
 const Header = (props: IHeader) => {
@@ -18,7 +19,8 @@ const Header = (props: IHeader) => {
   const {
     showSearch = false,
     screen,
-    onKeyDown
+    onKeyDown,
+    handleClearSearchText
   } = props
   const navigate = useNavigate();
 
@@ -44,6 +46,7 @@ const Header = (props: IHeader) => {
               showSearch &&
               <CustomSearchField
                 onKeyDown={onKeyDown}
+                handleClearSearchText={handleClearSearchText}
                 className={`${styles["header-search"]}`}
               />
             }

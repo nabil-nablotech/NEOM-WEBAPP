@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -45,7 +45,7 @@ const useEvent = () => {
    * fetch places with two words
    */
   const { loading, error, data, refetch: refetchEvents } = useQuery(events);
-  const { loading:refineLoading, error:refineErrorData, data:refineEventData, refetch: refineSearchEvents } = useQuery(refineEvents);
+  const[refineSearchEvents, { loading:refineLoading, error:refineErrorData, data:refineEventData}] = useMutation(refineEvents);
 
   useEffect(() => {
     if (data?.visits) {

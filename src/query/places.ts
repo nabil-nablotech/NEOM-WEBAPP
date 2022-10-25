@@ -243,7 +243,7 @@ export const places = gql`
 `;
 
 export const refinePlaces = gql`
-  query SearchTitle(
+  mutation SearchTitle(
     $search_one: String
     $search_two: String
     $search_three: String

@@ -38,7 +38,7 @@ const GridView = (props: PlacesProps) => {
         
         loader={loading ? <h4>Loading...</h4>: null}
         endMessage={
-          <p style={{ textAlign: "center" }}>
+          <p style={{ textAlign: "center", marginTop: 5 }}>
             <b>END OF RESULTS</b>
           </p>
         }
