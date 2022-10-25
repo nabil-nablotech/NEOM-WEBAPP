@@ -157,3 +157,54 @@
 .remarks-section .heading-title {
     margin-bottom: 3em;
 }
+
+
+@media (min-width: 575px) and (max-width: 1025px) {
+    .item-name ,
+    .item-name-arabic,
+    .item-number {
+        font-size: 3vw;
+    }
+
+    .details-section-main-grid {
+        max-width: 94vw;
+    }
+
+    .heading-title {
+        margin-top: 4vw;
+        margin-bottom: 1vw;
+    }
+    
+
+    .heading-title> div:nth-child(1) {
+        font-size: 3vw;
+    }
+    .heading-title> div:nth-child(2) {
+        font-size: 2vw;
+    }
+
+    .site-desc {
+        font-size: 2.1vw;
+        line-height: 1.2;
+        margin-bottom: 2em;
+        letter-spacing: 0.5px;
+    }
+
+    .section-left {
+        padding-right: 0;
+    }
+
+    .details-section {
+        font-size: 2vw;
+    }
+
+    .table-parameter,
+    .table-parameter-value {
+        line-height: 1.3;
+    }
+
+    .remarks-section .heading-title {
+        margin-bottom: 4vw;
+    }
+
+}
