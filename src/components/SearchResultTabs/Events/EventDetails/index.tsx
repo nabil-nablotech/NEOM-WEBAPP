@@ -28,6 +28,7 @@ import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setAct
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
 import YellowStar from '../../../../assets/images/searchResults/YellowStar.svg'
+import { useMediaQuery } from 'react-responsive'
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -122,7 +123,13 @@ const EventDetailsPage = () => {
     const { data } = useSelector((state: RootState) => state.login);
     const [mediaGridActiveItems, setMediaGridActiveItems] = useState<number>(0)
 
-    const mediaList = mediaGridActiveItems + 8 <= places.length ? places.slice(0, mediaGridActiveItems + 8) :
+    let mediaCount = 8
+    const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
+    if(isTablet) {
+        mediaCount = 6
+    }
+
+    const mediaList = mediaGridActiveItems + mediaCount <= places.length ? places.slice(0, mediaGridActiveItems + mediaCount) :
         places.slice(
             0,
             mediaGridActiveItems + (places.length - mediaGridActiveItems)
@@ -619,7 +626,7 @@ const EventDetailsPage = () => {
                             <Grid container className={`${styles['media-grid']}`}>
                                 {
                                     mediaList && mediaList.map((itemObj, inx) => (
-                                        <Grid item lg={3} md={3} sm={3} key={inx} className={`${styles['media-grid-item']}`}
+                                        <Grid item lg={3} md={4} sm={4} key={inx} className={`${styles['media-grid-item']}`}
                                             onClick={e => {
                                                 dispatch(setActiveMediaItem(media[inx]))
                                                 dispatch(setActiveMediaItemIndex(inx))
