@@ -19,7 +19,7 @@ import useMedia from '../../../hooks/useMedia';
 import { Meta } from '../../../types/Place';
 
 const MediaTab = () => {
-    const { selectedCardIndex, media, mediaMetaData } = useSelector(
+    const { selectedCardIndex, media, mediaMetaData, totalCounts } = useSelector(
         (state: RootState) => state.searchResults
       );
       const [img, setimg] = useState(MapImg1);
@@ -37,7 +37,7 @@ const MediaTab = () => {
     return (
         <Box component="div" className={`${styles['main-tab-content']}`}>
             <Box component="div" className={`${styles['utility-bar']}`}>
-                <Box component="div">{meta?.pagination?.total} Total Places</Box>
+                <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.media} Total Media Items</Box>
                 <Box component="div">
                 <Button
                     colors={["transparent", "var(--table-black-text)", "var(--table-black-text)"]}

@@ -4,7 +4,7 @@ import { fetchMeUser } from "../api/user";
 import { setUser } from "../store/reducers/loginReducers";
 import {getToken, setRole} from '../utils/storage/storage';
 import { fetchSearchCount } from '../api/dashboard';
-import { setTotalCounts, setSearchText } from "../store/reducers/searchResultsReducer";
+import { setTotalCounts } from "../store/reducers/searchResultsReducer";
 
 const useAuth = () => {
   const dispatch = useDispatch();

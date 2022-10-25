@@ -299,7 +299,7 @@ const MediaInputs = ({
                 <Grid item sm={6}>
                   <TextInput
                     className={`${styles["latitude"]}`}
-                    label="Latitude1"
+                    label="Latitude"
                     name="latitude"
                     type="number"
                     value={selectedValue.latitude}
@@ -313,7 +313,7 @@ const MediaInputs = ({
                 <Grid item sm={6}>
                   <TextInput
                     className={`${styles["longitude"]}`}
-                    label="Longitude1"
+                    label="Longitude"
                     name="longitude"
                     type="number"
                     value={selectedValue.longitude}

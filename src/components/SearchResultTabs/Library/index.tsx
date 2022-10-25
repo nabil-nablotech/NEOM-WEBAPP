@@ -21,7 +21,7 @@ import { Typography } from "@mui/material";
 let viewWidths = ["20vw", "20vw", "20vw", "20vw", "5vw"];
 
 const LibraryTab = () => {
-  const { selectedCardIndex, library, places, searchText, libararyMetaData } =
+  const { selectedCardIndex, library, places, totalCounts, libararyMetaData } =
     useSelector((state: RootState) => state.searchResults);
 
   const { fetchLibraryItems, hasMoreData, loading } = useLibrary();
@@ -144,7 +144,8 @@ const LibraryTab = () => {
   return (
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
-        <Box component="div">{meta?.pagination?.total} Total Library Items</Box>
+        
+        <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.library} Total Library Items</Box>
         <Box component="div">
           <Button
             colors={[
