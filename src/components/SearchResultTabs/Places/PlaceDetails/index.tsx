@@ -1,34 +1,32 @@
 import { useEffect, useState } from "react";
 import { Box, Button, Grid } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { tabNameProps } from "../../../types/SearchResultsTabsProps";
+import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import styles from './index.module.css'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useSelector } from "react-redux";
-import { RootState } from "../../../store";
-import RenderFileData from "../../RenderFileData";
-import { Place } from "../../../types/Place";
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import MenuList from "../../MenuList";
-import { useAnchor } from "../../../hooks/useAnchor";
-import { StyledAntTable } from "../../StyledAntTable";
+import { RootState } from "../../../../store";
+import RenderFileData from "../../../RenderFileData";
+import { Place } from "../../../../types/Place";
+import { useAnchor } from "../../../../hooks/useAnchor";
+import { StyledAntTable } from "../../../StyledAntTable";
 import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
-import { MoreOptionsComponent } from "../Media/ListView/MoreOption";
-import { antTablePaginationCss, copyToClipboard, formatWebDate, stringAvatar } from "../../../utils/services/helpers";
+import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
+import { antTablePaginationCss, copyToClipboard, formatWebDate, stringAvatar } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
-import { Media } from "../../../types/Media";
+import { Media } from "../../../../types/Media";
 import styled from "styled-components";
 import { format } from "date-fns";
-import useMedia from "../../../hooks/useMedia";
-import CommentsSection from "../../CommentsSection";
-import RenderInitials from "../../RenderInitials";
+import useMedia from "../../../../hooks/useMedia";
+import CommentsSection from "../../../CommentsSection";
+import RenderInitials from "../../../RenderInitials";
 import { useDispatch } from "react-redux";
-import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../store/reducers/searchResultsReducer";
-import { CustomMoreOptionsComponent } from "../../CustomMoreOptionsComponent";
-import PositionedSnackbar from "../../Snackbar";
+import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../../store/reducers/searchResultsReducer";
+import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
+import PositionedSnackbar from "../../../Snackbar";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -109,7 +107,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
     }
     ${antTablePaginationCss}
 ` 
-const DetailsPage = () => {
+const PlaceDetailsPage = () => {
     let { tabName, itemId } = useParams<{ tabName?: tabNameProps, itemId: string }>();
     const navigate = useNavigate();
 
@@ -484,6 +482,8 @@ const DetailsPage = () => {
                     <Box className={`${styles['title-section']}`}>
                         <Grid container className={`${styles['title-section-grid']}`}>
                             <Grid item className={`${styles['title-section-left-item']}`}>
+                                {/* to-do:  Make these true && dependent on incoming API variable.
+                                If it exists, render the jsx */}
                                 {true && <Grid container>
                                     <Grid item>
                                         <Box className={`${styles['item-name']}`}>
@@ -698,6 +698,15 @@ const DetailsPage = () => {
                                 style={{
                                     background: "transparent",
                                 }}
+                                onRow={(record: any, rowIndex: number | undefined) => {
+                                    return {
+                                      onClick: (event) => {
+                                        if (typeof rowIndex === "number") {
+                                            navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
+                                        }
+                                      },
+                                    };
+                                  }}
                             ></StyledTableWrapper>
                         </Box>
                     </Box>
@@ -715,4 +724,4 @@ const DetailsPage = () => {
     );
 }
 
-export default DetailsPage;
+export default PlaceDetailsPage;

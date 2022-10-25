@@ -14,6 +14,7 @@ import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsRe
 import {Card} from './Card';
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 export type EventsProps = {
   data: Event[];
@@ -25,6 +26,7 @@ export type EventsProps = {
 const GridView = (props: EventsProps) => {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const {data, handleNext, hasMoreData, loading} = props;
 
@@ -61,6 +63,7 @@ const GridView = (props: EventsProps) => {
                         data?.map((item: Event, index: number) => 
                             <Grid item key={index} sm={12} className={`${gridStyles['']}`} onClick={() => {
                                 dispatch(setSelectedCardIndex(index))
+                                navigate(`/search-results/Events/${item.attributes.uniqueId}`, {replace: true})
                             }}>
                                 <Card
                                     key={index}
