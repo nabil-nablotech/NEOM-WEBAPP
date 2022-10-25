@@ -13,6 +13,7 @@ const useSetPassword = () => {
     confirmPassword: "",
     password: "",
     error: '',
+    success: '',
     isNew: false,
     expired: false
   });
