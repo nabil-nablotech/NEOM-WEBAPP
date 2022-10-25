@@ -16,7 +16,7 @@ import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setActiveMediaItemIndex, setActiveMediaItem } from '../../../../store/reducers/searchResultsReducer';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import RenderFileData from '../../../RenderFileData';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
 import ModelViewer from '../../../Model';
@@ -219,6 +219,7 @@ export const MediaDetailsModal = () => {
     const { media, activeMediaItem, activeMediaItemIndex } = useSelector(
         (state: RootState) => state.searchResults
     )
+    const location = useLocation()
 
     const navigate = useNavigate()
     const dispatch = useDispatch();
@@ -231,8 +232,10 @@ export const MediaDetailsModal = () => {
         setModalOpen(false)
         dispatch(setActiveMediaItem(null))
         dispatch(setActiveMediaItemIndex(0))
-        navigate(`/search-results/Media`, { replace: true })
+        navigate(`/search-results/Media`, { replace: true, state: null })
     }
+
+    const showVisitCount = (location.state && location.state.from === 'events')  && activeMediaItem 
 
     return <>
         <CustomModal
@@ -247,7 +250,9 @@ export const MediaDetailsModal = () => {
                     }}
                 >
                     <Grid item sm={6}>
-                        {activeMediaItem.attributes.title.substring(0, 30)}
+                        {activeMediaItem.attributes.title.substring(0, 30)} {
+                            showVisitCount ? '- static count 1' : ''
+                        }
                     </Grid>
                     <Grid
                         item

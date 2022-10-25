@@ -630,6 +630,7 @@ const EventDetailsPage = () => {
                                             onClick={e => {
                                                 dispatch(setActiveMediaItem(media[inx]))
                                                 dispatch(setActiveMediaItemIndex(inx))
+                                                navigate(`/search-results/Media/${media[inx].attributes.uniqueId}`, { replace: true, state: {from: 'events'} })
                                             }}
                                         >
                                             <RenderFileData
