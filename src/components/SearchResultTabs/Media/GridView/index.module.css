@@ -92,6 +92,7 @@
     cursor: pointer;
 }
 
+
 .video-card-parent,
 .three-d-card-parent ,
 div > :has(.video-card-parent),
