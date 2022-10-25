@@ -86,6 +86,7 @@ const MediaDetailsPage = ({
         setMediaType("3d")
     },[])
 
+
     return <>
         <Box component="div" className={`${styles['details-page-wrapper']}`}>
             <Box component="div" className={`${styles['img-wrapper']}`} >
@@ -100,14 +101,14 @@ const MediaDetailsPage = ({
                     <ArrowForwardIosIcon className={`${styles['']}`} sx={{ color: '#fff' }} />
                 </Box>
 
-                {/* actual content */}
+                {/* to-do: api parameter based conditions */}
                 {
-                    mediaType === 'image' &&
+                    activeMediaItemIndex === 0 &&
                     <Box className={`${styles['image']}`} component="img" alt={""} src={currentRecord.thumbnailUrl} />
                 }
                 {/* static video */}
                 {
-                    mediaType === 'video' &&
+                    activeMediaItemIndex === 1 &&
                     <RenderFileData
                         fileData={{
                             src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
@@ -119,7 +120,7 @@ const MediaDetailsPage = ({
                     />
                 }
                 {
-                    mediaType === '3d' &&
+                    activeMediaItemIndex === 2 &&
                     <Box component="div" className={`${styles['threeD-model-wrapper']}`}>
                         <ModelViewer
                         />
