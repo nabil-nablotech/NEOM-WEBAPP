@@ -63,8 +63,6 @@ const useLibrary = () => {
       return x;
     });
     const obj: any = {
-      latitude: copiedValue&&copiedValue?.latitude?parseFloat(copiedValue?.latitude):0,
-      longitude: copiedValue&&copiedValue?.longitude?parseFloat(copiedValue?.longitude):0,
       search_one: searchWordArray[0],
       search_two: searchWordArray[1],
       search_three: searchWordArray[2],

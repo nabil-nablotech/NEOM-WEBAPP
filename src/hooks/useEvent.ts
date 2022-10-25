@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -45,7 +45,7 @@ const useEvent = () => {
    * fetch places with two words
    */
   const { loading, error, data, refetch: refetchEvents } = useQuery(events);
-  const[refineSearchEvents, { loading:refineLoading, error:refineErrorData, data:refineEventData}] = useMutation(refineEvents);
+  const{ loading:refineLoading, error:refineErrorData, data:refineEventData, refetch:refineSearchEvents} = useQuery(refineEvents);
 
   useEffect(() => {
     if (data?.visits) {
@@ -97,11 +97,9 @@ const useEvent = () => {
 
   const fetchData = (skip: number = eventsData.length, local: boolean = false) => {
     const searchData = getQueryObj(search);
-    console.log('search', searchData);
     const text = local ? searchText : searchData?.search;
     const searchWordArray = text?.split(' ') || [];
     const copiedValue = JSON.parse(JSON.stringify(selectedValue));
-    console.log('copiedValue', )
     Object.keys(copiedValue).map(x => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;

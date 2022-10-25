@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useSearchParams } from "react-router-dom";
@@ -49,7 +49,7 @@ const usePlace = () => {
    * fetch places with two words
    */
   const { loading, error, data, refetch: refetchPlaces } = useQuery(places);
-  const [refineSearchPlaces, { loading:refineLoading, error:refineErrorData, data:refinePlaceData }] = useMutation(refinePlaces);
+  const { loading:refineLoading, error:refineErrorData, data:refinePlaceData, refetch:refineSearchPlaces } = useQuery(refinePlaces);
 
   useEffect(() => {
     if (data?.places) {
@@ -117,13 +117,11 @@ const usePlace = () => {
     const searchData = getQueryObj(search);
     const text = local ? searchText : searchData?.search;
     const copiedValue = JSON.parse(JSON.stringify(selectedValue));
+    const searchWordArray = text?.split(" ") || [];
     Object.keys(copiedValue).map(x => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
-
-    // const searchParams = new URLSearchParams(copiedValue);
-    const searchWordArray = text?.split(" ") || [];
     const obj: any = {
       researchValue: copiedValue&&copiedValue?.researchValue && copiedValue?.researchValue,
       tourismValue: copiedValue&&copiedValue.tourismValue && copiedValue?.tourismValue,

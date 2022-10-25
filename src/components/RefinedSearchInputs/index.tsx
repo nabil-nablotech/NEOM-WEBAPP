@@ -361,7 +361,7 @@ const MediaInputs = ({
                 }}
               />
             }
-            label="Featured Image"
+            label="Featured Image"      
           />
         </FormGroup>
       </Grid>
