@@ -72,6 +72,10 @@ const StyledTableWrapper = styled(StyledAntTable)`
 
     @media (min-width: 575px) and (max-width: 1025px) {
 
+        .ant-table {
+            margin-block: 1em;
+        }
+
         .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell) ,
         .ant-table-tbody > tr > td:not(.ant-table-tbody > tr > td.more-menu-ant-cell) {
             min-width: 90px;
@@ -118,7 +122,6 @@ const EventDetailsPage = () => {
     const { data } = useSelector((state: RootState) => state.login);
     const [mediaGridActiveItems, setMediaGridActiveItems] = useState<number>(0)
 
-    console.log('hex: ', places)
     const mediaList = mediaGridActiveItems + 8 <= places.length ? places.slice(0, mediaGridActiveItems + 8) :
         places.slice(
             0,
@@ -150,7 +153,7 @@ const EventDetailsPage = () => {
 
     const { latitude, longitude } = selectedPlaceObj
 
-    // console.log('hex: ', media)
+    console.log('hex: ', library)
     // get from api
     let [images, setImages] = useState<any>([
         'https://via.placeholder.com/150/92c952',
@@ -442,7 +445,7 @@ const EventDetailsPage = () => {
                         <Grid container className={`${styles['details-section-main-grid']}`}
                             rowSpacing={2}
                         >
-                            <Grid item md={7} className={`${styles['text-left']} ${styles['section-left']}`}>
+                            <Grid item sm={7} className={`${styles['text-left']} ${styles['section-left']}`}>
                                 <Box className={`${styles['site-desc']}`}>
                                     {/* If needed See More functionality in future, copy from PlaceDetails */}
                                     <Box
@@ -453,7 +456,7 @@ const EventDetailsPage = () => {
                                 </Box>
                                 <Box className={`${styles['table']}`}>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']} `}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']} `}>
                                             Site Type
                                         </Grid>
                                         <Grid item>
@@ -463,7 +466,7 @@ const EventDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Period
                                         </Grid>
                                         <Grid item>
@@ -479,17 +482,17 @@ const EventDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Field Narrative
                                         </Grid>
-                                        <Grid item>
+                                        <Grid item sm={8} className={`${styles['table-parameter-value']}`}>
                                             {
                                                 `The site is west of highway 55, on a terrace overlooking a Wadi Sh site has one feature (F001). F001 is a rectangular rock alignment w concentration with an open center that is roughly square in the south`
                                             }
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             State of Conservation
                                         </Grid>
                                         <Grid item>
@@ -497,7 +500,7 @@ const EventDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Risk
                                         </Grid>
                                         <Grid item>
@@ -505,15 +508,15 @@ const EventDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Tourism Value
                                         </Grid>
-                                        <Grid item md={8} className={`${styles['table-parameter-value']}`}>
+                                        <Grid item sm={9} md={8} className={`${styles['table-parameter-value']}`}>
                                             Local - Only of local interest, although could provide the basis for an overnight stop
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Research Value
                                         </Grid>
                                         <Grid item>
@@ -521,7 +524,7 @@ const EventDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Recommendation
                                         </Grid>
                                         <Grid item>
@@ -529,7 +532,7 @@ const EventDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             URL
                                         </Grid>
                                         <Grid item>
@@ -557,7 +560,7 @@ const EventDetailsPage = () => {
                                     </Grid>
                                 </Box>
                             </Grid>
-                            <Grid item md={5}>
+                            <Grid item sm={5}>
                                 <RenderFileData
                                     fileData={{
                                         alt: "",
@@ -616,7 +619,7 @@ const EventDetailsPage = () => {
                             <Grid container className={`${styles['media-grid']}`}>
                                 {
                                     mediaList && mediaList.map((itemObj, inx) => (
-                                        <Grid item md={3} lg={3} key={inx} className={`${styles['media-grid-item']}`}
+                                        <Grid item lg={3} md={3} sm={3} key={inx} className={`${styles['media-grid-item']}`}
                                             onClick={e => {
                                                 dispatch(setActiveMediaItem(media[inx]))
                                                 dispatch(setActiveMediaItemIndex(inx))

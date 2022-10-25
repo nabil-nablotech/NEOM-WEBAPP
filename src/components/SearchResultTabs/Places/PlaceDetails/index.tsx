@@ -354,6 +354,11 @@ const PlaceDetailsPage = () => {
                             color: 'var(--table-black-text)',
                             textTransform: 'none'
                         }}
+                        sx={{ 
+                            '& .MuiButton-startIcon' : {
+                                marginRight: '4px'
+                            }
+                        }}
                         onClick={e => {
                             e.preventDefault()
                             /** resetters */
@@ -394,7 +399,7 @@ const PlaceDetailsPage = () => {
                         <Grid container className={`${styles['justify-center']} ${styles['image-grid-gap']}`}
                             spacing={1}
                         >
-                            <Grid item md={6} className={`${styles["grid-item"]}`}
+                            <Grid item sm={6} className={`${styles["grid-item"]}`}
                                 onClick={e=> {
                                     handleClickMediaItem(e, 1)
                                 }}
@@ -408,13 +413,13 @@ const PlaceDetailsPage = () => {
                                     fileType="image"
                                 />
                             </Grid>
-                            <Grid item md={6} className={`${styles['image-grid-gap']} ${styles["image-side-grid"]}`}
+                            <Grid item sm={6} className={`${styles['image-grid-gap']} ${styles["image-side-grid"]}`}
                                 
                             >
                                 <Grid container className={`${styles['image-grid-gap']} ${styles['row-1']}`}
                                     spacing={1}
                                 >
-                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                    <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
                                         onClick={e=> {
                                             handleClickMediaItem(e, 2)
                                         }}
@@ -429,7 +434,7 @@ const PlaceDetailsPage = () => {
                                             fileType="video"
                                         />
                                     </Grid>
-                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                    <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
                                         onClick={e=> {
                                             handleClickMediaItem(e, 3)
                                         }}
@@ -447,7 +452,7 @@ const PlaceDetailsPage = () => {
                                 <Grid container className={`${styles['image-grid-gap']}`}
                                     spacing={1}
                                 >
-                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                    <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
                                         onClick={e=> {
                                             handleClickMediaItem(e, 4)
                                         }}
@@ -461,7 +466,7 @@ const PlaceDetailsPage = () => {
                                             fileType="image"
                                         />
                                     </Grid>
-                                    <Grid item md={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                    <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
                                         onClick={e=> {
                                             handleClickMediaItem(e, 5)
                                         }}
@@ -515,7 +520,7 @@ const PlaceDetailsPage = () => {
                         <Grid container className={`${styles['details-section-main-grid']}`}
                             rowSpacing={2}
                         >
-                            <Grid item md={7} className={`${styles['text-left']} ${styles['section-left']}`}>
+                            <Grid item sm={7} className={`${styles['text-left']} ${styles['section-left']}`}>
                                 <Box className={`${styles['site-desc']}`}>
                                     <Box
                                         className={`${styles['site-desc-condensed']} ${isSeeMore ? styles['see-more-active'] : ''}`}
@@ -528,7 +533,7 @@ const PlaceDetailsPage = () => {
                                 </Box>
                                 <Box className={`${styles['table']}`}>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']} `}>
+                                        <Grid item sm={5} md={4} className={`${styles['table-parameter']} `}>
                                             Site Type
                                         </Grid>
                                         <Grid item>
@@ -538,7 +543,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Period
                                         </Grid>
                                         <Grid item>
@@ -554,7 +559,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             State of Conservation
                                         </Grid>
                                         <Grid item>
@@ -562,7 +567,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Risk
                                         </Grid>
                                         <Grid item>
@@ -570,7 +575,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Tourism Value
                                         </Grid>
                                         <Grid item>
@@ -578,7 +583,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Research Value
                                         </Grid>
                                         <Grid item>
@@ -586,7 +591,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Assessment
                                         </Grid>
                                         <Grid item>
@@ -594,7 +599,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Recommendation
                                         </Grid>
                                         <Grid item>
@@ -602,10 +607,10 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
-                                        <Grid item md={4} className={`${styles['table-parameter']}`}>
+                                        <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             URL
                                         </Grid>
-                                        <Grid item>
+                                        <Grid item sm={7} md={8}>
                                             {/* to-do */}
                                             {/* When clicking on the URL link, the link should be copied to the clip board. 
                                             A success message will be displayed with the message “URL copied to clipboard” */}
@@ -630,7 +635,7 @@ const PlaceDetailsPage = () => {
                                     </Grid>
                                 </Box>
                             </Grid>
-                            <Grid item md={5}>
+                            <Grid item sm={5}>
                                 <RenderFileData
                                     fileData={{
                                         alt: "",
@@ -643,13 +648,13 @@ const PlaceDetailsPage = () => {
                                     <Grid item lg={5} md={5} sm={5}>
                                         <Grid container className={`${styles['map-loctn-line']}`}>
                                             <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                            <Grid item>{latitude}</Grid>
+                                            <Grid item>28.090884</Grid>
                                         </Grid>
                                     </Grid>
                                     <Grid item lg={5} md={5} sm={6}>
                                         <Grid container className={`${styles['map-loctn-line']}`}>
                                             <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                            <Grid item>{longitude}</Grid>
+                                            <Grid item>35.475373</Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
