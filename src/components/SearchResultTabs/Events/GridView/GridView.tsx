@@ -12,7 +12,6 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 import {Card} from './Card';
-import { useSelector } from "react-redux";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 

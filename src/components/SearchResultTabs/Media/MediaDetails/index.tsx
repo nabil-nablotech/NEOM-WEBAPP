@@ -175,7 +175,6 @@ const MediaDetailsPage = ({
                                 <p>Recorded</p>
                                 <div>Date: 08/04/2022 7:41:10 AM</div>
                                 <div>By: Harland Ash</div>
-                                <div>Initials: DS</div>
                             </Box>
                             <Box className={`${styles[`bottom-grid`]}`} >
                                 <p>Metadata</p>
@@ -183,6 +182,10 @@ const MediaDetailsPage = ({
                                 <div>Date: 08/04/2022</div>
                                 <div>Dimensions: 1024x768</div>
                                 <div>Extensions: png</div>
+                            </Box>
+                            <Box className={`${styles[`bottom-grid`]}`} >
+                                <p>Assiciations</p>
+                                <div>Al-Muwaylih بئر فُحَيْماَن</div>
                             </Box>
                         </Grid>
                         <Grid item lg={6} md={6} sm={7}>
