@@ -14,6 +14,7 @@ import { toggleShowAddSuccess } from '../../../../store/reducers/searchResultsRe
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { useFormik } from 'formik';
 
 const commonSelectSxStyles = {
     textAlign: 'left',
@@ -77,17 +78,50 @@ const StepContent = ({
     handleBack
 }: StepContentTypes) => {
 
+    const formik = useFormik({
+        initialValues: {
+          placeNumber: '',
+          nameEnglish: '',
+          nameArabic: '',
+          siteDescription: '',
+          siteType: '',
+          period: '',
+          stateOfConservation: '',
+          risk: '',
+        },
+        onSubmit: values => {
+          alert(JSON.stringify(values, null, 2));
+        },
+      });
+
     return <>
         <Box component="div" className={`${styles['form']}`}>
             {
                 activeStep === 0 &&
                 <>
                     <TextInput
+                        className={`${styles["place-number"]}`}
+                        label="Place Number"
+                        name="place-number"
+                        type="number"
+                        required
+                        value={formik.values.placeNumber}
+                        onChange={e => {
+                            formik.setFieldValue('placeNumber', e.target.value)
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
                         className={`${styles["english-name"]}`}
                         label="Name in English"
                         name="english-name"
-                        value={''}
-                        // onChange={(e) => { }}
+                        value={formik.values.nameEnglish}
+                        onChange={e => {
+                            formik.setFieldValue('nameEnglish', e.target.value)
+                        }}
                         sx={{
                             ...textInputSxStyles
                         }}
@@ -97,8 +131,10 @@ const StepContent = ({
                         className={`${styles["arabic-name"]}`}
                         label="Name in Arabic"
                         name="arabic-name"
-                        value={''}
-                        // onChange={(e) => { }}
+                        value={formik.values.nameArabic}
+                        onChange={e => {
+                            formik.setFieldValue('nameArabic', e.target.value)
+                        }}
                         sx={{
                             ...textInputSxStyles
                         }}
@@ -108,30 +144,33 @@ const StepContent = ({
                         className={`${styles["site-description"]}`}
                         label="Site Description"
                         name="site-description"
-                        value={formState.siteDescription}
+                        value={formik.values.siteDescription}
+                        onChange={e => {
+                            formik.setFieldValue('siteDescription', e.target.value)
+                        }}
                         multiline
                         minRows={3}
                         maxRows={3}
-                        // onChange={(e) => {
-                        //     setFormState((state: any) => ({
-                        //         ...state,
-                        //         siteDescription: e.target.value
-                        //     }))
-                        // }}
                         sx={{
                             ...textInputSxStyles,
-                            marginBottom: '4em'
+                            marginBottom: '4em',
+                            '& .MuiInputBase-inputMultiline' : {
+                                paddingInline: '0 !important'
+                            }
                         }}
-                        formControlSx={commonFormControlSxStyles}
+                        formControlSx={{
+                            ...commonFormControlSxStyles,
+                        }}
                     />
 
                     <DropdownComponent
                         className={`${styles["site-type"]}`}
                         label={"Site Type"}
                         name="site-type"
-                        value={''}
-                        handleChange={(e: SelectChangeEvent<string | string[]>) => { }}
-                        handleClear={(e: React.MouseEvent) => { }}
+                        value={formik.values.siteType}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('siteType', e.target.value as string)
+                        }
                         itemsList={[]}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
@@ -140,9 +179,10 @@ const StepContent = ({
                         className={`${styles["period"]}`}
                         label={"Period"}
                         name="period"
-                        value={''}
-                        handleChange={(e: SelectChangeEvent<string | string[]>) => { }}
-                        handleClear={(e: React.MouseEvent) => { }}
+                        value={formik.values.period}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('period', e.target.value as string)
+                        }
                         itemsList={[]}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
@@ -151,9 +191,10 @@ const StepContent = ({
                         className={`${styles["state-of-conservation"]}`}
                         label={"State of Conservation"}
                         name="state-of-conservation"
-                        value={''}
-                        handleChange={(e: SelectChangeEvent<string | string[]>) => { }}
-                        handleClear={(e: React.MouseEvent) => { }}
+                        value={formik.values.stateOfConservation}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('stateOfConservation', e.target.value as string)
+                        }
                         itemsList={[]}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
@@ -162,9 +203,10 @@ const StepContent = ({
                         className={`${styles["risk"]}`}
                         label={"Risk"}
                         name="risk"
-                        value={''}
-                        handleChange={(e: SelectChangeEvent<string | string[]>) => { }}
-                        handleClear={(e: React.MouseEvent) => { }}
+                        value={formik.values.risk}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('risk', e.target.value as string)
+                        }
                         itemsList={[]}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
@@ -179,8 +221,10 @@ const StepContent = ({
                         className={`${styles["english-name"]}`}
                         label="Add Keywords"
                         name="english-name"
-                        value={''}
-                        // onChange={(e) => { }}
+                        // value={formik.values.siteDescription}
+                        // onChange={e => {
+                        //     formik.setFieldValue('siteDescription', e.target.value)
+                        // }}
                         sx={{
                             ...textInputSxStyles
                         }}
