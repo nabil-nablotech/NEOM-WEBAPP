@@ -130,7 +130,10 @@ const StepContent = ({
                         }}
                         sx={{
                             ...textInputSxStyles,
-                            marginBottom: '4em'
+                            marginBottom: '4em',
+                            '& .MuiInputBase-inputMultiline' : {
+                                paddingInline: '0 !important'
+                            }
                         }}
                         formControlSx={commonFormControlSxStyles}
                     />
@@ -147,7 +150,10 @@ const StepContent = ({
                         }}
                         sx={{
                             ...textInputSxStyles,
-                            marginBottom: '4em'
+                            marginBottom: '4em',
+                            '& .MuiInputBase-inputMultiline' : {
+                                paddingInline: '0 !important'
+                            }
                         }}
                         formControlSx={commonFormControlSxStyles}
                     />
@@ -164,7 +170,10 @@ const StepContent = ({
                         }}
                         sx={{
                             ...textInputSxStyles,
-                            marginBottom: '4em'
+                            marginBottom: '4em',
+                            '& .MuiInputBase-inputMultiline' : {
+                                paddingInline: '0 !important'
+                            }
                         }}
                         formControlSx={commonFormControlSxStyles}
                     />
