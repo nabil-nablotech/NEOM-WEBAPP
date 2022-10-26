@@ -163,7 +163,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
 
     navigate({
       pathname: `/search-results/${newLabel ? newLabel : "Places"}`,
-      search: encodeURIComponent(JSON.stringify({
+      search: decodeURIComponent(JSON.stringify({
         search: searchText
       }))
     });
@@ -176,7 +176,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
-    const searchParams: string = encodeURIComponent(JSON.stringify({
+    const searchParams: string = decodeURIComponent(JSON.stringify({
       search: searchText,
       refinedSearch: {...copiedValue}
     }));

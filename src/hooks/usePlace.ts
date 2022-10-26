@@ -116,7 +116,7 @@ const usePlace = () => {
   const fetchData = (skip: number = placeData.length, local: boolean = false) => {
     const searchData = getQueryObj(search);
     const text = local ? searchText : searchData?.search;
-    const copiedValue = JSON.parse(JSON.stringify(selectedValue));
+    const copiedValue = searchData['refinedSearch'];
     const searchWordArray = text?.split(" ") || [];
     Object.keys(copiedValue).map(x => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}

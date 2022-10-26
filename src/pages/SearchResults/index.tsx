@@ -74,7 +74,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       e.preventDefault();
       navigate({
         pathname: `/search-results/${tabName}`,
-        search: encodeURIComponent(JSON.stringify({
+        search: decodeURIComponent(JSON.stringify({
           search: searchText
         }))
       });
