@@ -104,24 +104,24 @@ const useEvent = () => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
-    const obj: any = {
-      researchValue: copiedValue&&copiedValue?.researchValue && copiedValue?.researchValue,
-      tourismValue: copiedValue&&copiedValue.tourismValue && copiedValue?.tourismValue,
-      stateOfConservation: copiedValue&&copiedValue?.stateOfConservation && copiedValue?.stateOfConservation,
-      recommendation: copiedValue&&copiedValue?.recommendation && copiedValue?.recommendation,
-      risk: copiedValue&&copiedValue?.risk && copiedValue?.risk,
-      period: copiedValue&&copiedValue?.period && copiedValue?.period,
-      latitude: copiedValue&&copiedValue?.latitude && parseFloat(copiedValue?.latitude),
-      longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
-      artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts,
-      assessmentType: copiedValue&&copiedValue?.assessmentType && copiedValue?.assessmentType,
-      search_one: searchWordArray[0],
-      search_two: searchWordArray[1],
-      search_three: searchWordArray[2],
-      limit: limit,
-      skip: skip,
-    };
     if(Object.keys(copiedValue).length !== 0){
+      const obj: any = {
+        researchValue: copiedValue&&copiedValue?.researchValue && copiedValue?.researchValue,
+        tourismValue: copiedValue&&copiedValue.tourismValue && copiedValue?.tourismValue,
+        stateOfConservation: copiedValue&&copiedValue?.stateOfConservation && copiedValue?.stateOfConservation,
+        recommendation: copiedValue&&copiedValue?.recommendation && copiedValue?.recommendation,
+        risk: copiedValue&&copiedValue?.risk && copiedValue?.risk,
+        period: copiedValue&&copiedValue?.period && copiedValue?.period,
+        latitude: copiedValue&&copiedValue?.latitude && parseFloat(copiedValue?.latitude),
+        longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
+        artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts,
+        assessmentType: copiedValue&&copiedValue?.assessmentType && copiedValue?.assessmentType,
+        search_one: searchWordArray[0],
+        search_two: searchWordArray[1],
+        search_three: searchWordArray[2],
+        limit: limit,
+        skip: skip,
+      };
       refineSearchEvents(obj)
     }else{
       refetchEvents({ search_one: searchWordArray[0], search_two: searchWordArray[1], search_three: searchWordArray[2], limit: limit, skip: skip });
