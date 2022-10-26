@@ -105,13 +105,14 @@ export const media = gql`
 `;
 
 export const refineMedia = gql`
-mutation SearchTitle(
+query refinedSearch(
     $search_one: String
     $search_two: String
     $search_three: String
     $latitude: Float
     $longitude: Float
-    # $artifacts: [String]
+    $featuredImage: Boolean
+    $artifacts: [String]
     $limit: Int
     $skip: Int
   ) {
@@ -138,7 +139,8 @@ mutation SearchTitle(
         and: [
           {	latitude: { gte: $latitude }}
           {	longitude: { lte: $longitude }}
-          { featuredImage:{eq: false}}
+          { featuredImage:{eq: $featuredImage}}
+          {	artifacts: { name: {in: $artifacts}}}
           {
             mediaType: {
               or: [

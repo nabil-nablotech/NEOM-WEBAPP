@@ -43,8 +43,7 @@ const GridView = (props: MediaProps) => {
             {/* to-do: infinite scroll based on data length */}
              <InfiniteScroll
                 dataLength={data.length} //This is important field to render the next data
-                next={() => fetchData()}
-
+                next={fetchData}
                 hasMore={hasMoreData}
                 loader={loading ? <h4>Loading...</h4> : null}
                 endMessage={

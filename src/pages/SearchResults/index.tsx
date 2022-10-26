@@ -65,10 +65,6 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       case "Media":
         fetchMediaItems(0, true);
         break;
-
-      default:
-        fetchPlaces(0, true);
-        break;
     }
   };
 
