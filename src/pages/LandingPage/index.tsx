@@ -85,7 +85,7 @@ function LandingPage() {
     if (e.code === 'Enter' && searchText.trim().length >= 3) {
       navigate({
         pathname: `/search-results/Places`,
-        search: encodeURIComponent(JSON.stringify({
+        search: decodeURIComponent(JSON.stringify({
           search: searchText
         }))
       });
