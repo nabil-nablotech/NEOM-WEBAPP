@@ -11,7 +11,7 @@ export type DropdownCompProps = {
     value: string[] | string | undefined
     handleChange?: ((event: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>, child: React.ReactNode) => void)
     handleSelectChange?: ((event: React.SyntheticEvent<Element, Event>, value: string[], reason: AutocompleteChangeReason, details?: AutocompleteChangeDetails<string> | undefined) => void) | undefined;
-    handleClear: (e: MouseEvent<HTMLButtonElement>) => void;
+    handleClear?: (e: MouseEvent<HTMLButtonElement>) => void;
     itemsList: Array<dropDownItem> | []
     name?: string
     multiple?: boolean;
