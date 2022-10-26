@@ -44,6 +44,7 @@ export type GridViewCard_Events = {
 
 export type SearchResultsState2 = {
   selectedCardIndex: number;
+  searchApply: boolean;
   totalCounts: DashboardResponse | null;
   searchText: string;
   places: Place[] | [];

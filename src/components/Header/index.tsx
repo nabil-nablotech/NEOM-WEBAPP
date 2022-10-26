@@ -12,6 +12,7 @@ interface IHeader {
   screen?: string
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
   handleClearSearchText?: () => void
+  handleLogo?: () => void
 }
 
 const Header = (props: IHeader) => {
@@ -20,7 +21,8 @@ const Header = (props: IHeader) => {
     showSearch = false,
     screen,
     onKeyDown,
-    handleClearSearchText
+    handleClearSearchText,
+    handleLogo
   } = props
   const navigate = useNavigate();
 
@@ -40,7 +42,7 @@ const Header = (props: IHeader) => {
         <Box component="div" className={`${styles["header-container"]}`}>
           <Box component="div" className={`${styles["header-lhs-content"]}`}>
             <Box component="div" className={`${styles["logo"]}`}>
-              <Box component="img" alt="NEOM logo" src={Logo} onClick={() => navigate("/")} />
+              <Box component="img" alt="NEOM logo" src={Logo} onClick={handleLogo} />
             </Box>
             {
               showSearch &&

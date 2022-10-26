@@ -105,7 +105,7 @@ export const media = gql`
 `;
 
 export const refineMedia = gql`
-query SearchTitle(
+mutation SearchTitle(
     $search_one: String
     $search_two: String
     $search_three: String

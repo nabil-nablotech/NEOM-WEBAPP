@@ -18,7 +18,7 @@ import Header from "../../components/Header";
 import useAuth from "../../hooks/useAuth";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { setSearchText } from "../../store/reducers/searchResultsReducer";
+import { setSearchText, setSearchApply } from "../../store/reducers/searchResultsReducer";
 import LandingPageImage from '../../assets/images/LandingPage.webp';
 
 const landingPageData = {
@@ -74,6 +74,7 @@ function LandingPage() {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     tabName: tabNameProps
   ) => {
+    dispatch(setSearchApply(false));
     navigate(`search-results/${tabName}`);
   };
 
@@ -89,6 +90,7 @@ function LandingPage() {
           search: searchText
         }))
       });
+      dispatch(setSearchApply(true));
     }
   };
 
@@ -444,3 +446,4 @@ const MediaItems = styled.div`
 `;
 
 export default LandingPage;
+

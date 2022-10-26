@@ -53,7 +53,7 @@ const useLibrary = () => {
     }
   }, [data])
   
-  const fetchData = (skip: number = libItem.length, local: boolean = false) => {
+  const fetchData = (skip: number = libItem.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);
     const text = local ? searchText : searchData?.search;
     const searchWordArray = text?.split(' ') || [];
@@ -63,13 +63,21 @@ const useLibrary = () => {
       return x;
     });
     const obj: any = {
-      search_one: searchWordArray[0],
+      search_one: searchWordArray[0] || '',
       search_two: searchWordArray[1],
       search_three: searchWordArray[2],
       limit: limit,
       skip: skip,
     };
+    if (clear) {
+      obj.skip = 0;
+      obj.search_one = '';
+      delete obj.search_two;
+      delete obj.search_three;
+      refetchLibraryItems(obj)
+    } {
       refetchLibraryItems(obj);
+    }
   };
  
   return {

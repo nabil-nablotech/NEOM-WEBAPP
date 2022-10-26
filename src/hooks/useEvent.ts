@@ -95,7 +95,7 @@ const useEvent = () => {
 
   }, [refineEventData]);
 
-  const fetchData = (skip: number = eventsData.length, local: boolean = false) => {
+  const fetchData = (skip: number = eventsData.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);
     const text = local ? searchText : searchData?.search;
     const searchWordArray = text?.split(' ') || [];
@@ -121,12 +121,24 @@ const useEvent = () => {
       limit: limit,
       skip: skip,
     };
-    if(Object.keys(copiedValue).length !== 0){
+    if (clear) {
+      obj.skip = 0;
+      obj.search_one = '';
+      delete obj.search_two;
+      delete obj.search_three;
+      refineSearchEvents(obj)
+    }
+    else if(Object.keys(copiedValue).length !== 0){
       refineSearchEvents(obj)
     }else{
-      refetchEvents({ search_one: searchWordArray[0], search_two: searchWordArray[1], search_three: searchWordArray[2], limit: limit, skip: skip });
+      refetchEvents({ search_one: searchWordArray[0] || '', search_two: searchWordArray[1], search_three: searchWordArray[2], limit: limit, skip: skip });
     }
   };
+
+  const clearTextSearch = () => {
+    console.log('inside clear search')
+    fetchData(0, true, true);
+  }
 
   return {
     loading,
@@ -135,6 +147,7 @@ const useEvent = () => {
     mapEvents,
     hasMoreData,
     fetchEvents: fetchData,
+    clearSearch: clearTextSearch
   };
 };
 

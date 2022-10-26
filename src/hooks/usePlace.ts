@@ -1,7 +1,7 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { places, refinePlaces } from "../query/places";
 import { RootState } from "../store";
 import { initialSelectedValue, setSelectedValue } from "../store/reducers/refinedSearchReducer";
@@ -49,7 +49,7 @@ const usePlace = () => {
    * fetch places with two words
    */
   const { loading, error, data, refetch: refetchPlaces } = useQuery(places);
-  const { loading:refineLoading, error:refineErrorData, data:refinePlaceData, refetch:refineSearchPlaces } = useQuery(refinePlaces);
+  const [refineSearchPlaces, { loading:refineLoading, error:refineErrorData, data:refinePlaceData}] = useMutation(refinePlaces);
 
   useEffect(() => {
     if (data?.places) {
@@ -113,9 +113,12 @@ const usePlace = () => {
     }
   }, [refinePlaceData]);
 
-  const fetchData = (skip: number = placeData.length, local: boolean = false) => {
+  const fetchData = (skip: number = placeData.length, local: boolean = false, clear: boolean = false) => {
+    // get the query from the url parameters
     const searchData = getQueryObj(search);
+    // check if the search is coming from local or using link
     const text = local ? searchText : searchData?.search;
+    // filter non data from the array object
     const copiedValue = JSON.parse(JSON.stringify(selectedValue));
     const searchWordArray = text?.split(" ") || [];
     Object.keys(copiedValue).map(x => {
@@ -138,11 +141,18 @@ const usePlace = () => {
       limit: limit,
       skip: skip,
     };
-    if(Object.keys(copiedValue).length !== 0){
+    if (clear) {
+      obj.skip = 0;
+      obj.search_one = '';
+      delete obj.search_two;
+      delete obj.search_three;
+      refineSearchPlaces(obj)
+    }
+    else if(Object.keys(copiedValue).length !== 0){
       refineSearchPlaces(obj)
     }else{
       refetchPlaces({
-        search_one: searchWordArray[0],
+        search_one: searchWordArray[0] || '',
         search_two: searchWordArray[1],
         search_three: searchWordArray[2],
         limit: limit,
@@ -151,13 +161,18 @@ const usePlace = () => {
     }
   };
 
+  const clearTextSearch = () => {
+    fetchData(0, true, true);
+  }
+
   return {
-    loading,
-    error,
+    loading: loading || refineLoading,
+    error: error || refineErrorData,
     data,
     mapPlaces,
     hasMoreData,
     fetchPlaces: fetchData,
+    clearSearch: clearTextSearch
   };
 };
 

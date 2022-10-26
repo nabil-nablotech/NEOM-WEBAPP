@@ -7,6 +7,7 @@ import { Media } from "../../types/Media";
 
 const initialState: SearchResultsState2 = {
   selectedCardIndex: 0,
+  searchApply: false,
   totalCounts: null,
   searchText: "",
   places: [],
@@ -88,6 +89,9 @@ export const searchResultsSlice = createSlice({
     toggleGalleryView: (state, action: PayloadAction<boolean>) => {
       state.isOpenGalleryView = action.payload;
     },
+    setSearchApply: (state, action: PayloadAction<boolean>) => {
+      state.searchApply = action.payload;
+    },
   },
 });
 
@@ -110,7 +114,8 @@ export const {
   setActivePlaceItemIndex,
   setActiveMediaItem,
   setActiveMediaItemIndex,
-  toggleGalleryView
+  toggleGalleryView,
+  setSearchApply
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

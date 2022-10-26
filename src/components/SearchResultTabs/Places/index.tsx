@@ -77,7 +77,7 @@ const PlacesTab = () => {
                 <GridView loading={loading} data={places} fetchData={fetchPlaces} hasMoreData={hasMoreData} />
               </Grid>
               {/* To-do: map view */}
-              <Grid item xl={6} lg={6} md={7} sm={7}>
+              <Grid item xl={6} lg={6} md={7} sm={7} className={`${styles["map-section"]}`}>
                 {mapPlaces !== null ? <MapView marker={mapPlaces}/>:<></>}
               </Grid>
             </>

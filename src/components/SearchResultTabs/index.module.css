@@ -42,12 +42,16 @@
     margin-block: 0.5em;
     max-height: 80vh;
 }
+.map-section {
+    min-height: 80vh;
+}
 .infinite-scroll-cls {
     overflow-y: hidden !important;
 }
 .refined-search-box {
     background-color: var(--search-bar-bg-color);
 }
+
 .refined-search-wrapper {
     width: fit-content;
     font-weight: bold;

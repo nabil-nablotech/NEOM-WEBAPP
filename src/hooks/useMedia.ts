@@ -1,10 +1,10 @@
-import { useQuery} from '@apollo/client';
+import { useMutation, useQuery} from '@apollo/client';
 import { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { media, refineMedia } from "../query/search";
 import { RootState } from '../store';
-import {setMedia, setMediaMetaData, setSearchText} from '../store/reducers/searchResultsReducer'
+import {setMedia, setMediaMetaData} from '../store/reducers/searchResultsReducer'
 import {limit, getQueryObj} from '../utils/services/helpers';
 
 const useMedia = () => {
@@ -36,14 +36,17 @@ const useMedia = () => {
    * fetch places with two words
    */
   const { loading, error, data, refetch:refetchMediaItems } = useQuery(media);
-  const { loading:refineLoading, error:refineErrorData, data:refineMediaData, refetch:refineSearchMedia } = useQuery(refineMedia);
+  const [refineSearchMedia, { loading:refineLoading, error:refineErrorData, data:refineMediaData }] = useMutation(refineMedia);
 
+  console.log('data in media', data)
   useEffect(() => {
+    console.log('data', data?.medias)
     if (data?.medias) {
       // update the data for the pagination
       if (data?.medias.meta.pagination.page === 1 && data?.medias.data.length > 0) {
-        dispatch(setMedia([...data?.medias?.data]));
+        dispatch(setMedia(data?.medias?.data));
       } else if (data?.medias.data.length > 0) {
+        console.log('inside else')
         dispatch(setMedia([...mediaItem, ...data?.medias?.data]));
       }
       // update the meta data
@@ -52,9 +55,10 @@ const useMedia = () => {
       setHasMoreData(data?.medias?.meta.pagination.pageCount !==
         data?.medias.meta.pagination.page);
     }
-  }, [data]);
+  }, [data?.medias, dispatch]);
 
   useEffect(() => {
+    console.log('refineMediaData', refineMediaData?.medias)
     if (refineMediaData?.medias) {
       // update the data for the pagination
       if (refineMediaData?.medias.meta.pagination.page === 1 && refineMediaData?.medias.data.length > 0) {
@@ -70,7 +74,8 @@ const useMedia = () => {
     }
   }, [refineMediaData]);
 
-  const fetchData = (skip: number = mediaItem.length, local: boolean = false) => {
+  const fetchData = (skip: number = mediaItem.length, local: boolean = false, clear: boolean = false) => {
+    console.log('fetch data in media', hasMoreData, skip, mediaItem.length)
     const searchData = getQueryObj(search);
     const text = local ? searchText : searchData?.search;
     const searchWordArray = text?.split(' ') || [];
@@ -88,10 +93,17 @@ const useMedia = () => {
       limit: limit,
       skip: skip,
     };
-    if(Object.keys(copiedValue).length !== 0){
+    if (clear) {
+      obj.skip = 0;
+      obj.search_one = '';
+      delete obj.search_two;
+      delete obj.search_three;
+      refineSearchMedia(obj)
+    }if(Object.keys(copiedValue).length !== 0){
       refineSearchMedia(obj)
     }else{
-      refetchMediaItems({ search_one: searchWordArray[0], search_two: searchWordArray[1], search_three: searchWordArray[2], limit: limit, skip: skip });
+      console.log('inside else condition', { search_one: searchWordArray[0] || '', search_two: searchWordArray[1], search_three: searchWordArray[2], limit: limit, skip: skip })
+      refetchMediaItems({ search_one: searchWordArray[0] || '', search_two: searchWordArray[1] || '', search_three: searchWordArray[2] || '', limit: limit, skip: skip });
     }
   };
  

@@ -76,7 +76,7 @@ const PlacesTab = () => {
                         <GridView loading={loading} data={events} handleNext={handleNext} hasMoreData={hasMoreData}  />
                     </Grid>
                     {/* To-do: map view */}
-                    <Grid item xl={6} lg={6} md={7} sm={7}>                     
+                    <Grid item xl={6} lg={6} md={7} sm={7} className={`${styles["map-section"]}`}>                     
                         {mapEvents !== null ? <MapView marker={mapEvents}/>:<></>}
                     </Grid></>}
                     {
