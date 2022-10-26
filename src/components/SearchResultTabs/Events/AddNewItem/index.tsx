@@ -15,6 +15,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import CustomSearchField from '../../../SearchField';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { useFormik } from 'formik';
+import ReactDatePicker from 'react-datepicker';
 
 const commonSelectSxStyles = {
     textAlign: 'left',
@@ -78,6 +80,20 @@ const StepContent = ({
     handleBack
 }: StepContentTypes) => {
 
+    const formik = useFormik({
+        initialValues: {
+            place: '',
+            eventDate: new Date(),
+            recordingTeam: '',
+            siteDescription: '',
+            fieldNarrative: '',
+            siteType: '',
+        },
+        onSubmit: values => {
+            alert(JSON.stringify(values, null, 2));
+        },
+    });
+
     return <>
         <Box component="div" className={`${styles['form']}`}>
             {
@@ -85,30 +101,50 @@ const StepContent = ({
                 <>
                     <CustomSearchField
                         handleChangeParent={(e) => {
-                            setFormState((state: any) => ({
-                                ...state,
-                                search: e.target.value
-                            }))
+                            // setFormState((state: any) => ({
+                            //     ...state,
+                            //     search: e.target.value
+                            // }))
                         }}
                         // onKeyDown={onKeyDown}
                         className={`${styles["custom-search-field"]}`}
                         shouldHandleChangeFromParent={true}
                         valueFromParent={formState.search}
                     />
+                    <ReactDatePicker
+                        placeholderText="Date Range"
+                        className={`${styles["date"]}`}
+                        selected={formik.values.eventDate}
+                        onChange={(date: Date) => formik.setFieldValue('eventDate', date)}
+                    />
+                    <TextInput
+                        className={`${styles["recording-team"]}`}
+                        label="Recording Team"
+                        name="recording-team"
+                        multiline
+                        minRows={2}
+                        maxRows={2}
+                        value={formik.values.recordingTeam}
+                        onChange={e => {
+                            formik.setFieldValue('recordingTeam', e.target.value)
+                        }}
+                        sx={{
+                            ...textInputSxStyles,
+                            marginBottom: '4em'
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
                     <TextInput
                         className={`${styles["site-description"]}`}
                         label="Site Description"
                         name="site-description"
-                        value={formState.siteDescription}
                         multiline
                         minRows={3}
                         maxRows={3}
-                        // onChange={(e) => {
-                        //     setFormState((state: any) => ({
-                        //         ...state,
-                        //         siteDescription: e.target.value
-                        //     }))
-                        // }}
+                        value={formik.values.siteDescription}
+                        onChange={e => {
+                            formik.setFieldValue('siteDescription', e.target.value)
+                        }}
                         sx={{
                             ...textInputSxStyles,
                             marginBottom: '4em'
@@ -119,16 +155,13 @@ const StepContent = ({
                         className={`${styles["field-narrative"]}`}
                         label="Field Narrative"
                         name="field-narrative"
-                        value={formState.fieldNarrative}
                         multiline
                         minRows={3}
                         maxRows={3}
-                        // onChange={(e) => {
-                        //     setFormState((state: any) => ({
-                        //         ...state,
-                        //         fieldNarrative: e.target.value
-                        //     }))
-                        // }}
+                        value={formik.values.fieldNarrative}
+                        onChange={e => {
+                            formik.setFieldValue('fieldNarrative', e.target.value)
+                        }}
                         sx={{
                             ...textInputSxStyles,
                             marginBottom: '4em'
@@ -140,42 +173,10 @@ const StepContent = ({
                         className={`${styles["site-type"]}`}
                         label={"Site Type"}
                         name="site-type"
-                        value={''}
-                        handleChange={(e: SelectChangeEvent<string | string[]>) => { }}
-                        handleClear={(e: React.MouseEvent) => { }}
-                        itemsList={[]}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <DropdownComponent
-                        className={`${styles["period"]}`}
-                        label={"Period"}
-                        name="period"
-                        value={''}
-                        handleChange={(e: SelectChangeEvent<string | string[]>) => { }}
-                        handleClear={(e: React.MouseEvent) => { }}
-                        itemsList={[]}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <DropdownComponent
-                        className={`${styles["state-of-conservation"]}`}
-                        label={"State of Conservation"}
-                        name="state-of-conservation"
-                        value={''}
-                        handleChange={(e: SelectChangeEvent<string | string[]>) => { }}
-                        handleClear={(e: React.MouseEvent) => { }}
-                        itemsList={[]}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <DropdownComponent
-                        className={`${styles["risk"]}`}
-                        label={"Risk"}
-                        name="risk"
-                        value={''}
-                        handleChange={(e: SelectChangeEvent<string | string[]>) => { }}
-                        handleClear={(e: React.MouseEvent) => { }}
+                        value={formik.values.siteType}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('siteType', e.target.value as string)
+                        }
                         itemsList={[]}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
