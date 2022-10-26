@@ -79,16 +79,16 @@ const useMedia = () => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
-    const obj: any = {
-      search_one: searchWordArray[0],
-      search_two: searchWordArray[1],
-      search_three: searchWordArray[2],
-      latitude: copiedValue&&copiedValue?.latitude && parseFloat(copiedValue?.latitude),
-      longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
-      limit: limit,
-      skip: skip,
-    };
     if(Object.keys(copiedValue).length !== 0){
+      const obj: any = {
+        search_one: searchWordArray[0],
+        search_two: searchWordArray[1],
+        search_three: searchWordArray[2],
+        latitude: copiedValue&&copiedValue?.latitude && parseFloat(copiedValue?.latitude),
+        longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
+        limit: limit,
+        skip: skip,
+      };
       refineSearchMedia(obj)
     }else{
       refetchMediaItems({ search_one: searchWordArray[0], search_two: searchWordArray[1], search_three: searchWordArray[2], limit: limit, skip: skip });
