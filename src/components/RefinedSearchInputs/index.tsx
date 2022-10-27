@@ -30,11 +30,10 @@ const BaseInputs = ({
   commonFormControlSxStyles,
   handleClear,
   handleSelectChange,
+  handleDate,
   textInputSxStyles
 }: BaseInputProps) => {
   const [locationModalOpen, toggleLocationModal] = useState<boolean>(false);
-  const [latitudeInput, setLatiInput] = useState<string>("");
-  const [longitudeInput, setLongiInput] = useState<string>("");
   const [startDate, setStartDate] = useState(new Date());
 
   return (
@@ -236,10 +235,20 @@ const BaseInputs = ({
       {activeTab === EVENTS_TAB_NAME && (
         <Grid item sm={2} className={`${styles["date-grid-item"]}`}>
           <DatePicker
-            placeholderText="Date Range"
+            placeholderText="From Date Range"
             className={`${styles["date"]}`}
-            selected={startDate}
-            onChange={(date: Date) => setStartDate(date)}
+            selected={selectedValue.startDate}
+            onChange={(date: Date) => handleDate(date, "startDate")}
+          />
+        </Grid>
+      )}
+      {activeTab === EVENTS_TAB_NAME && (
+        <Grid item sm={2} className={`${styles["date-grid-item"]}`}>
+          <DatePicker
+            placeholderText="To Date Range"
+            className={`${styles["date"]}`}
+            selected={selectedValue.endDate}
+            onChange={(date: Date) => handleDate(date, "endDate")}
           />
         </Grid>
       )}
@@ -377,6 +386,7 @@ const RefinedSearchInputs = ({
   selectedValue,
   handleSubmit,
   handleClear,
+  handleDate,
   handleSelectChange
 }: RefinedSearchInputProps) => {
   const commonSelectSxStyles = {
@@ -431,6 +441,7 @@ const RefinedSearchInputs = ({
             commonSelectSxStyles={commonSelectSxStyles}
             commonFormControlSxStyles={commonFormControlSxStyles}
             handleClear={handleClear}
+            handleDate={handleDate}
             textInputSxStyles={textInputSxStyles}
           />
         }

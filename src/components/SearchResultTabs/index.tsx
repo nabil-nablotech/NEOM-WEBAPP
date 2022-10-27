@@ -116,6 +116,8 @@ const initialState = {
   artifacts: [],
   latitude: '',
   longitude: '',
+  startDate: '',
+  endDate: '',
 }
 const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => {
   const [value, setValue] = React.useState(0);
@@ -197,6 +199,15 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
       dispatch(setSelectedValue(selectedValueCopy));
     }
   };
+
+  const handleDate = (date:Date | null, name: string) => {
+    console.log('date', name, date);
+    const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
+    if (name && date) {
+      selectedValueCopy[name] = date;
+      dispatch(setSelectedValue(selectedValueCopy));
+    }
+  }
 
   /** If get itedId, means its details page
    * Hence replace tabs view and open normal view
@@ -300,7 +311,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
           <AccordionDetails style={{
             padding: 0
           }}>
-            <RefinedSearchInputs handleSelectChange={handleSelectChange} handleClear={handleClear} handleChange={handleTextChange} handleSubmit={handleButtonSubmit} selectedValue={selectedValue} options={options} activeTabIndex={value} />
+            <RefinedSearchInputs handleDate={handleDate} handleSelectChange={handleSelectChange} handleClear={handleClear} handleChange={handleTextChange} handleSubmit={handleButtonSubmit} selectedValue={selectedValue} options={options} activeTabIndex={value} />
           </AccordionDetails>
         </Accordion>
       </Box>}

@@ -15,6 +15,7 @@ export type RefinedSearchInputProps = {
     handleSelectChange: ((event: React.SyntheticEvent<Element, Event>, value: string[], reason?: string, details?: AutocompleteChangeDetails<string> | undefined) => void);
     handleSubmit: (e: React.MouseEvent) => void;
     handleClear: (e: React.MouseEvent<HTMLButtonElement>, name?: string) => void;
+    handleDate: (date: Date | null, name: string) => void
 }
 export type BaseInputProps = {
   activeTab: string
@@ -26,6 +27,7 @@ export type BaseInputProps = {
   handleSelectChange: ((event: React.SyntheticEvent<Element, Event>, value: string[], reason?: string, details?: AutocompleteChangeDetails<string> | undefined) => void);
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleClear: (e: React.MouseEvent<HTMLButtonElement>, name?: string) => void;
+  handleDate: (date: Date | null, name: string) => void
 }
 export type MediaInputProps = {
   commonSelectSxStyles: SxProps
@@ -63,6 +65,8 @@ export type Translation = {
     tourismValue: option[]|[];
     latitude: string;
     longitude: string;
+    startDate: string;
+    endDate: string;
   }
   
   
