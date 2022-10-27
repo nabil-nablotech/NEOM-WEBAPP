@@ -158,12 +158,12 @@ const ListView = (props: EventsProps) => {
             dataIndex: "attributes",
             className: 'cell-name',
             sorter: (a: { attributes: {visit_associate: VisitAssociate} }, b: { attributes: {visit_associate: VisitAssociate} }) => {
-                return a.attributes.visit_associate.data.attributes.placeUniqueId.data.attributes.placeNameEnglish.localeCompare(b.attributes.visit_associate.data.attributes.placeUniqueId.data.attributes.placeNameEnglish);
+                return a.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish.localeCompare(b.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish);
             },
             sortDirections: ["ascend"],
             defaultSortOrder: "ascend",
             render: (value: any, index: number) => {
-              return `${value.visit_associate.data.attributes.placeUniqueId.data.attributes.placeNameEnglish}${value.visit_associate.data.attributes.placeUniqueId.data.attributes.placeNameArabic}`            
+              return `${value.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish}${value.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameArabic}`            
             }
         },
         {
@@ -171,7 +171,7 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-number',
-            render: (value: any, index: number) => value.visit_associate.data.attributes.placeUniqueId.data.attributes.placeNumber
+            render: (value: any, index: number) => value.visit_associate.data.attributes.place_unique_id.data.attributes.placeNumber
         },
         {
             title: "TYPE",
@@ -185,7 +185,7 @@ const ListView = (props: EventsProps) => {
             dataIndex: "attributes",
             className: 'cell-research',
             render: (value: any, index: number) => {
-                return value.researchValue?.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
+                return value.researchValue
             },
         },
         {
@@ -193,7 +193,7 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-tourism',
-            render: (value: any, index: number) => value.tourismValue.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
+            render: (value: any, index: number) => value.tourismValue
             // render: (value: any, index: number) => "Temp"
         },
         {
@@ -201,14 +201,14 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-conserve',
-            render: (value: any, index: number) => value.stateOfConservation.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
+            render: (value: any, index: number) => value.stateOfConservation
         },
         {
             title: "RECOMMENDATION",
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-recommend',
-            render: (value: any, index: number) => value.recommendation.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
+            render: (value: any, index: number) => value.recommendation
             // render: (value: any, index: number) => "temp"
         },
         {
@@ -216,13 +216,13 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-period',
-            render: (value: any, index: number) => value.period.data.map((x: FieldOption) => `${x.attributes.translation.data.attributes.locale[0].value}; `)
+            render: (value: any, index: number) => value.period
         },
         {
             title: "RISK",
             key: `attributes`,
             dataIndex: "attributes",
-            render: (value: any, index: number) => value.risk.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
+            render: (value: any, index: number) => value.risk
         },
         {
             title: "",

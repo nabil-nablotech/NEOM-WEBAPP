@@ -3,7 +3,7 @@ export type VisitAssociate = {
   data: {
     id: number
     attributes: {
-      placeUniqueId: {data: Place}
+      place_unique_id: {data: Place}
     }
   }
 }
