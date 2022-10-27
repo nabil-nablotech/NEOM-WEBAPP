@@ -62,6 +62,7 @@ export const places = gql`
           period
           researchValue
 
+          siteType
           tourismValue
           stateOfConservation
           recommendation
@@ -146,7 +147,6 @@ export const refinePlaces = gql`
         attributes {
           placeNameEnglish
           placeNameArabic
-          type
           siteDescription
           updatedAt
           keywords
@@ -156,7 +156,7 @@ export const refinePlaces = gql`
           uniqueId
           period
           researchValue
-
+          siteType
           tourismValue
           stateOfConservation
           recommendation

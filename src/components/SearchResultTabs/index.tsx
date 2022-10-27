@@ -115,6 +115,7 @@ const initialState = {
   risk: [],
   assessmentType: [],
   artifacts: [],
+  actionType: [],
   latitude: '',
   longitude: '',
   startDate: today,

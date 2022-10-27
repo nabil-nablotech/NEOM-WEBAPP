@@ -149,6 +149,7 @@ const usePlace = () => {
       refineSearchPlaces(obj)
     }
     else if(Object.keys(copiedValue).length !== 0){
+      // console.log('obj', obj);
       refineSearchPlaces(obj)
     }else{
       refetchPlaces({

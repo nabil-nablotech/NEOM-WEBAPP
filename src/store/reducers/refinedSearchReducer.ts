@@ -10,6 +10,7 @@ export const initialSelectedValue = {
   risk: [],
   assessmentType: [],
   artifacts: [],
+  actionType: [],
   siteType: [],
   latitude: '',
   longitude: '',

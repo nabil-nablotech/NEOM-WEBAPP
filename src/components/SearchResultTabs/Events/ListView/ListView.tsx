@@ -157,13 +157,13 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-name',
-            sorter: (a: { attributes: {visit_associate: VisitAssociate} }, b: { attributes: {visit_associate: VisitAssociate} }) => {
-                return a.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish.localeCompare(b.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish);
-            },
-            sortDirections: ["ascend"],
-            defaultSortOrder: "ascend",
+            // sorter: (a: { attributes: {visit_associate: VisitAssociate} }, b: { attributes: {visit_associate: VisitAssociate} }) => {
+            //     return a.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish.localeCompare(b.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish);
+            // },
+            // sortDirections: ["ascend"],
+            // defaultSortOrder: "ascend",
             render: (value: any, index: number) => {
-              return `${value.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish}${value.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameArabic}`            
+              return `${value.visit_associate.data?.attributes.place_unique_id.data?.attributes.placeNameEnglish}${value.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameArabic || ''}`          
             }
         },
         {
@@ -171,7 +171,7 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-number',
-            render: (value: any, index: number) => value.visit_associate.data.attributes.place_unique_id.data.attributes.placeNumber
+            render: (value: any, index: number) => value.visit_associate.data?.attributes.place_unique_id.data?.attributes.placeNumber || ''
         },
         {
             title: "TYPE",

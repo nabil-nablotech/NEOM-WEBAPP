@@ -2,7 +2,7 @@ import { NullValueNode } from "graphql";
 import { Place } from "./Place";
 
 export type PlaceUnique = {
-  placeUniqueId: {
+  place_unique_id: {
     data: Place | null;
   };
 };

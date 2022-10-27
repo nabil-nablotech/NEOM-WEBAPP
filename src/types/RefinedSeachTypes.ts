@@ -55,6 +55,7 @@ export type Translation = {
   
   export type Options = {
     artifacts: option[] | [];
+    actionType: option[] | [];
     assessmentType: option[] | [];
     period: option[] | [];
     recommendation: option[] |[];
