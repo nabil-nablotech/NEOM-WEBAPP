@@ -109,7 +109,7 @@ const GalleryView = () => {
                                         <RenderFileData
                                             fileData={{
                                                 alt: "",
-                                                src: itemObj.attributes.media_associates.data[0].attributes.mediaUniqueId.data.attributes.object.data.attributes.url,
+                                                src: itemObj.attributes.media_associates.data[0].attributes.media_unique_id.data.attributes.object.data.attributes.url,
                                                 className: styles['image']
                                             }}
                                             fileType="image"

@@ -63,11 +63,11 @@ const GridView = (props: PlacesProps) => {
                 }}
               >
                 <Card
-                  img={item.attributes.media_associates.data[0].attributes.mediaUniqueId.data.attributes.object.data.attributes.url}
+                  img={item.attributes.media_associates.data[0].attributes.media_unique_id.data.attributes.object.data.attributes.url}
                   title={`${item.attributes.placeNameEnglish.substr(0, 20)}${item.attributes.placeNameArabic.substr(0, 20)} - ${item.attributes.placeNumber}`}
                   subTitle={item.attributes.siteDescription}
                   dateString={`Last login on ${formatDateTime(item.attributes.updatedAt)}`}
-                  period={item.attributes.period}
+                  period={item.attributes.period.split(';')}
                 />
               </Grid>
           ))}

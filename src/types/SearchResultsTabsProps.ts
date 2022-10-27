@@ -29,7 +29,7 @@ export type GridViewCard_Places = {
   title: string;
   subTitle: string;
   dateString: string;
-  period?: FieldOptions | null;
+  period?: string[] | null;
   onClick?: ((e: React.MouseEvent<Element, React.MouseEvent>) => void) &
     React.MouseEvent<Element, React.MouseEvent>;
 };

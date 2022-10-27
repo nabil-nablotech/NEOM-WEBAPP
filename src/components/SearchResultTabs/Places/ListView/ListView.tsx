@@ -179,7 +179,7 @@ const ListView = (props: PlacesProps) => {
             dataIndex: "attributes",
             className: 'cell-research',
             render: (value: any, index: number) => {
-                return value.researchValue?.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
+                return value.researchValue
             },
         },
         {
@@ -187,34 +187,34 @@ const ListView = (props: PlacesProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-tourism',
-            render: (value: any, index: number) => value.tourismValue.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
+            render: (value: any, index: number) => value.tourismValue
         },
         {
             title: "STATE OF CONSERVATION",
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-conserve',
-            render: (value: any, index: number) => value.stateOfConservation.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
+            render: (value: any, index: number) => value.stateOfConservation
         },
         {
             title: "RECOMMENDATION",
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-recommend',
-            render: (value: any, index: number) => value.recommendation.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
+            render: (value: any, index: number) => value.recommendation
         },
         {
             title: "PERIOD",
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-period',
-            render: (value: any, index: number) => displayMultiple(value,index,'period')
+            render: (value: any, index: number) => value.period
         },
         {
             title: "RISK",
             key: `attributes`,
             dataIndex: "attributes",
-            render: (value: any, index: number) => value.risk.data.map((x: FieldOption) => x.attributes.translation.data.attributes.locale[0].value)
+            render: (value: any, index: number) => value.risk
         },
         {
             title: "",

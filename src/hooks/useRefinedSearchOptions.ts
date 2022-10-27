@@ -11,7 +11,7 @@ const useRefinedSearch = () => {
     onSuccess: (data: Options) => {
       dispatch(setOptions(data));
     },
-    retry: 1
+    retry: false
   });
   return {
     data,

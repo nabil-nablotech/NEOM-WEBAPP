@@ -13,12 +13,12 @@ export type Place = {
     latitude: Number;
     longitude: Number;
     uniqueId: string;
-    period: FieldOptions;
-    researchValue: FieldOptions;
-    tourismValue: FieldOptions;
-    stateOfConservation: FieldOptions;
-    recommendations: FieldOptions;
-    risk: FieldOptions;
+    period: string;
+    researchValue: string;
+    tourismValue: string;
+    stateOfConservation: string;
+    recommendations: string;
+    risk: string;
     media_associates: MediaAssociates;
   };
 };
@@ -26,7 +26,7 @@ export type Place = {
 export type MediaAssociates = {
   data: {
     attributes: {
-      mediaUniqueId: {
+      media_unique_id: {
         data: {
           attributes: {
             object: {

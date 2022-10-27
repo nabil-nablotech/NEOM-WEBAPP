@@ -171,6 +171,7 @@ const StepContent = ({
                         handleChange={(e: SelectChangeEvent<string | string[]>) =>
                             formik.setFieldValue('siteType', e.target.value as string)
                         }
+                        handleClear={() => {}}
                         itemsList={[]}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
@@ -183,6 +184,8 @@ const StepContent = ({
                         handleChange={(e: SelectChangeEvent<string | string[]>) =>
                             formik.setFieldValue('period', e.target.value as string)
                         }
+                        
+                        handleClear={() => {}}
                         itemsList={[]}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
@@ -195,6 +198,8 @@ const StepContent = ({
                         handleChange={(e: SelectChangeEvent<string | string[]>) =>
                             formik.setFieldValue('stateOfConservation', e.target.value as string)
                         }
+                        
+                        handleClear={() => {}}
                         itemsList={[]}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
@@ -207,6 +212,8 @@ const StepContent = ({
                         handleChange={(e: SelectChangeEvent<string | string[]>) =>
                             formik.setFieldValue('risk', e.target.value as string)
                         }
+                        
+                        handleClear={() => {}}
                         itemsList={[]}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
