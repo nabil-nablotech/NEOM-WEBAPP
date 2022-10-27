@@ -236,7 +236,7 @@ console.log('selectedValue.startDate', selectedValue.startDate)
           <DatePicker
             placeholderText="From"
             className={`${styles["date"]}`}
-            selected={selectedValue.startDate}
+            selected={new Date(selectedValue.startDate)}
             onChange={(date: Date) => handleDate(date, "startDate")}
           />
         </Grid>
@@ -246,7 +246,7 @@ console.log('selectedValue.startDate', selectedValue.startDate)
           <DatePicker
             placeholderText="To"
             className={`${styles["date"]}`}
-            selected={selectedValue.endDate}
+            selected={new Date(selectedValue.endDate)}
             onChange={(date: Date) => handleDate(date, "endDate")}
           />
         </Grid>
