@@ -126,15 +126,16 @@ const usePlace = () => {
       return x;
     });
     const obj: any = {
-      researchValue: copiedValue&&copiedValue?.researchValue && copiedValue?.researchValue,
-      tourismValue: copiedValue&&copiedValue.tourismValue && copiedValue?.tourismValue,
-      stateOfConservation: copiedValue&&copiedValue?.stateOfConservation && copiedValue?.stateOfConservation,
-      recommendation: copiedValue&&copiedValue?.recommendation && copiedValue?.recommendation,
-      risk: copiedValue&&copiedValue?.risk && copiedValue?.risk,
-      period: copiedValue&&copiedValue?.period && copiedValue?.period,
+      researchValue: copiedValue&&copiedValue?.researchValue && copiedValue?.researchValue.toString(),
+      tourismValue: copiedValue&&copiedValue.tourismValue && copiedValue?.tourismValue.toString(),
+      stateOfConservation: copiedValue&&copiedValue?.stateOfConservation && copiedValue?.stateOfConservation.toString(),
+      recommendation: copiedValue&&copiedValue?.recommendation && copiedValue?.recommendation.toString(),
+      risk: copiedValue&&copiedValue?.risk && copiedValue?.risk.toString(),
+      period: copiedValue&&copiedValue?.period && copiedValue?.period.toString(),
       latitude: copiedValue&&copiedValue?.latitude && parseFloat(copiedValue?.latitude),
       longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
-      artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts,
+      artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts.toString(),
+      actionType: copiedValue&&copiedValue?.actionType && copiedValue?.actionType.toString(),
       search_one: searchWordArray[0],
       search_two: searchWordArray[1],
       search_three: searchWordArray[2],
@@ -149,7 +150,7 @@ const usePlace = () => {
       refineSearchPlaces(obj)
     }
     else if(Object.keys(copiedValue).length !== 0){
-      // console.log('obj', obj);
+      console.log('obj', obj);
       refineSearchPlaces(obj)
     }else{
       refetchPlaces({
