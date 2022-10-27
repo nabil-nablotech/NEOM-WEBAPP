@@ -35,7 +35,7 @@ query SearchTitle(
         {
           media_type: {
             categoryCode: {
-              contains: "MEDIA
+              containsi: "LIBRARY"
             }
           }
         }
@@ -101,7 +101,6 @@ query SearchTitle(
     }
   }
 }
-
 `;
 
 export const refineMedia = gql`
