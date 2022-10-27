@@ -14,7 +14,7 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
-import { antTablePaginationCss, copyToClipboard, formatWebDate, stringAvatar } from "../../../../utils/services/helpers";
+import { antTablePaginationCss, computeArrayFromDelimiter, copyToClipboard, formatWebDate, stringAvatar } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
@@ -27,6 +27,9 @@ import { useDispatch } from "react-redux";
 import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
+import usePlace from "../../../../hooks/usePlace";
+import usePlaceDetails from "../../../../hooks/usePlaceDetails";
+import Loader from "../../../Common/Loader";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -133,13 +136,6 @@ const PlaceDetailsPage = () => {
             selectedPlaceObjIndex = inx
         }
     })
-
-    const {
-        placeNameEnglish, placeNameArabic, placeNumber,
-        siteDescription,
-    } = selectedPlaceObj.attributes
-
-    const {latitude, longitude} = selectedPlaceObj
 
 // console.log('hex: ', media)
     // get from api
@@ -326,7 +322,21 @@ const PlaceDetailsPage = () => {
     ];
 
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
+    const { loading : placeLoading, error, data : placeData } = usePlaceDetails();
     const dispatch = useDispatch()
+
+    if(!placeData) {
+        return <div>Cant fetch places</div>
+    }
+
+    const {
+        placeNameEnglish, placeNameArabic, placeNumber,
+        siteDescription, siteType, period, stateOfConservation,
+        risk, tourismValue, researchValue, recommendation,
+        placeUIPath
+    } = placeData
+    const {latitude, longitude} = placeData
+
 
     const handleClickMediaItem = (e: React.MouseEvent, itemIndex: number) => {
         /** itemIndex used to track which item being clicked out of 5;
@@ -339,6 +349,11 @@ const PlaceDetailsPage = () => {
             dispatch(setActiveMediaItemIndex(itemIndex - 1))
         }
     }
+
+    if(placeLoading) {
+        return <Loader />
+    }
+
     return (
         <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -538,8 +553,17 @@ const PlaceDetailsPage = () => {
                                             Site Type
                                         </Grid>
                                         <Grid item>
-                                            <Box component={"a"} href="#" className={`${styles['anchor']}`}>
-                                                Building
+                                            <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
+                                                {
+                                                    computeArrayFromDelimiter(siteType, ';').map(item => (
+                                                        <Box
+                                                            component="div"
+                                                            className={`${styles['text-anchor']}`}
+                                                        >
+                                                            {item}
+                                                        </Box>
+                                                    ))
+                                                }
                                             </Box>
                                         </Grid>
                                     </Grid>
@@ -554,8 +578,17 @@ const PlaceDetailsPage = () => {
                                             the Site Type says  “Building”, when the user clicks on it, the user will 
                                             be redirected to the search results page where they will see the list of 
                                             all places where the site type = building. */}
-                                            <Box component={"a"} href="#" className={`${styles['anchor']}`}>
-                                                Modern,Ottoman
+                                            <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
+                                                {
+                                                    computeArrayFromDelimiter(period, ';').map(item => (
+                                                        <Box
+                                                            component="div"
+                                                            className={`${styles['text-anchor']}`}
+                                                        >
+                                                            {item}
+                                                        </Box>
+                                                    ))
+                                                }
                                             </Box>
                                         </Grid>
                                     </Grid>
@@ -564,7 +597,7 @@ const PlaceDetailsPage = () => {
                                             State of Conservation
                                         </Grid>
                                         <Grid item>
-                                            Poor
+                                            {stateOfConservation}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -572,7 +605,7 @@ const PlaceDetailsPage = () => {
                                             Risk
                                         </Grid>
                                         <Grid item>
-                                            Actively damaged
+                                            {risk}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -580,7 +613,7 @@ const PlaceDetailsPage = () => {
                                             Tourism Value
                                         </Grid>
                                         <Grid item>
-                                            Local
+                                            {tourismValue}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -588,7 +621,7 @@ const PlaceDetailsPage = () => {
                                             Research Value
                                         </Grid>
                                         <Grid item>
-                                            Limited
+                                            {researchValue}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -604,7 +637,7 @@ const PlaceDetailsPage = () => {
                                             Recommendation
                                         </Grid>
                                         <Grid item>
-                                            Protected
+                                            {recommendation}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -621,10 +654,10 @@ const PlaceDetailsPage = () => {
                                                 }}
                                                 onClick={e => {
                                                     setCopyDone(true)
-                                                    copyToClipboard('https://www.neomheritage.com/place/N00381')
+                                                    copyToClipboard(placeUIPath)
                                                 }}
                                             >
-                                                https://www.neomheritage.com/place/N00381
+                                                {placeUIPath}
                                             </Box>
                                             <PositionedSnackbar
                                                 message={"Copied to clipboard"}
@@ -649,13 +682,13 @@ const PlaceDetailsPage = () => {
                                     <Grid item lg={5} md={5} sm={5}>
                                         <Grid container className={`${styles['map-loctn-line']}`}>
                                             <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                            <Grid item>28.090884</Grid>
+                                            <Grid item>{`${latitude}`}</Grid>
                                         </Grid>
                                     </Grid>
                                     <Grid item lg={5} md={5} sm={6}>
                                         <Grid container className={`${styles['map-loctn-line']}`}>
                                             <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                            <Grid item>35.475373</Grid>
+                                            <Grid item>{`${longitude}`}</Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>

@@ -2,26 +2,30 @@ export type Place = {
   id: string;
   latitude: number;
   longitude: number;
-  attributes: {
-    thumbnailUrl?: string;
-    placeNameEnglish: string;
-    placeNameArabic: string;
-    siteDescription: string;
-    updatedAt: string;
-    keywords: string[] | null;
-    placeNumber: string | null;
-    latitude: Number;
-    longitude: Number;
-    uniqueId: string;
-    period: string;
-    researchValue: string;
-    tourismValue: string;
-    stateOfConservation: string;
-    recommendations: string;
-    risk: string;
-    media_associates: MediaAssociates;
-  };
+  attributes: PlaceApiResponse;
 };
+
+export type PlaceApiResponse = {
+  thumbnailUrl?: string;
+  placeNameEnglish: string;
+  placeNameArabic: string;
+  siteDescription: string;
+  updatedAt: string;
+  keywords: string[] | null;
+  placeNumber: string | null;
+  latitude: Number;
+  longitude: Number;
+  uniqueId: string;
+  period: string;
+  researchValue: string;
+  tourismValue: string;
+  stateOfConservation: string;
+  recommendation: string;
+  risk: string;
+  media_associates: MediaAssociates;
+  siteType: string
+  placeUIPath: string
+}
 
 export type MediaAssociates = {
   data: {
