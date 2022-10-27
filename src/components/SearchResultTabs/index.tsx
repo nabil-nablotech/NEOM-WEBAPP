@@ -202,12 +202,12 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
   };
 
   const handleDate = (date:Date | null, name: string) => {
-    console.log('date', name, typeof date);
+
     const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
     if (name && date) {
 
       selectedValueCopy[name] = date;
-      // dispatch(setSelectedValue(selectedValueCopy));
+      dispatch(setSelectedValue(selectedValueCopy));
     }
   }
 
