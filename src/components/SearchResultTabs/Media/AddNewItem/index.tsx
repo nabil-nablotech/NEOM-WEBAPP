@@ -100,6 +100,14 @@ const StepContent = ({
                             {
                                 label: 'Image',
                                 value: 'Image'
+                            },
+                            {
+                                label: 'Video',
+                                value: 'Video'
+                            },
+                            {
+                                label: '3D Model',
+                                value: '3D Model'
                             }
                         ]}
                         selectStylesSx={commonSelectSxStyles}
