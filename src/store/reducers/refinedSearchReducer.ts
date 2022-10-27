@@ -13,8 +13,8 @@ export const initialSelectedValue = {
   siteType: [],
   latitude: '',
   longitude: '',
-  startDate: '',
-  endDate: '',
+  startDate: new Date(),
+  endDate: new Date(),
 }
 
 export type RefinedSearchState = {

@@ -22,12 +22,12 @@ import {
 } from "../../store/reducers/searchResultsReducer";
 import AddNewItem from "../../components/AddNewItem";
 import PositionedSnackbar from "../../components/Snackbar";
-import { PLACES_TAB_NAME } from "../../utils/services/helpers";
+import { EVENTS_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME } from "../../utils/services/helpers";
 import useRefinedSearch from "../../hooks/useRefinedSearchOptions";
-import {
-  setSearchText,
-  setSearchApply,
-} from "../../store/reducers/searchResultsReducer";
+import {setSearchText, setSearchApply,} from '../../store/reducers/searchResultsReducer';
+import AddNewPlace from "../../components/SearchResultTabs/Places/AddNewItem";
+import AddNewEvent from "../../components/SearchResultTabs/Events/AddNewItem";
+import AddNewMedia from "../../components/SearchResultTabs/Media/AddNewItem";
 
 const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
@@ -74,11 +74,9 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       e.preventDefault();
       navigate({
         pathname: `/search-results/${tabName}`,
-        search: encodeURIComponent(
-          JSON.stringify({
-            search: searchText,
-          })
-        ),
+        search: decodeURIComponent(JSON.stringify({
+          search: searchText
+        }))
       });
     }
   };
@@ -121,14 +119,19 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       <Box component="div">
         <SearchResultTabs handleSubmit={handleSubmit} tabIndex={tabIndex} />
       </Box>
-      <CustomDrawer
-        origin="right"
-        isOpen={newItemWindowOpen}
-        onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}
-      >
-        <AddNewItem
-          onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}
-        />
+      <CustomDrawer origin="right" isOpen={newItemWindowOpen} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}>
+        {
+          tabName === PLACES_TAB_NAME &&
+          <AddNewPlace onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}/>
+        }
+        {
+          tabName === EVENTS_TAB_NAME &&
+          <AddNewEvent onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}/>
+        }
+        {
+          tabName === MEDIA_TAB_NAME &&
+          <AddNewMedia onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}/>
+        }
       </CustomDrawer>
       <PositionedSnackbar
         message={`New ${tabName === PLACES_TAB_NAME ? "Place" : "Event"} added`}

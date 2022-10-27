@@ -34,8 +34,7 @@ const BaseInputs = ({
   textInputSxStyles
 }: BaseInputProps) => {
   const [locationModalOpen, toggleLocationModal] = useState<boolean>(false);
-  const [startDate, setStartDate] = useState(new Date());
-
+console.log('selectedValue.startDate', selectedValue.startDate)
   return (
     <>
       <Grid item sm={2} className={`${styles["input-field"]}`}>
@@ -235,7 +234,7 @@ const BaseInputs = ({
       {activeTab === EVENTS_TAB_NAME && (
         <Grid item sm={2} className={`${styles["date-grid-item"]}`}>
           <DatePicker
-            placeholderText="From Date Range"
+            placeholderText="From"
             className={`${styles["date"]}`}
             selected={selectedValue.startDate}
             onChange={(date: Date) => handleDate(date, "startDate")}
@@ -245,7 +244,7 @@ const BaseInputs = ({
       {activeTab === EVENTS_TAB_NAME && (
         <Grid item sm={2} className={`${styles["date-grid-item"]}`}>
           <DatePicker
-            placeholderText="To Date Range"
+            placeholderText="To"
             className={`${styles["date"]}`}
             selected={selectedValue.endDate}
             onChange={(date: Date) => handleDate(date, "endDate")}

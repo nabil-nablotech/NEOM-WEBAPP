@@ -29,7 +29,7 @@ const usePlace = () => {
     const searchData = getQueryObj(search);
     if (searchData) {
       dispatch(setSearchText(searchData.search))
-      if (searchData.refinedSearch) {
+      if (searchData?.refinedSearch) {
         dispatch(setSelectedValue({
           ...initialSelectedValue,
           ...searchData.refinedSearch

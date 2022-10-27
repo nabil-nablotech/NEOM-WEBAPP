@@ -105,6 +105,7 @@ const Label = ({ img, label }: LabelProps) => {
   );
 };
 
+const today: Date = new Date();
 const initialState = {
   stateOfConservation: [],
   period: [],
@@ -116,8 +117,8 @@ const initialState = {
   artifacts: [],
   latitude: '',
   longitude: '',
-  startDate: '',
-  endDate: '',
+  startDate: today,
+  endDate: today,
 }
 const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => {
   const [value, setValue] = React.useState(0);
@@ -165,7 +166,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
 
     navigate({
       pathname: `/search-results/${newLabel ? newLabel : "Places"}`,
-      search: encodeURIComponent(JSON.stringify({
+      search: decodeURIComponent(JSON.stringify({
         search: searchText
       }))
     });
@@ -178,7 +179,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
-    const searchParams: string = encodeURIComponent(JSON.stringify({
+    const searchParams: string = decodeURIComponent(JSON.stringify({
       search: searchText,
       refinedSearch: {...copiedValue}
     }));
@@ -201,11 +202,12 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
   };
 
   const handleDate = (date:Date | null, name: string) => {
-    console.log('date', name, date);
+    console.log('date', name, typeof date);
     const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
     if (name && date) {
+
       selectedValueCopy[name] = date;
-      dispatch(setSelectedValue(selectedValueCopy));
+      // dispatch(setSelectedValue(selectedValueCopy));
     }
   }
 
