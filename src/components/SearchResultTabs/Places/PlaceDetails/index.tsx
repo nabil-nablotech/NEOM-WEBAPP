@@ -108,7 +108,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
     ${antTablePaginationCss}
 ` 
 const PlaceDetailsPage = () => {
-    let { tabName, itemId } = useParams<{ tabName?: tabNameProps, itemId: string }>();
+    let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
     const navigate = useNavigate();
 
     const { places, library, events, media } = useSelector(
@@ -128,7 +128,7 @@ const PlaceDetailsPage = () => {
     }, [])
 
     places.forEach((placeItem: Place, inx: number) => {
-        if (placeItem.attributes.uniqueId === itemId) {
+        if (placeItem.attributes.uniqueId === uniqueId) {
             selectedPlaceObj = placeItem
             selectedPlaceObjIndex = inx
         }
