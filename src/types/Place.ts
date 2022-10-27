@@ -1,3 +1,28 @@
+import { VisitAssociate } from "./Event";
+
+export type PlaceApi = {
+  id: string;
+  latitude: number;
+  longitude: number;
+  thumbnailUrl?: string;
+  placeNameEnglish: string;
+  placeNameArabic: string;
+  siteDescription: string;
+  siteType: string;
+  updatedAt: string;
+  keywords: string[] | null;
+  placeNumber: string | null;
+  uniqueId: string;
+  period: string;
+  researchValue: string;
+  tourismValue: string;
+  stateOfConservation: string;
+  recommendation: string;
+  risk: string;
+  placeUIPath: string;
+  media_associates: MediaAssociates;
+  visit_associates: VisitAssociate[]
+};
 export type Place = {
   id: string;
   latitude: number;

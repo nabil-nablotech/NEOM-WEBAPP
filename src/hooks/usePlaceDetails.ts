@@ -1,17 +1,17 @@
 import { useEffect } from "react";
 import { useMutation, useQuery } from "react-query";
 import { useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { placeDetails } from "../api/place";
+import { tabNameProps } from "../types/SearchResultsTabsProps";
 
 const usePlaceDetails = () => {
-  const { search } = useLocation();
+  let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     console.log('fetch the uniqueId from params');
-    const uniqueId: string = JSON.stringify(search);
     if (uniqueId) {
       fetchPlaceDetails(uniqueId)
     }

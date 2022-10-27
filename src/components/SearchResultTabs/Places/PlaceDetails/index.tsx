@@ -28,6 +28,7 @@ import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setAct
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
 
+import usePlaceDetails from "../../../../hooks/usePlaceDetails";
 const StyledTableWrapper = styled(StyledAntTable)`
     
     .ant-table-container {
@@ -109,6 +110,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
 ` 
 const PlaceDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
+    const {data: placeData} = usePlaceDetails();
     const navigate = useNavigate();
 
     const { places, library, events, media } = useSelector(
@@ -339,6 +341,9 @@ const PlaceDetailsPage = () => {
             dispatch(setActiveMediaItemIndex(itemIndex - 1))
         }
     }
+    if (!placeData) {
+        return null
+    }
     return (
         <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -490,20 +495,20 @@ const PlaceDetailsPage = () => {
                             <Grid item className={`${styles['title-section-left-item']}`}>
                                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
-                                {true && <Grid container>
+                                {placeData && <Grid container>
                                     <Grid item>
                                         <Box component="div" className={`${styles['item-name']}`}>
-                                            {placeNameEnglish}
+                                            {placeData.placeNameEnglish}
                                         </Box>
                                     </Grid>
-                                    {true && <Grid item>
+                                    {placeData && <Grid item>
                                         <Box component="div" className={`${styles['item-name-arabic']}`}>
-                                            {placeNameArabic}
+                                            {placeData.placeNameArabic}
                                         </Box>
                                     </Grid>}
                                 </Grid>}
                                 <Box component="div" className={`${styles['item-number']}`}>
-                                    {placeNumber}
+                                    {placeData.placeNumber}
                                 </Box>
                             </Grid>
                             <Grid item className={`${styles['title-section-grid']}`}>
@@ -526,7 +531,7 @@ const PlaceDetailsPage = () => {
                                     <Box component="div"
                                         className={`${styles['site-desc-condensed']} ${isSeeMore ? styles['see-more-active'] : ''}`}
                                     >
-                                        {siteDescription.substring(0, !isSeeMore ? 500 : siteDescription.length - 1)}
+                                        {placeData?.siteDescription.substring(0, !isSeeMore ? 500 : placeData.siteDescription.length - 1)}
                                     </Box>
                                     {!isSeeMore && <Box component="div" className={`${styles['see-more-box']}`} onClick={e => {
                                         toggleSeeMore(state => !state)
@@ -539,7 +544,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                         <Grid item>
                                             <Box component={"a"} href="#" className={`${styles['anchor']}`}>
-                                                Building
+                                                {placeData.siteType}
                                             </Box>
                                         </Grid>
                                     </Grid>
@@ -555,7 +560,7 @@ const PlaceDetailsPage = () => {
                                             be redirected to the search results page where they will see the list of 
                                             all places where the site type = building. */}
                                             <Box component={"a"} href="#" className={`${styles['anchor']}`}>
-                                                Modern,Ottoman
+                                                {placeData.period}
                                             </Box>
                                         </Grid>
                                     </Grid>
@@ -564,7 +569,7 @@ const PlaceDetailsPage = () => {
                                             State of Conservation
                                         </Grid>
                                         <Grid item>
-                                            Poor
+                                            {placeData.stateOfConservation}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -572,7 +577,7 @@ const PlaceDetailsPage = () => {
                                             Risk
                                         </Grid>
                                         <Grid item>
-                                            Actively damaged
+                                            {placeData.risk}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -580,7 +585,7 @@ const PlaceDetailsPage = () => {
                                             Tourism Value
                                         </Grid>
                                         <Grid item>
-                                            Local
+                                            {placeData.tourismValue}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -588,7 +593,7 @@ const PlaceDetailsPage = () => {
                                             Research Value
                                         </Grid>
                                         <Grid item>
-                                            Limited
+                                            {placeData.researchValue}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -604,7 +609,7 @@ const PlaceDetailsPage = () => {
                                             Recommendation
                                         </Grid>
                                         <Grid item>
-                                            Protected
+                                            {placeData.recommendation}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -624,7 +629,7 @@ const PlaceDetailsPage = () => {
                                                     copyToClipboard('https://www.neomheritage.com/place/N00381')
                                                 }}
                                             >
-                                                https://www.neomheritage.com/place/N00381
+                                                {placeData.placeUIPath}
                                             </Box>
                                             <PositionedSnackbar
                                                 message={"Copied to clipboard"}
@@ -649,13 +654,13 @@ const PlaceDetailsPage = () => {
                                     <Grid item lg={5} md={5} sm={5}>
                                         <Grid container className={`${styles['map-loctn-line']}`}>
                                             <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                            <Grid item>28.090884</Grid>
+                                            <Grid item>{placeData.latitude}</Grid>
                                         </Grid>
                                     </Grid>
                                     <Grid item lg={5} md={5} sm={6}>
                                         <Grid container className={`${styles['map-loctn-line']}`}>
                                             <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                            <Grid item>35.475373</Grid>
+                                            <Grid item>{placeData.longitude}</Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -689,7 +694,7 @@ const PlaceDetailsPage = () => {
                     <Box component="div" className={`${styles['events-section']} ${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Events</Box>
-                            <Box component="div">1 Item</Box>
+                            <Box component="div">{placeData.visit_associates.length}</Box>
                         </Box>
                         <Box component="div">
                             <StyledTableWrapper
