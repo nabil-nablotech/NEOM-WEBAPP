@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import Graphql, { gql } from "@apollo/client";
 
 export const places = gql`
   query SearchTitle(
@@ -186,3 +186,4 @@ export const refinePlaces = gql`
     }
   }
 `;
+
