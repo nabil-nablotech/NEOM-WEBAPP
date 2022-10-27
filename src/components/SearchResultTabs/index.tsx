@@ -206,8 +206,6 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     if (name && date) {
 
       selectedValueCopy[name] = date;
-
-      console.log('date', selectedValueCopy);
       dispatch(setSelectedValue(selectedValueCopy));
     }
   }
