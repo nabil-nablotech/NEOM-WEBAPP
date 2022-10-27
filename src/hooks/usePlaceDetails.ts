@@ -11,7 +11,7 @@ const usePlaceDetails = () => {
 
   useEffect(() => {
     console.log('fetch the uniqueId from params');
-    const uniqueId = search;
+    const uniqueId: string = JSON.stringify(search);
     if (uniqueId) {
       fetchPlaceDetails(uniqueId)
     }

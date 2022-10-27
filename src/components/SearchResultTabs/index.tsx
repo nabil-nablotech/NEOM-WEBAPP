@@ -122,7 +122,7 @@ const initialState = {
 }
 const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => {
   const [value, setValue] = React.useState(0);
-  let { tabName, itemId } = useParams<{ tabName?: tabNameProps, itemId: string }>();
+  let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -213,7 +213,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
   /** If get itedId, means its details page
    * Hence replace tabs view and open normal view
    */
-  if(itemId) {
+  if(uniqueId) {
     if(tabName === PLACES_TAB_NAME) {
 
       if (isOpenGalleryView) {
