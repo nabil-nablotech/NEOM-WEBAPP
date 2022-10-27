@@ -16,6 +16,7 @@ import { RootState } from '../../../../store';
 import { addItemMediaSteps } from './../../../../utils/services/helpers';
 import CustomUpload from '../../../Upload';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { useFormik } from 'formik';
 
 const commonSelectSxStyles = {
     textAlign: 'left',
@@ -79,6 +80,15 @@ const StepContent = ({
     handleBack
 }: StepContentTypes) => {
 
+    const formik = useFormik({
+        initialValues: {
+            mediaType: '',
+        },
+        onSubmit: values => {
+            alert(JSON.stringify(values, null, 2));
+        },
+    });
+
     return <>
         <Box component="div" className={`${styles['form']}`}>
             {
@@ -88,13 +98,16 @@ const StepContent = ({
                         className={`${styles["media-type"]}`}
                         label={"Media Type"}
                         name="media-type"
-                        value={formState.mediaType}
+                        value={formik.values.mediaType}
+                        
                         // handleChange={(e) => setFormState((state: any) => ({
                         //     ...state,
                         //     mediaType: e.target.value
                         // }))}
 
-                        handleChange={(e: SelectChangeEvent<string | string[]>) => { }}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) => {
+                            formik.setFieldValue('mediaType', e.target.value)
+                        }}
                         handleClear={(e: React.MouseEvent) => { }}
                         itemsList={[
                             {
@@ -114,10 +127,10 @@ const StepContent = ({
                         formControlSx={commonFormControlSxStyles}
                     />
                     {
-                        formState.mediaType === 'Image' &&
+                        formik.values.mediaType === 'Image' &&
                         <>
                             <CustomUpload
-                                title={'Drag and drop you file here'}
+                                title={'Drag and drop your file here'}
                             />
                         </>
                     }
