@@ -3,6 +3,7 @@ import { Box, Button, Grid } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import styles from './index.module.css'
+import gridStyles from '../GridView/index.module.css'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
@@ -14,7 +15,7 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
-import { antTablePaginationCss, copyToClipboard, formatWebDate, stringAvatar } from "../../../../utils/services/helpers";
+import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatBytes, formatWebDate, shallRenderMedia, stringAvatar } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
@@ -27,6 +28,10 @@ import { useDispatch } from "react-redux";
 import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
+import usePlace from "../../../../hooks/usePlace";
+import usePlaceDetails from "../../../../hooks/usePlaceDetails";
+import Loader from "../../../Common/Loader";
+import MapView from "../../GoogleMap/MapView";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -39,6 +44,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
     .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell) ,
     .ant-table-tbody > tr > td:not(.ant-table-tbody > tr > td.more-menu-ant-cell) {
         min-width: 50px;
+        max-width: 150px;
     }
 
     th.ant-table-cell {
@@ -52,6 +58,10 @@ const StyledTableWrapper = styled(StyledAntTable)`
         vertical-align:middle;
         min-width: 20px;
         width: 20px;
+    }
+
+    .ant-table-cell {
+        vertical-align: middle;
     }
     .more-menu-div {
         vertical-align:middle;
@@ -134,14 +144,6 @@ const PlaceDetailsPage = () => {
         }
     })
 
-    const {
-        placeNameEnglish, placeNameArabic, placeNumber,
-        siteDescription,
-    } = selectedPlaceObj.attributes
-
-    const {latitude, longitude} = selectedPlaceObj
-
-// console.log('hex: ', media)
     // get from api
     let [images, setImages] = useState<any>([
         'https://via.placeholder.com/150/92c952',
@@ -185,8 +187,8 @@ const PlaceDetailsPage = () => {
         {
             title: "NAME",
             key: "attributes",
-            dataIndex: "attributes",
-            sorter: (a, b) => a?.title?.localeCompare(b?.title),
+            dataIndex: "media_unique_id",
+            sorter: (a, b) => a?.fileName?.localeCompare(b?.fileName),
             sortDirections: ["ascend"],
             defaultSortOrder: "ascend",
             className: "name-column",
@@ -198,7 +200,7 @@ const PlaceDetailsPage = () => {
                     }}
                 >
                     <InsertDriveFileOutlinedIcon fontSize="small" />
-                    <Box component="div">{value.title}</Box>
+                    <Box component="div">{value.fileName}</Box>
                 </Box>
             ),
         },
@@ -206,23 +208,23 @@ const PlaceDetailsPage = () => {
             title: "DESCRIPTION",
             key: "attributes",
             className: "description-column",
-            dataIndex: "attributes", // temporary
+            dataIndex: "media_unique_id", // temporary
             render: (value: any, index) => {
-                return value.description;
+                return value?.description;
             },
         },
         {
             title: "CITATION",
             className: "citation-column cell-citation",
-            dataIndex: "attributes", // temporary
+            dataIndex: "media_unique_id", // temporary
             render: (value: any, index) => {
-                return value.citation;
+                return value.citation ? value.citation : 'static citation';
             },
         },
         {
             title: "URL",
             key: "attributes",
-            dataIndex: "attributes", // temporary
+            dataIndex: "media_unique_id", // temporary
             render: (value, index) => (
                 <Box
                     component={"a"}
@@ -232,7 +234,7 @@ const PlaceDetailsPage = () => {
                     }}
                 >
                     <Tooltip>
-                        {value.referenceURL}
+                        {value.referenceURL ?? "static URL"}
                     </Tooltip>
                 </Box>
             ),
@@ -240,14 +242,14 @@ const PlaceDetailsPage = () => {
         {
             title: "SIZE",
             key: "attributes",
-            dataIndex: "attributes",
-            render: (value, index) => value?.imageMetadata?.fileSize ?? 'Temp',
+            dataIndex: "media_unique_id",
+            render: (value, index) => value.object.size ? formatBytes(value.object.size) : "static size",
         },
         {
             title: "UPDATED",
-            key: "attributes",
-            dataIndex: "attributes",
-            render: (value, index) => formatWebDate(value.updatedAt),
+            key: "media_unique_id",
+            dataIndex: "media_unique_id",
+            render: (value, index) => formatWebDate(value?.updatedAt),
         },
         {
             title: "",
@@ -263,37 +265,42 @@ const PlaceDetailsPage = () => {
     const tableHeaderJson_media: ColumnsType<any> = [
         {
             title: "",
-            key: "attributes",
-            dataIndex: "attributes",
+            key: "visit_unique_id",
+            dataIndex: "visit_unique_id",
             className: "cell-image",
-            render: (value: any, index: any) => (
-                <>
+            render: (value: any, index: any) => {
+                return <>
                     <Box
                         className={`media-table-image`}
                         component="img"
                         alt={""}
-                        src={value.thumbnailUrl}
+                        // src={value.thumbnailUrl}
+                        src={`${baseUrl}${value.media_associates[0].media_unique_id.object.url}`}
+                        style={{
+                            maxWidth: '100%'
+                        }}
                     ></Box>
                 </>
-            ),
+            },
         },
         {
             title: "",
             key: "new",
             dataIndex: "new",
             className: "cell-new",
-            render: (value: any, index: any) => "New",
+            // render: (value: any, index: any) => "New",
+            render: (value: any, index: any) => <div className={`${gridStyles["card-new-flag"]}`}>NEW!</div>,
         },
         {
             title: "Type",
             key: "attributes",
             dataIndex: "attributes",
-            render: (value, index) => "render_type"
+            render: (value, index) => "Visit"
         },
         {
             title: "Date of Event",
-            key: "attributes",
-            dataIndex: "attributes",
+            key: "visit_unique_id",
+            dataIndex: "visit_unique_id",
             // to-do
             // Events will be sorted by Date of Event newest to oldest
 
@@ -303,16 +310,18 @@ const PlaceDetailsPage = () => {
             render: (value, index) => format(
                 new Date(
                     // item.attributes.updatedAt
+                    value.visitDate
                     ),
                 "MM-dd-yyyy"
               ),
         },
         {
             title: "Participants",
-            key: "attributes",
-            dataIndex: "attributes",
+            key: "visit_unique_id",
+            dataIndex: "visit_unique_id",
             className: "cell-bearing",
-            render: (value: any, index: any) => "Adam Biernaski, Julian Jansen van Rensburg",
+            // render: (value: any, index: any) => "Adam Biernaski, Julian Jansen van Rensburg",
+            render: (value: any, index: any) => value.recordingTeam,
         },
         {
             title: "",
@@ -326,6 +335,9 @@ const PlaceDetailsPage = () => {
     ];
 
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
+    const { loading: placeLoading, error, data: placeData } = usePlaceDetails();
+    // const { mapEvents } = usePlace();
+
     const dispatch = useDispatch()
 
     const handleClickMediaItem = (e: React.MouseEvent, itemIndex: number) => {
@@ -339,6 +351,29 @@ const PlaceDetailsPage = () => {
             dispatch(setActiveMediaItemIndex(itemIndex - 1))
         }
     }
+
+    if(placeLoading) {
+        return <Loader />
+    }
+    
+    if(!placeLoading && !placeData) {
+        return <div>Cant fetch places</div>
+    }
+
+    if (!placeData) {
+        return null
+    }
+
+    
+    const {
+        placeNameEnglish, placeNameArabic, placeNumber,
+        siteDescription, siteType, period, stateOfConservation,
+        risk, tourismValue, researchValue, recommendation,
+        placeUIPath, media_associates, libraryItems, visit_associates,
+    } = placeData
+    
+    const {latitude, longitude} = placeData
+
     return (
         <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -380,7 +415,7 @@ const PlaceDetailsPage = () => {
                             right: 0,
                             bottom: 0
                         }}>
-                            <Button variant="contained" type="button"
+                            {shallRenderMedia(6, media_associates) && <Button variant="contained" type="button"
                                 style={{
                                     color: '#fff',
                                     backgroundColor: 'var(--black-90-pct)',
@@ -394,7 +429,7 @@ const PlaceDetailsPage = () => {
                                 }}
                             >
                                 View all
-                            </Button>
+                            </Button>}
                         </Box>
                         <Grid container className={`${styles['justify-center']} ${styles['image-grid-gap']}`}
                             spacing={1}
@@ -404,14 +439,15 @@ const PlaceDetailsPage = () => {
                                     handleClickMediaItem(e, 1)
                                 }}
                             >
-                                <RenderFileData
+                                {/* {media_associates[0] && <RenderFileData */}
+                                {shallRenderMedia(1, media_associates) && <RenderFileData
                                     fileData={{
                                         alt: "",
-                                        src: images[0],
+                                        src: `${baseUrl}${media_associates[0].media_unique_id.object.url}`,
                                         className: `${styles["single-image"]} ${styles["left-image"]}`
                                     }}
                                     fileType="image"
-                                />
+                                />}
                             </Grid>
                             <Grid item sm={6} className={`${styles['image-grid-gap']} ${styles["image-side-grid"]}`}
                                 
@@ -424,7 +460,16 @@ const PlaceDetailsPage = () => {
                                             handleClickMediaItem(e, 2)
                                         }}
                                     >
-                                        <RenderFileData
+                                        {shallRenderMedia(2, media_associates) && <RenderFileData
+                                            fileData={{
+                                                alt: "",
+                                                src: `${baseUrl}${media_associates[1].media_unique_id.object.url}`,
+                                                className: `${styles["single-image"]} ${styles["right-image"]}`
+                                            }}
+                                            fileType="image"
+                                        />}
+                                        {/* YOUTUBE VIDEO LOAD REFERENCE: DONT DELETE YET */}
+                                        {/* <RenderFileData
                                             fileData={{
                                                 src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
                                                 className: `${styles["single-image"]} ${styles["right-image"]}`,
@@ -432,14 +477,23 @@ const PlaceDetailsPage = () => {
                                                 thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg"
                                             }}
                                             fileType="video"
-                                        />
+                                        /> */}
                                     </Grid>
                                     <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
                                         onClick={e=> {
                                             handleClickMediaItem(e, 3)
                                         }}
                                     >
-                                        <RenderFileData
+                                        {shallRenderMedia(3, media_associates) && <RenderFileData
+                                            fileData={{
+                                                alt: "",
+                                                src: `${baseUrl}${media_associates[2].media_unique_id.object.url}`,
+                                                className: `${styles["single-image"]} ${styles["right-image"]}`
+                                            }}
+                                            fileType="image"
+                                        />}
+                                        {/* 3D model LOAD REFERENCE: DONT DELETE YET */}
+                                        {/* <RenderFileData
                                             fileData={{
                                                 alt: "",
                                                 src: images[2],
@@ -447,7 +501,7 @@ const PlaceDetailsPage = () => {
                                                 className: `${styles["single-image"]} ${styles["right-image"]}`
                                             }}
                                             fileType="3d"
-                                        />
+                                        /> */}
                                     </Grid>
                                 </Grid>
                                 <Grid container className={`${styles['image-grid-gap']}`}
@@ -458,28 +512,36 @@ const PlaceDetailsPage = () => {
                                             handleClickMediaItem(e, 4)
                                         }}
                                     >
-                                        <RenderFileData
+                                        {shallRenderMedia(4, media_associates) && <RenderFileData
+                                            fileData={{
+                                                alt: "",
+                                                src: `${baseUrl}${media_associates[3].media_unique_id.object.url}`,
+                                                className: `${styles["single-image"]} ${styles["right-image"]}`
+                                            }}
+                                            fileType="image"
+                                        />}
+                                        {/* <RenderFileData
                                             fileData={{
                                                 alt: "",
                                                 src: images[3],
                                                 className: `${styles["single-image"]} ${styles["right-image"]}`
                                             }}
                                             fileType="image"
-                                        />
+                                        /> */}
                                     </Grid>
                                     <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
                                         onClick={e=> {
                                             handleClickMediaItem(e, 5)
                                         }}
                                     >
-                                        <RenderFileData
+                                        {shallRenderMedia(5, media_associates) && <RenderFileData
                                             fileData={{
                                                 alt: "",
-                                                src: images[4],
+                                                src: `${baseUrl}${media_associates[4].media_unique_id.object.url}`,
                                                 className: `${styles["single-image"]} ${styles["right-image"]}`
                                             }}
                                             fileType="image"
-                                        />
+                                        />}
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -490,13 +552,13 @@ const PlaceDetailsPage = () => {
                             <Grid item className={`${styles['title-section-left-item']}`}>
                                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
-                                {true && <Grid container>
+                                {placeNameEnglish && <Grid container>
                                     <Grid item>
                                         <Box component="div" className={`${styles['item-name']}`}>
                                             {placeNameEnglish}
                                         </Box>
                                     </Grid>
-                                    {true && <Grid item>
+                                    {placeNameArabic && <Grid item>
                                         <Box component="div" className={`${styles['item-name-arabic']}`}>
                                             {placeNameArabic}
                                         </Box>
@@ -538,8 +600,17 @@ const PlaceDetailsPage = () => {
                                             Site Type
                                         </Grid>
                                         <Grid item>
-                                            <Box component={"a"} href="#" className={`${styles['anchor']}`}>
-                                                Building
+                                            <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
+                                                {
+                                                    siteType && siteType.map((item: string) => (
+                                                        <Box
+                                                            component="div"
+                                                            className={`${styles['text-anchor']}`}
+                                                        >
+                                                            {item}
+                                                        </Box>
+                                                    ))
+                                                }
                                             </Box>
                                         </Grid>
                                     </Grid>
@@ -554,8 +625,17 @@ const PlaceDetailsPage = () => {
                                             the Site Type says  “Building”, when the user clicks on it, the user will 
                                             be redirected to the search results page where they will see the list of 
                                             all places where the site type = building. */}
-                                            <Box component={"a"} href="#" className={`${styles['anchor']}`}>
-                                                Modern,Ottoman
+                                            <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
+                                                {
+                                                    period && period.map(item => (
+                                                        <Box
+                                                            component="div"
+                                                            className={`${styles['text-anchor']}`}
+                                                        >
+                                                            {item}
+                                                        </Box>
+                                                    ))
+                                                }
                                             </Box>
                                         </Grid>
                                     </Grid>
@@ -563,33 +643,37 @@ const PlaceDetailsPage = () => {
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             State of Conservation
                                         </Grid>
+                                        {stateOfConservation.map((item: string) =>
                                         <Grid item>
-                                            Poor
-                                        </Grid>
+                                             {item}
+                                        </Grid>)}
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Risk
                                         </Grid>
-                                        <Grid item>
-                                            Actively damaged
-                                        </Grid>
+                                        {risk.map((item: string) =><Grid item>
+                                             {item}
+                                        </Grid>)}
+                                        
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Tourism Value
                                         </Grid>
-                                        <Grid item>
-                                            Local
-                                        </Grid>
+                                        {tourismValue.map((item: string) =><Grid item>
+                                             {item}
+                                        </Grid>)}
+                                        
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Research Value
                                         </Grid>
-                                        <Grid item>
-                                            Limited
-                                        </Grid>
+                                        {researchValue.map((item: string) =><Grid item>
+                                             {item}
+                                        </Grid>)}
+                                        
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
@@ -603,9 +687,10 @@ const PlaceDetailsPage = () => {
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Recommendation
                                         </Grid>
-                                        <Grid item>
-                                            Protected
-                                        </Grid>
+                                        {recommendation.map((item: string) =><Grid item>
+                                             {item}
+                                        </Grid>)}
+                                        
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
@@ -621,10 +706,10 @@ const PlaceDetailsPage = () => {
                                                 }}
                                                 onClick={e => {
                                                     setCopyDone(true)
-                                                    copyToClipboard('https://www.neomheritage.com/place/N00381')
+                                                    copyToClipboard(placeUIPath ?? '')
                                                 }}
                                             >
-                                                https://www.neomheritage.com/place/N00381
+                                                {placeUIPath}
                                             </Box>
                                             <PositionedSnackbar
                                                 message={"Copied to clipboard"}
@@ -637,25 +722,25 @@ const PlaceDetailsPage = () => {
                                 </Box>
                             </Grid>
                             <Grid item sm={5}>
-                                <RenderFileData
-                                    fileData={{
-                                        alt: "",
-                                        src: images[4],
-                                        className: `${styles["single-image"]} ${styles["map-right-image"]}`
-                                    }}
-                                    fileType="image"
-                                />
+                                <MapView marker={[{
+                                    id: 0,
+                                    name: `${placeNameEnglish}`,
+                                    position: {
+                                        lat: latitude,
+                                        lng: longitude
+                                    }
+                                }]}/>
                                 <Grid container className={`${styles['map-loctn-details']}`} >
                                     <Grid item lg={5} md={5} sm={5}>
                                         <Grid container className={`${styles['map-loctn-line']}`}>
                                             <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                            <Grid item>28.090884</Grid>
+                                            <Grid item>{`${latitude}`}</Grid>
                                         </Grid>
                                     </Grid>
                                     <Grid item lg={5} md={5} sm={6}>
                                         <Grid container className={`${styles['map-loctn-line']}`}>
                                             <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                            <Grid item>35.475373</Grid>
+                                            <Grid item>{`${longitude}`}</Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -666,7 +751,7 @@ const PlaceDetailsPage = () => {
                     <Box component="div" className={`${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Library</Box>
-                            <Box component="div">3 Items</Box>
+                            <Box component="div">{libraryItems.length} Items</Box>
                         </Box>
                         <Box component="div">
                             <StyledTableWrapper
@@ -674,7 +759,7 @@ const PlaceDetailsPage = () => {
                                 rowKey={"id"}
                                 size="small"
                                 columns={tableHeaderJson}
-                                dataSource={library}
+                                dataSource={libraryItems ? libraryItems: []}
                                 pagination={false}
                                 loading={false}
                                 bordered
@@ -689,14 +774,15 @@ const PlaceDetailsPage = () => {
                     <Box component="div" className={`${styles['events-section']} ${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Events</Box>
-                            <Box component="div">1 Item</Box>
+                            <Box component="div">{visit_associates.length} Items</Box>
                         </Box>
                         <Box component="div">
                             <StyledTableWrapper
                                 rowKey={"id"}
                                 size="small"
                                 columns={tableHeaderJson_media}
-                                dataSource={events.slice(0,1)}
+                                // dataSource={events.slice(0,1)}
+                                dataSource={visit_associates}
                                 pagination={false}
                                 loading={loading ? loading : false}
                                 bordered
@@ -708,7 +794,7 @@ const PlaceDetailsPage = () => {
                                     return {
                                       onClick: (event) => {
                                         if (typeof rowIndex === "number") {
-                                            navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
+                                            navigate(`/search-results/Events/${record.visit_unique_id.uniqueId}`, {replace: true})
                                         }
                                       },
                                     };

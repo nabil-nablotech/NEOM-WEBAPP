@@ -177,7 +177,7 @@ const ListView = (props: EventsProps) => {
             title: "TYPE",
             key: `attributes`,
             dataIndex: "attributes",
-            render: (value: any, index: number) => value?.type?.substring(0, 8)
+            render: (value: any, index: number) => value.visit_associate.data?.attributes.place_unique_id.data?.attributes.siteType.map((x: string) => `${x};`) || ''
         },
         {
             title: "RESEARCH VALUE",
@@ -185,7 +185,7 @@ const ListView = (props: EventsProps) => {
             dataIndex: "attributes",
             className: 'cell-research',
             render: (value: any, index: number) => {
-                return value.researchValue
+                return value.researchValue.map((x: string) => `${x};`)
             },
         },
         {
@@ -193,7 +193,7 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-tourism',
-            render: (value: any, index: number) => value.tourismValue
+            render: (value: any, index: number) => value.tourismValue.map((x: string) => `${x};`)
             // render: (value: any, index: number) => "Temp"
         },
         {
@@ -201,14 +201,14 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-conserve',
-            render: (value: any, index: number) => value.stateOfConservation
+            render: (value: any, index: number) => value.stateOfConservation.map((x: string) => `${x};`)
         },
         {
             title: "RECOMMENDATION",
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-recommend',
-            render: (value: any, index: number) => value.recommendation
+            render: (value: any, index: number) => value.recommendation.map((x: string) => `${x};`)
             // render: (value: any, index: number) => "temp"
         },
         {
@@ -216,13 +216,13 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-period',
-            render: (value: any, index: number) => value.period
+            render: (value: any, index: number) => value.period.map((x: string) => `${x};`)
         },
         {
             title: "RISK",
             key: `attributes`,
             dataIndex: "attributes",
-            render: (value: any, index: number) => value.risk
+            render: (value: any, index: number) => value.risk.map((x: string) => `${x};`)
         },
         {
             title: "",

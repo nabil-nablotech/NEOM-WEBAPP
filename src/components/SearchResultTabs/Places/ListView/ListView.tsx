@@ -171,7 +171,7 @@ const ListView = (props: PlacesProps) => {
             title: "TYPE",
             key: `attributes`,
             dataIndex: "attributes",
-            render: (value: any, index: number) => value?.siteType
+            render: (value: any, index: number) => value?.siteType.map((x: string) => `${x}`)
         },
         {
             title: "RESEARCH VALUE",
@@ -187,34 +187,34 @@ const ListView = (props: PlacesProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-tourism',
-            render: (value: any, index: number) => value.tourismValue
+            render: (value: any, index: number) => value.tourismValue.map((x: string) => `${x}`)
         },
         {
             title: "STATE OF CONSERVATION",
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-conserve',
-            render: (value: any, index: number) => value.stateOfConservation
+            render: (value: any, index: number) => value.stateOfConservation.map((x: string) => `${x}`)
         },
         {
             title: "RECOMMENDATION",
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-recommend',
-            render: (value: any, index: number) => value.recommendation
+            render: (value: any, index: number) => value.recommendation.map((x: string) => `${x}`)
         },
         {
             title: "PERIOD",
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-period',
-            render: (value: any, index: number) => value.period
+            render: (value: any, index: number) => value.period.map((x: string) => `${x}`)
         },
         {
             title: "RISK",
             key: `attributes`,
             dataIndex: "attributes",
-            render: (value: any, index: number) => value.risk
+            render: (value: any, index: number) => value.risk.map((x: string) => `${x}`)
         },
         {
             title: "",

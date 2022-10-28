@@ -2,10 +2,10 @@ import { useEffect } from "react";
 import { useMutation, useQuery } from "react-query";
 import { useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
-import { placeDetails } from "../api/details";
+import { mediaDetails } from "../api/details";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 
-const usePlaceDetails = () => {
+const useMediaDetails = () => {
   const { search } = useLocation();
   const { uniqueId } = useParams<{ uniqueId: string }>()
 
@@ -21,7 +21,7 @@ const usePlaceDetails = () => {
   /**
    * fetch places with two words
    */
-  const { isLoading, error, data, mutate: fetchPlaceDetails } = useMutation('place-details', placeDetails, {
+  const { isLoading, error, data, mutate: fetchPlaceDetails } = useMutation('place-details', mediaDetails, {
     retry: false
   });
 
@@ -32,4 +32,4 @@ const usePlaceDetails = () => {
   };
 };
 
-export default usePlaceDetails;
+export default useMediaDetails;

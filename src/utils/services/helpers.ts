@@ -1,10 +1,11 @@
 import dayjs from "dayjs";
 import styled from "styled-components";
 import { StyledAntTable } from "../../components/StyledAntTable";
+import { MediaAssociates2, PlaceApi } from "../../types/Place";
 import { tabNameProps } from "../../types/SearchResultsTabsProps";
 
-export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://a00e-59-94-73-110.ngrok.io`;
+// export const baseUrl = `http://localhost:9999`;
+export const baseUrl = `https://b90e-117-214-57-151.ngrok.io`;
 export const webUrl = `http://localhost:3000`
 export const limit = 10;
 
@@ -287,4 +288,16 @@ export const getQueryObj = (search: string) => {
     return JSON.parse(searchParams);
   }
   return null
+}
+
+export const computeArrayFromDelimiter = (wholeString: string, delimiter: string) => {
+  return wholeString.split(delimiter)
+}
+
+export const shallRenderMedia = (mediaNo: number, mediaArray: MediaAssociates2) => {
+  if(!mediaArray) return false
+
+  if(mediaArray.length === mediaNo) {
+    return true
+  } else return false
 }

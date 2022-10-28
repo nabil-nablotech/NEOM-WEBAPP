@@ -13,24 +13,24 @@ query SearchTitle(
     pagination: { limit: $limit, start: $skip }
     filters: {
       or: [
-        {	siteType: {containsi: $search_one} }
+        # {	siteType: {containsi: $search_one} }
         { siteDescription: { contains: $search_one } }
-        {	period: {containsi: $search_one}}
+        # {	period: {containsi: $search_one}}
         { recordingTeam: { contains: $search_one } }
         { fieldNarrative: { contains: $search_one } }
-        { keywords: { contains: $search_one } }
-        { siteType: {containsi:$search_two} }
+        # { keywords: { contains: $search_one } }
+        # { siteType: {containsi:$search_two} }
         { siteDescription: { contains: $search_two } }
-        {	period: {containsi: $search_two}}
+        # {	period: {containsi: $search_two}}
         { recordingTeam: { contains: $search_two } }
         { fieldNarrative: { contains: $search_two } }
-        { keywords: { contains: $search_one } }
-        {	siteType: {containsi: $search_three }}
+        # { keywords: { contains: $search_one } }
+        # {	siteType: {containsi: $search_three }}
         { siteDescription: { contains: $search_three } }
-        {	period: {containsi: $search_three}}
+        # {	period: {containsi: $search_three}}
         { recordingTeam: { contains: $search_three } }
         { fieldNarrative: { contains: $search_three } }
-        { keywords: { contains: $search_three } }
+        # { keywords: { contains: $search_three } }
       ]
     }
   ) {
@@ -89,6 +89,7 @@ query SearchTitle(
                     placeNumber
                     placeNameEnglish
                     placeNameArabic
+                    siteType
                   }
                 }
               }
@@ -106,16 +107,16 @@ query SearchTitle(
   $search_one: String
   $search_two: String
   $search_three: String
-  $researchValue: String
-  $tourismValue: String
-  $stateOfConservation: String
-  $recommendation: String
-  $risk: String
-  $period: String
-  $assessmentType: String
+  $researchValue: JSON
+  $tourismValue: JSON
+  $stateOfConservation: JSON
+  $recommendation: JSON
+  $risk: JSON
+  $period: JSON
+  $assessmentType: JSON
   $latitude: Float
   $longitude: Float
-  $artifacts: String
+  $artifacts: JSON
   $limit: Int
   $skip: Int
 $startDate: Date
@@ -125,24 +126,24 @@ $endDate: Date
     pagination: { limit: $limit, start: $skip }
     filters: {
       or: [
-        {	siteType: {containsi: $search_one }}
+        # {	siteType: {containsi: $search_one }}
         { siteDescription: { contains: $search_one } }
-        {	period: {containsi: $search_one}}
+        # {	period: {containsi: $search_one}}
         { recordingTeam: { contains: $search_one } }
         { fieldNarrative: { contains: $search_one } }
-        { keywords: { contains: $search_one } }
-        { siteType: {containsi:$search_two} }
+        # { keywords: { contains: $search_one } }
+        # { siteType: {containsi:$search_two} }
         { siteDescription: { contains: $search_two } }
-        {	period: {containsi: $search_two}}
+        # {	period: {containsi: $search_two}}
         { recordingTeam: { contains: $search_two } }
         { fieldNarrative: { contains: $search_two } }
-        { keywords: { contains: $search_one } }
-        {	siteType: {containsi: $search_three }}
+        # { keywords: { contains: $search_one } }
+        # {	siteType: {containsi: $search_three }}
         { siteDescription: { contains: $search_three } }
-        {	period: {containsi: $search_three}}
+        # {	period: {containsi: $search_three}}
         { recordingTeam: { contains: $search_three } }
         { fieldNarrative: { contains: $search_three } }
-        { keywords: { contains: $search_three } }
+        # { keywords: { contains: $search_three } }
       ]
       and:[
         {	stateOfConservation: {containsi: $stateOfConservation}}
@@ -216,6 +217,7 @@ $endDate: Date
                     placeNumber
                     placeNameEnglish
                     placeNameArabic
+                    siteType
                   }
                 }
               }
