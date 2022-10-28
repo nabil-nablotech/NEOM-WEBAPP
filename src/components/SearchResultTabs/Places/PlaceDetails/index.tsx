@@ -25,7 +25,7 @@ import useMedia from "../../../../hooks/useMedia";
 import CommentsSection from "../../../CommentsSection";
 import RenderInitials from "../../../RenderInitials";
 import { useDispatch } from "react-redux";
-import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../../store/reducers/searchResultsReducer";
+import { setActiveEventItem, setActiveEventItemIndex, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
 import usePlace from "../../../../hooks/usePlace";
@@ -792,13 +792,15 @@ const PlaceDetailsPage = () => {
                                 }}
                                 onRow={(record: any, rowIndex: number | undefined) => {
                                     return {
-                                      onClick: (event) => {
-                                        if (typeof rowIndex === "number") {
-                                            navigate(`/search-results/Events/${record.visit_unique_id.uniqueId}`, {replace: true})
-                                        }
-                                      },
+                                        onClick: (event) => {
+                                            if (typeof rowIndex === "number") {
+                                                dispatch(setActiveEventItem(record))
+                                                dispatch(setActiveEventItemIndex(rowIndex))
+                                                navigate(`/search-results/Events/${record.visit_unique_id.uniqueId}`, { replace: true })
+                                            }
+                                        },
                                     };
-                                  }}
+                                }}
                             ></StyledTableWrapper>
                         </Box>
                     </Box>

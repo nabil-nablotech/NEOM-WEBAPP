@@ -22,6 +22,7 @@ import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent'
 import ModelViewer from '../../../Model';
 import { useEffect } from 'react';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
+import Loader from '../../../Common/Loader';
 
 const MediaDetailsPage = ({
     currentItemIndex,
@@ -33,13 +34,31 @@ const MediaDetailsPage = ({
         e: React.MouseEvent<HTMLElement>
         action: string
     }
-    const {media, activeMediaItemIndex } = useSelector(
+    const { media, activeMediaItemIndex } = useSelector(
         (state: RootState) => state.searchResults
     );
 
+    
     const dispatch = useDispatch()
 
     const {data:mediaDetails} = useMediaDetails();
+    
+
+    let [mediaType, setMediaType] = useState<"image" | "video" | "3d">("image")
+
+    useEffect(() => {
+        /** To-do: make this flag based on a api variable */
+        // setMediaType("image")
+        // setMediaType("video")
+        setMediaType("3d")
+    }, [])
+
+    if(!mediaDetails) {
+        return <>Cant display Media Details</>
+    }
+    const {description, title, id} = mediaDetails
+
+
 
     const handleNextOrPrevious = (e: handleAction['e'], action: handleAction['action']) => {
         e.preventDefault()
@@ -79,15 +98,6 @@ const MediaDetailsPage = ({
             },
         },
     ]
-
-    let [mediaType, setMediaType]  = useState<"image" | "video" | "3d">("image")
-    
-    useEffect(() => {
-        /** To-do: make this flag based on a api variable */
-        // setMediaType("image")
-        // setMediaType("video")
-        setMediaType("3d")
-    },[])
 
 
     return <>
@@ -140,7 +150,8 @@ const MediaDetailsPage = ({
                             <Grid item sm={12} >
                                 <Grid container style={{ gap: '2em', alignItems: 'center' }}>
                                     <Grid item>
-                                        <Box component="div" className={`${styles['overview-title']}`}>Overview of Site
+                                        <Box component="div" className={`${styles['overview-title']}`}>
+                                            {title}
                                         </Box>
                                     </Grid>
                                     <Grid item>
@@ -224,7 +235,7 @@ const MediaDetailsPage = ({
                             alignItems: 'start'
                         }}>
                             <Grid item sm={9} className={`${styles[`video-title`]}`}>
-                                Archaeologists in Saudi Arabia Excavate Forgotten Kingdoms
+                                {title}
                             </Grid>
                             <Grid item sm={1} className={`${styles['more-icon-grid-item']}`} style={{
                                 marginLeft: 'auto'
@@ -270,7 +281,7 @@ const MediaDetailsPage = ({
                             alignItems: 'start'
                         }}>
                             <Grid item sm={9} className={`${styles[`three-d-model-title`]}`}>
-                                Roadside 3d model
+                                {title}
                             </Grid>
                             <Grid item sm={1} className={`${styles['more-icon-grid-item']}`} style={{
                                 marginLeft: 'auto'
@@ -318,7 +329,7 @@ export const MediaDetailsModal = () => {
 
     const [isModalOpen, setModalOpen] = useState<boolean>(true)
 
-    const { media, activeMediaItem, activeMediaItemIndex } = useSelector(
+    const { media, activeMediaItem, activeMediaItemIndex, activeEventItem } = useSelector(
         (state: RootState) => state.searchResults
     )
     const location = useLocation()
@@ -326,9 +337,24 @@ export const MediaDetailsModal = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch();
 
-    if (!activeMediaItem) {
-        return <>Error display</>
+    const { loading: mediaLoading, data: mediaDetails } = useMediaDetails();
+    console.log('hex: ', mediaDetails)
+
+    const TotalMediaCount= activeEventItem ? activeEventItem.visit_unique_id.media_associates: 0
+
+
+    if (mediaLoading) {
+        return <Loader />
     }
+
+    if (!mediaLoading && !mediaDetails) {
+        return <div>Cant fetch media</div>
+    }
+
+    if (!mediaDetails) {
+        return null
+    }
+    
 
     const handleClose = () => {
         setModalOpen(false)
@@ -337,7 +363,7 @@ export const MediaDetailsModal = () => {
         navigate(`/search-results/Media`, { replace: true, state: null })
     }
 
-    const showVisitCount = (location.state && location.state.from === 'events')  && activeMediaItem 
+    const showVisitCount = (location.state && location.state.from === 'events') && activeMediaItem
 
     return <>
         <CustomModal
@@ -352,9 +378,9 @@ export const MediaDetailsModal = () => {
                     }}
                 >
                     <Grid item sm={6}>
-                        {activeMediaItem.attributes.title.substring(0, 30)} {
+                        {/* {mediaDetails?.attributes?.title.substring(0, 30)} {
                             showVisitCount ? '- static count 1' : ''
-                        }
+                        } */}
                     </Grid>
                     <Grid
                         item
@@ -364,7 +390,7 @@ export const MediaDetailsModal = () => {
                             right: "50%",
                         }}
                     >
-                        {activeMediaItemIndex + 1}/{media.length}
+                        {`${activeMediaItemIndex + 1}/${TotalMediaCount}`}
                     </Grid>
                     <Grid item>
                         <IconButton
@@ -387,9 +413,9 @@ export const MediaDetailsModal = () => {
             handleClose={() => handleClose()}
         >
             <MediaDetailsPage
-                data={media}
+                data={mediaDetails}
                 currentItemIndex={activeMediaItemIndex}
-                currentRecord={activeMediaItem}
+                currentRecord={mediaDetails}
             />
         </CustomModal>
     </>
