@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   GoogleMap,
   useJsApiLoader,
@@ -23,11 +23,25 @@ const MapView = ({marker}) => {
   // eslint-disable-next-line
   const [map, setMap] = useState(null);
 
+  const [activeMarker, setActiveMarker] = useState(null);
+
+  useEffect(() => {
+    if(map) {
+      const bounds = new window.google.maps.LatLngBounds();
+      marker.map((markers) =>{
+        bounds.extend(markers.position);
+      })
+      map.fitBounds(bounds);
+    }
+  }, [map, marker])
+
   const onUnmount = useCallback(function callback(map) {
     setMap(null);
   }, []);
 
-  const [activeMarker, setActiveMarker] = useState(null);
+  const onLoad = useCallback(function callback(map){
+    setMap(map)
+  })
 
   const handleActiveMarker = (marker) => {
     if (marker === activeMarker) {
@@ -35,18 +49,13 @@ const MapView = ({marker}) => {
     }
     setActiveMarker(marker);
   };
-  const handleOnLoad = (map) => {
-    const bounds = new window.google.maps.LatLngBounds();
-    marker?.forEach(({ position }) => bounds.extend(position));
-    map.fitBounds(bounds);
-  };
 
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
       zoom={25}      
       options={{ styles: MapStyles.dark }}
-      onLoad={handleOnLoad}
+      onLoad={onLoad}
       onUnmount={onUnmount}
       onClick={() => setActiveMarker(null)}
     >
