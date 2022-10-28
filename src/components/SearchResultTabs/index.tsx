@@ -118,6 +118,7 @@ const initialState = {
   actionType: [],
   latitude: '',
   longitude: '',
+  featuredImage: false,
   startDate: today,
   endDate: today,
 }
@@ -138,10 +139,10 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     }
   }, [tabName]);
 
-  const handleTextChange =(e: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>) => {
+  const handleTextChange =(e: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>, checked?: Boolean) => {
     e.preventDefault();
     const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
-    selectedValueCopy[e.target.name] = e.target.value;
+    selectedValueCopy[e.target.name] = e.target.name === "featuredImage" ? checked : e.target.value;
     dispatch(setSelectedValue(selectedValueCopy));
   }
   

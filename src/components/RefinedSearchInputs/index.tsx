@@ -369,7 +369,9 @@ const MediaInputs = ({
                 }}
               />
             }
-            label="Featured Image"      
+            name="featuredImage"
+            label="Featured Image"
+            onChange={(e: any, checked) => handleChange(e, checked)}
           />
         </FormGroup>
       </Grid>

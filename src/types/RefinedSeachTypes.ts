@@ -36,7 +36,7 @@ export type MediaInputProps = {
   options: Options | null;
   selectedValue: any;
   handleSelectChange: ((event: React.SyntheticEvent<Element, Event>, value: string[], reason?: string, details?: AutocompleteChangeDetails<string> | undefined) => void);
-  handleChange: (event: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (event: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>, checked?:boolean) => void;
   handleClear: (e: React.MouseEvent<HTMLButtonElement>, name?: string) => void;
 }
 export type Translation = {

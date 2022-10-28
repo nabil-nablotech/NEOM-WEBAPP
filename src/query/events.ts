@@ -107,6 +107,7 @@ query RefineSearchEvent(
   $search_one: String
   $search_two: String
   $search_three: String
+  $text: JSON
   $researchValue: JSON
   $tourismValue: JSON
   $stateOfConservation: JSON
@@ -143,7 +144,7 @@ $endDate: Date
         # {	period: {containsi: $search_three}}
         { recordingTeam: { contains: $search_three } }
         { fieldNarrative: { contains: $search_three } }
-        # { keywords: { contains: $search_three } }
+        { keywords: { contains: $text } }
       ]
       and:[
         {	stateOfConservation: {containsi: $stateOfConservation}}

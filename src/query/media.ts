@@ -62,7 +62,7 @@ query SearchMedia(
         uniqueId
         updatedAt
         bearing
-        actionType
+        categoryType
 
         featuredImage
         media_type {
@@ -111,6 +111,7 @@ query RefinedMediaSearch(
   $latitude: Float
   $longitude: Float
   $featuredImage: Boolean
+  $categoryType: JSON
   $limit: Int
   $skip: Int
 ) {
@@ -135,9 +136,10 @@ query RefinedMediaSearch(
         # { keywords: { contains: $search_three } }
       ]
       and: [
-        {	latitude: { gte: $latitude }}
-        {	longitude: { lte: $longitude }}
-        { featuredImage:{eq: $featuredImage}}
+        {	latitude: { gte: $latitude } }
+        {	longitude: { lte: $longitude } }
+        { featuredImage: { eq: $featuredImage } }
+        { categoryType: { containsi: $categoryType } }
         {
           media_type: {
             categoryCode: {
@@ -168,7 +170,7 @@ query RefinedMediaSearch(
         uniqueId
         updatedAt
         bearing
-        actionType
+        categoryType
 
         featuredImage
         media_type {
