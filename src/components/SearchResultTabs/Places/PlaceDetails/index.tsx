@@ -602,7 +602,7 @@ const PlaceDetailsPage = () => {
                                         <Grid item>
                                             <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
                                                 {
-                                                    siteType && computeArrayFromDelimiter(siteType, ';').map(item => (
+                                                    siteType && siteType.map((item: string) => (
                                                         <Box
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
@@ -627,7 +627,7 @@ const PlaceDetailsPage = () => {
                                             all places where the site type = building. */}
                                             <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
                                                 {
-                                                    period && computeArrayFromDelimiter(period, ';').map(item => (
+                                                    period && period.map(item => (
                                                         <Box
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
@@ -643,33 +643,37 @@ const PlaceDetailsPage = () => {
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             State of Conservation
                                         </Grid>
+                                        {stateOfConservation.map((item: string) =>
                                         <Grid item>
-                                            {stateOfConservation}
-                                        </Grid>
+                                             {item}
+                                        </Grid>)}
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Risk
                                         </Grid>
-                                        <Grid item>
-                                            {risk}
-                                        </Grid>
+                                        {risk.map((item: string) =><Grid item>
+                                             {item}
+                                        </Grid>)}
+                                        
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Tourism Value
                                         </Grid>
-                                        <Grid item>
-                                            {tourismValue}
-                                        </Grid>
+                                        {tourismValue.map((item: string) =><Grid item>
+                                             {item}
+                                        </Grid>)}
+                                        
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Research Value
                                         </Grid>
-                                        <Grid item>
-                                            {researchValue}
-                                        </Grid>
+                                        {researchValue.map((item: string) =><Grid item>
+                                             {item}
+                                        </Grid>)}
+                                        
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
@@ -683,9 +687,10 @@ const PlaceDetailsPage = () => {
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Recommendation
                                         </Grid>
-                                        <Grid item>
-                                            {recommendation}
-                                        </Grid>
+                                        {recommendation.map((item: string) =><Grid item>
+                                             {item}
+                                        </Grid>)}
+                                        
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>

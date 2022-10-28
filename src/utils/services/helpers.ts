@@ -5,7 +5,7 @@ import { MediaAssociates2, PlaceApi } from "../../types/Place";
 import { tabNameProps } from "../../types/SearchResultsTabsProps";
 
 // export const baseUrl = `http://localhost:9999`;
-export const baseUrl = `https://2352-117-214-57-151.in.ngrok.io`;
+export const baseUrl = `https://b90e-117-214-57-151.ngrok.io`;
 export const webUrl = `http://localhost:3000`
 export const limit = 10;
 
