@@ -3,6 +3,7 @@ import { Box, Button, Grid } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import styles from './index.module.css'
+import gridStyles from '../GridView/index.module.css'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
@@ -43,6 +44,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
     .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell) ,
     .ant-table-tbody > tr > td:not(.ant-table-tbody > tr > td.more-menu-ant-cell) {
         min-width: 50px;
+        max-width: 150px;
     }
 
     th.ant-table-cell {
@@ -56,6 +58,10 @@ const StyledTableWrapper = styled(StyledAntTable)`
         vertical-align:middle;
         min-width: 20px;
         width: 20px;
+    }
+
+    .ant-table-cell {
+        vertical-align: middle;
     }
     .more-menu-div {
         vertical-align:middle;
@@ -181,7 +187,7 @@ const PlaceDetailsPage = () => {
         {
             title: "NAME",
             key: "attributes",
-            dataIndex: "attributes",
+            dataIndex: "media_unique_id",
             sorter: (a, b) => a?.title?.localeCompare(b?.title),
             sortDirections: ["ascend"],
             defaultSortOrder: "ascend",
@@ -202,7 +208,7 @@ const PlaceDetailsPage = () => {
             title: "DESCRIPTION",
             key: "attributes",
             className: "description-column",
-            dataIndex: "attributes", // temporary
+            dataIndex: "media_unique_id", // temporary
             render: (value: any, index) => {
                 return value.description;
             },
@@ -210,15 +216,15 @@ const PlaceDetailsPage = () => {
         {
             title: "CITATION",
             className: "citation-column cell-citation",
-            dataIndex: "attributes", // temporary
+            dataIndex: "media_unique_id", // temporary
             render: (value: any, index) => {
-                return value.citation;
+                return value.citation ? value.citation : 'static citation';
             },
         },
         {
             title: "URL",
             key: "attributes",
-            dataIndex: "attributes", // temporary
+            dataIndex: "media_unique_id", // temporary
             render: (value, index) => (
                 <Box
                     component={"a"}
@@ -236,14 +242,16 @@ const PlaceDetailsPage = () => {
         {
             title: "SIZE",
             key: "attributes",
-            dataIndex: "attributes",
+            dataIndex: "media_unique_id",
             render: (value, index) => value?.imageMetadata?.fileSize ?? 'Temp',
         },
         {
             title: "UPDATED",
-            key: "attributes",
-            dataIndex: "attributes",
-            render: (value, index) => formatWebDate(value.updatedAt),
+            key: "media_unique_id",
+            dataIndex: "media_unique_id",
+            render: (value, index) => {
+                return formatWebDate(value.updatedAt)
+            },
         },
         {
             title: "",
@@ -259,37 +267,41 @@ const PlaceDetailsPage = () => {
     const tableHeaderJson_media: ColumnsType<any> = [
         {
             title: "",
-            key: "attributes",
-            dataIndex: "attributes",
+            key: "",
+            dataIndex: "",
             className: "cell-image",
-            render: (value: any, index: any) => (
-                <>
+            render: (value: any, index: any) => {
+
+                return <>
                     <Box
                         className={`media-table-image`}
                         component="img"
                         alt={""}
-                        src={value.thumbnailUrl}
+                        // src={value.thumbnailUrl}
+                        src={images[0]}
+                        // src={value.media_unique_id.object.formats.small.url}
                     ></Box>
                 </>
-            ),
+            },
         },
         {
             title: "",
             key: "new",
             dataIndex: "new",
             className: "cell-new",
-            render: (value: any, index: any) => "New",
+            // render: (value: any, index: any) => "New",
+            render: (value: any, index: any) => <div className={`${gridStyles["card-new-flag"]}`}>NEW!</div>,
         },
         {
             title: "Type",
             key: "attributes",
             dataIndex: "attributes",
-            render: (value, index) => "render_type"
+            render: (value, index) => "Visit"
         },
         {
             title: "Date of Event",
-            key: "attributes",
-            dataIndex: "attributes",
+            key: "visit_unique_id",
+            dataIndex: "visit_unique_id",
             // to-do
             // Events will be sorted by Date of Event newest to oldest
 
@@ -299,16 +311,18 @@ const PlaceDetailsPage = () => {
             render: (value, index) => format(
                 new Date(
                     // item.attributes.updatedAt
+                    value.visitDate
                     ),
                 "MM-dd-yyyy"
               ),
         },
         {
             title: "Participants",
-            key: "attributes",
-            dataIndex: "attributes",
+            key: "visit_unique_id",
+            dataIndex: "visit_unique_id",
             className: "cell-bearing",
-            render: (value: any, index: any) => "Adam Biernaski, Julian Jansen van Rensburg",
+            // render: (value: any, index: any) => "Adam Biernaski, Julian Jansen van Rensburg",
+            render: (value: any, index: any) => value.recordingTeam,
         },
         {
             title: "",
@@ -335,7 +349,7 @@ const PlaceDetailsPage = () => {
         placeNameEnglish, placeNameArabic, placeNumber,
         siteDescription, siteType, period, stateOfConservation,
         risk, tourismValue, researchValue, recommendation,
-        placeUIPath, media_associates, libraryItems
+        placeUIPath, media_associates, libraryItems, visit_associates
     } = placeData
     const {latitude, longitude} = placeData
 
@@ -762,7 +776,8 @@ const PlaceDetailsPage = () => {
                                 rowKey={"id"}
                                 size="small"
                                 columns={tableHeaderJson_media}
-                                dataSource={events.slice(0,1)}
+                                // dataSource={events.slice(0,1)}
+                                dataSource={visit_associates}
                                 pagination={false}
                                 loading={loading ? loading : false}
                                 bordered
