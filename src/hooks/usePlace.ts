@@ -149,6 +149,7 @@ const usePlace = () => {
       search_one: searchWordArray[0],
       search_two: searchWordArray[1],
       search_three: searchWordArray[2],
+      text: searchWordArray,
       limit: limit,
       skip: skip,
     };
