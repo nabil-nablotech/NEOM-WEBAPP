@@ -555,7 +555,7 @@ const EventDetailsPage = () => {
                                 </Box>
                             </Grid>
                             <Grid item sm={5}>
-                                <MapView marker={[{
+                                <MapView key={14} marker={[{
                                     id: 0,
                                     name: `${"P event name"}`,
                                     position: {
