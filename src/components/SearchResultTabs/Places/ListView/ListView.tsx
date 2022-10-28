@@ -171,7 +171,7 @@ const ListView = (props: PlacesProps) => {
             title: "TYPE",
             key: `attributes`,
             dataIndex: "attributes",
-            render: (value: any, index: number) => value?.type?.substring(0, 8)
+            render: (value: any, index: number) => value?.siteType
         },
         {
             title: "RESEARCH VALUE",

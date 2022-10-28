@@ -341,14 +341,14 @@ const MediaInputs = ({
       <Grid item sm={2} className={`${styles["input-field"]}`}>
         <AutoComplete
           className={`${styles["dropdown"]} ${styles["extra-width"]}`}
-          label={"Artifacts"}
-          name="artifacts"
-          value={selectedValue.artifacts}
+          label={"Action Type"}
+          name="actionType"
+          value={selectedValue.actionType}
           multiple={true}
-          handleSelectChange={(e, val) => handleSelectChange(e, val, 'artifacts')}
+          handleSelectChange={(e, val) => handleSelectChange(e, val, 'actionType')}
           handleChange={() => {}}
-          handleClear={(e) => handleClear(e, "artifacts")}
-          itemsList={options?.artifacts || []}
+          handleClear={(e) => handleClear(e, "actionType")}
+          itemsList={options?.actionType || []}
           selectStylesSx={commonSelectSxStyles}
           formControlSx={commonFormControlSxStyles}
         />

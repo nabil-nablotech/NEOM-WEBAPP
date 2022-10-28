@@ -115,6 +115,7 @@ const initialState = {
   risk: [],
   assessmentType: [],
   artifacts: [],
+  actionType: [],
   latitude: '',
   longitude: '',
   startDate: today,
@@ -179,6 +180,10 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
+    if (tabName !== 'Events') {
+      delete copiedValue.startDate;
+      delete copiedValue.endDate;
+    }
     const searchParams: string = decodeURIComponent(JSON.stringify({
       search: searchText,
       refinedSearch: {...copiedValue}

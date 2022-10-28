@@ -35,7 +35,7 @@ query SearchTitle(
         {
           media_type: {
             categoryCode: {
-              containsi: "LIBRARY"
+              containsi: "MEDIA"
             }
           }
         }
@@ -111,7 +111,6 @@ query refinedSearch(
     $latitude: Float
     $longitude: Float
     $featuredImage: Boolean
-    $artifacts: [String]
     $limit: Int
     $skip: Int
   ) {
@@ -139,14 +138,11 @@ query refinedSearch(
           {	latitude: { gte: $latitude }}
           {	longitude: { lte: $longitude }}
           { featuredImage:{eq: $featuredImage}}
-          {	artifacts: { name: {in: $artifacts}}}
           {
-            mediaType: {
-              or: [
-                { typeCode: { eq: "IMAGE" } }
-                { typeCode: { eq: "VIDEO" } }
-                { typeCode: { eq: "3DMODEL" } }
-              ]
+            media_type: {
+              categoryCode: {
+                containsi: "MEDIA"
+              }
             }
           }
         ]
@@ -175,7 +171,7 @@ query refinedSearch(
           actionType
 
           featuredImage
-          mediaType {
+          media_type {
             data {
               attributes {
                 typeCode
@@ -196,7 +192,7 @@ query refinedSearch(
           media_associate {
             data {
               attributes {
-                placeUniqueId {
+                place_unique_id{
                   data {
                     attributes {
                       placeNameArabic
