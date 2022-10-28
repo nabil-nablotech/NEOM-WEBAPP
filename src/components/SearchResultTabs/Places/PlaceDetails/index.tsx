@@ -210,7 +210,7 @@ const PlaceDetailsPage = () => {
             className: "description-column",
             dataIndex: "media_unique_id", // temporary
             render: (value: any, index) => {
-                return value.description;
+                return value?.description;
             },
         },
         {
@@ -234,7 +234,7 @@ const PlaceDetailsPage = () => {
                     }}
                 >
                     <Tooltip>
-                        {value.referenceURL && "static URL"}
+                        {value.referenceURL ?? "static URL"}
                     </Tooltip>
                 </Box>
             ),
@@ -249,9 +249,7 @@ const PlaceDetailsPage = () => {
             title: "UPDATED",
             key: "media_unique_id",
             dataIndex: "media_unique_id",
-            render: (value, index) => {
-                return formatWebDate(value.updatedAt)
-            },
+            render: (value, index) => formatWebDate(value?.updatedAt),
         },
         {
             title: "",
