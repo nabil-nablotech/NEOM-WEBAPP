@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useMutation, useQuery } from "react-query";
 import { useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
-import { placeDetails } from "../api/place";
+import { placeDetails } from "../api/details";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 
 const usePlaceDetails = () => {
