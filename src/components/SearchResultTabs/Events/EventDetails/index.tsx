@@ -24,7 +24,7 @@ import useMedia from "../../../../hooks/useMedia";
 import CommentsSection from "../../../CommentsSection";
 import RenderInitials from "../../../RenderInitials";
 import { useDispatch } from "react-redux";
-import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../../store/reducers/searchResultsReducer";
+import {  setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
 import YellowStar from '../../../../assets/images/searchResults/YellowStar.svg'
@@ -129,12 +129,13 @@ const EventDetailsPage = () => {
     let selectedPlaceObjIndex: number = 0
     let selectedPlaceObj: Place = places[0]
 
+    const {loading: eventLoading, data: eventDetails} = useEventDetails();
 
     useEffect(() => {
-        if (selectedPlaceObj) {
-            dispatch(setActivePlaceItem(selectedPlaceObj))
-            dispatch(setActivePlaceItemIndex(selectedPlaceObjIndex))
-        }
+        // if (eventDetails) {
+        //     dispatch(setActiveEventItem(eventDetails))
+        //     dispatch(setActiveEventItemIndex(0))
+        // }
     }, [])
 
     places.forEach((placeItem: Place, inx: number) => {
@@ -171,7 +172,6 @@ const EventDetailsPage = () => {
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
     const dispatch = useDispatch()
 
-    const {loading: eventLoading, data: eventDetails} = useEventDetails();
     // console.log('hex: ', eventDetails)
     
     const [mediaGridActiveItems, setMediaGridActiveItems] = useState<number>(0)

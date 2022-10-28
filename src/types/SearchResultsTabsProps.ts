@@ -1,7 +1,7 @@
 import React from "react";
 import { DashboardResponse } from "./dashboard";
 import { Place, Meta, FieldOptions } from "./Place";
-import { Event } from "./Event";
+import { Event, EventApi } from "./Event";
 import { Media } from "./Media";
 
 export type SearchResultTabsProps = {
@@ -60,6 +60,8 @@ export type SearchResultsState2 = {
   showAddSuccess: boolean;
   activePlaceItem: Place | null;
   activePlaceItemIndex: number;
+  activeEventItem: EventApi | null;
+  activeEventItemIndex: number;
   activeMediaItem: Media | null;
   activeMediaItemIndex: number;
   isOpenGalleryView: boolean
