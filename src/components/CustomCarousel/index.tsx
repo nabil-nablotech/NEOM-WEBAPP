@@ -27,7 +27,6 @@ export const CustomCarousel = ({
     data,
     itemClicked
 }: CustomCarouselType) => {
-    // console.log('Hex: in:  ', data[itemClicked])
 
     const {
         // data,
