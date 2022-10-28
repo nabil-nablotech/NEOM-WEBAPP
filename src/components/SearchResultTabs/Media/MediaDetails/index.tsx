@@ -21,6 +21,7 @@ import RenderFileData from '../../../RenderFileData';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
 import ModelViewer from '../../../Model';
 import { useEffect } from 'react';
+import useMediaDetails from '../../../../hooks/useMediaDetails';
 
 const MediaDetailsPage = ({
     currentItemIndex,
@@ -37,6 +38,8 @@ const MediaDetailsPage = ({
     );
 
     const dispatch = useDispatch()
+
+    const {data:mediaDetails} = useMediaDetails();
 
     const handleNextOrPrevious = (e: handleAction['e'], action: handleAction['action']) => {
         e.preventDefault()
