@@ -15,7 +15,7 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
-import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatWebDate, shallRenderMedia, stringAvatar } from "../../../../utils/services/helpers";
+import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatBytes, formatWebDate, shallRenderMedia, stringAvatar } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
@@ -188,7 +188,7 @@ const PlaceDetailsPage = () => {
             title: "NAME",
             key: "attributes",
             dataIndex: "media_unique_id",
-            sorter: (a, b) => a?.title?.localeCompare(b?.title),
+            sorter: (a, b) => a?.fileName?.localeCompare(b?.fileName),
             sortDirections: ["ascend"],
             defaultSortOrder: "ascend",
             className: "name-column",
@@ -200,7 +200,7 @@ const PlaceDetailsPage = () => {
                     }}
                 >
                     <InsertDriveFileOutlinedIcon fontSize="small" />
-                    <Box component="div">{value.title}</Box>
+                    <Box component="div">{value.fileName}</Box>
                 </Box>
             ),
         },
@@ -234,7 +234,7 @@ const PlaceDetailsPage = () => {
                     }}
                 >
                     <Tooltip>
-                        {value.referenceURL}
+                        {value.referenceURL && "static URL"}
                     </Tooltip>
                 </Box>
             ),
@@ -243,7 +243,7 @@ const PlaceDetailsPage = () => {
             title: "SIZE",
             key: "attributes",
             dataIndex: "media_unique_id",
-            render: (value, index) => value?.imageMetadata?.fileSize ?? 'Temp',
+            render: (value, index) => value.object.size ? formatBytes(value.object.size) : "static size",
         },
         {
             title: "UPDATED",
@@ -341,19 +341,6 @@ const PlaceDetailsPage = () => {
 
     const dispatch = useDispatch()
 
-    if(!placeData) {
-        return <div>Cant fetch places</div>
-    }
-
-    const {
-        placeNameEnglish, placeNameArabic, placeNumber,
-        siteDescription, siteType, period, stateOfConservation,
-        risk, tourismValue, researchValue, recommendation,
-        placeUIPath, media_associates, libraryItems, visit_associates
-    } = placeData
-    const {latitude, longitude} = placeData
-
-
     const handleClickMediaItem = (e: React.MouseEvent, itemIndex: number) => {
         /** itemIndex used to track which item being clicked out of 5;
          * 1st , 2nd etc.
@@ -369,10 +356,25 @@ const PlaceDetailsPage = () => {
     if(placeLoading) {
         return <Loader />
     }
+    
+    if(!placeLoading && !placeData) {
+        return <div>Cant fetch places</div>
+    }
 
     if (!placeData) {
         return null
     }
+
+    
+    const {
+        placeNameEnglish, placeNameArabic, placeNumber,
+        siteDescription, siteType, period, stateOfConservation,
+        risk, tourismValue, researchValue, recommendation,
+        placeUIPath, media_associates, libraryItems, visit_associates,
+    } = placeData
+    
+    const {latitude, longitude} = placeData
+
     return (
         <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -551,20 +553,20 @@ const PlaceDetailsPage = () => {
                             <Grid item className={`${styles['title-section-left-item']}`}>
                                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
-                                {placeData && <Grid container>
+                                {placeNameEnglish && <Grid container>
                                     <Grid item>
                                         <Box component="div" className={`${styles['item-name']}`}>
-                                            {placeData.placeNameEnglish}
+                                            {placeNameEnglish}
                                         </Box>
                                     </Grid>
-                                    {placeData && <Grid item>
+                                    {placeNameArabic && <Grid item>
                                         <Box component="div" className={`${styles['item-name-arabic']}`}>
-                                            {placeData.placeNameArabic}
+                                            {placeNameArabic}
                                         </Box>
                                     </Grid>}
                                 </Grid>}
                                 <Box component="div" className={`${styles['item-number']}`}>
-                                    {placeData.placeNumber}
+                                    {placeNumber}
                                 </Box>
                             </Grid>
                             <Grid item className={`${styles['title-section-grid']}`}>
@@ -587,7 +589,7 @@ const PlaceDetailsPage = () => {
                                     <Box component="div"
                                         className={`${styles['site-desc-condensed']} ${isSeeMore ? styles['see-more-active'] : ''}`}
                                     >
-                                        {placeData?.siteDescription.substring(0, !isSeeMore ? 500 : placeData.siteDescription.length - 1)}
+                                        {siteDescription.substring(0, !isSeeMore ? 500 : siteDescription.length - 1)}
                                     </Box>
                                     {!isSeeMore && <Box component="div" className={`${styles['see-more-box']}`} onClick={e => {
                                         toggleSeeMore(state => !state)
@@ -716,15 +718,14 @@ const PlaceDetailsPage = () => {
                                 </Box>
                             </Grid>
                             <Grid item sm={5}>
-                                <RenderFileData
-                                    fileData={{
-                                        alt: "",
-                                        src: images[4],
-                                        className: `${styles["single-image"]} ${styles["map-right-image"]}`
-                                    }}
-                                    fileType="image"
-                                />
-                                {/* <MapView marker={mapEvents}/> */}
+                                <MapView marker={[{
+                                    id: 0,
+                                    name: `${placeNameEnglish}`,
+                                    position: {
+                                        lat: latitude,
+                                        lng: longitude
+                                    }
+                                }]}/>
                                 <Grid container className={`${styles['map-loctn-details']}`} >
                                     <Grid item lg={5} md={5} sm={5}>
                                         <Grid container className={`${styles['map-loctn-line']}`}>
@@ -769,7 +770,7 @@ const PlaceDetailsPage = () => {
                     <Box component="div" className={`${styles['events-section']} ${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Events</Box>
-                            <Box component="div">{placeData.visit_associates.length}</Box>
+                            <Box component="div">{visit_associates.length}</Box>
                         </Box>
                         <Box component="div">
                             <StyledTableWrapper
@@ -789,7 +790,7 @@ const PlaceDetailsPage = () => {
                                     return {
                                       onClick: (event) => {
                                         if (typeof rowIndex === "number") {
-                                            navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
+                                            navigate(`/search-results/Events/${record.visit_unique_id.uniqueId}`, {replace: true})
                                         }
                                       },
                                     };
