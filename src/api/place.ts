@@ -1,5 +1,5 @@
 
-import {PlaceApi} from '../types/Place';
+import {Place, PlaceApi} from '../types/Place';
 import client from "../utils/services/axiosClient";
 
 export const placeDetails = (payload: string): Promise<PlaceApi> =>
