@@ -14,7 +14,7 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
-import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatWebDate, stringAvatar } from "../../../../utils/services/helpers";
+import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatBytes, formatWebDate, stringAvatar } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
@@ -44,6 +44,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
     .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell) ,
     .ant-table-tbody > tr > td:not(.ant-table-tbody > tr > td.more-menu-ant-cell) {
         min-width: 50px;
+        max-width: 150px;
     }
 
     th.ant-table-cell {
@@ -237,8 +238,8 @@ const EventDetailsPage = () => {
         {
             title: "NAME",
             key: "attributes",
-            dataIndex: "attributes",
-            sorter: (a, b) => a?.title?.localeCompare(b?.title),
+            dataIndex: "media_unique_id",
+            sorter: (a, b) => a?.fileName?.localeCompare(b?.fileName),
             sortDirections: ["ascend"],
             defaultSortOrder: "ascend",
             className: "name-column",
@@ -250,7 +251,7 @@ const EventDetailsPage = () => {
                     }}
                 >
                     <InsertDriveFileOutlinedIcon fontSize="small" />
-                    <Box component="div">{value.title}</Box>
+                    <Box component="div">{value.fileName}</Box>
                 </Box>
             ),
         },
@@ -258,23 +259,23 @@ const EventDetailsPage = () => {
             title: "DESCRIPTION",
             key: "attributes",
             className: "description-column",
-            dataIndex: "attributes", // temporary
+            dataIndex: "media_unique_id", // temporary
             render: (value: any, index) => {
-                return value.description;
+                return value?.description;
             },
         },
         {
             title: "CITATION",
             className: "citation-column cell-citation",
-            dataIndex: "attributes", // temporary
+            dataIndex: "media_unique_id", // temporary
             render: (value: any, index) => {
-                return value.citation;
+                return value.citation ? value.citation : 'static citation';
             },
         },
         {
             title: "URL",
             key: "attributes",
-            dataIndex: "attributes", // temporary
+            dataIndex: "media_unique_id", // temporary
             render: (value, index) => (
                 <Box
                     component={"a"}
@@ -284,7 +285,7 @@ const EventDetailsPage = () => {
                     }}
                 >
                     <Tooltip>
-                        {value.referenceURL}
+                        {value.referenceURL ?? "static URL"}
                     </Tooltip>
                 </Box>
             ),
@@ -292,14 +293,14 @@ const EventDetailsPage = () => {
         {
             title: "SIZE",
             key: "attributes",
-            dataIndex: "attributes",
-            render: (value, index) => value?.imageMetadata?.fileSize ?? 'Temp',
+            dataIndex: "media_unique_id",
+            render: (value, index) => value.object.size ? formatBytes(value.object.size) : "static size",
         },
         {
             title: "UPDATED",
-            key: "attributes",
-            dataIndex: "attributes",
-            render: (value, index) => formatWebDate(value.updatedAt),
+            key: "media_unique_id",
+            dataIndex: "media_unique_id",
+            render: (value, index) => formatWebDate(value?.updatedAt),
         },
         {
             title: "",
@@ -312,71 +313,7 @@ const EventDetailsPage = () => {
         },
     ];
 
-    const tableHeaderJson_media: ColumnsType<any> = [
-        {
-            title: "",
-            key: "attributes",
-            dataIndex: "attributes",
-            className: "cell-image",
-            render: (value: any, index: any) => (
-                <>
-                    <Box
-                        className={`media-table-image`}
-                        component="img"
-                        alt={""}
-                        src={value.thumbnailUrl}
-                    ></Box>
-                </>
-            ),
-        },
-        {
-            title: "",
-            key: "new",
-            dataIndex: "new",
-            className: "cell-new",
-            render: (value: any, index: any) => "New",
-        },
-        {
-            title: "Type",
-            key: "attributes",
-            dataIndex: "attributes",
-            render: (value, index) => "render_type"
-        },
-        {
-            title: "Date of Event",
-            key: "attributes",
-            dataIndex: "attributes",
-            // to-do
-            // Events will be sorted by Date of Event newest to oldest
-
-            // sorter: (a: { title: string }, b: { title: any }) => {
-            //     return a.title?.localeCompare(b.title);
-            //   },
-            render: (value, index) => format(
-                new Date(
-                    // item.attributes.updatedAt
-                ),
-                "MM-dd-yyyy"
-            ),
-        },
-        {
-            title: "Participants",
-            key: "attributes",
-            dataIndex: "attributes",
-            className: "cell-bearing",
-            render: (value: any, index: any) => "Adam Biernaski, Julian Jansen van Rensburg",
-        },
-        {
-            title: "",
-            key: "action",
-            fixed: "right",
-            className: "more-menu-ant-cell events-table-more-menu",
-            render: (value: any, record: Media) => (
-                <MoreOptionsComponent id={record.id} record={record} />
-            ),
-        },
-    ];
-
+    
     const actionsArray = [
         {
             label: 'Feature',
@@ -743,13 +680,17 @@ const EventDetailsPage = () => {
                                         padding: '0.4em 1.2em',
                                         cursor: 'pointer'
                                     }}
-                                    disabled={mediaGalleryLocal.length === places.length}
                                     onClick={e => {
                                         e.preventDefault()
-                                        setMediaGridActiveItems(state => state + 8)
+
+                                        if(mediaGalleryLocal.length === mediaGallery.length) {
+                                            setMediaGridActiveItems(8)
+                                        } else {
+                                            setMediaGridActiveItems(state => state + 8)
+                                        }
                                     }}
                                 >
-                                    See More
+                                    See {mediaGalleryLocal.length === mediaGallery.length ? 'Less': 'More'}
                                 </Button>
                             </Grid>
                         </Grid>
