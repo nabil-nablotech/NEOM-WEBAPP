@@ -29,6 +29,7 @@ import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent"
 import PositionedSnackbar from "../../../Snackbar";
 import YellowStar from '../../../../assets/images/searchResults/YellowStar.svg'
 import { useMediaQuery } from 'react-responsive'
+import useEventDetails from "../../../../hooks/useEventDetails";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -116,6 +117,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
 const EventDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
     const navigate = useNavigate();
+    const {data: eventDetails} = useEventDetails();
 
     const { places, library, events, media } = useSelector(
         (state: RootState) => state.searchResults
