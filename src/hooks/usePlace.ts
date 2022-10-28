@@ -53,41 +53,41 @@ const usePlace = () => {
   /**
    * fetch places with two words
    */
-  const { loading, error, data, refetch: refetchPlaces } = useQuery(places);
+  // const { loading, error, data, refetch: refetchPlaces } = useQuery(places);
   const { loading:refineLoading, error:refineErrorData, data:refinePlaceData, refetch:refineSearchPlaces} = useQuery(refinePlaces);
 
-  useEffect(() => {
-    if (data?.places) {
-      // update the data for the pagination
-      if (data?.places.meta.pagination.page === 1 && data?.places.data.length > 0) {
-        dispatch(setPlaces([...data?.places.data]));
-      } else if (data?.places.data.length > 0) {
-        dispatch(setPlaces([...placeData, ...data?.places.data]));
-      } else if (refinePlaceData?.places?.meta.pagination.total === 0) {
-        dispatch(setPlaces([]));
-      }
-      // update the meta data
-      dispatch(setPlaceMetaData(data?.places?.meta));
-      // this flag decides to fetch next set of data
-      setHasMoreData(
-        data?.places?.meta.pagination.pageCount !==
-          data?.places.meta.pagination.page
-      );
+  // useEffect(() => {
+  //   if (data?.places) {
+  //     // update the data for the pagination
+  //     if (data?.places.meta.pagination.page === 1 && data?.places.data.length > 0) {
+  //       dispatch(setPlaces([...data?.places.data]));
+  //     } else if (data?.places.data.length > 0) {
+  //       dispatch(setPlaces([...placeData, ...data?.places.data]));
+  //     } else if (refinePlaceData?.places?.meta.pagination.total === 0) {
+  //       dispatch(setPlaces([]));
+  //     }
+  //     // update the meta data
+  //     dispatch(setPlaceMetaData(data?.places?.meta));
+  //     // this flag decides to fetch next set of data
+  //     setHasMoreData(
+  //       data?.places?.meta.pagination.pageCount !==
+  //         data?.places.meta.pagination.page
+  //     );
 
-      let dummyArray: any = [];
-      for (let i = 0; i < data?.places?.data?.length; i++) {
-        dummyArray.push({
-          id: i,
-          name: data?.places?.data[i].attributes["placeNameEnglish"],
-          position: {
-            lat: data?.places?.data[i].attributes["latitude"],
-            lng: data?.places?.data[i].attributes["longitude"],
-          },
-        });
-      }
-      setMapPlaces(dummyArray);
-    }
-  }, [data]);
+  //     let dummyArray: any = [];
+  //     for (let i = 0; i < data?.places?.data?.length; i++) {
+  //       dummyArray.push({
+  //         id: i,
+  //         name: data?.places?.data[i].attributes["placeNameEnglish"],
+  //         position: {
+  //           lat: data?.places?.data[i].attributes["latitude"],
+  //           lng: data?.places?.data[i].attributes["longitude"],
+  //         },
+  //       });
+  //     }
+  //     setMapPlaces(dummyArray);
+  //   }
+  // }, [data]);
 
   useEffect(() => {
     if (refinePlaceData?.places) {
@@ -108,13 +108,13 @@ const usePlace = () => {
       );
 
       let dummyArray: any = [];
-      for (let i = 0; i < data?.places?.data?.length; i++) {
+      for (let i = 0; i < refinePlaceData?.places?.data?.length; i++) {
         dummyArray.push({
           id: i,
-          name: data?.places?.data[i].attributes["placeNameEnglish"],
+          name: refinePlaceData?.places?.data[i].attributes["placeNameEnglish"],
           position: {
-            lat: data?.places?.data[i].attributes["latitude"],
-            lng: data?.places?.data[i].attributes["longitude"],
+            lat: refinePlaceData?.places?.data[i].attributes["latitude"],
+            lng: refinePlaceData?.places?.data[i].attributes["longitude"],
           },
         });
       }
@@ -128,9 +128,10 @@ const usePlace = () => {
     // check if the search is coming from local or using link
     const text = local ? searchText : searchData?.search;
     // filter non data from the array object
-    const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData.refinedSearch;
+    const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData?.refinedSearch;
     const searchWordArray = text?.split(" ") || [];
-    Object.keys(copiedValue).map(x => {
+
+    copiedValue && Object.keys(copiedValue)?.map(x => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
@@ -158,18 +159,8 @@ const usePlace = () => {
       delete obj.search_three;
       refineSearchPlaces(obj)
     }
-    else if(Object.keys(copiedValue).length !== 0){
+    else { 
       refineSearchPlaces(obj)
-    }else{
-      
-      refetchPlaces({
-        text: searchWordArray,
-        search_one: searchWordArray[0] || '',
-        search_two: searchWordArray[1],
-        search_three: searchWordArray[2],
-        limit: limit,
-        skip: skip,
-      });
     }
   };
 
@@ -178,9 +169,9 @@ const usePlace = () => {
   }
 
   return {
-    loading: loading || refineLoading,
-    error: error || refineErrorData,
-    data,
+    loading: refineLoading,
+    error: refineErrorData,
+    data: refinePlaceData,
     mapPlaces,
     hasMoreData,
     fetchPlaces: fetchData,
