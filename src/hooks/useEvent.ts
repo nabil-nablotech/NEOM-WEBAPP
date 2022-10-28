@@ -8,6 +8,7 @@ import { setSelectedValue, initialSelectedValue } from "../store/reducers/refine
 import {
   setEvents,
   setEventMetaData,
+  setSearchText
 } from "../store/reducers/searchResultsReducer";
 import {limit, getQueryObj} from '../utils/services/helpers';
 import { tabNameProps } from "../types/SearchResultsTabsProps";
@@ -27,18 +28,19 @@ const useEvent = () => {
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
 
+  const searchParams = getQueryObj(search);
   useEffect(() => {
-    const searchParams = getQueryObj(search);
-    if (searchParams?.refinedSearch) {
-      dispatch(setSelectedValue({
-        ...initialSelectedValue,
-        ...searchParams.refinedSearch
-      }))
+    if (searchParams) {
+      dispatch(setSearchText(searchParams.search))
+      if (searchParams?.refinedSearch) {
+        dispatch(setSelectedValue({
+          ...initialSelectedValue,
+          ...searchParams.refinedSearch
+        }))
+      }
     }
     resetEvents();
-    if (tabName === "Events") {
       fetchData(0);
-    }
   }, []);
 
   const resetEvents = async () => {
@@ -120,6 +122,8 @@ const useEvent = () => {
       longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
       artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts,
       assessmentType: copiedValue&&copiedValue?.assessmentType && copiedValue?.assessmentType,
+      // startDate: copiedValue&&copiedValue?.startDate && copiedValue?.startDate,
+      // endDate: copiedValue&&copiedValue?.endDate && copiedValue?.endDate,      
       search_one: searchWordArray[0],
       search_two: searchWordArray[1],
       search_three: searchWordArray[2],
@@ -133,8 +137,12 @@ const useEvent = () => {
       delete obj.search_two;
       delete obj.search_three;
       delete obj.text;
+      refineSearchEvents(obj)
     }
-    refineSearchEvents(obj)
+    else { 
+      refineSearchEvents(obj)
+    }
+    // refineSearchEvents(obj)
     // else if(Object.keys(copiedValue).length !== 0){
     //   refineSearchEvents(obj)
     // }else{
