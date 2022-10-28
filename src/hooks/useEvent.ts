@@ -49,31 +49,31 @@ const useEvent = () => {
   /**
    * fetch places with two words
    */
-  const { loading, error, data, refetch: refetchEvents } = useQuery(events);
+  // const { loading, error, data, refetch: refetchEvents } = useQuery(events);
   const{ loading:refineLoading, error:refineErrorData, data:refineEventData, refetch:refineSearchEvents} = useQuery(refineEvents);
 
-  useEffect(() => {
-    if (data?.visits) {
-      // update the data for the pagination
-      if (data?.visits.meta.pagination.page === 1 && data?.visits.data.length > 0) {
-        dispatch(setEvents([...data?.visits?.data]));
-      } else if (data?.visits.data.length > 0) {
-        dispatch(setEvents([...eventsData, ...data?.visits?.data]));
-      }
-      // update the meta data
-      dispatch(setEventMetaData(data?.visits?.meta));
-      // this flag decides to fetch next set of data 
-      setHasMoreData(data?.visits?.meta.pagination.pageCount !==
-        data?.visits.meta.pagination.page);
+  // useEffect(() => {
+  //   if (data?.visits) {
+  //     // update the data for the pagination
+  //     if (data?.visits.meta.pagination.page === 1 && data?.visits.data.length > 0) {
+  //       dispatch(setEvents([...data?.visits?.data]));
+  //     } else if (data?.visits.data.length > 0) {
+  //       dispatch(setEvents([...eventsData, ...data?.visits?.data]));
+  //     }
+  //     // update the meta data
+  //     dispatch(setEventMetaData(data?.visits?.meta));
+  //     // this flag decides to fetch next set of data 
+  //     setHasMoreData(data?.visits?.meta.pagination.pageCount !==
+  //       data?.visits.meta.pagination.page);
 
-        let dummyArray:any = [];
-        for (let i = 0; i < data?.visits?.data?.length; i++) {
-            dummyArray.push({id:i,name:data?.visits?.data[i].attributes['recordingTeam'],position:{lat:data?.visits?.data[i].attributes['latitude'],lng:data?.visits?.data[i].attributes['longitude']}})
-        }
-          setMapEvents(dummyArray)
-    }
+  //       let dummyArray:any = [];
+  //       for (let i = 0; i < data?.visits?.data?.length; i++) {
+  //           dummyArray.push({id:i,name:data?.visits?.data[i].attributes['recordingTeam'],position:{lat:data?.visits?.data[i].attributes['latitude'],lng:data?.visits?.data[i].attributes['longitude']}})
+  //       }
+  //         setMapEvents(dummyArray)
+  //   }
 
-  }, [data]);
+  // }, [data]);
   
   useEffect(() => {
     if (refineEventData?.visits) {
@@ -82,8 +82,8 @@ const useEvent = () => {
         dispatch(setEvents([...refineEventData?.visits?.data]));
       } else if (refineEventData?.visits.data.length > 0) {
         dispatch(setEvents([...eventsData, ...refineEventData?.visits?.data]));
-      } else if (refineEventData?.visits.data.length === 0) {
-        dispatch(setEvents(refineEventData?.visits?.data));
+      }  else if (refineEventData?.places?.meta.pagination.total === 0) {
+        dispatch(setEvents([]));
       }
       // update the meta data
       dispatch(setEventMetaData(refineEventData?.visits?.meta));
@@ -123,6 +123,7 @@ const useEvent = () => {
       search_one: searchWordArray[0],
       search_two: searchWordArray[1],
       search_three: searchWordArray[2],
+      text: searchWordArray,
       limit: limit,
       skip: skip,
     };
@@ -132,12 +133,14 @@ const useEvent = () => {
       delete obj.search_two;
       delete obj.search_three;
       refineSearchEvents(obj)
-    }
-    else if(Object.keys(copiedValue).length !== 0){
+    } else {
       refineSearchEvents(obj)
-    }else{
-      refetchEvents({ search_one: searchWordArray[0] || '', search_two: searchWordArray[1], search_three: searchWordArray[2], limit: limit, skip: skip });
     }
+    // else if(Object.keys(copiedValue).length !== 0){
+    //   refineSearchEvents(obj)
+    // }else{
+    //   refetchEvents({ search_one: searchWordArray[0] || '', search_two: searchWordArray[1], search_three: searchWordArray[2], limit: limit, skip: skip });
+    // }
   };
 
   const clearTextSearch = () => {
@@ -146,9 +149,9 @@ const useEvent = () => {
   }
 
   return {
-    loading,
-    error,
-    data,
+    loading: refineLoading,
+    error: refineErrorData,
+    data: refineEventData,
     mapEvents,
     hasMoreData,
     fetchEvents: fetchData,
