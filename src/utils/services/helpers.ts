@@ -295,7 +295,6 @@ export const computeArrayFromDelimiter = (wholeString: string, delimiter: string
 }
 
 export const shallRenderMedia = (mediaNo: number, mediaArray: MediaAssociates2) => {
-  console.log('hex in: ', mediaArray.length, mediaNo)
   if(!mediaArray) return false
 
   if(mediaArray.length === mediaNo) {
