@@ -722,7 +722,7 @@ const PlaceDetailsPage = () => {
                                 </Box>
                             </Grid>
                             <Grid item sm={5}>
-                                <MapView marker={[{
+                                <MapView key={4} marker={[{
                                     id: 0,
                                     name: `${placeNameEnglish}`,
                                     position: {

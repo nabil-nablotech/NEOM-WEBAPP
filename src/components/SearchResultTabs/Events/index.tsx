@@ -77,14 +77,14 @@ const PlacesTab = () => {
                     </Grid>
                     {/* To-do: map view */}
                     <Grid item xl={6} lg={6} md={7} sm={7} className={`${styles["map-section"]}`}>                     
-                        {mapEvents !== null ? <MapView marker={mapEvents}/>:<></>}
+                        {mapEvents !== null ? <MapView key={11} marker={mapEvents}/>:<></>}
                     </Grid></>}
                     {
                         openStates[1] &&
                         <Box component={'div'} style={{
                             width: '100%'
                         }}>
-                            <ListView key={11} loading={loading} data={events} handleNext={handleNext} hasMoreData={hasMoreData} />
+                            <ListView key={12} loading={loading} data={events} handleNext={handleNext} hasMoreData={hasMoreData} />
                         </Box>
                     }
                 </Grid>
