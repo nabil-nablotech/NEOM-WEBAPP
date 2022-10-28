@@ -63,4 +63,32 @@ export type EventApi = {
   visitNumber: number
   visitUIPath: string
   visit_associate: VisitAssociate2
+  visit_unique_id: VisitIdProps
 };
+
+export type VisitIdProps = {
+  artifacts: string[]
+  assessmentType: string[]
+  createdAt: string
+  deleted: boolean
+  fieldNarrative: string
+  id: number
+  keywords: null | string
+  latitude: number
+  longitude: number
+  media_associates: Array<MediaAssociateObj>
+  period: string[]
+  recommendation: string
+  recordingTeam: string
+  researchValue: string
+  risk: string
+  siteDescription: string
+  siteType: string[]
+  stateOfConservation: string
+  tourismValue: string
+  uniqueId: string
+  updatedAt: string
+  visitDate: string
+  visitNumber: number
+  visitUIPath: string
+}
