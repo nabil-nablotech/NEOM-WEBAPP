@@ -128,9 +128,7 @@ query refinedSearch(
         { placeNumber: { containsi: $search_one } }
         { placeNumber: { containsi: $search_two } }
         { placeNumber: { containsi: $search_three } }
-        { keywords: { containsi: $search_one } }
-        { keywords: { containsi: $search_two } }
-        { keywords: { containsi: $search_three } }
+        { keywords: { containsi: $text } }
         { siteType: { containsi: $text} }
       ]
       and: [

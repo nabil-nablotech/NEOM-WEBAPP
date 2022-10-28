@@ -58,6 +58,8 @@ const useMedia = () => {
         dispatch(setMedia([...refineMediaData?.medias?.data]));
       } else if (refineMediaData?.medias.data.length > 0) {
         dispatch(setMedia([...mediaItem, ...refineMediaData?.medias?.data]));
+      } else if (refineMediaData?.places?.meta.pagination.total === 0) {
+        dispatch(setMedia([]));
       }
       // update the meta data
       dispatch(setMediaMetaData(refineMediaData?.medias?.meta));
@@ -83,6 +85,7 @@ const useMedia = () => {
       latitude: copiedValue&&copiedValue?.latitude && parseFloat(copiedValue?.latitude),
       longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
       categoryType: copiedValue&&copiedValue?.actionType && copiedValue?.actionType,
+      featuredImage: copiedValue&&copiedValue?.featuredImage,
       limit: limit,
       skip: skip,
     };
