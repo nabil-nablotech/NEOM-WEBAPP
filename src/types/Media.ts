@@ -41,3 +41,35 @@ export type Media = {
     }
   }
 };
+export type MediaApi = {
+  id: string;
+  thumbnailUrl?: string;
+  title: string;
+  description: string;
+  referanceUrl: string;
+  fileName: string;
+  bearing: string;
+  actionType: string;
+  featuredImage: boolean;
+  updatedAt: Date;
+  keywords: string[] | null;
+  citation: string;
+  latitude: Number;
+  longitude: Number;
+  imageMetadata: {
+    fileSize: Number;
+  };
+  uniqueId: string;
+  object: {
+    data: {
+      attributes: {
+        url: string;
+      };
+    };
+  };
+  media_associate: {
+    data: {
+    attributes: PlaceUnique;
+  }
+  }
+};
