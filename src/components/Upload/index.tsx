@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { CustomUploadProps } from '../../types/CustomDrawerTypes';
 import { Box } from '@mui/material';
 import styles from './index.module.css'
+import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
     const reader = new FileReader();
@@ -61,7 +62,8 @@ const CustomUpload_basic = ({
         <div>
             {loading ? <LoadingOutlined /> : <PlusOutlined />}
             <Box component="div">
-
+                {/* WIP */}
+                <ImageOutlinedIcon />
             </Box>
             <div style={{ marginTop: 8 }}>{title}</div>
         </div>

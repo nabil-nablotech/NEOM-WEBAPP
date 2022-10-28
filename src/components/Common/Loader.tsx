@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
 const StyledLoader = styled.div`
-  display: flex;
-  align-self: center;
   border: 2.5px solid #f9f9f9; /* Light grey */
   border-top: 2.5px solid rgb(227, 144, 67);
   border-radius: 50%;
@@ -21,7 +19,14 @@ const StyledLoader = styled.div`
 `;
 
 const Loader = () => {
-  return <StyledLoader />;
+  return <div className="loader-wrapper" style={{
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }}>
+    <StyledLoader />
+  </div>;
 };
 
 export default Loader;

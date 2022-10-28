@@ -38,7 +38,6 @@ const GalleryView = () => {
 
     useEffect(() => {
 
-        // console.log('hex: ', activeMediaItem)
         if(activeMediaItem) {
             navigate(`/search-results/Media/${activeMediaItem.attributes.uniqueId}`, { replace: true })
         }
@@ -110,6 +109,7 @@ const GalleryView = () => {
                                             fileData={{
                                                 alt: "",
                                                 src: itemObj.attributes.media_associates.data[0].attributes.media_unique_id.data.attributes.object.data.attributes.url,
+                                                // src: itemObj.media_unique_id.object.attributes.url,
                                                 className: styles['image']
                                             }}
                                             fileType="image"

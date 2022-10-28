@@ -121,10 +121,23 @@
 .single-image.map-right-image {
     width: 90%;
 }
+.text-anchors-parent {
+    display: flex;
+    gap: 3px;
+}
 
-.anchor {
+.text-anchor {
     color: unset;
     text-decoration: underline;
+    cursor: pointer;
+}
+
+.text-anchor::after{
+    content: ','
+}
+
+.text-anchor:last-child::after{
+    content: '';
 }
 
 .map-loctn-details {

@@ -6,7 +6,8 @@ import { placeDetails } from "../api/details";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 
 const usePlaceDetails = () => {
-  let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
+  const { search } = useLocation();
+  const { uniqueId } = useParams<{ uniqueId: string }>()
 
   const dispatch = useDispatch();
 

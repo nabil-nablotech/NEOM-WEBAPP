@@ -162,7 +162,6 @@ const EventDetailsPage = () => {
 
     const { latitude, longitude } = selectedPlaceObj
 
-    console.log('hex: ', library)
     // get from api
     let [images, setImages] = useState<any>([
         'https://via.placeholder.com/150/92c952',
@@ -638,7 +637,8 @@ const EventDetailsPage = () => {
                                             <RenderFileData
                                                 fileData={{
                                                     alt: "",
-                                                    src: itemObj.attributes.media_associates.data[0].attributes.media_unique_id.data.attributes.object.data.attributes.url,
+                                                    // src: itemObj.attributes.media_associates.data[0].attributes.media_unique_id.data.attributes.object.data.attributes.url,
+                                                    src: '',
                                                     className: styles['media-image']
                                                 }}
                                                 fileType="image"
