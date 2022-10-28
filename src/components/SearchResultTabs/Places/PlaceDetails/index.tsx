@@ -182,9 +182,9 @@ const PlaceDetailsPage = () => {
             title: "NAME",
             key: "attributes",
             dataIndex: "attributes",
-            sorter: (a, b) => a?.title?.localeCompare(b?.title),
-            sortDirections: ["ascend"],
-            defaultSortOrder: "ascend",
+            // sorter: (a, b) => a?.title?.localeCompare(b?.title),
+            // sortDirections: ["ascend"],
+            // defaultSortOrder: "ascend",
             className: "name-column",
             render: (value: any, record: any) => (
                 <Box component="div"
@@ -194,7 +194,7 @@ const PlaceDetailsPage = () => {
                     }}
                 >
                     <InsertDriveFileOutlinedIcon fontSize="small" />
-                    <Box component="div">{value.title}</Box>
+                    <Box component="div">{value?.title}</Box>
                 </Box>
             ),
         },
@@ -204,7 +204,7 @@ const PlaceDetailsPage = () => {
             className: "description-column",
             dataIndex: "attributes", // temporary
             render: (value: any, index) => {
-                return value.description;
+                return value?.description;
             },
         },
         {
@@ -212,7 +212,7 @@ const PlaceDetailsPage = () => {
             className: "citation-column cell-citation",
             dataIndex: "attributes", // temporary
             render: (value: any, index) => {
-                return value.citation;
+                return value?.citation;
             },
         },
         {
@@ -228,7 +228,7 @@ const PlaceDetailsPage = () => {
                     }}
                 >
                     <Tooltip>
-                        {value.referenceURL}
+                        {value?.referenceURL}
                     </Tooltip>
                 </Box>
             ),
@@ -243,7 +243,7 @@ const PlaceDetailsPage = () => {
             title: "UPDATED",
             key: "attributes",
             dataIndex: "attributes",
-            render: (value, index) => formatWebDate(value.updatedAt),
+            render: (value, index) => formatWebDate(value?.updatedAt),
         },
         {
             title: "",
@@ -732,7 +732,7 @@ const PlaceDetailsPage = () => {
                     <Box component="div" className={`${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Library</Box>
-                            <Box component="div">3 Items</Box>
+                            <Box component="div">{libraryItems.length} Items</Box>
                         </Box>
                         <Box component="div">
                             <StyledTableWrapper

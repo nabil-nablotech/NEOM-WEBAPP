@@ -158,7 +158,7 @@ const EventDetailsPage = () => {
     const {
         placeNameEnglish, placeNameArabic, placeNumber,
         siteDescription,
-    } = selectedPlaceObj.attributes
+    } = selectedPlaceObj?.attributes
 
     const { latitude, longitude } = selectedPlaceObj
 

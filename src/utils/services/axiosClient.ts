@@ -9,7 +9,7 @@ export type Headers = {
   Authorization?: string,
   Language: 'English' | 'Arabic';
   // un-comment below for local run
-  // "ngrok-skip-browser-warning"?: string  
+  "ngrok-skip-browser-warning"?: string  
 }
 
 const headers: Headers = {
@@ -18,7 +18,7 @@ const headers: Headers = {
   "Access-Control-Allow-Origin": "*",
   Language: 'English',
   // un-comment below for local run
-  // "ngrok-skip-browser-warning": "3243r"
+  "ngrok-skip-browser-warning": "3243r"
 };
 
 const client = axios.create({
