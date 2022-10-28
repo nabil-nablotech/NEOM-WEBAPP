@@ -166,7 +166,7 @@
 }
 
 .map-loctn-details {
-    margin-inline: 5%;
+    /* margin-inline: 5%; */
     margin-top: 0.5em;
 }
 
@@ -194,6 +194,25 @@
 
 .remarks-section .heading-title {
     margin-bottom: 3em;
+}
+
+.text-anchors-parent {
+    display: flex;
+    gap: 3px;
+}
+
+.text-anchor {
+    color: unset;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.text-anchor::after{
+    content: ','
+}
+
+.text-anchor:last-child::after{
+    content: '';
 }
 
 @media (min-width: 575px) and (max-width: 1025px) {

@@ -34,7 +34,7 @@ const BaseInputs = ({
   textInputSxStyles
 }: BaseInputProps) => {
   const [locationModalOpen, toggleLocationModal] = useState<boolean>(false);
-console.log('selectedValue.startDate', selectedValue.startDate)
+  
   return (
     <>
       <Grid item sm={2} className={`${styles["input-field"]}`}>

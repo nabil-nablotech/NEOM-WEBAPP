@@ -95,6 +95,16 @@
     z-index: 3;
 }
 
+.card-new-flag {
+    color: #fff;
+    font-size: clamp(10px, 1vw, 14px);
+    background-color: var(--clr-gold);
+    border-radius: 11px;
+    padding: 0.2em 10px;
+    margin-block: 0.4em;
+    width: fit-content;
+}
+
 @media (min-width: 575px) and (max-width: 1025px) {
     .left-grid-container {
         max-height: 77vh;
