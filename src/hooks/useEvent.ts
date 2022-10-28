@@ -103,9 +103,9 @@ const useEvent = () => {
   const fetchData = (skip: number = eventsData.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);
     const text = local ? searchText : searchData?.search;
+    const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData?.refinedSearch;
     const searchWordArray = text?.split(' ') || [];
-    const copiedValue = JSON.parse(JSON.stringify(selectedValue));
-    Object.keys(copiedValue).map(x => {
+    copiedValue && Object.keys(copiedValue)?.map(x => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
@@ -132,10 +132,9 @@ const useEvent = () => {
       obj.search_one = '';
       delete obj.search_two;
       delete obj.search_three;
-      refineSearchEvents(obj)
-    } else {
-      refineSearchEvents(obj)
+      delete obj.text;
     }
+    refineSearchEvents(obj)
     // else if(Object.keys(copiedValue).length !== 0){
     //   refineSearchEvents(obj)
     // }else{
@@ -144,7 +143,6 @@ const useEvent = () => {
   };
 
   const clearTextSearch = () => {
-    console.log('inside clear search')
     fetchData(0, true, true);
   }
 
