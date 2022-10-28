@@ -95,6 +95,7 @@ query SearchPlace(
 
 export const refinePlaces = gql`
 query refinedSearch(
+  $text: JSON
   $search_one: String
   $search_two: String
   $search_three: String
@@ -127,6 +128,10 @@ query refinedSearch(
         { placeNumber: { containsi: $search_one } }
         { placeNumber: { containsi: $search_two } }
         { placeNumber: { containsi: $search_three } }
+        { keywords: { containsi: $search_one } }
+        { keywords: { containsi: $search_two } }
+        { keywords: { containsi: $search_three } }
+        { siteType: { containsi: $text} }
       ]
       and: [
         { researchValue: {containsi: $researchValue } } 
