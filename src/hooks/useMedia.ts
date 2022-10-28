@@ -71,8 +71,8 @@ const useMedia = () => {
     const searchData = getQueryObj(search);
     const text = local ? searchText : searchData?.search;
     const searchWordArray = text?.split(' ') || [];
-    const copiedValue = JSON.parse(JSON.stringify(selectedValue));
-    Object.keys(copiedValue).map(x => {
+    const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData?.refinedSearch;
+    copiedValue && Object.keys(copiedValue).map(x => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
@@ -82,6 +82,7 @@ const useMedia = () => {
       search_three: searchWordArray[2],
       latitude: copiedValue&&copiedValue?.latitude && parseFloat(copiedValue?.latitude),
       longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
+      actionType: copiedValue&&copiedValue?.actionType && copiedValue?.actionType,
       limit: limit,
       skip: skip,
     };
@@ -91,11 +92,14 @@ const useMedia = () => {
       delete obj.search_two;
       delete obj.search_three;
       refineSearchMedia(obj)
-    }if(Object.keys(copiedValue).length !== 0){
+    } else  {
       refineSearchMedia(obj)
-    }else{
-      refetchMediaItems({ search_one: searchWordArray[0] || '', search_two: searchWordArray[1] || '', search_three: searchWordArray[2] || '', limit: limit, skip: skip });
     }
+    // if(Object.keys(copiedValue).length !== 0){
+      // refineSearchMedia(obj)
+    // }else{
+    //   refetchMediaItems({ search_one: searchWordArray[0] || '', search_two: searchWordArray[1] || '', search_three: searchWordArray[2] || '', limit: limit, skip: skip });
+    // }
   };
  
   return {

@@ -111,6 +111,7 @@ query RefinedMediaSearch(
   $latitude: Float
   $longitude: Float
   $featuredImage: Boolean
+  $actionType: JSON
   $limit: Int
   $skip: Int
 ) {
@@ -135,9 +136,10 @@ query RefinedMediaSearch(
         # { keywords: { contains: $search_three } }
       ]
       and: [
-        {	latitude: { gte: $latitude }}
-        {	longitude: { lte: $longitude }}
-        { featuredImage:{eq: $featuredImage}}
+        {	latitude: { gte: $latitude } }
+        {	longitude: { lte: $longitude } }
+        { featuredImage: { eq: $featuredImage } }
+        { actionType: { containsi: $actionType } }
         {
           media_type: {
             categoryCode: {
