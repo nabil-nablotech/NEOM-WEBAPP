@@ -120,31 +120,24 @@ query RefineSearchEvent(
   $artifacts: JSON
   $limit: Int
   $skip: Int
-$startDate: Date
-$endDate: Date
+  # $startDate: DateTime
+  # $endDate: DateTime
 ) {
   visits(
     pagination: { limit: $limit, start: $skip }
     filters: {
       or: [
-        # {	siteType: {containsi: $search_one }}
         { siteDescription: { contains: $search_one } }
-        # {	period: {containsi: $search_one}}
         { recordingTeam: { contains: $search_one } }
         { fieldNarrative: { contains: $search_one } }
-        # { keywords: { contains: $search_one } }
-        # { siteType: {containsi:$search_two} }
         { siteDescription: { contains: $search_two } }
-        # {	period: {containsi: $search_two}}
         { recordingTeam: { contains: $search_two } }
         { fieldNarrative: { contains: $search_two } }
-        # { keywords: { contains: $search_one } }
-        # {	siteType: {containsi: $search_three }}
         { siteDescription: { contains: $search_three } }
-        # {	period: {containsi: $search_three}}
         { recordingTeam: { contains: $search_three } }
         { fieldNarrative: { contains: $search_three } }
         { keywords: { contains: $text } }
+        { siteType: {containsi: $text} }
       ]
       and:[
         {	stateOfConservation: {containsi: $stateOfConservation}}
@@ -157,8 +150,8 @@ $endDate: Date
         { assessmentType: {containsi: $assessmentType}}
         {	latitude: { gte: $latitude }}
         {	longitude: { lte: $longitude }}
-        {visitDate: {gte: $startDate}}
-        {visitDate: {lte: $endDate}}
+        # { createdAt: { gte: $startDate }}
+        # { createdAt: { lte: $endDate }}
     ] 
     }
   ) {
@@ -173,13 +166,12 @@ $endDate: Date
     data {
       id
       attributes {
-         visitDate
+        visitDate
         recordingTeam
         siteDescription
         updatedAt
         createdAt
         keywords
-       
         latitude
         longitude
         uniqueId
