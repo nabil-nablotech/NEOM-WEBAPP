@@ -201,7 +201,7 @@ const EventDetailsPage = () => {
         risk, tourismValue, researchValue, recommendation,
         visitUIPath, visitDate, recordingTeam,
         visitNumber,
-        libraryItems, mediaGallery, visit_associate
+        libraryItems, mediaGallery, visit_associate,
     } = eventDetails
 
     const mediaGalleryLocal = mediaGridActiveItems + mediaCount <= mediaGallery.length ? mediaGallery.slice(0, mediaGridActiveItems + mediaCount) :
@@ -436,7 +436,7 @@ const EventDetailsPage = () => {
                                         <Grid item>
                                             <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
                                                 {
-                                                    siteType && computeArrayFromDelimiter(siteType, ';').map(item => (
+                                                    siteType && siteType.map(item => (
                                                         <Box
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
@@ -461,7 +461,7 @@ const EventDetailsPage = () => {
                                             all places where the site type = building. */}
                                             <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
                                                 {
-                                                    period && computeArrayFromDelimiter(period, ';').map(item => (
+                                                    period && period.map(item => (
                                                         <Box
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
@@ -487,41 +487,43 @@ const EventDetailsPage = () => {
                                         <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             State of Conservation
                                         </Grid>
-                                        <Grid item>
-                                            {stateOfConservation}
-                                        </Grid>
+                                        {stateOfConservation.map(item => <Grid item>
+                                            {item}
+                                        </Grid>)}
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Risk
                                         </Grid>
-                                        <Grid item>
-                                            {risk}
-                                        </Grid>
+                                        
+                                        {risk.map(item => <Grid item>
+                                            {item}
+                                        </Grid>)}
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Tourism Value
                                         </Grid>
-                                        <Grid item sm={8} md={7} className={`${styles['table-parameter-value']}`}>
-                                            {tourismValue}
-                                        </Grid>
+                                        
+                                        {tourismValue.map(item => <Grid item sm={8} md={7} className={`${styles['table-parameter-value']}`}>
+                                            {item}
+                                        </Grid>)}
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Research Value
                                         </Grid>
-                                        <Grid item>
-                                            {researchValue}
-                                        </Grid>
+                                        {researchValue.map(item => <Grid item>
+                                            {item}
+                                        </Grid>)}
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Recommendation
                                         </Grid>
-                                        <Grid item>
-                                            {recommendation}
-                                        </Grid>
+                                        {recommendation.map(item => <Grid item>
+                                            {item}
+                                        </Grid>)}
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>

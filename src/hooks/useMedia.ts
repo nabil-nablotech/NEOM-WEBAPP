@@ -1,10 +1,11 @@
 import { useQuery} from '@apollo/client';
 import { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { media, refineMedia } from "../query/media";
 import { RootState } from '../store';
 import {setMedia, setMediaMetaData} from '../store/reducers/searchResultsReducer'
+import { tabNameProps } from '../types/SearchResultsTabsProps';
 import {limit, getQueryObj} from '../utils/services/helpers';
 
 const useMedia = () => {
@@ -12,13 +13,15 @@ const useMedia = () => {
 
   const {searchText, media: mediaItem} = useSelector((state: RootState) => state.searchResults);
   const {search} = useLocation();
+  let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
   const { selectedValue } = useSelector((state: RootState) => state.refinedSearch);
 
   useEffect(() => {
-
     resetMedia();
-    // fetchData(0);
+    if (tabName === "Media") {
+      fetchData(0);
+    }
   }, []);
 
   const resetMedia = async () => {

@@ -1,12 +1,11 @@
 import { useEffect } from "react";
 import { useMutation } from "react-query";
-import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { eventDetails } from "../api/details";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 
 const useEventDetails = () => {
-  let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
+  let { uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
 
   useEffect(() => {
     if (uniqueId) {
@@ -17,7 +16,7 @@ const useEventDetails = () => {
   /**
    * fetch places with two words
    */
-  const { isLoading, error, data, mutate: fetchEventDetails } = useMutation('place-details', eventDetails, {
+  const { isLoading, error, data, mutate: fetchEventDetails } = useMutation('event-details', eventDetails, {
     retry: false
   });
 

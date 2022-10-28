@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const media = gql`
-query SearchTitle(
+query SearchMedia(
   $search_one: String
   $search_two: String
   $search_three: String
@@ -104,7 +104,7 @@ query SearchTitle(
 `;
 
 export const refineMedia = gql`
-query refinedSearch(
+query RefinedMediaSearch(
   $search_one: String
   $search_two: String
   $search_three: String

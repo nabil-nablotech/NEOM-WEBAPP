@@ -1,10 +1,11 @@
 import {useQuery} from '@apollo/client';
 import { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { library } from "../query/library";
 import { RootState } from '../store';
 import {setLibrary, setLibraryMetaData, setSearchText} from '../store/reducers/searchResultsReducer';
+import { tabNameProps } from '../types/SearchResultsTabsProps';
 import {limit, getQueryObj} from '../utils/services/helpers';
 
 const useLibrary = () => {
@@ -15,6 +16,7 @@ const useLibrary = () => {
     (state: RootState) => state.refinedSearch
   );
   const {search} = useLocation();
+  let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -23,7 +25,9 @@ const useLibrary = () => {
     //   dispatch(setSearchText(searchParams))
     // }
     resetLib();
-    fetchData(0);
+    if (tabName === "Library") {
+      fetchData(0);
+    }
   }, []);
 
   const resetLib = async () => {

@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { events, refineEvents } from "../query/events";
 import { RootState } from "../store";
 import { setSelectedValue, initialSelectedValue } from "../store/reducers/refinedSearchReducer";
@@ -10,6 +10,7 @@ import {
   setEventMetaData,
 } from "../store/reducers/searchResultsReducer";
 import {limit, getQueryObj} from '../utils/services/helpers';
+import { tabNameProps } from "../types/SearchResultsTabsProps";
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -22,6 +23,8 @@ const useEvent = () => {
     (state: RootState) => state.refinedSearch
   );
   const { search } = useLocation();
+  
+  let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -33,7 +36,9 @@ const useEvent = () => {
       }))
     }
     resetEvents();
-    fetchData(0);
+    if (tabName === "Events") {
+      fetchData(0);
+    }
   }, []);
 
   const resetEvents = async () => {

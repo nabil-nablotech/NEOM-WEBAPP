@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { places, refinePlaces } from "../query/places";
 import { RootState } from "../store";
 import { initialSelectedValue, setSelectedValue } from "../store/reducers/refinedSearchReducer";
@@ -10,6 +10,7 @@ import {
   setPlaceMetaData,
   setSearchText
 } from "../store/reducers/searchResultsReducer";
+import { tabNameProps } from "../types/SearchResultsTabsProps";
 
 import {limit, getQueryObj} from '../utils/services/helpers';
 
@@ -23,10 +24,12 @@ const usePlace = () => {
     (state: RootState) => state.refinedSearch
   );
   const { search } = useLocation();
+  let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
 
+  const searchData = getQueryObj(search);
   useEffect(() => {
-    const searchData = getQueryObj(search);
+    console.log('search', searchData);
     if (searchData) {
       dispatch(setSearchText(searchData.search))
       if (searchData?.refinedSearch) {
@@ -37,7 +40,9 @@ const usePlace = () => {
       }
     }
     resetPlaces();
+    // if (tabName === "Places") {
     fetchData(0);
+    // }
   }, []);
 
   const resetPlaces = async () => {
@@ -58,6 +63,8 @@ const usePlace = () => {
         dispatch(setPlaces([...data?.places.data]));
       } else if (data?.places.data.length > 0) {
         dispatch(setPlaces([...placeData, ...data?.places.data]));
+      } else if (refinePlaceData?.places?.meta.pagination.total === 0) {
+        dispatch(setPlaces([]));
       }
       // update the meta data
       dispatch(setPlaceMetaData(data?.places?.meta));
@@ -89,6 +96,8 @@ const usePlace = () => {
         dispatch(setPlaces([...refinePlaceData?.places.data]));
       } else if (refinePlaceData?.places.data.length > 0) {
         dispatch(setPlaces([...placeData, ...refinePlaceData?.places.data]));
+      } else if (refinePlaceData?.places?.meta.pagination.total === 0) {
+        dispatch(setPlaces([]));
       }
       // update the meta data
       dispatch(setPlaceMetaData(refinePlaceData?.places?.meta));
@@ -119,23 +128,23 @@ const usePlace = () => {
     // check if the search is coming from local or using link
     const text = local ? searchText : searchData?.search;
     // filter non data from the array object
-    const copiedValue = JSON.parse(JSON.stringify(selectedValue));
+    const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData.refinedSearch;
     const searchWordArray = text?.split(" ") || [];
     Object.keys(copiedValue).map(x => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
     const obj: any = {
-      researchValue: copiedValue&&copiedValue?.researchValue && copiedValue?.researchValue.toString(),
-      tourismValue: copiedValue&&copiedValue.tourismValue && copiedValue?.tourismValue.toString(),
-      stateOfConservation: copiedValue&&copiedValue?.stateOfConservation && copiedValue?.stateOfConservation.toString(),
-      recommendation: copiedValue&&copiedValue?.recommendation && copiedValue?.recommendation.toString(),
-      risk: copiedValue&&copiedValue?.risk && copiedValue?.risk.toString(),
-      period: copiedValue&&copiedValue?.period && copiedValue?.period.toString(),
+      researchValue: copiedValue&&copiedValue?.researchValue && copiedValue?.researchValue,
+      tourismValue: copiedValue&&copiedValue.tourismValue && copiedValue?.tourismValue,
+      stateOfConservation: copiedValue&&copiedValue?.stateOfConservation && copiedValue?.stateOfConservation,
+      recommendation: copiedValue&&copiedValue?.recommendation && copiedValue?.recommendation,
+      risk: copiedValue&&copiedValue?.risk && copiedValue?.risk,
+      period: copiedValue&&copiedValue?.period && copiedValue?.period,
       latitude: copiedValue&&copiedValue?.latitude && parseFloat(copiedValue?.latitude),
       longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
-      artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts.toString(),
-      actionType: copiedValue&&copiedValue?.actionType && copiedValue?.actionType.toString(),
+      artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts,
+      actionType: copiedValue&&copiedValue?.actionType && copiedValue?.actionType,
       search_one: searchWordArray[0],
       search_two: searchWordArray[1],
       search_three: searchWordArray[2],
@@ -152,7 +161,9 @@ const usePlace = () => {
     else if(Object.keys(copiedValue).length !== 0){
       refineSearchPlaces(obj)
     }else{
+      
       refetchPlaces({
+        text: searchWordArray,
         search_one: searchWordArray[0] || '',
         search_two: searchWordArray[1],
         search_three: searchWordArray[2],

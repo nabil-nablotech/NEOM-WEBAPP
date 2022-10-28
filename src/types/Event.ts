@@ -35,28 +35,28 @@ export type Event = {
 };
 export type EventApi = {
 
-  artifacts: string
-  assessmentType: string
+  artifacts: string[]
+  assessmentType: string[]
   assessmentTypeOther: null | string
   createdAt: string
   deleted: boolean
   fieldNarrative: string
   id: number
-  keywords: null | string
+  keywords: null | string[]
   latitude: number
   libraryItems: Media[]
   longitude: number
   mediaGallery: Array<MediaAssociateObj>
   media_associates: Array<MediaAssociateObj>
-  period: string
-  recommendation: string
+  period: string[]
+  recommendation: string[]
   recordingTeam: string
-  researchValue: string
-  risk: string
+  researchValue: string[]
+  risk: string[]
   siteDescription: string
-  siteType: string
-  stateOfConservation: string
-  tourismValue: string
+  siteType: string[]
+  stateOfConservation: string[]
+  tourismValue: string[]
   uniqueId: string
   updatedAt: string
   visitDate: string

@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const events = gql`
 
-query SearchTitle(
+query SearchEvents(
   $search_one: String
   $search_two: String
   $search_three: String
@@ -103,7 +103,7 @@ query SearchTitle(
 `;
 
 export const refineEvents = gql`
-query SearchTitle(
+query RefineSearchEvent(
   $search_one: String
   $search_two: String
   $search_three: String
