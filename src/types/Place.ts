@@ -9,17 +9,17 @@ export type PlaceApi = {
   placeNameEnglish: string;
   placeNameArabic: string;
   siteDescription: string;
-  siteType: string;
+  siteType: string[];
   updatedAt: string;
   keywords: string[] | null;
   placeNumber: string | null;
   uniqueId: string;
-  period: string;
-  researchValue: string;
-  tourismValue: string;
-  stateOfConservation: string;
-  recommendation: string;
-  risk: string;
+  period: string[];
+  researchValue: string[];
+  tourismValue: string[];
+  stateOfConservation: string[];
+  recommendation: string[];
+  risk: string[];
   placeUIPath: string;
   // media_associates: MediaAssociates;
   media_associates: MediaAssociates2;
@@ -48,14 +48,14 @@ export type PlaceApiResponse = {
   latitude: Number;
   longitude: Number;
   uniqueId: string;
-  period: string;
-  researchValue: string;
-  tourismValue: string;
-  stateOfConservation: string;
-  recommendation: string;
-  risk: string;
+  period: string[];
+  researchValue: string[];
+  tourismValue: string[];
+  stateOfConservation: string[];
+  recommendation: string[];
+  risk: string[];
   media_associates: MediaAssociates;
-  siteType: string
+  siteType: string[]
   placeUIPath: string
 }
 

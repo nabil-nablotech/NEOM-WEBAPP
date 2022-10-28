@@ -67,7 +67,7 @@ const GridView = (props: PlacesProps) => {
                   title={`${item.attributes.placeNameEnglish.substr(0, 20)}${item.attributes.placeNameArabic.substr(0, 20)} - ${item.attributes.placeNumber}`}
                   subTitle={item.attributes.siteDescription}
                   dateString={`Last login on ${formatDateTime(item.attributes.updatedAt)}`}
-                  period={item.attributes.period.split(';')}
+                  period={item.attributes.period}
                 />
               </Grid>
           ))}
