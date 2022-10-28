@@ -1,7 +1,7 @@
 
-import {Place, PlaceApiResponse} from '../types/Place';
+import {PlaceApi} from '../types/Place';
 import client from "../utils/services/axiosClient";
 
-export const placeDetails = (payload: string): Promise<PlaceApiResponse> =>
+export const placeDetails = (payload: string): Promise<PlaceApi> =>
   client.get(`/api/custom/place/${payload}`).then((response) => response.data);
 

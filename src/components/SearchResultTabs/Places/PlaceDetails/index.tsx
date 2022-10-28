@@ -31,6 +31,7 @@ import usePlace from "../../../../hooks/usePlace";
 import usePlaceDetails from "../../../../hooks/usePlaceDetails";
 import Loader from "../../../Common/Loader";
 
+import usePlaceDetails from "../../../../hooks/usePlaceDetails";
 const StyledTableWrapper = styled(StyledAntTable)`
     
     .ant-table-container {
@@ -112,6 +113,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
 ` 
 const PlaceDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
+    const {data: placeData} = usePlaceDetails();
     const navigate = useNavigate();
 
     const { places, library, events, media } = useSelector(
@@ -354,6 +356,9 @@ const PlaceDetailsPage = () => {
         return <Loader />
     }
 
+    if (!placeData) {
+        return null
+    }
     return (
         <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -505,20 +510,20 @@ const PlaceDetailsPage = () => {
                             <Grid item className={`${styles['title-section-left-item']}`}>
                                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
-                                {true && <Grid container>
+                                {placeData && <Grid container>
                                     <Grid item>
                                         <Box component="div" className={`${styles['item-name']}`}>
-                                            {placeNameEnglish}
+                                            {placeData.placeNameEnglish}
                                         </Box>
                                     </Grid>
-                                    {true && <Grid item>
+                                    {placeData && <Grid item>
                                         <Box component="div" className={`${styles['item-name-arabic']}`}>
-                                            {placeNameArabic}
+                                            {placeData.placeNameArabic}
                                         </Box>
                                     </Grid>}
                                 </Grid>}
                                 <Box component="div" className={`${styles['item-number']}`}>
-                                    {placeNumber}
+                                    {placeData.placeNumber}
                                 </Box>
                             </Grid>
                             <Grid item className={`${styles['title-section-grid']}`}>
@@ -541,7 +546,7 @@ const PlaceDetailsPage = () => {
                                     <Box component="div"
                                         className={`${styles['site-desc-condensed']} ${isSeeMore ? styles['see-more-active'] : ''}`}
                                     >
-                                        {siteDescription.substring(0, !isSeeMore ? 500 : siteDescription.length - 1)}
+                                        {placeData?.siteDescription.substring(0, !isSeeMore ? 500 : placeData.siteDescription.length - 1)}
                                     </Box>
                                     {!isSeeMore && <Box component="div" className={`${styles['see-more-box']}`} onClick={e => {
                                         toggleSeeMore(state => !state)
@@ -722,7 +727,7 @@ const PlaceDetailsPage = () => {
                     <Box component="div" className={`${styles['events-section']} ${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Events</Box>
-                            <Box component="div">1 Item</Box>
+                            <Box component="div">{placeData.visit_associates.length}</Box>
                         </Box>
                         <Box component="div">
                             <StyledTableWrapper
