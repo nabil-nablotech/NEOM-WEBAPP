@@ -436,7 +436,7 @@ const EventDetailsPage = () => {
                                         <Grid item>
                                             <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
                                                 {
-                                                    siteType && computeArrayFromDelimiter(siteType, ';').map(item => (
+                                                    siteType && siteType.map(item => (
                                                         <Box
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
@@ -461,7 +461,7 @@ const EventDetailsPage = () => {
                                             all places where the site type = building. */}
                                             <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
                                                 {
-                                                    period && computeArrayFromDelimiter(period, ';').map(item => (
+                                                    period && period.map(item => (
                                                         <Box
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}

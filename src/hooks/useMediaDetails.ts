@@ -14,14 +14,14 @@ const useMediaDetails = () => {
   useEffect(() => {
     console.log('fetch the uniqueId from params');
     if (uniqueId) {
-      fetchPlaceDetails(uniqueId)
+      fetchMediaDetails(uniqueId)
     }
   }, [])
 
   /**
    * fetch places with two words
    */
-  const { isLoading, error, data, mutate: fetchPlaceDetails } = useMutation('place-details', mediaDetails, {
+  const { isLoading, error, data, mutate: fetchMediaDetails } = useMutation('place-details', mediaDetails, {
     retry: false
   });
 

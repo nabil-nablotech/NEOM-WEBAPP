@@ -48,13 +48,13 @@ export type EventApi = {
   longitude: number
   mediaGallery: Array<MediaAssociateObj>
   media_associates: Array<MediaAssociateObj>
-  period: string
+  period: string[]
   recommendation: string
   recordingTeam: string
   researchValue: string
   risk: string
   siteDescription: string
-  siteType: string
+  siteType: string[]
   stateOfConservation: string
   tourismValue: string
   uniqueId: string
