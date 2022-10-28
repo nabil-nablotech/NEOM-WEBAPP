@@ -267,19 +267,20 @@ const PlaceDetailsPage = () => {
     const tableHeaderJson_media: ColumnsType<any> = [
         {
             title: "",
-            key: "",
-            dataIndex: "",
+            key: "visit_unique_id",
+            dataIndex: "visit_unique_id",
             className: "cell-image",
             render: (value: any, index: any) => {
-
                 return <>
                     <Box
                         className={`media-table-image`}
                         component="img"
                         alt={""}
                         // src={value.thumbnailUrl}
-                        src={images[0]}
-                        // src={value.media_unique_id.object.formats.small.url}
+                        src={`${baseUrl}${value.media_associates[0].media_unique_id.object.url}`}
+                        style={{
+                            maxWidth: '100%'
+                        }}
                     ></Box>
                 </>
             },
@@ -702,7 +703,7 @@ const PlaceDetailsPage = () => {
                                                 }}
                                                 onClick={e => {
                                                     setCopyDone(true)
-                                                    copyToClipboard(placeUIPath)
+                                                    copyToClipboard(placeUIPath ?? '')
                                                 }}
                                             >
                                                 {placeUIPath}
@@ -747,7 +748,7 @@ const PlaceDetailsPage = () => {
                     <Box component="div" className={`${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Library</Box>
-                            <Box component="div">3 Items</Box>
+                            <Box component="div">{libraryItems.length} Items</Box>
                         </Box>
                         <Box component="div">
                             <StyledTableWrapper
@@ -770,7 +771,7 @@ const PlaceDetailsPage = () => {
                     <Box component="div" className={`${styles['events-section']} ${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Events</Box>
-                            <Box component="div">{visit_associates.length}</Box>
+                            <Box component="div">{visit_associates.length} Items</Box>
                         </Box>
                         <Box component="div">
                             <StyledTableWrapper

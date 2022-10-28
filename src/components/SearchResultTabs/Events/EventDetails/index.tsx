@@ -14,7 +14,7 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
-import { antTablePaginationCss, copyToClipboard, formatWebDate, stringAvatar } from "../../../../utils/services/helpers";
+import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatWebDate, stringAvatar } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
@@ -30,6 +30,8 @@ import PositionedSnackbar from "../../../Snackbar";
 import YellowStar from '../../../../assets/images/searchResults/YellowStar.svg'
 import { useMediaQuery } from 'react-responsive'
 import useEventDetails from "../../../../hooks/useEventDetails";
+import Loader from "../../../Common/Loader";
+import MapView from "../../GoogleMap/MapView";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -117,25 +119,11 @@ const StyledTableWrapper = styled(StyledAntTable)`
 const EventDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
     const navigate = useNavigate();
-    const {data: eventDetails} = useEventDetails();
-
+    
     const { places, library, events, media } = useSelector(
         (state: RootState) => state.searchResults
     );
     const { data } = useSelector((state: RootState) => state.login);
-    const [mediaGridActiveItems, setMediaGridActiveItems] = useState<number>(0)
-
-    let mediaCount = 8
-    const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
-    if(isTablet) {
-        mediaCount = 6
-    }
-
-    const mediaList = mediaGridActiveItems + mediaCount <= places.length ? places.slice(0, mediaGridActiveItems + mediaCount) :
-        places.slice(
-            0,
-            mediaGridActiveItems + (places.length - mediaGridActiveItems)
-        )
 
     let selectedPlaceObjIndex: number = 0
     let selectedPlaceObj: Place = places[0]
@@ -155,13 +143,6 @@ const EventDetailsPage = () => {
         }
     })
 
-    const {
-        placeNameEnglish, placeNameArabic, placeNumber,
-        siteDescription,
-    } = selectedPlaceObj.attributes
-
-    const { latitude, longitude } = selectedPlaceObj
-
     // get from api
     let [images, setImages] = useState<any>([
         'https://via.placeholder.com/150/92c952',
@@ -173,6 +154,67 @@ const EventDetailsPage = () => {
     const [isMoreTitleMenuOpen, setMoreTitleMenuOpen] = useState<false>(false)
     const [isSeeMore, toggleSeeMore] = useState<boolean>(false)
     const [isCopyDone, setCopyDone] = useState<boolean>(false)
+
+
+    // const { fetchLibraryItems, hasMoreData, loading } = useLibrary();
+
+    const {
+        anchorEl,
+        open,
+        handleClick,
+        handleClose,
+        handleSettingsClose
+    } = useAnchor()
+
+
+    const { fetchMediaItems, hasMoreData, loading } = useMedia();
+    const dispatch = useDispatch()
+
+    const {loading: eventLoading, data: eventDetails} = useEventDetails();
+    // console.log('hex: ', eventDetails)
+    
+    const [mediaGridActiveItems, setMediaGridActiveItems] = useState<number>(0)
+
+    let mediaCount = 8
+    const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
+    if(isTablet) {
+        mediaCount = 6
+    }
+
+
+
+    if(eventLoading) {
+        return <Loader />
+    }
+    
+    if(!eventLoading && !eventDetails) {
+        return <div>Cant fetch event</div>
+    }
+
+    if (!eventDetails) {
+        return null
+    }
+
+    const {
+        siteDescription, siteType, period, fieldNarrative, stateOfConservation,
+        risk, tourismValue, researchValue, recommendation,
+        visitUIPath, visitDate, recordingTeam,
+        visitNumber,
+        libraryItems, mediaGallery, visit_associate
+    } = eventDetails
+
+    const mediaGalleryLocal = mediaGridActiveItems + mediaCount <= mediaGallery.length ? mediaGallery.slice(0, mediaGridActiveItems + mediaCount) :
+        mediaGallery.slice(
+            0,
+            mediaGridActiveItems + (mediaGallery.length - mediaGridActiveItems)
+        )
+
+
+    
+    const {latitude, longitude} = eventDetails
+
+    const { placeNameEnglish, placeNameArabic, placeNumber} = visit_associate.place_unique_id
+
 
     const menuItems = [
         {
@@ -190,16 +232,6 @@ const EventDetailsPage = () => {
             },
         },
     ]
-
-    // const { fetchLibraryItems, hasMoreData, loading } = useLibrary();
-
-    const {
-        anchorEl,
-        open,
-        handleClick,
-        handleClose,
-        handleSettingsClose
-    } = useAnchor()
 
     const tableHeaderJson: ColumnsType<any> = [
         {
@@ -364,9 +396,6 @@ const EventDetailsPage = () => {
         }
     ]
 
-    const { fetchMediaItems, hasMoreData, loading } = useMedia();
-    const dispatch = useDispatch()
-
     const handleClickMediaItem = (e: React.MouseEvent, itemIndex: number) => {
         /** itemIndex used to track which item being clicked out of 5;
          * 1st , 2nd etc.
@@ -413,29 +442,29 @@ const EventDetailsPage = () => {
                             <Grid item className={`${styles['title-section-left-item']}`}>
                                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
-                                {true && <Grid container>
+                                {placeNameEnglish && <Grid container>
                                     <Grid item>
                                         <Box component="div" className={`${styles['item-name']}`}>
-                                            Al-Muwaylih   Al-Muwaylih
+                                            {placeNameEnglish}
                                         </Box>
                                     </Grid>
-                                    {true && <Grid item>
+                                    {placeNameArabic && <Grid item>
                                         <Box component="div" className={`${styles['item-name-arabic']}`}>
-                                            الُموَيْلح - الحي التراثي
+                                            {placeNameArabic}
                                         </Box>
                                     </Grid>}
-                                    {true && <Grid item>
+                                    {placeNumber && <Grid item>
                                         <Box component="div" className={`${styles['item-number']}`}>
-                                            - N00381
+                                            {`- ${placeNumber}`}
                                         </Box>
                                     </Grid>}
                                 </Grid>}
                                 <Box component="div" className={`${styles['visited-by-main-box']}`}>
-                                    <Box component="span">Visited on 7 September, 2022 by </Box>
-                                    <Box component="span">Adam Biernaski, Julian Jansen van Rensburg</Box>
+                                    <Box component="span">Visited on {visitDate} by </Box>
+                                    <Box component="span">{recordingTeam}</Box>
                                 </Box>
                                 <Box component="div" className={`${styles['visit-count']}`}>
-                                    VISIT 1
+                                    VISIT {visitNumber}
                                 </Box>
                             </Grid>
                             <Grid item className={`${styles['title-section-grid']}`}>
@@ -468,8 +497,17 @@ const EventDetailsPage = () => {
                                             Site Type
                                         </Grid>
                                         <Grid item>
-                                            <Box component={"a"} href="#" className={`${styles['anchor']}`}>
-                                                Settlement
+                                            <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
+                                                {
+                                                    siteType && computeArrayFromDelimiter(siteType, ';').map(item => (
+                                                        <Box
+                                                            component="div"
+                                                            className={`${styles['text-anchor']}`}
+                                                        >
+                                                            {item}
+                                                        </Box>
+                                                    ))
+                                                }
                                             </Box>
                                         </Grid>
                                     </Grid>
@@ -484,8 +522,17 @@ const EventDetailsPage = () => {
                                             the Site Type says  “Building”, when the user clicks on it, the user will 
                                             be redirected to the search results page where they will see the list of 
                                             all places where the site type = building. */}
-                                            <Box component={"a"} href="#" className={`${styles['anchor']}`}>
-                                                Modern,Ottoman
+                                            <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
+                                                {
+                                                    period && computeArrayFromDelimiter(period, ';').map(item => (
+                                                        <Box
+                                                            component="div"
+                                                            className={`${styles['text-anchor']}`}
+                                                        >
+                                                            {item}
+                                                        </Box>
+                                                    ))
+                                                }
                                             </Box>
                                         </Grid>
                                     </Grid>
@@ -495,7 +542,7 @@ const EventDetailsPage = () => {
                                         </Grid>
                                         <Grid item sm={8} className={`${styles['table-parameter-value']}`}>
                                             {
-                                                `The site is west of highway 55, on a terrace overlooking a Wadi Sh site has one feature (F001). F001 is a rectangular rock alignment w concentration with an open center that is roughly square in the south`
+                                                fieldNarrative
                                             }
                                         </Grid>
                                     </Grid>
@@ -504,7 +551,7 @@ const EventDetailsPage = () => {
                                             State of Conservation
                                         </Grid>
                                         <Grid item>
-                                            Good
+                                            {stateOfConservation}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -512,7 +559,7 @@ const EventDetailsPage = () => {
                                             Risk
                                         </Grid>
                                         <Grid item>
-                                            No threat
+                                            {risk}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -520,7 +567,7 @@ const EventDetailsPage = () => {
                                             Tourism Value
                                         </Grid>
                                         <Grid item sm={8} md={7} className={`${styles['table-parameter-value']}`}>
-                                            Local - Only of local interest, although could provide the basis for an overnight stop
+                                            {tourismValue}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -528,7 +575,7 @@ const EventDetailsPage = () => {
                                             Research Value
                                         </Grid>
                                         <Grid item>
-                                            Has very little or no academic research value
+                                            {researchValue}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -536,7 +583,7 @@ const EventDetailsPage = () => {
                                             Recommendation
                                         </Grid>
                                         <Grid item>
-                                            Protected
+                                            {recommendation}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -553,10 +600,10 @@ const EventDetailsPage = () => {
                                                 }}
                                                 onClick={e => {
                                                     setCopyDone(true)
-                                                    copyToClipboard('https://www.neomheritage.com/place/N00381')
+                                                    copyToClipboard(visitUIPath)
                                                 }}
                                             >
-                                                https://www.neomheritage.com/place/N00381
+                                                {visitUIPath}
                                             </Box>
                                             <PositionedSnackbar
                                                 message={"Copied to clipboard"}
@@ -569,25 +616,25 @@ const EventDetailsPage = () => {
                                 </Box>
                             </Grid>
                             <Grid item sm={5}>
-                                <RenderFileData
-                                    fileData={{
-                                        alt: "",
-                                        src: images[4],
-                                        className: `${styles["single-image"]} ${styles["map-right-image"]}`
-                                    }}
-                                    fileType="image"
-                                />
+                                <MapView marker={[{
+                                    id: 0,
+                                    name: `${"P event name"}`,
+                                    position: {
+                                        lat: latitude,
+                                        lng: longitude
+                                    }
+                                }]}/>
                                 <Grid container className={`${styles['map-loctn-details']}`} >
                                     <Grid item lg={5} md={5} sm={5}>
                                         <Grid container className={`${styles['map-loctn-line']}`}>
                                             <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                            <Grid item>28.090884</Grid>
+                                            <Grid item>{latitude}</Grid>
                                         </Grid>
                                     </Grid>
                                     <Grid item lg={5} md={5} sm={6}>
                                         <Grid container className={`${styles['map-loctn-line']}`}>
                                             <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                            <Grid item>35.475373</Grid>
+                                            <Grid item>{longitude}</Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -598,7 +645,7 @@ const EventDetailsPage = () => {
                     <Box component="div" className={`${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Library</Box>
-                            <Box component="div">3 Items</Box>
+                            <Box component="div">{libraryItems.length} Items</Box>
                         </Box>
                         <Box component="div">
                             <StyledTableWrapper
@@ -606,7 +653,7 @@ const EventDetailsPage = () => {
                                 rowKey={"id"}
                                 size="small"
                                 columns={tableHeaderJson}
-                                dataSource={library}
+                                dataSource={libraryItems ? libraryItems: []}
                                 pagination={false}
                                 loading={false}
                                 bordered
@@ -621,24 +668,24 @@ const EventDetailsPage = () => {
                     <Box component="div" className={`${styles['events-section']} ${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Media Gallery</Box>
-                            <Box component="div">12 Items</Box>
+                            <Box component="div">{mediaGallery.length} Items</Box>
                         </Box>
                         <Box component="div">
                             <Grid container className={`${styles['media-grid']}`}>
                                 {
-                                    mediaList && mediaList.map((itemObj, inx) => (
+                                    mediaGalleryLocal && mediaGalleryLocal.map((itemObj, inx) => (
                                         <Grid item lg={3} md={4} sm={4} key={inx} className={`${styles['media-grid-item']}`}
                                             onClick={e => {
-                                                dispatch(setActiveMediaItem(media[inx]))
+                                                dispatch(setActiveMediaItem(itemObj))
                                                 dispatch(setActiveMediaItemIndex(inx))
-                                                navigate(`/search-results/Media/${media[inx].attributes.uniqueId}`, { replace: true, state: {from: 'events'} })
+                                                navigate(`/search-results/Media/${itemObj.media_unique_id.uniqueId}`, { replace: true, state: {from: 'events'} })
                                             }}
                                         >
                                             <RenderFileData
                                                 fileData={{
                                                     alt: "",
                                                     // src: itemObj.attributes.media_associates.data[0].attributes.media_unique_id.data.attributes.object.data.attributes.url,
-                                                    src: '',
+                                                    src: `${baseUrl}${itemObj.media_unique_id.object.url}`,
                                                     className: styles['media-image']
                                                 }}
                                                 fileType="image"
@@ -696,7 +743,7 @@ const EventDetailsPage = () => {
                                         padding: '0.4em 1.2em',
                                         cursor: 'pointer'
                                     }}
-                                    disabled={mediaList.length === places.length}
+                                    disabled={mediaGalleryLocal.length === places.length}
                                     onClick={e => {
                                         e.preventDefault()
                                         setMediaGridActiveItems(state => state + 8)
