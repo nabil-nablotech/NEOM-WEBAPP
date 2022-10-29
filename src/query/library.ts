@@ -5,6 +5,7 @@ query librarySearchList(
   $search_one: String
   $search_two: String
   $search_three: String
+  $text: JSON
   $limit: Int
   $skip: Int
 ) {
@@ -19,17 +20,15 @@ query librarySearchList(
             { title: { contains: $search_one } }
             { fileName: { contains: $search_one } }
             { citation: { contains: $search_one } }
-            { keywords: { contains: $search_one } }
+            { keywords: { contains: $text } }
             { description: { contains: $search_two } }
             { title: { contains: $search_two } }
             { fileName: { contains: $search_two } }
             { citation: { contains: $search_two } }
-            { keywords: { contains: $search_two } }
             { description: { contains: $search_three } }
             { title: { contains: $search_three } }
             { fileName: { contains: $search_three } }
             { citation: { contains: $search_three } }
-            { keywords: { contains: $search_three } }
           ]
         }
         {
@@ -62,7 +61,7 @@ query librarySearchList(
         uniqueId
         updatedAt
         bearing
-        actionType
+        categoryType
 
         featuredImage
         media_type {
@@ -104,7 +103,7 @@ query librarySearchList(
 `;
 
 export const refineLibrary = gql`
-query RefinedMediaSearch(
+query RefinedLibrarySearch(
   $search_one: String
   $search_two: String
   $search_three: String

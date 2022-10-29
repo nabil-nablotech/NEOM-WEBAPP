@@ -244,10 +244,9 @@ export const addEvent = gql`
     $artifacts: JSON
     $keywords: JSON
     $assessmentType: JSON
-    $assessmentTypeOther: String
   ) {
     createVisit(
-      data: {
+      input: {
         uniqueId: $uniqueId
         visitNumber: $visitNumber
         visitDate: $visitDate
@@ -269,7 +268,6 @@ export const addEvent = gql`
         period: $period
         artifacts: $artifacts
         assessmentType: $assessmentType
-        assessmentTypeOther: $assessmentTypeOther
       }
     ) {
       data {

@@ -13,7 +13,7 @@ export type CustomDrawerProps = {
 
 export type AddNewItemProps = {
     onClose: () => void
-    create?: (options?: MutationFunctionOptions<AddEventState> | undefined) => Promise<any>
+    create?: (options?: any) => Promise<any>
 }
 
 export type StepContentTypes = {
@@ -23,10 +23,21 @@ export type StepContentTypes = {
     setFormState: React.SetStateAction<any> 
     activeStep: number
     steps: Array<string>
-    handleNext: () => void
+    handleNext: (e: any, data?: InitialValues) => void
     handleBack:  () => void
+    formik?:any
 }
 
 export type CustomUploadProps = {
     title?: string
+}
+
+export type InitialValues = {
+    place: string,
+    eventDate: Date,
+    recordingTeam: string,
+    siteDescription: string,
+    fieldNarrative: string,
+    siteType: string,
+    keywords: string,
 }

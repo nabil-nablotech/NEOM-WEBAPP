@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
+import { format } from "date-fns";
 import { addEvent, refineEvents } from "../query/events";
 import { RootState } from "../store";
 import { setSelectedValue, initialSelectedValue } from "../store/reducers/refinedSearchReducer";
@@ -10,9 +11,10 @@ import {
   setEventMetaData,
   setSearchText
 } from "../store/reducers/searchResultsReducer";
-import {limit, getQueryObj, generateUniqueId} from '../utils/services/helpers';
+import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/helpers';
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { AddEventState } from "../store/reducers/eventReducer";
+import { graphQlHeaders } from "../utils/services/interceptor";
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -52,7 +54,7 @@ const useEvent = () => {
   /**
    * fetch places with two words
    */
-  const [createEventMuation, { loading, error, data }] = useMutation(addEvent);
+  const [createEventMuation, { loading, error, data }] = useMutation(addEvent, graphQlHeaders());
   const{ loading:refineLoading, error:refineErrorData, data:refineEventData, refetch:refineSearchEvents} = useQuery(refineEvents);
 
  
@@ -139,13 +141,28 @@ const useEvent = () => {
     fetchData(0, true, true);
   }
 
-  const createEvent = (payload: any) => {
+  const createEvent = async (payload: any | undefined) => {
+    const uniqueId = generateUniqueId();
+    const keywords = payload.keywords?.split(' ');
     const data = {
       ...payload,
-      uniqueId: generateUniqueId()
+      uniqueId: uniqueId,
+      visitNumber: `${webUrl}/search-results/Events/${uniqueId}`,
+      asset_config_id: 1,
+      keywords: keywords,
+      siteType: [payload.siteType],
+      visitDate: payload.eventDate,
+      "researchValue": ["Limited"],
+      "tourismValue": ["Local"],
+      "stateOfConservation": ["Fair"],
+      "recommendation": ["0. No further action required"],
+      "risk": ["3. Identifiable Threat"],
+      "period": ["Modern", "Islamic", "Early", "Pre-Islamic", "Multi-Period"],
+      "latitude": null,
+      "longitude": null,
+      "assessmentType": ["Field-based"]
     }
-    console.log(data, 'on submit data')
-    // createEventMuation(data)
+    createEventMuation({variables: data})
   }
 
   return {

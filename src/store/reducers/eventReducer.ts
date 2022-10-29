@@ -11,8 +11,8 @@ export const initialValue = {
   assessmentType: [],
   artifacts: [],
   actionType: [],
-  siteType: [],
-  keywords: [],
+  siteType: '',
+  keywords: '',
   recordingTeam: '',
   uniqueId: '',
   fieldNarrative: '',
@@ -35,7 +35,7 @@ export type AddEventState = {
     visitNumber: Number | null
     asset_config_id: Number | null
     siteDescription: string
-    siteType: string[]
+    siteType: string
     researchValue: string[]
     tourismValue: string[]
     stateOfConservation: string[]
@@ -45,7 +45,7 @@ export type AddEventState = {
     latitude: Number | null
     longitude: Number | null
     artifacts: string[]
-    keywords: string[]
+    keywords: string
     assessmentType: string[]
     assessmentTypeOther: string
 }
