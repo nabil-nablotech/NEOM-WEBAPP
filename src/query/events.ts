@@ -255,7 +255,71 @@ export const addEvent = gql`
         siteDescription: $siteDescription
         latitude: $latitude
         longitude: $longitude
-        deleted: true
+        deleted: false
+        keywords: $keywords
+        visitUIPath: $visitUIPath
+        asset_config_id: $asset_config_id
+        siteType: $siteType
+        recommendation: $recommendation
+        tourismValue: $tourismValue
+        stateOfConservation: $stateOfConservation
+        risk: $risk
+        researchValue: $researchValue
+        period: $period
+        artifacts: $artifacts
+        assessmentType: $assessmentType
+      }
+    ) {
+      data {
+        id
+        attributes {
+          uniqueId
+          asset_config_id {
+            data {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const updateEvent = gql`
+  mutation UpdateEvent(
+    $id: ID
+    $visitDate: Date
+    $recordingTeam: String
+    $fieldNarrative: String
+    $visitUIPath: String
+    $visitNumber: Int
+    $asset_config_id: ID
+    $siteDescription: String
+    $siteType: JSON
+    $researchValue: JSON
+    $tourismValue: JSON
+    $stateOfConservation: JSON
+    $recommendation: JSON
+    $risk: JSON
+    $period: JSON
+    $latitude: Float
+    $longitude: Float
+    $artifacts: JSON
+    $keywords: JSON
+    $assessmentType: JSON
+    $deleted: Boolean
+  ) {
+    updateVisit(
+      id: $id,
+      data: {
+        visitNumber: $visitNumber
+        visitDate: $visitDate
+        recordingTeam: $recordingTeam
+        fieldNarrative: $fieldNarrative
+        siteDescription: $siteDescription
+        latitude: $latitude
+        longitude: $longitude
+        deleted: $deleted
         keywords: $keywords
         visitUIPath: $visitUIPath
         asset_config_id: $asset_config_id

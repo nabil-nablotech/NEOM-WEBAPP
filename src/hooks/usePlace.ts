@@ -12,7 +12,7 @@ import {
 } from "../store/reducers/searchResultsReducer";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 
-import {limit, getQueryObj} from '../utils/services/helpers';
+import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/helpers';
 import {graphQlHeaders} from '../utils/services/interceptor';
 
 
@@ -143,6 +143,34 @@ const usePlace = () => {
     fetchData(0, true, true);
   }
 
+  const createPlace = async (payload: any | undefined) => {
+    const uniqueId = generateUniqueId();
+    const keywords = payload.keywords?.split(' ');
+    const eventDate = payload.eventDate;
+    const data = {
+      ...payload,
+      uniqueId: uniqueId,
+      placeUIPath: `${webUrl}/search-results/Events/${uniqueId}`,
+      asset_config_id: 8,
+      keywords: keywords,
+      siteType: [payload.siteType],
+      previousNumber: "",
+      placeValue: 0,
+      "stateOfConservation": [payload.stateOfConservation],
+      "risk": [payload.risk],
+      "period": [payload.period],
+      "researchValue": ["Limited"],
+      "tourismValue": ["Local"],
+      "recommendation": ["0. No further action required"],
+      "latitude": 28.453292,
+      "longitude": 34.80304,
+      "assessmentType": ["Field-based"],
+      artifacts: ["Observed and photographed"]
+    }
+    createPlaceMutation({variables: data})
+  }
+
+
   return {
     loading: refineLoading,
     error: refineErrorData,
@@ -151,7 +179,7 @@ const usePlace = () => {
     hasMoreData,
     fetchPlaces: fetchData,
     clearSearch: clearTextSearch,
-    createPlace: createPlaceMutation
+    createPlace: createPlace
   };
 };
 

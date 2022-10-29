@@ -36,7 +36,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
     useSelector((state: RootState) => state.searchResults);
   const { fetchEvents, clearSearch: clearEventSearch, createEvent } = useEvent();
   const { fetchLibraryItems } = useLibrary();
-  const { fetchPlaces, clearSearch: clearPlaceSearch } = usePlace();
+  const { fetchPlaces, clearSearch: clearPlaceSearch, createPlace } = usePlace();
   const { fetchMediaItems } = useMedia();
 
   const dispatch = useDispatch();
@@ -121,7 +121,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       <CustomDrawer origin="right" isOpen={newItemWindowOpen} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}>
         {
           tabName === PLACES_TAB_NAME &&
-          <AddNewPlace onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}/>
+          <AddNewPlace create={createPlace} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}/>
         }
         {
           tabName === EVENTS_TAB_NAME &&

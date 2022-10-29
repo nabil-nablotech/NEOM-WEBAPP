@@ -211,6 +211,7 @@ export const addPlace = gql`
     $tourismValue: JSON
     $stateOfConservation: JSON
     $recommendation: JSON
+    $siteType: JSON
     $risk: JSON
     $period: JSON
     $latitude: Float

@@ -145,7 +145,6 @@ const useEvent = () => {
     const uniqueId = generateUniqueId();
     const keywords = payload.keywords?.split(' ');
     const eventDate = payload.eventDate;
-    console.log('eventDate', eventDate)
     const visitDate = `${eventDate.getFullYear()}-${eventDate.getMonth() + 1}-${eventDate.getDate()}`;
     const data = {
       ...payload,

@@ -75,24 +75,12 @@ const StepContent = ({
     activeStep,
     steps,
     handleNext,
-    handleBack
+    handleBack,
+    formik,
+    options
 }: StepContentTypes) => {
 
-    const formik = useFormik({
-        initialValues: {
-          placeNumber: '',
-          nameEnglish: '',
-          nameArabic: '',
-          siteDescription: '',
-          siteType: '',
-          period: '',
-          stateOfConservation: '',
-          risk: '',
-        },
-        onSubmit: values => {
-          alert(JSON.stringify(values, null, 2));
-        },
-      });
+    
 
     return <>
         <Box component="div" className={`${styles['form']}`}>
@@ -118,9 +106,9 @@ const StepContent = ({
                         className={`${styles["english-name"]}`}
                         label="Name in English"
                         name="english-name"
-                        value={formik.values.nameEnglish}
+                        value={formik.values.placeNameEnglish}
                         onChange={e => {
-                            formik.setFieldValue('nameEnglish', e.target.value)
+                            formik.setFieldValue('placeNameEnglish', e.target.value)
                         }}
                         sx={{
                             ...textInputSxStyles
@@ -131,9 +119,9 @@ const StepContent = ({
                         className={`${styles["arabic-name"]}`}
                         label="Name in Arabic"
                         name="arabic-name"
-                        value={formik.values.nameArabic}
+                        value={formik.values.placeNameArabic}
                         onChange={e => {
-                            formik.setFieldValue('nameArabic', e.target.value)
+                            formik.setFieldValue('placeNameArabic', e.target.value)
                         }}
                         sx={{
                             ...textInputSxStyles
@@ -172,7 +160,7 @@ const StepContent = ({
                             formik.setFieldValue('siteType', e.target.value as string)
                         }
                         handleClear={() => {}}
-                        itemsList={[]}
+                        itemsList={options?.siteType || []}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
                     />
@@ -186,7 +174,7 @@ const StepContent = ({
                         }
                         
                         handleClear={() => {}}
-                        itemsList={[]}
+                        itemsList={options?.period || []}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
                     />
@@ -200,7 +188,7 @@ const StepContent = ({
                         }
                         
                         handleClear={() => {}}
-                        itemsList={[]}
+                        itemsList={options?.stateOfConservation || []}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
                     />
@@ -214,7 +202,7 @@ const StepContent = ({
                         }
                         
                         handleClear={() => {}}
-                        itemsList={[]}
+                        itemsList={options?.risk || []}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
                     />
@@ -228,10 +216,10 @@ const StepContent = ({
                         className={`${styles["english-name"]}`}
                         label="Add Keywords"
                         name="english-name"
-                        // value={formik.values.siteDescription}
-                        // onChange={e => {
-                        //     formik.setFieldValue('siteDescription', e.target.value)
-                        // }}
+                        value={formik.values.keywords}
+                        onChange={(e) => {
+                          formik.setFieldValue("keywords", e.target.value);
+                        }}
                         sx={{
                             ...textInputSxStyles
                         }}
@@ -246,11 +234,13 @@ const StepContent = ({
 
 
 const AddNewPlace = ({
-    onClose
+    onClose,
+    create
 }: AddNewItemProps) => {
     let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
     const { showAddSuccess } = useSelector((state: RootState) => state.searchResults);
+    const { options } = useSelector((state: RootState) => state.refinedSearch);
 
     const [activeStep, setActiveStep] = useState(0);
     const [formState, setFormState] = useState({
@@ -275,7 +265,7 @@ const AddNewPlace = ({
     const isStepSkipped = (step: number) => {
         return skipped.has(step);
     };
-    const handleNext = () => {
+    const handleNext = (e: any, data: any) => {
         let newSkipped = skipped;
         if (isStepSkipped(activeStep)) {
             newSkipped = new Set(newSkipped.values());
@@ -286,6 +276,14 @@ const AddNewPlace = ({
         if (activeStep + 1 === steps.length) {
             onClose()
             dispatch(toggleShowAddSuccess(true))
+        }
+        if (activeStep === 1) {
+      
+          if (create) {
+            create({
+              ...data
+            });
+          }
         }
         setSkipped(newSkipped);
     };
@@ -317,102 +315,121 @@ const AddNewPlace = ({
         setActiveStep(0);
     };
 
-
+    const formik = useFormik({
+        initialValues: {
+          placeNumber: '',
+          placeNameEnglish: '',
+          placeNameArabic: '',
+          siteDescription: '',
+          siteType: '',
+          period: '',
+          stateOfConservation: '',
+          risk: '',
+        },
+        onSubmit: values => {
+          alert(JSON.stringify(values, null, 2));
+          handleNext(null, values);
+        },
+      });
     return (
         <Box component="div">
-            <Box component="div" className={`${styles['add-new-item-container']}`}>
+                <form onSubmit={formik.handleSubmit}>
+              <Box component="div" className={`${styles['add-new-item-container']}`}>
 
-                <Box component="div" className={`${styles['content-section']}`}>
-                    <Box component="div" className={`${styles['hide-btn']}`}
-                        style={{
-                            marginRight: 0,
-                            marginLeft: 'auto',
-                            width: 'fit-content'
-                        }}>
-                        <DefaultButton variant="text" onClick={e => onClose()}
-                            style={{
-                                // paddingInline: 0,
-                                minWidth: 'fit-content',
-                                padding: 0,
-                                color: 'var(--table-black-text)'
-                            }}
-                        >Hide</DefaultButton>
-                    </Box>
-                    <Typography className={`${styles['add-title']}`} variant="h4" component="h4" style={{
-                    }}>
-                        Add Place
-                    </Typography>
-                    <Stepper activeStep={activeStep} alternativeLabel
-                        className={`${styles['stepper']}`}
-                    >
-                        {steps.map((label, index) => {
-                            const stepProps: { completed?: boolean } = {};
-                            const labelProps: {
-                                optional?: React.ReactNode;
-                            } = {};
-                            // if (isStepOptional(index)) {
-                            //     labelProps.optional = (
-                            //         <Typography variant="caption">Optional</Typography>
-                            //     );
-                            // }
-                            // if (isStepSkipped(index)) {
-                            //     stepProps.completed = false;
-                            // }
-                            return (
-                                <Step key={label} {...stepProps}>
-                                    <StepLabel {...labelProps} className={`${styles['step-label']}`}
-                                        StepIconProps={{
-                                            sx: {
-                                                ...stepperIconSx
-                                            }
-                                        }}
-                                    >{label}</StepLabel>
-                                </Step>
-                            );
-                        })}
-                    </Stepper>
-                    <>
-                        <React.Fragment>
-                            <StepContent
-                                tabName={tabName}
-                                formState={formState}
-                                setFormState={setFormState}
-                                activeStep={activeStep}
-                                steps={steps}
-                                handleNext={handleNext}
-                                handleBack={handleBack}
-                            />
+                  <Box component="div" className={`${styles['content-section']}`}>
+                      <Box component="div" className={`${styles['hide-btn']}`}
+                          style={{
+                              marginRight: 0,
+                              marginLeft: 'auto',
+                              width: 'fit-content'
+                          }}>
+                          <DefaultButton variant="text" onClick={e => onClose()}
+                              style={{
+                                  // paddingInline: 0,
+                                  minWidth: 'fit-content',
+                                  padding: 0,
+                                  color: 'var(--table-black-text)'
+                              }}
+                          >Hide</DefaultButton>
+                      </Box>
+                      <Typography className={`${styles['add-title']}`} variant="h4" component="h4" style={{
+                      }}>
+                          Add Place
+                      </Typography>
+                      <Stepper activeStep={activeStep} alternativeLabel
+                          className={`${styles['stepper']}`}
+                      >
+                          {steps.map((label, index) => {
+                              const stepProps: { completed?: boolean } = {};
+                              const labelProps: {
+                                  optional?: React.ReactNode;
+                              } = {};
+                              // if (isStepOptional(index)) {
+                              //     labelProps.optional = (
+                              //         <Typography variant="caption">Optional</Typography>
+                              //     );
+                              // }
+                              // if (isStepSkipped(index)) {
+                              //     stepProps.completed = false;
+                              // }
+                              return (
+                                  <Step key={label} {...stepProps}>
+                                      <StepLabel {...labelProps} className={`${styles['step-label']}`}
+                                          StepIconProps={{
+                                              sx: {
+                                                  ...stepperIconSx
+                                              }
+                                          }}
+                                      >{label}</StepLabel>
+                                  </Step>
+                              );
+                          })}
+                      </Stepper>
+                      <>
+                          <React.Fragment>
+                              <StepContent
+                                  tabName={tabName}
+                                  formState={formState}
+                                  setFormState={setFormState}
+                                  activeStep={activeStep}
+                                  steps={steps}
+                                  handleNext={handleNext}
+                                  handleBack={handleBack}
+                                  formik={formik}
+                                  options={options}
+                              />
 
-                        </React.Fragment>
-                    </>
-                </Box>
-                <Box component="div"
-                    className={`${styles["btn-row"]}`}
-                    sx={{
-                        display: 'flex', flexDirection: 'row',
-                        justifyContent: 'space-between'
-                    }}
-                >
-                    <Button
-                        colors={["#fff", "var(--table-black-text)", "none"]}
-                        className={`${styles["plain-whitee-btn"]}`}
-                        label={activeStep === 0 ? 'Cancel' : 'Back'}
-                        onClick={handleBack}
-                        style={{
-                            paddingInline: 0
-                        }}
-                    />
-                    {/* {isStepOptional(activeStep) && (
-                                                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                                                    Skip
-                                                </Button>
-                                            )} */}
-                    <Button
-                        label={activeStep === steps.length - 1 ? 'Add' : 'Next'}
-                        onClick={handleNext}
-                    />
-                </Box>
-            </Box>
+                          </React.Fragment>
+                      </>
+                  </Box>
+                  <Box component="div"
+                      className={`${styles["btn-row"]}`}
+                      sx={{
+                          display: 'flex', flexDirection: 'row',
+                          justifyContent: 'space-between'
+                      }}
+                  >
+                      <Button
+                          colors={["#fff", "var(--table-black-text)", "none"]}
+                          className={`${styles["plain-whitee-btn"]}`}
+                          label={activeStep === 0 ? 'Cancel' : 'Back'}
+                          onClick={handleBack}
+                          style={{
+                              paddingInline: 0
+                          }}
+                      />
+                      {/* {isStepOptional(activeStep) && (
+                                                  <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+                                                      Skip
+                                                  </Button>
+                                              )} */}
+                      <Button
+                          label={activeStep === steps.length - 1 ? 'Add' : 'Next'}
+                          type="submit"
+                      />
+                  </Box>
+              </Box>
+            </form>
         </Box>
     );
 }
