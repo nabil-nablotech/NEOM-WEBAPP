@@ -1,8 +1,8 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
-import { events, refineEvents } from "../query/events";
+import { addEvent, refineEvents } from "../query/events";
 import { RootState } from "../store";
 import { setSelectedValue, initialSelectedValue } from "../store/reducers/refinedSearchReducer";
 import {
@@ -10,8 +10,9 @@ import {
   setEventMetaData,
   setSearchText
 } from "../store/reducers/searchResultsReducer";
-import {limit, getQueryObj} from '../utils/services/helpers';
+import {limit, getQueryObj, generateUniqueId} from '../utils/services/helpers';
 import { tabNameProps } from "../types/SearchResultsTabsProps";
+import { AddEventState } from "../store/reducers/eventReducer";
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -51,32 +52,10 @@ const useEvent = () => {
   /**
    * fetch places with two words
    */
-  // const { loading, error, data, refetch: refetchEvents } = useQuery(events);
+  const [createEventMuation, { loading, error, data }] = useMutation(addEvent);
   const{ loading:refineLoading, error:refineErrorData, data:refineEventData, refetch:refineSearchEvents} = useQuery(refineEvents);
 
-  // useEffect(() => {
-  //   if (data?.visits) {
-  //     // update the data for the pagination
-  //     if (data?.visits.meta.pagination.page === 1 && data?.visits.data.length > 0) {
-  //       dispatch(setEvents([...data?.visits?.data]));
-  //     } else if (data?.visits.data.length > 0) {
-  //       dispatch(setEvents([...eventsData, ...data?.visits?.data]));
-  //     }
-  //     // update the meta data
-  //     dispatch(setEventMetaData(data?.visits?.meta));
-  //     // this flag decides to fetch next set of data 
-  //     setHasMoreData(data?.visits?.meta.pagination.pageCount !==
-  //       data?.visits.meta.pagination.page);
-
-  //       let dummyArray:any = [];
-  //       for (let i = 0; i < data?.visits?.data?.length; i++) {
-  //           dummyArray.push({id:i,name:data?.visits?.data[i].attributes['recordingTeam'],position:{lat:data?.visits?.data[i].attributes['latitude'],lng:data?.visits?.data[i].attributes['longitude']}})
-  //       }
-  //         setMapEvents(dummyArray)
-  //   }
-
-  // }, [data]);
-  
+ 
   useEffect(() => {
     if (refineEventData?.visits) {
       // update the data for the pagination
@@ -101,6 +80,12 @@ const useEvent = () => {
     }
 
   }, [refineEventData]);
+
+  useEffect(() => {
+    if (data) {
+      fetchData(0);
+    }
+  }, [data])
 
   const fetchData = (skip: number = eventsData.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);
@@ -154,6 +139,15 @@ const useEvent = () => {
     fetchData(0, true, true);
   }
 
+  const createEvent = (payload: any) => {
+    const data = {
+      ...payload,
+      uniqueId: generateUniqueId()
+    }
+    console.log(data, 'on submit data')
+    // createEventMuation(data)
+  }
+
   return {
     loading: refineLoading,
     error: refineErrorData,
@@ -161,7 +155,8 @@ const useEvent = () => {
     mapEvents,
     hasMoreData,
     fetchEvents: fetchData,
-    clearSearch: clearTextSearch
+    clearSearch: clearTextSearch,
+    createEvent: createEvent
   };
 };
 

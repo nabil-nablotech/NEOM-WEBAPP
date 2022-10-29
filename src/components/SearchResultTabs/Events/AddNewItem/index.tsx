@@ -72,6 +72,7 @@ export const stepperIconSx = {
 
 const StepContent = ({
     tabName,
+    options,
     formState,
     setFormState,
     activeStep,
@@ -186,7 +187,7 @@ const StepContent = ({
                         handleChange={(e: SelectChangeEvent<string | string[]>) =>
                             formik.setFieldValue('siteType', e.target.value as string)
                         }
-                        itemsList={[]}
+                        itemsList={options?.siteType || []}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
                     />
@@ -217,11 +218,13 @@ const StepContent = ({
 
 
 const AddNewEvent = ({
-    onClose
+    onClose,
+    create
 }: AddNewItemProps) => {
     let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
     const { showAddSuccess } = useSelector((state: RootState) => state.searchResults);
+    const { options } = useSelector((state: RootState) => state.refinedSearch);
 
     const [activeStep, setActiveStep] = useState(0);
     const [formState, setFormState] = useState({
@@ -346,6 +349,7 @@ const AddNewEvent = ({
                         <React.Fragment>
                             <StepContent
                                 tabName={tabName}
+                                options={options}
                                 formState={formState}
                                 setFormState={setFormState}
                                 activeStep={activeStep}

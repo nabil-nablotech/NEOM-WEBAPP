@@ -301,3 +301,12 @@ export const shallRenderMedia = (mediaNo: number, mediaArray: MediaAssociates2) 
     return true
   } else return false
 }
+
+function randomString(len: number) {
+  var p = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  return [...Array(len)].reduce(a=>a+p[~~(Math.random()*p.length)],'').toUpperCase();
+}
+
+export const generateUniqueId = () => {
+  return `${randomString(8)}-${randomString(4)}-${randomString(4)}-${randomString(4)}-${randomString(12)}`
+}

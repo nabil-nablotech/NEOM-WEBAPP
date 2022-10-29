@@ -197,7 +197,7 @@ export const refinePlaces = gql`
   }
 `;
 export const addPlace = gql`
-  mutation Create(
+  mutation CreatePlace(
     $placeNameEnglish: String
     $uniqueId: String
     $placeNameArabic: String

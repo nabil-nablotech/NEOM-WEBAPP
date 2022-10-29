@@ -20,7 +20,6 @@ import {
   toggleNewItemWindow,
   toggleShowAddSuccess,
 } from "../../store/reducers/searchResultsReducer";
-import AddNewItem from "../../components/AddNewItem";
 import PositionedSnackbar from "../../components/Snackbar";
 import { EVENTS_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME } from "../../utils/services/helpers";
 import useRefinedSearch from "../../hooks/useRefinedSearchOptions";
@@ -35,7 +34,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   const navigate = useNavigate();
   const { searchText, activeTab, newItemWindowOpen, showAddSuccess } =
     useSelector((state: RootState) => state.searchResults);
-  const { fetchEvents, clearSearch: clearEventSearch } = useEvent();
+  const { fetchEvents, clearSearch: clearEventSearch, createEvent } = useEvent();
   const { fetchLibraryItems } = useLibrary();
   const { fetchPlaces, clearSearch: clearPlaceSearch } = usePlace();
   const { fetchMediaItems } = useMedia();
@@ -126,7 +125,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         }
         {
           tabName === EVENTS_TAB_NAME &&
-          <AddNewEvent onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}/>
+          <AddNewEvent create={createEvent} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}/>
         }
         {
           tabName === MEDIA_TAB_NAME &&
