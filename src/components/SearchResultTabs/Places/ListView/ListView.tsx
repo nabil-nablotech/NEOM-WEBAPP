@@ -10,7 +10,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import {PlacesProps} from '../GridView/GridView';
-import { Place, FieldOption } from "../../../../types/Place";
+import { FieldOption } from "../../../../types/Place";
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {

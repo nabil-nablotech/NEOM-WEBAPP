@@ -84,7 +84,7 @@ const useEvent = () => {
         dispatch(setEvents([...refineEventData?.visits?.data]));
       } else if (refineEventData?.visits.data.length > 0) {
         dispatch(setEvents([...eventsData, ...refineEventData?.visits?.data]));
-      }  else if (refineEventData?.places?.meta.pagination.total === 0) {
+      }  else if (refineEventData?.visits?.meta.pagination.total === 0) {
         dispatch(setEvents([]));
       }
       // update the meta data

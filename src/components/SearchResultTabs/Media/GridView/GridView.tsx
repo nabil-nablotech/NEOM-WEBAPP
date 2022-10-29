@@ -24,6 +24,7 @@ export type MediaProps = {
     fetchData: () => void;
     hasMoreData: boolean;
     loading: boolean;
+    totalData?: number;
   }
 
 const GridView = (props: MediaProps) => {
@@ -31,12 +32,15 @@ const GridView = (props: MediaProps) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const {data, hasMoreData, fetchData, loading} = props;
+    const {data, hasMoreData, fetchData, loading, totalData} = props;
 
     const { media } = useSelector(
         (state: RootState) => state.searchResults
     );
 
+    if (totalData === 0) {
+        return <h1>No data found</h1>
+      }
     return (
         <Box component="div" className={`${gridStyles['left-grid-box']}`}
         >

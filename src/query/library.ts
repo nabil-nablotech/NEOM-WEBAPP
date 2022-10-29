@@ -171,7 +171,8 @@ query RefinedMediaSearch(
         updatedAt
         bearing
         categoryType
-
+        latitude
+        longitude
         featuredImage
         media_type {
           data {

@@ -58,7 +58,8 @@ const useMedia = () => {
         dispatch(setMedia([...refineMediaData?.medias?.data]));
       } else if (refineMediaData?.medias.data.length > 0) {
         dispatch(setMedia([...mediaItem, ...refineMediaData?.medias?.data]));
-      } else if (refineMediaData?.places?.meta.pagination.total === 0) {
+      } else if (refineMediaData?.medias?.meta.pagination.total === 0) {
+        console.log('media inside else')
         dispatch(setMedia([]));
       }
       // update the meta data

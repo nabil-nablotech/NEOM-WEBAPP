@@ -28,3 +28,13 @@ export function setupInterceptorsTo(axiosInstance: AxiosInstance): AxiosInstance
   axiosInstance.interceptors.response.use(onResponse, onResponseError);
   return axiosInstance;
 }
+
+export function graphQlHeaders() {
+  return ({
+    context: {
+      headers: {
+        'Authorization': `Bearer ${getToken()}`
+      }
+    }
+})
+}

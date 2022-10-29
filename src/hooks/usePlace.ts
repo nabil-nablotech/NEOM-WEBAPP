@@ -1,8 +1,8 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
-import { places, refinePlaces } from "../query/places";
+import { addPlace, refinePlaces } from "../query/places";
 import { RootState } from "../store";
 import { initialSelectedValue, setSelectedValue } from "../store/reducers/refinedSearchReducer";
 import {
@@ -13,6 +13,8 @@ import {
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 
 import {limit, getQueryObj} from '../utils/services/helpers';
+import {graphQlHeaders} from '../utils/services/interceptor';
+
 
 const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -53,42 +55,9 @@ const usePlace = () => {
   /**
    * fetch places with two words
    */
-  // const { loading, error, data, refetch: refetchPlaces } = useQuery(places);
-  const { loading:refineLoading, error:refineErrorData, data:refinePlaceData, refetch:refineSearchPlaces} = useQuery(refinePlaces);
+  const { loading:refineLoading, error:refineErrorData, data:refinePlaceData, refetch:refineSearchPlaces} = useQuery(refinePlaces, graphQlHeaders());
 
-  // useEffect(() => {
-  //   if (data?.places) {
-  //     // update the data for the pagination
-  //     if (data?.places.meta.pagination.page === 1 && data?.places.data.length > 0) {
-  //       dispatch(setPlaces([...data?.places.data]));
-  //     } else if (data?.places.data.length > 0) {
-  //       dispatch(setPlaces([...placeData, ...data?.places.data]));
-  //     } else if (refinePlaceData?.places?.meta.pagination.total === 0) {
-  //       dispatch(setPlaces([]));
-  //     }
-  //     // update the meta data
-  //     dispatch(setPlaceMetaData(data?.places?.meta));
-  //     // this flag decides to fetch next set of data
-  //     setHasMoreData(
-  //       data?.places?.meta.pagination.pageCount !==
-  //         data?.places.meta.pagination.page
-  //     );
-
-  //     let dummyArray: any = [];
-  //     for (let i = 0; i < data?.places?.data?.length; i++) {
-  //       dummyArray.push({
-  //         id: i,
-  //         name: data?.places?.data[i].attributes["placeNameEnglish"],
-  //         position: {
-  //           lat: data?.places?.data[i].attributes["latitude"],
-  //           lng: data?.places?.data[i].attributes["longitude"],
-  //         },
-  //       });
-  //     }
-  //     setMapPlaces(dummyArray);
-  //   }
-  // }, [data]);
-
+  const [createPlaceMutation, {data, loading, error}] = useMutation(addPlace, graphQlHeaders())
   useEffect(() => {
     if (refinePlaceData?.places) {
       // update the data for the pagination
@@ -122,6 +91,11 @@ const usePlace = () => {
     }
   }, [refinePlaceData]);
 
+  useEffect(() => {
+    if (data) {
+      fetchData(0);
+    }
+  }, [data])
   const fetchData = (skip: number = placeData.length, local: boolean = false, clear: boolean = false) => {
     // get the query from the url parameters
     const searchData = getQueryObj(search);
@@ -176,7 +150,8 @@ const usePlace = () => {
     mapPlaces,
     hasMoreData,
     fetchPlaces: fetchData,
-    clearSearch: clearTextSearch
+    clearSearch: clearTextSearch,
+    createPlace: createPlaceMutation
   };
 };
 

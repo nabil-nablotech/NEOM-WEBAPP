@@ -48,6 +48,8 @@ const useLibrary = () => {
         dispatch(setLibrary([...data?.medias?.data]));
       } else if (data?.medias.data.length > 0) {
         dispatch(setLibrary([...libItem, ...data?.medias?.data]));
+      } else if (data?.medias?.meta.pagination.total === 0) {
+        dispatch(setLibrary([]));
       }
       // update the meta data
       dispatch(setLibraryMetaData(data?.medias?.meta));

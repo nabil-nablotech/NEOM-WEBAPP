@@ -16,11 +16,12 @@ export type PlacesProps = {
   fetchData: () => void;
   hasMoreData: boolean;
   loading: boolean;
+  totalData?: number;
 }
 
 const GridView = (props: PlacesProps) => {
 
-  const {data, loading, fetchData, hasMoreData} = props;
+  const {data, loading, fetchData, hasMoreData, totalData} = props;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,6 +30,9 @@ const GridView = (props: PlacesProps) => {
     return <h1>loadig....</h1>
   }
 
+  if (totalData === 0) {
+    return <h1>No data found</h1>
+  }
   return (
     <Box component="div" className={`${gridStyles["left-grid-box"]}`}>
       <InfiniteScroll
