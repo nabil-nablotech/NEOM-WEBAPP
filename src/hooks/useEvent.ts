@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { addEvent, refineEvents } from "../query/events";
 import { RootState } from "../store";
 import { setSelectedValue, initialSelectedValue } from "../store/reducers/refinedSearchReducer";
@@ -144,14 +144,18 @@ const useEvent = () => {
   const createEvent = async (payload: any | undefined) => {
     const uniqueId = generateUniqueId();
     const keywords = payload.keywords?.split(' ');
+    const eventDate = payload.eventDate;
+    console.log('eventDate', eventDate)
+    const visitDate = `${eventDate.getFullYear()}-${eventDate.getMonth() + 1}-${eventDate.getDate()}`;
     const data = {
       ...payload,
       uniqueId: uniqueId,
-      visitNumber: `${webUrl}/search-results/Events/${uniqueId}`,
+      visitNumber: 1,
+      visitUIPath: `${webUrl}/search-results/Events/${uniqueId}`,
       asset_config_id: 1,
       keywords: keywords,
       siteType: [payload.siteType],
-      visitDate: payload.eventDate,
+      visitDate: visitDate,
       "researchValue": ["Limited"],
       "tourismValue": ["Local"],
       "stateOfConservation": ["Fair"],

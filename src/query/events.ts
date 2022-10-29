@@ -246,7 +246,7 @@ export const addEvent = gql`
     $assessmentType: JSON
   ) {
     createVisit(
-      input: {
+      data: {
         uniqueId: $uniqueId
         visitNumber: $visitNumber
         visitDate: $visitDate

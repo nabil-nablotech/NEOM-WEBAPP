@@ -243,7 +243,6 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
     return skipped.has(step);
   };
   const handleNext = (e: any, data?: any) => {
-    console.log("datainside", data);
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());

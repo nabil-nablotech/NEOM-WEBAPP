@@ -163,7 +163,7 @@ const ListView = (props: EventsProps) => {
             // sortDirections: ["ascend"],
             // defaultSortOrder: "ascend",
             render: (value: any, index: number) => {
-              return `${value.visit_associate.data?.attributes.place_unique_id.data?.attributes.placeNameEnglish}${value.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameArabic || ''}`          
+              return `${value.visit_associate.data?.attributes?.place_unique_id.data?.attributes.placeNameEnglish}${value.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic || ''}`          
             }
         },
         {
