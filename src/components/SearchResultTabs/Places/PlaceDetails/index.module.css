@@ -32,9 +32,10 @@
 
 .title-section {
     margin-top: 1em;
+    max-width: 50%;
 }
 .title-section-grid {
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 2em;
 }
 
