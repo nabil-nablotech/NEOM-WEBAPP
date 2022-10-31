@@ -65,6 +65,7 @@ export type SearchResultsState2 = {
   activeMediaItem: Media | null;
   activeMediaItemIndex: number;
   isOpenGalleryView: boolean
+  addNewItemWindowType: tabNameProps | null
 };
 
 export type FileDataType = {
