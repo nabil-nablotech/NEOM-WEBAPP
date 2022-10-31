@@ -70,8 +70,8 @@ const AutoCompleteComponent = ({
                     paddingLeft: '1em',
                   },
                   '& .MuiFormLabel-root.MuiInputLabel-root[data-shrink="true"]': {
-                    top: '-15%',
-                    background: '#fff',
+                    top: '-0.7em',
+                    background: 'radial-gradient(circle, rgba(0,0,0,0.05) 0.5%, transparent 100%)',
                     borderRadius: '4px'
                   }
                 }}
