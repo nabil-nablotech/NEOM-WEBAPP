@@ -115,9 +115,6 @@ const StepContent = ({
               className={`${styles["visit-number"]}`}
               label="Visit Number"
               name="visit-number"
-              multiline
-              minRows={2}
-              maxRows={2}
               value={formik.values.visitNumber}
               onChange={(e) => {
                 formik.setFieldValue("visitNumber", e.target.value);
