@@ -288,7 +288,7 @@ export const addEvent = gql`
 
 export const updateEvent = gql`
   mutation UpdateEvent(
-    $id: ID
+    $id: ID!
     $visitDate: Date
     $recordingTeam: String
     $fieldNarrative: String

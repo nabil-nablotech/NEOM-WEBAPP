@@ -192,7 +192,6 @@ const useEvent = () => {
       "assessmentType": payload.assessmentType && [payload.assessmentType],
       artifacts: payload.artifacts && [payload.artifacts]
     }
-    console.log('data.....', data);
     setPlace(data.place);
     createEventMuation({variables: data})
   }
