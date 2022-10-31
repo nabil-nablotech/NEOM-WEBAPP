@@ -1,6 +1,6 @@
 import { Box, Typography, Button as DefaultButton, Grid, Avatar } from "@mui/material";
 import { AddNewItemProps } from "../../types/CustomDrawerTypes";
-import placeStyles from '../../components/SearchResultTabs/Places/AddNewItem/index.module.css'
+import placeStyles from '../../components/SearchResultTabs/Places/AddNewItem/addNewItem.module.css'
 import styles from './index.module.css'
 import Button from "../../components/Button";
 import PlacesIcon from '../../assets/images/searchResults/Places.svg'
@@ -8,12 +8,20 @@ import EventsIcon from '../../assets/images/searchResults/Events.svg'
 import LibraryIcon from '../../assets/images/searchResults/Library.svg'
 import MediaIcon from '../../assets/images/searchResults/Media.svg'
 import CloseIcon from '@mui/icons-material/Close';
+import { useDispatch } from "react-redux";
+import { setAddNewItemWindowType } from "../../store/reducers/searchResultsReducer";
+import { EVENTS_TAB_NAME, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME } from "../../utils/services/helpers";
 
 const StepContent = () => {
+    const dispatch = useDispatch()
 
     return <Box component="div">
         <Grid container className={`${styles['tab-name-tile-row']}`}>
-            <Grid item sm={4} className={`${styles['tab-name-tile']}`}>
+            <Grid item sm={4} className={`${styles['tab-name-tile']}`}
+                onClick={e => {
+                    dispatch(setAddNewItemWindowType(PLACES_TAB_NAME))
+                }}
+            >
                 <Box
                     component="img"
                     src={PlacesIcon}
@@ -21,7 +29,11 @@ const StepContent = () => {
                 />
                 <Box component="div">Places</Box>
             </Grid>
-            <Grid item sm={4} className={`${styles['tab-name-tile']}`}>
+            <Grid item sm={4} className={`${styles['tab-name-tile']}`}
+                onClick={e => {
+                    dispatch(setAddNewItemWindowType(EVENTS_TAB_NAME))
+                }}
+            >
                 <Box
                     component="img"
                     src={EventsIcon}
@@ -29,7 +41,11 @@ const StepContent = () => {
                 />
                 <Box component="div">Events</Box>
             </Grid>
-            <Grid item sm={4} className={`${styles['tab-name-tile']}`}>
+            <Grid item sm={4} className={`${styles['tab-name-tile']}`}
+                onClick={e => {
+                    dispatch(setAddNewItemWindowType(LIBRARY_TAB_NAME))
+                }}
+            >
                 <Box
                     component="img"
                     src={LibraryIcon}
@@ -37,7 +53,11 @@ const StepContent = () => {
                 />
                 <Box component="div">Library Item</Box>
             </Grid>
-            <Grid item sm={4} className={`${styles['tab-name-tile']}`}>
+            <Grid item sm={4} className={`${styles['tab-name-tile']}`}
+                onClick={e => {
+                    dispatch(setAddNewItemWindowType(MEDIA_TAB_NAME))
+                }}
+            >
                 <Box
                     component="img"
                     src={MediaIcon}
