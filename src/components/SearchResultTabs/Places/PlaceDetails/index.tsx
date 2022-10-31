@@ -584,7 +584,7 @@ const PlaceDetailsPage = () => {
                             rowSpacing={2}
                         >
                             <Grid item sm={7} className={`${styles['text-left']} ${styles['section-left']}`}>
-                                <Box component="div" className={`${styles['site-desc']}`}>
+                               {siteDescription&& <Box component="div" className={`${styles['site-desc']}`}>
                                     <Box component="div"
                                         className={`${styles['site-desc-condensed']} ${isSeeMore ? styles['see-more-active'] : ''}`}
                                     >
@@ -593,7 +593,7 @@ const PlaceDetailsPage = () => {
                                     {!isSeeMore && <Box component="div" className={`${styles['see-more-box']}`} onClick={e => {
                                         toggleSeeMore(state => !state)
                                     }}>{!isSeeMore ? '...See More' : ''}</Box>}
-                                </Box>
+                                </Box>}
                                 <Box component="div" className={`${styles['table']}`}>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']} `}>
@@ -726,8 +726,8 @@ const PlaceDetailsPage = () => {
                                     id: 0,
                                     name: `${placeNameEnglish}`,
                                     position: {
-                                        lat: latitude,
-                                        lng: longitude
+                                        lat: latitude || 24.11,
+                                        lng: longitude || 34.98
                                     }
                                 }]}/>
                                 <Grid container className={`${styles['map-loctn-details']}`} >

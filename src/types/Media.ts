@@ -47,6 +47,7 @@ export type MediaApi = {
   title: string;
   description: string;
   referanceUrl: string;
+  objectURL: string;
   fileName: string;
   bearing: string;
   actionType: string;
