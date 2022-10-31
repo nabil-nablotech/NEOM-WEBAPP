@@ -20,12 +20,12 @@ import {
 } from "../../store/reducers/searchResultsReducer";
 import PositionedSnackbar from "../../components/Snackbar";
 import { PLACES_TAB_NAME } from "../../utils/services/helpers";
-// import useRefinedSearch from "../../hooks/useRefinedSearchOptions";
+import useRefinedSearch from "../../hooks/useRefinedSearchOptions";
 import {setSearchText, } from '../../store/reducers/searchResultsReducer';
 
 const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
-  // const { data } = useRefinedSearch();
+  const { data } = useRefinedSearch();
   const navigate = useNavigate();
   // const { searchText, activeTab, newItemWindowOpen, showAddSuccess } =
   const { searchText, showAddSuccess } =
