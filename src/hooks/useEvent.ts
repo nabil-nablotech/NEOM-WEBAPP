@@ -76,7 +76,7 @@ const useEvent = () => {
 
         let dummyArray:any = [];
         for (let i = 0; i < refineEventData?.visits?.data?.length; i++) {
-            dummyArray.push({id:i,name:refineEventData?.visits?.data[i].attributes['recordingTeam'],position:{lat:refineEventData?.visits?.data[i].attributes['latitude'],lng:refineEventData?.visits?.data[i].attributes['longitude']}})
+            if (refineEventData?.visits?.data[i]?.attributes?.latitude && refineEventData?.visits?.data[i]?.attributes?.longitude) dummyArray.push({id:i,name:refineEventData?.visits?.data[i].attributes['recordingTeam'],position:{lat:refineEventData?.visits?.data[i]?.attributes?.latitude,lng:refineEventData?.visits?.data[i]?.attributes?.longitude}})
         }
           setMapEvents(dummyArray)
     }
@@ -93,11 +93,18 @@ const useEvent = () => {
     const searchData = getQueryObj(search);
     const text = local ? searchText : searchData?.search;
     const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData?.refinedSearch;
+    
     const searchWordArray = text?.split(' ') || [];
     copiedValue && Object.keys(copiedValue)?.map(x => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
+
+    const startDate = new Date(copiedValue?.startDate);
+    const visitStartDate = (copiedValue?.startDate && startDate?.getFullYear()) ? `${startDate?.getFullYear()}-${startDate?.getMonth() + 1}-${startDate?.getDate()}` : undefined;
+    const endDate = new Date(copiedValue?.endDate);
+    const visitEndDate = (copiedValue?.endDate && endDate?.getFullYear()) ? `${endDate?.getFullYear()}-${endDate?.getMonth() + 1}-${endDate?.getDate()}` : undefined;
+    
     const obj: any = {
       researchValue: copiedValue&&copiedValue?.researchValue && copiedValue?.researchValue,
       tourismValue: copiedValue&&copiedValue.tourismValue && copiedValue?.tourismValue,
@@ -109,8 +116,8 @@ const useEvent = () => {
       longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
       artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts,
       assessmentType: copiedValue&&copiedValue?.assessmentType && copiedValue?.assessmentType,
-      // startDate: copiedValue&&copiedValue?.startDate && copiedValue?.startDate,
-      // endDate: copiedValue&&copiedValue?.endDate && copiedValue?.endDate,      
+      startDate: visitStartDate && visitStartDate,
+      endDate: visitEndDate && visitEndDate,      
       search_one: searchWordArray[0],
       search_two: searchWordArray[1],
       search_three: searchWordArray[2],
@@ -129,12 +136,6 @@ const useEvent = () => {
     else { 
       refineSearchEvents(obj)
     }
-    // refineSearchEvents(obj)
-    // else if(Object.keys(copiedValue).length !== 0){
-    //   refineSearchEvents(obj)
-    // }else{
-    //   refetchEvents({ search_one: searchWordArray[0] || '', search_two: searchWordArray[1], search_three: searchWordArray[2], limit: limit, skip: skip });
-    // }
   };
 
   const clearTextSearch = () => {
