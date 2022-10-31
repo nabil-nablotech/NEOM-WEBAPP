@@ -15,10 +15,11 @@ import {
 } from "../../../../types/CustomDrawerTypes";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import { addItemDefaultSteps } from "../../../../utils/services/helpers";
-import styles from '../../Places/AddNewItem/addNewItem.module.css'
+import styles from "../../Places/AddNewItem/addNewItem.module.css";
 import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
 import DropdownComponent from "../../../Dropdown/index";
+import AutoCompleteSingleSelect from "../../../AutoComplete/singleSelect";
 import AutoComplete from "../../../AutoComplete";
 
 import { useEffect } from "react";
@@ -98,7 +99,7 @@ const StepContent = ({
       <Box component="div" className={`${styles["form"]}`}>
         {activeStep === 0 && (
           <>
-            <CustomSearchField
+            {/* <CustomSearchField
               handleChangeParent={(e) => {
                 // setFormState((state: any) => ({
                 //     ...state,
@@ -109,22 +110,56 @@ const StepContent = ({
               className={`${styles["custom-search-field"]}`}
               shouldHandleChangeFromParent={true}
               valueFromParent={formState.search}
+            /> */}
+            <TextInput
+              className={`${styles["visit-number"]}`}
+              label="Visit Number"
+              name="visit-number"
+              multiline
+              minRows={2}
+              maxRows={2}
+              value={formik.values.visitNumber}
+              onChange={(e) => {
+                formik.setFieldValue("visitNumber", e.target.value);
+              }}
+              sx={{
+                ...textInputSxStyles,
+                marginBottom: "4em",
+                "& .MuiInputBase-inputMultiline": {
+                  paddingInline: "0 !important",
+                },
+              }}
+              formControlSx={commonFormControlSxStyles}
             />
-            <AutoComplete
+            <AutoCompleteSingleSelect
               className={`${styles["custom-search-field"]}`}
-              multiple={false}
               label="Search"
+              placeholder="Search"
               value={formState.search}
               handleClear={() => {}}
               itemsList={places || []}
-              handleSelectChange={(e, value) => console.log('value...', value)}
-              
+              handleSelectChange={(e, value, r, d) =>
+                formik.setFieldValue("place", value)
+              }
+              selectStylesSx={commonFormControlSxStyles}
             />
             <ReactDatePicker
               placeholderText="Date Range"
               className={`${styles["date"]}`}
               selected={formik.values.eventDate}
               onChange={(date: Date) => formik.setFieldValue("eventDate", date)}
+            />
+            <DropdownComponent
+              className={`${styles["assessment-type"]}`}
+              label={"Assessment Type"}
+              name="assessment-type"
+              value={formik.values.assessmentType}
+              handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                formik.setFieldValue("assessmentType", e.target.value as string)
+              }
+              itemsList={options?.assessmentType || []}
+              selectStylesSx={commonSelectSxStyles}
+              formControlSx={commonFormControlSxStyles}
             />
             <TextInput
               className={`${styles["recording-team"]}`}
@@ -166,6 +201,35 @@ const StepContent = ({
               }}
               formControlSx={commonFormControlSxStyles}
             />
+            <DropdownComponent
+              className={`${styles["site-type"]}`}
+              label={"Site Type"}
+              name="site-type"
+              value={formik.values.siteType}
+              handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                formik.setFieldValue("siteType", e.target.value as string)
+              }
+              itemsList={options?.siteType || []}
+              selectStylesSx={commonSelectSxStyles}
+              formControlSx={commonFormControlSxStyles}
+            />
+            <AutoComplete
+              className={`${styles["period"]}`}
+              label={"Period"}
+              name="period"
+              multiple={true}
+              value={formik.values.period}
+              handleClear={() => {}}
+              handleSelectChange={(e, value) =>
+                formik.setFieldValue("period", value)
+              }
+              // handleSChange={(e: SelectChangeEvent<string | string[]>) =>
+              //   formik.setFieldValue("period", e.target.value as string)
+              // }
+              itemsList={options?.period || []}
+              selectStylesSx={commonSelectSxStyles}
+              formControlSx={commonFormControlSxStyles}
+            />
             <TextInput
               className={`${styles["field-narrative"]}`}
               label="Field Narrative"
@@ -186,16 +250,112 @@ const StepContent = ({
               }}
               formControlSx={commonFormControlSxStyles}
             />
-
             <DropdownComponent
-              className={`${styles["site-type"]}`}
-              label={"Site Type"}
-              name="site-type"
-              value={formik.values.siteType}
+              className={`${styles["artifacts"]}`}
+              label={"Artifacts"}
+              name="artifacts"
+              value={formik.values.artifacts}
               handleChange={(e: SelectChangeEvent<string | string[]>) =>
-                formik.setFieldValue("siteType", e.target.value as string)
+                formik.setFieldValue("artifacts", e.target.value as string)
               }
-              itemsList={options?.siteType || []}
+              itemsList={options?.artifacts || []}
+              selectStylesSx={commonSelectSxStyles}
+              formControlSx={commonFormControlSxStyles}
+            />
+            <TextInput
+              className={`${styles["latitude"]}`}
+              label="Latitude"
+              name="latitude"
+              type="number"
+              value={formik.values.latitude}
+              onChange={(e) => {
+                formik.setFieldValue("latitude", e.target.value);
+              }}
+              sx={{
+                ...textInputSxStyles,
+                marginBottom: "4em",
+                "& .MuiInputBase-inputMultiline": {
+                  paddingInline: "0 !important",
+                },
+              }}
+              formControlSx={commonFormControlSxStyles}
+            />
+            <TextInput
+              className={`${styles["longitude"]}`}
+              label="Longitude"
+              name="Longitude"
+              type="number"
+              value={formik.values.Longitude}
+              onChange={(e) => {
+                formik.setFieldValue("Longitude", e.target.value);
+              }}
+              sx={{
+                ...textInputSxStyles,
+                marginBottom: "4em",
+                "& .MuiInputBase-inputMultiline": {
+                  paddingInline: "0 !important",
+                },
+              }}
+              formControlSx={commonFormControlSxStyles}
+            />
+            <DropdownComponent
+              className={`${styles["state-of-conservation"]}`}
+              label={"State of conservation"}
+              name="stateOfConservation"
+              value={formik.values.stateOfConservation}
+              handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                formik.setFieldValue("stateOfConservation", e.target.value as string)
+              }
+              itemsList={options?.stateOfConservation || []}
+              selectStylesSx={commonSelectSxStyles}
+              formControlSx={commonFormControlSxStyles}
+            />
+            <DropdownComponent
+              className={`${styles["risk"]}`}
+              label={"Risk"}
+              name="risk"
+              value={formik.values.risk}
+              handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                formik.setFieldValue("risk", e.target.value as string)
+              }
+              itemsList={options?.risk || []}
+              selectStylesSx={commonSelectSxStyles}
+              formControlSx={commonFormControlSxStyles}
+            />
+            
+            <DropdownComponent
+              className={`${styles["tourism-value"]}`}
+              label={"Tourism Value"}
+              name="tourismValue"
+              value={formik.values.tourismValue}
+              handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                formik.setFieldValue("tourismValue", e.target.value as string)
+              }
+              itemsList={options?.tourismValue || []}
+              selectStylesSx={commonSelectSxStyles}
+              formControlSx={commonFormControlSxStyles}
+            />
+            <DropdownComponent
+              className={`${styles["research-value"]}`}
+              label={"Research Value"}
+              name="researchValue"
+              value={formik.values.researchValue}
+              handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                formik.setFieldValue("researchValue", e.target.value as string)
+              }
+              itemsList={options?.researchValue || []}
+              selectStylesSx={commonSelectSxStyles}
+              formControlSx={commonFormControlSxStyles}
+            />
+            <DropdownComponent
+              className={`${styles["recommendation"]}`}
+              label={"Recommendation"}
+              name="recommendation"
+              value={formik.values.recommendation}
+              handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                formik.setFieldValue("recommendation", e.target.value as string)
+              }
+              itemsList={options?.recommendation || []}
               selectStylesSx={commonSelectSxStyles}
               formControlSx={commonFormControlSxStyles}
             />
@@ -306,14 +466,26 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
 
   const formik = useFormik({
     initialValues: {
-      place: "",
+      place: undefined,
       eventDate: new Date(),
       recordingTeam: "",
+      visitNumber: "",
       siteDescription: "",
       fieldNarrative: "",
+      artifacts: "",
+      latitude: null,
+      longitude: null,
+      assessmentType: "",
+      stateOfConservation: "",
       siteType: "",
+      risk: "",
+      tourismValue: "",
+      researchValue: "",
+      recommendation: "",
+      period: [],
       keywords: "",
     },
+
     onSubmit: (values) => {
       handleNext(null, values);
     },
