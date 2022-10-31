@@ -139,11 +139,8 @@ const usePlace = () => {
       obj.search_one = '';
       delete obj.search_two;
       delete obj.search_three;
-      refineSearchPlaces(obj)
     }
-    else { 
-      refineSearchPlaces(obj)
-    }
+    refineSearchPlaces(obj)
   };
 
   const clearTextSearch = () => {
@@ -153,7 +150,6 @@ const usePlace = () => {
   const createPlace = async (payload: any | undefined) => {
     const uniqueId = generateUniqueId();
     const keywords = payload.keywords?.split(' ');
-    const eventDate = payload.eventDate;
     const data = {
       ...payload,
       uniqueId: uniqueId,
