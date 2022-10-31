@@ -56,7 +56,8 @@ const MediaDetailsPage = ({
     if(!mediaDetails) {
         return <>Cant display Media Details</>
     }
-    const {description, title, id} = mediaDetails
+    // console.log('hex: ', mediaDetails)
+    const {description, title, id, objectURL, referanceUrl, citation} = mediaDetails
 
 
 
@@ -247,7 +248,7 @@ const MediaDetailsPage = ({
                             </Grid>
                         </Grid>
                         <Box component="div" className={`${styles[`video-desc`]}`}>
-                            This panel not only contains a rich assortment of unique medicine bags, but an intricate eagle is depicted to the left of center here at Little Petroglyph Canyon in California.
+                            {description}
                         </Box>
                         <Box component="div">
                             <Box component="div" className={`${styles[`bottom-grid`]}`} >
@@ -255,13 +256,13 @@ const MediaDetailsPage = ({
                                 <div className={`${styles[`video-info-grid`]}`}>
                                     <Box component="div">URL:</Box>
                                     <Box component={"a"} href="#" className={`${styles['anchor']}`}>
-                                        https://sketchfab.com/3d-models/medicine-bag-panel-2-8037cae6290b4e5284a92c23a99c9499
+                                        {}
                                     </Box>
                                 </div>
                                 <div className={`${styles[`video-info-grid`]}`}>
                                     <Box component="div">Citation:</Box>
                                     <Box component="div">
-                                        PaleoWest - Medicine Bag Panel 2
+                                        {citation}
                                     </Box>
                                 </div>
                             </Box>
@@ -293,7 +294,7 @@ const MediaDetailsPage = ({
                             </Grid>
                         </Grid>
                         <Box component="div" className={`${styles[`three-d-modeldesc`]}`}>
-                            This panel not only contains a rich assortment of unique medicine bags, but an intricate eagle is depicted to the left of center here at Little Petroglyph Canyon in California.
+                            {description}
                         </Box>
                         <Box component="div">
                             <Box component="div" className={`${styles[`bottom-grid`]}`} >
@@ -301,13 +302,13 @@ const MediaDetailsPage = ({
                                 <div className={`${styles[`three-d-modelinfo-grid`]}`}>
                                     <Box component="div">URL:</Box>
                                     <Box component={"a"} href="#" className={`${styles['anchor']}`}>
-                                        https://sketchfab.com/3d-models/medicine-bag-panel-2-8037cae6290b4e5284a92c23a99c9499
+                                        {objectURL}
                                     </Box>
                                 </div>
                                 <div className={`${styles[`three-d-modelinfo-grid`]}`}>
                                     <Box component="div">Citation:</Box>
                                     <Box component="div">
-                                        PaleoWest - Medicine Bag Panel 2
+                                        {citation}
                                     </Box>
                                 </div>
                             </Box>
@@ -338,7 +339,6 @@ export const MediaDetailsModal = () => {
     const dispatch = useDispatch();
 
     const { loading: mediaLoading, data: mediaDetails } = useMediaDetails();
-    console.log('hex: ', mediaDetails)
 
     const TotalMediaCount= activeEventItem ? activeEventItem.visit_unique_id.media_associates: 0
 
