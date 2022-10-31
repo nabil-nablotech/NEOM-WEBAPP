@@ -1,6 +1,6 @@
 import Select from "@mui/material/Select";
 import Chip from '@mui/material/Chip';
-import { AutoCompleteProps, DropdownCompProps } from "../../types/DropdownComponent";
+import { AutoCompleteMultiSelectProps, DropdownCompProps } from "../../types/DropdownComponent";
 import { MenuItem, Box, Autocomplete, TextField } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
@@ -20,7 +20,7 @@ const AutoCompleteComponent = ({
   formControlSx,
   multiple,
   handleClear
-}: AutoCompleteProps) => {
+}: AutoCompleteMultiSelectProps) => {
   const staticLabel = label ? label : "select";
   const [focused, setFocused] = useState(false);
 
@@ -31,7 +31,7 @@ const AutoCompleteComponent = ({
           multiple && <>
             <Box component="div" className={`${styles['autocmplt-container']}`}>
               <Autocomplete
-                multiple={multiple ? multiple : true}
+                multiple
                 id="tags-filled"
                 options={itemsList.map(item => item.label)}
                 onChange={handleSelectChange}

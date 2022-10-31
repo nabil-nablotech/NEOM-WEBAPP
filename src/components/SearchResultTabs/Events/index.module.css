@@ -3,6 +3,13 @@
     aspect-ratio: 1/1;
     width: 100%;
 }
+.select-search {
+    max-width: var(--width-constant) !important;
+    flex-basis: var(--width-constant) !important;
+    flex-shrink: 0;
+    border-color: var(--lightest-border);
+    cursor: pointer;
+}
 @media (min-width: 575px) and (max-width: 1025px) {
     .map-img {
         aspect-ratio: 1/2;

@@ -16,19 +16,26 @@ export type DropdownCompProps = {
     name?: string
     multiple?: boolean;
 }
-export type AutoCompleteProps = {
+export interface Multiple {
+    multiple: boolean
+}
+export interface AutoCompleteMultiSelectProps {
     className?: string
     label?: string
     placeholder?: string
     selectStylesSx?: SxProps
     formControlSx?: SxProps
-    value: string[] | undefined
     handleChange?: ((event: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>, child: React.ReactNode) => void)
-    handleSelectChange?: ((event: React.SyntheticEvent<Element, Event>, value: string[], reason: AutocompleteChangeReason, details?: AutocompleteChangeDetails<string> | undefined) => void) | undefined;
+    value: string[] | undefined
+    handleSelectChange?: (event: React.SyntheticEvent<Element, Event>, value: string[], reason: AutocompleteChangeReason, details?: AutocompleteChangeDetails<string> | undefined) => void;
     handleClear: (e: MouseEvent<HTMLButtonElement>) => void;
     itemsList: Array<dropDownItem> | []
     name?: string
     multiple?: boolean;
+}
+export interface AutoCompleteSingleSelectProps extends Omit<AutoCompleteMultiSelectProps, "value" | "handleSelectChange"> {
+    value?: object | any
+    handleSelectChange?: (event: React.SyntheticEvent<Element, Event>, value: string | null, reason: AutocompleteChangeReason, details?: AutocompleteChangeDetails<string> | undefined) => void;
 }
 
 export type dropDownItem = {

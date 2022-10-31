@@ -63,7 +63,7 @@ const usePlace = () => {
       const places = JSON.parse(JSON.stringify(refinePlaceData?.places.data))
       places.map((x: Place) => {
         x.label = `${x?.attributes?.placeNameEnglish}${x?.attributes?.placeNameArabic}` || '';
-        x.value = `${x?.attributes?.placeNameEnglish}${x.attributes?.placeNameArabic}` || '';
+        x.value = x?.id;
         return x;
       })
 

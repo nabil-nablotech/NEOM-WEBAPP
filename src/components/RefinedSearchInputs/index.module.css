@@ -32,8 +32,6 @@
 .dropdown::placeholder {
     border: 0;
 }
-.dropdown {
-}
 
 .extra-width {
     flex-grow: 1;
