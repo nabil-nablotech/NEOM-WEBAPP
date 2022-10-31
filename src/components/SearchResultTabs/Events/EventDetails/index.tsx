@@ -414,11 +414,16 @@ const EventDetailsPage = () => {
                             <Grid item sm={7} className={`${styles['text-left']} ${styles['section-left']}`}>
                                 <Box component="div" className={`${styles['site-desc']}`}>
                                     {/* If needed See More functionality in future, copy from PlaceDetails */}
-                                    <Box component="div"
-                                        className={`${styles['site-desc-condensed']} ${styles['see-more-active']}`}
+                                    {siteDescription ? <Box component="div"
+                                        className={`${styles['no-data-available']} ${styles['see-more-active']}`}
                                     >
                                         {siteDescription?.substring(0, 200)}
-                                    </Box>
+                                    </Box>: 
+                                    <Box component="div"
+                                        className={`${styles['no-data-available']} ${styles['see-more-active']}`}
+                                    >
+                                        No data available
+                                    </Box>}
                                 </Box>
                                 <Box component="div" className={`${styles['table']}`}>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -426,7 +431,7 @@ const EventDetailsPage = () => {
                                             Site Type
                                         </Grid>
                                         <Grid item>
-                                            <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
+                                            {siteType ? <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
                                                 {
                                                     siteType && siteType.map(item => (
                                                         <Box
@@ -438,6 +443,14 @@ const EventDetailsPage = () => {
                                                     ))
                                                 }
                                             </Box>
+                                           : <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
+                                                <Box
+                                                    component="div"
+                                                    className={`${styles['text-anchor']}`}
+                                                >
+                                                    No data available
+                                                </Box>
+                                            </Box>}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -547,14 +560,14 @@ const EventDetailsPage = () => {
                                 </Box>
                             </Grid>
                             <Grid item sm={5}>
-                                <MapView key={14} marker={[{
+                                {latitude && longitude ? <MapView key={14} marker={[{
                                     id: 0,
                                     name: `${"P event name"}`,
                                     position: {
                                         lat: latitude,
                                         lng: longitude
                                     }
-                                }]}/>
+                                }]}/> : <img src={''} alt="" width={250} height={250} />}
                                 <Grid container className={`${styles['map-loctn-details']}`} >
                                     <Grid item lg={5} md={5} sm={5}>
                                         <Grid container className={`${styles['map-loctn-line']}`}>

@@ -512,11 +512,11 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
       keywords: [],
     },
     validate: values => {
-      if (!values.visitNumber) {
-        setFormError('Place Number is required')
-      } else {
-        setFormError('')
-      }
+      // if (!values.visitNumber) {
+      //   setFormError('Event Number is required')
+      // } else {
+      //   setFormError('')
+      // }
     },
     onSubmit: (values) => {
       if (!formError) {

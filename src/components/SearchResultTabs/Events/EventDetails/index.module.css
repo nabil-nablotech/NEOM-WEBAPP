@@ -90,6 +90,14 @@
     height: unset;
 }
 
+.no-data-available {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 5ch;
+}
+
 .see-more-box {
     position: absolute;
     right: 0;
