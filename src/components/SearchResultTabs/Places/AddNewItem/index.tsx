@@ -83,7 +83,6 @@ const StepContent = ({
     options
 }: StepContentTypes) => {
 
-//   const obj = usePlace();
     // const handleSelectChange = (e: React.SyntheticEvent, value: string[] | [], reason?: string) => {
     //     if (reason) {
     //         const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
@@ -473,16 +472,16 @@ const AddNewPlace = ({
 
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         if (activeStep + 1 === steps.length) {
+            if (create) {
+                create({
+                    ...data
+                });
+            }
             onClose()
             dispatch(toggleShowAddSuccess(true))
         }
         if (activeStep === 1) {
       
-          if (create) {
-            create({
-              ...data
-            });
-          }
         }
         setSkipped(newSkipped);
     };
