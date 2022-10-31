@@ -66,8 +66,8 @@ export type Translation = {
     tourismValue: option[]|[];
     latitude: string;
     longitude: string;
-    startDate: Date;
-    endDate: Date;
+    startDate?: Date;
+    endDate?: Date;
   }
   
   
