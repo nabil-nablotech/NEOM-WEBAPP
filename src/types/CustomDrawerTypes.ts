@@ -1,6 +1,7 @@
 import { ApolloCache, DefaultContext, MutationFunctionOptions, OperationVariables } from "@apollo/client"
 import { MutateFunction } from "react-query"
 import { AddEventState } from "../store/reducers/eventReducer"
+import { Place } from "./Place"
 import { Options } from "./RefinedSeachTypes"
 import { tabNameProps } from "./SearchResultsTabsProps"
 
@@ -19,6 +20,7 @@ export type AddNewItemProps = {
 export type StepContentTypes = {
     tabName: tabNameProps | undefined
     options?: Options | null
+    places?: Place[] | []
     formState: any
     setFormState: React.SetStateAction<any> 
     activeStep: number

@@ -19,6 +19,8 @@ import styles from '../../Places/AddNewItem/addNewItem.module.css'
 import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
 import DropdownComponent from "../../../Dropdown/index";
+import AutoComplete from "../../../AutoComplete";
+
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
@@ -89,6 +91,7 @@ const StepContent = ({
   handleNext,
   handleBack,
   formik,
+  places,
 }: StepContentTypes) => {
   return (
     <>
@@ -106,6 +109,16 @@ const StepContent = ({
               className={`${styles["custom-search-field"]}`}
               shouldHandleChangeFromParent={true}
               valueFromParent={formState.search}
+            />
+            <AutoComplete
+              className={`${styles["custom-search-field"]}`}
+              multiple={false}
+              label="Search"
+              value={formState.search}
+              handleClear={() => {}}
+              itemsList={places || []}
+              handleSelectChange={(e, value) => console.log('value...', value)}
+              
             />
             <ReactDatePicker
               placeholderText="Date Range"
@@ -214,7 +227,7 @@ const StepContent = ({
 const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { showAddSuccess } = useSelector(
+  const { showAddSuccess, places } = useSelector(
     (state: RootState) => state.searchResults
   );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
@@ -255,10 +268,9 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
       dispatch(toggleShowAddSuccess(true));
     }
     if (activeStep === 1) {
-      
       if (create) {
         create({
-          ...data
+          ...data,
         });
       }
     }
@@ -382,6 +394,7 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
                 <StepContent
                   tabName={tabName}
                   options={options}
+                  places={places}
                   formState={formState}
                   setFormState={setFormState}
                   activeStep={activeStep}
