@@ -325,7 +325,6 @@ const StepContent = ({
                         }}
                         onKeyDown={e => {
                             handleEnter(e, () => {
-                                console.log('hex: ', currentKeyword)
                                 formik.setFieldValue('keywords', [...new Set([...formik.values.keywords, currentKeyword])])
                                 setCurrentKeyword('')
                             })
