@@ -58,7 +58,8 @@ const AutoCompleteComponent = ({
                   '& .MuiFilledInput-root.MuiInputBase-sizeSmall': {
                     paddingLeft: '0.5em',
                     paddingTop: '0.55em',
-                    borderRadius: '0.3em'
+                    borderRadius: '0.3em',
+                    border: '1px solid rgba(0,0,0,0.2)'
                   },
                   '& .MuiFormControl-fullWidth.MuiTextField-root': {
                     position: 'relative'
@@ -70,7 +71,8 @@ const AutoCompleteComponent = ({
                   },
                   '& .MuiFormLabel-root.MuiInputLabel-root[data-shrink="true"]': {
                     top: '-15%',
-                    background: 'rgba(0,0,0,0.02)'
+                    background: '#fff',
+                    borderRadius: '4px'
                   }
                 }}
               />

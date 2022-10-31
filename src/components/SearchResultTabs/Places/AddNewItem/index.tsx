@@ -16,7 +16,7 @@ import { RootState } from '../../../../store';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { useFormik } from 'formik';
 import usePlace from '../../../../hooks/usePlace';
-import AutoCompleteComponent from '../../../AutoComplete';
+import AutoComplete from '../../../AutoComplete';
 import CloseIcon from '@mui/icons-material/Close';
 
 const commonSelectSxStyles = {
@@ -83,15 +83,10 @@ const StepContent = ({
     options
 }: StepContentTypes) => {
 
-    // const handleSelectChange = (e: React.SyntheticEvent, value: string[] | [], reason?: string) => {
-    //     if (reason) {
-    //         const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
-    //         selectedValueCopy[reason] = value;
-    //         e.preventDefault();
-    //         // dispatch(setSelectedValue(selectedValueCopy));
-    //         console.log('hex: ', selectedValueCopy)
-    //     }
-    // }
+    const handleSelectChange = (e: React.SyntheticEvent, value: string[] | [], stateName: string) => {
+        e.preventDefault();
+        formik.setFieldValue(stateName, [...new Set([...formik.values[stateName], ...value])]);
+    }
 
     const [placeKeywords, setPlaceKeywords] = useState<Array<string>>([])
     const [currentKeyword, setCurrentKeyword] = useState<string>('')
@@ -169,43 +164,28 @@ const StepContent = ({
                         }}
                     />
 
-                    <DropdownComponent
-                        className={`${styles["site-type"]}`}
+                    <AutoComplete
+                        className={`${styles["dropdown"]}`}
                         label={"Site Type"}
-                        name="site-type"
-                        value={formik.values.siteType}
-                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
-                            formik.setFieldValue('siteType', e.target.value as string)
-                        }
-                        handleClear={() => {}}
+                        name="siteType"
+                        value={[...formik.values.siteType]}
+                        multiple={true}
+                        handleSelectChange={ (e,value) => handleSelectChange(e,value, 'siteType')}
+                        handleChange={() => { }}
+                        handleClear={(e) => {}}
                         itemsList={options?.siteType || []}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
                     />
-                    {/* <AutoCompleteComponent
+                    <AutoComplete
                         className={`${styles["dropdown"]}`}
-                        label={"State of Conservation"}
-                        name="stateOfConservation"
-                        value={formik.values.siteType}
-                        multiple={true}
-                        // handleSelectChange={(e, value) => handleSelectChange(e, value, 'stateOfConservation')}
-                        handleSelectChange={handleSelectChange}
-                        // handleChange={() => { }}
-                        handleClear={(e) => {}}
-                        itemsList={options?.stateOfConservation || []}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    /> */}
-                    <DropdownComponent
-                        className={`${styles["period"]}`}
                         label={"Period"}
                         name="period"
-                        value={formik.values.period}
-                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
-                            formik.setFieldValue('period', e.target.value as string)
-                        }
-                        
-                        handleClear={() => {}}
+                        value={[...formik.values.period]}
+                        multiple={true}
+                        handleSelectChange={ (e,value) => handleSelectChange(e,value, 'period')}
+                        handleChange={() => { }}
+                        handleClear={(e) => {}}
                         itemsList={options?.period || []}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
@@ -519,8 +499,8 @@ const AddNewPlace = ({
             placeNameEnglish: '',
             placeNameArabic: '',
             siteDescription: '',
-            siteType: '',
-            period: '',
+            siteType: [],
+            period: [],
             stateOfConservation: '',
             risk: '',
             tourismValue: '',
