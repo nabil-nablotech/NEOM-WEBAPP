@@ -70,7 +70,7 @@ const usePlace = () => {
       // update the data for the pagination
       if (refinePlaceData?.places?.meta.pagination.page === 1 && refinePlaceData?.places?.data.length > 0) {
         dispatch(setPlaces([...places]));
-      } else if (places.data.length > 0) {
+      } else if (places?.length > 0) {
         dispatch(setPlaces([...placeData, ...places]));
       } else if (refinePlaceData?.places?.meta.pagination.total === 0) {
         dispatch(setPlaces([]));
@@ -85,14 +85,18 @@ const usePlace = () => {
 
       let dummyArray: any = [];
       for (let i = 0; i < refinePlaceData?.places?.data?.length; i++) {
-        dummyArray.push({
-          id: i,
-          name: refinePlaceData?.places?.data[i].attributes["placeNameEnglish"],
-          position: {
-            lat: refinePlaceData?.places?.data[i].attributes["latitude"],
-            lng: refinePlaceData?.places?.data[i].attributes["longitude"],
-          },
-        });
+        if (refinePlaceData?.places?.data[i]?.attributes?.latitude && refinePlaceData?.places?.data[i]?.attributes?.longitude) {
+
+          dummyArray.push({
+            id: i,
+            name: refinePlaceData?.places?.data[i].attributes["placeNameEnglish"],
+            position: {
+              lat: refinePlaceData?.places?.data[i].attributes["latitude"],
+              lng: refinePlaceData?.places?.data[i].attributes["longitude"],
+            },
+          });
+        }
+
       }
       setMapPlaces(dummyArray);
     }

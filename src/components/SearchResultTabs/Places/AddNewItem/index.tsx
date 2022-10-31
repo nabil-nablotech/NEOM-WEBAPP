@@ -458,8 +458,8 @@ const AddNewPlace = ({
             researchValue: '',
             artifacts: '',
             recommendation: '',
-            latitude: '',
-            longitude: '',
+            latitude: null,
+            longitude: null,
             keywords: []
         },
         validate: values => {
