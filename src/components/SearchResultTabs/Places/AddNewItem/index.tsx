@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AddNewItemProps, StepContentTypes } from '../../../../types/CustomDrawerTypes';
 import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
-import { addItemDefaultSteps, AddPlaceFormSchema } from '../../../../utils/services/helpers';
+import { addItemDefaultSteps, AddPlaceFormSchema, preventEnter } from '../../../../utils/services/helpers';
 import styles from './addNewItem.module.css'
 import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
@@ -93,11 +93,14 @@ const StepContent = ({
                         className={`${styles["place-number"]}`}
                         label="Place Number"
                         name="place-number"
-                        type="number"
+                        type="text"
                         required
                         value={formik.values.placeNumber}
                         onChange={e => {
                             formik.setFieldValue('placeNumber', e.target.value)
+                        }}
+                        onKeyDown={e => {
+                            preventEnter(e)
                         }}
                         sx={{
                             ...textInputSxStyles
@@ -389,7 +392,7 @@ const AddNewPlace = ({
         siteDescription: ''
     });
     const [skipped, setSkipped] = useState(new Set<number>());
-    // const [formError, setFormError] = useState('');
+    const [formError, setFormError] = useState<string>('');
 
     const [steps, setSteps] = useState<Array<string>>(addItemDefaultSteps)
 
@@ -475,18 +478,18 @@ const AddNewPlace = ({
             latitude: '',
             longitude: ''
         },
-        onSubmit: (values, errors) => {
-            // AddPlaceFormSchema
-            //     .validate(values)
-            //     .catch((err: any) => {
-            //         console.log('hex: ', JSON.stringify(err, null, '\t'))
-            //         if (err.message) {
-            //             setFormError(err.message)
-            //         } else {
-            //             setFormError('')
-            //         }
-            //   })
-          handleNext(null, values);
+        validate: values => {
+            if(!values.placeNumber) {
+                setFormError('Place Number is required')
+            } else {
+                setFormError('')
+            }
+        },
+        onSubmit: (values) => {
+
+            if (!formError) {
+                handleNext(null, values);
+            }
         },
       });
     return (
@@ -560,6 +563,9 @@ const AddNewPlace = ({
                           </React.Fragment>
                       </>
                   </Box>
+                    {formError && <Box component="div" className={`${styles["form-error"]}`}>
+                        {formError}
+                    </Box>}
                   <Box component="div"
                       className={`${styles["btn-row"]}`}
                       sx={{

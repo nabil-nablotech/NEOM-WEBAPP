@@ -5,8 +5,8 @@ import { MediaAssociates2, PlaceApi } from "../../types/Place";
 import { tabNameProps } from "../../types/SearchResultsTabsProps";
 import * as Yup from 'yup';
 
-export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://334b-117-214-59-174.in.ngrok.io`;
+// export const baseUrl = `http://localhost:9999`;
+export const baseUrl = `https://334b-117-214-59-174.in.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -316,3 +316,10 @@ export const AddPlaceFormSchema = Yup.object().shape({
   placeNumber: Yup.string()
     .required()
 });
+
+export const preventEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+
+  if(e.key === "Enter") {
+    e.preventDefault()
+  }
+}
