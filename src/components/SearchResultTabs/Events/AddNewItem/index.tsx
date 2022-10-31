@@ -5,6 +5,7 @@ import {
   StepLabel,
   Stepper,
   Typography,
+  Chip
 } from "@mui/material";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -14,17 +15,17 @@ import {
   InitialValues,
 } from "../../../../types/CustomDrawerTypes";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
-import { addItemDefaultSteps } from "../../../../utils/services/helpers";
+import { addItemDefaultSteps, handleEnter } from "../../../../utils/services/helpers";
 import styles from "../../Places/AddNewItem/addNewItem.module.css";
 import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
 import DropdownComponent from "../../../Dropdown/index";
 import AutoCompleteSingleSelect from "../../../AutoComplete/singleSelect";
 import AutoComplete from "../../../AutoComplete";
-
+import CloseIcon from '@mui/icons-material/Close';
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
+import { toggleNewItemWindow, toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import CustomSearchField from "../../../SearchField";
@@ -93,6 +94,9 @@ const StepContent = ({
   formik,
   places,
 }: StepContentTypes) => {
+
+  const [currentKeyword, setCurrentKeyword] = useState<string>('')
+
   return (
     <>
       <Box component="div" className={`${styles["form"]}`}>
@@ -360,17 +364,42 @@ const StepContent = ({
             <Box component="div">Make your content discoverable</Box>
             <TextInput
               className={`${styles["english-name"]}`}
+              id="keyword-div"
               label="Add Keywords"
-              name="english-name"
-              value={formik.values.keywords}
+              name="keywords"
+              value={currentKeyword}
               onChange={(e) => {
-                formik.setFieldValue("keywords", e.target.value);
+                setCurrentKeyword(e.target.value)
+              }}
+              onKeyDown={e => {
+                handleEnter(e, () => {
+                  formik.setFieldValue('keywords', [...new Set([...formik.values.keywords, currentKeyword])])
+                  setCurrentKeyword('')
+                })
               }}
               sx={{
-                ...textInputSxStyles,
+                ...textInputSxStyles
               }}
               formControlSx={commonFormControlSxStyles}
             />
+            {
+              <Box component="div" style={{
+                display: 'flex',
+                gap: '5px'
+              }}>
+                {
+                  formik.values.keywords.map((item: string, index: any) => (
+                    <Chip key={index} size="small" variant="outlined" label={item}
+                      deleteIcon={<CloseIcon fontSize="small" />}
+                      onDelete={e => {
+                        const newArr = [...formik.values.keywords].filter((element: string) => element !== item)
+                        formik.setFieldValue('keywords', [...new Set(newArr)])
+                      }}
+                    />
+                  ))
+                }
+              </Box>
+            }
           </>
         )}
       </Box>
@@ -393,6 +422,7 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
   const [skipped, setSkipped] = useState(new Set<number>());
 
   const [steps, setSteps] = useState<Array<string>>(addItemDefaultSteps);
+  const [formError, setFormError] = useState<string>('');
 
   const dispatch = useDispatch();
 
@@ -417,17 +447,19 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
     }
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
     if (activeStep + 1 === steps.length) {
-      onClose();
-      dispatch(toggleShowAddSuccess(true));
-    }
-    if (activeStep === 1) {
       if (create) {
         create({
-          ...data,
+          ...data
         });
       }
+      onClose();
+      dispatch(toggleShowAddSuccess(true));
+      dispatch(toggleNewItemWindow(false))
+
     }
+
     setSkipped(newSkipped);
   };
 
@@ -477,11 +509,19 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
       researchValue: "",
       recommendation: "",
       period: [],
-      keywords: "",
+      keywords: [],
     },
-
+    validate: values => {
+      if (!values.visitNumber) {
+        setFormError('Place Number is required')
+      } else {
+        setFormError('')
+      }
+    },
     onSubmit: (values) => {
-      handleNext(null, values);
+      if (!formError) {
+        handleNext(null, values);
+      }
     },
   });
 
@@ -572,6 +612,9 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
               </React.Fragment>
             </>
           </Box>
+          {formError && <Box component="div" className={`${styles["form-error"]}`}>
+            {formError}
+          </Box>}
           <Box
             component="div"
             className={`${styles["btn-row"]}`}
