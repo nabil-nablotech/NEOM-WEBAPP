@@ -21,6 +21,7 @@ export type Event = {
     thumbnailUrl?: string;
     recordingTeam: string;
     visitNumber: string;
+    visitDate: string;
     siteDescription: string;
     updatedAt: string;
     createdAt: string;
@@ -59,7 +60,7 @@ export type EventApi = {
   tourismValue: string[]
   uniqueId: string
   updatedAt: string
-  visitDate: string
+  visitDate?: string
   visitNumber: number
   visitUIPath: string
   visit_associate: VisitAssociate2

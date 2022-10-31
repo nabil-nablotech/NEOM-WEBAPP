@@ -14,7 +14,6 @@ import {
 } from "../store/reducers/searchResultsReducer";
 import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/helpers';
 import { tabNameProps } from "../types/SearchResultsTabsProps";
-import { AddEventState } from "../store/reducers/eventReducer";
 import { graphQlHeaders } from "../utils/services/interceptor";
 import { Place } from "../types/Place";
 
