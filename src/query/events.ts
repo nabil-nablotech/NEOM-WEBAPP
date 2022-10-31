@@ -295,6 +295,8 @@ export const updateEvent = gql`
     $visitUIPath: String
     $visitNumber: Int
     $asset_config_id: ID
+    $visit_associate: ID
+    $media_associates: [ID]
     $siteDescription: String
     $siteType: JSON
     $researchValue: JSON
@@ -324,6 +326,8 @@ export const updateEvent = gql`
         keywords: $keywords
         visitUIPath: $visitUIPath
         asset_config_id: $asset_config_id
+        visit_associate: $visit_associate
+        media_associates: $media_associates
         siteType: $siteType
         recommendation: $recommendation
         tourismValue: $tourismValue

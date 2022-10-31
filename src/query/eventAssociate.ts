@@ -22,6 +22,14 @@ mutation CreateVisitAssociate(
             }
           }
         }
+        visit_unique_id {
+          data {
+            id
+            attributes {
+              uniqueId
+            }
+          }
+        }
       }
     }
   }
