@@ -1,9 +1,9 @@
-import { Box, Button as DefaultButton, Step, StepLabel, Stepper, Typography } from '@mui/material';
+import { Box, Button as DefaultButton, Step, StepLabel, Stepper, Typography, Chip } from '@mui/material';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AddNewItemProps, StepContentTypes } from '../../../../types/CustomDrawerTypes';
 import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
-import { addItemDefaultSteps } from '../../../../utils/services/helpers';
+import { addItemDefaultSteps, AddPlaceFormSchema, handleEnter } from '../../../../utils/services/helpers';
 import styles from './addNewItem.module.css'
 import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
@@ -15,6 +15,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { useFormik } from 'formik';
+import usePlace from '../../../../hooks/usePlace';
+import AutoCompleteComponent from '../../../AutoComplete';
+import CloseIcon from '@mui/icons-material/Close';
 
 const commonSelectSxStyles = {
     textAlign: 'left',
@@ -80,7 +83,19 @@ const StepContent = ({
     options
 }: StepContentTypes) => {
 
-    
+//   const obj = usePlace();
+    // const handleSelectChange = (e: React.SyntheticEvent, value: string[] | [], reason?: string) => {
+    //     if (reason) {
+    //         const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
+    //         selectedValueCopy[reason] = value;
+    //         e.preventDefault();
+    //         // dispatch(setSelectedValue(selectedValueCopy));
+    //         console.log('hex: ', selectedValueCopy)
+    //     }
+    // }
+
+    const [placeKeywords, setPlaceKeywords] = useState<Array<string>>([])
+    const [currentKeyword, setCurrentKeyword] = useState<string>('')
 
     return <>
         <Box component="div" className={`${styles['form']}`}>
@@ -91,11 +106,14 @@ const StepContent = ({
                         className={`${styles["place-number"]}`}
                         label="Place Number"
                         name="place-number"
-                        type="number"
+                        type="text"
                         required
                         value={formik.values.placeNumber}
                         onChange={e => {
                             formik.setFieldValue('placeNumber', e.target.value)
+                        }}
+                        onKeyDown={e => {
+                            handleEnter(e)
                         }}
                         sx={{
                             ...textInputSxStyles
@@ -165,6 +183,20 @@ const StepContent = ({
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
                     />
+                    {/* <AutoCompleteComponent
+                        className={`${styles["dropdown"]}`}
+                        label={"State of Conservation"}
+                        name="stateOfConservation"
+                        value={formik.values.siteType}
+                        multiple={true}
+                        // handleSelectChange={(e, value) => handleSelectChange(e, value, 'stateOfConservation')}
+                        handleSelectChange={handleSelectChange}
+                        // handleChange={() => { }}
+                        handleClear={(e) => {}}
+                        itemsList={options?.stateOfConservation || []}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    /> */}
                     <DropdownComponent
                         className={`${styles["period"]}`}
                         label={"Period"}
@@ -277,7 +309,7 @@ const StepContent = ({
                         formControlSx={commonFormControlSxStyles}
                     />
                     <DropdownComponent
-                        className={`${styles["risk"]}`}
+                        className={`${styles["research-value"]}`}
                         label={"Research Value"}
                         name="research-value"
                         value={formik.values.researchValue}
@@ -291,7 +323,21 @@ const StepContent = ({
                         formControlSx={commonFormControlSxStyles}
                     />
                     <DropdownComponent
-                        className={`${styles["risk"]}`}
+                        className={`${styles["artifacts"]}`}
+                        label={"Artifacts"}
+                        name="artifacts"
+                        value={formik.values.artifacts}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('artifacts', e.target.value as string)
+                        }
+                        
+                        handleClear={() => {}}
+                        itemsList={options?.artifacts || []}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
+                        className={`${styles["recommendation"]}`}
                         label={"Recommendation"}
                         name="recommendation"
                         value={formik.values.recommendation}
@@ -304,6 +350,34 @@ const StepContent = ({
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
                     />
+                    <TextInput
+                        className={`${styles["latitude"]}`}
+                        label="Latitude"
+                        name="latitude"
+                        type="number"
+                        value={formik.values.latitude}
+                        onChange={e => {
+                            formik.setFieldValue('latitude', e.target.value)
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
+                        className={`${styles["longitude"]}`}
+                        label="Longitude"
+                        name="longitude"
+                        type="number"
+                        value={formik.values.longitude}
+                        onChange={e => {
+                            formik.setFieldValue('longitude', e.target.value)
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
                 </>
             }
             {
@@ -312,17 +386,43 @@ const StepContent = ({
                     <Box component="div">Make your content discoverable</Box>
                     <TextInput
                         className={`${styles["english-name"]}`}
+                        id="keyword-div"
                         label="Add Keywords"
                         name="english-name"
-                        value={formik.values.keywords}
+                        value={currentKeyword}
                         onChange={(e) => {
-                          formik.setFieldValue("keywords", e.target.value);
+                          setCurrentKeyword(e.target.value)
+                        }}
+                        onKeyDown={e => {
+                            handleEnter(e, () => {
+                                console.log('hex: ', currentKeyword)
+                                formik.setFieldValue('keywords', [...new Set([...formik.values.keywords, currentKeyword])])
+                                setCurrentKeyword('')
+                            })
                         }}
                         sx={{
                             ...textInputSxStyles
                         }}
                         formControlSx={commonFormControlSxStyles}
                     />
+                    {
+                        <Box component="div" style={{
+                            display: 'flex',
+                            gap: '5px'
+                        }}>
+                            {
+                                formik.values.keywords.map((item: string, index: any) => (
+                                    <Chip key={index} size="small" variant="outlined" label={item}
+                                        deleteIcon={<CloseIcon fontSize="small" />}
+                                        onDelete={e => {
+                                            const newArr = [...formik.values.keywords].filter((element: string) => element !== item)
+                                            formik.setFieldValue('keywords', [...new Set(newArr)])
+                                        }}
+                                    />
+                                ))
+                            }
+                        </Box>
+                    }
                 </>
             }
 
@@ -345,6 +445,7 @@ const AddNewPlace = ({
         siteDescription: ''
     });
     const [skipped, setSkipped] = useState(new Set<number>());
+    const [formError, setFormError] = useState<string>('');
 
     const [steps, setSteps] = useState<Array<string>>(addItemDefaultSteps)
 
@@ -415,24 +516,34 @@ const AddNewPlace = ({
 
     const formik = useFormik({
         initialValues: {
-          placeNumber: '',
-          placeNameEnglish: '',
-          placeNameArabic: '',
-          siteDescription: '',
-          siteType: '',
-          period: '',
-          artifacts: '',
-          previousNumber: '',
-          latitude: null,
-          longitude: null,
-          stateOfConservation: '',
-          risk: '',
-          tourismValue: '',
-          researchValue: '',
-          recommendation: '',
+            placeNumber: '',
+            placeNameEnglish: '',
+            placeNameArabic: '',
+            siteDescription: '',
+            siteType: '',
+            period: '',
+            stateOfConservation: '',
+            risk: '',
+            tourismValue: '',
+            researchValue: '',
+            artifacts: '',
+            recommendation: '',
+            latitude: '',
+            longitude: '',
+            keywords: []
         },
-        onSubmit: values => {
-          handleNext(null, values);
+        validate: values => {
+            if(!values.placeNumber) {
+                setFormError('Place Number is required')
+            } else {
+                setFormError('')
+            }
+        },
+        onSubmit: (values) => {
+
+            if (!formError) {
+                handleNext(null, values);
+            }
         },
       });
     return (
@@ -506,6 +617,9 @@ const AddNewPlace = ({
                           </React.Fragment>
                       </>
                   </Box>
+                    {formError && <Box component="div" className={`${styles["form-error"]}`}>
+                        {formError}
+                    </Box>}
                   <Box component="div"
                       className={`${styles["btn-row"]}`}
                       sx={{

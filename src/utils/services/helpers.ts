@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { StyledAntTable } from "../../components/StyledAntTable";
 import { MediaAssociates2, PlaceApi } from "../../types/Place";
 import { tabNameProps } from "../../types/SearchResultsTabsProps";
+import * as Yup from 'yup';
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://b90e-117-214-57-151.ngrok.io`;
+// export const baseUrl = `https://334b-117-214-59-174.in.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -309,4 +310,18 @@ function randomString(len: number) {
 
 export const generateUniqueId = () => {
   return `${randomString(8)}-${randomString(4)}-${randomString(4)}-${randomString(4)}-${randomString(12)}`
+}
+
+export const AddPlaceFormSchema = Yup.object().shape({
+  placeNumber: Yup.string()
+    .required()
+});
+
+export const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>, callback?: () => void) => {
+
+  if(e.key === "Enter") {
+    e.preventDefault()
+
+    if(callback) callback()
+  }
 }
