@@ -14,6 +14,8 @@ import MenuList from "../MenuList";
 import { Box } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
+import CustomDrawer from "../CustomDrawer";
+import AddNewItem from "../../pages/AddNewItem";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -121,6 +123,21 @@ function UserMenuComponent() {
           handleClose={handleSettingsClose}
           options={menuSettingItems}
         />
+        <CustomDrawer origin="right" isOpen={newItemWindowOpen} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}>
+          <AddNewItem onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}/>
+        {/* {
+          tabName === PLACES_TAB_NAME &&
+          <AddNewPlace create={createPlace} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}/>
+        }
+        {
+          tabName === EVENTS_TAB_NAME &&
+          <AddNewEvent create={createEvent} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}/>
+        }
+        {
+          tabName === MEDIA_TAB_NAME &&
+          <AddNewMedia onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}/>
+        } */}
+      </CustomDrawer>
       </Box>
     </>
   );

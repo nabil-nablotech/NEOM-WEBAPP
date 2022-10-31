@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import { useSelector } from "react-redux";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { RootState } from "../../store";
 import {
   SearchResultTabsProps,
@@ -14,29 +14,25 @@ import useEvent from "../../hooks/useEvent";
 import usePlace from "../../hooks/usePlace";
 import useLibrary from "../../hooks/useLibrary";
 import useMedia from "../../hooks/useMedia";
-import CustomDrawer from "../../components/CustomDrawer";
 import {
   setActiveTab,
-  toggleNewItemWindow,
   toggleShowAddSuccess,
 } from "../../store/reducers/searchResultsReducer";
 import PositionedSnackbar from "../../components/Snackbar";
-import { EVENTS_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME } from "../../utils/services/helpers";
-import useRefinedSearch from "../../hooks/useRefinedSearchOptions";
-import {setSearchText, setSearchApply,} from '../../store/reducers/searchResultsReducer';
-import AddNewPlace from "../../components/SearchResultTabs/Places/AddNewItem";
-import AddNewEvent from "../../components/SearchResultTabs/Events/AddNewItem";
-import AddNewMedia from "../../components/SearchResultTabs/Media/AddNewItem";
+import { PLACES_TAB_NAME } from "../../utils/services/helpers";
+// import useRefinedSearch from "../../hooks/useRefinedSearchOptions";
+import {setSearchText, } from '../../store/reducers/searchResultsReducer';
 
 const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
-  const { data } = useRefinedSearch();
+  // const { data } = useRefinedSearch();
   const navigate = useNavigate();
-  const { searchText, activeTab, newItemWindowOpen, showAddSuccess } =
+  // const { searchText, activeTab, newItemWindowOpen, showAddSuccess } =
+  const { searchText, showAddSuccess } =
     useSelector((state: RootState) => state.searchResults);
-  const { fetchEvents, clearSearch: clearEventSearch, createEvent } = useEvent();
+  const { fetchEvents, clearSearch: clearEventSearch } = useEvent();
   const { fetchLibraryItems } = useLibrary();
-  const { fetchPlaces, clearSearch: clearPlaceSearch, createPlace } = usePlace();
+  const { fetchPlaces, clearSearch: clearPlaceSearch } = usePlace();
   const { fetchMediaItems } = useMedia();
 
   const dispatch = useDispatch();
@@ -118,20 +114,6 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       <Box component="div">
         <SearchResultTabs handleSubmit={handleSubmit} tabIndex={tabIndex} />
       </Box>
-      <CustomDrawer origin="right" isOpen={newItemWindowOpen} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}>
-        {
-          tabName === PLACES_TAB_NAME &&
-          <AddNewPlace create={createPlace} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}/>
-        }
-        {
-          tabName === EVENTS_TAB_NAME &&
-          <AddNewEvent create={createEvent} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}/>
-        }
-        {
-          tabName === MEDIA_TAB_NAME &&
-          <AddNewMedia onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}/>
-        }
-      </CustomDrawer>
       <PositionedSnackbar
         message={`New ${tabName === PLACES_TAB_NAME ? "Place" : "Event"} added`}
         severity={"success"}
