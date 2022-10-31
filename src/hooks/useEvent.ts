@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 import { format, parseISO } from "date-fns";
-import { addEvent, refineEvents } from "../query/events";
+import { addEvent, refineEvents, updateEvent } from "../query/events";
 import { createVisitAssociate } from "../query/eventAssociate";
 import { RootState } from "../store";
 import { setSelectedValue, initialSelectedValue } from "../store/reducers/refinedSearchReducer";
@@ -16,10 +16,12 @@ import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/he
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { AddEventState } from "../store/reducers/eventReducer";
 import { graphQlHeaders } from "../utils/services/interceptor";
+import { Place } from "../types/Place";
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [mapEvents, setMapEvents]= useState(null);
+  const [place, setPlace]= useState<Place>();
   const {
     searchText,
     events: eventsData,
@@ -56,6 +58,7 @@ const useEvent = () => {
    * fetch places with two words
    */
   const [createEventMuation, { loading, error, data }] = useMutation(addEvent, graphQlHeaders());
+  const [updateEventMuation, { loading:updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateEvent, graphQlHeaders());
   const [createVisitAssociateMuation, { loading: visitAssociateload, error: visitAssociateErr, data: visitAssociate }] = useMutation(createVisitAssociate, graphQlHeaders());
   const{ loading:refineLoading, error:refineErrorData, data:refineEventData, refetch:refineSearchEvents} = useQuery(refineEvents);
 
@@ -82,22 +85,29 @@ const useEvent = () => {
         }
           setMapEvents(dummyArray)
     }
-
   }, [refineEventData]);
 
   useEffect(() => {
-    if (data) {
-      console.log('data in create event', data)
+    if (data && place) {
       createVisitAssociateMuation({variables: {
-        "place_unique_id": 1,
+        "place_unique_id": place?.id,
         "visit_unique_id": data.createVisit.data.id
-      }})
+      }});
     }
   }, [data])
 
   useEffect(() => {
-    if (visitAssociate) {
+    if (updateData) {
       fetchData(0);
+    }
+  }, [updateData])
+
+  useEffect(() => {
+    if (visitAssociate) {
+      updateEventMuation({variables: {
+        id: Number(data.createVisit.data.id),
+        visit_associate: Number(visitAssociate.createVisitAssociate.data.id)
+      }});
     }
   }, [visitAssociate])
 
@@ -183,6 +193,7 @@ const useEvent = () => {
       artifacts: payload.artifacts && [payload.artifacts]
     }
     console.log('data.....', data);
+    setPlace(data.place);
     createEventMuation({variables: data})
   }
 
