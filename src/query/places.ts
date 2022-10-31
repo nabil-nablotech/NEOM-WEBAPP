@@ -201,7 +201,7 @@ export const addPlace = gql`
     $placeNameEnglish: String
     $uniqueId: String
     $placeNameArabic: String
-    $placeNumber: String
+    $placeNumber: String!
     $previousNumber: String
     $siteDescription: String
     $placeValue: Int
@@ -248,6 +248,71 @@ export const addPlace = gql`
         id
         attributes {
           placeNameEnglish
+          asset_config_id {
+            data {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const updatePlace = gql`
+  mutation UpdatePlace(
+    $id: ID
+    $placeNameEnglish: String
+    $uniqueId: String
+    $placeNameArabic: String
+    $placeNumber: String!
+    $previousNumber: String
+    $siteDescription: String
+    $placeValue: Int
+    $asset_config_id: ID
+    $placeUIPath: String
+    $researchValue: JSON
+    $tourismValue: JSON
+    $stateOfConservation: JSON
+    $recommendation: JSON
+    $siteType: JSON
+    $risk: JSON
+    $period: JSON
+    $latitude: Float
+    $longitude: Float
+    $artifacts: JSON
+    $keywords: JSON
+  ) {
+    updatePlace(
+      id: $id
+      data: {
+        placeNameEnglish: $placeNameEnglish
+        uniqueId: $uniqueId
+        placeNameArabic: $placeNameArabic
+        placeNumber: $placeNumber
+        previousNumber: $previousNumber
+        siteDescription: $siteDescription
+        deleted: false
+        keywords: $keywords
+        placeUIPath: $placeUIPath
+        placeValue: $placeValue
+        latitude: $latitude
+        longitude: $longitude
+        asset_config_id: $asset_config_id
+        siteType: $siteType
+        researchValue: $researchValue
+        artifacts: $artifacts
+        tourismValue: $tourismValue
+        stateOfConservation: $stateOfConservation
+        recommendation: $recommendation
+        risk: $risk
+        period: $period
+      }
+    ) {
+      data {
+        id
+        attributes {
+          uniqueId
           asset_config_id {
             data {
               id
