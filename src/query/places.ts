@@ -261,7 +261,7 @@ export const addPlace = gql`
 
 export const updatePlace = gql`
   mutation UpdatePlace(
-    $id: ID
+    $id: ID!
     $placeNameEnglish: String
     $uniqueId: String
     $placeNameArabic: String

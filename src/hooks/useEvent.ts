@@ -14,7 +14,6 @@ import {
 } from "../store/reducers/searchResultsReducer";
 import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/helpers';
 import { tabNameProps } from "../types/SearchResultsTabsProps";
-import { AddEventState } from "../store/reducers/eventReducer";
 import { graphQlHeaders } from "../utils/services/interceptor";
 import { Place } from "../types/Place";
 
@@ -192,7 +191,6 @@ const useEvent = () => {
       "assessmentType": payload.assessmentType && [payload.assessmentType],
       artifacts: payload.artifacts && [payload.artifacts]
     }
-    console.log('data.....', data);
     setPlace(data.place);
     createEventMuation({variables: data})
   }
