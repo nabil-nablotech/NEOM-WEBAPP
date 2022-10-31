@@ -10,7 +10,7 @@ import Button from "../../../../components/Button";
 import DropdownComponent from '../../../Dropdown/index';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { toggleShowAddSuccess } from '../../../../store/reducers/searchResultsReducer';
+import { toggleNewItemWindow, toggleShowAddSuccess } from '../../../../store/reducers/searchResultsReducer';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { SelectChangeEvent } from '@mui/material/Select';
@@ -318,7 +318,7 @@ const StepContent = ({
                         className={`${styles["english-name"]}`}
                         id="keyword-div"
                         label="Add Keywords"
-                        name="english-name"
+                        name="keywords"
                         value={currentKeyword}
                         onChange={(e) => {
                             setCurrentKeyword(e.target.value)
@@ -401,6 +401,7 @@ const AddNewPlace = ({
         }
 
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
         if (activeStep + 1 === steps.length) {
             if (create) {
                 create({
@@ -409,10 +410,9 @@ const AddNewPlace = ({
             }
             onClose()
             dispatch(toggleShowAddSuccess(true))
+            dispatch(toggleNewItemWindow(false))
         }
-        if (activeStep === 1) {
 
-        }
         setSkipped(newSkipped);
     };
 
