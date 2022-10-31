@@ -12,7 +12,6 @@ import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
 import styles from "./index.module.css";
 import DatePicker from "react-datepicker";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import "react-datepicker/dist/react-datepicker.css";
 import { BaseInputProps, MediaInputProps, RefinedSearchInputProps } from "../../types/RefinedSeachTypes";
 import {
@@ -234,9 +233,9 @@ const BaseInputs = ({
       {activeTab === EVENTS_TAB_NAME && (
         <Grid item sm={2} className={`${styles["date-grid-item"]}`}>
           <DatePicker
-            placeholderText="From"
+            placeholderText="From Date"
             className={`${styles["date"]}`}
-            selected={new Date(selectedValue.startDate)}
+            selected={selectedValue.startDate && new Date(selectedValue.startDate)}
             onChange={(date: Date) => handleDate(date, "startDate")}
           />
         </Grid>
@@ -244,9 +243,10 @@ const BaseInputs = ({
       {activeTab === EVENTS_TAB_NAME && (
         <Grid item sm={2} className={`${styles["date-grid-item"]}`}>
           <DatePicker
-            placeholderText="To"
+            placeholderText="To Date"
             className={`${styles["date"]}`}
-            selected={new Date(selectedValue.endDate)}
+            selected={selectedValue.endDate && new Date(selectedValue.endDate)}
+            minDate={selectedValue.startDate && new Date(selectedValue.startDate)}
             onChange={(date: Date) => handleDate(date, "endDate")}
           />
         </Grid>
@@ -341,7 +341,7 @@ const MediaInputs = ({
       <Grid item sm={2} className={`${styles["input-field"]}`}>
         <AutoComplete
           className={`${styles["dropdown"]} ${styles["extra-width"]}`}
-          label={"Action Type"}
+          label={"Category Type"}
           name="actionType"
           value={selectedValue.actionType}
           multiple={true}

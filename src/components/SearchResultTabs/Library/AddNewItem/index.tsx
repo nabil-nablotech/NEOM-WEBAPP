@@ -11,7 +11,6 @@ import { useParams } from "react-router-dom";
 import {
   AddNewItemProps,
   StepContentTypes,
-  InitialValues,
 } from "../../../../types/CustomDrawerTypes";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import { addItemDefaultSteps } from "../../../../utils/services/helpers";
@@ -19,8 +18,6 @@ import styles from '../../Places/AddNewItem/addNewItem.module.css'
 import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
 import DropdownComponent from "../../../Dropdown/index";
-import AutoComplete from "../../../AutoComplete";
-
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
@@ -30,7 +27,6 @@ import CustomSearchField from "../../../SearchField";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useFormik } from "formik";
 import ReactDatePicker from "react-datepicker";
-import { formatDate } from "../../../../utils/services/helpers";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -91,7 +87,6 @@ const StepContent = ({
   handleNext,
   handleBack,
   formik,
-  places,
 }: StepContentTypes) => {
   return (
     <>
@@ -109,16 +104,6 @@ const StepContent = ({
               className={`${styles["custom-search-field"]}`}
               shouldHandleChangeFromParent={true}
               valueFromParent={formState.search}
-            />
-            <AutoComplete
-              className={`${styles["custom-search-field"]}`}
-              multiple={false}
-              label="Search"
-              value={formState.search}
-              handleClear={() => {}}
-              itemsList={places || []}
-              handleSelectChange={(e, value) => console.log('value...', value)}
-              
             />
             <ReactDatePicker
               placeholderText="Date Range"
@@ -224,10 +209,10 @@ const StepContent = ({
   );
 };
 
-const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
+const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { showAddSuccess, places } = useSelector(
+  const { showAddSuccess } = useSelector(
     (state: RootState) => state.searchResults
   );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
@@ -268,9 +253,10 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
       dispatch(toggleShowAddSuccess(true));
     }
     if (activeStep === 1) {
+
       if (create) {
         create({
-          ...data,
+          ...data
         });
       }
     }
@@ -352,7 +338,7 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
               component="h4"
               style={{}}
             >
-              Add Event
+              Add Library
             </Typography>
             <Stepper
               activeStep={activeStep}
@@ -364,14 +350,7 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
                 const labelProps: {
                   optional?: React.ReactNode;
                 } = {};
-                // if (isStepOptional(index)) {
-                //     labelProps.optional = (
-                //         <Typography variant="caption">Optional</Typography>
-                //     );
-                // }
-                // if (isStepSkipped(index)) {
-                //     stepProps.completed = false;
-                // }
+
                 return (
                   <Step key={label} {...stepProps}>
                     <StepLabel
@@ -394,7 +373,6 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
                 <StepContent
                   tabName={tabName}
                   options={options}
-                  places={places}
                   formState={formState}
                   setFormState={setFormState}
                   activeStep={activeStep}
@@ -424,15 +402,9 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
                 paddingInline: 0,
               }}
             />
-            {/* {isStepOptional(activeStep) && (
-                                                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                                                    Skip
-                                                </Button>
-                                            )} */}
             <Button
               label={activeStep === steps.length - 1 ? "Add" : "Next"}
               type="submit"
-              // onClick={handleNext}
             />
           </Box>
         </Box>
@@ -441,4 +413,4 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
   );
 };
 
-export default AddNewEvent;
+export default AddNewLibraryItem;

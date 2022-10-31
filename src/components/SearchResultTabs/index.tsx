@@ -119,8 +119,8 @@ const initialState = {
   latitude: '',
   longitude: '',
   featuredImage: false,
-  startDate: today,
-  endDate: today,
+  startDate: undefined,
+  endDate: undefined,
 }
 const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => {
   const [value, setValue] = React.useState(0);
@@ -184,6 +184,9 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     if (tabName !== 'Events') {
       delete copiedValue.startDate;
       delete copiedValue.endDate;
+    }
+    if (tabName !== 'Media') {
+      delete copiedValue.featuredImage;
     }
     const searchParams: string = decodeURIComponent(JSON.stringify({
       search: searchText,

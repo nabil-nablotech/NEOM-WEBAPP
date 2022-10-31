@@ -14,8 +14,8 @@ export const initialSelectedValue = {
   siteType: [],
   latitude: '',
   longitude: '',
-  startDate: new Date(),
-  endDate: new Date(),
+  startDate: undefined,
+  endDate: undefined,
 }
 
 export type RefinedSearchState = {

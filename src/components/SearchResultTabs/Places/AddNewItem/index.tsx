@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AddNewItemProps, StepContentTypes } from '../../../../types/CustomDrawerTypes';
 import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
-import { addItemDefaultSteps } from '../../../../utils/services/helpers';
-import styles from './index.module.css'
+import { addItemDefaultSteps, AddPlaceFormSchema, preventEnter } from '../../../../utils/services/helpers';
+import styles from './addNewItem.module.css'
 import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
 import DropdownComponent from '../../../Dropdown/index';
@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { useFormik } from 'formik';
+import usePlace from '../../../../hooks/usePlace';
 
 const commonSelectSxStyles = {
     textAlign: 'left',
@@ -80,6 +81,7 @@ const StepContent = ({
     options
 }: StepContentTypes) => {
 
+//   const obj = usePlace();
     
 
     return <>
@@ -91,11 +93,14 @@ const StepContent = ({
                         className={`${styles["place-number"]}`}
                         label="Place Number"
                         name="place-number"
-                        type="number"
+                        type="text"
                         required
                         value={formik.values.placeNumber}
                         onChange={e => {
                             formik.setFieldValue('placeNumber', e.target.value)
+                        }}
+                        onKeyDown={e => {
+                            preventEnter(e)
                         }}
                         sx={{
                             ...textInputSxStyles
@@ -128,6 +133,7 @@ const StepContent = ({
                         }}
                         formControlSx={commonFormControlSxStyles}
                     />
+                    
                     <TextInput
                         className={`${styles["site-description"]}`}
                         label="Site Description"
@@ -179,6 +185,61 @@ const StepContent = ({
                         formControlSx={commonFormControlSxStyles}
                     />
                     <DropdownComponent
+                        className={`${styles["period"]}`}
+                        label={"Artifacts"}
+                        name="artifacts"
+                        value={formik.values.artifacts}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('artifacts', e.target.value as string)
+                        }
+                        
+                        handleClear={() => {}}
+                        itemsList={options?.artifacts || []}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
+                        className={`${styles["arabic-name"]}`}
+                        label="Previous Number"
+                        name="previousNumber"
+                        value={formik.values.previousNumber}
+                        onChange={e => {
+                            formik.setFieldValue('previousNumber', e.target.value)
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
+                        className={`${styles["arabic-name"]}`}
+                        label="Latitude"
+                        name="latitude"
+                        value={formik.values.latitude}
+                        type="number"
+                        onChange={e => {
+                            formik.setFieldValue('latitude', e.target.value)
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
+                        className={`${styles["arabic-name"]}`}
+                        label="Longitude"
+                        name="longitude"
+                        value={formik.values.longitude}
+                        type="number"
+                        onChange={e => {
+                            formik.setFieldValue('longitude', e.target.value)
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
                         className={`${styles["state-of-conservation"]}`}
                         label={"State of Conservation"}
                         name="state-of-conservation"
@@ -204,6 +265,90 @@ const StepContent = ({
                         handleClear={() => {}}
                         itemsList={options?.risk || []}
                         selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
+                        className={`${styles["tourism-value"]}`}
+                        label={"Tourism Value"}
+                        name="tourism-value"
+                        value={formik.values.tourismValue}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('tourismValue', e.target.value as string)
+                        }
+                        
+                        handleClear={() => {}}
+                        itemsList={options?.tourismValue || []}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
+                        className={`${styles["research-value"]}`}
+                        label={"Research Value"}
+                        name="research-value"
+                        value={formik.values.researchValue}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('researchValue', e.target.value as string)
+                        }
+                        
+                        handleClear={() => {}}
+                        itemsList={options?.researchValue || []}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
+                        className={`${styles["artifacts"]}`}
+                        label={"Artifacts"}
+                        name="artifacts"
+                        value={formik.values.artifacts}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('artifacts', e.target.value as string)
+                        }
+                        
+                        handleClear={() => {}}
+                        itemsList={options?.artifacts || []}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
+                        className={`${styles["recommendation"]}`}
+                        label={"Recommendation"}
+                        name="recommendation"
+                        value={formik.values.recommendation}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('recommendation', e.target.value as string)
+                        }
+                        
+                        handleClear={() => {}}
+                        itemsList={options?.recommendation || []}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
+                        className={`${styles["latitude"]}`}
+                        label="Latitude"
+                        name="latitude"
+                        type="number"
+                        value={formik.values.latitude}
+                        onChange={e => {
+                            formik.setFieldValue('latitude', e.target.value)
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
+                        className={`${styles["longitude"]}`}
+                        label="Longitude"
+                        name="longitude"
+                        type="number"
+                        value={formik.values.longitude}
+                        onChange={e => {
+                            formik.setFieldValue('longitude', e.target.value)
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
                         formControlSx={commonFormControlSxStyles}
                     />
                 </>
@@ -247,6 +392,7 @@ const AddNewPlace = ({
         siteDescription: ''
     });
     const [skipped, setSkipped] = useState(new Set<number>());
+    const [formError, setFormError] = useState<string>('');
 
     const [steps, setSteps] = useState<Array<string>>(addItemDefaultSteps)
 
@@ -317,18 +463,33 @@ const AddNewPlace = ({
 
     const formik = useFormik({
         initialValues: {
-          placeNumber: '',
-          placeNameEnglish: '',
-          placeNameArabic: '',
-          siteDescription: '',
-          siteType: '',
-          period: '',
-          stateOfConservation: '',
-          risk: '',
+            placeNumber: '',
+            placeNameEnglish: '',
+            placeNameArabic: '',
+            siteDescription: '',
+            siteType: '',
+            period: '',
+            stateOfConservation: '',
+            risk: '',
+            tourismValue: '',
+            researchValue: '',
+            artifacts: '',
+            recommendation: '',
+            latitude: '',
+            longitude: ''
         },
-        onSubmit: values => {
-          alert(JSON.stringify(values, null, 2));
-          handleNext(null, values);
+        validate: values => {
+            if(!values.placeNumber) {
+                setFormError('Place Number is required')
+            } else {
+                setFormError('')
+            }
+        },
+        onSubmit: (values) => {
+
+            if (!formError) {
+                handleNext(null, values);
+            }
         },
       });
     return (
@@ -402,6 +563,9 @@ const AddNewPlace = ({
                           </React.Fragment>
                       </>
                   </Box>
+                    {formError && <Box component="div" className={`${styles["form-error"]}`}>
+                        {formError}
+                    </Box>}
                   <Box component="div"
                       className={`${styles["btn-row"]}`}
                       sx={{

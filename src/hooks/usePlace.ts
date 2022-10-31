@@ -10,6 +10,7 @@ import {
   setPlaceMetaData,
   setSearchText
 } from "../store/reducers/searchResultsReducer";
+import { Place } from "../types/Place";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 
 import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/helpers';
@@ -31,7 +32,6 @@ const usePlace = () => {
 
   const searchData = getQueryObj(search);
   useEffect(() => {
-    console.log('search', searchData);
     if (searchData) {
       dispatch(setSearchText(searchData.search))
       if (searchData?.refinedSearch) {
@@ -60,11 +60,18 @@ const usePlace = () => {
   const [createPlaceMutation, {data, loading, error}] = useMutation(addPlace, graphQlHeaders())
   useEffect(() => {
     if (refinePlaceData?.places) {
+      const places = JSON.parse(JSON.stringify(refinePlaceData?.places.data))
+      places.map((x: Place) => {
+        x.label = `${x?.attributes?.placeNameEnglish}${x?.attributes?.placeNameArabic}` || '';
+        x.value = `${x?.attributes?.placeNameEnglish}${x.attributes?.placeNameArabic}` || '';
+        return x;
+      })
+
       // update the data for the pagination
-      if (refinePlaceData?.places.meta.pagination.page === 1 && refinePlaceData?.places.data.length > 0) {
-        dispatch(setPlaces([...refinePlaceData?.places.data]));
-      } else if (refinePlaceData?.places.data.length > 0) {
-        dispatch(setPlaces([...placeData, ...refinePlaceData?.places.data]));
+      if (refinePlaceData?.places?.meta.pagination.page === 1 && refinePlaceData?.places?.data.length > 0) {
+        dispatch(setPlaces([...places]));
+      } else if (places.data.length > 0) {
+        dispatch(setPlaces([...placeData, ...places]));
       } else if (refinePlaceData?.places?.meta.pagination.total === 0) {
         dispatch(setPlaces([]));
       }
@@ -132,11 +139,8 @@ const usePlace = () => {
       obj.search_one = '';
       delete obj.search_two;
       delete obj.search_three;
-      refineSearchPlaces(obj)
     }
-    else { 
-      refineSearchPlaces(obj)
-    }
+    refineSearchPlaces(obj)
   };
 
   const clearTextSearch = () => {
@@ -146,7 +150,6 @@ const usePlace = () => {
   const createPlace = async (payload: any | undefined) => {
     const uniqueId = generateUniqueId();
     const keywords = payload.keywords?.split(' ');
-    const eventDate = payload.eventDate;
     const data = {
       ...payload,
       uniqueId: uniqueId,
@@ -159,13 +162,13 @@ const usePlace = () => {
       "stateOfConservation": [payload.stateOfConservation],
       "risk": [payload.risk],
       "period": [payload.period],
-      "researchValue": ["Limited"],
-      "tourismValue": ["Local"],
-      "recommendation": ["0. No further action required"],
-      "latitude": 28.453292,
-      "longitude": 34.80304,
-      "assessmentType": ["Field-based"],
-      artifacts: ["Observed and photographed"]
+      "researchValue": [payload.researchValue],
+      "tourismValue": [payload.tourismValue],
+      "recommendation": [payload.recommendation],
+      "latitude": payload.latitude,
+      "longitude": payload.longitude,
+      // "assessmentType": ["Field-based"],
+      artifacts: [payload.artifacts]
     }
     createPlaceMutation({variables: data})
   }

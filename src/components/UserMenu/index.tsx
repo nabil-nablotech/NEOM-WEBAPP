@@ -6,14 +6,22 @@ import { useSelector } from "react-redux";
 import { RobotoMediumMerino20px } from "../styledMixins";
 import WhiteCircle from "../../assets/images/WhiteCircle.svg";
 import useLogout from "../../hooks/useLogout";
-import { stringAvatar } from "../../utils/services/helpers";
+import { EVENTS_TAB_NAME, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME, stringAvatar } from "../../utils/services/helpers";
 import { RootState } from "../../store";
 import { getRole } from "../../utils/storage/storage";
 
 import MenuList from "../MenuList";
 import { Box } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
+import CustomDrawer from "../CustomDrawer";
+import AddNewItem from "../../pages/AddNewItem";
+import AddNewPlace from "../SearchResultTabs/Places/AddNewItem";
+import usePlace from "../../hooks/usePlace";
+import AddNewEvent from "../SearchResultTabs/Events/AddNewItem";
+import AddNewMedia from "../SearchResultTabs/Media/AddNewItem";
+import useEvent from "../../hooks/useEvent";
+import AddNewLibraryItem from "../SearchResultTabs/Library/AddNewItem";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -26,7 +34,9 @@ function UserMenuComponent() {
   const { clientLogout } = useLogout();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [anchorElSettings, setAnchorElSettings] = React.useState<null | HTMLElement>(null);
-  const {newItemWindowOpen} = useSelector((state: RootState) => state.searchResults);
+  const {newItemWindowOpen, addNewItemWindowType} = useSelector((state: RootState) => state.searchResults);
+  const { createPlace  } = usePlace();
+  const { createEvent } = useEvent();
 
   const open = Boolean(anchorEl);
   const admin = getRole() === 'Admin';
@@ -121,6 +131,27 @@ function UserMenuComponent() {
           handleClose={handleSettingsClose}
           options={menuSettingItems}
         />
+        <CustomDrawer origin="right" isOpen={newItemWindowOpen} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}>
+          {!addNewItemWindowType &&
+            <AddNewItem onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))} />
+          }
+          {
+            addNewItemWindowType === PLACES_TAB_NAME &&
+            <AddNewPlace create={createPlace} onClose={() => dispatch(setAddNewItemWindowType(null))} />
+          }
+          {
+            addNewItemWindowType === EVENTS_TAB_NAME &&
+            <AddNewEvent create={createEvent} onClose={() => dispatch(setAddNewItemWindowType(null))} />
+          }
+          {
+            addNewItemWindowType === LIBRARY_TAB_NAME &&
+            <AddNewLibraryItem onClose={() => dispatch(setAddNewItemWindowType(null))} />
+          }
+          {
+            addNewItemWindowType === MEDIA_TAB_NAME &&
+            <AddNewMedia onClose={() => dispatch(setAddNewItemWindowType(null))} />
+          }
+      </CustomDrawer>
       </Box>
     </>
   );
