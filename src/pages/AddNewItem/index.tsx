@@ -1,13 +1,51 @@
-import { Box, Typography, Button as DefaultButton } from "@mui/material";
+import { Box, Typography, Button as DefaultButton, Grid, Avatar } from "@mui/material";
 import { AddNewItemProps } from "../../types/CustomDrawerTypes";
 import placeStyles from '../../components/SearchResultTabs/Places/AddNewItem/index.module.css'
 import styles from './index.module.css'
 import Button from "../../components/Button";
+import PlacesIcon from '../../assets/images/searchResults/Places.svg'
+import EventsIcon from '../../assets/images/searchResults/Events.svg'
+import LibraryIcon from '../../assets/images/searchResults/Library.svg'
+import MediaIcon from '../../assets/images/searchResults/Media.svg'
+import CloseIcon from '@mui/icons-material/Close';
 
 const StepContent = () => {
 
     return <Box component="div">
-        Hellp
+        <Grid container className={`${styles['tab-name-tile-row']}`}>
+            <Grid item sm={4} className={`${styles['tab-name-tile']}`}>
+                <Box
+                    component="img"
+                    src={PlacesIcon}
+                    alt="places icon"
+                />
+                <Box component="div">Places</Box>
+            </Grid>
+            <Grid item sm={4} className={`${styles['tab-name-tile']}`}>
+                <Box
+                    component="img"
+                    src={EventsIcon}
+                    alt="Events icon"
+                />
+                <Box component="div">Events</Box>
+            </Grid>
+            <Grid item sm={4} className={`${styles['tab-name-tile']}`}>
+                <Box
+                    component="img"
+                    src={LibraryIcon}
+                    alt="Library icon"
+                />
+                <Box component="div">Library Item</Box>
+            </Grid>
+            <Grid item sm={4} className={`${styles['tab-name-tile']}`}>
+                <Box
+                    component="img"
+                    src={MediaIcon}
+                    alt="Media icon"
+                />
+                <Box component="div">Media Item</Box>
+            </Grid>
+        </Grid>
     </Box>
 }
 
@@ -32,7 +70,9 @@ const AddNewItem = ({
                                 padding: 0,
                                 color: 'var(--table-black-text)'
                             }}
-                        >Hide</DefaultButton>
+                        >
+                            <CloseIcon fontSize="large" />
+                        </DefaultButton>
                     </Box>
                     <Typography className={`${placeStyles['add-title']}`} variant="h4" component="h4" style={{
                     }}>
