@@ -317,9 +317,11 @@ export const AddPlaceFormSchema = Yup.object().shape({
     .required()
 });
 
-export const preventEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+export const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>, callback?: () => void) => {
 
   if(e.key === "Enter") {
     e.preventDefault()
+
+    if(callback) callback()
   }
 }

@@ -31,6 +31,7 @@ interface TextInputProps {
   type?: string;
   label: string;
   className?: string;
+  id?: string;
   name?: string;
   showLabel?: boolean;
   InputProps?: any;
@@ -85,6 +86,7 @@ export default function NTextFields(props: TextInputProps) {
     size,
     fullWidth,
     type,
+    id,
     className,
     showLabel = true,
     InputProps,
@@ -108,7 +110,9 @@ export default function NTextFields(props: TextInputProps) {
       >
         <NeomTextInput
           error={error}
-          id={error ? `outlined-error ${className}` : `outlined-size-small ${className}`}
+          id={`${
+            id ? id : ''
+          }`}
           size={size ? size : "small"}
           fullWidth={fullWidth}
           label={showLabel ? label : ''}
