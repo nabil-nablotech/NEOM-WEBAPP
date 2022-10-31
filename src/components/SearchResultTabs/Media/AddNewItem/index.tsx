@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { AddNewItemProps, StepContentTypes } from '../../../../types/CustomDrawerTypes';
 import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { addItemDefaultSteps, MEDIA_TAB_NAME } from '../../../../utils/services/helpers';
-import styles from './index.module.css'
+import styles from '../../Places/AddNewItem/addNewItem.module.css'
 import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
 import DropdownComponent from '../../../Dropdown/index';
