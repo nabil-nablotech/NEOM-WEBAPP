@@ -31,7 +31,6 @@ import CustomSearchField from "../../../SearchField";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useFormik } from "formik";
 import ReactDatePicker from "react-datepicker";
-import { formatDate } from "../../../../utils/services/helpers";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -114,6 +113,7 @@ const StepContent = ({
             <TextInput
               className={`${styles["visit-number"]}`}
               label="Visit Number"
+              required
               name="visit-number"
               value={formik.values.visitNumber}
               onChange={(e) => {
@@ -121,7 +121,6 @@ const StepContent = ({
               }}
               sx={{
                 ...textInputSxStyles,
-                marginBottom: "4em",
                 "& .MuiInputBase-inputMultiline": {
                   paddingInline: "0 !important",
                 },
@@ -171,7 +170,7 @@ const StepContent = ({
               }}
               sx={{
                 ...textInputSxStyles,
-                marginBottom: "4em",
+                marginBottom: "3em",
                 "& .MuiInputBase-inputMultiline": {
                   paddingInline: "0 !important",
                 },
@@ -270,7 +269,6 @@ const StepContent = ({
               }}
               sx={{
                 ...textInputSxStyles,
-                marginBottom: "4em",
                 "& .MuiInputBase-inputMultiline": {
                   paddingInline: "0 !important",
                 },
@@ -280,7 +278,7 @@ const StepContent = ({
             <TextInput
               className={`${styles["longitude"]}`}
               label="Longitude"
-              name="Longitude"
+              name="longitude"
               type="number"
               value={formik.values.Longitude}
               onChange={(e) => {
@@ -288,7 +286,6 @@ const StepContent = ({
               }}
               sx={{
                 ...textInputSxStyles,
-                marginBottom: "4em",
                 "& .MuiInputBase-inputMultiline": {
                   paddingInline: "0 !important",
                 },

@@ -214,9 +214,10 @@ const EventDetailsPage = () => {
     
     const {latitude, longitude} = eventDetails
 
-    const { placeNameEnglish, placeNameArabic, placeNumber} = visit_associate.place_unique_id
+    if (visit_associate?.place_unique_id) {
 
-
+    }
+    
     const menuItems = [
         {
             label: "Share",
@@ -344,6 +345,8 @@ const EventDetailsPage = () => {
             dispatch(setActiveMediaItemIndex(itemIndex - 1))
         }
     }
+    // const { placeNameEnglish, placeNameArabic, placeNumber} = visit_associate?.place_unique_id;
+
     return (
         <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -379,20 +382,20 @@ const EventDetailsPage = () => {
                             <Grid item className={`${styles['title-section-left-item']}`}>
                                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
-                                {placeNameEnglish && <Grid container>
+                                {visit_associate?.place_unique_id?.placeNameEnglish && <Grid container>
                                     <Grid item>
                                         <Box component="div" className={`${styles['item-name']}`}>
-                                            {placeNameEnglish}
+                                            {visit_associate?.place_unique_id?.placeNameEnglish}
                                         </Box>
                                     </Grid>
-                                    {placeNameArabic && <Grid item>
+                                    {visit_associate?.place_unique_id?.placeNameArabic && <Grid item>
                                         <Box component="div" className={`${styles['item-name-arabic']}`}>
-                                            {placeNameArabic}
+                                            {visit_associate?.place_unique_id?.placeNameArabic}
                                         </Box>
                                     </Grid>}
-                                    {placeNumber && <Grid item>
+                                    {visit_associate?.place_unique_id?.placeNumber && <Grid item>
                                         <Box component="div" className={`${styles['item-number']}`}>
-                                            {`- ${placeNumber}`}
+                                            {`- ${visit_associate?.place_unique_id?.placeNumber}`}
                                         </Box>
                                     </Grid>}
                                 </Grid>}

@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { addEvent, refineEvents } from "../query/events";
+import { createVisitAssociate } from "../query/eventAssociate";
 import { RootState } from "../store";
 import { setSelectedValue, initialSelectedValue } from "../store/reducers/refinedSearchReducer";
 import {
@@ -55,6 +56,7 @@ const useEvent = () => {
    * fetch places with two words
    */
   const [createEventMuation, { loading, error, data }] = useMutation(addEvent, graphQlHeaders());
+  const [createVisitAssociateMuation, { loading: visitAssociateload, error: visitAssociateErr, data: visitAssociate }] = useMutation(createVisitAssociate, graphQlHeaders());
   const{ loading:refineLoading, error:refineErrorData, data:refineEventData, refetch:refineSearchEvents} = useQuery(refineEvents);
 
  
@@ -85,9 +87,19 @@ const useEvent = () => {
 
   useEffect(() => {
     if (data) {
-      fetchData(0);
+      console.log('data in create event', data)
+      createVisitAssociateMuation({variables: {
+        "place_unique_id": 1,
+        "visit_unique_id": data.createVisit.data.id
+      }})
     }
   }, [data])
+
+  useEffect(() => {
+    if (visitAssociate) {
+      fetchData(0);
+    }
+  }, [visitAssociate])
 
   const fetchData = (skip: number = eventsData.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);
@@ -142,11 +154,14 @@ const useEvent = () => {
     fetchData(0, true, true);
   }
 
+  function zerofill(i: number) {
+    return (i < 10 ? '0' : '') + i;
+}
   const createEvent = async (payload: any | undefined) => {
     const uniqueId = generateUniqueId();
     const keywords = payload.keywords?.split(' ');
     const eventDate = payload.eventDate;
-    const visitDate = `${eventDate.getFullYear()}-${eventDate.getMonth() + 1}-${eventDate.getDate()}`;
+    const visitDate = `${eventDate.getFullYear()}-${zerofill(eventDate.getMonth() + 1)}-${zerofill(eventDate.getDate())}`;
     const data = {
       ...payload,
       uniqueId: uniqueId,
@@ -154,18 +169,20 @@ const useEvent = () => {
       visitUIPath: `${webUrl}/search-results/Events/${uniqueId}`,
       asset_config_id: 1,
       keywords: keywords,
-      siteType: [payload.siteType],
+      siteType: payload.siteType && [payload.siteType],
       visitDate: visitDate,
-      "researchValue": ["Limited"],
-      "tourismValue": ["Local"],
-      "stateOfConservation": ["Fair"],
-      "recommendation": ["0. No further action required"],
-      "risk": ["3. Identifiable Threat"],
-      "period": ["Modern", "Islamic", "Early", "Pre-Islamic", "Multi-Period"],
-      "latitude": null,
-      "longitude": null,
-      "assessmentType": ["Field-based"]
+      "researchValue": payload.researchValue && [payload.researchValue],
+      "tourismValue": payload.tourismValue && [payload.tourismValue],
+      "stateOfConservation": payload.stateOfConservation && [payload.stateOfConservation],
+      "recommendation": payload.recommendation && [payload.recommendation],
+      "risk": payload.risk && [payload.risk],
+      "period": payload.period && payload.period,
+      "latitude": payload.latitude && parseFloat(payload.latitude),
+      "longitude": payload.longitude && parseFloat(payload.longitude),
+      "assessmentType": payload.assessmentType && [payload.assessmentType],
+      artifacts: payload.artifacts && [payload.artifacts]
     }
+    console.log('data.....', data);
     createEventMuation({variables: data})
   }
 
