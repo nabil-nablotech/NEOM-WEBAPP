@@ -149,19 +149,19 @@ const usePlace = () => {
 
   const createPlace = async (payload: any | undefined) => {
     const uniqueId = generateUniqueId();
-    const keywords = payload.keywords?.split(' ');
+
     const data = {
       ...payload,
       uniqueId: uniqueId,
       placeUIPath: `${webUrl}/search-results/Events/${uniqueId}`,
       asset_config_id: 8,
-      keywords: keywords,
-      siteType: [payload.siteType],
+      keywords: payload.keywords,
+      siteType: payload.siteType,
       previousNumber: "",
       placeValue: 0,
       "stateOfConservation": [payload.stateOfConservation],
       "risk": [payload.risk],
-      "period": [payload.period],
+      "period": payload.period,
       "researchValue": [payload.researchValue],
       "tourismValue": [payload.tourismValue],
       "recommendation": [payload.recommendation],

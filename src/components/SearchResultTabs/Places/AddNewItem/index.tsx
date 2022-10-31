@@ -16,7 +16,7 @@ import { RootState } from '../../../../store';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { useFormik } from 'formik';
 import usePlace from '../../../../hooks/usePlace';
-import AutoCompleteComponent from '../../../AutoComplete';
+import AutoComplete from '../../../AutoComplete';
 import CloseIcon from '@mui/icons-material/Close';
 
 const commonSelectSxStyles = {
@@ -83,16 +83,10 @@ const StepContent = ({
     options
 }: StepContentTypes) => {
 
-//   const obj = usePlace();
-    // const handleSelectChange = (e: React.SyntheticEvent, value: string[] | [], reason?: string) => {
-    //     if (reason) {
-    //         const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
-    //         selectedValueCopy[reason] = value;
-    //         e.preventDefault();
-    //         // dispatch(setSelectedValue(selectedValueCopy));
-    //         console.log('hex: ', selectedValueCopy)
-    //     }
-    // }
+    const handleSelectChange = (e: React.SyntheticEvent, value: string[] | [], stateName: string) => {
+        e.preventDefault();
+        formik.setFieldValue(stateName, [...new Set([...formik.values[stateName], ...value])]);
+    }
 
     const [placeKeywords, setPlaceKeywords] = useState<Array<string>>([])
     const [currentKeyword, setCurrentKeyword] = useState<string>('')
@@ -146,7 +140,6 @@ const StepContent = ({
                         }}
                         formControlSx={commonFormControlSxStyles}
                     />
-                    
                     <TextInput
                         className={`${styles["site-description"]}`}
                         label="Site Description"
@@ -161,7 +154,7 @@ const StepContent = ({
                         sx={{
                             ...textInputSxStyles,
                             marginBottom: '4em',
-                            '& .MuiInputBase-inputMultiline' : {
+                            '& .MuiInputBase-inputMultiline': {
                                 paddingInline: '0 !important'
                             }
                         }}
@@ -170,58 +163,29 @@ const StepContent = ({
                         }}
                     />
 
-                    <DropdownComponent
-                        className={`${styles["site-type"]}`}
+                    <AutoComplete
+                        className={`${styles["dropdown"]}`}
                         label={"Site Type"}
-                        name="site-type"
-                        value={formik.values.siteType}
-                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
-                            formik.setFieldValue('siteType', e.target.value as string)
-                        }
-                        handleClear={() => {}}
+                        name="siteType"
+                        value={[...formik.values.siteType]}
+                        multiple={true}
+                        handleSelectChange={(e, value) => handleSelectChange(e, value, 'siteType')}
+                        handleChange={() => { }}
+                        handleClear={(e) => { }}
                         itemsList={options?.siteType || []}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
                     />
-                    {/* <AutoCompleteComponent
+                    <AutoComplete
                         className={`${styles["dropdown"]}`}
-                        label={"State of Conservation"}
-                        name="stateOfConservation"
-                        value={formik.values.siteType}
-                        multiple={true}
-                        // handleSelectChange={(e, value) => handleSelectChange(e, value, 'stateOfConservation')}
-                        handleSelectChange={handleSelectChange}
-                        // handleChange={() => { }}
-                        handleClear={(e) => {}}
-                        itemsList={options?.stateOfConservation || []}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    /> */}
-                    <DropdownComponent
-                        className={`${styles["period"]}`}
                         label={"Period"}
                         name="period"
-                        value={formik.values.period}
-                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
-                            formik.setFieldValue('period', e.target.value as string)
-                        }
-                        
-                        handleClear={() => {}}
+                        value={[...formik.values.period]}
+                        multiple={true}
+                        handleSelectChange={(e, value) => handleSelectChange(e, value, 'period')}
+                        handleChange={() => { }}
+                        handleClear={(e) => { }}
                         itemsList={options?.period || []}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <DropdownComponent
-                        className={`${styles["period"]}`}
-                        label={"Artifacts"}
-                        name="artifacts"
-                        value={formik.values.artifacts}
-                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
-                            formik.setFieldValue('artifacts', e.target.value as string)
-                        }
-                        
-                        handleClear={() => {}}
-                        itemsList={options?.artifacts || []}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
                     />
@@ -238,34 +202,6 @@ const StepContent = ({
                         }}
                         formControlSx={commonFormControlSxStyles}
                     />
-                    <TextInput
-                        className={`${styles["arabic-name"]}`}
-                        label="Latitude"
-                        name="latitude"
-                        value={formik.values.latitude}
-                        type="number"
-                        onChange={e => {
-                            formik.setFieldValue('latitude', e.target.value)
-                        }}
-                        sx={{
-                            ...textInputSxStyles
-                        }}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <TextInput
-                        className={`${styles["arabic-name"]}`}
-                        label="Longitude"
-                        name="longitude"
-                        value={formik.values.longitude}
-                        type="number"
-                        onChange={e => {
-                            formik.setFieldValue('longitude', e.target.value)
-                        }}
-                        sx={{
-                            ...textInputSxStyles
-                        }}
-                        formControlSx={commonFormControlSxStyles}
-                    />
                     <DropdownComponent
                         className={`${styles["state-of-conservation"]}`}
                         label={"State of Conservation"}
@@ -274,8 +210,7 @@ const StepContent = ({
                         handleChange={(e: SelectChangeEvent<string | string[]>) =>
                             formik.setFieldValue('stateOfConservation', e.target.value as string)
                         }
-                        
-                        handleClear={() => {}}
+                        handleClear={() => { }}
                         itemsList={options?.stateOfConservation || []}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
@@ -288,8 +223,7 @@ const StepContent = ({
                         handleChange={(e: SelectChangeEvent<string | string[]>) =>
                             formik.setFieldValue('risk', e.target.value as string)
                         }
-                        
-                        handleClear={() => {}}
+                        handleClear={() => { }}
                         itemsList={options?.risk || []}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
@@ -302,8 +236,7 @@ const StepContent = ({
                         handleChange={(e: SelectChangeEvent<string | string[]>) =>
                             formik.setFieldValue('tourismValue', e.target.value as string)
                         }
-                        
-                        handleClear={() => {}}
+                        handleClear={() => { }}
                         itemsList={options?.tourismValue || []}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
@@ -316,8 +249,7 @@ const StepContent = ({
                         handleChange={(e: SelectChangeEvent<string | string[]>) =>
                             formik.setFieldValue('researchValue', e.target.value as string)
                         }
-                        
-                        handleClear={() => {}}
+                        handleClear={() => { }}
                         itemsList={options?.researchValue || []}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
@@ -330,8 +262,7 @@ const StepContent = ({
                         handleChange={(e: SelectChangeEvent<string | string[]>) =>
                             formik.setFieldValue('artifacts', e.target.value as string)
                         }
-                        
-                        handleClear={() => {}}
+                        handleClear={() => { }}
                         itemsList={options?.artifacts || []}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
@@ -344,8 +275,7 @@ const StepContent = ({
                         handleChange={(e: SelectChangeEvent<string | string[]>) =>
                             formik.setFieldValue('recommendation', e.target.value as string)
                         }
-                        
-                        handleClear={() => {}}
+                        handleClear={() => { }}
                         itemsList={options?.recommendation || []}
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
@@ -391,7 +321,7 @@ const StepContent = ({
                         name="english-name"
                         value={currentKeyword}
                         onChange={(e) => {
-                          setCurrentKeyword(e.target.value)
+                            setCurrentKeyword(e.target.value)
                         }}
                         onKeyDown={e => {
                             handleEnter(e, () => {
@@ -473,16 +403,16 @@ const AddNewPlace = ({
 
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         if (activeStep + 1 === steps.length) {
+            if (create) {
+                create({
+                    ...data
+                });
+            }
             onClose()
             dispatch(toggleShowAddSuccess(true))
         }
         if (activeStep === 1) {
-      
-          if (create) {
-            create({
-              ...data
-            });
-          }
+
         }
         setSkipped(newSkipped);
     };
@@ -520,8 +450,8 @@ const AddNewPlace = ({
             placeNameEnglish: '',
             placeNameArabic: '',
             siteDescription: '',
-            siteType: '',
-            period: '',
+            siteType: [],
+            period: [],
             stateOfConservation: '',
             risk: '',
             tourismValue: '',
@@ -533,7 +463,7 @@ const AddNewPlace = ({
             keywords: []
         },
         validate: values => {
-            if(!values.placeNumber) {
+            if (!values.placeNumber) {
                 setFormError('Place Number is required')
             } else {
                 setFormError('')
@@ -545,108 +475,95 @@ const AddNewPlace = ({
                 handleNext(null, values);
             }
         },
-      });
+    });
     return (
         <Box component="div">
-                <form onSubmit={formik.handleSubmit}>
-              <Box component="div" className={`${styles['add-new-item-container']}`}>
+            <form onSubmit={formik.handleSubmit}>
+                <Box component="div" className={`${styles['add-new-item-container']}`}>
 
-                  <Box component="div" className={`${styles['content-section']}`}>
-                      <Box component="div" className={`${styles['hide-btn']}`}
-                          style={{
-                              marginRight: 0,
-                              marginLeft: 'auto',
-                              width: 'fit-content'
-                          }}>
-                          <DefaultButton variant="text" onClick={e => onClose()}
-                              style={{
-                                  // paddingInline: 0,
-                                  minWidth: 'fit-content',
-                                  padding: 0,
-                                  color: 'var(--table-black-text)'
-                              }}
-                          >Hide</DefaultButton>
-                      </Box>
-                      <Typography className={`${styles['add-title']}`} variant="h4" component="h4" style={{
-                      }}>
-                          Add Place
-                      </Typography>
-                      <Stepper activeStep={activeStep} alternativeLabel
-                          className={`${styles['stepper']}`}
-                      >
-                          {steps.map((label, index) => {
-                              const stepProps: { completed?: boolean } = {};
-                              const labelProps: {
-                                  optional?: React.ReactNode;
-                              } = {};
-                              // if (isStepOptional(index)) {
-                              //     labelProps.optional = (
-                              //         <Typography variant="caption">Optional</Typography>
-                              //     );
-                              // }
-                              // if (isStepSkipped(index)) {
-                              //     stepProps.completed = false;
-                              // }
-                              return (
-                                  <Step key={label} {...stepProps}>
-                                      <StepLabel {...labelProps} className={`${styles['step-label']}`}
-                                          StepIconProps={{
-                                              sx: {
-                                                  ...stepperIconSx
-                                              }
-                                          }}
-                                      >{label}</StepLabel>
-                                  </Step>
-                              );
-                          })}
-                      </Stepper>
-                      <>
-                          <React.Fragment>
-                              <StepContent
-                                  tabName={tabName}
-                                  formState={formState}
-                                  setFormState={setFormState}
-                                  activeStep={activeStep}
-                                  steps={steps}
-                                  handleNext={handleNext}
-                                  handleBack={handleBack}
-                                  formik={formik}
-                                  options={options}
-                              />
+                    <Box component="div" className={`${styles['content-section']}`}>
+                        <Box component="div" className={`${styles['hide-btn']}`}
+                            style={{
+                                marginRight: 0,
+                                marginLeft: 'auto',
+                                width: 'fit-content'
+                            }}>
+                            <DefaultButton variant="text" onClick={e => onClose()}
+                                style={{
+                                    // paddingInline: 0,
+                                    minWidth: 'fit-content',
+                                    padding: 0,
+                                    color: 'var(--table-black-text)'
+                                }}
+                            >Hide</DefaultButton>
+                        </Box>
+                        <Typography className={`${styles['add-title']}`} variant="h4" component="h4" style={{
+                        }}>
+                            Add Place
+                        </Typography>
+                        <Stepper activeStep={activeStep} alternativeLabel
+                            className={`${styles['stepper']}`}
+                        >
+                            {steps.map((label, index) => {
+                                const stepProps: { completed?: boolean } = {};
+                                const labelProps: {
+                                    optional?: React.ReactNode;
+                                } = {};
+                                return (
+                                    <Step key={label} {...stepProps}>
+                                        <StepLabel {...labelProps} className={`${styles['step-label']}`}
+                                            StepIconProps={{
+                                                sx: {
+                                                    ...stepperIconSx
+                                                }
+                                            }}
+                                        >{label}</StepLabel>
+                                    </Step>
+                                );
+                            })}
+                        </Stepper>
+                        <>
+                            <React.Fragment>
+                                <StepContent
+                                    tabName={tabName}
+                                    formState={formState}
+                                    setFormState={setFormState}
+                                    activeStep={activeStep}
+                                    steps={steps}
+                                    handleNext={handleNext}
+                                    handleBack={handleBack}
+                                    formik={formik}
+                                    options={options}
+                                />
 
-                          </React.Fragment>
-                      </>
-                  </Box>
+                            </React.Fragment>
+                        </>
+                    </Box>
                     {formError && <Box component="div" className={`${styles["form-error"]}`}>
                         {formError}
                     </Box>}
-                  <Box component="div"
-                      className={`${styles["btn-row"]}`}
-                      sx={{
-                          display: 'flex', flexDirection: 'row',
-                          justifyContent: 'space-between'
-                      }}
-                  >
-                      <Button
-                          colors={["#fff", "var(--table-black-text)", "none"]}
-                          className={`${styles["plain-whitee-btn"]}`}
-                          label={activeStep === 0 ? 'Cancel' : 'Back'}
-                          onClick={handleBack}
-                          style={{
-                              paddingInline: 0
-                          }}
-                      />
-                      {/* {isStepOptional(activeStep) && (
-                                                  <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                                                      Skip
-                                                  </Button>
-                                              )} */}
-                      <Button
-                          label={activeStep === steps.length - 1 ? 'Add' : 'Next'}
-                          type="submit"
-                      />
-                  </Box>
-              </Box>
+                    <Box component="div"
+                        className={`${styles["btn-row"]}`}
+                        sx={{
+                            display: 'flex', flexDirection: 'row',
+                            justifyContent: 'space-between'
+                        }}
+                    >
+                        <Button
+                            colors={["#fff", "var(--table-black-text)", "none"]}
+                            className={`${styles["plain-whitee-btn"]}`}
+                            label={activeStep === 0 ? 'Cancel' : 'Back'}
+                            onClick={handleBack}
+                            style={{
+                                paddingInline: 0
+                            }}
+                        />
+                        <Button
+                            label={activeStep === steps.length - 1 ? 'Add' : 'Next'}
+                            type="submit"
+                        />
+                    </Box>
+                </Box>
             </form>
         </Box>
     );
