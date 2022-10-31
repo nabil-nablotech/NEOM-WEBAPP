@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AddNewItemProps, StepContentTypes } from '../../../../types/CustomDrawerTypes';
 import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
-import { addItemDefaultSteps } from '../../../../utils/services/helpers';
+import { addItemDefaultSteps, AddPlaceFormSchema } from '../../../../utils/services/helpers';
 import styles from './addNewItem.module.css'
 import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { useFormik } from 'formik';
+import usePlace from '../../../../hooks/usePlace';
 
 const commonSelectSxStyles = {
     textAlign: 'left',
@@ -80,6 +81,7 @@ const StepContent = ({
     options
 }: StepContentTypes) => {
 
+//   const obj = usePlace();
     
 
     return <>
@@ -206,6 +208,90 @@ const StepContent = ({
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
                     />
+                    <DropdownComponent
+                        className={`${styles["tourism-value"]}`}
+                        label={"Tourism Value"}
+                        name="tourism-value"
+                        value={formik.values.tourismValue}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('tourismValue', e.target.value as string)
+                        }
+                        
+                        handleClear={() => {}}
+                        itemsList={options?.tourismValue || []}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
+                        className={`${styles["research-value"]}`}
+                        label={"Research Value"}
+                        name="research-value"
+                        value={formik.values.researchValue}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('researchValue', e.target.value as string)
+                        }
+                        
+                        handleClear={() => {}}
+                        itemsList={options?.researchValue || []}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
+                        className={`${styles["artifacts"]}`}
+                        label={"Artifacts"}
+                        name="artifacts"
+                        value={formik.values.artifacts}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('artifacts', e.target.value as string)
+                        }
+                        
+                        handleClear={() => {}}
+                        itemsList={options?.artifacts || []}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <DropdownComponent
+                        className={`${styles["recommendation"]}`}
+                        label={"Recommendation"}
+                        name="recommendation"
+                        value={formik.values.recommendation}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('recommendation', e.target.value as string)
+                        }
+                        
+                        handleClear={() => {}}
+                        itemsList={options?.recommendation || []}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
+                        className={`${styles["latitude"]}`}
+                        label="Latitude"
+                        name="latitude"
+                        type="number"
+                        value={formik.values.latitude}
+                        onChange={e => {
+                            formik.setFieldValue('latitude', e.target.value)
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
+                        className={`${styles["longitude"]}`}
+                        label="Longitude"
+                        name="longitude"
+                        type="number"
+                        value={formik.values.longitude}
+                        onChange={e => {
+                            formik.setFieldValue('longitude', e.target.value)
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
                 </>
             }
             {
@@ -247,6 +333,7 @@ const AddNewPlace = ({
         siteDescription: ''
     });
     const [skipped, setSkipped] = useState(new Set<number>());
+    // const [formError, setFormError] = useState('');
 
     const [steps, setSteps] = useState<Array<string>>(addItemDefaultSteps)
 
@@ -317,17 +404,32 @@ const AddNewPlace = ({
 
     const formik = useFormik({
         initialValues: {
-          placeNumber: '',
-          placeNameEnglish: '',
-          placeNameArabic: '',
-          siteDescription: '',
-          siteType: '',
-          period: '',
-          stateOfConservation: '',
-          risk: '',
+            placeNumber: '',
+            placeNameEnglish: '',
+            placeNameArabic: '',
+            siteDescription: '',
+            siteType: '',
+            period: '',
+            stateOfConservation: '',
+            risk: '',
+            tourismValue: '',
+            researchValue: '',
+            artifacts: '',
+            recommendation: '',
+            latitude: '',
+            longitude: ''
         },
-        onSubmit: values => {
-          alert(JSON.stringify(values, null, 2));
+        onSubmit: (values, errors) => {
+            // AddPlaceFormSchema
+            //     .validate(values)
+            //     .catch((err: any) => {
+            //         console.log('hex: ', JSON.stringify(err, null, '\t'))
+            //         if (err.message) {
+            //             setFormError(err.message)
+            //         } else {
+            //             setFormError('')
+            //         }
+            //   })
           handleNext(null, values);
         },
       });
