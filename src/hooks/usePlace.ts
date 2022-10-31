@@ -10,6 +10,7 @@ import {
   setPlaceMetaData,
   setSearchText
 } from "../store/reducers/searchResultsReducer";
+import { Place } from "../types/Place";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 
 import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/helpers';
@@ -31,7 +32,6 @@ const usePlace = () => {
 
   const searchData = getQueryObj(search);
   useEffect(() => {
-    console.log('search', searchData);
     if (searchData) {
       dispatch(setSearchText(searchData.search))
       if (searchData?.refinedSearch) {
@@ -60,11 +60,18 @@ const usePlace = () => {
   const [createPlaceMutation, {data, loading, error}] = useMutation(addPlace, graphQlHeaders())
   useEffect(() => {
     if (refinePlaceData?.places) {
+      const places = JSON.parse(JSON.stringify(refinePlaceData?.places.data))
+      places.map((x: Place) => {
+        x.label = `${x?.attributes?.placeNameEnglish}${x?.attributes?.placeNameArabic}` || '';
+        x.value = `${x?.attributes?.placeNameEnglish}${x.attributes?.placeNameArabic}` || '';
+        return x;
+      })
+
       // update the data for the pagination
-      if (refinePlaceData?.places.meta.pagination.page === 1 && refinePlaceData?.places.data.length > 0) {
-        dispatch(setPlaces([...refinePlaceData?.places.data]));
-      } else if (refinePlaceData?.places.data.length > 0) {
-        dispatch(setPlaces([...placeData, ...refinePlaceData?.places.data]));
+      if (refinePlaceData?.places?.meta.pagination.page === 1 && refinePlaceData?.places?.data.length > 0) {
+        dispatch(setPlaces([...places]));
+      } else if (places.data.length > 0) {
+        dispatch(setPlaces([...placeData, ...places]));
       } else if (refinePlaceData?.places?.meta.pagination.total === 0) {
         dispatch(setPlaces([]));
       }

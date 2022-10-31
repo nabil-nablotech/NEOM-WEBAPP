@@ -31,7 +31,7 @@ const AutoCompleteComponent = ({
           multiple && <>
             <Box component="div" className={`${styles['autocmplt-container']}`}>
               <Autocomplete
-                multiple
+                multiple={multiple ? multiple : true}
                 id="tags-filled"
                 options={itemsList.map(item => item.label)}
                 onChange={handleSelectChange}

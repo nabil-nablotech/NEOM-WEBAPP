@@ -1,3 +1,4 @@
+import { dropDownItem } from "./DropdownComponent";
 import { VisitAssociate } from "./Event";
 import { Media } from "./Media";
 
@@ -26,7 +27,7 @@ export type PlaceApi = {
   visit_associates: VisitAssociate[]
   libraryItems: Media[]
 };
-export type Place = {
+export interface Place extends dropDownItem {
   id: string;
   latitude: number;
   longitude: number;

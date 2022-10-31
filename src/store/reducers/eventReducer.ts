@@ -2,15 +2,15 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Options } from "../../types/RefinedSeachTypes";
 
 export const initialValue = {
-  stateOfConservation: [],
+  stateOfConservation: '',
   period: [],
-  recommendation: [],
-  researchValue: [],
-  tourismValue: [],
-  risk: [],
-  assessmentType: [],
-  artifacts: [],
-  actionType: [],
+  recommendation: '',
+  researchValue: '',
+  tourismValue: '',
+  risk: '',
+  assessmentType: '',
+  artifacts: '',
+  actionType: '',
   siteType: '',
   keywords: '',
   recordingTeam: '',
@@ -23,11 +23,11 @@ export const initialValue = {
   asset_config_id: null,
   latitude: null,
   longitude: null,
-  visitDate: new Date(),
+  visitDate: undefined,
 }
 
 export type AddEventState = {
-    visitDate: Date
+    visitDate?: Date
     uniqueId: string
     recordingTeam: string
     fieldNarrative: string
@@ -36,17 +36,17 @@ export type AddEventState = {
     asset_config_id: Number | null
     siteDescription: string
     siteType: string
-    researchValue: string[]
-    tourismValue: string[]
-    stateOfConservation: string[]
-    recommendation: string[]
-    risk: string[]
+    researchValue: string
+    tourismValue: string
+    stateOfConservation: string
+    recommendation: string
+    risk: string
     period: string[]
     latitude: Number | null
     longitude: Number | null
-    artifacts: string[]
+    artifacts: string
     keywords: string
-    assessmentType: string[]
+    assessmentType: string
     assessmentTypeOther: string
 }
 
