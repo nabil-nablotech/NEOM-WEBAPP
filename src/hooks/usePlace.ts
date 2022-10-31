@@ -166,13 +166,13 @@ const usePlace = () => {
       "stateOfConservation": [payload.stateOfConservation],
       "risk": [payload.risk],
       "period": [payload.period],
-      "researchValue": ["Limited"],
-      "tourismValue": ["Local"],
-      "recommendation": ["0. No further action required"],
-      "latitude": 28.453292,
-      "longitude": 34.80304,
-      "assessmentType": ["Field-based"],
-      artifacts: ["Observed and photographed"]
+      "researchValue": [payload.researchValue],
+      "tourismValue": [payload.tourismValue],
+      "recommendation": [payload.recommendation],
+      "latitude": payload.latitude,
+      "longitude": payload.longitude,
+      // "assessmentType": ["Field-based"],
+      artifacts: [payload.artifacts]
     }
     createPlaceMutation({variables: data})
   }
