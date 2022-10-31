@@ -29,7 +29,7 @@
 }
 
 .btn-row {
-    margin-top: 1em;
+    margin-top: 0.5em;
 }
 
 .stepper {
@@ -50,4 +50,9 @@
     border-radius: 0.3em;
     height: 100%;
     width: 100%;
+}
+
+.form-error {
+    color: red;
+    margin-top: 1em;
 }
