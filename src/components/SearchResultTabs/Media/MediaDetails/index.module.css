@@ -50,6 +50,12 @@
     max-width: fit-content;
 }
 
+.more-icon-grid-item > div {
+    width: fit-content;
+    margin-right: 0;
+    margin-left: auto;
+}
+
 .more-icon {
     cursor: pointer;
     width: fit-content;

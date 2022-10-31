@@ -172,8 +172,6 @@ const EventDetailsPage = () => {
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
     const dispatch = useDispatch()
 
-    // console.log('hex: ', eventDetails)
-    
     const [mediaGridActiveItems, setMediaGridActiveItems] = useState<number>(0)
 
     let mediaCount = 8
