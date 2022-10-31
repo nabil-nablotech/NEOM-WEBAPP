@@ -146,15 +146,6 @@ const EventDetailsPage = () => {
     })
 
     // get from api
-    let [images, setImages] = useState<any>([
-        'https://via.placeholder.com/150/92c952',
-        'https://via.placeholder.com/150/771796',
-        'https://via.placeholder.com/150/24f355',
-        'https://via.placeholder.com/150/d32776',
-        'https://via.placeholder.com/150/f66b97',
-    ])
-    const [isMoreTitleMenuOpen, setMoreTitleMenuOpen] = useState<false>(false)
-    const [isSeeMore, toggleSeeMore] = useState<boolean>(false)
     const [isCopyDone, setCopyDone] = useState<boolean>(false)
 
 
@@ -426,7 +417,7 @@ const EventDetailsPage = () => {
                                     <Box component="div"
                                         className={`${styles['site-desc-condensed']} ${styles['see-more-active']}`}
                                     >
-                                        {siteDescription.substring(0, 200)}
+                                        {siteDescription?.substring(0, 200)}
                                     </Box>
                                 </Box>
                                 <Box component="div" className={`${styles['table']}`}>

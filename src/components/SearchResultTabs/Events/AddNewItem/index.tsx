@@ -112,7 +112,7 @@ const StepContent = ({
             /> */}
             <TextInput
               className={`${styles["visit-number"]}`}
-              label="Visit Number"
+              label="Event Number"
               required
               name="visit-number"
               value={formik.values.visitNumber}
@@ -129,8 +129,8 @@ const StepContent = ({
             />
             <AutoCompleteSingleSelect
               className={`${styles["custom-search-field"]}`}
-              label="Search"
-              placeholder="Search"
+              label="Search Place"
+              placeholder="Search Place"
               value={formState.search}
               handleClear={() => {}}
               itemsList={places || []}
@@ -140,9 +140,9 @@ const StepContent = ({
               selectStylesSx={commonFormControlSxStyles}
             />
             <ReactDatePicker
-              placeholderText="Date Range"
+              placeholderText="Event Date"
               className={`${styles["date"]}`}
-              selected={formik.values.eventDate}
+              selected={formik.values.eventDate && new Date(formik.values.eventDate)}
               onChange={(date: Date) => formik.setFieldValue("eventDate", date)}
             />
             <DropdownComponent
@@ -461,7 +461,7 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
   const formik = useFormik({
     initialValues: {
       place: undefined,
-      eventDate: new Date(),
+      eventDate: undefined,
       recordingTeam: "",
       visitNumber: "",
       siteDescription: "",
@@ -598,6 +598,7 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
             <Button
               label={activeStep === steps.length - 1 ? "Add" : "Next"}
               type="submit"
+              disabled={!(formik.values.visitNumber.length > 0)}
               // onClick={handleNext}
             />
           </Box>
