@@ -225,8 +225,9 @@ const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
       dispatch(toggleShowAddSuccess(true));
     }
   }, [showAddSuccess]);
-  
+
   useEffect(() => {
+
     if (activeStep === 1) {
       dispatch(toggleAssociationsStepOpen(true));
     } else {

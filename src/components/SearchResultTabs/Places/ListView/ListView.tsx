@@ -11,7 +11,10 @@ import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import {PlacesProps} from '../GridView/GridView';
 import { FieldOption } from "../../../../types/Place";
-
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store";
+import DetachedIcon from "../../../Icons/DetachedIcon";
+ 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
   }
@@ -143,89 +146,114 @@ const MoreOptionsComponent = ({ record, id }: { id: number; record: User }) => {
 };
 
 function displayMultiple(value: any, index: number, key: string) { return value[key].data.map((x: FieldOption) => `${x.attributes.translation.data.attributes.locale[0].value}; `) }
+
+
+
+export const attachIconColumnHeader: any = {
+  title: "",
+  key: "action",
+  fixed: 'right',
+  className: 'more-menu-ant-cell attach-icon',
+  render: (value: any, record: User) => {
+    return <Box component="div">
+      <DetachedIcon
+        style={{
+          height: '18px',
+          position: 'relative',
+          top: '3px',
+        }}
+      />
+    </Box>
+  },
+}
+
 const ListView = (props: PlacesProps) => {
 
-    const tableHeaderJson: ColumnsType<any> = [
-        {
-            title: "NAME",
-            key: `attributes`,
-            dataIndex: "attributes",
-            className: 'cell-name',
-            sorter: (a: { attributes: {placeNameEnglish: string;} }, b: { attributes: {placeNameEnglish: string;} }) => {
-                return a.attributes.placeNameEnglish.localeCompare(b.attributes.placeNameEnglish)
-            },
-            sortDirections: ["ascend"],
-            defaultSortOrder: "ascend",
-            render: (value: any, index: number) => {
-              return `${value.placeNameEnglish}${value.placeNameArabic}`            
-            }
-        },
-        {
-            title: "NUMBER",
-            key: `attributes`,
-            dataIndex: "attributes",
-            className: 'cell-number',
-            render: (value: any, index: number) => value.placeNumber
-        },
-        {
-            title: "TYPE",
-            key: `attributes`,
-            dataIndex: "attributes",
-            render: (value: any, index: number) => value?.siteType.map((x: string) => `${x}`)
-        },
-        {
-            title: "RESEARCH VALUE",
-            key: `attributes`,
-            dataIndex: "attributes",
-            className: 'cell-research',
-            render: (value: any, index: number) => {
-                return value.researchValue
-            },
-        },
-        {
-            title: "TOURISM VALUE",
-            key: `attributes`,
-            dataIndex: "attributes",
-            className: 'cell-tourism',
-            render: (value: any, index: number) => value.tourismValue.map((x: string) => `${x}`)
-        },
-        {
-            title: "STATE OF CONSERVATION",
-            key: `attributes`,
-            dataIndex: "attributes",
-            className: 'cell-conserve',
-            render: (value: any, index: number) => value.stateOfConservation.map((x: string) => `${x}`)
-        },
-        {
-            title: "RECOMMENDATION",
-            key: `attributes`,
-            dataIndex: "attributes",
-            className: 'cell-recommend',
-            render: (value: any, index: number) => value.recommendation.map((x: string) => `${x}`)
-        },
-        {
-            title: "PERIOD",
-            key: `attributes`,
-            dataIndex: "attributes",
-            className: 'cell-period',
-            render: (value: any, index: number) => value.period.map((x: string) => `${x}`)
-        },
-        {
-            title: "RISK",
-            key: `attributes`,
-            dataIndex: "attributes",
-            render: (value: any, index: number) => value.risk.map((x: string) => `${x}`)
-        },
-        {
-            title: "",
-            key: "action",
-            fixed: 'right',
-            className: 'more-menu-ant-cell',
-            render: (value: any, record: User) => (
-                <MoreOptionsComponent id={record.id} record={record} />
-            ),
-        },
-    ]
+  const { isAssociationsStepOpen } = useSelector(
+    (state: RootState) => state.searchResults
+  );
+
+    const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([
+      {
+          title: "NAME",
+          key: `attributes`,
+          dataIndex: "attributes",
+          className: 'cell-name',
+          sorter: (a: { attributes: {placeNameEnglish: string;} }, b: { attributes: {placeNameEnglish: string;} }) => {
+              return a.attributes.placeNameEnglish.localeCompare(b.attributes.placeNameEnglish)
+          },
+          sortDirections: ["ascend"],
+          defaultSortOrder: "ascend",
+          render: (value: any, index: number) => {
+            return `${value.placeNameEnglish}${value.placeNameArabic}`            
+          }
+      },
+      {
+          title: "NUMBER",
+          key: `attributes`,
+          dataIndex: "attributes",
+          className: 'cell-number',
+          render: (value: any, index: number) => value.placeNumber
+      },
+      {
+          title: "TYPE",
+          key: `attributes`,
+          dataIndex: "attributes",
+          render: (value: any, index: number) => value?.siteType.map((x: string) => `${x}`)
+      },
+      {
+          title: "RESEARCH VALUE",
+          key: `attributes`,
+          dataIndex: "attributes",
+          className: 'cell-research',
+          render: (value: any, index: number) => {
+              return value.researchValue
+          },
+      },
+      {
+          title: "TOURISM VALUE",
+          key: `attributes`,
+          dataIndex: "attributes",
+          className: 'cell-tourism',
+          render: (value: any, index: number) => value.tourismValue.map((x: string) => `${x}`)
+      },
+      {
+          title: "STATE OF CONSERVATION",
+          key: `attributes`,
+          dataIndex: "attributes",
+          className: 'cell-conserve',
+          render: (value: any, index: number) => value.stateOfConservation.map((x: string) => `${x}`)
+      },
+      {
+          title: "RECOMMENDATION",
+          key: `attributes`,
+          dataIndex: "attributes",
+          className: 'cell-recommend',
+          render: (value: any, index: number) => value.recommendation.map((x: string) => `${x}`)
+      },
+      {
+          title: "PERIOD",
+          key: `attributes`,
+          dataIndex: "attributes",
+          className: 'cell-period',
+          render: (value: any, index: number) => value.period.map((x: string) => `${x}`)
+      },
+      {
+          title: "RISK",
+          key: `attributes`,
+          dataIndex: "attributes",
+          render: (value: any, index: number) => value.risk.map((x: string) => `${x}`)
+      },
+      {
+          title: "",
+          key: "action",
+          fixed: 'right',
+          className: 'more-menu-ant-cell',
+          render: (value: any, record: User) => (
+              <MoreOptionsComponent id={record.id} record={record} />
+          ),
+      },
+  ])
 
     const {data, hasMoreData, fetchData, loading} = props;
 
@@ -239,6 +267,16 @@ const ListView = (props: PlacesProps) => {
         }
  
     }, []);
+
+    useEffect(() => {
+      // console.log('hex: ', isAssociationsStepOpen)
+        if(isAssociationsStepOpen) {
+          setTableHeaderJson(state => [attachIconColumnHeader , ...state])
+        } else {
+          setTableHeaderJson(state => state.filter(item => item.className?.indexOf('attach-icon') !== -1))
+        }
+ 
+    }, [isAssociationsStepOpen]);
 
     return (
         <Box component="div" id={'places-list-parent'}>
