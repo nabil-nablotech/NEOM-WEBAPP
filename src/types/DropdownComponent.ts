@@ -1,6 +1,6 @@
-import { AutocompleteChangeDetails, AutocompleteChangeReason, SxProps } from '@mui/material';
+import { AutocompleteChangeDetails, AutocompleteChangeReason, AutocompleteRenderOptionState, SxProps } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
-import { ChangeEvent, MouseEvent } from 'react';
+import { ChangeEvent, ChangeEventHandler, MouseEvent } from 'react';
 
 export type DropdownCompProps = {
     className?: string
@@ -33,9 +33,11 @@ export interface AutoCompleteMultiSelectProps {
     name?: string
     multiple?: boolean;
 }
-export interface AutoCompleteSingleSelectProps extends Omit<AutoCompleteMultiSelectProps, "value" | "handleSelectChange"> {
+export interface AutoCompleteSingleSelectProps extends Omit<AutoCompleteMultiSelectProps, "value" | "handleSelectChange" | "handleChange"> {
     value?: object | any
+    handleChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
     handleSelectChange?: (event: React.SyntheticEvent<Element, Event>, value: string | null, reason: AutocompleteChangeReason, details?: AutocompleteChangeDetails<string> | undefined) => void;
+    renderOption?: ((props: React.HTMLAttributes<HTMLLIElement>, option: string, state: AutocompleteRenderOptionState) => React.ReactNode)
 }
 
 export type dropDownItem = {

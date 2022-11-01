@@ -101,7 +101,6 @@ export const events = gql`
   }
 `;
 
-
 export const eventByEventNumber = gql`
   query SearchEvents(
     $visitNumber: String
@@ -125,59 +124,6 @@ export const eventByEventNumber = gql`
       }
       data {
         id
-        attributes {
-          recordingTeam
-          siteDescription
-          updatedAt
-          createdAt
-          keywords
-          visitNumber
-          latitude
-          longitude
-          uniqueId
-          period
-          researchValue
-          tourismValue
-          stateOfConservation
-          recommendation
-          risk
-          media_associates {
-            data {
-              attributes {
-                media_unique_id {
-                  data {
-                    attributes {
-                      object {
-                        data {
-                          attributes {
-                            url
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          visit_associate {
-            data {
-              id
-              attributes {
-                place_unique_id {
-                  data {
-                    attributes {
-                      placeNumber
-                      placeNameEnglish
-                      placeNameArabic
-                      siteType
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
       }
     }
   }

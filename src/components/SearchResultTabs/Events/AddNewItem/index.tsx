@@ -8,7 +8,7 @@ import {
   Chip,
   StepButton
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { ChangeEventHandler, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   AddNewItemProps,
@@ -31,6 +31,7 @@ import { RootState } from "../../../../store";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useFormik } from "formik";
 import ReactDatePicker from "react-datepicker";
+import { Place } from "../../../../types/Place";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -92,6 +93,7 @@ const StepContent = ({
   handleBack,
   formik,
   places,
+  handleChange
 }: StepContentTypes) => {
 
   const [currentKeyword, setCurrentKeyword] = useState<string>('')
@@ -113,6 +115,30 @@ const StepContent = ({
               shouldHandleChangeFromParent={true}
               valueFromParent={formState.search}
             /> */}
+            <AutoCompleteSingleSelect
+              className={`${styles["custom-search-field"]}`}
+              label="Search Place*"
+              placeholder="Search Place"
+              value={formState.search}
+              handleClear={() => {}}
+              itemsList={places || []}
+              handleSelectChange={(e, value, r, d) =>
+                formik.setFieldValue("place", value)
+              }
+              handleChange={handleChange}
+              renderOption={(props, option: any) => (
+                <Box component="li" sx={{ '& > img': { display: 'flex', justifyContent: 'space-between' } }} {...props}>
+                  <Typography align="left">
+
+                    {option.attributes.placeNameEnglish}{option.attributes.placeNameArabic}
+                  </Typography>
+                  <Typography style={{float: "right"}}>
+                    {option.attributes.placeNumber}
+                  </Typography>
+                </Box>
+              )}
+              selectStylesSx={commonFormControlSxStyles}
+            />
             <TextInput
               className={`${styles["visit-number"]}`}
               label="Event Number"
@@ -130,18 +156,7 @@ const StepContent = ({
               }}
               formControlSx={commonFormControlSxStyles}
             />
-            <AutoCompleteSingleSelect
-              className={`${styles["custom-search-field"]}`}
-              label="Search Place"
-              placeholder="Search Place"
-              value={formState.search}
-              handleClear={() => {}}
-              itemsList={places || []}
-              handleSelectChange={(e, value, r, d) =>
-                formik.setFieldValue("place", value)
-              }
-              selectStylesSx={commonFormControlSxStyles}
-            />
+            
             <ReactDatePicker
               placeholderText="Event Date"
               className={`${styles["date"]}`}
@@ -406,13 +421,14 @@ const StepContent = ({
   );
 };
 
-const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
+const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { showAddSuccess, places } = useSelector(
+  const { showAddSuccess } = useSelector(
     (state: RootState) => state.searchResults
   );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
+  const {places} = useSelector((state: RootState) => state.event);
 
   const [activeStep, setActiveStep] = useState(0);
   const [formState, setFormState] = useState({
@@ -530,6 +546,13 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
     },
   });
 
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    console.log('e', e.target.value)
+    if (setSearchValue) {
+      setSearchValue(e.target.value);
+    }
+  }
+
   return (
     <Box component="div">
       <form onSubmit={formik.handleSubmit}>
@@ -612,6 +635,7 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
                   handleNext={handleNext}
                   formik={formik}
                   handleBack={handleBack}
+                  handleChange={handleChange}
                 />
               </React.Fragment>
             </>
@@ -645,7 +669,7 @@ const AddNewEvent = ({ onClose, create }: AddNewItemProps) => {
             <Button
               label={activeStep === steps.length - 1 ? "Add" : "Next"}
               type="submit"
-              disabled={!(formik.values.visitNumber.length > 0)}
+              disabled={!(formik.values.visitNumber.length > 0 && formik.values.place)}
               // onClick={handleNext}
             />
           </Box>
