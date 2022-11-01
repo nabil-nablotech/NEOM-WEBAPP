@@ -71,6 +71,7 @@ export const refinePlaces = gql`
     $latitude: Float
     $longitude: Float
     $artifacts: JSON
+    $keywords: JSON
     $limit: Int
     $skip: Int
   ) {
@@ -104,6 +105,7 @@ export const refinePlaces = gql`
           { period: { containsi: $period } }
           { latitude: { gte: $latitude } }
           { longitude: { lte: $longitude } }
+          { keywords: { containsi: $keywords } }
         ]
       }
     ) {
@@ -284,6 +286,28 @@ export const updatePlace = gql`
               id
             }
           }
+        }
+      }
+    }
+  }
+`;
+
+
+export const placesKeyWords = gql`
+  query PlacesKeyWordsSearch(
+    $text: JSON
+  ) {
+    places(
+      filters: {
+        and: [
+          { keywords: { containsi: $text } }
+        ]
+      }
+    ) {
+      data {
+        id
+        attributes {
+          keywords
         }
       }
     }
