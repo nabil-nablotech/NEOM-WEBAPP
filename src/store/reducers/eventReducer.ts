@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Place } from "../../types/Place";
 import { Options } from "../../types/RefinedSeachTypes";
 
 export const initialValue = {
@@ -50,8 +51,10 @@ export type AddEventState = {
     assessmentTypeOther: string
 }
 
-const initialState: {event: AddEventState} = {
-  event: initialValue
+const initialState: {event: AddEventState, 
+  places: Place[] | null} = {
+  event: initialValue,
+  places: null
 }
 
 export const eventSlice = createSlice({
@@ -60,12 +63,16 @@ export const eventSlice = createSlice({
   reducers: {
     setEventData: (state, action: PayloadAction<AddEventState>) => {
       state.event = action.payload
+    },
+    setPlaces: (state, action: PayloadAction<Place[] | null>) => {
+      state.places = action.payload
     } 
   },
 });
 
 export const {
-  setEventData
+  setEventData,
+  setPlaces
 } = eventSlice.actions;
 
 export default eventSlice.reducer;

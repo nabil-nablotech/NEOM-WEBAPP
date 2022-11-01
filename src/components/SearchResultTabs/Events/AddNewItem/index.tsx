@@ -12,7 +12,6 @@ import { useParams } from "react-router-dom";
 import {
   AddNewItemProps,
   StepContentTypes,
-  InitialValues,
 } from "../../../../types/CustomDrawerTypes";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import { addItemDefaultSteps, handleEnter } from "../../../../utils/services/helpers";
@@ -28,7 +27,6 @@ import { useDispatch } from "react-redux";
 import { toggleNewItemWindow, toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
-import CustomSearchField from "../../../SearchField";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useFormik } from "formik";
 import ReactDatePicker from "react-datepicker";

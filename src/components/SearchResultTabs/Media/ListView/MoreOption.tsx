@@ -28,8 +28,9 @@ export const MoreOptionsComponent = ({ record, id }: { id: string; record: Media
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuItem key={1}>Menu 1</MenuItem>
-          <MenuItem key={2}>Menu 2</MenuItem>
+          <MenuItem key={1}>Share</MenuItem>
+          <MenuItem key={2}>Edit</MenuItem>
+          <MenuItem key={2}>Delete</MenuItem>
         </Menu>
       </>
     );
