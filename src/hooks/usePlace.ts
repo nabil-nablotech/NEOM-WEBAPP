@@ -1,14 +1,15 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { addPlace, refinePlaces } from "../query/places";
 import { RootState } from "../store";
 import { initialSelectedValue, setSelectedValue } from "../store/reducers/refinedSearchReducer";
 import {
   setPlaces,
   setPlaceMetaData,
-  setSearchText
+  setSearchText,
+  toggleShowAddSuccess
 } from "../store/reducers/searchResultsReducer";
 import { Place } from "../types/Place";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
@@ -29,6 +30,7 @@ const usePlace = () => {
   const { search } = useLocation();
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const searchData = getQueryObj(search);
   useEffect(() => {
@@ -61,6 +63,7 @@ const usePlace = () => {
   useEffect(() => {
     if (refinePlaceData?.places) {
       const places = JSON.parse(JSON.stringify(refinePlaceData?.places.data))
+
       places.map((x: Place) => {
         x.label = `${x?.attributes?.placeNameEnglish}${x?.attributes?.placeNameArabic}` || '';
         x.value = x?.id;
@@ -105,8 +108,16 @@ const usePlace = () => {
   useEffect(() => {
     if (data) {
       fetchData(0);
+      dispatch(toggleShowAddSuccess(true))
+
+      console.log('hex: ', data)
+      /** rdirect */
+      navigate(`/search-results/Places/${data.createPlace.data.attributes.uniqueId}`, {replace: true})
+      /** insert in reducer */
+      /** map that to screen  */
     }
   }, [data])
+
   const fetchData = (skip: number = placeData.length, local: boolean = false, clear: boolean = false) => {
     // get the query from the url parameters
     const searchData = getQueryObj(search);
