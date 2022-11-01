@@ -216,7 +216,7 @@ const useEvent = () => {
       visitUIPath: `${webUrl}/search-results/Events/${uniqueId}`,
       asset_config_id: 1,
       keywords: keywords,
-      siteType: payload.siteType && [payload.siteType],
+      siteType: payload.siteType && payload.siteType,
       visitDate: visitDate,
       "researchValue": payload.researchValue && [payload.researchValue],
       "tourismValue": payload.tourismValue && [payload.tourismValue],
