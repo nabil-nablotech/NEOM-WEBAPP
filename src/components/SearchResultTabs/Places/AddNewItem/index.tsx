@@ -189,6 +189,19 @@ const StepContent = ({
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
                     />
+                    <DropdownComponent
+                        className={`${styles["artifacts"]}`}
+                        label={"Artifacts"}
+                        name="artifacts"
+                        value={formik.values.artifacts}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('artifacts', e.target.value as string)
+                        }
+                        handleClear={() => { }}
+                        itemsList={options?.artifacts || []}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
                     <TextInput
                         className={`${styles["arabic-name"]}`}
                         label="Previous Number"
@@ -196,6 +209,34 @@ const StepContent = ({
                         value={formik.values.previousNumber}
                         onChange={e => {
                             formik.setFieldValue('previousNumber', e.target.value)
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
+                        className={`${styles["latitude"]}`}
+                        label="Latitude"
+                        name="latitude"
+                        type="number"
+                        value={formik.values.latitude}
+                        onChange={e => {
+                            formik.setFieldValue('latitude', e.target.value)
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
+                        className={`${styles["longitude"]}`}
+                        label="Longitude"
+                        name="longitude"
+                        type="number"
+                        value={formik.values.longitude}
+                        onChange={e => {
+                            formik.setFieldValue('longitude', e.target.value)
                         }}
                         sx={{
                             ...textInputSxStyles
@@ -255,19 +296,6 @@ const StepContent = ({
                         formControlSx={commonFormControlSxStyles}
                     />
                     <DropdownComponent
-                        className={`${styles["artifacts"]}`}
-                        label={"Artifacts"}
-                        name="artifacts"
-                        value={formik.values.artifacts}
-                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
-                            formik.setFieldValue('artifacts', e.target.value as string)
-                        }
-                        handleClear={() => { }}
-                        itemsList={options?.artifacts || []}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <DropdownComponent
                         className={`${styles["recommendation"]}`}
                         label={"Recommendation"}
                         name="recommendation"
@@ -278,34 +306,6 @@ const StepContent = ({
                         handleClear={() => { }}
                         itemsList={options?.recommendation || []}
                         selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <TextInput
-                        className={`${styles["latitude"]}`}
-                        label="Latitude"
-                        name="latitude"
-                        type="number"
-                        value={formik.values.latitude}
-                        onChange={e => {
-                            formik.setFieldValue('latitude', e.target.value)
-                        }}
-                        sx={{
-                            ...textInputSxStyles
-                        }}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <TextInput
-                        className={`${styles["longitude"]}`}
-                        label="Longitude"
-                        name="longitude"
-                        type="number"
-                        value={formik.values.longitude}
-                        onChange={e => {
-                            formik.setFieldValue('longitude', e.target.value)
-                        }}
-                        sx={{
-                            ...textInputSxStyles
-                        }}
                         formControlSx={commonFormControlSxStyles}
                     />
                 </>
