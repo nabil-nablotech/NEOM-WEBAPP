@@ -157,7 +157,7 @@ const PlaceDetailsPage = () => {
         'https://via.placeholder.com/150/f66b97',
     ])
     const [isMoreTitleMenuOpen, setMoreTitleMenuOpen] = useState<false>(false)
-    const [isSeeMore, toggleSeeMore] = useState<boolean>(false)
+    const [isSeeMoreHidden, toggleSeeMoreHidden] = useState<boolean>(false)
     const [isCopyDone, setCopyDone] = useState<boolean>(false)
 
     const menuItems = [
@@ -355,6 +355,12 @@ const PlaceDetailsPage = () => {
             dispatch(setActiveMediaItemIndex(itemIndex - 1))
         }
     }
+    
+    useEffect(() => {
+        if(placeData && (placeData?.siteDescription?.length < 500)) {
+            toggleSeeMoreHidden(true)
+        }
+    }, [placeData])
 
     if(placeLoading) {
         return <Loader />
@@ -602,14 +608,14 @@ const PlaceDetailsPage = () => {
                                         {siteDescription ?
                                         <>
                                             <Box component="div"
-                                                className={`${styles['site-desc-condensed']} ${isSeeMore ? styles['see-more-active'] : ''}`}
+                                                className={`${styles['site-desc-condensed']} ${isSeeMoreHidden ? styles['see-more-active'] : ''}`}
                                             >
-                                                {siteDescription.substring(0, !isSeeMore ? 500 : siteDescription.length - 1)}
+                                                {siteDescription.substring(0, !isSeeMoreHidden ? 500 : siteDescription.length - 1)}
                                             </Box>
                                             {
-                                                !isSeeMore && <Box component="div" className={`${styles['see-more-box']}`} onClick={e => {
-                                                    toggleSeeMore(state => !state)
-                                                }}>{!isSeeMore ? '...See More' : ''}</Box>
+                                                !isSeeMoreHidden && <Box component="div" className={`${styles['see-more-box']}`} onClick={e => {
+                                                    toggleSeeMoreHidden(state => !state)
+                                                }}>{!isSeeMoreHidden ? '...See More' : ''}</Box>
                                             }
                                         </> :
                                         <NoTextPresent
