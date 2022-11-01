@@ -2,10 +2,7 @@ import { gql } from "@apollo/client";
 
 export const places = gql`
   query SearchPlace(
-    $search_one: String
-    $search_two: String
-    $search_three: String
-    $text: JSON
+    $search: String
     $limit: Int
     $skip: Int
   ) {
@@ -13,30 +10,9 @@ export const places = gql`
       pagination: { limit: $limit, start: $skip }
       filters: {
         or: [
-          { siteType: { containsi: $text } }
-          { siteDescription: { containsi: $search_one } }
-          { period: { containsi: $text } }
-          { previousNumber: { containsi: $search_one } }
-          { placeNumber: { containsi: $search_one } }
-          { placeNameEnglish: { containsi: $search_one } }
-          { placeNameArabic: { containsi: $search_one } }
-          { keywords: { containsi: $search_one } }
-          # { siteType: { containsi: [$search_two] } }
-          { siteDescription: { containsi: $search_two } }
-          # { period: { containsi: [$search_two] } }
-          { previousNumber: { containsi: $search_two } }
-          { placeNumber: { containsi: $search_two } }
-          { placeNameEnglish: { containsi: $search_two } }
-          { placeNameArabic: { containsi: $search_two } }
-          { keywords: { containsi: $search_two } }
-          # { siteType: { containsi: [$search_three] } }
-          { siteDescription: { containsi: $search_three } }
-          # { period: { containsi: [$search_three] } }
-          { previousNumber: { containsi: $search_three } }
-          { placeNumber: { containsi: $search_three } }
-          { placeNameEnglish: { containsi: $search_three } }
-          { placeNameArabic: { containsi: $search_three } }
-          { keywords: { containsi: $search_three } }
+          { placeNumber: { containsi: $search } }
+          { placeNameEnglish: { containsi: $search } }
+          { placeNameArabic: { containsi: $search } }
         ]
       }
     ) {
@@ -53,21 +29,8 @@ export const places = gql`
         attributes {
           placeNameEnglish
           placeNameArabic
-          siteDescription
-          updatedAt
-          keywords
           placeNumber
-          latitude
-          longitude
           uniqueId
-          period
-          researchValue
-
-          siteType
-          tourismValue
-          stateOfConservation
-          recommendation
-          risk
           media_associates {
             data {
               attributes {
@@ -248,6 +211,9 @@ export const addPlace = gql`
         id
         attributes {
           placeNameEnglish
+          placeNameArabic
+          placeNumber
+          uniqueId
           asset_config_id {
             data {
               id

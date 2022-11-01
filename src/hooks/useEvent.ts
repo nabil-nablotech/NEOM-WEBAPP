@@ -2,7 +2,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
-import { format, parseISO } from "date-fns";
 import { addEvent, refineEvents, updateEvent } from "../query/events";
 import { createVisitAssociate } from "../query/eventAssociate";
 import { RootState } from "../store";
@@ -16,6 +15,7 @@ import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/he
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { graphQlHeaders } from "../utils/services/interceptor";
 import { Place } from "../types/Place";
+import { places } from "../query/places";
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -61,6 +61,7 @@ const useEvent = () => {
   const [createVisitAssociateMuation, { loading: visitAssociateload, error: visitAssociateErr, data: visitAssociate }] = useMutation(createVisitAssociate, graphQlHeaders());
   const{ loading:refineLoading, error:refineErrorData, data:refineEventData, refetch:refineSearchEvents} = useQuery(refineEvents);
 
+  const { loading: placesLoading, error: placesErr, data: placeList } = useQuery(places, graphQlHeaders());
  
   useEffect(() => {
     if (refineEventData?.visits) {

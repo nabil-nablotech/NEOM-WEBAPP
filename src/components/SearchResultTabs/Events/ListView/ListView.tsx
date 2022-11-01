@@ -2,17 +2,17 @@ import { useState, useEffect } from 'react';
 import { Box, Menu, MenuItem } from '@mui/material';
 import { ColumnsType } from 'antd/lib/table';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { User } from '../../../../types/User';
 import { StyledAntTable } from '../../../StyledAntTable';
 import styled from "styled-components";
 import { antTablePaginationCss } from '../../../../utils/services/helpers';
-import { usePaginatedArray } from './../../../../hooks/usePaginatedArray';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import {EventsProps} from '../GridView/GridView';
-import { FieldOption } from '../../../../types/Place';
-import { VisitAssociate } from '../../../../types/Event';
+import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -145,12 +145,9 @@ const MoreOptionsComponent = ({
     );
 };
 
-
-
-
-
 const ListView = (props: EventsProps) => {
-
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const tableHeaderJson: ColumnsType<any> = [
         {
             title: "NAME",
@@ -235,15 +232,6 @@ const ListView = (props: EventsProps) => {
         },
     ]
 
-    // const {
-    //     data,
-    //     hasMoreData,
-    //     fetchData,
-    //     loading
-    // } = usePaginatedArray({
-    //     apiUrl: 'https://jsonplaceholder.typicode.com/photos',
-    //     step: 10
-    // })
     const {data, handleNext: fetchData, hasMoreData, loading} = props;
     useEffect(() => {
         /** Needs to be done , since InfiniteSCroll needs a relation with
@@ -272,9 +260,17 @@ const ListView = (props: EventsProps) => {
                 scrollableTarget={'events-list-div'}
                 className={`${commonStyles['infinite-scroll-cls']}`}
             >
-                <StyledTableWrapper
+                {data.length > 0 ? <StyledTableWrapper
                     // className={`${styles["table-container"]}`}
                     rowKey={"id"}
+                    onRow={(record: any, rowIndex) => {
+                        return {
+                          onClick: event => {
+                            dispatch(setSelectedCardIndex(rowIndex || record.id))
+                            navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
+                          }, // click row
+                        };
+                      }}
                     size="small"
                     columns={tableHeaderJson}
                     dataSource={data}
@@ -285,7 +281,7 @@ const ListView = (props: EventsProps) => {
                     style={{
                         background: "transparent",
                     }}
-                ></StyledTableWrapper>
+                ></StyledTableWrapper> : <h1>No data available</h1>}
             </InfiniteScroll>
         </Box>
     );

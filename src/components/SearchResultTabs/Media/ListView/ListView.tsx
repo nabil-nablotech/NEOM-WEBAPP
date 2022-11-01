@@ -18,7 +18,8 @@ import { Media } from "../../../../types/Media";
 import { MediaDetailsModal } from "../MediaDetails";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setActiveMediaItem, setActiveMediaItemIndex } from "../../../../store/reducers/searchResultsReducer";
+
+import { setActiveMediaItem, setActiveMediaItemIndex, setSelectedCardIndex } from '../../../../store/reducers/searchResultsReducer';
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {

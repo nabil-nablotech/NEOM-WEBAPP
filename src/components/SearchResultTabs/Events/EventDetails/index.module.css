@@ -95,7 +95,7 @@
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    height: 5ch;
+    /* height: 5ch; */
 }
 
 .see-more-box {
