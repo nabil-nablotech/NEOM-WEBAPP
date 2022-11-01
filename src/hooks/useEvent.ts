@@ -13,7 +13,7 @@ import {
   toggleShowAddSuccess
 
 } from "../store/reducers/searchResultsReducer";
-import {setPlaces} from '../store/reducers/eventReducer';
+import {setEventEdit, setPlaces} from '../store/reducers/eventReducer';
 import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/helpers';
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { graphQlHeaders } from "../utils/services/interceptor";
@@ -116,6 +116,14 @@ const useEvent = () => {
   useEffect(() => {
     if (updateData) {
       fetchData(0);
+      if (edit) {
+        dispatch(setEventEdit(false))
+        // dispatch(toggleShowAddSuccess(true))
+
+        /** re-direct */
+        navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, {replace: true})
+
+      }
     }
   }, [updateData])
 

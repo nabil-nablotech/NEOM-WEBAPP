@@ -57,7 +57,7 @@ export type AddEventState = {
   assessmentTypeOther?: string;
 };
 
-const initialState: { event: EventApi; places: Place[] | [], edit: boolean } = {
+const initialState: { event: any; places: Place[] | [], edit: boolean } = {
   event: initialValue,
   places: [],
   edit: false
@@ -67,7 +67,7 @@ export const eventSlice = createSlice({
   name: "event",
   initialState,
   reducers: {
-    setEventData: (state, action: PayloadAction<EventApi>) => {
+    setEventData: (state, action: PayloadAction<any>) => {
       state.event = action.payload;
     },
     setPlaces: (state, action: PayloadAction<Place[] | []>) => {

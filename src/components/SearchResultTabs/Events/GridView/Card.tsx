@@ -6,6 +6,7 @@ import { GridViewCard_Events } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'
 import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
 import { baseUrl } from "../../../../utils/services/helpers";
+import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
 
 export const Card = ({
   img,
@@ -26,12 +27,12 @@ export const Card = ({
             sm={11}
             className={`${gridStyles["card-image-wrapper"]}`}
           >
-            <Box
+            {img ? <Box
               className={`${gridStyles["card-image"]}`}
               component="img"
               alt={""}
               src={`${baseUrl}${img}`}
-            />
+            /> : <NoImagePresent message={"No media item is available"} />}
           </Grid>
           <Grid
             item

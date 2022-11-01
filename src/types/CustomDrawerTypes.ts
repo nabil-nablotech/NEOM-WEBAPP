@@ -23,8 +23,8 @@ export type StepContentTypes = {
     tabName: tabNameProps | undefined
     options?: Options | null
     places?: Place[] | []
-    formState: any
-    setFormState: React.SetStateAction<any> 
+    formState?: any
+    setFormState?: React.SetStateAction<any> 
     activeStep: number
     steps: Array<string>
     handleNext: (e: any, data?: InitialValues) => void
