@@ -14,20 +14,18 @@ import {
   StepContentTypes,
 } from "../../../../types/CustomDrawerTypes";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
-import { addItemDefaultSteps } from "../../../../utils/services/helpers";
+import { addItemLibrarySteps } from "../../../../utils/services/helpers";
 import styles from '../../Places/AddNewItem/addNewItem.module.css'
 import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
-import DropdownComponent from "../../../Dropdown/index";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
+import { toggleAssociationsStepOpen, toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
-import CustomSearchField from "../../../SearchField";
-import { SelectChangeEvent } from "@mui/material/Select";
 import { useFormik } from "formik";
-import ReactDatePicker from "react-datepicker";
+import FileUpload from "../../../Upload/FileUpload";
+import DetachedIcon from "../../../Icons/DetachedIcon";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -94,34 +92,18 @@ const StepContent = ({
       <Box component="div" className={`${styles["form"]}`}>
         {activeStep === 0 && (
           <>
-            <CustomSearchField
-              handleChangeParent={(e) => {
-                // setFormState((state: any) => ({
-                //     ...state,
-                //     search: e.target.value
-                // }))
-              }}
-              // onKeyDown={onKeyDown}
-              className={`${styles["custom-search-field"]}`}
-              shouldHandleChangeFromParent={true}
-              valueFromParent={formState.search}
-            />
-            <ReactDatePicker
-              placeholderText="Date Range"
-              className={`${styles["date"]}`}
-              selected={formik.values.eventDate}
-              onChange={(date: Date) => formik.setFieldValue("eventDate", date)}
-            />
+            <FileUpload />
             <TextInput
-              className={`${styles["recording-team"]}`}
-              label="Recording Team"
-              name="recording-team"
+              required
+              className={`${styles["title"]}`}
+              label="Title"
+              name="title"
               multiline
               minRows={2}
               maxRows={2}
-              value={formik.values.recordingTeam}
+              value={formik.values.title}
               onChange={(e) => {
-                formik.setFieldValue("recordingTeam", e.target.value);
+                formik.setFieldValue("title", e.target.value);
               }}
               sx={{
                 ...textInputSxStyles,
@@ -133,15 +115,16 @@ const StepContent = ({
               formControlSx={commonFormControlSxStyles}
             />
             <TextInput
-              className={`${styles["site-description"]}`}
-              label="Site Description"
-              name="site-description"
+              required
+              className={`${styles["description"]}`}
+              label="Description"
+              name="description"
               multiline
               minRows={3}
               maxRows={3}
-              value={formik.values.siteDescription}
+              value={formik.values.description}
               onChange={(e) => {
-                formik.setFieldValue("siteDescription", e.target.value);
+                formik.setFieldValue("description", e.target.value);
               }}
               sx={{
                 ...textInputSxStyles,
@@ -153,15 +136,15 @@ const StepContent = ({
               formControlSx={commonFormControlSxStyles}
             />
             <TextInput
-              className={`${styles["field-narrative"]}`}
-              label="Field Narrative"
-              name="field-narrative"
+              className={`${styles["referenceUrl"]}`}
+              label="Reference URL"
+              name="referenceUrl"
               multiline
-              minRows={3}
-              maxRows={3}
-              value={formik.values.fieldNarrative}
+              minRows={2}
+              maxRows={2}
+              value={formik.values.referenceUrl}
               onChange={(e) => {
-                formik.setFieldValue("fieldNarrative", e.target.value);
+                formik.setFieldValue("referenceUrl", e.target.value);
               }}
               sx={{
                 ...textInputSxStyles,
@@ -172,38 +155,47 @@ const StepContent = ({
               }}
               formControlSx={commonFormControlSxStyles}
             />
-
-            <DropdownComponent
-              className={`${styles["site-type"]}`}
-              label={"Site Type"}
-              name="site-type"
-              value={formik.values.siteType}
-              handleChange={(e: SelectChangeEvent<string | string[]>) =>
-                formik.setFieldValue("siteType", e.target.value as string)
-              }
-              itemsList={options?.siteType || []}
-              selectStylesSx={commonSelectSxStyles}
+            <TextInput
+              className={`${styles["citation"]}`}
+              label="Citation"
+              name="citation"
+              multiline
+              minRows={3}
+              maxRows={3}
+              value={formik.values.citation}
+              onChange={(e) => {
+                formik.setFieldValue("citation", e.target.value);
+              }}
+              sx={{
+                ...textInputSxStyles,
+                marginBottom: "4em",
+                "& .MuiInputBase-inputMultiline": {
+                  paddingInline: "0 !important",
+                },
+              }}
               formControlSx={commonFormControlSxStyles}
             />
+            
           </>
         )}
         {activeStep === 1 && (
-          <>
-            <Box component="div">Make your content discoverable</Box>
-            <TextInput
-              className={`${styles["english-name"]}`}
-              label="Add Keywords"
-              name="english-name"
-              value={formik.values.keywords}
-              onChange={(e) => {
-                formik.setFieldValue("keywords", e.target.value);
+          <Box component="div">
+            <Box component="div" style={{
+              display: 'inline-block',
+              lineHeight: 1.5
+            }}>
+              Click on{' '}
+              <DetachedIcon
+              style={{
+                height: '18px',
+                position: 'relative',
+                top: '3px',
               }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-          </>
+              />
+              {' '}to select the places and events you want to associate this library item to.
+            </Box>
+            
+          </Box>
         )}
       </Box>
     </>
@@ -224,7 +216,7 @@ const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
   });
   const [skipped, setSkipped] = useState(new Set<number>());
 
-  const [steps, setSteps] = useState<Array<string>>(addItemDefaultSteps);
+  const [steps, setSteps] = useState<Array<string>>(addItemLibrarySteps);
 
   const dispatch = useDispatch();
 
@@ -233,6 +225,14 @@ const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
       dispatch(toggleShowAddSuccess(true));
     }
   }, [showAddSuccess]);
+  
+  useEffect(() => {
+    if (activeStep === 1) {
+      dispatch(toggleAssociationsStepOpen(true));
+    } else {
+      dispatch(toggleAssociationsStepOpen(false));
+    }
+  }, [activeStep]);
 
   const isStepOptional = (step: number) => {
     return step === 1;
