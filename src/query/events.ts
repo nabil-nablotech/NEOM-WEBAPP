@@ -398,6 +398,7 @@ query EventsKeyWordsSearch(
   $text: JSON
   ){
   visits(
+    pagination: { limit: 10, start: 0}
     filters: {
       and: [
         { keywords: { containsi: $text } }

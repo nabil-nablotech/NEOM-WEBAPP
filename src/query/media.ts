@@ -361,6 +361,7 @@ export const mediaKeyWords = gql`
     $text: JSON
   ) {
     medias(
+      pagination: { limit: 10, start: 0}
       filters: {
         or: [
           { keywords: { contains: $text } }

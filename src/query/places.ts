@@ -77,7 +77,6 @@ export const refinePlaces = gql`
   ) {
     places(
       pagination: { limit: $limit, start: $skip }
-
       filters: {
         or: [
           { placeNameEnglish: { containsi: $search_one } }
@@ -298,6 +297,7 @@ export const placesKeyWords = gql`
     $text: JSON
   ) {
     places(
+      pagination: { limit: 10, start: 0}
       filters: {
         and: [
           { keywords: { containsi: $text } }
