@@ -14,7 +14,8 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
-import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatBytes, formatWebDate, stringAvatar } from "../../../../utils/services/helpers";
+import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatBytes, formatWebDate, stringAvatar,
+    isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT,  } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
@@ -32,6 +33,10 @@ import { useMediaQuery } from 'react-responsive'
 import useEventDetails from "../../../../hooks/useEventDetails";
 import Loader from "../../../Common/Loader";
 import MapView from "../../GoogleMap/MapView";
+import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
+import NoTextPresent from "../../../NoDataScreens/NoText";
+import {isEmpty} from 'lodash'
+import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -419,11 +424,10 @@ const EventDetailsPage = () => {
                                     >
                                         {siteDescription?.substring(0, 200)}
                                     </Box>: 
-                                    <Box component="div"
-                                        className={`${styles['no-data-available']} ${styles['see-more-active']}`}
-                                    >
-                                        No data available
-                                    </Box>}
+                                    <NoTextPresent
+                                        message={NO_DESCRIPTION}
+                                    />}
+
                                 </Box>
                                 <Box component="div" className={`${styles['table']}`}>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -431,26 +435,21 @@ const EventDetailsPage = () => {
                                             Site Type
                                         </Grid>
                                         <Grid item>
-                                            {siteType ? <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
+                                            <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
                                                 {
-                                                    siteType && siteType.map(item => (
+                                                    !isEmpty(siteType) ? siteType.map((item: string) => (
                                                         <Box
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
                                                         >
                                                             {item}
                                                         </Box>
-                                                    ))
+                                                    )) :
+                                                        <NoTextPresent
+                                                            message={NO_TEXT}
+                                                        />
                                                 }
                                             </Box>
-                                           : <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
-                                                <Box
-                                                    component="div"
-                                                    className={`${styles['text-anchor']}`}
-                                                >
-                                                    No data available
-                                                </Box>
-                                            </Box>}
                                         </Grid>
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -466,14 +465,17 @@ const EventDetailsPage = () => {
                                             all places where the site type = building. */}
                                             <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
                                                 {
-                                                    period && period.map(item => (
+                                                    !isEmpty(period) ? period.map(item => (
                                                         <Box
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
                                                         >
                                                             {item}
                                                         </Box>
-                                                    ))
+                                                    )) :
+                                                        <NoTextPresent
+                                                            message={NO_TEXT}
+                                                        />
                                                 }
                                             </Box>
                                         </Grid>
@@ -482,59 +484,105 @@ const EventDetailsPage = () => {
                                         <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Field Narrative
                                         </Grid>
-                                        <Grid item sm={8} className={`${styles['table-parameter-value']}`}>
-                                            {
-                                                fieldNarrative
-                                            }
-                                        </Grid>
+                                        {
+                                            !isEmptyValue(fieldNarrative) ? 
+                                                <Grid item>
+                                                    {fieldNarrative}
+                                                </Grid> :
+                                                <Grid item>
+                                                    <NoTextPresent
+                                                        message={NO_TEXT}
+                                                    />
+                                                </Grid>
+
+                                        }
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             State of Conservation
                                         </Grid>
-                                        {stateOfConservation.map(item => <Grid item>
-                                            {item}
-                                        </Grid>)}
+                                        {
+                                            !isEmptyValue(stateOfConservation) ? stateOfConservation.map((item: string) =>
+                                                <Grid item>
+                                                    {item}
+                                                </Grid>) :
+                                                <Grid item>
+                                                    <NoTextPresent
+                                                        message={NO_TEXT}
+                                                    />
+                                                </Grid>
+                                           
+                                        }
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Risk
                                         </Grid>
-                                        
-                                        {risk.map(item => <Grid item>
-                                            {item}
-                                        </Grid>)}
+                                        {
+                                            !isEmptyValue(risk) ? risk.map((item: string) =>
+                                                <Grid item>
+                                                    {item}
+                                                </Grid>) :
+                                                <Grid item>
+                                                    <NoTextPresent
+                                                        message={NO_TEXT}
+                                                    />
+                                                </Grid>
+                                        }
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Tourism Value
                                         </Grid>
-                                        
-                                        {tourismValue.map(item => <Grid item sm={8} md={7} className={`${styles['table-parameter-value']}`}>
-                                            {item}
-                                        </Grid>)}
+                                        {
+                                            !isEmptyValue(tourismValue) ? tourismValue.map((item: string) =>
+                                                <Grid item>
+                                                    {item}
+                                                </Grid>) :
+                                                <Grid item>
+                                                    <NoTextPresent
+                                                        message={NO_TEXT}
+                                                    />
+                                                </Grid>
+                                        }
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Research Value
                                         </Grid>
-                                        {researchValue.map(item => <Grid item>
-                                            {item}
-                                        </Grid>)}
+                                        {
+                                            !isEmptyValue(researchValue) ? researchValue.map((item: string) =>
+                                                <Grid item>
+                                                    {item}
+                                                </Grid>) :
+                                                <Grid item>
+                                                    <NoTextPresent
+                                                        message={NO_TEXT}
+                                                    />
+                                                </Grid>
+                                        }
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             Recommendation
                                         </Grid>
-                                        {recommendation.map(item => <Grid item>
-                                            {item}
-                                        </Grid>)}
+                                        {
+                                            !isEmptyValue(recommendation) ? recommendation.map((item: string) =>
+                                                <Grid item>
+                                                    {item}
+                                                </Grid>) :
+                                                <Grid item>
+                                                    <NoTextPresent
+                                                        message={NO_TEXT}
+                                                    />
+                                                </Grid>
+                                        }
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
                                             URL
                                         </Grid>
-                                        <Grid item>
+                                        <Grid item sm={9} md={8}>
                                             {/* to-do */}
                                             {/* When clicking on the URL link, the link should be copied to the clip board. 
                                             A success message will be displayed with the message “URL copied to clipboard” */}
@@ -560,28 +608,36 @@ const EventDetailsPage = () => {
                                 </Box>
                             </Grid>
                             <Grid item sm={5}>
-                                {latitude && longitude ? <MapView key={14} marker={[{
-                                    id: 0,
-                                    name: `${"P event name"}`,
-                                    position: {
-                                        lat: latitude,
-                                        lng: longitude
-                                    }
-                                }]}/> : <img src={''} alt="" width={250} height={250} />}
-                                <Grid container className={`${styles['map-loctn-details']}`} >
-                                    <Grid item lg={5} md={5} sm={5}>
-                                        <Grid container className={`${styles['map-loctn-line']}`}>
-                                            <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                            <Grid item>{latitude}</Grid>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid item lg={5} md={5} sm={6}>
-                                        <Grid container className={`${styles['map-loctn-line']}`}>
-                                            <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                            <Grid item>{longitude}</Grid>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
+                                {
+                                    (latitude && longitude) ?
+                                        <>
+                                            <MapView key={4} marker={[{
+                                                id: 0,
+                                                name: "P event name",
+                                                position: {
+                                                    lat: latitude || 24.11,
+                                                    lng: longitude || 34.98
+                                                }
+                                            }]} />
+                                            <Grid container className={`${styles['map-loctn-details']}`} >
+                                                <Grid item lg={5} md={5} sm={5}>
+                                                    <Grid container className={`${styles['map-loctn-line']}`}>
+                                                        <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
+                                                        <Grid item>{`${latitude}`}</Grid>
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid item lg={5} md={5} sm={6}>
+                                                    <Grid container className={`${styles['map-loctn-line']}`}>
+                                                        <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
+                                                        <Grid item>{`${longitude}`}</Grid>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        </> :
+                                        <NoMapPresent
+                                            message={NO_LOCATION}
+                                        />
+                                }
                             </Grid>
                         </Grid>
 
@@ -589,81 +645,92 @@ const EventDetailsPage = () => {
                     <Box component="div" className={`${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Library</Box>
-                            <Box component="div">{libraryItems.length} Items</Box>
+                            {!isEmpty(libraryItems) && <Box component="div">{libraryItems.length} Items</Box>}
                         </Box>
-                        <Box component="div">
-                            <StyledTableWrapper
-                                className={`${styles["table-container"]}`}
-                                rowKey={"id"}
-                                size="small"
-                                columns={tableHeaderJson}
-                                dataSource={libraryItems ? libraryItems: []}
-                                pagination={false}
-                                loading={false}
-                                bordered
-                                scroll={{ x: true, y: 300 }}
-                                style={{
-                                    background: "transparent",
-                                }}
-                            ></StyledTableWrapper>
+                        <Box component="div" className={`${styles["table-wrapper"]}`}>
+                            {
+                                !isEmpty(libraryItems) ?
+                                    <StyledTableWrapper
+                                        className={`${styles["table-container"]}`}
+                                        rowKey={"id"}
+                                        size="small"
+                                        columns={tableHeaderJson}
+                                        dataSource={libraryItems ? libraryItems : []}
+                                        pagination={false}
+                                        loading={false}
+                                        bordered
+                                        scroll={{ x: true, y: 300 }}
+                                        style={{
+                                            background: "transparent",
+                                        }}
+                                    ></StyledTableWrapper> :
+                                    <NoTextPresent
+                                        message={NO_TABLE_ROWS}
+                                    />
+                            }
                         </Box>
                     </Box>
                     {/* Currently showing only 1 events oit of available list */}
                     <Box component="div" className={`${styles['events-section']} ${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Media Gallery</Box>
-                            <Box component="div">{mediaGallery.length} Items</Box>
+                            {!isEmpty(mediaGallery) && <Box component="div">{mediaGallery.length} Items</Box>}
                         </Box>
-                        <Box component="div">
-                            <Grid container className={`${styles['media-grid']}`}>
-                                {
-                                    mediaGalleryLocal && mediaGalleryLocal.map((itemObj, inx) => (
-                                        <Grid item lg={3} md={4} sm={4} key={inx} className={`${styles['media-grid-item']}`}
-                                            onClick={e => {
-                                                dispatch(setActiveMediaItem(itemObj))
-                                                dispatch(setActiveMediaItemIndex(inx))
-                                                navigate(`/search-results/Media/${itemObj.media_unique_id.uniqueId}`, { replace: true, state: {from: 'events'} })
-                                            }}
-                                        >
-                                            <RenderFileData
-                                                fileData={{
-                                                    alt: "",
-                                                    // src: itemObj.attributes.media_associates.data[0].attributes.media_unique_id.data.attributes.object.data.attributes.url,
-                                                    src: `${baseUrl}${itemObj.media_unique_id.object.url}`,
-                                                    className: styles['media-image']
+                        <Box component="div" className={`${styles["table-wrapper"]}`}>
+                            {!isEmpty(mediaGalleryLocal) ?
+                                <Grid container className={`${styles['media-grid']}`}>
+                                    {
+                                        mediaGalleryLocal && mediaGalleryLocal.map((itemObj, inx) => (
+                                            <Grid item lg={3} md={4} sm={4} key={inx} className={`${styles['media-grid-item']}`}
+                                                onClick={e => {
+                                                    dispatch(setActiveMediaItem(itemObj))
+                                                    dispatch(setActiveMediaItemIndex(inx))
+                                                    navigate(`/search-results/Media/${itemObj.media_unique_id.uniqueId}`, { replace: true, state: { from: 'events' } })
                                                 }}
-                                                fileType="image"
-                                            />
-                                            <Box component="div">
-                                                <Grid container className={`${styles['media-grid-item-options-row']}`}>
-                                                    <Grid item>
-                                                        {/* To-do: modify featured image flag */}
-                                                        {inx === 0 && <Box component="div">
-                                                            <Grid container className={`${styles['star-icon-grid']}`}>
-                                                                <Grid item>
-                                                                    <Box
-                                                                        component="img"
-                                                                        alt={""}
-                                                                        src={YellowStar}
-                                                                    ></Box>
+                                            >
+                                                <RenderFileData
+                                                    fileData={{
+                                                        alt: "",
+                                                        // src: itemObj.attributes.media_associates.data[0].attributes.media_unique_id.data.attributes.object.data.attributes.url,
+                                                        src: `${baseUrl}${itemObj.media_unique_id.object.url}`,
+                                                        className: styles['media-image']
+                                                    }}
+                                                    fileType="image"
+                                                />
+                                                <Box component="div">
+                                                    <Grid container className={`${styles['media-grid-item-options-row']}`}>
+                                                        <Grid item>
+                                                            {/* To-do: modify featured image flag */}
+                                                            {inx === 0 && <Box component="div">
+                                                                <Grid container className={`${styles['star-icon-grid']}`}>
+                                                                    <Grid item>
+                                                                        <Box
+                                                                            component="img"
+                                                                            alt={""}
+                                                                            src={YellowStar}
+                                                                        ></Box>
+                                                                    </Grid>
+                                                                    <Grid item>Featured</Grid>
                                                                 </Grid>
-                                                                <Grid item>Featured</Grid>
-                                                            </Grid>
-                                                        </Box>}
+                                                            </Box>}
+                                                        </Grid>
+                                                        <Grid item>
+                                                            <CustomMoreOptionsComponent
+                                                                menuActions={actionsArray}
+                                                            />
+                                                        </Grid>
                                                     </Grid>
-                                                    <Grid item>
-                                                        <CustomMoreOptionsComponent
-                                                            menuActions={actionsArray}
-                                                        />
-                                                    </Grid>
-                                                </Grid>
-                                            </Box>
-                                        </Grid>
-                                    ))
-                                }
-                            </Grid>
+                                                </Box>
+                                            </Grid>
+                                        ))
+                                    }
+                                </Grid> :
+                                <NoTextPresent
+                                    message={NO_TABLE_ROWS}
+                                />
+                            }
                         </Box>
-                        <Grid container sx={{
+                        {!isEmpty(mediaGalleryLocal) && <Grid container sx={{
                             justifyContent: 'center',
                             '& .MuiGrid-root.MuiGrid-item:has(.Mui-disabled.MuiButtonBase-root.MuiButton-root)': {
                                 cursor: 'not-allowed'
@@ -700,7 +767,7 @@ const EventDetailsPage = () => {
                                     See {mediaGalleryLocal.length === mediaGallery.length ? 'Less': 'More'}
                                 </Button>
                             </Grid>
-                        </Grid>
+                        </Grid>}
                     </Box>
                     <Box component="div" className={`${styles['remarks-section']}  ${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>

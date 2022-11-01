@@ -5,6 +5,7 @@ import {
   StepLabel,
   Stepper,
   Typography,
+  StepButton
 } from "@mui/material";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -290,6 +291,12 @@ const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
     setActiveStep(0);
   };
 
+  const handleStep = (step: number) => () => {
+    if (activeStep > step) {
+      setActiveStep(step);
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       place: "",
@@ -353,17 +360,16 @@ const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
 
                 return (
                   <Step key={label} {...stepProps}>
-                    <StepLabel
-                      {...labelProps}
-                      className={`${styles["step-label"]}`}
-                      StepIconProps={{
-                        sx: {
-                          ...stepperIconSx,
-                        },
-                      }}
-                    >
-                      {label}
-                    </StepLabel>
+                    <StepButton color="inherit" onClick={handleStep(index)}>
+                      <StepLabel {...labelProps} className={`${styles['step-label']}`}
+                        StepIconProps={{
+                          sx: {
+                            ...stepperIconSx
+                          }
+                        }}
+                      >{label}
+                      </StepLabel>
+                    </StepButton>
                   </Step>
                 );
               })}

@@ -5,7 +5,8 @@ import {
   StepLabel,
   Stepper,
   Typography,
-  Chip
+  Chip,
+  StepButton
 } from "@mui/material";
 import React, { ChangeEventHandler, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -504,6 +505,12 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
     setActiveStep(0);
   };
 
+  const handleStep = (step: number) => () => {
+    if (activeStep > step) {
+      setActiveStep(step);
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       place: undefined,
@@ -601,17 +608,16 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
                 // }
                 return (
                   <Step key={label} {...stepProps}>
-                    <StepLabel
-                      {...labelProps}
-                      className={`${styles["step-label"]}`}
-                      StepIconProps={{
-                        sx: {
-                          ...stepperIconSx,
-                        },
-                      }}
-                    >
-                      {label}
-                    </StepLabel>
+                    <StepButton color="inherit" onClick={handleStep(index)}>
+                      <StepLabel {...labelProps} className={`${styles['step-label']}`}
+                        StepIconProps={{
+                          sx: {
+                            ...stepperIconSx
+                          }
+                        }}
+                      >{label}
+                      </StepLabel>
+                    </StepButton>
                   </Step>
                 );
               })}
@@ -663,7 +669,7 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
             <Button
               label={activeStep === steps.length - 1 ? "Add" : "Next"}
               type="submit"
-              disabled={!(formik.values.visitNumber.length > 0)}
+              disabled={!(formik.values.visitNumber.length > 0 && formik.values.place)}
               // onClick={handleNext}
             />
           </Box>

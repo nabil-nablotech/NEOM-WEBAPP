@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import Box from "@mui/material/Box";
+import {Box, Grid, Button} from "@mui/material";
 import { useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { RootState } from "../../store";
@@ -22,6 +22,8 @@ import PositionedSnackbar from "../../components/Snackbar";
 import { PLACES_TAB_NAME } from "../../utils/services/helpers";
 import useRefinedSearch from "../../hooks/useRefinedSearchOptions";
 import {setSearchText, } from '../../store/reducers/searchResultsReducer';
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import styles from './index.module.css'
 
 const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
@@ -103,6 +105,35 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
     await navigate("/");
   };
 
+  const ContinueEditing = () => {
+    
+    return <Box component="div">
+      <Grid container style={{
+        gap: '10px',
+        alignItems: 'center'
+      }}>
+        <Grid item>{`New ${tabName === PLACES_TAB_NAME ? "Place" : "Event"} added.`}</Grid>
+        <Grid item className={`${styles['continue-btn']}`}>
+          <Button variant="text" onClick={e => { }}
+            startIcon={<CreateOutlinedIcon fontSize="small" />}
+            style={{
+              minWidth: 'fit-content',
+              padding: 0,
+              color: '#fff',
+              borderColor: '#fff',
+              fontSize: 'smaller'
+            }}
+            sx={{
+              '& .MuiButton-startIcon': {
+                marginRight: '2px'
+              }
+            }}
+          >CONTINUE EDITING</Button>
+        </Grid>
+      </Grid>
+    </Box>
+  }
+
   return (
     <>
       <Header
@@ -115,10 +146,11 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         <SearchResultTabs handleSubmit={handleSubmit} tabIndex={tabIndex} />
       </Box>
       <PositionedSnackbar
-        message={`New ${tabName === PLACES_TAB_NAME ? "Place" : "Event"} added`}
+        message={<ContinueEditing />}
         severity={"success"}
         open={showAddSuccess}
         handleClose={() => dispatch(toggleShowAddSuccess(false))}
+        duration={10000}
       />
     </>
   );
