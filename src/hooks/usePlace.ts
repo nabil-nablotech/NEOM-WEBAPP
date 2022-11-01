@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { addPlace, refinePlaces } from "../query/places";
 import { RootState } from "../store";
 import { initialSelectedValue, setSelectedValue } from "../store/reducers/refinedSearchReducer";
@@ -30,6 +30,7 @@ const usePlace = () => {
   const { search } = useLocation();
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const searchData = getQueryObj(search);
   useEffect(() => {
@@ -111,6 +112,7 @@ const usePlace = () => {
 
       console.log('hex: ', data)
       /** rdirect */
+      navigate(`/search-results/Places/${data.createPlace.data.attributes.uniqueId}`, {replace: true})
       /** insert in reducer */
       /** map that to screen  */
     }
