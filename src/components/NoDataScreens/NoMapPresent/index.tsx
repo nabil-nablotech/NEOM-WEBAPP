@@ -8,7 +8,7 @@ const NoMapPresent = ({
 
     return <Box component="div" className={`${styles['wrapper']} ${styles['no-map-wrapper']}`}>
         <Grid container className={`${styles['content-grid']}`} style={{
-
+                flexDirection: 'column'
         }}>
             <Grid item >
                 <LocationOnIcon className={`${styles['content-image']}`} />
