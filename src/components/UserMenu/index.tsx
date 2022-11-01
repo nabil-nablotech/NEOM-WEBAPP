@@ -36,7 +36,7 @@ function UserMenuComponent() {
   const [anchorElSettings, setAnchorElSettings] = React.useState<null | HTMLElement>(null);
   const {newItemWindowOpen, addNewItemWindowType} = useSelector((state: RootState) => state.searchResults);
   const { createPlace  } = usePlace();
-  const { createEvent } = useEvent();
+  const { createEvent, setSearchValue } = useEvent();
 
   const open = Boolean(anchorEl);
   const admin = getRole() === 'Admin';
@@ -141,7 +141,7 @@ function UserMenuComponent() {
           }
           {
             addNewItemWindowType === EVENTS_TAB_NAME &&
-            <AddNewEvent create={createEvent} onClose={() => dispatch(setAddNewItemWindowType(null))} />
+            <AddNewEvent create={createEvent} setSearchValue={setSearchValue} onClose={() => dispatch(setAddNewItemWindowType(null))} />
           }
           {
             addNewItemWindowType === LIBRARY_TAB_NAME &&

@@ -1,13 +1,12 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete, { AutocompleteProps } from '@mui/material/Autocomplete';
 import FormControl from "@mui/material/FormControl";
 import { InputAdornment } from "@mui/material";
 import { AutoCompleteSingleSelectProps } from '../../types/DropdownComponent';
 import SearchIcon from '@mui/icons-material/Search';
 
-export default function FreeSolo({ className, formControlSx, itemsList, value, placeholder, label, selectStylesSx, handleSelectChange }: AutoCompleteSingleSelectProps) {
+export default function FreeSolo({ className, formControlSx, itemsList, value, placeholder, label, selectStylesSx, handleSelectChange, handleChange, renderOption}: AutoCompleteSingleSelectProps) {
   return (
     <div className={className}>
       <FormControl sx={{ width: '100%', ...formControlSx }}>
@@ -24,10 +23,12 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
           options={itemsList.map((option: any) => option)}
           value={value}
           onChange={handleSelectChange}
+
           renderInput={(params) => (
             <TextField
               {...params}
               placeholder={placeholder}
+              onChange={handleChange}
               InputProps={{
                 ...params.InputProps,
                 type: 'search',
@@ -46,6 +47,7 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
         sx={{
           ...selectStylesSx
         }}
+        renderOption={renderOption}
       />
       </FormControl>
     </div>

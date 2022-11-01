@@ -11,6 +11,7 @@ import {
   setEventMetaData,
   setSearchText
 } from "../store/reducers/searchResultsReducer";
+import {setPlaces} from '../store/reducers/eventReducer';
 import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/helpers';
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { graphQlHeaders } from "../utils/services/interceptor";
@@ -21,6 +22,8 @@ const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [mapEvents, setMapEvents]= useState(null);
   const [place, setPlace]= useState<Place>();
+  
+  const [searchValue, setSearchValue] = useState<string>('');
   const {
     searchText,
     events: eventsData,
@@ -61,7 +64,7 @@ const useEvent = () => {
   const [createVisitAssociateMuation, { loading: visitAssociateload, error: visitAssociateErr, data: visitAssociate }] = useMutation(createVisitAssociate, graphQlHeaders());
   const{ loading:refineLoading, error:refineErrorData, data:refineEventData, refetch:refineSearchEvents} = useQuery(refineEvents);
 
-  const { loading: placesLoading, error: placesErr, data: placeList } = useQuery(places, graphQlHeaders());
+  const { loading: placesLoading, error: placesErr, data: placeList, refetch: refetchPlaces } = useQuery(places, graphQlHeaders());
  
   useEffect(() => {
     if (refineEventData?.visits) {
@@ -110,6 +113,18 @@ const useEvent = () => {
       }});
     }
   }, [visitAssociate])
+
+  useEffect(() => {
+    if (placeList?.places) {
+      const places = JSON.parse(JSON.stringify(placeList?.places.data))
+      places.map((x: Place) => {
+        x.label = `${x?.attributes?.placeNameEnglish}${x?.attributes?.placeNameArabic}` || '';
+        x.value = x?.id;
+        return x;
+      })
+      dispatch((setPlaces(places)))
+    }
+  }, [placeList])
 
   const fetchData = (skip: number = eventsData.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);
@@ -166,10 +181,10 @@ const useEvent = () => {
 
   function zerofill(i: number) {
     return (i < 10 ? '0' : '') + i;
-}
+  }
   const createEvent = async (payload: any | undefined) => {
     const uniqueId = generateUniqueId();
-    const keywords = payload.keywords?.split(' ');
+    const keywords = payload.keywords;
     const eventDate = payload.eventDate;
     const visitDate = `${eventDate.getFullYear()}-${zerofill(eventDate.getMonth() + 1)}-${zerofill(eventDate.getDate())}`;
     const data = {
@@ -196,6 +211,20 @@ const useEvent = () => {
     createEventMuation({variables: data})
   }
 
+  useEffect(() => {
+    const getData = setTimeout(() => filterPlaces(), 2000);
+    return () => clearTimeout(getData)
+  }, [searchValue])
+  const filterPlaces = () => {
+    if (searchValue.trim().length > 2) {
+      refetchPlaces({
+        search: searchValue,
+        limit: 100,
+        skip: 0
+      }) 
+    }
+  }
+
   return {
     loading: refineLoading,
     error: refineErrorData,
@@ -204,7 +233,8 @@ const useEvent = () => {
     hasMoreData,
     fetchEvents: fetchData,
     clearSearch: clearTextSearch,
-    createEvent: createEvent
+    createEvent: createEvent,
+    setSearchValue
   };
 };
 

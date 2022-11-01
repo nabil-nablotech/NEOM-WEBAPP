@@ -15,6 +15,7 @@ export type CustomDrawerProps = {
 export type AddNewItemProps = {
     onClose: () => void
     create?: (options?: any) => Promise<any>
+    setSearchValue?: (str: string) => void
 }
 
 export type StepContentTypes = {
@@ -26,6 +27,7 @@ export type StepContentTypes = {
     activeStep: number
     steps: Array<string>
     handleNext: (e: any, data?: InitialValues) => void
+    handleChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
     handleBack:  () => void
     formik?:any
 }
