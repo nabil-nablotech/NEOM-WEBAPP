@@ -19,7 +19,7 @@ function TransitionDown(props: TransitionProps) {
 }
 
 type SnackbarProps = {
-  message: string | "";
+  message: string | React.ReactNode;
   severity?: "error" | "info" | "warning" | "success";
   open: boolean;
   handleClose: () => void;
@@ -62,6 +62,9 @@ export default function PositionedSnackbar(props: SnackbarProps) {
           icon={false}
           onClose={handleClose}
           severity={severity ? severity : "success"}
+          style={{
+            backgroundColor: severity === "success" ? 'var(--snackbar-green)' : 'initial'
+          }}
         >
           {message}
         </Alert>
