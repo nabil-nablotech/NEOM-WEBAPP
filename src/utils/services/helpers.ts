@@ -6,7 +6,7 @@ import { tabNameProps } from "../../types/SearchResultsTabsProps";
 import * as Yup from 'yup';
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://334b-117-214-59-174.in.ngrok.io`;
+// export const baseUrl = `https://8568-117-251-210-47.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -325,3 +325,29 @@ export const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>, callback?:
     if(callback) callback()
   }
 }
+
+type isEmptyType = (value: any) => boolean
+
+
+export const isEmptyValue: isEmptyType = (value: any) => {
+  if (typeof value === 'string') return value === ''
+  if (
+    (typeof value === 'object') &&
+    (Array.isArray(value)) &&
+    value.length === 0
+  ) return value.length === 0
+  if (
+    (typeof value === 'object') &&
+    (Array.isArray(value)) &&
+    value.length === 1
+  ) return isEmptyValue(value[0])
+
+  return false
+}
+
+export const NO_TEXT = "No data available"
+export const NO_MEDIA = "No media items to display"
+export const NO_TABLE_ROWS = "No items to display"
+export const NO_LOCATION = "No location available"
+export const NO_DESCRIPTION = "No description available"
+

@@ -1,29 +1,23 @@
 import { Box, Grid } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import styles from '../../NoDataScreens/index.module.css';
 
 const NoMapPresent = ({
     message
-}: {message: string}) => {
-    return (
-        <Box component="div" style={{
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'var(--no-map-bg)'
+}: { message: string }) => {
+
+    return <Box component="div" className={`${styles['wrapper']} ${styles['no-map-wrapper']}`}>
+        <Grid container className={`${styles['content-grid']}`} style={{
+
         }}>
-            <Grid container style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center'
-            }}>
-                <Grid item>
-                    <LocationOnIcon />
-                </Grid>
-                <Grid item>
-                    {message}
-                </Grid>
+            <Grid item >
+                <LocationOnIcon className={`${styles['content-image']}`} />
             </Grid>
-        </Box>
-    );
+            <Grid item className={`${styles['content-text']}`}>
+                {message}
+            </Grid>
+        </Grid>
+    </Box>
 }
 
 export default NoMapPresent;
