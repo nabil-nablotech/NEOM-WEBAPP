@@ -106,10 +106,9 @@ export const eventByEventNumber = gql`
   query SearchEvents(
     $visitNumber: String
     $limit: Int
-    $skip: 0
   ) {
     visits(
-      pagination: { limit: $limit, start: $skip }
+      pagination: { limit: $limit, start: 0 }
       filters: {
         or: [
       { visitNumber: { contains: $visitNumber } }
