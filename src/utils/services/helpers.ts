@@ -6,7 +6,7 @@ import { tabNameProps } from "../../types/SearchResultsTabsProps";
 import * as Yup from 'yup';
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://8568-117-251-210-47.ngrok.io`;
+// export const baseUrl = `https://2db5-117-251-210-47.in.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -150,6 +150,7 @@ export const tabNameBasedOnIndex = (tabIndex: number) => {
 
 export const addItemDefaultSteps = ['Item Details', 'Keywords']
 
+export const addItemLibrarySteps = ['Item Details', 'Associations', 'Keywords']
 export const addItemMediaSteps = ['Media', 'Item Details', 'Associations', 'Keywords']
 
 export const StyledTableWrapper = styled(StyledAntTable)`
