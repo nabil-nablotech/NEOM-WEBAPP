@@ -28,7 +28,8 @@ const initialState: SearchResultsState2 = {
   activeMediaItem: null,
   activeMediaItemIndex: 0,
   isOpenGalleryView: false,
-  addNewItemWindowType: null
+  addNewItemWindowType: null,
+  isAssociationsStepOpen: false
 };
 
 export const searchResultsSlice = createSlice({
@@ -104,6 +105,9 @@ export const searchResultsSlice = createSlice({
     setAddNewItemWindowType: (state, action: PayloadAction<tabNameProps | null>) => {
       state.addNewItemWindowType = action.payload;
     },
+    toggleAssociationsStepOpen: (state, action: PayloadAction<boolean>) => {
+      state.isAssociationsStepOpen = action.payload;
+    },
   },
 });
 
@@ -130,7 +134,8 @@ export const {
   setActiveMediaItemIndex,
   toggleGalleryView,
   setSearchApply,
-  setAddNewItemWindowType
+  setAddNewItemWindowType,
+  toggleAssociationsStepOpen
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

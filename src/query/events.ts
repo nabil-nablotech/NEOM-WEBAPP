@@ -101,6 +101,43 @@ export const events = gql`
   }
 `;
 
+export const eventByEventNumber = gql`
+  query SearchEvents(
+    $visitNumber: String
+    $limit: Int
+  ) {
+    visits(
+      pagination: { limit: $limit, start: 0 }
+      filters: {
+        or: [
+      { visitNumber: { contains: $visitNumber } }
+        ]
+      }
+    ) {
+      meta {
+        pagination {
+          total
+          pageCount
+          pageSize
+          page
+        }
+      }
+      data {
+        id
+      }
+    }
+  }
+`;
+export const eventById = gql`
+  query getEventById($id: ID){
+    document(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
 export const refineEvents = gql`
 query RefineSearchEvent(
   $search_one: String

@@ -1,8 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
-import { format, parseISO } from "date-fns";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { addEvent, refineEvents, updateEvent } from "../query/events";
 import { createVisitAssociate } from "../query/eventAssociate";
 import { RootState } from "../store";
@@ -10,18 +9,23 @@ import { setSelectedValue, initialSelectedValue } from "../store/reducers/refine
 import {
   setEvents,
   setEventMetaData,
-  setSearchText
+  setSearchText,
+  toggleShowAddSuccess
+
 } from "../store/reducers/searchResultsReducer";
+import {setEventEdit, setPlaces} from '../store/reducers/eventReducer';
 import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/helpers';
 import { tabNameProps } from "../types/SearchResultsTabsProps";
-import { AddEventState } from "../store/reducers/eventReducer";
 import { graphQlHeaders } from "../utils/services/interceptor";
 import { Place } from "../types/Place";
+import { places } from "../query/places";
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [mapEvents, setMapEvents]= useState(null);
   const [place, setPlace]= useState<Place>();
+  
+  const [searchValue, setSearchValue] = useState<string>('');
   const {
     searchText,
     events: eventsData,
@@ -29,10 +33,14 @@ const useEvent = () => {
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
   );
+  const { edit, event } = useSelector(
+    (state: RootState) => state.event
+  );
   const { search } = useLocation();
   
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const searchParams = getQueryObj(search);
   useEffect(() => {
@@ -62,6 +70,7 @@ const useEvent = () => {
   const [createVisitAssociateMuation, { loading: visitAssociateload, error: visitAssociateErr, data: visitAssociate }] = useMutation(createVisitAssociate, graphQlHeaders());
   const{ loading:refineLoading, error:refineErrorData, data:refineEventData, refetch:refineSearchEvents} = useQuery(refineEvents);
 
+  const { loading: placesLoading, error: placesErr, data: placeList, refetch: refetchPlaces } = useQuery(places, graphQlHeaders());
  
   useEffect(() => {
     if (refineEventData?.visits) {
@@ -94,11 +103,27 @@ const useEvent = () => {
         "visit_unique_id": data.createVisit.data.id
       }});
     }
+
+    if(data) {
+      dispatch(toggleShowAddSuccess(true))
+
+      /** re-direct */
+      navigate(`/search-results/Events/${data.createVisit.data.attributes.uniqueId}`, {replace: true})
+
+    }
   }, [data])
 
   useEffect(() => {
     if (updateData) {
       fetchData(0);
+      if (edit) {
+        dispatch(setEventEdit(false))
+        // dispatch(toggleShowAddSuccess(true))
+
+        /** re-direct */
+        navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, {replace: true})
+
+      }
     }
   }, [updateData])
 
@@ -110,6 +135,18 @@ const useEvent = () => {
       }});
     }
   }, [visitAssociate])
+
+  useEffect(() => {
+    if (placeList?.places) {
+      const places = JSON.parse(JSON.stringify(placeList?.places.data))
+      places.map((x: Place) => {
+        x.label = `${x?.attributes?.placeNameEnglish}${x?.attributes?.placeNameArabic}` || '';
+        x.value = x?.id;
+        return x;
+      })
+      dispatch((setPlaces(places)))
+    }
+  }, [placeList])
 
   const fetchData = (skip: number = eventsData.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);
@@ -167,12 +204,12 @@ const useEvent = () => {
 
   function zerofill(i: number) {
     return (i < 10 ? '0' : '') + i;
-}
+  }
   const createEvent = async (payload: any | undefined) => {
     const uniqueId = generateUniqueId();
-    const keywords = payload.keywords?.split(' ');
-    const eventDate = payload.eventDate;
-    const visitDate = `${eventDate.getFullYear()}-${zerofill(eventDate.getMonth() + 1)}-${zerofill(eventDate.getDate())}`;
+    const keywords = payload.keywords;
+    const eventDate = payload.eventDate && payload.eventDate;
+    const visitDate = eventDate && eventDate.getFullYear() && `${eventDate.getFullYear()}-${zerofill(eventDate.getMonth() + 1)}-${zerofill(eventDate.getDate())}`;
     const data = {
       ...payload,
       uniqueId: uniqueId,
@@ -180,7 +217,7 @@ const useEvent = () => {
       visitUIPath: `${webUrl}/search-results/Events/${uniqueId}`,
       asset_config_id: 1,
       keywords: keywords,
-      siteType: payload.siteType && [payload.siteType],
+      siteType: payload.siteType && payload.siteType,
       visitDate: visitDate,
       "researchValue": payload.researchValue && [payload.researchValue],
       "tourismValue": payload.tourismValue && [payload.tourismValue],
@@ -194,7 +231,32 @@ const useEvent = () => {
       artifacts: payload.artifacts && [payload.artifacts]
     }
     setPlace(data.place);
-    createEventMuation({variables: data})
+    if (!edit) {
+
+      createEventMuation({variables: data})
+    }
+    if (edit && event?.id) {
+      updateEventMuation({
+        variables: {
+          ...data,
+          id: event.id
+        }
+      })
+    }
+  }
+
+  useEffect(() => {
+    const getData = setTimeout(() => filterPlaces(), 2000);
+    return () => clearTimeout(getData)
+  }, [searchValue])
+  const filterPlaces = () => {
+    if (searchValue.trim().length > 2) {
+      refetchPlaces({
+        search: searchValue,
+        limit: 100,
+        skip: 0
+      }) 
+    }
   }
 
   return {
@@ -205,7 +267,8 @@ const useEvent = () => {
     hasMoreData,
     fetchEvents: fetchData,
     clearSearch: clearTextSearch,
-    createEvent: createEvent
+    createEvent: createEvent,
+    setSearchValue
   };
 };
 

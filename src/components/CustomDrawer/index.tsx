@@ -12,11 +12,23 @@ const CustomDrawer = ({
     return (
         <Box component="div" style={{
             zIndex: '33'
+        }} sx={{
+            '& .MuiModal-root.MuiDrawer-root': {
+                left: 'unset'
+            },
         }}>
             <Drawer
                 anchor={origin ? origin : "left"}
                 open={isOpen}
                 onClose={onClose}
+                style={{
+                    left: 'unset'
+                }}
+                sx={{
+                    '& .MuiBackdrop-root': {
+                        display: 'none'
+                    }
+                }}
                 >
                     {children}
                 </Drawer>

@@ -1,4 +1,4 @@
-import { Box, Button as DefaultButton, Step, StepLabel, Stepper, Typography } from '@mui/material';
+import { Box, Button as DefaultButton, Step, StepLabel, Stepper, Typography, StepButton } from '@mui/material';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AddNewItemProps, StepContentTypes } from '../../../../types/CustomDrawerTypes';
@@ -14,7 +14,7 @@ import { toggleShowAddSuccess } from '../../../../store/reducers/searchResultsRe
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { addItemMediaSteps } from './../../../../utils/services/helpers';
-import CustomUpload from '../../../Upload';
+import CustomUpload from '../../../Upload/ImageUpload';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { useFormik } from 'formik';
 
@@ -241,6 +241,13 @@ const AddNewMedia = ({
         setActiveStep(0);
     };
 
+    const handleStep = (step: number) => () => {
+        if (activeStep > step) {
+            setActiveStep(step);
+        }
+    };
+
+
 
     return (
         <Box component="div">
@@ -284,13 +291,16 @@ const AddNewMedia = ({
                             // }
                             return (
                                 <Step key={label} {...stepProps}>
-                                    <StepLabel {...labelProps} className={`${styles['step-label']}`}
-                                        StepIconProps={{
-                                            sx: {
-                                                ...stepperIconSx
-                                            }
-                                        }}
-                                    >{label}</StepLabel>
+                                    <StepButton color="inherit" onClick={handleStep(index)}>
+                                        <StepLabel {...labelProps} className={`${styles['step-label']}`}
+                                            StepIconProps={{
+                                                sx: {
+                                                    ...stepperIconSx
+                                                }
+                                            }}
+                                        >{label}
+                                        </StepLabel>
+                                    </StepButton>
                                 </Step>
                             );
                         })}

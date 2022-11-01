@@ -1,4 +1,4 @@
-import { Box, Button as DefaultButton, Step, StepLabel, Stepper, Typography, Chip } from '@mui/material';
+import { Box, Button as DefaultButton, Step, StepLabel, Stepper, Typography, Chip, StepButton } from '@mui/material';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AddNewItemProps, StepContentTypes } from '../../../../types/CustomDrawerTypes';
@@ -10,7 +10,7 @@ import Button from "../../../../components/Button";
 import DropdownComponent from '../../../Dropdown/index';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { toggleShowAddSuccess } from '../../../../store/reducers/searchResultsReducer';
+import { toggleNewItemWindow, toggleShowAddSuccess } from '../../../../store/reducers/searchResultsReducer';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { SelectChangeEvent } from '@mui/material/Select';
@@ -189,6 +189,19 @@ const StepContent = ({
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
                     />
+                    <DropdownComponent
+                        className={`${styles["artifacts"]}`}
+                        label={"Artifacts"}
+                        name="artifacts"
+                        value={formik.values.artifacts}
+                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                            formik.setFieldValue('artifacts', e.target.value as string)
+                        }
+                        handleClear={() => { }}
+                        itemsList={options?.artifacts || []}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
                     <TextInput
                         className={`${styles["arabic-name"]}`}
                         label="Previous Number"
@@ -196,6 +209,34 @@ const StepContent = ({
                         value={formik.values.previousNumber}
                         onChange={e => {
                             formik.setFieldValue('previousNumber', e.target.value)
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
+                        className={`${styles["latitude"]}`}
+                        label="Latitude"
+                        name="latitude"
+                        type="number"
+                        value={formik.values.latitude}
+                        onChange={e => {
+                            formik.setFieldValue('latitude', e.target.value)
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
+                        className={`${styles["longitude"]}`}
+                        label="Longitude"
+                        name="longitude"
+                        type="number"
+                        value={formik.values.longitude}
+                        onChange={e => {
+                            formik.setFieldValue('longitude', e.target.value)
                         }}
                         sx={{
                             ...textInputSxStyles
@@ -255,19 +296,6 @@ const StepContent = ({
                         formControlSx={commonFormControlSxStyles}
                     />
                     <DropdownComponent
-                        className={`${styles["artifacts"]}`}
-                        label={"Artifacts"}
-                        name="artifacts"
-                        value={formik.values.artifacts}
-                        handleChange={(e: SelectChangeEvent<string | string[]>) =>
-                            formik.setFieldValue('artifacts', e.target.value as string)
-                        }
-                        handleClear={() => { }}
-                        itemsList={options?.artifacts || []}
-                        selectStylesSx={commonSelectSxStyles}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <DropdownComponent
                         className={`${styles["recommendation"]}`}
                         label={"Recommendation"}
                         name="recommendation"
@@ -280,34 +308,6 @@ const StepContent = ({
                         selectStylesSx={commonSelectSxStyles}
                         formControlSx={commonFormControlSxStyles}
                     />
-                    <TextInput
-                        className={`${styles["latitude"]}`}
-                        label="Latitude"
-                        name="latitude"
-                        type="number"
-                        value={formik.values.latitude}
-                        onChange={e => {
-                            formik.setFieldValue('latitude', e.target.value)
-                        }}
-                        sx={{
-                            ...textInputSxStyles
-                        }}
-                        formControlSx={commonFormControlSxStyles}
-                    />
-                    <TextInput
-                        className={`${styles["longitude"]}`}
-                        label="Longitude"
-                        name="longitude"
-                        type="number"
-                        value={formik.values.longitude}
-                        onChange={e => {
-                            formik.setFieldValue('longitude', e.target.value)
-                        }}
-                        sx={{
-                            ...textInputSxStyles
-                        }}
-                        formControlSx={commonFormControlSxStyles}
-                    />
                 </>
             }
             {
@@ -318,7 +318,7 @@ const StepContent = ({
                         className={`${styles["english-name"]}`}
                         id="keyword-div"
                         label="Add Keywords"
-                        name="english-name"
+                        name="keywords"
                         value={currentKeyword}
                         onChange={(e) => {
                             setCurrentKeyword(e.target.value)
@@ -401,6 +401,7 @@ const AddNewPlace = ({
         }
 
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
         if (activeStep + 1 === steps.length) {
             if (create) {
                 create({
@@ -408,11 +409,9 @@ const AddNewPlace = ({
                 });
             }
             onClose()
-            dispatch(toggleShowAddSuccess(true))
+            dispatch(toggleNewItemWindow(false))
         }
-        if (activeStep === 1) {
 
-        }
         setSkipped(newSkipped);
     };
 
@@ -441,6 +440,12 @@ const AddNewPlace = ({
 
     const handleReset = () => {
         setActiveStep(0);
+    };
+
+    const handleStep = (step: number) => () => {
+        if (activeStep > step) {
+            setActiveStep(step);
+        }
     };
 
     const formik = useFormik({
@@ -510,13 +515,16 @@ const AddNewPlace = ({
                                 } = {};
                                 return (
                                     <Step key={label} {...stepProps}>
-                                        <StepLabel {...labelProps} className={`${styles['step-label']}`}
-                                            StepIconProps={{
-                                                sx: {
-                                                    ...stepperIconSx
-                                                }
-                                            }}
-                                        >{label}</StepLabel>
+                                        <StepButton color="inherit" onClick={handleStep(index)}>
+                                            <StepLabel {...labelProps} className={`${styles['step-label']}`}
+                                                StepIconProps={{
+                                                    sx: {
+                                                        ...stepperIconSx
+                                                    }
+                                                }}
+                                            >{label}
+                                            </StepLabel>
+                                        </StepButton>
                                     </Step>
                                 );
                             })}
@@ -560,6 +568,7 @@ const AddNewPlace = ({
                         <Button
                             label={activeStep === steps.length - 1 ? 'Add' : 'Next'}
                             type="submit"
+                            disabled={!(formik.values.placeNumber.length > 0)}
                         />
                     </Box>
                 </Box>

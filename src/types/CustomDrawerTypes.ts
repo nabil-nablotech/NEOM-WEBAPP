@@ -15,17 +15,20 @@ export type CustomDrawerProps = {
 export type AddNewItemProps = {
     onClose: () => void
     create?: (options?: any) => Promise<any>
+    update?: (options?: any) => Promise<any>
+    setSearchValue?: (str: string) => void
 }
 
 export type StepContentTypes = {
     tabName: tabNameProps | undefined
     options?: Options | null
     places?: Place[] | []
-    formState: any
-    setFormState: React.SetStateAction<any> 
+    formState?: any
+    setFormState?: React.SetStateAction<any> 
     activeStep: number
     steps: Array<string>
     handleNext: (e: any, data?: InitialValues) => void
+    handleChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
     handleBack:  () => void
     formik?:any
 }

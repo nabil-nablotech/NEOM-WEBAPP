@@ -22,6 +22,7 @@ import AddNewEvent from "../SearchResultTabs/Events/AddNewItem";
 import AddNewMedia from "../SearchResultTabs/Media/AddNewItem";
 import useEvent from "../../hooks/useEvent";
 import AddNewLibraryItem from "../SearchResultTabs/Library/AddNewItem";
+import { setEventEdit } from "../../store/reducers/eventReducer";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -36,7 +37,7 @@ function UserMenuComponent() {
   const [anchorElSettings, setAnchorElSettings] = React.useState<null | HTMLElement>(null);
   const {newItemWindowOpen, addNewItemWindowType} = useSelector((state: RootState) => state.searchResults);
   const { createPlace  } = usePlace();
-  const { createEvent } = useEvent();
+  const { createEvent, setSearchValue } = useEvent();
 
   const open = Boolean(anchorEl);
   const admin = getRole() === 'Admin';
@@ -94,6 +95,11 @@ function UserMenuComponent() {
     }
   ]
 
+  const handlePlus = () => {
+    dispatch(toggleNewItemWindow(!newItemWindowOpen));
+    dispatch(setEventEdit(false));
+  }
+
   return (
     <>
       <Box component="div" sx={{
@@ -105,7 +111,7 @@ function UserMenuComponent() {
         marginRight: '1em'
       }}>
         <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }} onClick={
-          e => dispatch(toggleNewItemWindow(!newItemWindowOpen))
+          e => handlePlus()
         }/>
         {admin && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
         <InitialsWrapper
@@ -141,7 +147,7 @@ function UserMenuComponent() {
           }
           {
             addNewItemWindowType === EVENTS_TAB_NAME &&
-            <AddNewEvent create={createEvent} onClose={() => dispatch(setAddNewItemWindowType(null))} />
+            <AddNewEvent create={createEvent} setSearchValue={setSearchValue} onClose={() => dispatch(setAddNewItemWindowType(null))} />
           }
           {
             addNewItemWindowType === LIBRARY_TAB_NAME &&

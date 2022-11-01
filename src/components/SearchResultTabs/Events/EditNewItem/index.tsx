@@ -6,8 +6,7 @@ import {
   Stepper,
   Typography,
   Chip,
-  StepButton,
-  Grid,
+  StepButton
 } from "@mui/material";
 import React, { ChangeEventHandler, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -16,30 +15,23 @@ import {
   StepContentTypes,
 } from "../../../../types/CustomDrawerTypes";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
-import {
-  addItemDefaultSteps,
-  handleEnter,
-} from "../../../../utils/services/helpers";
+import { addItemDefaultSteps, handleEnter } from "../../../../utils/services/helpers";
 import styles from "../../Places/AddNewItem/addNewItem.module.css";
 import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
 import DropdownComponent from "../../../Dropdown/index";
 import AutoCompleteSingleSelect from "../../../AutoComplete/singleSelect";
 import AutoComplete from "../../../AutoComplete";
-import CloseIcon from "@mui/icons-material/Close";
+import CloseIcon from '@mui/icons-material/Close';
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import {
-  toggleNewItemWindow,
-  toggleShowAddSuccess,
-} from "../../../../store/reducers/searchResultsReducer";
+import { toggleNewItemWindow, toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useFormik } from "formik";
 import ReactDatePicker from "react-datepicker";
 import { Place } from "../../../../types/Place";
-import { setEventEdit } from "../../../../store/reducers/eventReducer";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -93,26 +85,41 @@ export const stepperIconSx = {
 const StepContent = ({
   tabName,
   options,
+  formState,
+  setFormState,
   activeStep,
   steps,
   handleNext,
   handleBack,
   formik,
   places,
-  handleChange,
+  handleChange
 }: StepContentTypes) => {
-  const [currentKeyword, setCurrentKeyword] = useState<string>("");
+
+  const [currentKeyword, setCurrentKeyword] = useState<string>('')
 
   return (
     <>
       <Box component="div" className={`${styles["form"]}`}>
         {activeStep === 0 && (
           <>
+            {/* <CustomSearchField
+              handleChangeParent={(e) => {
+                // setFormState((state: any) => ({
+                //     ...state,
+                //     search: e.target.value
+                // }))
+              }}
+              // onKeyDown={onKeyDown}
+              className={`${styles["custom-search-field"]}`}
+              shouldHandleChangeFromParent={true}
+              valueFromParent={formState.search}
+            /> */}
             <AutoCompleteSingleSelect
               className={`${styles["custom-search-field"]}`}
               label="Search Place*"
-              placeholder="Search Place*"
-              value={formik.Place}
+              placeholder="Search Place"
+              value={formState.search}
               handleClear={() => {}}
               itemsList={places || []}
               handleSelectChange={(e, value, r, d) =>
@@ -120,17 +127,12 @@ const StepContent = ({
               }
               handleChange={handleChange}
               renderOption={(props, option: any) => (
-                <Box
-                  component="li"
-                  sx={{ display: "flex", justifyContent: "space-between" }}
-                  {...props}
-                >
-                  <Typography>
-                    {option.attributes.placeNameEnglish}
-                    {option.attributes.placeNameArabic}
-                  </Typography>
+                <Box component="li" sx={{ '& > img': { display: 'flex', justifyContent: 'space-between' } }} {...props}>
+                  <Typography align="left">
 
-                  <Typography style={{ float: "right" }}>
+                    {option.attributes.placeNameEnglish}{option.attributes.placeNameArabic}
+                  </Typography>
+                  <Typography style={{float: "right"}}>
                     {option.attributes.placeNumber}
                   </Typography>
                 </Box>
@@ -154,13 +156,11 @@ const StepContent = ({
               }}
               formControlSx={commonFormControlSxStyles}
             />
-
+            
             <ReactDatePicker
               placeholderText="Event Date"
               className={`${styles["date"]}`}
-              selected={
-                formik.values.eventDate && new Date(formik.values.eventDate)
-              }
+              selected={formik.values.eventDate && new Date(formik.values.eventDate)}
               onChange={(date: Date) => formik.setFieldValue("eventDate", date)}
             />
             <DropdownComponent
@@ -215,6 +215,18 @@ const StepContent = ({
               }}
               formControlSx={commonFormControlSxStyles}
             />
+            {/* <DropdownComponent
+              className={`${styles["site-type"]}`}
+              label={"Site Type"}
+              name="site-type"
+              value={formik.values.siteType}
+              handleChange={(e: SelectChangeEvent<string | string[]>) =>
+                formik.setFieldValue("siteType", e.target.value as string)
+              }
+              itemsList={options?.siteType || []}
+              selectStylesSx={commonSelectSxStyles}
+              formControlSx={commonFormControlSxStyles}
+            /> */}
             <AutoComplete
               className={`${styles["period"]}`}
               label={"Site Type"}
@@ -225,6 +237,9 @@ const StepContent = ({
               handleSelectChange={(e, value) =>
                 formik.setFieldValue("siteType", value)
               }
+              // handleSChange={(e: SelectChangeEvent<string | string[]>) =>
+              //   formik.setFieldValue("period", e.target.value as string)
+              // }
               itemsList={options?.siteType || []}
               selectStylesSx={commonSelectSxStyles}
               formControlSx={commonFormControlSxStyles}
@@ -318,10 +333,7 @@ const StepContent = ({
               name="stateOfConservation"
               value={formik.values.stateOfConservation}
               handleChange={(e: SelectChangeEvent<string | string[]>) =>
-                formik.setFieldValue(
-                  "stateOfConservation",
-                  e.target.value as string
-                )
+                formik.setFieldValue("stateOfConservation", e.target.value as string)
               }
               itemsList={options?.stateOfConservation || []}
               selectStylesSx={commonSelectSxStyles}
@@ -339,7 +351,7 @@ const StepContent = ({
               selectStylesSx={commonSelectSxStyles}
               formControlSx={commonFormControlSxStyles}
             />
-
+            
             <DropdownComponent
               className={`${styles["tourism-value"]}`}
               label={"Tourism Value"}
@@ -388,44 +400,35 @@ const StepContent = ({
               name="keywords"
               value={currentKeyword}
               onChange={(e) => {
-                setCurrentKeyword(e.target.value);
+                setCurrentKeyword(e.target.value)
               }}
-              onKeyDown={(e) => {
+              onKeyDown={e => {
                 handleEnter(e, () => {
-                  formik.setFieldValue("keywords", [
-                    ...new Set([...formik.values.keywords, currentKeyword]),
-                  ]);
-                  setCurrentKeyword("");
-                });
+                  formik.setFieldValue('keywords', [...new Set([...formik.values.keywords, currentKeyword])])
+                  setCurrentKeyword('')
+                })
               }}
               sx={{
-                ...textInputSxStyles,
+                ...textInputSxStyles
               }}
               formControlSx={commonFormControlSxStyles}
             />
             {
-              <Box
-                component="div"
-                style={{
-                  display: "flex",
-                  gap: "5px",
-                }}
-              >
-                {formik.values.keywords.map((item: string, index: any) => (
-                  <Chip
-                    key={index}
-                    size="small"
-                    variant="outlined"
-                    label={item}
-                    deleteIcon={<CloseIcon fontSize="small" />}
-                    onDelete={(e) => {
-                      const newArr = [...formik.values.keywords].filter(
-                        (element: string) => element !== item
-                      );
-                      formik.setFieldValue("keywords", [...new Set(newArr)]);
-                    }}
-                  />
-                ))}
+              <Box component="div" style={{
+                display: 'flex',
+                gap: '5px'
+              }}>
+                {
+                  formik.values.keywords.map((item: string, index: any) => (
+                    <Chip key={index} size="small" variant="outlined" label={item}
+                      deleteIcon={<CloseIcon fontSize="small" />}
+                      onDelete={e => {
+                        const newArr = [...formik.values.keywords].filter((element: string) => element !== item)
+                        formik.setFieldValue('keywords', [...new Set(newArr)])
+                      }}
+                    />
+                  ))
+                }
               </Box>
             }
           </>
@@ -435,22 +438,23 @@ const StepContent = ({
   );
 };
 
-const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
+const EditEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
   const { showAddSuccess } = useSelector(
     (state: RootState) => state.searchResults
   );
-  const { edit, event } = useSelector((state: RootState) => state.event);
   const { options } = useSelector((state: RootState) => state.refinedSearch);
-  const { places } = useSelector((state: RootState) => state.event);
+  const {places} = useSelector((state: RootState) => state.event);
 
   const [activeStep, setActiveStep] = useState(0);
-
+  const [formState, setFormState] = useState({
+    siteDescription: "",
+  });
   const [skipped, setSkipped] = useState(new Set<number>());
 
   const [steps, setSteps] = useState<Array<string>>(addItemDefaultSteps);
-  const [formError, setFormError] = useState<string>("");
+  const [formError, setFormError] = useState<string>('');
 
   const dispatch = useDispatch();
 
@@ -477,21 +481,15 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
     if (activeStep + 1 === steps.length) {
-      if (create && !edit) {
+      if (create) {
         create({
-          ...data,
+          ...data
         });
       }
       onClose();
       dispatch(toggleShowAddSuccess(true));
-      dispatch(toggleNewItemWindow(false));
-    }
-    if (edit && create) {
-      create({
-        ...data,
-      });
-      onClose();
-      dispatch(toggleNewItemWindow(false));
+      dispatch(toggleNewItemWindow(false))
+
     }
 
     setSkipped(newSkipped);
@@ -532,27 +530,26 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
 
   const formik = useFormik({
     initialValues: {
-      place: edit ? event?.visit_associate?.place_unique_id : undefined,
-      eventDate:
-        edit && event.visitDate ? new Date(event.visitDate) : undefined,
-      recordingTeam: edit ? event?.recordingTeam : "",
-      visitNumber: edit ? event.visitNumber : "",
-      siteDescription: edit ? event?.siteDescription : "",
-      fieldNarrative: edit ? event?.fieldNarrative : "",
-      artifacts: edit ? event?.artifacts[0] : "",
-      latitude: edit ? event?.latitude : null,
-      longitude: edit ? event?.longitude : null,
-      assessmentType: edit ? event?.assessmentType[0] : "",
-      stateOfConservation: edit ? event?.stateOfConservation[0] : "",
-      siteType: edit ? event?.siteType : [],
-      risk: edit ? event?.risk[0] : "",
-      tourismValue: edit ? event?.tourismValue[0] : "",
-      researchValue: edit ? event?.researchValue[0] : "",
-      recommendation: edit ? event?.recommendation[0] : "",
-      period: edit ? event?.period : [],
-      keywords: edit ? event?.keywords : [],
+      place: undefined,
+      eventDate: undefined,
+      recordingTeam: "",
+      visitNumber: "",
+      siteDescription: "",
+      fieldNarrative: "",
+      artifacts: "",
+      latitude: null,
+      longitude: null,
+      assessmentType: "",
+      stateOfConservation: "",
+      siteType: [],
+      risk: "",
+      tourismValue: "",
+      researchValue: "",
+      recommendation: "",
+      period: [],
+      keywords: [],
     },
-    validate: (values) => {
+    validate: values => {
       // if (!values.visitNumber) {
       //   setFormError('Event Number is required')
       // } else {
@@ -566,13 +563,12 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
     },
   });
 
-  const handleChange = async (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    console.log('e', e.target.value)
     if (setSearchValue) {
       setSearchValue(e.target.value);
     }
-  };
+  }
 
   return (
     <Box component="div">
@@ -607,7 +603,7 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
               component="h4"
               style={{}}
             >
-              {edit ? "Edit" : "Add"} Event
+              Add Event
             </Typography>
             <Stepper
               activeStep={activeStep}
@@ -630,16 +626,13 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
                 return (
                   <Step key={label} {...stepProps}>
                     <StepButton color="inherit" onClick={handleStep(index)}>
-                      <StepLabel
-                        {...labelProps}
-                        className={`${styles["step-label"]}`}
+                      <StepLabel {...labelProps} className={`${styles['step-label']}`}
                         StepIconProps={{
                           sx: {
-                            ...stepperIconSx,
-                          },
+                            ...stepperIconSx
+                          }
                         }}
-                      >
-                        {label}
+                      >{label}
                       </StepLabel>
                     </StepButton>
                   </Step>
@@ -648,15 +641,12 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
             </Stepper>
             <>
               <React.Fragment>
-                {edit && event && (
-                  <Box component="div" className={`${styles['visit-count']}`}>
-                    {event.visitNumber || event?.attributes.visitNumber}
-                  </Box>
-                )}
                 <StepContent
                   tabName={tabName}
                   options={options}
                   places={places}
+                  formState={formState}
+                  setFormState={setFormState}
                   activeStep={activeStep}
                   steps={steps}
                   handleNext={handleNext}
@@ -667,11 +657,9 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
               </React.Fragment>
             </>
           </Box>
-          {formError && (
-            <Box component="div" className={`${styles["form-error"]}`}>
-              {formError}
-            </Box>
-          )}
+          {formError && <Box component="div" className={`${styles["form-error"]}`}>
+            {formError}
+          </Box>}
           <Box
             component="div"
             className={`${styles["btn-row"]}`}
@@ -695,43 +683,12 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
                                                     Skip
                                                 </Button>
                                             )} */}
-            <Grid item display={"flex"}>
-              {!edit && (
-                <Button
-                  label={activeStep === steps.length - 1 ? "Add" : "Next"}
-                  type="submit"
-                  disabled={
-                    !(
-                      formik.values.visitNumber.length > 0 &&
-                      formik.values.place
-                    )
-                  }
-                  // onClick={handleNext}
-                />
-              )}
-              {edit && activeStep !== steps.length - 1 && (
-                <Button
-                  colors={["#fff", "var(--table-black-text)", "none"]}
-                  label={"Next"}
-                  type="submit"
-                  disabled={
-                    !(
-                      formik.values.visitNumber.length > 0 &&
-                      formik.values.place
-                    )
-                  }
-                  // onClick={handleNext}
-                />
-              )}
-              {edit && (
-                <Button
-                  label={"Update"}
-                  type="submit"
-                  // disabled={!(formik.values.visitNumber.length > 0 && formik.values.place)}
-                  // onClick={handleNext}
-                />
-              )}
-            </Grid>
+            <Button
+              label={activeStep === steps.length - 1 ? "Add" : "Next"}
+              type="submit"
+              disabled={!(formik.values.visitNumber.length > 0 && formik.values.place)}
+              // onClick={handleNext}
+            />
           </Box>
         </Box>
       </form>
@@ -739,4 +696,4 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
   );
 };
 
-export default AddNewEvent;
+export default EditEvent;

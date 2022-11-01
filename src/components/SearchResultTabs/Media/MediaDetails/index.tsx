@@ -340,7 +340,7 @@ export const MediaDetailsModal = () => {
 
     const { loading: mediaLoading, data: mediaDetails } = useMediaDetails();
 
-    const TotalMediaCount= activeEventItem ? activeEventItem.visit_unique_id.media_associates: 0
+    const TotalMediaCount= (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates: 0
 
 
     if (mediaLoading) {

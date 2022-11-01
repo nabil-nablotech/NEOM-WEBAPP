@@ -15,7 +15,7 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
-import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatBytes, formatWebDate, shallRenderMedia, stringAvatar } from "../../../../utils/services/helpers";
+import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, checkIsNew } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
@@ -32,6 +32,10 @@ import usePlace from "../../../../hooks/usePlace";
 import usePlaceDetails from "../../../../hooks/usePlaceDetails";
 import Loader from "../../../Common/Loader";
 import MapView from "../../GoogleMap/MapView";
+import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
+import NoTextPresent from "../../../NoDataScreens/NoText";
+import {isEmpty} from 'lodash'
+import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -153,7 +157,7 @@ const PlaceDetailsPage = () => {
         'https://via.placeholder.com/150/f66b97',
     ])
     const [isMoreTitleMenuOpen, setMoreTitleMenuOpen] = useState<false>(false)
-    const [isSeeMore, toggleSeeMore] = useState<boolean>(false)
+    const [isSeeMoreHidden, toggleSeeMoreHidden] = useState<boolean>(false)
     const [isCopyDone, setCopyDone] = useState<boolean>(false)
 
     const menuItems = [
@@ -200,7 +204,7 @@ const PlaceDetailsPage = () => {
                     }}
                 >
                     <InsertDriveFileOutlinedIcon fontSize="small" />
-                    <Box component="div">{value.fileName}</Box>
+                    <Box component="div">{value?.fileName}</Box>
                 </Box>
             ),
         },
@@ -210,7 +214,7 @@ const PlaceDetailsPage = () => {
             className: "description-column",
             dataIndex: "media_unique_id", // temporary
             render: (value: any, index) => {
-                return value?.description;
+                return value?.description || '-';
             },
         },
         {
@@ -218,7 +222,7 @@ const PlaceDetailsPage = () => {
             className: "citation-column cell-citation",
             dataIndex: "media_unique_id", // temporary
             render: (value: any, index) => {
-                return value.citation ? value.citation : 'static citation';
+                return value.citation ? value?.citation : '-';
             },
         },
         {
@@ -234,7 +238,7 @@ const PlaceDetailsPage = () => {
                     }}
                 >
                     <Tooltip>
-                        {value.referenceURL ?? "static URL"}
+                        {value.referenceURL ?? "-"}
                     </Tooltip>
                 </Box>
             ),
@@ -243,7 +247,7 @@ const PlaceDetailsPage = () => {
             title: "SIZE",
             key: "attributes",
             dataIndex: "media_unique_id",
-            render: (value, index) => value.object.size ? formatBytes(value.object.size) : "static size",
+            render: (value, index) => value.object?.size ? formatBytes(value.object.size) : "-",
         },
         {
             title: "UPDATED",
@@ -270,16 +274,16 @@ const PlaceDetailsPage = () => {
             className: "cell-image",
             render: (value: any, index: any) => {
                 return <>
-                    <Box
+                    {value?.media_associates[0] ? <Box
                         className={`media-table-image`}
                         component="img"
                         alt={""}
                         // src={value.thumbnailUrl}
-                        src={`${baseUrl}${value.media_associates[0].media_unique_id.object.url}`}
+                        src={`${baseUrl}${value?.media_associates[0]?.media_unique_id.object.url}`}
                         style={{
                             maxWidth: '100%'
                         }}
-                    ></Box>
+                    ></Box>: <NoImagePresent message="No media items to display"/>}
                 </>
             },
         },
@@ -289,13 +293,13 @@ const PlaceDetailsPage = () => {
             dataIndex: "new",
             className: "cell-new",
             // render: (value: any, index: any) => "New",
-            render: (value: any, index: any) => <div className={`${gridStyles["card-new-flag"]}`}>NEW!</div>,
+            render: (value: any, index: any) => <div className={`${gridStyles["card-new-flag"]}`}>{checkIsNew(value?.createdAt) ? 'NEW!' : '' }</div>,
         },
         {
             title: "Type",
             key: "attributes",
             dataIndex: "attributes",
-            render: (value, index) => "Visit"
+            render: (value, index) => value?.siteType?.map((x: string) => `${x};`)
         },
         {
             title: "Date of Event",
@@ -307,13 +311,13 @@ const PlaceDetailsPage = () => {
             // sorter: (a: { title: string }, b: { title: any }) => {
             //     return a.title?.localeCompare(b.title);
             //   },
-            render: (value, index) => format(
+            render: (value, index) => value?.visitDate ? format(
                 new Date(
                     // item.attributes.updatedAt
-                    value.visitDate
+                    value?.visitDate
                     ),
                 "MM-dd-yyyy"
-              ),
+              ) : '-',
         },
         {
             title: "Participants",
@@ -321,7 +325,7 @@ const PlaceDetailsPage = () => {
             dataIndex: "visit_unique_id",
             className: "cell-bearing",
             // render: (value: any, index: any) => "Adam Biernaski, Julian Jansen van Rensburg",
-            render: (value: any, index: any) => value.recordingTeam,
+            render: (value: any, index: any) => value?.recordingTeam || '',
         },
         {
             title: "",
@@ -351,6 +355,12 @@ const PlaceDetailsPage = () => {
             dispatch(setActiveMediaItemIndex(itemIndex - 1))
         }
     }
+    
+    useEffect(() => {
+        if(placeData && (placeData?.siteDescription?.length < 500)) {
+            toggleSeeMoreHidden(true)
+        }
+    }, [placeData])
 
     if(placeLoading) {
         return <Loader />
@@ -409,67 +419,75 @@ const PlaceDetailsPage = () => {
                     </Button>
                 </Grid>
                 <Box component="div" className={`${styles['content-section']}`}>
-                    <Box component="div" className={`${styles['images-section']}`}>
-                        <Box component="div" style={{
-                            position: 'absolute',
-                            right: 0,
-                            bottom: 0
-                        }}>
-                            {shallRenderMedia(6, media_associates) && <Button variant="contained" type="button"
-                                style={{
-                                    color: '#fff',
-                                    backgroundColor: 'var(--black-90-pct)',
-                                    borderRadius: '2em',
-                                    margin: '1em',
-                                    padding: '0.4em 1.2em'
-                                }}
-                                onClick={e => {
-                                    e.preventDefault()
-                                    dispatch(toggleGalleryView(true))
-                                }}
-                            >
-                                View all
-                            </Button>}
-                        </Box>
-                        <Grid container className={`${styles['justify-center']} ${styles['image-grid-gap']}`}
-                            spacing={1}
-                        >
-                            <Grid item sm={6} className={`${styles["grid-item"]}`}
-                                onClick={e=> {
-                                    handleClickMediaItem(e, 1)
-                                }}
-                            >
-                                {/* {media_associates[0] && <RenderFileData */}
-                                {shallRenderMedia(1, media_associates) && <RenderFileData
-                                    fileData={{
-                                        alt: "",
-                                        src: `${baseUrl}${media_associates[0].media_unique_id.object.url}`,
-                                        className: `${styles["single-image"]} ${styles["left-image"]}`
-                                    }}
-                                    fileType="image"
-                                />}
-                            </Grid>
-                            <Grid item sm={6} className={`${styles['image-grid-gap']} ${styles["image-side-grid"]}`}
-                                
-                            >
-                                <Grid container className={`${styles['image-grid-gap']} ${styles['row-1']}`}
-                                    spacing={1}
-                                >
-                                    <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
-                                        onClick={e=> {
-                                            handleClickMediaItem(e, 2)
+                    {
+                        // If you dont 1 image also, show placeholder section
+                        !shallRenderMedia(1, media_associates) ?
+                            <Box component="div" className={`${styles['no-images-section']}`}>
+                                <NoImagePresent
+                                    message={NO_MEDIA}
+                                />
+                            </Box> :
+                            <Box component="div" className={`${styles['images-section']}`}>
+                                <Box component="div" style={{
+                                    position: 'absolute',
+                                    right: 0,
+                                    bottom: 0
+                                }}>
+                                    {shallRenderMedia(6, media_associates) && <Button variant="contained" type="button"
+                                        style={{
+                                            color: '#fff',
+                                            backgroundColor: 'var(--black-90-pct)',
+                                            borderRadius: '2em',
+                                            margin: '1em',
+                                            padding: '0.4em 1.2em'
+                                        }}
+                                        onClick={e => {
+                                            e.preventDefault()
+                                            dispatch(toggleGalleryView(true))
                                         }}
                                     >
-                                        {shallRenderMedia(2, media_associates) && <RenderFileData
+                                        View all
+                                    </Button>}
+                                </Box>
+                                <Grid container className={`${styles['justify-center']} ${styles['image-grid-gap']}`}
+                                    spacing={1}
+                                >
+                                    <Grid item sm={6} className={`${styles["grid-item"]}`}
+                                        onClick={e => {
+                                            handleClickMediaItem(e, 1)
+                                        }}
+                                    >
+                                        {/* {media_associates[0] && <RenderFileData */}
+                                        {shallRenderMedia(1, media_associates) && <RenderFileData
                                             fileData={{
                                                 alt: "",
-                                                src: `${baseUrl}${media_associates[1].media_unique_id.object.url}`,
-                                                className: `${styles["single-image"]} ${styles["right-image"]}`
+                                                src: `${baseUrl}${media_associates[0].media_unique_id.object.url}`,
+                                                className: `${styles["single-image"]} ${styles["left-image"]}`
                                             }}
                                             fileType="image"
                                         />}
-                                        {/* YOUTUBE VIDEO LOAD REFERENCE: DONT DELETE YET */}
-                                        {/* <RenderFileData
+                                    </Grid>
+                                    <Grid item sm={6} className={`${styles['image-grid-gap']} ${styles["image-side-grid"]}`}
+
+                                    >
+                                        <Grid container className={`${styles['image-grid-gap']} ${styles['row-1']}`}
+                                            spacing={1}
+                                        >
+                                            <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                                onClick={e => {
+                                                    handleClickMediaItem(e, 2)
+                                                }}
+                                            >
+                                                {shallRenderMedia(2, media_associates) && <RenderFileData
+                                                    fileData={{
+                                                        alt: "",
+                                                        src: `${baseUrl}${media_associates[1].media_unique_id.object.url}`,
+                                                        className: `${styles["single-image"]} ${styles["right-image"]}`
+                                                    }}
+                                                    fileType="image"
+                                                />}
+                                                {/* YOUTUBE VIDEO LOAD REFERENCE: DONT DELETE YET */}
+                                                {/* <RenderFileData
                                             fileData={{
                                                 src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
                                                 className: `${styles["single-image"]} ${styles["right-image"]}`,
@@ -478,22 +496,22 @@ const PlaceDetailsPage = () => {
                                             }}
                                             fileType="video"
                                         /> */}
-                                    </Grid>
-                                    <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
-                                        onClick={e=> {
-                                            handleClickMediaItem(e, 3)
-                                        }}
-                                    >
-                                        {shallRenderMedia(3, media_associates) && <RenderFileData
-                                            fileData={{
-                                                alt: "",
-                                                src: `${baseUrl}${media_associates[2].media_unique_id.object.url}`,
-                                                className: `${styles["single-image"]} ${styles["right-image"]}`
-                                            }}
-                                            fileType="image"
-                                        />}
-                                        {/* 3D model LOAD REFERENCE: DONT DELETE YET */}
-                                        {/* <RenderFileData
+                                            </Grid>
+                                            <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                                onClick={e => {
+                                                    handleClickMediaItem(e, 3)
+                                                }}
+                                            >
+                                                {shallRenderMedia(3, media_associates) && <RenderFileData
+                                                    fileData={{
+                                                        alt: "",
+                                                        src: `${baseUrl}${media_associates[2].media_unique_id.object.url}`,
+                                                        className: `${styles["single-image"]} ${styles["right-image"]}`
+                                                    }}
+                                                    fileType="image"
+                                                />}
+                                                {/* 3D model LOAD REFERENCE: DONT DELETE YET */}
+                                                {/* <RenderFileData
                                             fileData={{
                                                 alt: "",
                                                 src: images[2],
@@ -502,25 +520,25 @@ const PlaceDetailsPage = () => {
                                             }}
                                             fileType="3d"
                                         /> */}
-                                    </Grid>
-                                </Grid>
-                                <Grid container className={`${styles['image-grid-gap']}`}
-                                    spacing={1}
-                                >
-                                    <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
-                                        onClick={e=> {
-                                            handleClickMediaItem(e, 4)
-                                        }}
-                                    >
-                                        {shallRenderMedia(4, media_associates) && <RenderFileData
-                                            fileData={{
-                                                alt: "",
-                                                src: `${baseUrl}${media_associates[3].media_unique_id.object.url}`,
-                                                className: `${styles["single-image"]} ${styles["right-image"]}`
-                                            }}
-                                            fileType="image"
-                                        />}
-                                        {/* <RenderFileData
+                                            </Grid>
+                                        </Grid>
+                                        <Grid container className={`${styles['image-grid-gap']}`}
+                                            spacing={1}
+                                        >
+                                            <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                                onClick={e => {
+                                                    handleClickMediaItem(e, 4)
+                                                }}
+                                            >
+                                                {shallRenderMedia(4, media_associates) && <RenderFileData
+                                                    fileData={{
+                                                        alt: "",
+                                                        src: `${baseUrl}${media_associates[3].media_unique_id.object.url}`,
+                                                        className: `${styles["single-image"]} ${styles["right-image"]}`
+                                                    }}
+                                                    fileType="image"
+                                                />}
+                                                {/* <RenderFileData
                                             fileData={{
                                                 alt: "",
                                                 src: images[3],
@@ -528,25 +546,26 @@ const PlaceDetailsPage = () => {
                                             }}
                                             fileType="image"
                                         /> */}
-                                    </Grid>
-                                    <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
-                                        onClick={e=> {
-                                            handleClickMediaItem(e, 5)
-                                        }}
-                                    >
-                                        {shallRenderMedia(5, media_associates) && <RenderFileData
-                                            fileData={{
-                                                alt: "",
-                                                src: `${baseUrl}${media_associates[4].media_unique_id.object.url}`,
-                                                className: `${styles["single-image"]} ${styles["right-image"]}`
-                                            }}
-                                            fileType="image"
-                                        />}
+                                            </Grid>
+                                            <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
+                                                onClick={e => {
+                                                    handleClickMediaItem(e, 5)
+                                                }}
+                                            >
+                                                {shallRenderMedia(5, media_associates) && <RenderFileData
+                                                    fileData={{
+                                                        alt: "",
+                                                        src: `${baseUrl}${media_associates[4].media_unique_id.object.url}`,
+                                                        className: `${styles["single-image"]} ${styles["right-image"]}`
+                                                    }}
+                                                    fileType="image"
+                                                />}
+                                            </Grid>
+                                        </Grid>
                                     </Grid>
                                 </Grid>
-                            </Grid>
-                        </Grid>
-                    </Box>
+                            </Box>
+                    }
                     <Box component="div" className={`${styles['title-section']}`}>
                         <Grid container className={`${styles['title-section-grid']}`}>
                             <Grid item className={`${styles['title-section-left-item']}`}>
@@ -584,16 +603,26 @@ const PlaceDetailsPage = () => {
                             rowSpacing={2}
                         >
                             <Grid item sm={7} className={`${styles['text-left']} ${styles['section-left']}`}>
-                               {siteDescription&& <Box component="div" className={`${styles['site-desc']}`}>
-                                    <Box component="div"
-                                        className={`${styles['site-desc-condensed']} ${isSeeMore ? styles['see-more-active'] : ''}`}
-                                    >
-                                        {siteDescription.substring(0, !isSeeMore ? 500 : siteDescription.length - 1)}
+                                {
+                                    <Box component="div" className={`${styles['site-desc']}`}>
+                                        {siteDescription ?
+                                        <>
+                                            <Box component="div"
+                                                className={`${styles['site-desc-condensed']} ${isSeeMoreHidden ? styles['see-more-active'] : ''}`}
+                                            >
+                                                {siteDescription.substring(0, !isSeeMoreHidden ? 500 : siteDescription.length - 1)}
+                                            </Box>
+                                            {
+                                                !isSeeMoreHidden && <Box component="div" className={`${styles['see-more-box']}`} onClick={e => {
+                                                    toggleSeeMoreHidden(state => !state)
+                                                }}>{!isSeeMoreHidden ? '...See More' : ''}</Box>
+                                            }
+                                        </> :
+                                        <NoTextPresent
+                                            message={NO_DESCRIPTION}
+                                        />}
                                     </Box>
-                                    {!isSeeMore && <Box component="div" className={`${styles['see-more-box']}`} onClick={e => {
-                                        toggleSeeMore(state => !state)
-                                    }}>{!isSeeMore ? '...See More' : ''}</Box>}
-                                </Box>}
+                                }
                                 <Box component="div" className={`${styles['table']}`}>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']} `}>
@@ -602,14 +631,18 @@ const PlaceDetailsPage = () => {
                                         <Grid item>
                                             <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
                                                 {
-                                                    siteType && siteType.map((item: string) => (
+                                                    !isEmpty(siteType) ? siteType.map((item: string, index: number) => (
                                                         <Box
+                                                        key={index}
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
                                                         >
                                                             {item}
                                                         </Box>
-                                                    ))
+                                                    )) :
+                                                        <NoTextPresent
+                                                            message={NO_TEXT}
+                                                        />
                                                 }
                                             </Box>
                                         </Grid>
@@ -627,14 +660,18 @@ const PlaceDetailsPage = () => {
                                             all places where the site type = building. */}
                                             <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
                                                 {
-                                                    period && period.map(item => (
+                                                    !isEmpty(period) ? period.map((item, index) => (
                                                         <Box
+                                                            key={index}
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
                                                         >
                                                             {item}
                                                         </Box>
-                                                    ))
+                                                    )) :
+                                                    <NoTextPresent
+                                                        message={NO_TEXT}
+                                                    />
                                                 }
                                             </Box>
                                         </Grid>
@@ -643,37 +680,67 @@ const PlaceDetailsPage = () => {
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             State of Conservation
                                         </Grid>
-                                        {stateOfConservation.map((item: string) =>
-                                        <Grid item>
-                                             {item}
-                                        </Grid>)}
+                                        {
+                                            !isEmptyValue(stateOfConservation) ? stateOfConservation.map((item: string, index: number) =>
+                                                <Grid item key={index}>
+                                                    {item}
+                                                </Grid>) :
+                                                <Grid item>
+                                                    <NoTextPresent
+                                                        message={NO_TEXT}
+                                                    />
+                                                </Grid>
+                                           
+                                        }
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Risk
                                         </Grid>
-                                        {risk.map((item: string) =><Grid item>
-                                             {item}
-                                        </Grid>)}
-                                        
+                                        {
+                                            !isEmptyValue(risk) ? risk.map((item: string, index: number) =>
+                                                <Grid item key={index}>
+                                                    {item}
+                                                </Grid>) :
+                                                <Grid item>
+                                                    <NoTextPresent
+                                                        message={NO_TEXT}
+                                                    />
+                                                </Grid>
+                                        }
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Tourism Value
                                         </Grid>
-                                        {tourismValue.map((item: string) =><Grid item>
-                                             {item}
-                                        </Grid>)}
+                                        {
+                                            !isEmptyValue(tourismValue) ? tourismValue.map((item: string, index: number) =>
+                                                <Grid item key={index}>
+                                                    {item}
+                                                </Grid>) :
+                                                <Grid item>
+                                                    <NoTextPresent
+                                                        message={NO_TEXT}
+                                                    />
+                                                </Grid>
+                                        }
                                         
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Research Value
                                         </Grid>
-                                        {researchValue.map((item: string) =><Grid item>
-                                             {item}
-                                        </Grid>)}
-                                        
+                                        {
+                                            !isEmptyValue(researchValue) ? researchValue.map((item: string, index: number) =>
+                                                <Grid item key={index}>
+                                                    {item}
+                                                </Grid>) :
+                                                <Grid item>
+                                                    <NoTextPresent
+                                                        message={NO_TEXT}
+                                                    />
+                                                </Grid>
+                                        }
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
@@ -687,10 +754,17 @@ const PlaceDetailsPage = () => {
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
                                             Recommendation
                                         </Grid>
-                                        {recommendation.map((item: string) =><Grid item>
-                                             {item}
-                                        </Grid>)}
-                                        
+                                        {
+                                            !isEmptyValue(recommendation) ? recommendation.map((item: string, index:number) =>
+                                                <Grid item key={index}>
+                                                    {item}
+                                                </Grid>) :
+                                                <Grid item>
+                                                    <NoTextPresent
+                                                        message={NO_TEXT}
+                                                    />
+                                                </Grid>
+                                        }
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
@@ -722,28 +796,36 @@ const PlaceDetailsPage = () => {
                                 </Box>
                             </Grid>
                             <Grid item sm={5}>
-                                <MapView key={4} marker={[{
-                                    id: 0,
-                                    name: `${placeNameEnglish}`,
-                                    position: {
-                                        lat: latitude || 24.11,
-                                        lng: longitude || 34.98
-                                    }
-                                }]}/>
-                                <Grid container className={`${styles['map-loctn-details']}`} >
-                                    <Grid item lg={5} md={5} sm={5}>
-                                        <Grid container className={`${styles['map-loctn-line']}`}>
-                                            <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                            <Grid item>{`${latitude}`}</Grid>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid item lg={5} md={5} sm={6}>
-                                        <Grid container className={`${styles['map-loctn-line']}`}>
-                                            <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                            <Grid item>{`${longitude}`}</Grid>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
+                                {
+                                    (latitude && longitude) ?
+                                        <>
+                                            <MapView key={4} marker={[{
+                                                id: 0,
+                                                name: `${placeNameEnglish}`,
+                                                position: {
+                                                    lat: latitude || 24.11,
+                                                    lng: longitude || 34.98
+                                                }
+                                            }]} />
+                                            <Grid container className={`${styles['map-loctn-details']}`} >
+                                                <Grid item lg={5} md={5} sm={5}>
+                                                    <Grid container className={`${styles['map-loctn-line']}`}>
+                                                        <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
+                                                        <Grid item>{`${latitude}`}</Grid>
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid item lg={5} md={5} sm={6}>
+                                                    <Grid container className={`${styles['map-loctn-line']}`}>
+                                                        <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
+                                                        <Grid item>{`${longitude}`}</Grid>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        </> :
+                                        <NoMapPresent
+                                            message={NO_LOCATION}
+                                        />
+                                }
                             </Grid>
                         </Grid>
 
@@ -751,57 +833,69 @@ const PlaceDetailsPage = () => {
                     <Box component="div" className={`${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Library</Box>
-                            <Box component="div">{libraryItems.length} Items</Box>
+                            {!isEmpty(libraryItems) && <Box component="div">{libraryItems.length} Items</Box>}
                         </Box>
-                        <Box component="div">
-                            <StyledTableWrapper
-                                className={`${styles["table-container"]}`}
-                                rowKey={"id"}
-                                size="small"
-                                columns={tableHeaderJson}
-                                dataSource={libraryItems ? libraryItems: []}
-                                pagination={false}
-                                loading={false}
-                                bordered
-                                scroll={{ x: true, y: 300 }}
-                                style={{
-                                    background: "transparent",
-                                }}
-                            ></StyledTableWrapper>
+                        <Box component="div"  className={`${styles["table-wrapper"]}`}>
+                            {
+                                !isEmpty(libraryItems) ?
+                                    <StyledTableWrapper
+                                        className={`${styles["table-container"]}`}
+                                        rowKey={"id"}
+                                        size="small"
+                                        columns={tableHeaderJson}
+                                        dataSource={libraryItems ? libraryItems : []}
+                                        pagination={false}
+                                        loading={false}
+                                        bordered
+                                        scroll={{ x: true, y: 300 }}
+                                        style={{
+                                            background: "transparent",
+                                        }}
+                                    ></StyledTableWrapper> :
+                                    <NoTextPresent
+                                        message={NO_TABLE_ROWS}
+                                    />
+                            }
                         </Box>
                     </Box>
                     {/* Currently showing only 1 events oit of available list */}
                     <Box component="div" className={`${styles['events-section']} ${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Events</Box>
-                            <Box component="div">{visit_associates.length} Items</Box>
+                           {!isEmpty(visit_associates) && <Box component="div">{visit_associates.length} Items</Box>}
                         </Box>
-                        <Box component="div">
-                            <StyledTableWrapper
-                                rowKey={"id"}
-                                size="small"
-                                columns={tableHeaderJson_media}
-                                // dataSource={events.slice(0,1)}
-                                dataSource={visit_associates}
-                                pagination={false}
-                                loading={loading ? loading : false}
-                                bordered
-                                scroll={{ y: 500, scrollToFirstRowOnChange: true }}
-                                style={{
-                                    background: "transparent",
-                                }}
-                                onRow={(record: any, rowIndex: number | undefined) => {
-                                    return {
-                                        onClick: (event) => {
-                                            if (typeof rowIndex === "number") {
-                                                dispatch(setActiveEventItem(record))
-                                                dispatch(setActiveEventItemIndex(rowIndex))
-                                                navigate(`/search-results/Events/${record.visit_unique_id.uniqueId}`, { replace: true })
-                                            }
-                                        },
-                                    };
-                                }}
-                            ></StyledTableWrapper>
+                        <Box component="div" className={`${styles["table-wrapper"]}`}>
+                            {
+                                !isEmpty(visit_associates) ?
+                                    <StyledTableWrapper
+                                        rowKey={"id"}
+                                        size="small"
+                                        columns={tableHeaderJson_media}
+                                        // dataSource={events.slice(0,1)}
+                                        dataSource={visit_associates}
+                                        pagination={false}
+                                        loading={loading ? loading : false}
+                                        bordered
+                                        scroll={{ y: 500, scrollToFirstRowOnChange: true }}
+                                        style={{
+                                            background: "transparent",
+                                        }}
+                                        onRow={(record: any, rowIndex: number | undefined) => {
+                                            return {
+                                                onClick: (event) => {
+                                                    if (typeof rowIndex === "number") {
+                                                        dispatch(setActiveEventItem(record))
+                                                        dispatch(setActiveEventItemIndex(rowIndex))
+                                                        navigate(`/search-results/Events/${record.visit_unique_id.uniqueId}`, { replace: true })
+                                                    }
+                                                },
+                                            };
+                                        }}
+                                    ></StyledTableWrapper> :
+                                    <NoTextPresent
+                                        message={NO_TABLE_ROWS}
+                                    />
+                            }
                         </Box>
                     </Box>
                     <Box component="div" className={`${styles['remarks-section']}  ${styles['heading']} ${styles['text-left']}`}>

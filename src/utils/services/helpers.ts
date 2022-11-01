@@ -6,7 +6,7 @@ import { tabNameProps } from "../../types/SearchResultsTabsProps";
 import * as Yup from 'yup';
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://334b-117-214-59-174.in.ngrok.io`;
+// export const baseUrl = `https://2db5-117-251-210-47.in.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -150,6 +150,7 @@ export const tabNameBasedOnIndex = (tabIndex: number) => {
 
 export const addItemDefaultSteps = ['Item Details', 'Keywords']
 
+export const addItemLibrarySteps = ['Item Details', 'Associations', 'Keywords']
 export const addItemMediaSteps = ['Media', 'Item Details', 'Associations', 'Keywords']
 
 export const StyledTableWrapper = styled(StyledAntTable)`
@@ -325,3 +326,35 @@ export const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>, callback?:
     if(callback) callback()
   }
 }
+
+type isEmptyType = (value: any) => boolean
+
+
+export const isEmptyValue: isEmptyType = (value: any) => {
+  if (typeof value === 'string') return value === ''
+  if (
+    (typeof value === 'object') &&
+    (Array.isArray(value)) &&
+    value.length === 0
+  ) return value.length === 0
+  if (
+    (typeof value === 'object') &&
+    (Array.isArray(value)) &&
+    value.length === 1
+  ) return isEmptyValue(value[0])
+
+  return false
+}
+
+export const NO_TEXT = "No data available"
+export const NO_MEDIA = "No media items to display"
+export const NO_TABLE_ROWS = "No items to display"
+export const NO_LOCATION = "No location available"
+export const NO_DESCRIPTION = "No description available"
+
+export const checkIsNew = (updatedDate: string) => {
+  const expDate = dayjs(updatedDate).add(30, "d").toDate();
+  return dayjs().isBefore(expDate);
+}
+
+

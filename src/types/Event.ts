@@ -21,6 +21,7 @@ export type Event = {
     thumbnailUrl?: string;
     recordingTeam: string;
     visitNumber: string;
+    visitDate: string;
     siteDescription: string;
     updatedAt: string;
     createdAt: string;
@@ -34,20 +35,19 @@ export type Event = {
   };
 };
 export type EventApi = {
-
   artifacts: string[]
   assessmentType: string[]
   assessmentTypeOther: null | string
   createdAt: string
   deleted: boolean
   fieldNarrative: string
-  id: number
+  id?: number
   keywords: null | string[]
-  latitude: number
-  libraryItems: Media[]
-  longitude: number
-  mediaGallery: Array<MediaAssociateObj>
-  media_associates: Array<MediaAssociateObj>
+  latitude?: number
+  libraryItems?: Media[]
+  longitude?: number
+  mediaGallery?: Array<MediaAssociateObj>
+  media_associates?: Array<MediaAssociateObj>
   period: string[]
   recommendation: string[]
   recordingTeam: string
@@ -59,11 +59,11 @@ export type EventApi = {
   tourismValue: string[]
   uniqueId: string
   updatedAt: string
-  visitDate: string
-  visitNumber: number
+  visitDate?: string
+  visitNumber: string
   visitUIPath: string
-  visit_associate: VisitAssociate2
-  visit_unique_id: VisitIdProps
+  visit_associate?: VisitAssociate2
+  visit_unique_id?: VisitIdProps
 };
 
 export type VisitIdProps = {

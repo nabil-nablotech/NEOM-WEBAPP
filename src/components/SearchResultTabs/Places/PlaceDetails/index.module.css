@@ -5,6 +5,9 @@
 .images-section {
     position: relative;
 }
+.no-images-section {
+    height: 400px;
+}
 .content-section {
     max-width: 1200px;
     margin-inline: auto;
@@ -32,7 +35,7 @@
 
 .title-section {
     margin-top: 1em;
-    max-width: 50%;
+    max-width: 55%;
 }
 .title-section-grid {
     justify-content: space-between;
@@ -170,6 +173,12 @@
 
 .remarks-section .heading-title {
     margin-bottom: 3em;
+}
+
+.table-wrapper {
+    min-height: 150px;
+    display: flex;
+    align-items: center;
 }
 
 
