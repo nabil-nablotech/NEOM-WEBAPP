@@ -8,10 +8,10 @@ const NoImagePresent = ({
     return (
         <Box component="div" className={`${styles['wrapper']}`}>
             <Grid container className={`${styles['content-grid']}`} style={{
-                
+                flexDirection: 'column'
             }}>
                 <Grid item >
-                    <ImageOutlinedIcon className={`${styles['content-image']}`} />
+                    <ImageOutlinedIcon className={`${styles['content-image']} ${styles['map-image']}`} />
                 </Grid>
                 <Grid item className={`${styles['content-text']}`}>
                     {message}

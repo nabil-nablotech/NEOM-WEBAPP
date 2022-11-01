@@ -22,9 +22,10 @@
 
 .title-section {
     margin-top: 1em;
+    max-width: 55%;
 }
 .title-section-grid {
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 2em;
 }
 
@@ -221,6 +222,16 @@
 
 .text-anchor:last-child::after{
     content: '';
+}
+
+.no-images-section {
+    height: 400px;
+}
+
+.table-wrapper {
+    min-height: 150px;
+    display: flex;
+    align-items: center;
 }
 
 @media (min-width: 575px) and (max-width: 1025px) {

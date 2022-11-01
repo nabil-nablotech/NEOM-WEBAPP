@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { addEvent, refineEvents, updateEvent } from "../query/events";
 import { createVisitAssociate } from "../query/eventAssociate";
 import { RootState } from "../store";
@@ -9,7 +9,9 @@ import { setSelectedValue, initialSelectedValue } from "../store/reducers/refine
 import {
   setEvents,
   setEventMetaData,
-  setSearchText
+  setSearchText,
+  toggleShowAddSuccess
+
 } from "../store/reducers/searchResultsReducer";
 import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/helpers';
 import { tabNameProps } from "../types/SearchResultsTabsProps";
@@ -32,6 +34,7 @@ const useEvent = () => {
   
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const searchParams = getQueryObj(search);
   useEffect(() => {
@@ -93,6 +96,14 @@ const useEvent = () => {
         "place_unique_id": place?.id,
         "visit_unique_id": data.createVisit.data.id
       }});
+    }
+
+    if(data) {
+      dispatch(toggleShowAddSuccess(true))
+
+      /** re-direct */
+      navigate(`/search-results/Events/${data.createVisit.data.attributes.uniqueId}`, {replace: true})
+
     }
   }, [data])
 
@@ -169,8 +180,8 @@ const useEvent = () => {
 }
   const createEvent = async (payload: any | undefined) => {
     const uniqueId = generateUniqueId();
-    const keywords = payload.keywords?.split(' ');
-    const eventDate = payload.eventDate;
+    const keywords = payload.keywords;
+    const eventDate = payload.eventDate ? payload.eventDate : new Date();
     const visitDate = `${eventDate.getFullYear()}-${zerofill(eventDate.getMonth() + 1)}-${zerofill(eventDate.getDate())}`;
     const data = {
       ...payload,

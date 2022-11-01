@@ -110,7 +110,6 @@ const usePlace = () => {
       fetchData(0);
       dispatch(toggleShowAddSuccess(true))
 
-      console.log('hex: ', data)
       /** rdirect */
       navigate(`/search-results/Places/${data.createPlace.data.attributes.uniqueId}`, {replace: true})
       /** insert in reducer */

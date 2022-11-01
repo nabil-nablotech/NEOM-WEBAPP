@@ -739,7 +739,6 @@ const PlaceDetailsPage = () => {
                                                     />
                                                 </Grid>
                                         }
-                                        
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
@@ -764,7 +763,6 @@ const PlaceDetailsPage = () => {
                                                     />
                                                 </Grid>
                                         }
-                                        
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>

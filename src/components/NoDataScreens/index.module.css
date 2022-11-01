@@ -43,3 +43,8 @@
 .wrapper.no-map-wrapper .content-image {
     width: 30%;
 }
+
+.wrapper .content-image {
+    width: 40%;
+    height: auto;
+}
