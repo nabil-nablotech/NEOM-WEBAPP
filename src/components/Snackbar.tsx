@@ -23,10 +23,11 @@ type SnackbarProps = {
   severity?: "error" | "info" | "warning" | "success";
   open: boolean;
   handleClose: () => void;
+  duration?: number
 };
 
 export default function PositionedSnackbar(props: SnackbarProps) {
-  const { message, severity, open, handleClose } = props;
+  const { message, severity, open, handleClose, duration = 6000 } = props;
   
   const action:React.ReactNode = (
     <React.Fragment>
@@ -55,7 +56,7 @@ export default function PositionedSnackbar(props: SnackbarProps) {
         onClose={handleClose}
         key={"top center"}
         action={action}
-        autoHideDuration={6000}
+        autoHideDuration={duration}
       >
         <Alert
           icon={false}

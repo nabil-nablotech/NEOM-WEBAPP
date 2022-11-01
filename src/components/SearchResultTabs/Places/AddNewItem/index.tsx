@@ -409,7 +409,6 @@ const AddNewPlace = ({
                 });
             }
             onClose()
-            dispatch(toggleShowAddSuccess(true))
             dispatch(toggleNewItemWindow(false))
         }
 

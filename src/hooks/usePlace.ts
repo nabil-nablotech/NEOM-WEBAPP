@@ -8,7 +8,8 @@ import { initialSelectedValue, setSelectedValue } from "../store/reducers/refine
 import {
   setPlaces,
   setPlaceMetaData,
-  setSearchText
+  setSearchText,
+  toggleShowAddSuccess
 } from "../store/reducers/searchResultsReducer";
 import { Place } from "../types/Place";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
@@ -61,6 +62,7 @@ const usePlace = () => {
   useEffect(() => {
     if (refinePlaceData?.places) {
       const places = JSON.parse(JSON.stringify(refinePlaceData?.places.data))
+
       places.map((x: Place) => {
         x.label = `${x?.attributes?.placeNameEnglish}${x?.attributes?.placeNameArabic}` || '';
         x.value = x?.id;
@@ -105,8 +107,15 @@ const usePlace = () => {
   useEffect(() => {
     if (data) {
       fetchData(0);
+      dispatch(toggleShowAddSuccess(true))
+
+      console.log('hex: ', data)
+      /** rdirect */
+      /** insert in reducer */
+      /** map that to screen  */
     }
   }, [data])
+
   const fetchData = (skip: number = placeData.length, local: boolean = false, clear: boolean = false) => {
     // get the query from the url parameters
     const searchData = getQueryObj(search);

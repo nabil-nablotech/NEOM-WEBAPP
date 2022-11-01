@@ -119,6 +119,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         severity={"success"}
         open={showAddSuccess}
         handleClose={() => dispatch(toggleShowAddSuccess(false))}
+        duration={10000}
       />
     </>
   );
