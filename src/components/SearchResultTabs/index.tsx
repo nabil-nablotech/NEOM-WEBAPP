@@ -121,6 +121,7 @@ const initialState = {
   featuredImage: false,
   startDate: undefined,
   endDate: undefined,
+  keyWords: [],
 }
 const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => {
   const [value, setValue] = React.useState(0);

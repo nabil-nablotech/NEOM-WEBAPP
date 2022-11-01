@@ -68,6 +68,7 @@ export type Translation = {
     longitude: string;
     startDate?: Date;
     endDate?: Date;
+    keyWords?: option[]|[];
   }
   
   

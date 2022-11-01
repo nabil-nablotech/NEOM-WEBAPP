@@ -115,7 +115,6 @@ const usePlace = () => {
     // filter non data from the array object
     const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData?.refinedSearch;
     const searchWordArray = text?.split(" ") || [];
-
     copiedValue && Object.keys(copiedValue)?.map(x => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
@@ -131,6 +130,7 @@ const usePlace = () => {
       longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
       artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts,
       actionType: copiedValue&&copiedValue?.actionType && copiedValue?.actionType,
+      keywords: copiedValue&&copiedValue?.keyWords && copiedValue?.keyWords,
       search_one: searchWordArray[0],
       search_two: searchWordArray[1],
       search_three: searchWordArray[2],

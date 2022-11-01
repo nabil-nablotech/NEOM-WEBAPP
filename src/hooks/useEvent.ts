@@ -138,6 +138,7 @@ const useEvent = () => {
       longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
       artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts,
       assessmentType: copiedValue&&copiedValue?.assessmentType && copiedValue?.assessmentType,
+      keywords: copiedValue&&copiedValue?.keyWords && copiedValue?.keyWords,
       startDate: visitStartDate && visitStartDate,
       endDate: visitEndDate && visitEndDate,      
       search_one: searchWordArray[0],

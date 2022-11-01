@@ -117,6 +117,7 @@ query RefineSearchEvent(
   $latitude: Float
   $longitude: Float
   $artifacts: JSON
+  $keywords: JSON
   $limit: Int
   $skip: Int
   $startDate: Date
@@ -152,6 +153,7 @@ query RefineSearchEvent(
         { longitude: { lte: $longitude } }
         { visitDate: { gte: $startDate }}
         { visitDate: { lte: $endDate }}
+        { keywords: { containsi: $keywords } }
       ]
     }
   ) {
@@ -352,4 +354,25 @@ export const updateEvent = gql`
       }
     }
   }
+`;
+
+export const eventsKeyWords = gql`
+query EventsKeyWordsSearch(
+  $text: JSON
+  ){
+  visits(
+    filters: {
+      and: [
+        { keywords: { containsi: $text } }
+      ]
+    }
+  ) {
+    data {
+      id
+      attributes {
+        keywords
+      }
+    }
+  }
+}
 `;
