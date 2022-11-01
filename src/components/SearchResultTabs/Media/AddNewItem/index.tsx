@@ -14,7 +14,7 @@ import { toggleShowAddSuccess } from '../../../../store/reducers/searchResultsRe
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { addItemMediaSteps } from './../../../../utils/services/helpers';
-import CustomUpload from '../../../Upload';
+import CustomUpload from '../../../Upload/ImageUpload';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { useFormik } from 'formik';
 

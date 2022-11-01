@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { EVENTS_TAB_NAME, addItemMediaSteps } from './../../utils/services/helpers';
 import CustomSearchField from '../SearchField';
-import CustomUpload from '../Upload';
+import CustomUpload from '../Upload/ImageUpload';
 
 const commonSelectSxStyles = {
     textAlign: 'left',

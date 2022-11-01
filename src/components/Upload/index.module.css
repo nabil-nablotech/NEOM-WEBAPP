@@ -1,2 +1,6 @@
-.upload-wrapper {
+.file-upload-wrapper {
+    background-color: #FAFAFA;
+    border: 1px solid #E8E9E9;
+    padding: 5px 10px;
+    color: var(--grey-text);
 }
