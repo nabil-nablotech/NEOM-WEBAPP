@@ -351,3 +351,9 @@ export const NO_TABLE_ROWS = "No items to display"
 export const NO_LOCATION = "No location available"
 export const NO_DESCRIPTION = "No description available"
 
+export const checkIsNew = (updatedDate: string) => {
+  const expDate = dayjs(updatedDate).add(30, "d").toDate();
+  return dayjs().isBefore(expDate);
+}
+
+

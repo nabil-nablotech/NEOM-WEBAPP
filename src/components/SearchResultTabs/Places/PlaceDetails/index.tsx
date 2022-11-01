@@ -15,7 +15,7 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
-import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, stringAvatar } from "../../../../utils/services/helpers";
+import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, checkIsNew } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
@@ -204,7 +204,7 @@ const PlaceDetailsPage = () => {
                     }}
                 >
                     <InsertDriveFileOutlinedIcon fontSize="small" />
-                    <Box component="div">{value.fileName}</Box>
+                    <Box component="div">{value?.fileName}</Box>
                 </Box>
             ),
         },
@@ -214,7 +214,7 @@ const PlaceDetailsPage = () => {
             className: "description-column",
             dataIndex: "media_unique_id", // temporary
             render: (value: any, index) => {
-                return value?.description;
+                return value?.description || '-';
             },
         },
         {
@@ -222,7 +222,7 @@ const PlaceDetailsPage = () => {
             className: "citation-column cell-citation",
             dataIndex: "media_unique_id", // temporary
             render: (value: any, index) => {
-                return value.citation ? value.citation : 'static citation';
+                return value.citation ? value?.citation : '-';
             },
         },
         {
@@ -238,7 +238,7 @@ const PlaceDetailsPage = () => {
                     }}
                 >
                     <Tooltip>
-                        {value.referenceURL ?? "static URL"}
+                        {value.referenceURL ?? "-"}
                     </Tooltip>
                 </Box>
             ),
@@ -247,7 +247,7 @@ const PlaceDetailsPage = () => {
             title: "SIZE",
             key: "attributes",
             dataIndex: "media_unique_id",
-            render: (value, index) => value.object.size ? formatBytes(value.object.size) : "static size",
+            render: (value, index) => value.object?.size ? formatBytes(value.object.size) : "-",
         },
         {
             title: "UPDATED",
@@ -274,16 +274,16 @@ const PlaceDetailsPage = () => {
             className: "cell-image",
             render: (value: any, index: any) => {
                 return <>
-                    <Box
+                    {value?.media_associates[0] ? <Box
                         className={`media-table-image`}
                         component="img"
                         alt={""}
                         // src={value.thumbnailUrl}
-                        src={`${baseUrl}${value.media_associates[0].media_unique_id.object.url}`}
+                        src={`${baseUrl}${value?.media_associates[0]?.media_unique_id.object.url}`}
                         style={{
                             maxWidth: '100%'
                         }}
-                    ></Box>
+                    ></Box>: <NoImagePresent message="No media items to display"/>}
                 </>
             },
         },
@@ -293,13 +293,13 @@ const PlaceDetailsPage = () => {
             dataIndex: "new",
             className: "cell-new",
             // render: (value: any, index: any) => "New",
-            render: (value: any, index: any) => <div className={`${gridStyles["card-new-flag"]}`}>NEW!</div>,
+            render: (value: any, index: any) => <div className={`${gridStyles["card-new-flag"]}`}>{checkIsNew(value?.createdAt) ? 'NEW!' : '' }</div>,
         },
         {
             title: "Type",
             key: "attributes",
             dataIndex: "attributes",
-            render: (value, index) => "Visit"
+            render: (value, index) => value?.siteType?.map((x: string) => `${x};`)
         },
         {
             title: "Date of Event",
@@ -311,13 +311,13 @@ const PlaceDetailsPage = () => {
             // sorter: (a: { title: string }, b: { title: any }) => {
             //     return a.title?.localeCompare(b.title);
             //   },
-            render: (value, index) => format(
+            render: (value, index) => value?.visitDate ? format(
                 new Date(
                     // item.attributes.updatedAt
-                    value.visitDate
+                    value?.visitDate
                     ),
                 "MM-dd-yyyy"
-              ),
+              ) : '-',
         },
         {
             title: "Participants",
@@ -325,7 +325,7 @@ const PlaceDetailsPage = () => {
             dataIndex: "visit_unique_id",
             className: "cell-bearing",
             // render: (value: any, index: any) => "Adam Biernaski, Julian Jansen van Rensburg",
-            render: (value: any, index: any) => value.recordingTeam,
+            render: (value: any, index: any) => value?.recordingTeam || '',
         },
         {
             title: "",
@@ -631,8 +631,9 @@ const PlaceDetailsPage = () => {
                                         <Grid item>
                                             <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
                                                 {
-                                                    !isEmpty(siteType) ? siteType.map((item: string) => (
+                                                    !isEmpty(siteType) ? siteType.map((item: string, index: number) => (
                                                         <Box
+                                                        key={index}
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
                                                         >
@@ -659,8 +660,9 @@ const PlaceDetailsPage = () => {
                                             all places where the site type = building. */}
                                             <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
                                                 {
-                                                    !isEmpty(period) ? period.map(item => (
+                                                    !isEmpty(period) ? period.map((item, index) => (
                                                         <Box
+                                                            key={index}
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
                                                         >
@@ -679,8 +681,8 @@ const PlaceDetailsPage = () => {
                                             State of Conservation
                                         </Grid>
                                         {
-                                            !isEmptyValue(stateOfConservation) ? stateOfConservation.map((item: string) =>
-                                                <Grid item>
+                                            !isEmptyValue(stateOfConservation) ? stateOfConservation.map((item: string, index: number) =>
+                                                <Grid item key={index}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -696,8 +698,8 @@ const PlaceDetailsPage = () => {
                                             Risk
                                         </Grid>
                                         {
-                                            !isEmptyValue(risk) ? risk.map((item: string) =>
-                                                <Grid item>
+                                            !isEmptyValue(risk) ? risk.map((item: string, index: number) =>
+                                                <Grid item key={index}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -712,8 +714,8 @@ const PlaceDetailsPage = () => {
                                             Tourism Value
                                         </Grid>
                                         {
-                                            !isEmptyValue(tourismValue) ? tourismValue.map((item: string) =>
-                                                <Grid item>
+                                            !isEmptyValue(tourismValue) ? tourismValue.map((item: string, index: number) =>
+                                                <Grid item key={index}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -729,8 +731,8 @@ const PlaceDetailsPage = () => {
                                             Research Value
                                         </Grid>
                                         {
-                                            !isEmptyValue(researchValue) ? researchValue.map((item: string) =>
-                                                <Grid item>
+                                            !isEmptyValue(researchValue) ? researchValue.map((item: string, index: number) =>
+                                                <Grid item key={index}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -753,8 +755,8 @@ const PlaceDetailsPage = () => {
                                             Recommendation
                                         </Grid>
                                         {
-                                            !isEmptyValue(recommendation) ? recommendation.map((item: string) =>
-                                                <Grid item>
+                                            !isEmptyValue(recommendation) ? recommendation.map((item: string, index:number) =>
+                                                <Grid item key={index}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>

@@ -568,6 +568,7 @@ const AddNewPlace = ({
                         <Button
                             label={activeStep === steps.length - 1 ? 'Add' : 'Next'}
                             type="submit"
+                            disabled={!(formik.values.placeNumber.length > 0)}
                         />
                     </Box>
                 </Box>

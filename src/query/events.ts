@@ -128,6 +128,15 @@ export const eventByEventNumber = gql`
     }
   }
 `;
+export const eventById = gql`
+  query getEventById($id: ID){
+    document(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
 
 export const refineEvents = gql`
 query RefineSearchEvent(

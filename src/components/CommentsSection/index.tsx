@@ -68,13 +68,13 @@ const SingleComment = ({
                 commentObj.nestedCommentsCount > 0 ?
                     <>
                         {
-                            commentObj.nestedComments && commentObj.nestedComments.map(singleCommentItem => (
-                                <>
+                            commentObj.nestedComments && commentObj.nestedComments?.map((singleCommentItem, index: number) => (
+                                <div key={index}>
                                     <SingleComment
                                         SelfIcon={SelfIcon}
                                         commentObj={singleCommentItem}
                                     />
-                                </>
+                                </div>
                             ))
                         }
                     </> :
@@ -150,13 +150,13 @@ const CommentsSection = ({
             </Grid>
             <Box component="div" className={`${styles['comments-list-parent-box']}`}>
                 {
-                    commentsJson.map(singleCommentItem => (
-                        <>
+                    commentsJson.map((singleCommentItem, index: number) => (
+                        <div key={index}>
                             <SingleComment
                                 SelfIcon={SelfIcon}
                                 commentObj={singleCommentItem}
                             />
-                        </>
+                        </div>
                     ))
                 }
             </Box>

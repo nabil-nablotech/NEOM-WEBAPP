@@ -134,7 +134,7 @@ const EventDetailsPage = () => {
     let selectedPlaceObjIndex: number = 0
     let selectedPlaceObj: Place = places[0]
 
-    const {loading: eventLoading, data: eventDetails} = useEventDetails();
+    const {loading: eventLoading, data: eventDetails, setEdit} = useEventDetails();
 
     useEffect(() => {
         // if (eventDetails) {
@@ -198,10 +198,10 @@ const EventDetailsPage = () => {
         libraryItems, mediaGallery, visit_associate,
     } = eventDetails
 
-    const mediaGalleryLocal = mediaGridActiveItems + mediaCount <= mediaGallery.length ? mediaGallery.slice(0, mediaGridActiveItems + mediaCount) :
-        mediaGallery.slice(
+    const mediaGalleryLocal = mediaGallery && mediaGridActiveItems + mediaCount <= mediaGallery?.length ? mediaGallery?.slice(0, mediaGridActiveItems + mediaCount) :
+        mediaGallery?.slice(
             0,
-            mediaGridActiveItems + (mediaGallery.length - mediaGridActiveItems)
+            mediaGridActiveItems + (mediaGallery?.length - mediaGridActiveItems)
         )
 
 
@@ -220,6 +220,7 @@ const EventDetailsPage = () => {
         {
             label: "Edit",
             action: () => {
+                setEdit()
             },
         },
         {
@@ -437,10 +438,11 @@ const EventDetailsPage = () => {
                                         <Grid item>
                                             <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
                                                 {
-                                                    !isEmpty(siteType) ? siteType.map((item: string) => (
+                                                    !isEmpty(siteType) ? siteType.map((item: string, index: number) => (
                                                         <Box
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
+                                                            key={index}
                                                         >
                                                             {item}
                                                         </Box>
@@ -465,8 +467,9 @@ const EventDetailsPage = () => {
                                             all places where the site type = building. */}
                                             <Box component={"div"} className={`${styles['text-anchors-parent']}`}>
                                                 {
-                                                    !isEmpty(period) ? period.map(item => (
+                                                    !isEmpty(period) ? period.map((item, index) => (
                                                         <Box
+                                                        key={index}
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
                                                         >
@@ -502,8 +505,8 @@ const EventDetailsPage = () => {
                                             State of Conservation
                                         </Grid>
                                         {
-                                            !isEmptyValue(stateOfConservation) ? stateOfConservation.map((item: string) =>
-                                                <Grid item>
+                                            !isEmptyValue(stateOfConservation) ? stateOfConservation.map((item: string, index: number) =>
+                                                <Grid item key={index}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -519,8 +522,8 @@ const EventDetailsPage = () => {
                                             Risk
                                         </Grid>
                                         {
-                                            !isEmptyValue(risk) ? risk.map((item: string) =>
-                                                <Grid item>
+                                            !isEmptyValue(risk) ? risk.map((item: string, index: number) =>
+                                                <Grid item key={index}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -535,8 +538,8 @@ const EventDetailsPage = () => {
                                             Tourism Value
                                         </Grid>
                                         {
-                                            !isEmptyValue(tourismValue) ? tourismValue.map((item: string) =>
-                                                <Grid item>
+                                            !isEmptyValue(tourismValue) ? tourismValue.map((item: string, index: number) =>
+                                                <Grid item key={index}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -551,8 +554,8 @@ const EventDetailsPage = () => {
                                             Research Value
                                         </Grid>
                                         {
-                                            !isEmptyValue(researchValue) ? researchValue.map((item: string) =>
-                                                <Grid item>
+                                            !isEmptyValue(researchValue) ? researchValue.map((item: string, index: number) =>
+                                                <Grid item key={index}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -567,8 +570,8 @@ const EventDetailsPage = () => {
                                             Recommendation
                                         </Grid>
                                         {
-                                            !isEmptyValue(recommendation) ? recommendation.map((item: string) =>
-                                                <Grid item>
+                                            !isEmptyValue(recommendation) ? recommendation.map((item: string, index: number) =>
+                                                <Grid item key={index}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -645,7 +648,7 @@ const EventDetailsPage = () => {
                     <Box component="div" className={`${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Library</Box>
-                            {!isEmpty(libraryItems) && <Box component="div">{libraryItems.length} Items</Box>}
+                            {libraryItems && !isEmpty(libraryItems) && <Box component="div">{libraryItems.length} Items</Box>}
                         </Box>
                         <Box component="div" className={`${styles["table-wrapper"]}`}>
                             {
@@ -674,7 +677,7 @@ const EventDetailsPage = () => {
                     <Box component="div" className={`${styles['events-section']} ${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Media Gallery</Box>
-                            {!isEmpty(mediaGallery) && <Box component="div">{mediaGallery.length} Items</Box>}
+                            {mediaGallery && !isEmpty(mediaGallery) && <Box component="div">{mediaGallery.length} Items</Box>}
                         </Box>
                         <Box component="div" className={`${styles["table-wrapper"]}`}>
                             {!isEmpty(mediaGalleryLocal) ?
@@ -757,14 +760,14 @@ const EventDetailsPage = () => {
                                     onClick={e => {
                                         e.preventDefault()
 
-                                        if(mediaGalleryLocal.length === mediaGallery.length) {
+                                        if( mediaGalleryLocal && mediaGallery && (mediaGalleryLocal.length === mediaGallery.length)) {
                                             setMediaGridActiveItems(8)
                                         } else {
                                             setMediaGridActiveItems(state => state + 8)
                                         }
                                     }}
                                 >
-                                    See {mediaGalleryLocal.length === mediaGallery.length ? 'Less': 'More'}
+                                    See { mediaGalleryLocal && mediaGallery && (mediaGalleryLocal.length === mediaGallery.length) ? 'Less': 'More'}
                                 </Button>
                             </Grid>
                         </Grid>}

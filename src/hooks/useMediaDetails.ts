@@ -12,7 +12,6 @@ const useMediaDetails = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('fetch the uniqueId from params');
     if (uniqueId) {
       fetchMediaDetails(uniqueId)
     }

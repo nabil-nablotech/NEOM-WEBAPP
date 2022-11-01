@@ -15,6 +15,7 @@ export type CustomDrawerProps = {
 export type AddNewItemProps = {
     onClose: () => void
     create?: (options?: any) => Promise<any>
+    update?: (options?: any) => Promise<any>
     setSearchValue?: (str: string) => void
 }
 

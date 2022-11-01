@@ -22,6 +22,7 @@ import AddNewEvent from "../SearchResultTabs/Events/AddNewItem";
 import AddNewMedia from "../SearchResultTabs/Media/AddNewItem";
 import useEvent from "../../hooks/useEvent";
 import AddNewLibraryItem from "../SearchResultTabs/Library/AddNewItem";
+import { setEventEdit } from "../../store/reducers/eventReducer";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -94,6 +95,11 @@ function UserMenuComponent() {
     }
   ]
 
+  const handlePlus = () => {
+    dispatch(toggleNewItemWindow(!newItemWindowOpen));
+    dispatch(setEventEdit(false));
+  }
+
   return (
     <>
       <Box component="div" sx={{
@@ -105,7 +111,7 @@ function UserMenuComponent() {
         marginRight: '1em'
       }}>
         <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }} onClick={
-          e => dispatch(toggleNewItemWindow(!newItemWindowOpen))
+          e => handlePlus()
         }/>
         {admin && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
         <InitialsWrapper

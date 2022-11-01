@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import { Grid } from "@mui/material";
 /** indicating that we can send html later on wherever we parse */
 import parse from "html-react-parser";
+import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import { GridViewCard_Places } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
 import MoreIcon from "../../../../assets/images/searchResults/MoreMenu.svg";
@@ -46,12 +47,17 @@ export const Card = ({
             sm={11}
             className={`${gridStyles["card-image-wrapper"]}`}
           >
-            <Box
+            {img ?<Box
               className={`${gridStyles["card-image"]}`}
               component="img"
               alt={""}
               src={`${baseUrl}${img}`}
-            />
+            /> : <Box
+            className={`${gridStyles["card-image"]}`}
+            component="div"
+          >
+            <ImageOutlinedIcon className={`${gridStyles['content-image']} ${gridStyles['map-image']}`} />
+            </Box>}
           </Grid>
           <Grid
             item
@@ -65,7 +71,7 @@ export const Card = ({
             <div className={`${gridStyles["card-subtitle"]}`}>{subTitle}</div>
             <div className={`${gridStyles["card-date"]}`}>{dateString}</div>
             <div className={`${gridStyles["card-keywords"]}`}>
-              {period && period?.map((item, keyInx) => (
+              {period && period.length > 0 && period?.map((item, keyInx) => (
                <> {2 > keyInx ? <div key={keyInx} className={`${gridStyles["keyword-pill"]}`}>
                   {item}
                 </div> : null}

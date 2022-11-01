@@ -6,8 +6,7 @@ import {
   Stepper,
   Typography,
   Chip,
-  StepButton,
-  Grid
+  StepButton
 } from "@mui/material";
 import React, { ChangeEventHandler, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -119,7 +118,7 @@ const StepContent = ({
             <AutoCompleteSingleSelect
               className={`${styles["custom-search-field"]}`}
               label="Search Place*"
-              placeholder="Search Place*"
+              placeholder="Search Place"
               value={formState.search}
               handleClear={() => {}}
               itemsList={places || []}
@@ -439,21 +438,18 @@ const StepContent = ({
   );
 };
 
-const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
+const EditEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
   const { showAddSuccess } = useSelector(
     (state: RootState) => state.searchResults
-  );
-  const { edit, event } = useSelector(
-    (state: RootState) => state.event
   );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
   const {places} = useSelector((state: RootState) => state.event);
 
   const [activeStep, setActiveStep] = useState(0);
   const [formState, setFormState] = useState({
-    siteDescription: edit ? event?.visit_associate?.place_unique_id?.placeNameEnglish : ""
+    siteDescription: "",
   });
   const [skipped, setSkipped] = useState(new Set<number>());
 
@@ -485,7 +481,7 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
     if (activeStep + 1 === steps.length) {
-      if (create && !edit) {
+      if (create) {
         create({
           ...data
         });
@@ -494,14 +490,6 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
       dispatch(toggleShowAddSuccess(true));
       dispatch(toggleNewItemWindow(false))
 
-    }
-    if (edit && create) {
-      create({
-        ...data
-      });
-      onClose();
-      dispatch(toggleShowAddSuccess(true));
-      dispatch(toggleNewItemWindow(false))
     }
 
     setSkipped(newSkipped);
@@ -542,24 +530,24 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
 
   const formik = useFormik({
     initialValues: {
-      place: edit ? event?.visit_associate?.place_unique_id :undefined,
-      eventDate: edit && event.visitDate ? new Date(event.visitDate) : undefined,
-      recordingTeam: edit ? event?.recordingTeam : "",
-      visitNumber: edit ? event.visitNumber : "",
-      siteDescription: edit ? event?.siteDescription : "",
-      fieldNarrative: edit ? event?.fieldNarrative : "",
-      artifacts: edit ? event?.artifacts[0] : "",
-      latitude: edit ? event?.latitude : null,
-      longitude: edit ? event?.longitude : null,
-      assessmentType: edit ? event?.assessmentType[0] : "",
-      stateOfConservation: edit ? event?.stateOfConservation[0] : "",
-      siteType: edit ? event?.siteType : [],
-      risk: edit ? event?.risk[0] : "",
-      tourismValue: edit ? event?.tourismValue[0] : "",
-      researchValue: edit ? event?.researchValue[0] : "",
-      recommendation: edit ? event?.recommendation[0] : "",
-      period: edit ? event?.period : [],
-      keywords: edit ? event?.keywords : [],
+      place: undefined,
+      eventDate: undefined,
+      recordingTeam: "",
+      visitNumber: "",
+      siteDescription: "",
+      fieldNarrative: "",
+      artifacts: "",
+      latitude: null,
+      longitude: null,
+      assessmentType: "",
+      stateOfConservation: "",
+      siteType: [],
+      risk: "",
+      tourismValue: "",
+      researchValue: "",
+      recommendation: "",
+      period: [],
+      keywords: [],
     },
     validate: values => {
       // if (!values.visitNumber) {
@@ -576,12 +564,11 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
   });
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    console.log('e', e.target.value)
     if (setSearchValue) {
       setSearchValue(e.target.value);
     }
   }
-
-  console.log(formik.values, 'formik values......');
 
   return (
     <Box component="div">
@@ -616,7 +603,7 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
               component="h4"
               style={{}}
             >
-              {edit ? 'Edit' : 'Add'} Event
+              Add Event
             </Typography>
             <Stepper
               activeStep={activeStep}
@@ -696,29 +683,12 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
                                                     Skip
                                                 </Button>
                                             )} */}
-            <Grid item display={'flex'}>
-
-            {!edit && <Button
-            
+            <Button
               label={activeStep === steps.length - 1 ? "Add" : "Next"}
               type="submit"
               disabled={!(formik.values.visitNumber.length > 0 && formik.values.place)}
               // onClick={handleNext}
-            />}
-            {edit && activeStep !== steps.length - 1 && <Button
-              colors={["#fff", "var(--table-black-text)", "none"]}
-              label={"Next"}
-              type="submit"
-              disabled={!(formik.values.visitNumber.length > 0 && formik.values.place)}
-              // onClick={handleNext}
-            />}
-            {edit && <Button
-              label={"Update"}
-              type="submit"
-              // disabled={!(formik.values.visitNumber.length > 0 && formik.values.place)}
-              // onClick={handleNext}
-            />}
-                                            </Grid>
+            />
           </Box>
         </Box>
       </form>
@@ -726,4 +696,4 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
   );
 };
 
-export default AddNewEvent;
+export default EditEvent;

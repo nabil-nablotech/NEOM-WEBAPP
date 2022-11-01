@@ -33,6 +33,9 @@ const useEvent = () => {
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
   );
+  const { edit, event } = useSelector(
+    (state: RootState) => state.event
+  );
   const { search } = useLocation();
   
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
@@ -219,7 +222,18 @@ const useEvent = () => {
       artifacts: payload.artifacts && [payload.artifacts]
     }
     setPlace(data.place);
-    createEventMuation({variables: data})
+    if (!edit) {
+
+      createEventMuation({variables: data})
+    }
+    if (edit && event?.id) {
+      updateEventMuation({
+        variables: {
+          ...data,
+          id: event.id
+        }
+      })
+    }
   }
 
   useEffect(() => {
