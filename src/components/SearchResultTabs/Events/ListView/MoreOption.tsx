@@ -1,20 +1,19 @@
-import { useState, useEffect } from 'react';
-import { Box, Menu, MenuItem } from '@mui/material';
+import { useState } from 'react';
+import { Menu, MenuItem } from '@mui/material';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { User } from '../../../../types/User';
-import { StyledAntTable } from '../../../StyledAntTable';
-import styled from "styled-components";
-import { antTablePaginationCss } from '../../../../utils/services/helpers';
-import { setEventData } from '../../../../store/reducers/eventReducer';
+import { Event } from '../../../../types/Event';
+import { setEventData, setEventEdit } from '../../../../store/reducers/eventReducer';
 
 const MoreOptionsComponent = ({
     record,
     id,
-    dispatch
+    dispatch,
+    setEdit
 }: {
-    id: number;
-    record: User;
+    id: string;
+    record: Event;
     dispatch: any
+    setEdit: (payload: Event) => void
 }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
@@ -29,6 +28,7 @@ const MoreOptionsComponent = ({
         <>
             <div
                 className=""
+                onClick={handleClick}
             >
                 <MoreHorizIcon className="more-menu-div" />
             </div>
@@ -44,8 +44,8 @@ const MoreOptionsComponent = ({
                 <MenuItem
                     key={1}
                     onClick={() => {
-                        dispatch(setEditEvent(true));
-                        dispatch(setEventData(record));
+                        setEdit(record);
+                        handleClose();
                     }}
                 >
                     Edit

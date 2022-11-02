@@ -10,15 +10,16 @@ import {
   setEvents,
   setEventMetaData,
   setSearchText,
-  toggleShowAddSuccess
-
+  toggleShowAddSuccess,
+  toggleNewItemWindow, setAddNewItemWindowType
 } from "../store/reducers/searchResultsReducer";
-import {setEventEdit, setPlaces} from '../store/reducers/eventReducer';
-import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/helpers';
+import {setEventEdit, setPlaces, setEventData} from '../store/reducers/eventReducer';
+import {limit, getQueryObj, generateUniqueId, webUrl, EVENTS_TAB_NAME} from '../utils/services/helpers';
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { graphQlHeaders } from "../utils/services/interceptor";
 import { Place } from "../types/Place";
 import { places } from "../query/places";
+import { eventDetails } from "../api/details";
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -250,6 +251,7 @@ const useEvent = () => {
     const getData = setTimeout(() => filterPlaces(), 1000);
     return () => clearTimeout(getData)
   }, [searchValue])
+  
   const filterPlaces = () => {
     if (searchValue.trim().length > 2) {
       refetchPlaces({
@@ -260,6 +262,16 @@ const useEvent = () => {
     }
   }
 
+  const setEdit = async (payload: any) => {
+    if (payload) {
+      const payloadRes = await eventDetails(payload.attributes.uniqueId);
+      dispatch(setEventData(payloadRes));
+      dispatch(setEventEdit(true));
+      dispatch(toggleNewItemWindow(true))
+      dispatch(setAddNewItemWindowType(EVENTS_TAB_NAME))
+    }
+  };
+
   return {
     loading: refineLoading,
     error: refineErrorData,
@@ -269,7 +281,8 @@ const useEvent = () => {
     fetchEvents: fetchData,
     clearSearch: clearTextSearch,
     createEvent: createEvent,
-    setSearchValue
+    setSearchValue,
+    setEdit,
   };
 };
 

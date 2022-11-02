@@ -40,6 +40,11 @@ export type GridViewCard_Events = {
   subTitle: string;
   dateString: string;
   isNew: boolean;
+  handleClick: (item: Event, index: number) => void
+  setEdit: (item: Event) => void
+  record: Event;
+  id: string;
+  dispatch: any
 };
 
 export type SearchResultsState2 = {

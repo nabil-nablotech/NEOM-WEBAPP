@@ -128,66 +128,6 @@ export const eventByEventNumber = gql`
     }
   }
 `;
-export const eventById = gql`
-query getEventById($id: ID){
-  visit(id: $id) {
-    data {
-      id
-      attributes {
-        visitNumber
-        visitDate
-        visitUIPath
-        stateOfConservation
-        risk
-        period
-        assessmentType
-        artifacts
-        recordingTeam
-        researchValue
-        tourismValue
-        latitude
-        longitude
-        siteType
-        siteDescription
-        media_associates {
-        data {
-          attributes {
-            media_unique_id {
-              data {
-                attributes {
-                  object {
-                    data {
-                      attributes {
-                        url
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-        visit_associate {
-          data {
-            attributes {
-              place_unique_id {
-                data {
-                  attributes {
-                    placeNumber
-                    placeNameArabic
-                    placeNameEnglish
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-`;
 
 export const refineEvents = gql`
 query RefineSearchEvent(
@@ -257,6 +197,7 @@ query RefineSearchEvent(
       id
       attributes {
         visitDate
+        visitNumber
         recordingTeam
         siteDescription
         updatedAt
@@ -296,6 +237,7 @@ query RefineSearchEvent(
             attributes {
               place_unique_id {
                 data {
+                id
                   attributes {
                     placeNumber
                     placeNameEnglish

@@ -141,9 +141,11 @@ export const refinePlaces = gql`
               attributes {
                 media_unique_id {
                   data {
+                    id
                     attributes {
                       object {
                         data {
+                          id
                           attributes {
                             url
                           }

@@ -12,7 +12,7 @@ import { RootState } from "../store";
 const useEventDetails = () => {
   let { uniqueId } = useParams<{ tabName?: tabNameProps; uniqueId: string }>();
   const dispatch = useDispatch();
-  const {edit} = useSelector((state:RootState) => state.event)
+  const { edit } = useSelector((state:RootState) => state.event)
 
   useEffect(() => {
     if (uniqueId && !edit) {
