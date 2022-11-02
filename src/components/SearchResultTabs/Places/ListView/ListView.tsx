@@ -5,7 +5,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { User } from "../../../../types/User";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
-import { antTablePaginationCss, DETACH_ICON_CLASSNAME, shouldAddAtttachColumnHeader } from '../../../../utils/services/helpers';
+import { antTablePaginationCss, DETACH_ICON_CLASSNAME, isRecordAttached, shouldAddAtttachColumnHeader } from '../../../../utils/services/helpers';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
@@ -261,13 +261,13 @@ const ListView = (props: PlacesProps) => {
             position: 'relative',
             top: '3px',
           }}
+          shouldShowAttachIcon={isRecordAttached(record, associatedPlaces)}
           onClick={e => {
-            handleAttachClick(e, record)
           }}
         />
       </Box>
     }
-  }), [associatedPlaces]
+  }), [associatedPlaces.length]
   )
 
     const {data, hasMoreData, fetchData, loading} = props;
@@ -282,6 +282,24 @@ const ListView = (props: PlacesProps) => {
         }
  
     }, []);
+
+    /** Effect needed to refresh the headers, 
+     * when associations have changed.
+     */
+    useEffect(() => {
+      setTableHeaderJson(state => state.filter(item => {
+        return shouldAddAtttachColumnHeader(item)
+      }))
+
+      setTableHeaderJson(state => {
+        let newState = [...state]
+        if(newState.every(item => shouldAddAtttachColumnHeader(item))) {
+          newState = [attachIconColumnHeader , ...state]
+        }
+
+        return newState 
+      })
+    }, [associatedPlaces]);
 
     useEffect(() => {
 
@@ -332,17 +350,17 @@ const ListView = (props: PlacesProps) => {
                         background: "transparent",
                     }}
                     onRow={(record: any, rowIndex) => {
-                        return {
-                          onClick: (event: React.MouseEvent<HTMLElement>) => {
-                            const target = event.target as Element;
-                            const clsList = target.classList 
+                      return {
+                        onClick: (event: React.MouseEvent<HTMLElement>) => {
+                          const target = event.target as Element;
+                          const clsList = target.classList
 
-                            if([...clsList].includes(DETACH_ICON_CLASSNAME)) {
-                              handleAttachClick(event, record)
-                            }
-                          }, // click row
-                        };
-                      }}
+                          if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
+                            handleAttachClick(event, record)
+                          }
+                        }, // click row
+                      };
+                    }}
                 />
             </InfiniteScroll>
         </Box>
