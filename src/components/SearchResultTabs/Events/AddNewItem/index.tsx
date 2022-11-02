@@ -30,6 +30,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
+  setAddNewItemWindowType,
+  toggleAddItemWindowMinimized,
   toggleNewItemWindow,
   toggleShowAddSuccess,
 } from "../../../../store/reducers/searchResultsReducer";
@@ -438,7 +440,7 @@ const StepContent = ({
   );
 };
 
-const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
+const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
   const { showAddSuccess } = useSelector(
@@ -485,7 +487,7 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
           ...data,
         });
       }
-      onClose();
+      onHide();
       dispatch(toggleShowAddSuccess(true));
       dispatch(toggleNewItemWindow(false));
     }
@@ -493,7 +495,7 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
       create({
         ...data,
       });
-      onClose();
+      onHide();
       dispatch(toggleNewItemWindow(false));
     }
 
@@ -502,7 +504,9 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
 
   const handleBack = () => {
     if (activeStep === 0) {
-      onClose();
+      dispatch(toggleNewItemWindow(false))
+      dispatch(setAddNewItemWindowType(null))
+      dispatch(toggleAddItemWindowMinimized(null))
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
@@ -594,7 +598,7 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
             >
               <DefaultButton
                 variant="text"
-                onClick={(e) => onClose()}
+                onClick={(e) => onHide()}
                 style={{
                   // paddingInline: 0,
                   minWidth: "fit-content",

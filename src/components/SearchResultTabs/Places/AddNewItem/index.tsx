@@ -10,7 +10,7 @@ import Button from "../../../../components/Button";
 import DropdownComponent from '../../../Dropdown/index';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { toggleNewItemWindow, toggleShowAddSuccess } from '../../../../store/reducers/searchResultsReducer';
+import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleNewItemWindow, toggleShowAddSuccess } from '../../../../store/reducers/searchResultsReducer';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { SelectChangeEvent } from '@mui/material/Select';
@@ -361,7 +361,7 @@ const StepContent = ({
 
 
 const AddNewPlace = ({
-    onClose,
+    onHide,
     create
 }: AddNewItemProps) => {
     let { tabName } = useParams<{ tabName?: tabNameProps }>();
@@ -408,7 +408,7 @@ const AddNewPlace = ({
                     ...data
                 });
             }
-            onClose()
+            onHide()
             dispatch(toggleNewItemWindow(false))
         }
 
@@ -417,7 +417,9 @@ const AddNewPlace = ({
 
     const handleBack = () => {
         if (activeStep === 0) {
-            onClose()
+            dispatch(toggleNewItemWindow(false))
+            dispatch(setAddNewItemWindowType(null))
+            dispatch(toggleAddItemWindowMinimized(null))
         } else {
             setActiveStep((prevActiveStep) => prevActiveStep - 1);
         }
@@ -492,7 +494,7 @@ const AddNewPlace = ({
                                 marginLeft: 'auto',
                                 width: 'fit-content'
                             }}>
-                            <DefaultButton variant="text" onClick={e => onClose()}
+                            <DefaultButton variant="text" onClick={e => onHide()}
                                 style={{
                                     // paddingInline: 0,
                                     minWidth: 'fit-content',
