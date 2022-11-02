@@ -74,6 +74,7 @@ export type SearchResultsState2 = {
   isAssociationsStepOpen: boolean
   associatedPlaces: Place[] | []
   associatedEvents: Event[]
+  addItemWindowMinimized: boolean | null
 };
 
 export type FileDataType = {

@@ -12,8 +12,14 @@ export type CustomDrawerProps = {
     children: React.ReactNode
 }
 
-export type AddNewItemProps = {
+export type AddNewItemPaneProps = {
     onClose: () => void
+    create?: (options?: any) => Promise<any>
+    update?: (options?: any) => Promise<any>
+    setSearchValue?: (str: string) => void
+}
+export type AddNewItemProps = {
+    onHide: () => void
     create?: (options?: any) => Promise<any>
     update?: (options?: any) => Promise<any>
     setSearchValue?: (str: string) => void

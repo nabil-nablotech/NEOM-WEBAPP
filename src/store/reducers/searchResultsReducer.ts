@@ -31,7 +31,8 @@ const initialState: SearchResultsState2 = {
   addNewItemWindowType: null,
   isAssociationsStepOpen: false,
   associatedPlaces: [],
-  associatedEvents: []
+  associatedEvents: [],
+  addItemWindowMinimized: null
 };
 
 export const searchResultsSlice = createSlice({
@@ -116,6 +117,9 @@ export const searchResultsSlice = createSlice({
     modifyAssociatedEvents: (state, action: PayloadAction<Event[] | []>) => {
       state.associatedEvents = action.payload;
     },
+    toggleAddItemWindowMinimized: (state, action: PayloadAction<boolean | null>) => {
+      state.addItemWindowMinimized = action.payload;
+    },
   },
 });
 
@@ -145,7 +149,8 @@ export const {
   setAddNewItemWindowType,
   toggleAssociationsStepOpen,
   modifyAssociatedPlaces,
-  modifyAssociatedEvents
+  modifyAssociatedEvents,
+  toggleAddItemWindowMinimized
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;
