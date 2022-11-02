@@ -7,6 +7,7 @@ import gridStyles from './index.module.css'
 import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
 import { baseUrl } from "../../../../utils/services/helpers";
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
+import MoreOptionsComponent from "../ListView/MoreOption";
 
 export const Card = ({
   img,
@@ -14,6 +15,11 @@ export const Card = ({
   subTitle,
   dateString,
   isNew,
+  record,
+  id,
+  dispatch,
+  handleClick,
+  setEdit
 }: GridViewCard_Events) => {
   return (
     <>
@@ -26,6 +32,7 @@ export const Card = ({
             md={11}
             sm={11}
             className={`${gridStyles["card-image-wrapper"]}`}
+            onClick={() => {}}
           >
             {img ? <Box
               className={`${gridStyles["card-image"]}`}
@@ -55,10 +62,14 @@ export const Card = ({
             >
               <Box
                 className={`${gridStyles["more-icon"]}`}
-                component="img"
-                alt={""}
-                src={MoreIcon}
-              ></Box>
+                component={"span"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log('click on more')
+                }}
+              >
+                <MoreOptionsComponent setEdit={setEdit} record={record} id={id} dispatch={dispatch}  />
+              </Box>
             </Box>
           </Grid>
         </Grid>

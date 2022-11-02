@@ -1,12 +1,14 @@
 import dayjs from "dayjs";
 import styled from "styled-components";
 import { StyledAntTable } from "../../components/StyledAntTable";
-import { MediaAssociates2, PlaceApi } from "../../types/Place";
+import { MediaAssociates2, Place, PlaceApi } from "../../types/Place";
 import { tabNameProps } from "../../types/SearchResultsTabsProps";
 import * as Yup from 'yup';
+import { ColumnType } from "antd/lib/table";
+import { Event } from "../../types/Event";
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://2db5-117-251-210-47.in.ngrok.io`;
+// export const baseUrl = `https://b159-117-251-211-219.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -357,4 +359,18 @@ export const checkIsNew = (updatedDate: string) => {
   return dayjs().isBefore(expDate);
 }
 
+export const ATTACH_ICON_CLASSNAME = 'attach-icon'
+export const DETACH_ICON_CLASSNAME = 'detached-icon'
 
+export const shouldAddAtttachColumnHeader = (item: ColumnType<any>) => {
+  return (!item.className || item.className?.indexOf(ATTACH_ICON_CLASSNAME) === -1)
+}
+
+export const isRecordAttached = (record: Place | Event, list: Array<Place | Event>) => {
+
+  if(!list || !record) return false
+
+  return list.some(item => {
+    return (item.attributes.uniqueId === record.attributes.uniqueId)
+  }) 
+}

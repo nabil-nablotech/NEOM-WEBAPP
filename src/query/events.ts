@@ -128,15 +128,6 @@ export const eventByEventNumber = gql`
     }
   }
 `;
-export const eventById = gql`
-  query getEventById($id: ID){
-    document(id: $id) {
-      data {
-        id
-      }
-    }
-  }
-`;
 
 export const refineEvents = gql`
 query RefineSearchEvent(
@@ -206,6 +197,7 @@ query RefineSearchEvent(
       id
       attributes {
         visitDate
+        visitNumber
         recordingTeam
         siteDescription
         updatedAt
@@ -245,6 +237,7 @@ query RefineSearchEvent(
             attributes {
               place_unique_id {
                 data {
+                id
                   attributes {
                     placeNumber
                     placeNameEnglish

@@ -40,6 +40,11 @@ export type GridViewCard_Events = {
   subTitle: string;
   dateString: string;
   isNew: boolean;
+  handleClick: (item: Event, index: number) => void
+  setEdit: (item: Event) => void
+  record: Event;
+  id: string;
+  dispatch: any
 };
 
 export type SearchResultsState2 = {
@@ -67,6 +72,9 @@ export type SearchResultsState2 = {
   isOpenGalleryView: boolean
   addNewItemWindowType: tabNameProps | null
   isAssociationsStepOpen: boolean
+  associatedPlaces: Place[] | []
+  associatedEvents: Event[]
+  addItemWindowMinimized: boolean | null
 };
 
 export type FileDataType = {
@@ -120,3 +128,10 @@ export type CustomMoreOptionsComponentProps = {
   menuActions: Array<menuAction>;
   moreIconClassName?: string
 };
+
+export type DetachedIconTypes ={
+  className?: string
+  style?: React.CSSProperties
+  onClick: (e: React.MouseEvent<HTMLImageElement>) => void
+  shouldShowAttachIcon?: boolean
+}

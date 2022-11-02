@@ -68,7 +68,12 @@ export const eventSlice = createSlice({
   initialState,
   reducers: {
     setEventData: (state, action: PayloadAction<any>) => {
-      state.event = action.payload;
+      if (action.payload?.visit_associate?.place_unique_id) {
+        const copyPlace = JSON.parse(JSON.stringify(action.payload));
+        copyPlace.visit_associate.place_unique_id.label = `${copyPlace.visit_associate?.place_unique_id.placeNameEnglish}${copyPlace.visit_associate?.place_unique_id.placeNameArabic}`;
+        copyPlace.visit_associate.place_unique_id.value = copyPlace.visit_associate?.place_unique_id.id; 
+        state.event = copyPlace;
+      }
     },
     setPlaces: (state, action: PayloadAction<Place[] | []>) => {
       state.places = action.payload;

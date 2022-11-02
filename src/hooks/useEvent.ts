@@ -10,15 +10,16 @@ import {
   setEvents,
   setEventMetaData,
   setSearchText,
-  toggleShowAddSuccess
-
+  toggleShowAddSuccess,
+  toggleNewItemWindow, setAddNewItemWindowType
 } from "../store/reducers/searchResultsReducer";
-import {setEventEdit, setPlaces} from '../store/reducers/eventReducer';
-import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/helpers';
+import {setEventEdit, setPlaces, setEventData} from '../store/reducers/eventReducer';
+import {limit, getQueryObj, generateUniqueId, webUrl, EVENTS_TAB_NAME} from '../utils/services/helpers';
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { graphQlHeaders } from "../utils/services/interceptor";
 import { Place } from "../types/Place";
 import { places } from "../query/places";
+import { eventDetails } from "../api/details";
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -38,7 +39,7 @@ const useEvent = () => {
   );
   const { search } = useLocation();
   
-  let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
+  let { tabName, uniqueId: idParams } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -212,9 +213,8 @@ const useEvent = () => {
     const visitDate = eventDate && eventDate.getFullYear() && `${eventDate.getFullYear()}-${zerofill(eventDate.getMonth() + 1)}-${zerofill(eventDate.getDate())}`;
     const data = {
       ...payload,
-      uniqueId: uniqueId,
-      visitNumber: 1,
-      visitUIPath: `${webUrl}/search-results/Events/${uniqueId}`,
+      visitNumber: parseFloat(payload.visitNumber),
+
       asset_config_id: 1,
       keywords: keywords,
       siteType: payload.siteType && payload.siteType,
@@ -232,10 +232,12 @@ const useEvent = () => {
     }
     setPlace(data.place);
     if (!edit) {
-
+      data.uniqueId = uniqueId;
+      data.visitUIPath = `${webUrl}/search-results/Events/${uniqueId}`;
       createEventMuation({variables: data})
     }
     if (edit && event?.id) {
+      // data.visitUIPath = `${webUrl}/search-results/Events/${payload.uniqueId}`;
       updateEventMuation({
         variables: {
           ...data,
@@ -246,9 +248,10 @@ const useEvent = () => {
   }
 
   useEffect(() => {
-    const getData = setTimeout(() => filterPlaces(), 2000);
+    const getData = setTimeout(() => filterPlaces(), 1000);
     return () => clearTimeout(getData)
   }, [searchValue])
+  
   const filterPlaces = () => {
     if (searchValue.trim().length > 2) {
       refetchPlaces({
@@ -259,6 +262,16 @@ const useEvent = () => {
     }
   }
 
+  const setEdit = async (payload: any) => {
+    if (payload) {
+      const payloadRes = await eventDetails(payload.attributes.uniqueId);
+      dispatch(setEventData(payloadRes));
+      dispatch(setEventEdit(true));
+      dispatch(toggleNewItemWindow(true))
+      dispatch(setAddNewItemWindowType(EVENTS_TAB_NAME))
+    }
+  };
+
   return {
     loading: refineLoading,
     error: refineErrorData,
@@ -268,7 +281,8 @@ const useEvent = () => {
     fetchEvents: fetchData,
     clearSearch: clearTextSearch,
     createEvent: createEvent,
-    setSearchValue
+    setSearchValue,
+    setEdit,
   };
 };
 

@@ -1,17 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Box, Menu, MenuItem } from "@mui/material";
 import { ColumnsType } from "antd/lib/table";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { User } from "../../../../types/User";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
-import { antTablePaginationCss } from '../../../../utils/services/helpers';
+import { antTablePaginationCss, DETACH_ICON_CLASSNAME, isRecordAttached, shouldAddAtttachColumnHeader } from '../../../../utils/services/helpers';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import {PlacesProps} from '../GridView/GridView';
-import { FieldOption } from "../../../../types/Place";
-
+import { FieldOption, Place } from "../../../../types/Place";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store";
+import DetachedIcon from "../../../Icons/DetachedIcon";
+import { useDispatch } from "react-redux";
+import { modifyAssociatedPlaces } from "../../../../store/reducers/searchResultsReducer";
+ 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
   }
@@ -143,89 +148,127 @@ const MoreOptionsComponent = ({ record, id }: { id: number; record: User }) => {
 };
 
 function displayMultiple(value: any, index: number, key: string) { return value[key].data.map((x: FieldOption) => `${x.attributes.translation.data.attributes.locale[0].value}; `) }
+
+
+
+
 const ListView = (props: PlacesProps) => {
 
-    const tableHeaderJson: ColumnsType<any> = [
-        {
-            title: "NAME",
-            key: `attributes`,
-            dataIndex: "attributes",
-            className: 'cell-name',
-            sorter: (a: { attributes: {placeNameEnglish: string;} }, b: { attributes: {placeNameEnglish: string;} }) => {
-                return a.attributes.placeNameEnglish.localeCompare(b.attributes.placeNameEnglish)
-            },
-            sortDirections: ["ascend"],
-            defaultSortOrder: "ascend",
-            render: (value: any, index: number) => {
-              return `${value.placeNameEnglish}${value.placeNameArabic}`            
-            }
-        },
-        {
-            title: "NUMBER",
-            key: `attributes`,
-            dataIndex: "attributes",
-            className: 'cell-number',
-            render: (value: any, index: number) => value.placeNumber
-        },
-        {
-            title: "TYPE",
-            key: `attributes`,
-            dataIndex: "attributes",
-            render: (value: any, index: number) => value?.siteType.map((x: string) => `${x}`)
-        },
-        {
-            title: "RESEARCH VALUE",
-            key: `attributes`,
-            dataIndex: "attributes",
-            className: 'cell-research',
-            render: (value: any, index: number) => {
-                return value.researchValue
-            },
-        },
-        {
-            title: "TOURISM VALUE",
-            key: `attributes`,
-            dataIndex: "attributes",
-            className: 'cell-tourism',
-            render: (value: any, index: number) => value.tourismValue.map((x: string) => `${x}`)
-        },
-        {
-            title: "STATE OF CONSERVATION",
-            key: `attributes`,
-            dataIndex: "attributes",
-            className: 'cell-conserve',
-            render: (value: any, index: number) => value.stateOfConservation.map((x: string) => `${x}`)
-        },
-        {
-            title: "RECOMMENDATION",
-            key: `attributes`,
-            dataIndex: "attributes",
-            className: 'cell-recommend',
-            render: (value: any, index: number) => value.recommendation.map((x: string) => `${x}`)
-        },
-        {
-            title: "PERIOD",
-            key: `attributes`,
-            dataIndex: "attributes",
-            className: 'cell-period',
-            render: (value: any, index: number) => value.period.map((x: string) => `${x}`)
-        },
-        {
-            title: "RISK",
-            key: `attributes`,
-            dataIndex: "attributes",
-            render: (value: any, index: number) => value.risk.map((x: string) => `${x}`)
-        },
-        {
-            title: "",
-            key: "action",
-            fixed: 'right',
-            className: 'more-menu-ant-cell',
-            render: (value: any, record: User) => (
-                <MoreOptionsComponent id={record.id} record={record} />
-            ),
-        },
-    ]
+  const dispatch = useDispatch()
+
+  const { isAssociationsStepOpen, associatedPlaces } = useSelector(
+    (state: RootState) => state.searchResults
+  );
+
+    const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([
+      {
+          title: "NAME",
+          key: `attributes`,
+          dataIndex: "attributes",
+          className: 'cell-name',
+          sorter: (a: { attributes: {placeNameEnglish: string;} }, b: { attributes: {placeNameEnglish: string;} }) => {
+              return a.attributes.placeNameEnglish.localeCompare(b.attributes.placeNameEnglish)
+          },
+          sortDirections: ["ascend"],
+          defaultSortOrder: "ascend",
+          render: (value: any, index: number) => {
+            return `${value.placeNameEnglish}${value.placeNameArabic}`            
+          }
+      },
+      {
+          title: "NUMBER",
+          key: `attributes`,
+          dataIndex: "attributes",
+          className: 'cell-number',
+          render: (value: any, index: number) => value.placeNumber
+      },
+      {
+          title: "TYPE",
+          key: `attributes`,
+          dataIndex: "attributes",
+          render: (value: any, index: number) => value?.siteType.map((x: string) => `${x}`)
+      },
+      {
+          title: "RESEARCH VALUE",
+          key: `attributes`,
+          dataIndex: "attributes",
+          className: 'cell-research',
+          render: (value: any, index: number) => {
+              return value.researchValue
+          },
+      },
+      {
+          title: "TOURISM VALUE",
+          key: `attributes`,
+          dataIndex: "attributes",
+          className: 'cell-tourism',
+          render: (value: any, index: number) => value.tourismValue.map((x: string) => `${x}`)
+      },
+      {
+          title: "STATE OF CONSERVATION",
+          key: `attributes`,
+          dataIndex: "attributes",
+          className: 'cell-conserve',
+          render: (value: any, index: number) => value.stateOfConservation.map((x: string) => `${x}`)
+      },
+      {
+          title: "RECOMMENDATION",
+          key: `attributes`,
+          dataIndex: "attributes",
+          className: 'cell-recommend',
+          render: (value: any, index: number) => value.recommendation.map((x: string) => `${x}`)
+      },
+      {
+          title: "PERIOD",
+          key: `attributes`,
+          dataIndex: "attributes",
+          className: 'cell-period',
+          render: (value: any, index: number) => value.period.map((x: string) => `${x}`)
+      },
+      {
+          title: "RISK",
+          key: `attributes`,
+          dataIndex: "attributes",
+          render: (value: any, index: number) => value.risk.map((x: string) => `${x}`)
+      },
+      {
+          title: "",
+          key: "action",
+          fixed: 'right',
+          className: 'more-menu-ant-cell',
+          render: (value: any, record: User) => (
+              <MoreOptionsComponent id={record.id} record={record} />
+          ),
+      },
+  ])
+
+
+  const handleAttachClick = (e:any, record: Place) => {
+    dispatch(modifyAssociatedPlaces([...associatedPlaces, record]))
+  }
+
+  const attachIconColumnHeader: any = useMemo(() => ({
+    title: "",
+    key: "action",
+    fixed: 'left',
+    className: 'more-menu-ant-cell attach-icon',
+    render: (value: any, record: Place) => {
+
+      return <Box component="div">
+        <DetachedIcon
+          style={{
+            height: '18px',
+            position: 'relative',
+            top: '3px',
+          }}
+          shouldShowAttachIcon={isRecordAttached(record, associatedPlaces)}
+          onClick={e => {
+          }}
+        />
+      </Box>
+    }
+  }), [associatedPlaces.length]
+  )
 
     const {data, hasMoreData, fetchData, loading} = props;
 
@@ -239,6 +282,43 @@ const ListView = (props: PlacesProps) => {
         }
  
     }, []);
+
+    /** Effect needed to refresh the headers, 
+     * when associations have changed.
+     */
+    useEffect(() => {
+      setTableHeaderJson(state => state.filter(item => {
+        return shouldAddAtttachColumnHeader(item)
+      }))
+
+      setTableHeaderJson(state => {
+        let newState = [...state]
+        if(newState.every(item => shouldAddAtttachColumnHeader(item))) {
+          newState = [attachIconColumnHeader , ...state]
+        }
+
+        return newState 
+      })
+    }, [associatedPlaces]);
+
+    useEffect(() => {
+
+        if(isAssociationsStepOpen) {
+          setTableHeaderJson(state => {
+            let newState = [...state]
+            if(newState.every(item => shouldAddAtttachColumnHeader(item))) {
+              newState = [attachIconColumnHeader , ...state]
+            }
+
+            return newState 
+          })
+        } else {
+          setTableHeaderJson(state => state.filter(item => {
+            return shouldAddAtttachColumnHeader(item)
+          }))
+        }
+ 
+    }, [isAssociationsStepOpen]);
 
     return (
         <Box component="div" id={'places-list-parent'}>
@@ -268,6 +348,18 @@ const ListView = (props: PlacesProps) => {
                     scroll={{ x: true, y: 300 }}
                     style={{
                         background: "transparent",
+                    }}
+                    onRow={(record: any, rowIndex) => {
+                      return {
+                        onClick: (event: React.MouseEvent<HTMLElement>) => {
+                          const target = event.target as Element;
+                          const clsList = target.classList
+
+                          if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
+                            handleAttachClick(event, record)
+                          }
+                        }, // click row
+                      };
                     }}
                 />
             </InfiniteScroll>

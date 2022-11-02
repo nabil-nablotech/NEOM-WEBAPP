@@ -5,7 +5,8 @@ import {
   StepLabel,
   Stepper,
   Typography,
-  StepButton
+  StepButton,
+  Chip
 } from "@mui/material";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -14,18 +15,20 @@ import {
   StepContentTypes,
 } from "../../../../types/CustomDrawerTypes";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
-import { addItemLibrarySteps } from "../../../../utils/services/helpers";
+import { addItemLibrarySteps, handleEnter } from "../../../../utils/services/helpers";
 import styles from '../../Places/AddNewItem/addNewItem.module.css'
 import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { toggleAssociationsStepOpen, toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleAssociationsStepOpen, toggleNewItemWindow, toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import { useFormik } from "formik";
 import FileUpload from "../../../Upload/FileUpload";
 import DetachedIcon from "../../../Icons/DetachedIcon";
+import AddedPlaces from "../../../AssociationsList/AddedPlaces";
+import CloseIcon from '@mui/icons-material/Close';
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -87,6 +90,11 @@ const StepContent = ({
   handleBack,
   formik,
 }: StepContentTypes) => {
+  const { associatedPlaces } = useSelector(
+    (state: RootState) => state.searchResults
+  );
+  const [currentKeyword, setCurrentKeyword] = useState<string>('')
+
   return (
     <>
       <Box component="div" className={`${styles["form"]}`}>
@@ -186,26 +194,74 @@ const StepContent = ({
             }}>
               Click on{' '}
               <DetachedIcon
-              style={{
-                height: '18px',
-                position: 'relative',
-                top: '3px',
-              }}
+                style={{
+                  height: '18px',
+                  position: 'relative',
+                  top: '3px',
+                }}
+                onClick={e => {
+                  
+                }}
               />
               {' '}to select the places and events you want to associate this library item to.
             </Box>
-            
+            <AddedPlaces
+              list={associatedPlaces}
+            />
           </Box>
         )}
+        {activeStep === 2 && <>
+          <>
+            <Box component="div">Make your content discoverable</Box>
+            <TextInput
+              className={`${styles["english-name"]}`}
+              id="keyword-div"
+              label="Add Keywords"
+              name="keywords"
+              value={currentKeyword}
+              onChange={(e) => {
+                setCurrentKeyword(e.target.value)
+              }}
+              onKeyDown={e => {
+                handleEnter(e, () => {
+                  formik.setFieldValue('keywords', [...new Set([...formik.values.keywords, currentKeyword])])
+                  setCurrentKeyword('')
+                })
+              }}
+              sx={{
+                ...textInputSxStyles
+              }}
+              formControlSx={commonFormControlSxStyles}
+            />
+            {
+              <Box component="div" style={{
+                display: 'flex',
+                gap: '5px'
+              }}>
+                {
+                  formik.values.keywords.map((item: string, index: any) => (
+                    <Chip key={index} size="small" variant="outlined" label={item}
+                      deleteIcon={<CloseIcon fontSize="small" />}
+                      onDelete={e => {
+                        const newArr = [...formik.values.keywords].filter((element: string) => element !== item)
+                        formik.setFieldValue('keywords', [...new Set(newArr)])
+                      }}
+                    />
+                  ))
+                }
+              </Box>
+            }
+          </>
+        </>}
       </Box>
     </>
   );
 };
 
-const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
+const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { showAddSuccess } = useSelector(
+  const { showAddSuccess, associatedPlaces } = useSelector(
     (state: RootState) => state.searchResults
   );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
@@ -225,8 +281,9 @@ const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
       dispatch(toggleShowAddSuccess(true));
     }
   }, [showAddSuccess]);
-  
+
   useEffect(() => {
+
     if (activeStep === 1) {
       dispatch(toggleAssociationsStepOpen(true));
     } else {
@@ -250,7 +307,7 @@ const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     if (activeStep + 1 === steps.length) {
-      onClose();
+      onHide();
       dispatch(toggleShowAddSuccess(true));
     }
     if (activeStep === 1) {
@@ -266,7 +323,9 @@ const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
 
   const handleBack = () => {
     if (activeStep === 0) {
-      onClose();
+      dispatch(toggleNewItemWindow(false))
+      dispatch(setAddNewItemWindowType(null))
+      dispatch(toggleAddItemWindowMinimized(null))
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
@@ -305,7 +364,7 @@ const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
       siteDescription: "",
       fieldNarrative: "",
       siteType: "",
-      keywords: "",
+      keywords: [],
     },
     onSubmit: (values) => {
       handleNext(null, values);
@@ -328,7 +387,7 @@ const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
             >
               <DefaultButton
                 variant="text"
-                onClick={(e) => onClose()}
+                onClick={(e) => onHide()}
                 style={{
                   // paddingInline: 0,
                   minWidth: "fit-content",

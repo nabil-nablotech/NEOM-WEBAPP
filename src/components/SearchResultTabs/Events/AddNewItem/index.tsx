@@ -30,6 +30,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
+  setAddNewItemWindowType,
+  toggleAddItemWindowMinimized,
   toggleNewItemWindow,
   toggleShowAddSuccess,
 } from "../../../../store/reducers/searchResultsReducer";
@@ -112,11 +114,13 @@ const StepContent = ({
               className={`${styles["custom-search-field"]}`}
               label="Search Place*"
               placeholder="Search Place*"
-              value={formik.Place}
+              value={formik.values.place}
+              // defaultValue={formik.}
               handleClear={() => {}}
               itemsList={places || []}
               handleSelectChange={(e, value, r, d) =>
-                formik.setFieldValue("place", value)
+                {console.log('value...', value)
+                  formik.setFieldValue("place", value)}
               }
               handleChange={handleChange}
               renderOption={(props, option: any) => (
@@ -126,12 +130,12 @@ const StepContent = ({
                   {...props}
                 >
                   <Typography>
-                    {option.attributes.placeNameEnglish}
-                    {option.attributes.placeNameArabic}
+                    {option?.attributes?.placeNameEnglish || ''}
+                    {option?.attributes?.placeNameArabic || ''}
                   </Typography>
 
                   <Typography style={{ float: "right" }}>
-                    {option.attributes.placeNumber}
+                    {option?.attributes?.placeNumber || '-'}
                   </Typography>
                 </Box>
               )}
@@ -142,6 +146,7 @@ const StepContent = ({
               label="Event Number"
               required
               name="visit-number"
+              type="number"
               value={formik.values.visitNumber}
               onChange={(e) => {
                 formik.setFieldValue("visitNumber", e.target.value);
@@ -435,7 +440,7 @@ const StepContent = ({
   );
 };
 
-const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
+const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
   const { showAddSuccess } = useSelector(
@@ -476,21 +481,21 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
-    if (activeStep + 1 === steps.length) {
+    if ((activeStep + 1 === steps.length) && data) {
       if (create && !edit) {
         create({
           ...data,
         });
       }
-      onClose();
+      onHide();
       dispatch(toggleShowAddSuccess(true));
       dispatch(toggleNewItemWindow(false));
     }
-    if (edit && create) {
+    if (edit && create && data) {
       create({
         ...data,
       });
-      onClose();
+      onHide();
       dispatch(toggleNewItemWindow(false));
     }
 
@@ -499,7 +504,9 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
 
   const handleBack = () => {
     if (activeStep === 0) {
-      onClose();
+      dispatch(toggleNewItemWindow(false))
+      dispatch(setAddNewItemWindowType(null))
+      dispatch(toggleAddItemWindowMinimized(null))
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
@@ -530,27 +537,28 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
     }
   };
 
+
   const formik = useFormik({
     initialValues: {
-      place: edit ? event?.visit_associate?.place_unique_id : undefined,
+      place: edit ? event?.visit_associate?.place_unique_id : '',
       eventDate:
         edit && event.visitDate ? new Date(event.visitDate) : undefined,
       recordingTeam: edit ? event?.recordingTeam : "",
-      visitNumber: edit ? event.visitNumber : "",
+      visitNumber: edit ? event?.visitNumber : "",
       siteDescription: edit ? event?.siteDescription : "",
       fieldNarrative: edit ? event?.fieldNarrative : "",
-      artifacts: edit ? event?.artifacts[0] : "",
+      artifacts: (edit && event?.artifacts) ? event?.artifacts[0] : "",
       latitude: edit ? event?.latitude : null,
       longitude: edit ? event?.longitude : null,
-      assessmentType: edit ? event?.assessmentType[0] : "",
-      stateOfConservation: edit ? event?.stateOfConservation[0] : "",
+      assessmentType: (edit && event?.assessmentType && event?.assessmentType?.length) > 0 ? event?.assessmentType[0] : "",
+      stateOfConservation: edit && event?.stateOfConservation ? event?.stateOfConservation[0] : "",
       siteType: edit ? event?.siteType : [],
-      risk: edit ? event?.risk[0] : "",
-      tourismValue: edit ? event?.tourismValue[0] : "",
-      researchValue: edit ? event?.researchValue[0] : "",
-      recommendation: edit ? event?.recommendation[0] : "",
-      period: edit ? event?.period : [],
-      keywords: edit ? event?.keywords : [],
+      risk: edit && event?.risk.length > 0 ? event?.risk[0] : "",
+      tourismValue: edit && event?.tourismValue?.length > 0 ? event?.tourismValue[0] : "",
+      researchValue: edit && event?.researchValue?.length > 0 ? event?.researchValue[0] : "",
+      recommendation: edit && event?.recommendation?.length > 0 ? event?.recommendation[0] : "",
+      period: (edit && event?.period) ? event?.period : [],
+      keywords: (edit && event?.keywords) ? event?.keywords : [],
     },
     validate: (values) => {
       // if (!values.visitNumber) {
@@ -590,7 +598,7 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
             >
               <DefaultButton
                 variant="text"
-                onClick={(e) => onClose()}
+                onClick={(e) => onHide()}
                 style={{
                   // paddingInline: 0,
                   minWidth: "fit-content",
@@ -650,7 +658,7 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
               <React.Fragment>
                 {edit && event && (
                   <Box component="div" className={`${styles['visit-count']}`}>
-                    {event.visitNumber || event?.attributes.visitNumber}
+                    {event?.visitNumber || event?.attributes?.visitNumber}
                   </Box>
                 )}
                 <StepContent
@@ -713,14 +721,14 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
                 <Button
                   colors={["#fff", "var(--table-black-text)", "none"]}
                   label={"Next"}
-                  type="submit"
-                  disabled={
-                    !(
-                      formik.values.visitNumber.length > 0 &&
-                      formik.values.place
-                    )
-                  }
-                  // onClick={handleNext}
+                  // type="submit"
+                  // disabled={
+                  //   !(
+                  //     formik.values?.visitNumber?.length > 0 &&
+                  //     formik.values.place
+                  //   )
+                  // }
+                  onClick={handleNext}
                 />
               )}
               {edit && (
