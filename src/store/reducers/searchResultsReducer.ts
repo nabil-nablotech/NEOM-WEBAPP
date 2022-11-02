@@ -21,6 +21,7 @@ const initialState: SearchResultsState2 = {
   activeTab: '',
   newItemWindowOpen: false,
   showAddSuccess: false,
+  showEditSuccess: false,
   activePlaceItem: null,
   activePlaceItemIndex: 0,
   activeEventItem: null,
@@ -81,6 +82,9 @@ export const searchResultsSlice = createSlice({
     toggleShowAddSuccess: (state, action: PayloadAction<boolean>) => {
       state.showAddSuccess = action.payload;
     },
+    toggleShowEditSuccess: (state, action: PayloadAction<boolean>) => {
+      state.showEditSuccess = action.payload;
+    },
     setActiveMediaItem: (state, action: PayloadAction<Object | any>) => {
       state.activeMediaItem = action.payload;
     },
@@ -138,6 +142,7 @@ export const {
   setActiveTab,
   toggleNewItemWindow,
   toggleShowAddSuccess,
+  toggleShowEditSuccess,
   setActivePlaceItem,
   setActivePlaceItemIndex,
   setActiveEventItem,

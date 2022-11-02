@@ -17,6 +17,7 @@ import useMedia from "../../hooks/useMedia";
 import {
   setActiveTab,
   toggleShowAddSuccess,
+  toggleShowEditSuccess
 } from "../../store/reducers/searchResultsReducer";
 import PositionedSnackbar from "../../components/Snackbar";
 import { PLACES_TAB_NAME } from "../../utils/services/helpers";
@@ -30,7 +31,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   const { data } = useRefinedSearch();
   const navigate = useNavigate();
   // const { searchText, activeTab, newItemWindowOpen, showAddSuccess } =
-  const { searchText, showAddSuccess } =
+  const { searchText, showAddSuccess, showEditSuccess } =
     useSelector((state: RootState) => state.searchResults);
   const { fetchEvents, clearSearch: clearEventSearch } = useEvent();
   const { fetchLibraryItems } = useLibrary();
@@ -134,6 +135,21 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
     </Box>
   }
 
+  const successMessage = () => {
+    let screen = 'Place';
+    switch (tabName) {
+      case 'Events':
+        screen = 'Event'
+        break;
+      case 'Library':
+        screen = 'Library'
+        break;
+      case 'Media':
+        screen = 'Media'
+        break;
+    }
+    return screen;
+  }
   return (
     <>
       <Header
@@ -151,6 +167,13 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         open={showAddSuccess}
         handleClose={() => dispatch(toggleShowAddSuccess(false))}
         duration={10000}
+      />
+      <PositionedSnackbar
+        message={`${successMessage()} updated`}
+        severity={"success"}
+        open={showEditSuccess}
+        handleClose={() => dispatch(toggleShowEditSuccess(false))}
+        duration={5000}
       />
     </>
   );

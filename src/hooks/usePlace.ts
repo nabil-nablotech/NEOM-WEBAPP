@@ -11,7 +11,7 @@ import {
   setPlaceMetaData,
   setSearchText,
   toggleShowAddSuccess,
-  toggleNewItemWindow, setAddNewItemWindowType
+  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess
 } from "../store/reducers/searchResultsReducer";
 import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 import { Place } from "../types/Place";
@@ -131,7 +131,8 @@ const usePlace = () => {
     if (updateData && edit) {
         dispatch(setTabEdit(false));
         dispatch(setTabData({}));
-        // dispatch(toggleShowAddSuccess(true))
+        dispatch(toggleShowEditSuccess(true))
+        navigate(`/search-results/Places/${updateData.updatePlace.data.attributes.uniqueId}`, {replace: true})
     }
   }, [updateData])
 
