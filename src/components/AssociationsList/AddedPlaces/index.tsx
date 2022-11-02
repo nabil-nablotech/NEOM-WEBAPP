@@ -21,7 +21,10 @@ const AddedPlaces = ({
       );
 
     const handleRemoveItem = (e: React.MouseEvent, id: number) => {
-        dispatch(modifyAssociatedPlaces(associatedPlaces.filter((place: InventoryAssociationType) => place.id !== id)))
+        dispatch(modifyAssociatedPlaces({
+            newItem: null,
+            removeId: id
+        }))
     }
 
     if(list.length === 0) return <></>

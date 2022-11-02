@@ -31,7 +31,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   const { data } = useRefinedSearch();
   const navigate = useNavigate();
   // const { searchText, activeTab, newItemWindowOpen, showAddSuccess } =
-  const { searchText, showAddSuccess, showEditSuccess } =
+  const { searchText, showAddSuccess,addNewItemWindowType, showEditSuccess } =
     useSelector((state: RootState) => state.searchResults);
   const { fetchEvents, clearSearch: clearEventSearch } = useEvent();
   const { fetchLibraryItems } = useLibrary();
@@ -113,7 +113,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         gap: '10px',
         alignItems: 'center'
       }}>
-        <Grid item>{`New ${tabName === PLACES_TAB_NAME ? "Place" : "Event"} added.`}</Grid>
+        <Grid item>{`New ${addNewItemWindowType} added.`}</Grid>
         <Grid item className={`${styles['continue-btn']}`}>
           <Button variant="text" onClick={e => { }}
             startIcon={<CreateOutlinedIcon fontSize="small" />}

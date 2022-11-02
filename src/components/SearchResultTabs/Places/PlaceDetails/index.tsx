@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Box, Button, Grid } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
+import { InventoryAssociationType, tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import styles from './index.module.css'
 import gridStyles from '../GridView/index.module.css'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
@@ -25,7 +25,7 @@ import useMedia from "../../../../hooks/useMedia";
 import CommentsSection from "../../../CommentsSection";
 import RenderInitials from "../../../RenderInitials";
 import { useDispatch } from "react-redux";
-import { setActiveEventItem, setActiveEventItemIndex, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../../store/reducers/searchResultsReducer";
+import { modifyAssociatedPlaces, setActiveEventItem, setActiveEventItemIndex, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
 import usePlace from "../../../../hooks/usePlace";
@@ -600,6 +600,17 @@ const PlaceDetailsPage = () => {
                                             }}
                                             shouldShowAttachIcon={isInventoryDetailAttached(placeData, associatedPlaces)}
                                             onClick={e => {
+                                                const data: InventoryAssociationType = {
+                                                    id: Number(placeData.id),
+                                                    placeNameEnglish: placeData.placeNameEnglish,
+                                                    placeNameArabic: placeData.placeNameArabic,
+                                                    placeNumber: placeData.placeNumber,
+                                                }
+
+                                                dispatch(modifyAssociatedPlaces({
+                                                    newItem: data,
+                                                    removeId: null
+                                                }))
                                             }}
                                         /> :
                                         // <></>: 
