@@ -367,6 +367,9 @@ export const shouldAddAtttachColumnHeader = (item: ColumnType<any>) => {
 }
 
 export const isRecordAttached = (record: Place | Event, list: Array<Place | Event>) => {
+
+  if(!list || !record) return false
+
   return list.some(item => {
     return (item.attributes.uniqueId === record.attributes.uniqueId)
   }) 
