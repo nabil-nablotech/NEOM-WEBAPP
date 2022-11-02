@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import styled from "styled-components";
 import { StyledAntTable } from "../../components/StyledAntTable";
-import { MediaAssociates2, Place, PlaceApi } from "../../types/Place";
+import { MediaAssociates2, Place, PlaceApi, PlaceApiResponse } from "../../types/Place";
 import { tabNameProps } from "../../types/SearchResultsTabsProps";
 import * as Yup from 'yup';
 import { ColumnType } from "antd/lib/table";
@@ -366,11 +366,25 @@ export const shouldAddAtttachColumnHeader = (item: ColumnType<any>) => {
   return (!item.className || item.className?.indexOf(ATTACH_ICON_CLASSNAME) === -1)
 }
 
-export const isRecordAttached = (record: Place | Event, list: Array<Place | Event>) => {
+export const isRecordAttached = (record: Place | Event , list: Array<Place | Event>, type: string = '') => {
 
   if(!list || !record) return false
 
-  return list.some(item => {
-    return (item.attributes.uniqueId === record.attributes.uniqueId)
-  }) 
+  // if (type = "details page") {
+  //   if (record.uniqueId) {
+  //     return list.some(item => {
+  //       return (item.attributes.uniqueId === record.uniqueId)
+  //     })
+  //   }
+  // } else {
+    return list.some(item => {
+      return (item.attributes.uniqueId === record.attributes.uniqueId)
+    })
+  // }
+
+  
+
+  // if(record.attributes) {
+   
+  // }
 }

@@ -101,6 +101,11 @@ function UserMenuComponent() {
     dispatch(setEventEdit(false));
   }
 
+  const onHide = () => {
+    dispatch(toggleAddItemWindowMinimized(true))
+    dispatch(toggleNewItemWindow(false))
+  }
+
   return (
     <>
       <Box component="div" sx={{
@@ -144,19 +149,19 @@ function UserMenuComponent() {
           }
           {
             addNewItemWindowType === PLACES_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewPlace create={createPlace} onHide={() => dispatch(toggleAddItemWindowMinimized(true))} />
+            <AddNewPlace create={createPlace} onHide={() => onHide()} />
           }
           {
             addNewItemWindowType === EVENTS_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewEvent create={createEvent} setSearchValue={setSearchValue} onHide={() => dispatch(toggleAddItemWindowMinimized(true))} />
+            <AddNewEvent create={createEvent} setSearchValue={setSearchValue} onHide={() => onHide()} />
           }
           {
             addNewItemWindowType === LIBRARY_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewLibraryItem onHide={() => dispatch(toggleAddItemWindowMinimized(true))} />
+            <AddNewLibraryItem onHide={() => onHide()} />
           }
           {
             addNewItemWindowType === MEDIA_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewMedia onHide={() => dispatch(toggleAddItemWindowMinimized(true))} />
+            <AddNewMedia onHide={() => onHide()} />
           }
       </CustomDrawer>
       {addNewItemWindowType && addItemWindowMinimized && <AddItemCollapsedWindow />}
