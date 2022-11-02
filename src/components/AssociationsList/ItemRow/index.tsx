@@ -16,15 +16,15 @@ const InventoryItem = ({
     return (
         <Box component="div" className={`${styles["inventory-item"]}`}>
             <Grid container className={`${styles['container']}`}>
-                <Grid item>{item.attributes.placeNameEnglish}</Grid>
-                <Grid item>{item.attributes.placeNameArabic}</Grid>
+                <Grid item>{item.placeNameEnglish}</Grid>
+                <Grid item>{item.placeNameArabic}</Grid>
                 <Grid item className={`${styles["right-section"]}`} sx={{
                         marginLeft: 'auto'
                     }}>
                     <Grid container className={`${styles['right-container']}`} >
-                        <Grid>{item.attributes.placeNumber}</Grid>
+                        <Grid>{item.placeNumber}</Grid>
                         <Grid>
-                            <Button variant="text" onClick={e => handleRemoveItem(e, item.attributes.uniqueId)}
+                            <Button variant="text" onClick={e => handleRemoveItem(e, item.id)}
                                 style={{
                                     minWidth: 'fit-content',
                                     padding: 0,

@@ -59,6 +59,13 @@ export type GridViewCard_Events = {
   dispatch: any
 };
 
+export type InventoryAssociationType = {
+  id: number
+  placeNameEnglish: string
+  placeNameArabic: string
+  placeNumber: string | null
+}
+
 export type SearchResultsState2 = {
   selectedCardIndex: number;
   searchApply: boolean;
@@ -84,8 +91,8 @@ export type SearchResultsState2 = {
   isOpenGalleryView: boolean
   addNewItemWindowType: tabNameProps | null
   isAssociationsStepOpen: boolean
-  associatedPlaces: Place[] | []
-  associatedEvents: Event[]
+  associatedPlaces: InventoryAssociationType[] | []
+  associatedEvents: InventoryAssociationType[] | []
   addItemWindowMinimized: boolean | null
 };
 

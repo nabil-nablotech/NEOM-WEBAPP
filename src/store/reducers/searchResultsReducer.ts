@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SearchResultsState2, tabNameProps } from "../../types/SearchResultsTabsProps";
+import { InventoryAssociationType, SearchResultsState2, tabNameProps } from "../../types/SearchResultsTabsProps";
 import { DashboardResponse } from "../../types/dashboard";
 import { Place, Meta } from "../../types/Place";
 import { Event } from "../../types/Event";
@@ -111,10 +111,10 @@ export const searchResultsSlice = createSlice({
     toggleAssociationsStepOpen: (state, action: PayloadAction<boolean>) => {
       state.isAssociationsStepOpen = action.payload;
     },
-    modifyAssociatedPlaces: (state, action: PayloadAction<Place[] | []>) => {
+    modifyAssociatedPlaces: (state, action: PayloadAction<InventoryAssociationType[] | []>) => {
       state.associatedPlaces = action.payload;
     },
-    modifyAssociatedEvents: (state, action: PayloadAction<Event[] | []>) => {
+    modifyAssociatedEvents: (state, action: PayloadAction<InventoryAssociationType[] | []>) => {
       state.associatedEvents = action.payload;
     },
     toggleAddItemWindowMinimized: (state, action: PayloadAction<boolean | null>) => {
