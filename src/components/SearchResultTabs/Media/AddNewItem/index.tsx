@@ -85,15 +85,6 @@ const StepContent = ({
     formik
 }: StepContentTypes) => {
 
-    // const formik = useFormik({
-    //     initialValues: {
-    //         mediaType: '',
-    //     },
-    //     onSubmit: values => {
-    //         alert(JSON.stringify(values, null, 2));
-    //     },
-    // });
-
     const handleSelectChange = (e: React.SyntheticEvent, value: string[] | [], stateName: string) => {
         e.preventDefault();
         formik.setFieldValue(stateName, [...new Set([...formik.values[stateName], ...value])]);
@@ -158,8 +149,10 @@ const StepContent = ({
                         className={`${styles["english-name"]}`}
                         label="Title"
                         name="title"
-                        value={''}
-                        // onChange={(e) => { }}
+                        value={formik.values.title}
+                        onChange={e => {
+                            formik.setFieldValue('title', e.target.value)
+                        }}
                         sx={{
                             ...textInputSxStyles
                         }}
@@ -169,9 +162,9 @@ const StepContent = ({
                         className={`${styles["site-description"]}`}
                         label="Description"
                         name="description"
-                        value={''}
+                        value={formik.values.description}
                         onChange={e => {
-                            
+                            formik.setFieldValue('description', e.target.value)
                         }}
                         multiline
                         minRows={3}
@@ -191,8 +184,10 @@ const StepContent = ({
                         className={`${styles["english-name"]}`}
                         label="Bearing"
                         name="bearing"
-                        value={''}
-                        // onChange={(e) => { }}
+                        value={formik.values.bearing}
+                        onChange={e => {
+                            formik.setFieldValue('bearing', e.target.value)
+                        }}
                         sx={{
                             ...textInputSxStyles
                         }}
@@ -202,8 +197,10 @@ const StepContent = ({
                         className={`${styles["english-name"]}`}
                         label="Author"
                         name="Author"
-                        value={''}
-                        // onChange={(e) => { }}
+                        value={formik.values.Author}
+                        onChange={e => {
+                            formik.setFieldValue('Author', e.target.value)
+                        }}
                         sx={{
                             ...textInputSxStyles
                         }}
@@ -213,10 +210,9 @@ const StepContent = ({
                         className={`${styles["dropdown"]}`}
                         label={"Category Type"}
                         name="categoryType"
-                        value={[]}
+                        value={[...formik.values.categoryType]}
                         multiple={true}
                         handleSelectChange={(e, value) => handleSelectChange(e, value, 'categoryType')}
-                        handleChange={() => { }}
                         handleClear={(e) => { }}
                         itemsList={options?.actionType || []}
                         selectStylesSx={commonSelectSxStyles}
@@ -226,8 +222,10 @@ const StepContent = ({
                         className={`${styles["english-name"]}`}
                         label="Longitude"
                         name="longitude"
-                        value={''}
-                        // onChange={(e) => { }}
+                        value={formik.values.longitude}
+                        onChange={e => {
+                            formik.setFieldValue('longitude', e.target.value)
+                        }}
                         sx={{
                             ...textInputSxStyles
                         }}
@@ -237,8 +235,10 @@ const StepContent = ({
                         className={`${styles["english-name"]}`}
                         label="Latitude"
                         name="latitude"
-                        value={''}
-                        // onChange={(e) => { }}
+                        value={formik.values.latitude}
+                        onChange={e => {
+                            formik.setFieldValue('latitude', e.target.value)
+                        }}
                         sx={{
                             ...textInputSxStyles
                         }}
@@ -248,8 +248,10 @@ const StepContent = ({
                         className={`${styles["english-name"]}`}
                         label="Reference URL"
                         name="refrerenceUrl"
-                        value={''}
-                        // onChange={(e) => { }}
+                        value={formik.values.refrerenceUrl}
+                        onChange={e => {
+                            formik.setFieldValue('refrerenceUrl', e.target.value)
+                        }}
                         sx={{
                             ...textInputSxStyles
                         }}
@@ -369,7 +371,6 @@ const AddNewMedia = ({
             //         ...data
             //     });
             // }
-            // onClose()
             onHide()
             dispatch(toggleShowAddSuccess(true))
             // dispatch(toggleNewItemWindow(false))
@@ -415,31 +416,26 @@ const AddNewMedia = ({
 
     const formik = useFormik({
         initialValues: {
-            placeNumber: '',
-            placeNameEnglish: '',
-            placeNameArabic: '',
-            siteDescription: '',
-            siteType: [],
-            period: [],
-            stateOfConservation: '',
-            risk: '',
-            tourismValue: '',
-            researchValue: '',
-            artifacts: '',
-            recommendation: '',
+            mediaType: '',
+            title: '',
+            bearing: '',
+            description: '',
+            Author: '',
+            categoryType: [],
             latitude: null,
             longitude: null,
+            refrerenceUrl:'',
             keywords: []
         },
         validate: values => {
-            if (!values.placeNumber) {
-                setFormError('Place Number is required')
+            if (!values.title) {
+                setFormError('Image Title is required')
             } else {
                 setFormError('')
             }
         },
         onSubmit: (values) => {
-
+            alert(JSON.stringify(values, null, 2));
             if (!formError) {
                 handleNext(null, values);
             }
@@ -449,6 +445,7 @@ const AddNewMedia = ({
 
     return (
         <Box component="div">
+             <form onSubmit={formik.handleSubmit}>
             <Box component="div" className={`${styles['add-new-item-container']}`}>
                 
                 <Box component="div" className={`${styles['content-section']}`}>
@@ -520,6 +517,9 @@ const AddNewMedia = ({
                         </React.Fragment>
                     </>
                 </Box>
+                {formError && <Box component="div" className={`${styles["form-error"]}`}>
+                        {formError}
+                </Box>}
                 <Box component="div"
                     className={`${styles["btn-row"]}`}
                     sx={{
@@ -540,9 +540,10 @@ const AddNewMedia = ({
                         <Button label='Back' />
                     )}
                     <Button
-                        label={activeStep === steps.length - 1 ? 'Add' : 'Next'}  />
+                        label={activeStep === steps.length - 1 ? 'Add' : 'Next'} type="submit" disabled={!(formik.values.mediaType.length > 0)}/>
                 </Box>
             </Box>
+            </form>
         </Box>
     );
 }
