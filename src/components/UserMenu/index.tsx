@@ -25,6 +25,7 @@ import AddNewLibraryItem from "../SearchResultTabs/Library/AddNewItem";
 import { setEventEdit } from "../../store/reducers/eventReducer";
 import AddItemCollapsedWindow from "../AddItemCollapsedWindow";
 import { setTabEdit } from "../../store/reducers/tabEditReducer";
+import useLibrary from "../../hooks/useLibrary";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -40,6 +41,7 @@ function UserMenuComponent() {
   const {newItemWindowOpen, addNewItemWindowType, addItemWindowMinimized} = useSelector((state: RootState) => state.searchResults);
   const { createPlace  } = usePlace();
   const { createEvent, setSearchValue } = useEvent();
+  const { createLibrary } = useLibrary();
 
   const open = Boolean(anchorEl);
   const admin = getRole() === 'Admin';
@@ -159,7 +161,7 @@ function UserMenuComponent() {
           }
           {
             addNewItemWindowType === LIBRARY_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewLibraryItem onHide={() => onHide()} />
+            <AddNewLibraryItem create={createLibrary} onHide={() => onHide()} />
           }
           {
             addNewItemWindowType === MEDIA_TAB_NAME && !addItemWindowMinimized &&
