@@ -5,7 +5,8 @@ import {
   StepLabel,
   Stepper,
   Typography,
-  StepButton
+  StepButton,
+  Chip
 } from "@mui/material";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -14,7 +15,7 @@ import {
   StepContentTypes,
 } from "../../../../types/CustomDrawerTypes";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
-import { addItemLibrarySteps } from "../../../../utils/services/helpers";
+import { addItemLibrarySteps, handleEnter } from "../../../../utils/services/helpers";
 import styles from '../../Places/AddNewItem/addNewItem.module.css'
 import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
@@ -26,6 +27,8 @@ import { RootState } from "../../../../store";
 import { useFormik } from "formik";
 import FileUpload from "../../../Upload/FileUpload";
 import DetachedIcon from "../../../Icons/DetachedIcon";
+import AddedPlaces from "../../../AssociationsList/AddedPlaces";
+import CloseIcon from '@mui/icons-material/Close';
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -87,6 +90,11 @@ const StepContent = ({
   handleBack,
   formik,
 }: StepContentTypes) => {
+  const { associatedPlaces } = useSelector(
+    (state: RootState) => state.searchResults
+  );
+  const [currentKeyword, setCurrentKeyword] = useState<string>('')
+
   return (
     <>
       <Box component="div" className={`${styles["form"]}`}>
@@ -197,11 +205,54 @@ const StepContent = ({
               />
               {' '}to select the places and events you want to associate this library item to.
             </Box>
-            {
-              /** list render */
-            }
+            <AddedPlaces
+              list={associatedPlaces}
+            />
           </Box>
         )}
+        {activeStep === 2 && <>
+          <>
+            <Box component="div">Make your content discoverable</Box>
+            <TextInput
+              className={`${styles["english-name"]}`}
+              id="keyword-div"
+              label="Add Keywords"
+              name="keywords"
+              value={currentKeyword}
+              onChange={(e) => {
+                setCurrentKeyword(e.target.value)
+              }}
+              onKeyDown={e => {
+                handleEnter(e, () => {
+                  formik.setFieldValue('keywords', [...new Set([...formik.values.keywords, currentKeyword])])
+                  setCurrentKeyword('')
+                })
+              }}
+              sx={{
+                ...textInputSxStyles
+              }}
+              formControlSx={commonFormControlSxStyles}
+            />
+            {
+              <Box component="div" style={{
+                display: 'flex',
+                gap: '5px'
+              }}>
+                {
+                  formik.values.keywords.map((item: string, index: any) => (
+                    <Chip key={index} size="small" variant="outlined" label={item}
+                      deleteIcon={<CloseIcon fontSize="small" />}
+                      onDelete={e => {
+                        const newArr = [...formik.values.keywords].filter((element: string) => element !== item)
+                        formik.setFieldValue('keywords', [...new Set(newArr)])
+                      }}
+                    />
+                  ))
+                }
+              </Box>
+            }
+          </>
+        </>}
       </Box>
     </>
   );
@@ -210,7 +261,7 @@ const StepContent = ({
 const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { showAddSuccess } = useSelector(
+  const { showAddSuccess, associatedPlaces } = useSelector(
     (state: RootState) => state.searchResults
   );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
@@ -313,7 +364,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       siteDescription: "",
       fieldNarrative: "",
       siteType: "",
-      keywords: "",
+      keywords: [],
     },
     onSubmit: (values) => {
       handleNext(null, values);

@@ -133,4 +133,5 @@ export type DetachedIconTypes ={
   className?: string
   style?: React.CSSProperties
   onClick: (e: React.MouseEvent<HTMLImageElement>) => void
+  shouldShowAttachIcon?: boolean
 }
