@@ -186,15 +186,20 @@ const StepContent = ({
             }}>
               Click on{' '}
               <DetachedIcon
-              style={{
-                height: '18px',
-                position: 'relative',
-                top: '3px',
-              }}
+                style={{
+                  height: '18px',
+                  position: 'relative',
+                  top: '3px',
+                }}
+                onClick={e => {
+                  
+                }}
               />
               {' '}to select the places and events you want to associate this library item to.
             </Box>
-            
+            {
+              /** list render */
+            }
           </Box>
         )}
       </Box>

@@ -2,13 +2,16 @@ import ItemDetached from '../../../assets/images/searchResults/ItemDetached.svg'
 import {
     Box,
   } from "@mui/material";
-
+import { DetachedIconTypes } from '../../../types/SearchResultsTabsProps';
 
 const DetachedIcon = ({
-    style
-}: {style?: React.CSSProperties}) => {
+    className,
+    style,
+    onClick
+}: DetachedIconTypes) => {
     return (
         <Box
+            className={className ? className : 'detached-icon'}
             style={{
                 ...style,
                 cursor: 'pointer'
@@ -16,6 +19,9 @@ const DetachedIcon = ({
             component={"img"}
             src={ItemDetached}
             alt="ItemDetached"
+            onClick={e => {
+                onClick(e)
+            }}
         >
         </Box>
     );

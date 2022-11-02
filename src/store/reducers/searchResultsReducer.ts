@@ -29,7 +29,9 @@ const initialState: SearchResultsState2 = {
   activeMediaItemIndex: 0,
   isOpenGalleryView: false,
   addNewItemWindowType: null,
-  isAssociationsStepOpen: false
+  isAssociationsStepOpen: false,
+  associatedPlaces: [],
+  associatedEvents: []
 };
 
 export const searchResultsSlice = createSlice({
@@ -108,6 +110,12 @@ export const searchResultsSlice = createSlice({
     toggleAssociationsStepOpen: (state, action: PayloadAction<boolean>) => {
       state.isAssociationsStepOpen = action.payload;
     },
+    modifyAssociatedPlaces: (state, action: PayloadAction<Place[] | []>) => {
+      state.associatedPlaces = action.payload;
+    },
+    modifyAssociatedEvents: (state, action: PayloadAction<Event[] | []>) => {
+      state.associatedEvents = action.payload;
+    },
   },
 });
 
@@ -135,7 +143,9 @@ export const {
   toggleGalleryView,
   setSearchApply,
   setAddNewItemWindowType,
-  toggleAssociationsStepOpen
+  toggleAssociationsStepOpen,
+  modifyAssociatedPlaces,
+  modifyAssociatedEvents
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

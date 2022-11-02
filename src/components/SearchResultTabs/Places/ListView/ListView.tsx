@@ -1,19 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Box, Menu, MenuItem } from "@mui/material";
 import { ColumnsType } from "antd/lib/table";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { User } from "../../../../types/User";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
-import { antTablePaginationCss } from '../../../../utils/services/helpers';
+import { antTablePaginationCss, DETACH_ICON_CLASSNAME, shouldAddAtttachColumnHeader } from '../../../../utils/services/helpers';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import {PlacesProps} from '../GridView/GridView';
-import { FieldOption } from "../../../../types/Place";
+import { FieldOption, Place } from "../../../../types/Place";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import DetachedIcon from "../../../Icons/DetachedIcon";
+import { useDispatch } from "react-redux";
+import { modifyAssociatedPlaces } from "../../../../store/reducers/searchResultsReducer";
  
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -149,27 +151,12 @@ function displayMultiple(value: any, index: number, key: string) { return value[
 
 
 
-export const attachIconColumnHeader: any = {
-  title: "",
-  key: "action",
-  fixed: 'right',
-  className: 'more-menu-ant-cell attach-icon',
-  render: (value: any, record: User) => {
-    return <Box component="div">
-      <DetachedIcon
-        style={{
-          height: '18px',
-          position: 'relative',
-          top: '3px',
-        }}
-      />
-    </Box>
-  },
-}
 
 const ListView = (props: PlacesProps) => {
 
-  const { isAssociationsStepOpen } = useSelector(
+  const dispatch = useDispatch()
+
+  const { isAssociationsStepOpen, associatedPlaces } = useSelector(
     (state: RootState) => state.searchResults
   );
 
@@ -255,6 +242,35 @@ const ListView = (props: PlacesProps) => {
       },
   ])
 
+
+  const handleAttachClick = (e:any, record: Place) => {
+    dispatch(modifyAssociatedPlaces([...associatedPlaces, record]))
+  }
+
+  const attachIconColumnHeader: any = useMemo(() => ({
+    title: "",
+    key: "action",
+    fixed: 'left',
+    className: 'more-menu-ant-cell attach-icon',
+    render: (value: any, record: Place) => {
+      console.log('hexxs: insi: ', associatedPlaces)
+
+      return <Box component="div">
+        <DetachedIcon
+          style={{
+            height: '18px',
+            position: 'relative',
+            top: '3px',
+          }}
+          onClick={e => {
+            handleAttachClick(e, record)
+          }}
+        />
+      </Box>
+    }
+  }), [associatedPlaces]
+  )
+
     const {data, hasMoreData, fetchData, loading} = props;
 
     useEffect(() => {
@@ -271,9 +287,18 @@ const ListView = (props: PlacesProps) => {
     useEffect(() => {
       // console.log('hex: ', isAssociationsStepOpen)
         if(isAssociationsStepOpen) {
-          setTableHeaderJson(state => [attachIconColumnHeader , ...state])
+          setTableHeaderJson(state => {
+            let newState = [...state]
+            if(newState.every(item => shouldAddAtttachColumnHeader(item))) {
+              newState = [attachIconColumnHeader , ...state]
+            }
+
+            return newState 
+          })
         } else {
-          setTableHeaderJson(state => state.filter(item => item.className?.indexOf('attach-icon') !== -1))
+          setTableHeaderJson(state => state.filter(item => {
+            return shouldAddAtttachColumnHeader(item)
+          }))
         }
  
     }, [isAssociationsStepOpen]);
@@ -307,6 +332,18 @@ const ListView = (props: PlacesProps) => {
                     style={{
                         background: "transparent",
                     }}
+                    onRow={(record: any, rowIndex) => {
+                        return {
+                          onClick: (event: React.MouseEvent<HTMLElement>) => {
+                            const target = event.target as Element;
+                            const clsList = target.classList 
+
+                            if([...clsList].includes(DETACH_ICON_CLASSNAME)) {
+                              handleAttachClick(event, record)
+                            }
+                          }, // click row
+                        };
+                      }}
                 />
             </InfiniteScroll>
         </Box>

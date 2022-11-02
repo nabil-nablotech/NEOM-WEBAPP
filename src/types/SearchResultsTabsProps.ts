@@ -67,6 +67,8 @@ export type SearchResultsState2 = {
   isOpenGalleryView: boolean
   addNewItemWindowType: tabNameProps | null
   isAssociationsStepOpen: boolean
+  associatedPlaces: Place[] | []
+  associatedEvents: Event[]
 };
 
 export type FileDataType = {
@@ -120,3 +122,9 @@ export type CustomMoreOptionsComponentProps = {
   menuActions: Array<menuAction>;
   moreIconClassName?: string
 };
+
+export type DetachedIconTypes ={
+  className?: string
+  style?: React.CSSProperties
+  onClick: (e: React.MouseEvent<HTMLImageElement>) => void
+}
