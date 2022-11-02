@@ -8,6 +8,7 @@ import InventoryItem from "../ItemRow";
 import { useDispatch, useSelector } from "react-redux";
 import { modifyAssociatedPlaces } from "../../../store/reducers/searchResultsReducer";
 import { RootState } from "../../../store";
+import { InventoryAssociationType } from "../../../types/SearchResultsTabsProps";
 
 const AddedPlaces = ({
     list
@@ -19,8 +20,8 @@ const AddedPlaces = ({
         (state: RootState) => state.searchResults
       );
 
-    const handleRemoveItem = (e: React.MouseEvent, uniqueId: string) => {
-        dispatch(modifyAssociatedPlaces(associatedPlaces.filter((place: Place) => place.attributes.uniqueId !== uniqueId)))
+    const handleRemoveItem = (e: React.MouseEvent, id: number) => {
+        dispatch(modifyAssociatedPlaces(associatedPlaces.filter((place: InventoryAssociationType) => place.id !== id)))
     }
 
     if(list.length === 0) return <></>
@@ -30,10 +31,15 @@ const AddedPlaces = ({
             <Box component="div" className={`${styles["title"]}`}>Places</Box>
             <Box component="div" className={`${styles["list"]}`}>
                 {
-                    list?.map((place: Place) => (
+                    list?.map((place: InventoryAssociationType) => (
                         <Box component="div">
                             <InventoryItem
-                                item={place}
+                                item={{
+                                    id: Number(place.id),
+                                    placeNameEnglish: place.placeNameEnglish,
+                                    placeNameArabic: place.placeNameArabic,
+                                    placeNumber: place.placeNumber,
+                                }}
                                 handleRemoveItem={handleRemoveItem}
                             />
                         </Box>

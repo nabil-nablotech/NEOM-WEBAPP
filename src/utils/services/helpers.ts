@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
 import styled from "styled-components";
 import { StyledAntTable } from "../../components/StyledAntTable";
-import { MediaAssociates2, Place, PlaceApi, PlaceApiResponse } from "../../types/Place";
-import { tabNameProps } from "../../types/SearchResultsTabsProps";
+import { MediaAssociates2, Place, PlaceApi } from "../../types/Place";
+import { InventoryAssociationType, tabNameProps } from "../../types/SearchResultsTabsProps";
 import * as Yup from 'yup';
 import { ColumnType } from "antd/lib/table";
 import { Event } from "../../types/Event";
@@ -366,25 +366,22 @@ export const shouldAddAtttachColumnHeader = (item: ColumnType<any>) => {
   return (!item.className || item.className?.indexOf(ATTACH_ICON_CLASSNAME) === -1)
 }
 
-export const isRecordAttached = (record: Place | Event , list: Array<Place | Event>, type: string = '') => {
+export const isRecordAttached = (record: Place | Event , list: Array<InventoryAssociationType>, type: string = '') => {
 
-  if(!list || !record) return false
-
-  // if (type = "details page") {
-  //   if (record.uniqueId) {
-  //     return list.some(item => {
-  //       return (item.attributes.uniqueId === record.uniqueId)
-  //     })
-  //   }
-  // } else {
-    return list.some(item => {
-      return (item.attributes.uniqueId === record.attributes.uniqueId)
-    })
-  // }
-
+  if (!list || !record) return false
   
+  return list.some(item => {
+    return (item.id === parseInt(record.id))
+  })
 
-  // if(record.attributes) {
-   
-  // }
+}
+
+export const isInventoryDetailAttached = (record: PlaceApi , list: Array<InventoryAssociationType>, type: string = '') => {
+
+  if (!list || !record) return false
+
+  return list.some(item => {
+    return (item.id === parseInt(record.id))
+  })
+
 }
