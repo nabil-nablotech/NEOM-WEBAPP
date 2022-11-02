@@ -212,7 +212,7 @@ const useEvent = () => {
     const data = {
       ...payload,
       uniqueId: uniqueId,
-      visitNumber: 1,
+      visitNumber: parseFloat(payload.visitNumber),
       visitUIPath: `${webUrl}/search-results/Events/${uniqueId}`,
       asset_config_id: 1,
       keywords: keywords,
@@ -245,7 +245,7 @@ const useEvent = () => {
   }
 
   useEffect(() => {
-    const getData = setTimeout(() => filterPlaces(), 2000);
+    const getData = setTimeout(() => filterPlaces(), 1000);
     return () => clearTimeout(getData)
   }, [searchValue])
   const filterPlaces = () => {
