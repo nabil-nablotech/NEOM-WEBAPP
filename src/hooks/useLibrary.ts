@@ -82,14 +82,15 @@ const useLibrary = () => {
       dispatch(toggleShowAddSuccess(true))
 
       /** re-direct */
-      navigate(`/search-results/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true})
+      // navigate(`/search-results/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true})
+      navigate(`/search-results/Library`, {replace: true})
     }
 
     if(mediaAssociate) {
       dispatch(toggleShowAddSuccess(true))
 
       /** re-direct */
-      navigate(`/search-results/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true})
+      navigate(`/search-results/Library`, {replace: true})
 
     }
   }, [addData, mediaAssociate])
