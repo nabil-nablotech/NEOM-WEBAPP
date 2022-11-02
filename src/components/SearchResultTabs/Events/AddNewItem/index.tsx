@@ -479,7 +479,7 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
-    if (activeStep + 1 === steps.length) {
+    if ((activeStep + 1 === steps.length) && data) {
       if (create && !edit) {
         create({
           ...data,
@@ -489,7 +489,7 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
       dispatch(toggleShowAddSuccess(true));
       dispatch(toggleNewItemWindow(false));
     }
-    if (edit && create) {
+    if (edit && create && data) {
       create({
         ...data,
       });
@@ -550,11 +550,11 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
       stateOfConservation: edit && event?.stateOfConservation ? event?.stateOfConservation[0] : "",
       siteType: edit ? event?.siteType : [],
       risk: edit && event?.risk.length > 0 ? event?.risk[0] : "",
-      tourismValue: edit && event?.tourismValue.length > 0 ? event?.tourismValue[0] : "",
-      researchValue: edit && event?.researchValue.length > 0 ? event?.researchValue[0] : "",
-      recommendation: edit && event?.recommendation.length > 0 ? event?.recommendation[0] : "",
-      period: edit ? event?.period : [],
-      keywords: edit ? event?.keywords : [],
+      tourismValue: edit && event?.tourismValue?.length > 0 ? event?.tourismValue[0] : "",
+      researchValue: edit && event?.researchValue?.length > 0 ? event?.researchValue[0] : "",
+      recommendation: edit && event?.recommendation?.length > 0 ? event?.recommendation[0] : "",
+      period: (edit && event?.period) ? event?.period : [],
+      keywords: (edit && event?.keywords) ? event?.keywords : [],
     },
     validate: (values) => {
       // if (!values.visitNumber) {
@@ -717,14 +717,14 @@ const AddNewEvent = ({ onClose, create, setSearchValue }: AddNewItemProps) => {
                 <Button
                   colors={["#fff", "var(--table-black-text)", "none"]}
                   label={"Next"}
-                  type="submit"
-                  disabled={
-                    !(
-                      formik.values?.visitNumber?.length > 0 &&
-                      formik.values.place
-                    )
-                  }
-                  // onClick={handleNext}
+                  // type="submit"
+                  // disabled={
+                  //   !(
+                  //     formik.values?.visitNumber?.length > 0 &&
+                  //     formik.values.place
+                  //   )
+                  // }
+                  onClick={handleNext}
                 />
               )}
               {edit && (

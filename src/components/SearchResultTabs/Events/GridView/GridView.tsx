@@ -20,6 +20,7 @@ export type EventsProps = {
   handleNext: () => void;
   hasMoreData: boolean;
   loading: boolean;
+  setEdit:(record: Event) => void
 }
 
 const GridView = (props: EventsProps) => {
@@ -27,7 +28,7 @@ const GridView = (props: EventsProps) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const {data, handleNext, hasMoreData, loading} = props;
+    const {data, handleNext, hasMoreData, loading, setEdit} = props;
 
     if (!data) {
         return <h1>Loading...</h1>   
@@ -36,6 +37,11 @@ const GridView = (props: EventsProps) => {
     const checkIsNew = (updatedDate: string) => {
         const expDate = dayjs(updatedDate).add(30, "d").toDate();
         return dayjs().isBefore(expDate);
+    }
+
+    const handleClick = (item: Event, index: number) => {
+        dispatch(setSelectedCardIndex(index))
+        navigate(`/search-results/Events/${item.attributes.uniqueId}`, {replace: true})
     }
 
     return (
@@ -60,10 +66,7 @@ const GridView = (props: EventsProps) => {
                 <Grid container id={'events-scrollable-div'} spacing={1} className={`${gridStyles['left-grid-container']}`}>
                     {
                         data?.map((item: Event, index: number) => 
-                            <Grid item key={index} sm={12} className={`${gridStyles['']}`} onClick={() => {
-                                dispatch(setSelectedCardIndex(index))
-                                navigate(`/search-results/Events/${item.attributes.uniqueId}`, {replace: true})
-                            }}>
+                            <Grid item key={index} sm={12} className={`${gridStyles['']}`} onClick={() => handleClick(item, index)}>
                                 <Card
                                     key={index}
                                     img={item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data.attributes.object.data.attributes.url || ''}
@@ -74,6 +77,11 @@ const GridView = (props: EventsProps) => {
                                       "MM/dd/yyyy"
                                     )}`}
                                     isNew={checkIsNew(item.attributes.createdAt)}
+                                    handleClick={handleClick}
+                                    record={item}
+                                    id={item.id}
+                                    dispatch={dispatch}
+                                    setEdit={setEdit}
                                 />
                             </Grid>
                        )

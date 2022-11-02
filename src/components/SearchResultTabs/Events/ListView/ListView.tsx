@@ -14,6 +14,7 @@ import { Loader } from '../../../Loader';
 import {EventsProps} from '../GridView/GridView';
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 import MoreOptionsComponent from './MoreOption';
+import { Event } from '../../../../types/Event';
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -226,8 +227,9 @@ const ListView = (props: EventsProps) => {
             key: "action",
             fixed: 'right',
             className: 'more-menu-ant-cell',
-            render: (value: any, record: User) => (
-                <MoreOptionsComponent dispatch={dispatch} id={record.id} record={record} />
+            render: (value: any, record: Event) => (
+
+                <MoreOptionsComponent setEdit={props.setEdit} dispatch={dispatch} id={record.id} record={record} />
             ),
         },
     ]
