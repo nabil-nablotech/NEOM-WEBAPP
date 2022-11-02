@@ -265,14 +265,14 @@ const ListView = (props: EventsProps) => {
                 {data.length > 0 ? <StyledTableWrapper
                     // className={`${styles["table-container"]}`}
                     rowKey={"id"}
-                    // onRow={(record: any, rowIndex) => {
-                    //     return {
-                    //       onClick: event => {
-                    //         dispatch(setSelectedCardIndex(rowIndex || record.id))
-                    //         navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
-                    //       }, // click row
-                    //     };
-                    //   }}
+                    onRow={(record: any, rowIndex) => {
+                        return {
+                          onClick: event => {
+                            dispatch(setSelectedCardIndex(rowIndex || record.id))
+                            navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
+                          }, // click row
+                        };
+                      }}
                     size="small"
                     columns={tableHeaderJson}
                     dataSource={data}

@@ -22,22 +22,6 @@ export const Card = ({
   record
 }: GridViewCard_Places) => {
 
-  const menuItems = [
-    {
-      label: "Share",
-      action: () => { },
-    },
-    {
-      label: "Edit",
-      action: () => {
-      },
-    },
-    {
-      label: "Delete",
-      action: () => {
-      },
-    },
-  ]
 
   return (
     <>

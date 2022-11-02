@@ -18,6 +18,7 @@ const MoreOptionsComponent = ({
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
     const handleClick = (e: any) => {
+        e.stopPropagation();
         setAnchorEl(e.currentTarget);
     };
     const handleClose = () => {
