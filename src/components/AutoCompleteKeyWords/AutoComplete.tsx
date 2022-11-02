@@ -20,7 +20,7 @@ import {
 } from "./styles";
 
 interface IData {
-  name: string;
+  name: [];
 }
 export const AutoComplete = () => {
 let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
@@ -47,7 +47,7 @@ let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
         for (let i = 0; i < keyWordsData[tabName==='Places'?'places':tabName==='Events'?'visits':'medias']?.data?.length; i++) {
             if (keyWordsData[tabName==='Places'?'places':tabName==='Events'?'visits':'medias']?.data[i]?.attributes?.keywords!==null) {
                 suggestions.push({
-                name: keyWordsData[tabName==='Places'?'places':tabName==='Events'?'visits':'medias']?.data[i].attributes["keywords"]
+                    name: keyWordsData[tabName==='Places'?'places':tabName==='Events'?'visits':'medias']?.data[i].attributes["keywords"].filter((element: string) => element.includes(value))
                 });
           }
         }
@@ -56,8 +56,8 @@ let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
     setSearch({suggestions:suggestions, text: value });
   };
   const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
-  const suggestionSelected = (value:IData) => {
-    const val:any = value.name[0];
+  const suggestionSelected = (value:any) => {
+    const val:any = value;
     setIsComponentVisible(false);
     if(!selectedValueCopy['keyWords']?.includes(val)){
             selectedValueCopy['keyWords'].push(val);
@@ -118,14 +118,20 @@ let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
       {search?.suggestions.length > 0 && isComponentVisible && (
         <AutoCompleteContainer>
           {search?.suggestions.map((item: IData, index) => (
+            <> {item.name?.map((val,index)=>{
+                return (
+        <>
             <AutoCompleteItem key={index}>
-              <AutoCompleteItemButton
-                key={index}
-                onClick={() => suggestionSelected(item)}
-              >
-                {item.name}
-              </AutoCompleteItemButton>
+                <AutoCompleteItemButton
+                    key={index}
+                    onClick={() => suggestionSelected(val)}
+                >
+                {val}
+                </AutoCompleteItemButton>
             </AutoCompleteItem>
+            </>
+                )
+            })}</>      
           ))}
         </AutoCompleteContainer>
       )}
