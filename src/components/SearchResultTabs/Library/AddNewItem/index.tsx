@@ -20,7 +20,7 @@ import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { toggleAssociationsStepOpen, toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleAssociationsStepOpen, toggleNewItemWindow, toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import { useFormik } from "formik";
@@ -186,15 +186,20 @@ const StepContent = ({
             }}>
               Click on{' '}
               <DetachedIcon
-              style={{
-                height: '18px',
-                position: 'relative',
-                top: '3px',
-              }}
+                style={{
+                  height: '18px',
+                  position: 'relative',
+                  top: '3px',
+                }}
+                onClick={e => {
+                  
+                }}
               />
               {' '}to select the places and events you want to associate this library item to.
             </Box>
-            
+            {
+              /** list render */
+            }
           </Box>
         )}
       </Box>
@@ -202,7 +207,7 @@ const StepContent = ({
   );
 };
 
-const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
+const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
   const { showAddSuccess } = useSelector(
@@ -225,8 +230,9 @@ const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
       dispatch(toggleShowAddSuccess(true));
     }
   }, [showAddSuccess]);
-  
+
   useEffect(() => {
+
     if (activeStep === 1) {
       dispatch(toggleAssociationsStepOpen(true));
     } else {
@@ -250,7 +256,7 @@ const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     if (activeStep + 1 === steps.length) {
-      onClose();
+      onHide();
       dispatch(toggleShowAddSuccess(true));
     }
     if (activeStep === 1) {
@@ -266,7 +272,9 @@ const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
 
   const handleBack = () => {
     if (activeStep === 0) {
-      onClose();
+      dispatch(toggleNewItemWindow(false))
+      dispatch(setAddNewItemWindowType(null))
+      dispatch(toggleAddItemWindowMinimized(null))
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
@@ -328,7 +336,7 @@ const AddNewLibraryItem = ({ onClose, create }: AddNewItemProps) => {
             >
               <DefaultButton
                 variant="text"
-                onClick={(e) => onClose()}
+                onClick={(e) => onHide()}
                 style={{
                   // paddingInline: 0,
                   minWidth: "fit-content",

@@ -1,5 +1,5 @@
 import { Box, Typography, Button as DefaultButton, Grid, Avatar } from "@mui/material";
-import { AddNewItemProps } from "../../types/CustomDrawerTypes";
+import { AddNewItemPaneProps } from "../../types/CustomDrawerTypes";
 import placeStyles from '../../components/SearchResultTabs/Places/AddNewItem/addNewItem.module.css'
 import styles from './index.module.css'
 import Button from "../../components/Button";
@@ -71,7 +71,7 @@ const StepContent = () => {
 
 const AddNewItem = ({
     onClose
-}: AddNewItemProps) => {
+}: AddNewItemPaneProps) => {
     return (
         <Box component={"div"} className={`${styles['add-new-item-parent']}`}>
             <Box component="div" className={`${placeStyles['add-new-item-container']}`}>
