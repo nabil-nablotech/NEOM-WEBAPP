@@ -26,6 +26,7 @@ import { RootState } from "../../../../store";
 import { useFormik } from "formik";
 import FileUpload from "../../../Upload/FileUpload";
 import DetachedIcon from "../../../Icons/DetachedIcon";
+import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -87,6 +88,10 @@ const StepContent = ({
   handleBack,
   formik,
 }: StepContentTypes) => {
+  const { associatedPlaces } = useSelector(
+    (state: RootState) => state.searchResults
+  );
+
   return (
     <>
       <Box component="div" className={`${styles["form"]}`}>
@@ -200,6 +205,9 @@ const StepContent = ({
             {
               /** list render */
             }
+            <AddedPlaces
+              list={associatedPlaces}
+            />
           </Box>
         )}
       </Box>
@@ -210,7 +218,7 @@ const StepContent = ({
 const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { showAddSuccess } = useSelector(
+  const { showAddSuccess, associatedPlaces } = useSelector(
     (state: RootState) => state.searchResults
   );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
