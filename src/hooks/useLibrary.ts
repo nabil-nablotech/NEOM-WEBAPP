@@ -79,6 +79,10 @@ const useLibrary = () => {
       //   "visit_unique_id": data.createVisit.data.id
       // media_unique_id: addData.createMedia.data.id
       // }});
+      dispatch(toggleShowAddSuccess(true))
+
+      /** re-direct */
+      navigate(`/search-results/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true})
     }
 
     if(mediaAssociate) {

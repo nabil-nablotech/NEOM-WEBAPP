@@ -237,7 +237,6 @@ const useEvent = () => {
       createEventMuation({variables: data})
     }
     if (edit && event?.id) {
-      // data.visitUIPath = `${webUrl}/search-results/Events/${payload.uniqueId}`;
       updateEventMuation({
         variables: {
           ...data,
@@ -272,6 +271,15 @@ const useEvent = () => {
     }
   };
 
+  const deleteEvent = async (id: number) => {
+    updateEventMuation({
+      variables: {
+        id: id,
+        deleted: true
+      }
+    })
+  }
+
   return {
     loading: refineLoading,
     error: refineErrorData,
@@ -283,6 +291,7 @@ const useEvent = () => {
     createEvent,
     setSearchValue,
     setEdit,
+    deleteEvent
   };
 };
 
