@@ -38,7 +38,7 @@ const useEvent = () => {
   );
   const { search } = useLocation();
   
-  let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
+  let { tabName, uniqueId: idParams } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -212,9 +212,8 @@ const useEvent = () => {
     const visitDate = eventDate && eventDate.getFullYear() && `${eventDate.getFullYear()}-${zerofill(eventDate.getMonth() + 1)}-${zerofill(eventDate.getDate())}`;
     const data = {
       ...payload,
-      uniqueId: uniqueId,
       visitNumber: parseFloat(payload.visitNumber),
-      visitUIPath: `${webUrl}/search-results/Events/${uniqueId}`,
+
       asset_config_id: 1,
       keywords: keywords,
       siteType: payload.siteType && payload.siteType,
@@ -232,10 +231,12 @@ const useEvent = () => {
     }
     setPlace(data.place);
     if (!edit) {
-
+      data.uniqueId = uniqueId;
+      data.visitUIPath = `${webUrl}/search-results/Events/${uniqueId}`;
       createEventMuation({variables: data})
     }
     if (edit && event?.id) {
+      // data.visitUIPath = `${webUrl}/search-results/Events/${payload.uniqueId}`;
       updateEventMuation({
         variables: {
           ...data,
