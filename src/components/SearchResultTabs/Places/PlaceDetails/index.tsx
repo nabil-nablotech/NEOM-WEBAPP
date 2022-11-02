@@ -37,6 +37,7 @@ import NoTextPresent from "../../../NoDataScreens/NoText";
 import {isEmpty} from 'lodash'
 import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
 import DetachedIcon from "../../../Icons/DetachedIcon";
+import MoreOption from '../ListView/MoreOption'
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -340,7 +341,7 @@ const PlaceDetailsPage = () => {
     ];
 
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
-    const { loading: placeLoading, error, data: placeData } = usePlaceDetails();
+    const { loading: placeLoading, error, data: placeData, setEdit } = usePlaceDetails();
     // const { mapEvents } = usePlace();
 
     const dispatch = useDispatch()
@@ -383,8 +384,7 @@ const PlaceDetailsPage = () => {
         placeUIPath, media_associates, libraryItems, visit_associates,
     } = placeData
     
-    const {latitude, longitude} = placeData
-console.log('hex: ', placeData, places)
+    const {latitude, longitude} = placeData;
     return (
         <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -614,8 +614,9 @@ console.log('hex: ', placeData, places)
                                             }}
                                         /> :
                                         // <></>: 
-                                        <CustomMoreOptionsComponent
-                                            menuActions={menuItems}
+                                        <MoreOption
+                                        setEdit={setEdit}
+                                        record={placeData}
                                         />}
                                 </Box>
                             </Grid>

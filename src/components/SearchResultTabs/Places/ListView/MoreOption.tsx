@@ -7,7 +7,7 @@ const MoreOptionsComponent = ({
     record,
     setEdit
 }: {
-    record: Place;
+    record: any;
     setEdit: (payload: Place) => void
 }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
