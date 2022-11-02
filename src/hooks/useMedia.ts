@@ -86,7 +86,9 @@ const useMedia = () => {
       latitude: copiedValue&&copiedValue?.latitude && parseFloat(copiedValue?.latitude),
       longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
       categoryType: copiedValue&&copiedValue?.actionType && copiedValue?.actionType,
+      keywords: copiedValue&&copiedValue?.keyWords && copiedValue?.keyWords,
       featuredImage: copiedValue&&copiedValue?.featuredImage,
+      text: searchWordArray,
       limit: limit,
       skip: skip,
     };

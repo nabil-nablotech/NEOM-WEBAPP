@@ -20,6 +20,7 @@ import {
   tabNameBasedOnIndex,
 } from "../../utils/services/helpers";
 
+import AutoCompleteKeyWordsComponent from "../AutoCompleteKeyWords"
 const BaseInputs = ({
   activeTab,
   selectedValue,
@@ -33,6 +34,7 @@ const BaseInputs = ({
   textInputSxStyles
 }: BaseInputProps) => {
   const [locationModalOpen, toggleLocationModal] = useState<boolean>(false);
+  const [currentKeyword, setCurrentKeyword] = useState<string>('')
   
   return (
     <>
@@ -230,6 +232,9 @@ const BaseInputs = ({
           formControlSx={commonFormControlSxStyles}
         />
       </Grid>
+      <Grid item sm={2} className={`${styles["input-field"]}`}>
+        <AutoCompleteKeyWordsComponent />
+      </Grid>
       {activeTab === EVENTS_TAB_NAME && (
         <Grid item sm={2} className={`${styles["date-grid-item"]}`}>
           <DatePicker
@@ -352,6 +357,9 @@ const MediaInputs = ({
           selectStylesSx={commonSelectSxStyles}
           formControlSx={commonFormControlSxStyles}
         />
+      </Grid>
+      <Grid item sm={2} className={`${styles["input-field"]}`}>
+        <AutoCompleteKeyWordsComponent />
       </Grid>
       <Grid item sm={2} className={`${styles["input-field"]}`}>
         <FormGroup className={`${styles["black-90-pct"]}`}>

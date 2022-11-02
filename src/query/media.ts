@@ -98,6 +98,7 @@ export const media = gql`
 
 export const refineMedia = gql`
   query RefinedMediaSearch(
+    $text: JSON
     $search_one: String
     $search_two: String
     $search_three: String
@@ -105,6 +106,7 @@ export const refineMedia = gql`
     $longitude: Float
     $featuredImage: Boolean
     $categoryType: JSON
+    $keywords: JSON
     $limit: Int
     $skip: Int
   ) {
@@ -116,17 +118,15 @@ export const refineMedia = gql`
           { title: { contains: $search_one } }
           { fileName: { contains: $search_one } }
           { citation: { contains: $search_one } }
-          # { keywords: { contains: $search_one } }
           { description: { contains: $search_two } }
           { title: { contains: $search_two } }
           { fileName: { contains: $search_two } }
           { citation: { contains: $search_two } }
-          # { keywords: { contains: $search_two } }
           { description: { contains: $search_three } }
           { title: { contains: $search_three } }
           { fileName: { contains: $search_three } }
           { citation: { contains: $search_three } }
-          # { keywords: { contains: $search_three } }
+          { keywords: { contains: $text } }
         ]
         and: [
           { latitude: { gte: $latitude } }
@@ -134,6 +134,7 @@ export const refineMedia = gql`
           { featuredImage: { eq: $featuredImage } }
           { categoryType: { containsi: $categoryType } }
           { media_type: { categoryCode: { containsi: "MEDIA" } } }
+          { keywords: { containsi: $keywords } }
         ]
       }
     ) {
@@ -353,4 +354,26 @@ mutation UpdateMedia(
     }
   }
 }
+`;
+
+export const mediaKeyWords = gql`
+  query MediaKeyWordsSearch(
+    $text: JSON
+  ) {
+    medias(
+      pagination: { limit: 10, start: 0}
+      filters: {
+        or: [
+          { keywords: { contains: $text } }
+        ]
+      }
+    ) {
+      data {
+        id
+        attributes {
+          keywords
+        }
+      }
+    }
+  }
 `;
