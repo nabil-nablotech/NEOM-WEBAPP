@@ -111,11 +111,49 @@ export const searchResultsSlice = createSlice({
     toggleAssociationsStepOpen: (state, action: PayloadAction<boolean>) => {
       state.isAssociationsStepOpen = action.payload;
     },
-    modifyAssociatedPlaces: (state, action: PayloadAction<InventoryAssociationType[] | []>) => {
-      state.associatedPlaces = action.payload;
+    modifyAssociatedPlaces: (state, action: PayloadAction<{newItem: InventoryAssociationType | null, removeId: number | null}>) => {
+
+      // remove flow
+      if (
+        !action.payload.newItem &&
+        (action.payload.removeId || action.payload.removeId === 0)
+      ) {
+        state.associatedPlaces = state.associatedPlaces.filter(item => item.id !== action.payload.removeId)
+      }
+
+      // add flow
+      if (
+        action.payload.newItem &&
+        !action.payload.removeId
+        &&
+        (
+          state.associatedPlaces.every(item => item.id !== action.payload.newItem?.id)
+        )
+      ) {
+        state.associatedPlaces = [...state.associatedPlaces, action.payload.newItem];
+      }
     },
-    modifyAssociatedEvents: (state, action: PayloadAction<InventoryAssociationType[] | []>) => {
-      state.associatedEvents = action.payload;
+    modifyAssociatedEvents: (state, action: PayloadAction<{newItem: InventoryAssociationType | null, removeId: number | null}>) => {
+
+      // remove flow
+      if (
+        !action.payload.newItem &&
+        (action.payload.removeId || action.payload.removeId === 0)
+      ) {
+        state.associatedEvents = state.associatedEvents.filter(item => item.id !== action.payload.removeId)
+      }
+
+      // add flow
+      if (
+        action.payload.newItem &&
+        !action.payload.removeId
+        &&
+        (
+          state.associatedEvents.every(item => item.id !== action.payload.newItem?.id)
+        )
+      ) {
+        state.associatedEvents = [...state.associatedEvents, action.payload.newItem];
+      }
     },
     toggleAddItemWindowMinimized: (state, action: PayloadAction<boolean | null>) => {
       state.addItemWindowMinimized = action.payload;
