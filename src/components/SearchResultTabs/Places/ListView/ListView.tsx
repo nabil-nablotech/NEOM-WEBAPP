@@ -253,7 +253,6 @@ const ListView = (props: PlacesProps) => {
     fixed: 'left',
     className: 'more-menu-ant-cell attach-icon',
     render: (value: any, record: Place) => {
-      console.log('hexxs: insi: ', associatedPlaces)
 
       return <Box component="div">
         <DetachedIcon
@@ -285,7 +284,7 @@ const ListView = (props: PlacesProps) => {
     }, []);
 
     useEffect(() => {
-      // console.log('hex: ', isAssociationsStepOpen)
+
         if(isAssociationsStepOpen) {
           setTableHeaderJson(state => {
             let newState = [...state]
