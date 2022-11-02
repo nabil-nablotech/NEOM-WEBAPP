@@ -295,7 +295,7 @@ const StepContent = ({
 
 
 const AddNewItem = ({
-    onClose
+    onHide
 }: AddNewItemProps) => {
     let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
@@ -342,7 +342,7 @@ const AddNewItem = ({
 
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         if (activeStep + 1 === steps.length) {
-            onClose()
+            onHide()
             dispatch(toggleShowAddSuccess(true))
         }
         setSkipped(newSkipped);
@@ -350,7 +350,7 @@ const AddNewItem = ({
 
     const handleBack = () => {
         if (activeStep === 0) {
-            onClose()
+            onHide()
         } else {
             setActiveStep((prevActiveStep) => prevActiveStep - 1);
         }
@@ -387,7 +387,7 @@ const AddNewItem = ({
                         marginLeft: 'auto',
                         width: 'fit-content'
                     }}>
-                        <DefaultButton variant="text" onClick={e => onClose()}
+                        <DefaultButton variant="text" onClick={e => onHide()}
                             style={{
                                 // paddingInline: 0,
                                 minWidth: 'fit-content',
