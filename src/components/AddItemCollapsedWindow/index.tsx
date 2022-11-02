@@ -6,7 +6,7 @@ import {
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { toggleAddItemWindowMinimized } from "../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
 import styles from './index.module.css'
 
 const AddItemCollapsedWindow = () => {
@@ -24,7 +24,11 @@ const AddItemCollapsedWindow = () => {
                 <Grid item>
                     <Button
                         variant="text"
-                        onClick={(e) => dispatch(toggleAddItemWindowMinimized(false))}
+                        onClick={(e) => {
+                            dispatch(toggleAddItemWindowMinimized(false))
+                            dispatch(toggleNewItemWindow(true))
+                            dispatch(setAddNewItemWindowType(addNewItemWindowType))
+                        }}
                         style={{
                             minWidth: "fit-content",
                             textTransform: 'unset',

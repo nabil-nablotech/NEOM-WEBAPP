@@ -17,6 +17,7 @@ import DetachedIcon from "../../../Icons/DetachedIcon";
 import { useDispatch } from "react-redux";
 import { modifyAssociatedPlaces } from "../../../../store/reducers/searchResultsReducer";
 import MoreOptionsComponent from './MoreOption';
+import { InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
  
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -210,7 +211,13 @@ const ListView = (props: PlacesProps) => {
 
 
   const handleAttachClick = (e:any, record: Place) => {
-    dispatch(modifyAssociatedPlaces([...associatedPlaces, record]))
+    const data: InventoryAssociationType = {
+      id: Number(record.id),
+      placeNameEnglish: record.attributes.placeNameEnglish,
+      placeNameArabic: record.attributes.placeNameArabic,
+      placeNumber: record.attributes.placeNumber,
+    }
+    dispatch(modifyAssociatedPlaces([...associatedPlaces, data]))
   }
 
   const attachIconColumnHeader: any = useMemo(() => ({

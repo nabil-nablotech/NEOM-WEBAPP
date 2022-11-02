@@ -15,7 +15,7 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
-import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, checkIsNew } from "../../../../utils/services/helpers";
+import { antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, checkIsNew, isRecordAttached, isInventoryDetailAttached } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
@@ -36,6 +36,7 @@ import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
 import NoTextPresent from "../../../NoDataScreens/NoText";
 import {isEmpty} from 'lodash'
 import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
+import DetachedIcon from "../../../Icons/DetachedIcon";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -125,7 +126,7 @@ const PlaceDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
     const navigate = useNavigate();
 
-    const { places, library, events, media } = useSelector(
+    const { places, library, events, media, isAssociationsStepOpen, associatedPlaces } = useSelector(
         (state: RootState) => state.searchResults
     );
     const { data } = useSelector((state: RootState) => state.login);
@@ -383,7 +384,7 @@ const PlaceDetailsPage = () => {
     } = placeData
     
     const {latitude, longitude} = placeData
-
+console.log('hex: ', placeData, places)
     return (
         <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -590,9 +591,21 @@ const PlaceDetailsPage = () => {
                             <Grid item className={`${styles['title-section-grid']}`}>
                                 <Box component="div" className={`${styles['more-icon-box']}`}
                                 >
-                                    <CustomMoreOptionsComponent
-                                        menuActions={menuItems}
-                                    />
+                                    {isAssociationsStepOpen ?
+                                        <DetachedIcon
+                                            style={{
+                                                // height: '18px',
+                                                // position: 'relative',
+                                                // top: '3px',
+                                            }}
+                                            shouldShowAttachIcon={isInventoryDetailAttached(placeData, associatedPlaces)}
+                                            onClick={e => {
+                                            }}
+                                        /> :
+                                        // <></>: 
+                                        <CustomMoreOptionsComponent
+                                            menuActions={menuItems}
+                                        />}
                                 </Box>
                             </Grid>
                         </Grid>
