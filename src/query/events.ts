@@ -129,13 +129,64 @@ export const eventByEventNumber = gql`
   }
 `;
 export const eventById = gql`
-  query getEventById($id: ID){
-    document(id: $id) {
-      data {
-        id
+query getEventById($id: ID){
+  visit(id: $id) {
+    data {
+      id
+      attributes {
+        visitNumber
+        visitDate
+        visitUIPath
+        stateOfConservation
+        risk
+        period
+        assessmentType
+        artifacts
+        recordingTeam
+        researchValue
+        tourismValue
+        latitude
+        longitude
+        siteType
+        siteDescription
+        media_associates {
+        data {
+          attributes {
+            media_unique_id {
+              data {
+                attributes {
+                  object {
+                    data {
+                      attributes {
+                        url
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+        visit_associate {
+          data {
+            attributes {
+              place_unique_id {
+                data {
+                  attributes {
+                    placeNumber
+                    placeNameArabic
+                    placeNameEnglish
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
+}
 `;
 
 export const refineEvents = gql`
@@ -154,6 +205,7 @@ query RefineSearchEvent(
   $latitude: Float
   $longitude: Float
   $artifacts: JSON
+  $keywords: JSON
   $limit: Int
   $skip: Int
   $startDate: Date
@@ -189,6 +241,7 @@ query RefineSearchEvent(
         { longitude: { lte: $longitude } }
         { visitDate: { gte: $startDate }}
         { visitDate: { lte: $endDate }}
+        { keywords: { containsi: $keywords } }
       ]
     }
   ) {
@@ -389,4 +442,26 @@ export const updateEvent = gql`
       }
     }
   }
+`;
+
+export const eventsKeyWords = gql`
+query EventsKeyWordsSearch(
+  $text: JSON
+  ){
+  visits(
+    pagination: { limit: 10, start: 0}
+    filters: {
+      and: [
+        { keywords: { containsi: $text } }
+      ]
+    }
+  ) {
+    data {
+      id
+      attributes {
+        keywords
+      }
+    }
+  }
+}
 `;

@@ -57,3 +57,7 @@
     color: red;
     margin-top: 1em;
 }
+
+.visit-count {
+    color: var(--grey-text);
+}

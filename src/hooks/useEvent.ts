@@ -13,7 +13,7 @@ import {
   toggleShowAddSuccess
 
 } from "../store/reducers/searchResultsReducer";
-import {setPlaces} from '../store/reducers/eventReducer';
+import {setEventEdit, setPlaces} from '../store/reducers/eventReducer';
 import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/helpers';
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { graphQlHeaders } from "../utils/services/interceptor";
@@ -38,7 +38,7 @@ const useEvent = () => {
   );
   const { search } = useLocation();
   
-  let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
+  let { tabName, uniqueId: idParams } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -116,6 +116,14 @@ const useEvent = () => {
   useEffect(() => {
     if (updateData) {
       fetchData(0);
+      if (edit) {
+        dispatch(setEventEdit(false))
+        // dispatch(toggleShowAddSuccess(true))
+
+        /** re-direct */
+        navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, {replace: true})
+
+      }
     }
   }, [updateData])
 
@@ -167,6 +175,7 @@ const useEvent = () => {
       longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
       artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts,
       assessmentType: copiedValue&&copiedValue?.assessmentType && copiedValue?.assessmentType,
+      keywords: copiedValue&&copiedValue?.keyWords && copiedValue?.keyWords,
       startDate: visitStartDate && visitStartDate,
       endDate: visitEndDate && visitEndDate,      
       search_one: searchWordArray[0],
@@ -203,12 +212,11 @@ const useEvent = () => {
     const visitDate = eventDate && eventDate.getFullYear() && `${eventDate.getFullYear()}-${zerofill(eventDate.getMonth() + 1)}-${zerofill(eventDate.getDate())}`;
     const data = {
       ...payload,
-      uniqueId: uniqueId,
-      visitNumber: 1,
-      visitUIPath: `${webUrl}/search-results/Events/${uniqueId}`,
+      visitNumber: parseFloat(payload.visitNumber),
+
       asset_config_id: 1,
       keywords: keywords,
-      siteType: payload.siteType && [payload.siteType],
+      siteType: payload.siteType && payload.siteType,
       visitDate: visitDate,
       "researchValue": payload.researchValue && [payload.researchValue],
       "tourismValue": payload.tourismValue && [payload.tourismValue],
@@ -223,10 +231,12 @@ const useEvent = () => {
     }
     setPlace(data.place);
     if (!edit) {
-
+      data.uniqueId = uniqueId;
+      data.visitUIPath = `${webUrl}/search-results/Events/${uniqueId}`;
       createEventMuation({variables: data})
     }
     if (edit && event?.id) {
+      // data.visitUIPath = `${webUrl}/search-results/Events/${payload.uniqueId}`;
       updateEventMuation({
         variables: {
           ...data,
@@ -237,7 +247,7 @@ const useEvent = () => {
   }
 
   useEffect(() => {
-    const getData = setTimeout(() => filterPlaces(), 2000);
+    const getData = setTimeout(() => filterPlaces(), 1000);
     return () => clearTimeout(getData)
   }, [searchValue])
   const filterPlaces = () => {

@@ -176,8 +176,6 @@ const EventDetailsPage = () => {
         mediaCount = 6
     }
 
-
-
     if(eventLoading) {
         return <Loader />
     }

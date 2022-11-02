@@ -35,6 +35,7 @@ export interface AutoCompleteMultiSelectProps {
 }
 export interface AutoCompleteSingleSelectProps extends Omit<AutoCompleteMultiSelectProps, "value" | "handleSelectChange" | "handleChange"> {
     value?: object | any
+    defaultValue?: object | any
     handleChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
     handleSelectChange?: (event: React.SyntheticEvent<Element, Event>, value: string | null, reason: AutocompleteChangeReason, details?: AutocompleteChangeDetails<string> | undefined) => void;
     renderOption?: ((props: React.HTMLAttributes<HTMLLIElement>, option: string, state: AutocompleteRenderOptionState) => React.ReactNode)

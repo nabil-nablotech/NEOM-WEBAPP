@@ -16,6 +16,7 @@ export const initialSelectedValue = {
   longitude: '',
   startDate: undefined,
   endDate: undefined,
+  keyWords: [],
 }
 
 export type RefinedSearchState = {

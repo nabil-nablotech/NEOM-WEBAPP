@@ -13,6 +13,7 @@ import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import {EventsProps} from '../GridView/GridView';
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
+import MoreOptionsComponent from './MoreOption';
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -99,51 +100,50 @@ const StyledTableWrapper = styled(StyledAntTable)`
     ${antTablePaginationCss}
 ` 
 
-const MoreOptionsComponent = ({
-    record,
-    id,
-}: {
-    id: number;
-    record: User;
-}) => {
-    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (e: any) => {
-        setAnchorEl(e.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+// const MoreOptionsComponent = ({
+//     record,
+//     id,
+// }: {
+//     id: number;
+//     record: User;
+// }) => {
+//     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+//     const open = Boolean(anchorEl);
+//     const handleClick = (e: any) => {
+//         setAnchorEl(e.currentTarget);
+//     };
+//     const handleClose = () => {
+//         setAnchorEl(null);
+//     };
 
-    const showRecoveryLink = record.recoveryToken;
-    return (
-        <>
-            <div
-                className=""
-            >
-                <MoreHorizIcon className="more-menu-div" />
-            </div>
-            <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                }}
-            >
-                <MenuItem
-                    key={1}
-                >
-                    Menu 1
-                </MenuItem>
-                <MenuItem key={2}>
-                    Menu 2
-                </MenuItem>
-            </Menu>
-        </>
-    );
-};
+//     return (
+//         <>
+//             <div
+//                 className=""
+//             >
+//                 <MoreHorizIcon className="more-menu-div" />
+//             </div>
+//             <Menu
+//                 id="basic-menu"
+//                 anchorEl={anchorEl}
+//                 open={open}
+//                 onClose={handleClose}
+//                 MenuListProps={{
+//                     "aria-labelledby": "basic-button",
+//                 }}
+//             >
+//                 <MenuItem
+//                     key={1}
+//                 >
+//                     Edit
+//                 </MenuItem>
+//                 <MenuItem key={2}>
+//                    Delete
+//                 </MenuItem>
+//             </Menu>
+//         </>
+//     );
+// };
 
 const ListView = (props: EventsProps) => {
     const dispatch = useDispatch();
@@ -160,7 +160,7 @@ const ListView = (props: EventsProps) => {
             // sortDirections: ["ascend"],
             // defaultSortOrder: "ascend",
             render: (value: any, index: number) => {
-              return `${value.visit_associate.data?.attributes?.place_unique_id.data?.attributes.placeNameEnglish}${value.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic || ''}`          
+              return `${value.visit_associate?.data?.attributes?.place_unique_id.data?.attributes.placeNameEnglish}${value.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic || ''}`          
             }
         },
         {
@@ -182,7 +182,7 @@ const ListView = (props: EventsProps) => {
             dataIndex: "attributes",
             className: 'cell-research',
             render: (value: any, index: number) => {
-                return value.researchValue.map((x: string) => `${x};`)
+                return value?.researchValue.length > 0 ? value?.researchValue?.map((x: string) => `${x};`) : '';
             },
         },
         {
@@ -190,7 +190,7 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-tourism',
-            render: (value: any, index: number) => value.tourismValue.map((x: string) => `${x};`)
+            render: (value: any, index: number) => value?.tourismValue.length > 0 ? value?.tourismValue?.map((x: string) => `${x};`) : ''
             // render: (value: any, index: number) => "Temp"
         },
         {
@@ -198,14 +198,14 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-conserve',
-            render: (value: any, index: number) => value.stateOfConservation.map((x: string) => `${x};`)
+            render: (value: any, index: number) => value?.stateOfConservation.length > 0 ? value?.stateOfConservation?.map((x: string) => `${x};`) : ''
         },
         {
             title: "RECOMMENDATION",
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-recommend',
-            render: (value: any, index: number) => value.recommendation.map((x: string) => `${x};`)
+            render: (value: any, index: number) => value?.recommendation.length > 0 ? value?.recommendation?.map((x: string) => `${x || ''};`) : ''
             // render: (value: any, index: number) => "temp"
         },
         {
@@ -213,13 +213,13 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-period',
-            render: (value: any, index: number) => value.period.map((x: string) => `${x};`)
+            render: (value: any, index: number) => value?.period.length > 0 ? value?.period?.map((x: string) => `${x};`) : ''
         },
         {
             title: "RISK",
             key: `attributes`,
             dataIndex: "attributes",
-            render: (value: any, index: number) => value.risk.map((x: string) => `${x};`)
+            render: (value: any, index: number) => value?.risk?.length > 0 ? value?.risk?.map((x: string) => `${x};`) : ''
         },
         {
             title: "",
@@ -227,7 +227,7 @@ const ListView = (props: EventsProps) => {
             fixed: 'right',
             className: 'more-menu-ant-cell',
             render: (value: any, record: User) => (
-                <MoreOptionsComponent id={record.id} record={record} />
+                <MoreOptionsComponent dispatch={dispatch} id={record.id} record={record} />
             ),
         },
     ]
@@ -263,14 +263,14 @@ const ListView = (props: EventsProps) => {
                 {data.length > 0 ? <StyledTableWrapper
                     // className={`${styles["table-container"]}`}
                     rowKey={"id"}
-                    onRow={(record: any, rowIndex) => {
-                        return {
-                          onClick: event => {
-                            dispatch(setSelectedCardIndex(rowIndex || record.id))
-                            navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
-                          }, // click row
-                        };
-                      }}
+                    // onRow={(record: any, rowIndex) => {
+                    //     return {
+                    //       onClick: event => {
+                    //         dispatch(setSelectedCardIndex(rowIndex || record.id))
+                    //         navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
+                    //       }, // click row
+                    //     };
+                    //   }}
                     size="small"
                     columns={tableHeaderJson}
                     dataSource={data}

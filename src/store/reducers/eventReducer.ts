@@ -57,7 +57,7 @@ export type AddEventState = {
   assessmentTypeOther?: string;
 };
 
-const initialState: { event: EventApi; places: Place[] | [], edit: boolean } = {
+const initialState: { event: any; places: Place[] | [], edit: boolean } = {
   event: initialValue,
   places: [],
   edit: false
@@ -67,8 +67,13 @@ export const eventSlice = createSlice({
   name: "event",
   initialState,
   reducers: {
-    setEventData: (state, action: PayloadAction<EventApi>) => {
-      state.event = action.payload;
+    setEventData: (state, action: PayloadAction<any>) => {
+      if (action.payload?.visit_associate?.place_unique_id) {
+        const copyPlace = JSON.parse(JSON.stringify(action.payload));
+        copyPlace.visit_associate.place_unique_id.label = `${copyPlace.visit_associate?.place_unique_id.placeNameEnglish}${copyPlace.visit_associate?.place_unique_id.placeNameArabic}`;
+        copyPlace.visit_associate.place_unique_id.value = copyPlace.visit_associate?.place_unique_id.id; 
+        state.event = copyPlace;
+      }
     },
     setPlaces: (state, action: PayloadAction<Place[] | []>) => {
       state.places = action.payload;

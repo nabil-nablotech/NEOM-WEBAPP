@@ -6,7 +6,8 @@ import { InputAdornment } from "@mui/material";
 import { AutoCompleteSingleSelectProps } from '../../types/DropdownComponent';
 import SearchIcon from '@mui/icons-material/Search';
 
-export default function FreeSolo({ className, formControlSx, itemsList, value, placeholder, label, selectStylesSx, handleSelectChange, handleChange, renderOption}: AutoCompleteSingleSelectProps) {
+export default function FreeSolo({ className, formControlSx, itemsList, value, placeholder, label, defaultValue, selectStylesSx, handleSelectChange, handleChange, renderOption}: AutoCompleteSingleSelectProps) {
+
   return (
     <div className={className}>
       <FormControl sx={{ width: '100%', ...formControlSx }}>
@@ -20,8 +21,9 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
           freeSolo
           id="free-solo-2-demo"
           disableClearable
-          options={itemsList.map((option: any) => option)}
+          options={itemsList}
           value={value}
+          defaultValue={defaultValue}
           onChange={handleSelectChange}
 
           renderInput={(params) => (
@@ -47,6 +49,7 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
         sx={{
           ...selectStylesSx
         }}
+        getOptionLabel={(option: any) => option.label}
         renderOption={renderOption}
       />
       </FormControl>
