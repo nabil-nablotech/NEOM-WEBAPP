@@ -217,7 +217,10 @@ const ListView = (props: PlacesProps) => {
       placeNameArabic: record.attributes.placeNameArabic,
       placeNumber: record.attributes.placeNumber,
     }
-    dispatch(modifyAssociatedPlaces([...associatedPlaces, data]))
+    dispatch(modifyAssociatedPlaces({
+      newItem: data,
+      removeId: null
+    }))
   }
 
   const attachIconColumnHeader: any = useMemo(() => ({

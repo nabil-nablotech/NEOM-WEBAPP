@@ -265,6 +265,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     (state: RootState) => state.searchResults
   );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
+  const { edit, tabData } = useSelector((state: RootState) => state.tabEdit);
 
   const [activeStep, setActiveStep] = useState(0);
   const [formState, setFormState] = useState({
@@ -284,7 +285,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
 
   useEffect(() => {
 
-    if (activeStep === 1) {
+    if (activeStep >= 1) {
       dispatch(toggleAssociationsStepOpen(true));
     } else {
       dispatch(toggleAssociationsStepOpen(false));
@@ -310,13 +311,23 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       onHide();
       dispatch(toggleShowAddSuccess(true));
     }
-    if (activeStep === 1) {
 
-      if (create) {
+    if (activeStep + 1 === steps.length && data) {
+      if (create && !edit) {
         create({
-          ...data
+          ...data,
         });
       }
+      onHide()
+      dispatch(toggleNewItemWindow(false))
+    }
+
+    if (edit && create && data) {
+      create({
+        ...data,
+      });
+      onHide();
+      dispatch(toggleNewItemWindow(false));
     }
     setSkipped(newSkipped);
   };
