@@ -49,7 +49,7 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
         sx={{
           ...selectStylesSx
         }}
-        getOptionLabel={(option: any) => option.label}
+        getOptionLabel={(option: any) => option?.label || ''}
         renderOption={renderOption}
       />
       </FormControl>

@@ -23,6 +23,16 @@ export interface TabPanelProps {
 
 export type tabNameProps = "Places" | "Events" | "Library" | "Media";
 
+export type GridViewCard_Media = {
+  itemIndex?: number;
+  img?: string;
+  title: string;
+  subTitle: string;
+  dateString: string;
+  period?: string[] | null;
+  onClick?: ((e: React.MouseEvent<Element, React.MouseEvent>) => void) &
+    React.MouseEvent<Element, React.MouseEvent>;
+};
 export type GridViewCard_Places = {
   itemIndex?: number;
   img?: string;
@@ -32,6 +42,8 @@ export type GridViewCard_Places = {
   period?: string[] | null;
   onClick?: ((e: React.MouseEvent<Element, React.MouseEvent>) => void) &
     React.MouseEvent<Element, React.MouseEvent>;
+  setEdit: (payload: Place) => void;
+  record: Place
 };
 export type GridViewCard_Events = {
   // key?: number

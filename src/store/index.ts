@@ -3,13 +3,15 @@ import loginReducers  from './reducers/loginReducers';
 import searchResultsReducer from './reducers/searchResultsReducer';
 import refinedSearchReducer from './reducers/refinedSearchReducer';
 import eventReducer from './reducers/eventReducer';
+import tabEditReducer from './reducers/tabEditReducer';
 
 export const store = configureStore({
   reducer: {
     login: loginReducers,
     searchResults: searchResultsReducer,
     refinedSearch: refinedSearchReducer,
-    event: eventReducer
+    event: eventReducer,
+    tabEdit: tabEditReducer
   },
   // Storing date in redux throwd cmd errors, hence to ignore those
   middleware: getDefaultMiddleware =>

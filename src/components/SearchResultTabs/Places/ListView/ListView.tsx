@@ -16,6 +16,7 @@ import { RootState } from "../../../../store";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import { useDispatch } from "react-redux";
 import { modifyAssociatedPlaces } from "../../../../store/reducers/searchResultsReducer";
+import MoreOptionsComponent from './MoreOption';
  
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -115,42 +116,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
   ${antTablePaginationCss}
 `;
 
-const MoreOptionsComponent = ({ record, id }: { id: number; record: User }) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (e: any) => {
-    setAnchorEl(e.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const showRecoveryLink = record.recoveryToken;
-  return (
-    <>
-      <div className="">
-        <MoreHorizIcon className="more-menu-div" />
-      </div>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-      >
-        <MenuItem key={1}>Menu 1</MenuItem>
-        <MenuItem key={2}>Menu 2</MenuItem>
-      </Menu>
-    </>
-  );
-};
-
 function displayMultiple(value: any, index: number, key: string) { return value[key].data.map((x: FieldOption) => `${x.attributes.translation.data.attributes.locale[0].value}; `) }
-
-
-
 
 const ListView = (props: PlacesProps) => {
 
@@ -236,8 +202,8 @@ const ListView = (props: PlacesProps) => {
           key: "action",
           fixed: 'right',
           className: 'more-menu-ant-cell',
-          render: (value: any, record: User) => (
-              <MoreOptionsComponent id={record.id} record={record} />
+          render: (value: any, record: Place) => (
+              <MoreOptionsComponent setEdit={props.setEdit} record={record} />
           ),
       },
   ])
