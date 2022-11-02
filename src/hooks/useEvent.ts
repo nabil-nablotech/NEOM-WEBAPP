@@ -280,7 +280,7 @@ const useEvent = () => {
     hasMoreData,
     fetchEvents: fetchData,
     clearSearch: clearTextSearch,
-    createEvent: createEvent,
+    createEvent,
     setSearchValue,
     setEdit,
   };
