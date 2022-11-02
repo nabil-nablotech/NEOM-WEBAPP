@@ -2,19 +2,22 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { addPlace, refinePlaces } from "../query/places";
+import { placeDetails } from "../api/details";
+import { addPlace, refinePlaces, updatePlace } from "../query/places";
 import { RootState } from "../store";
 import { initialSelectedValue, setSelectedValue } from "../store/reducers/refinedSearchReducer";
 import {
   setPlaces,
   setPlaceMetaData,
   setSearchText,
-  toggleShowAddSuccess
+  toggleShowAddSuccess,
+  toggleNewItemWindow, setAddNewItemWindowType
 } from "../store/reducers/searchResultsReducer";
+import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 import { Place } from "../types/Place";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 
-import {limit, getQueryObj, generateUniqueId, webUrl} from '../utils/services/helpers';
+import {limit, getQueryObj, generateUniqueId, webUrl, PLACES_TAB_NAME} from '../utils/services/helpers';
 import {graphQlHeaders} from '../utils/services/interceptor';
 
 
@@ -27,6 +30,11 @@ const usePlace = () => {
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
   );
+
+  const { edit, tabData } = useSelector(
+    (state: RootState) => state.tabEdit
+  );
+
   const { search } = useLocation();
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
@@ -59,7 +67,9 @@ const usePlace = () => {
    */
   const { loading:refineLoading, error:refineErrorData, data:refinePlaceData, refetch:refineSearchPlaces} = useQuery(refinePlaces, graphQlHeaders());
 
-  const [createPlaceMutation, {data, loading, error}] = useMutation(addPlace, graphQlHeaders())
+  const [createPlaceMutation, {data, loading, error}] = useMutation(addPlace, graphQlHeaders());
+  const [updatePlaceMutation, {data: updateData, loading: updateLoading, error: updateErr}] = useMutation(updatePlace, graphQlHeaders());
+
   useEffect(() => {
     if (refinePlaceData?.places) {
       const places = JSON.parse(JSON.stringify(refinePlaceData?.places.data))
@@ -117,6 +127,14 @@ const usePlace = () => {
     }
   }, [data])
 
+  useEffect(() => {
+    if (updateData && edit) {
+        dispatch(setTabEdit(false));
+        dispatch(setTabData({}));
+        // dispatch(toggleShowAddSuccess(true))
+    }
+  }, [updateData])
+
   const fetchData = (skip: number = placeData.length, local: boolean = false, clear: boolean = false) => {
     // get the query from the url parameters
     const searchData = getQueryObj(search);
@@ -166,8 +184,6 @@ const usePlace = () => {
 
     const data = {
       ...payload,
-      uniqueId: uniqueId,
-      placeUIPath: `${webUrl}/search-results/Events/${uniqueId}`,
       asset_config_id: 8,
       keywords: payload.keywords,
       siteType: payload.siteType,
@@ -184,8 +200,30 @@ const usePlace = () => {
       // "assessmentType": ["Field-based"],
       artifacts: [payload.artifacts]
     }
-    createPlaceMutation({variables: data})
+    if (!edit) {
+      data.uniqueId = uniqueId;
+      data.placeUIPath = `${webUrl}/search-results/Events/${uniqueId}`;
+      createPlaceMutation({variables: data})
+    }
+    if (edit && tabData?.id) {
+      updatePlaceMutation({
+        variables: {
+          ...data,
+          id: tabData.id
+        }
+      })
+    }
   }
+
+  const setEdit = async (payload: any) => {
+    if (payload) {
+      const payloadRes = await placeDetails(payload.attributes.uniqueId);
+      dispatch(setTabData(payloadRes));
+      dispatch(setTabEdit(true));
+      dispatch(toggleNewItemWindow(true))
+      dispatch(setAddNewItemWindowType(PLACES_TAB_NAME))
+    }
+  };
 
 
   return {
@@ -196,7 +234,8 @@ const usePlace = () => {
     hasMoreData,
     fetchPlaces: fetchData,
     clearSearch: clearTextSearch,
-    createPlace: createPlace
+    createPlace: createPlace,
+    setEdit
   };
 };
 

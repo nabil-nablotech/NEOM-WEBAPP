@@ -1,6 +1,6 @@
 
 import Box from '@mui/material/Box';
-import { GridViewCard_Places } from '../../../../types/SearchResultsTabsProps'
+import { GridViewCard_Media } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'
 import styles from './index.module.css'
 import { Grid } from '@mui/material';
@@ -16,7 +16,7 @@ export const Card = ({
     title,
     subTitle,
     dateString
-}: GridViewCard_Places) => {
+}: GridViewCard_Media) => {
     return <>
         <Box component="div" className={`${gridStyles['card-container']}`} >
             <Grid container spacing={1} className={`${gridStyles['card-grid']}`}>

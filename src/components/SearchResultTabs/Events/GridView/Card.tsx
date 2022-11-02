@@ -18,7 +18,6 @@ export const Card = ({
   record,
   id,
   dispatch,
-  handleClick,
   setEdit
 }: GridViewCard_Events) => {
   return (

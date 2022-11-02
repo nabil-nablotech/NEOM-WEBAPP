@@ -17,11 +17,12 @@ export type PlacesProps = {
   hasMoreData: boolean;
   loading: boolean;
   totalData?: number;
+  setEdit: (payload: Place) => void
 }
 
 const GridView = (props: PlacesProps) => {
 
-  const {data, loading, fetchData, hasMoreData, totalData} = props;
+  const {data, loading, fetchData, hasMoreData, totalData, setEdit} = props;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -73,6 +74,8 @@ const GridView = (props: PlacesProps) => {
                   subTitle={item.attributes?.siteDescription}
                   dateString={`Last login on ${formatDateTime(item.attributes.updatedAt)}`}
                   period={item?.attributes?.period}
+                  setEdit={setEdit}
+                  record={item}
                 />
               </Grid>
           ))}

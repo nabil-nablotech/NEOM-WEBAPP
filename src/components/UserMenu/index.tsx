@@ -24,6 +24,7 @@ import useEvent from "../../hooks/useEvent";
 import AddNewLibraryItem from "../SearchResultTabs/Library/AddNewItem";
 import { setEventEdit } from "../../store/reducers/eventReducer";
 import AddItemCollapsedWindow from "../AddItemCollapsedWindow";
+import { setTabEdit } from "../../store/reducers/tabEditReducer";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -99,6 +100,7 @@ function UserMenuComponent() {
   const handlePlus = () => {
     dispatch(toggleNewItemWindow(!newItemWindowOpen));
     dispatch(setEventEdit(false));
+    dispatch(setTabEdit(false));
   }
 
   return (
