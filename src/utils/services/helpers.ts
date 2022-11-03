@@ -333,12 +333,17 @@ type isEmptyType = (value: any) => boolean
 
 
 export const isEmptyValue: isEmptyType = (value: any) => {
+
+  if(value === null || value === undefined) return true
+
   if (typeof value === 'string') return value === ''
+
   if (
     (typeof value === 'object') &&
     (Array.isArray(value)) &&
     value.length === 0
   ) return value.length === 0
+
   if (
     (typeof value === 'object') &&
     (Array.isArray(value)) &&
