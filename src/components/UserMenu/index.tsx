@@ -167,8 +167,12 @@ function UserMenuComponent() {
             addNewItemWindowType === MEDIA_TAB_NAME && !addItemWindowMinimized &&
             <AddNewMedia onHide={() => onHide()} />
           }
-      </CustomDrawer>
-      {addNewItemWindowType && addItemWindowMinimized && <AddItemCollapsedWindow />}
+        </CustomDrawer>
+        {
+          addNewItemWindowType &&
+          addItemWindowMinimized &&
+          <AddItemCollapsedWindow />
+        }
       </Box>
     </>
   );
