@@ -2,12 +2,17 @@ import Box from "@mui/material/Box";
 /** indicating that we can send html later on wherever we parse */
 import parse from "html-react-parser";
 import { Grid } from "@mui/material";
-import { GridViewCard_Events } from '../../../../types/SearchResultsTabsProps'
+import { GridViewCard_Events, InventoryAssociationType_Event } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'
 import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
-import { baseUrl } from "../../../../utils/services/helpers";
+import { baseUrl, isEventRecordAttached } from "../../../../utils/services/helpers";
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
 import MoreOptionsComponent from "../ListView/MoreOption";
+import DetachedIcon from "../../../Icons/DetachedIcon";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { RootState } from "../../../../store";
+import { modifyAssociatedEvents } from "../../../../store/reducers/searchResultsReducer";
 
 export const Card = ({
   img,
@@ -17,9 +22,14 @@ export const Card = ({
   isNew,
   record,
   id,
-  dispatch,
   setEdit
 }: GridViewCard_Events) => {
+  const { isAssociationsStepOpen, associatedEvents } = useSelector(
+    (state: RootState) => state.searchResults
+  );
+
+  const dispatch = useDispatch()
+
   return (
     <>
       <Box component="div" className={`${gridStyles["card-container"]}`}>
@@ -67,7 +77,30 @@ export const Card = ({
                   console.log('click on more')
                 }}
               >
-                <MoreOptionsComponent setEdit={setEdit} record={record} id={id} dispatch={dispatch}  />
+                {isAssociationsStepOpen ?
+                  <DetachedIcon
+                    style={{
+                      height: '18px',
+                      position: 'relative',
+                      top: '0.5em',
+                    }}
+                    shouldShowAttachIcon={isEventRecordAttached(record, associatedEvents)}
+                    onClick={e => {
+                      const data: InventoryAssociationType_Event = {
+                        id: record.id,
+                        visitNumber: record.attributes.visitNumber,
+                        placeNameEnglish: record.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish,
+                        placeNameArabic: record.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameArabic,
+                        placeNumber: record.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNumber,
+                      }
+                      dispatch(modifyAssociatedEvents({
+                        newItem: data,
+                        removeId: null
+                      }))
+                    }}
+                  /> :
+                  <MoreOptionsComponent setEdit={setEdit} record={record} id={id} dispatch={dispatch} />
+                }
               </Box>
             </Box>
           </Grid>

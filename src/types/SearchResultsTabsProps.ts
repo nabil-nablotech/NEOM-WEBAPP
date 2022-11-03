@@ -56,7 +56,6 @@ export type GridViewCard_Events = {
   setEdit: (item: Event) => void
   record: Event;
   id: string;
-  dispatch: any
 };
 
 export type InventoryAssociationType = {
