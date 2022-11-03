@@ -459,12 +459,6 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (showAddSuccess) {
-      dispatch(toggleShowAddSuccess(true));
-    }
-  }, [showAddSuccess]);
-
   const isStepOptional = (step: number) => {
     return step === 1;
   };
@@ -487,9 +481,10 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
           ...data,
         });
       }
-      handleHide();
+      handleReset();
       dispatch(toggleShowAddSuccess(true));
-      dispatch(toggleNewItemWindow(false));
+      dispatch(toggleNewItemWindow(false))
+      
     }
     if (edit && create && data) {
       create({
@@ -506,10 +501,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
     if (activeStep === 0) {
       dispatch(toggleNewItemWindow(false))
       dispatch(setAddNewItemWindowType(null))
-      dispatch(toggleAddItemWindowMinimized(null))
-
-      /** remove the data when change in add item type window occurs */
-      dispatch(storeAddItemProgressState(null))
+      handleReset();
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
@@ -532,7 +524,14 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
 
   const handleReset = () => {
     setActiveStep(0);
-  };
+
+    dispatch(toggleAddItemWindowMinimized(null))
+
+    /** remove the data when change in add item type window occurs */
+    dispatch(storeAddItemProgressState(null))
+
+    
+}
 
   const handleStep = (step: number) => () => {
     if (activeStep > step) {
