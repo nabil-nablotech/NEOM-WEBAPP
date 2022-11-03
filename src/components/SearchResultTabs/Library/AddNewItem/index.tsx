@@ -405,15 +405,6 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
 
   }, [])
 
-  useEffect(() => {
-
-   
-    // if(!addNewItemWindowType) {
-    //   dispatch(storeAddItemProgressState(null))
-    // }
-
-  }, [addNewItemWindowType])
-
   const handleHide = () => {
     onHide()
 
