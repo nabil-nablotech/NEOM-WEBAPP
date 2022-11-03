@@ -102,6 +102,7 @@ export type SearchResultsState2 = {
   associatedEvents: InventoryAssociationType_Event[] | []
   addItemWindowMinimized: boolean | null
   addItemProgressState: null | addItemProgressPayload
+  isAssociationsIconsDisabled: boolean
 };
 
 export type addItemProgressPayload = addItemProgressStateType | addPlaceProgressStateType | addEventProgressStateType
