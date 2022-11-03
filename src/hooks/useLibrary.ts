@@ -5,7 +5,7 @@ import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { addLibrary, library, updateLibrary } from "../query/library";
 import { createMediaAssociate } from '../query/mediaAssociate';
 import { RootState } from '../store';
-import {modifyAssociatedPlaces, setAddNewItemWindowType, setLibrary, setLibraryMetaData, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess} from '../store/reducers/searchResultsReducer';
+import {modifyAssociatedEvents, modifyAssociatedPlaces, setAddNewItemWindowType, setLibrary, setLibraryMetaData, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess} from '../store/reducers/searchResultsReducer';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
 import {limit, getQueryObj, webUrl, generateUniqueId, EVENTS_TAB_NAME} from '../utils/services/helpers';
 import { graphQlHeaders } from '../utils/services/interceptor';
@@ -15,7 +15,7 @@ import { setTabData, setTabEdit } from '../store/reducers/tabEditReducer';
 const useLibrary = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
 
-  const {searchText, library: libItem, associatedPlaces} = useSelector((state: RootState) => state.searchResults);
+  const {searchText, library: libItem, associatedPlaces, associatedEvents} = useSelector((state: RootState) => state.searchResults);
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
   );
@@ -71,18 +71,29 @@ const useLibrary = () => {
   }, [data])
 
   const createAssociation = async () => {
-    
-    for(let i = 0; i < associatedPlaces.length; i++) {
-      await createMediaAssociateMutation({variables: {
-        // "place_unique_id": place?.id,
-        // "visit_unique_id": data.createVisit.data.id,
-        "place_unique_id": associatedPlaces[i].id,
-        "media_unique_id": addData.createMedia.data.id
-      }});
-      await dispatch(modifyAssociatedPlaces({
-        newItem: null,
-        removeId: associatedPlaces[i].id
-      }))
+    if (associatedPlaces.length > 0) {
+      for(let i = 0; i < associatedPlaces.length; i++) {
+        await createMediaAssociateMutation({variables: {
+          "place_unique_id": associatedPlaces[i].id,
+          "media_unique_id": addData.createMedia.data.id
+        }});
+        await dispatch(modifyAssociatedPlaces({
+          newItem: null,
+          removeId: associatedPlaces[i].id
+        }))
+      }
+    }
+    if (associatedEvents.length > 0) {
+      for(let i = 0; i < associatedEvents.length; i++) {
+        await createMediaAssociateMutation({variables: {
+          "visit_unique_id": associatedEvents[i].id,
+          "media_unique_id": addData.createMedia.data.id
+        }});
+        await dispatch(modifyAssociatedEvents({
+          newItem: null,
+          removeId: associatedEvents[i].id
+        }))
+      }
     }
   }
 
