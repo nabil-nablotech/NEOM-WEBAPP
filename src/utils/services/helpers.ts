@@ -5,7 +5,7 @@ import { MediaAssociates2, Place, PlaceApi } from "../../types/Place";
 import { InventoryAssociationType, InventoryAssociationType_Event, tabNameProps } from "../../types/SearchResultsTabsProps";
 import * as Yup from 'yup';
 import { ColumnType } from "antd/lib/table";
-import { Event } from "../../types/Event";
+import { Event, EventApi } from "../../types/Event";
 
 export const baseUrl = `http://localhost:9999`;
 // export const baseUrl = `https://9fc5-117-214-58-33.in.ngrok.io`;
@@ -384,8 +384,19 @@ export const isEventRecordAttached = (record: Place | Event , list: Array<Invent
   })
 
 }
+export const isEventDetailAttached = (record: EventApi , list: Array<InventoryAssociationType_Event>, type: string = '') => {
 
-export const isInventoryDetailAttached = (record: PlaceApi , list: Array<InventoryAssociationType>, type: string = '') => {
+  if (!list || !record) return false
+
+  if (!record.id) return false
+
+  return list.some(item => {
+    return record.id && (item.id === record.id.toString())
+  })
+
+}
+
+export const isPlaceDetailAttached = (record: PlaceApi , list: Array<InventoryAssociationType>, type: string = '') => {
 
   if (!list || !record) return false
 

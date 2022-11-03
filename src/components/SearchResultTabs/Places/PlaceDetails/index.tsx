@@ -15,7 +15,7 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
-import { antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, checkIsNew, isRecordAttached, isInventoryDetailAttached } from "../../../../utils/services/helpers";
+import { antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, checkIsNew, isRecordAttached, isPlaceDetailAttached } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
@@ -598,7 +598,7 @@ const PlaceDetailsPage = () => {
                                                 // position: 'relative',
                                                 // top: '3px',
                                             }}
-                                            shouldShowAttachIcon={isInventoryDetailAttached(placeData, associatedPlaces)}
+                                            shouldShowAttachIcon={isPlaceDetailAttached(placeData, associatedPlaces)}
                                             onClick={e => {
                                                 const data: InventoryAssociationType = {
                                                     id: Number(placeData.id),

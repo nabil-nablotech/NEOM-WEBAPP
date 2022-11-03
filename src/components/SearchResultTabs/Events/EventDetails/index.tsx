@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Box, Button, Grid } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
+import { InventoryAssociationType_Event, tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import styles from './index.module.css'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useSelector } from "react-redux";
@@ -15,17 +15,16 @@ import { ColumnsType } from "antd/lib/table";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
 import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatBytes, formatWebDate, stringAvatar,
-    isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT,  } from "../../../../utils/services/helpers";
+    isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, isEventRecordAttached, isEventDetailAttached,  } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
 import styled from "styled-components";
-import { format } from "date-fns";
 import useMedia from "../../../../hooks/useMedia";
 import CommentsSection from "../../../CommentsSection";
 import RenderInitials from "../../../RenderInitials";
 import { useDispatch } from "react-redux";
-import {  setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex } from "../../../../store/reducers/searchResultsReducer";
+import {  modifyAssociatedEvents, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
 import YellowStar from '../../../../assets/images/searchResults/YellowStar.svg'
@@ -33,10 +32,10 @@ import { useMediaQuery } from 'react-responsive'
 import useEventDetails from "../../../../hooks/useEventDetails";
 import Loader from "../../../Common/Loader";
 import MapView from "../../GoogleMap/MapView";
-import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
 import NoTextPresent from "../../../NoDataScreens/NoText";
 import {isEmpty} from 'lodash'
 import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
+import DetachedIcon from "../../../Icons/DetachedIcon";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -126,13 +125,10 @@ const EventDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
     const navigate = useNavigate();
     
-    const { places, library, events, media } = useSelector(
+    const { places, isAssociationsStepOpen, associatedEvents, media } = useSelector(
         (state: RootState) => state.searchResults
     );
     const { data } = useSelector((state: RootState) => state.login);
-
-    let selectedPlaceObjIndex: number = 0
-    let selectedPlaceObj: Place = places[0]
 
     const {loading: eventLoading, data: eventDetails, setEdit} = useEventDetails();
 
@@ -403,9 +399,28 @@ const EventDetailsPage = () => {
                             <Grid item className={`${styles['title-section-grid']}`}>
                                 <Box component="div" className={`${styles['more-icon-box']}`}
                                 >
-                                    <CustomMoreOptionsComponent
-                                        menuActions={menuItems}
-                                    />
+                                    {isAssociationsStepOpen ?
+                                        <DetachedIcon
+                                            style={{}}
+                                            shouldShowAttachIcon={isEventDetailAttached(eventDetails, associatedEvents)}
+                                            onClick={e => {
+                                                const data: InventoryAssociationType_Event = {
+                                                    id: eventDetails.id ? eventDetails.id.toString() : '',
+                                                    visitNumber: eventDetails.visitNumber,
+                                                    placeNameEnglish: eventDetails.visit_associate?.place_unique_id.placeNameEnglish ?? '',
+                                                    placeNameArabic: eventDetails.visit_associate?.place_unique_id.placeNameArabic ?? '',
+                                                    placeNumber: eventDetails.visit_associate?.place_unique_id.placeNumber ?? '',
+                                                }
+
+                                                dispatch(modifyAssociatedEvents({
+                                                    newItem: data,
+                                                    removeId: null
+                                                }))
+                                            }}
+                                        /> :
+                                        <CustomMoreOptionsComponent
+                                            menuActions={menuItems}
+                                        />}
                                 </Box>
                             </Grid>
                         </Grid>
