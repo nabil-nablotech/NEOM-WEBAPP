@@ -121,6 +121,19 @@ const useLibrary = () => {
       refetchLibraryItems(obj);
     }
   };
+
+  const mediaType = (typeCode: string) => {
+    let media_type = 2;
+    switch (typeCode) {
+      case 'REFERENCEURL':
+        media_type=3;
+        break;
+      case 'INLINE':
+        media_type=4;
+        break;
+    }
+    return media_type;
+  }
  
   const createLibrary = async (payload: any | undefined) => {
     const uniqueId = generateUniqueId();
@@ -129,7 +142,7 @@ const useLibrary = () => {
       ...payload,
       visitNumber: parseFloat(payload.visitNumber),
 
-      asset_config_id: 1,
+      asset_config_id: [mediaType(payload.documentType)], // documentType should be string and media type
       keywords: keywords,
       siteType: payload.siteType && payload.siteType,
       "latitude": payload.latitude && parseFloat(payload.latitude),
