@@ -26,6 +26,7 @@ import { setEventEdit } from "../../store/reducers/eventReducer";
 import AddItemCollapsedWindow from "../AddItemCollapsedWindow";
 import { setTabEdit } from "../../store/reducers/tabEditReducer";
 import useLibrary from "../../hooks/useLibrary";
+import useMedia from "../../hooks/useMedia";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -38,10 +39,11 @@ function UserMenuComponent() {
   const { clientLogout } = useLogout();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [anchorElSettings, setAnchorElSettings] = React.useState<null | HTMLElement>(null);
-  const {newItemWindowOpen, addNewItemWindowType, addItemWindowMinimized} = useSelector((state: RootState) => state.searchResults);
-  const { createPlace  } = usePlace();
+  const { newItemWindowOpen, addNewItemWindowType, addItemWindowMinimized } = useSelector((state: RootState) => state.searchResults);
+  const { createPlace } = usePlace();
   const { createEvent, setSearchValue } = useEvent();
   const { createLibrary } = useLibrary();
+  const { createMedia } = useMedia();
 
   const open = Boolean(anchorEl);
   const admin = getRole() === 'Admin';
@@ -77,9 +79,9 @@ function UserMenuComponent() {
   const menuItems = [
     {
       label: "Support",
-      handleClickMenuItem: () => {},
+      handleClickMenuItem: () => { },
       render: () => <a href="mailto: support@neomheritage.com?subject = Neom Heritage Support" rel="noreferrer" target={"_blank"}>
-      Help & Support
+        Help & Support
       </a>
     },
     {
@@ -122,7 +124,7 @@ function UserMenuComponent() {
       }}>
         <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }} onClick={
           e => handlePlus()
-        }/>
+        } />
         {true && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
         <InitialsWrapper
           id="long-button"
@@ -165,7 +167,7 @@ function UserMenuComponent() {
           }
           {
             addNewItemWindowType === MEDIA_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewMedia onHide={() => onHide()} />
+            <AddNewMedia create={createMedia} onHide={() => onHide()} />
           }
         </CustomDrawer>
         {

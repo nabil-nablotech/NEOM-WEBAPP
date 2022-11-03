@@ -39,13 +39,13 @@ import { RootState } from "../../../../store";
 import { addItemMediaSteps } from "./../../../../utils/services/helpers";
 import CustomUpload from "../../../Upload/ImageUpload";
 import { SelectChangeEvent } from "@mui/material/Select";
-import InsertLinkIcon from "@mui/icons-material/InsertLink";
 import { useFormik } from "formik";
 import AutoComplete from "../../../AutoComplete";
 import CloseIcon from "@mui/icons-material/Close";
 
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import AddedPlaces from "../../../AssociationsList/AddedPlaces";
+import AddedEvents from "../../../AssociationsList/AddedEvents";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -107,7 +107,7 @@ const StepContent = ({
   options,
   formik,
 }: StepContentTypes) => {
-  const { associatedPlaces } = useSelector(
+  const { associatedPlaces, associatedEvents } = useSelector(
     (state: RootState) => state.searchResults
   );
 
@@ -308,6 +308,7 @@ const StepContent = ({
               item to.
             </Box>
             <AddedPlaces list={associatedPlaces} />
+            <AddedEvents list={associatedEvents} />
           </Box>
         )}
         {activeStep === 3 && (
@@ -367,7 +368,7 @@ const StepContent = ({
   );
 };
 
-const AddNewMedia = ({ onHide }: AddNewItemProps) => {
+const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
   const { options } = useSelector((state: RootState) => state.refinedSearch);
 
@@ -426,11 +427,11 @@ const AddNewMedia = ({ onHide }: AddNewItemProps) => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
     if (activeStep + 1 === steps.length) {
-      // if (create) {
-      //     create({
-      //         ...data
-      //     });
-      // }
+      if (create) {
+        create({
+          ...data,
+        });
+      }
       onHide();
       dispatch(toggleShowAddSuccess(true));
       // dispatch(toggleNewItemWindow(false))
@@ -610,7 +611,7 @@ const AddNewMedia = ({ onHide }: AddNewItemProps) => {
               colors={["#fff", "var(--table-black-text)", "none"]}
               className={`${styles["plain-whitee-btn"]}`}
               label="Cancel"
-              onClick={(e) => onHide()}
+              onClick={(e) => handleReset()}
               style={{
                 paddingInline: 0,
               }}
