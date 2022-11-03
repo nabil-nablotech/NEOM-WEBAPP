@@ -100,7 +100,9 @@ function UserMenuComponent() {
   ]
 
   const handlePlus = () => {
-    dispatch(toggleNewItemWindow(!newItemWindowOpen));
+    if(!addItemWindowMinimized) {
+      dispatch(toggleNewItemWindow(!newItemWindowOpen));
+    }
     dispatch(setEventEdit(false));
     dispatch(setTabEdit(false));
   }
