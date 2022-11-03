@@ -5,7 +5,7 @@ import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { CustomUploadProps } from '../../types/CustomDrawerTypes';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import styles from './index.module.css'
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 
@@ -38,7 +38,7 @@ const StyledUpload = styled(Upload)`
     }
 `
 
-const CustomUpload_basic = ({
+const ImageUpload = ({
     title
 }: CustomUploadProps) => {
     const [loading, setLoading] = useState(false);
@@ -71,6 +71,7 @@ const CustomUpload_basic = ({
 
 
     return (
+        <>
         <StyledUpload
             name="avatar"
             listType="picture-card"
@@ -83,8 +84,10 @@ const CustomUpload_basic = ({
         >
             {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
         </StyledUpload>
-    );
+        <Typography className={`${styles['file-upload-bottom-text']}`}>Accepted file types: .jpg, .png</Typography>
+        </>
+    )
 };
 
 
-export default CustomUpload_basic;
+export default ImageUpload;

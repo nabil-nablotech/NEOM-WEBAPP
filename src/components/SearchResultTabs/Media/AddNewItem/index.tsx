@@ -1,9 +1,9 @@
-import { Box, Button as DefaultButton, Step, StepLabel, Stepper, Typography, StepButton } from '@mui/material';
+import { Box, Button as DefaultButton, Step, StepLabel, Stepper, Typography, StepButton, Chip } from '@mui/material';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AddNewItemProps, StepContentTypes } from '../../../../types/CustomDrawerTypes';
 import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
-import { addItemDefaultSteps, MEDIA_TAB_NAME } from '../../../../utils/services/helpers';
+import { addItemDefaultSteps, MEDIA_TAB_NAME, handleEnter } from '../../../../utils/services/helpers';
 import styles from '../../Places/AddNewItem/addNewItem.module.css'
 import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
@@ -16,7 +16,10 @@ import { RootState } from '../../../../store';
 import { addItemMediaSteps } from './../../../../utils/services/helpers';
 import CustomUpload from '../../../Upload/ImageUpload';
 import { SelectChangeEvent } from '@mui/material/Select';
+import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import { useFormik } from 'formik';
+import AutoComplete from '../../../AutoComplete';
+import CloseIcon from '@mui/icons-material/Close';
 
 const commonSelectSxStyles = {
     textAlign: 'left',
@@ -77,17 +80,27 @@ const StepContent = ({
     activeStep,
     steps,
     handleNext,
-    handleBack
+    handleBack,
+    options,
+    formik
 }: StepContentTypes) => {
 
-    const formik = useFormik({
-        initialValues: {
-            mediaType: '',
-        },
-        onSubmit: values => {
-            alert(JSON.stringify(values, null, 2));
-        },
-    });
+    // const formik = useFormik({
+    //     initialValues: {
+    //         mediaType: '',
+    //     },
+    //     onSubmit: values => {
+    //         alert(JSON.stringify(values, null, 2));
+    //     },
+    // });
+
+    const handleSelectChange = (e: React.SyntheticEvent, value: string[] | [], stateName: string) => {
+        e.preventDefault();
+        formik.setFieldValue(stateName, [...new Set([...formik.values[stateName], ...value])]);
+    }
+
+    const [mediaKeywords, setMediaKeywords] = useState<Array<string>>([])
+    const [currentKeyword, setCurrentKeyword] = useState<string>('')
 
     return <>
         <Box component="div" className={`${styles['form']}`}>
@@ -140,11 +153,11 @@ const StepContent = ({
             {
                 activeStep === 1 &&
                 <>
-                    <Box component="div">Make your content discoverable</Box>
+                   
                     <TextInput
                         className={`${styles["english-name"]}`}
-                        label="Add Keywords"
-                        name="english-name"
+                        label="Title"
+                        name="title"
                         value={''}
                         // onChange={(e) => { }}
                         sx={{
@@ -152,6 +165,145 @@ const StepContent = ({
                         }}
                         formControlSx={commonFormControlSxStyles}
                     />
+                    <TextInput
+                        className={`${styles["site-description"]}`}
+                        label="Description"
+                        name="description"
+                        value={''}
+                        onChange={e => {
+                            
+                        }}
+                        multiline
+                        minRows={3}
+                        maxRows={3}
+                        sx={{
+                            ...textInputSxStyles,
+                            marginBottom: '4em',
+                            '& .MuiInputBase-inputMultiline': {
+                                paddingInline: '0 !important'
+                            }
+                        }}
+                        formControlSx={{
+                            ...commonFormControlSxStyles,
+                        }}
+                    />
+                     <TextInput
+                        className={`${styles["english-name"]}`}
+                        label="Bearing"
+                        name="bearing"
+                        value={''}
+                        // onChange={(e) => { }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    <TextInput
+                        className={`${styles["english-name"]}`}
+                        label="Author"
+                        name="Author"
+                        value={''}
+                        // onChange={(e) => { }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                     <AutoComplete
+                        className={`${styles["dropdown"]}`}
+                        label={"Category Type"}
+                        name="categoryType"
+                        value={[]}
+                        multiple={true}
+                        handleSelectChange={(e, value) => handleSelectChange(e, value, 'categoryType')}
+                        handleChange={() => { }}
+                        handleClear={(e) => { }}
+                        itemsList={options?.actionType || []}
+                        selectStylesSx={commonSelectSxStyles}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                     <TextInput
+                        className={`${styles["english-name"]}`}
+                        label="Longitude"
+                        name="longitude"
+                        value={''}
+                        // onChange={(e) => { }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                     <TextInput
+                        className={`${styles["english-name"]}`}
+                        label="Latitude"
+                        name="latitude"
+                        value={''}
+                        // onChange={(e) => { }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                     <TextInput
+                        className={`${styles["english-name"]}`}
+                        label="Reference URL"
+                        name="refrerenceUrl"
+                        value={''}
+                        // onChange={(e) => { }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                </>
+            }
+              {
+                activeStep === 2 &&
+                <Box component="div">
+                    Click on <InsertLinkIcon/> to select the places and events you want to associate this library item to.</Box>
+              }
+              {
+                activeStep === 3 &&
+                <>
+                    <Box component="div">Make your content discoverable</Box>
+                    <TextInput
+                        className={`${styles["english-name"]}`}
+                        id="keyword-div"
+                        label="Add Keywords"
+                        name="keywords"
+                        value={currentKeyword}
+                        onChange={(e) => {
+                            setCurrentKeyword(e.target.value)
+                        }}
+                        onKeyDown={e => {
+                            handleEnter(e, () => {
+                                formik.setFieldValue('keywords', [...new Set([...formik.values.keywords, currentKeyword])])
+                                setCurrentKeyword('')
+                            })
+                        }}
+                        sx={{
+                            ...textInputSxStyles
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    {
+                        <Box component="div" style={{
+                            display: 'flex',
+                            gap: '5px'
+                        }}>
+                            {
+                                formik.values.keywords.map((item: string, index: any) => (
+                                    <Chip key={index} size="small" variant="outlined" label={item}
+                                        deleteIcon={<CloseIcon fontSize="small" />}
+                                        onDelete={e => {
+                                            const newArr = [...formik.values.keywords].filter((element: string) => element !== item)
+                                            formik.setFieldValue('keywords', [...new Set(newArr)])
+                                        }}
+                                    />
+                                ))
+                            }
+                        </Box>
+                    }
                 </>
             }
             
@@ -164,6 +316,7 @@ const AddNewMedia = ({
     onHide
 }: AddNewItemProps) => {
     let { tabName } = useParams<{ tabName?: tabNameProps }>();
+    const { options } = useSelector((state: RootState) => state.refinedSearch);
 
     const { showAddSuccess } = useSelector((state: RootState) => state.searchResults);
 
@@ -172,14 +325,15 @@ const AddNewMedia = ({
         siteDescription: ''
     });
     const [skipped, setSkipped] = useState(new Set<number>());
-
+    const [formError, setFormError] = useState<string>('');
 
     const getSteps = () => {
-        if (tabName === MEDIA_TAB_NAME) {
-            return addItemMediaSteps
-        } else {
-            return addItemDefaultSteps
-        }
+        return addItemMediaSteps
+        // if (tabName === MEDIA_TAB_NAME) {
+        //     return addItemMediaSteps
+        // } else {
+        //     return addItemDefaultSteps
+        // }
     }
 
     const [steps, setSteps] = useState<Array<string>>(getSteps())
@@ -199,7 +353,8 @@ const AddNewMedia = ({
     const isStepSkipped = (step: number) => {
         return skipped.has(step);
     };
-    const handleNext = () => {
+
+    const handleNext = (e: any, data: any) => {
         let newSkipped = skipped;
         if (isStepSkipped(activeStep)) {
             newSkipped = new Set(newSkipped.values());
@@ -207,10 +362,19 @@ const AddNewMedia = ({
         }
 
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
         if (activeStep + 1 === steps.length) {
+            // if (create) {
+            //     create({
+            //         ...data
+            //     });
+            // }
+            // onClose()
             onHide()
             dispatch(toggleShowAddSuccess(true))
+            // dispatch(toggleNewItemWindow(false))
         }
+
         setSkipped(newSkipped);
     };
 
@@ -249,6 +413,38 @@ const AddNewMedia = ({
         }
     };
 
+    const formik = useFormik({
+        initialValues: {
+            placeNumber: '',
+            placeNameEnglish: '',
+            placeNameArabic: '',
+            siteDescription: '',
+            siteType: [],
+            period: [],
+            stateOfConservation: '',
+            risk: '',
+            tourismValue: '',
+            researchValue: '',
+            artifacts: '',
+            recommendation: '',
+            latitude: null,
+            longitude: null,
+            keywords: []
+        },
+        validate: values => {
+            if (!values.placeNumber) {
+                setFormError('Place Number is required')
+            } else {
+                setFormError('')
+            }
+        },
+        onSubmit: (values) => {
+
+            if (!formError) {
+                handleNext(null, values);
+            }
+        },
+    });
 
 
     return (
@@ -317,6 +513,8 @@ const AddNewMedia = ({
                                 steps={steps}
                                 handleNext={handleNext}
                                 handleBack={handleBack}
+                                options={options}
+                                formik={formik}
                             />
 
                         </React.Fragment>
@@ -332,21 +530,17 @@ const AddNewMedia = ({
                     <Button
                         colors={["#fff", "var(--table-black-text)", "none"]}
                         className={`${styles["plain-whitee-btn"]}`}
-                        label={activeStep === 0 ? 'Cancel' : 'Back'}
+                        label='Cancel'
                         onClick={handleBack}
                         style={{
                             paddingInline: 0
                         }}
                     />
-                    {/* {isStepOptional(activeStep) && (
-                                                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                                                    Skip
-                                                </Button>
-                                            )} */}
+                    {activeStep > 0 && (
+                        <Button label='Back' />
+                    )}
                     <Button
-                        label={activeStep === steps.length - 1 ? 'Add' : 'Next'}
-                        onClick={handleNext}
-                    />
+                        label={activeStep === steps.length - 1 ? 'Add' : 'Next'}  />
                 </Box>
             </Box>
         </Box>
