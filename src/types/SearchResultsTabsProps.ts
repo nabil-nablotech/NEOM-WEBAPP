@@ -102,8 +102,10 @@ export type SearchResultsState2 = {
   associatedPlaces: InventoryAssociationType[] | []
   associatedEvents: InventoryAssociationType_Event[] | []
   addItemWindowMinimized: boolean | null
-  addItemProgressState: null | addItemProgressStateType
+  addItemProgressState: null | addItemProgressPayload
 };
+
+export type addItemProgressPayload = addItemProgressStateType | addPlaceProgressStateType | addEventProgressStateType
 
 export type addItemProgressStateType = {
   activeStep :number,
@@ -115,6 +117,49 @@ export type addItemProgressStateType = {
     fieldNarrative: string
     siteType: string
     keywords: Array<string>,
+  }
+}
+export type addPlaceProgressStateType = {
+  activeStep :number
+  formData: {
+    placeNumber: string
+    placeNameEnglish: string
+    placeNameArabic: string
+    siteDescription: string
+    siteType: string[],
+    period: string[],
+    stateOfConservation: string
+    risk: string
+    tourismValue: string
+    researchValue: string
+    artifacts: string
+    recommendation: string
+    latitude: number | null,
+    longitude: number | null,
+    keywords: string[],
+  }
+}
+export type addEventProgressStateType = {
+  activeStep :number
+  formData: {
+    place: string,
+    eventDate: Date | undefined,
+    recordingTeam: string
+    visitNumber: string | Number | null
+    siteDescription: string
+    fieldNarrative: string
+    artifacts: string
+    latitude: Number | number | null,
+    longitude: Number | number | null,
+    assessmentType: string
+    stateOfConservation: string
+    siteType: string | never[]
+    risk: string
+    tourismValue: string
+    researchValue: string
+    recommendation: string
+    period: string[]
+    keywords: string | never[]
   }
 }
 

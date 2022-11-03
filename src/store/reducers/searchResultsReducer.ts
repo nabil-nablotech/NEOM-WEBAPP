@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addItemProgressStateType, InventoryAssociationType, InventoryAssociationType_Event, SearchResultsState2, tabNameProps } from "../../types/SearchResultsTabsProps";
+import { addItemProgressPayload, addItemProgressStateType, InventoryAssociationType, InventoryAssociationType_Event, SearchResultsState2, tabNameProps } from "../../types/SearchResultsTabsProps";
 import { DashboardResponse } from "../../types/dashboard";
 import { Place, Meta } from "../../types/Place";
 import { Event } from "../../types/Event";
@@ -163,7 +163,7 @@ export const searchResultsSlice = createSlice({
     toggleAddItemWindowMinimized: (state, action: PayloadAction<boolean | null>) => {
       state.addItemWindowMinimized = action.payload;
     },
-    storeAddItemProgressState: (state, action: PayloadAction<addItemProgressStateType | null>) => {
+    storeAddItemProgressState: (state, action: PayloadAction<addItemProgressPayload | null>) => {
       state.addItemProgressState = action.payload;
     },
   },
