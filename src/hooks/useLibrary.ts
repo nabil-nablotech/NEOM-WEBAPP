@@ -5,10 +5,12 @@ import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { addLibrary, library, updateLibrary } from "../query/library";
 import { createMediaAssociate } from '../query/mediaAssociate';
 import { RootState } from '../store';
-import {setLibrary, setLibraryMetaData, toggleShowAddSuccess} from '../store/reducers/searchResultsReducer';
+import {setAddNewItemWindowType, setLibrary, setLibraryMetaData, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess} from '../store/reducers/searchResultsReducer';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
-import {limit, getQueryObj, webUrl, generateUniqueId} from '../utils/services/helpers';
+import {limit, getQueryObj, webUrl, generateUniqueId, EVENTS_TAB_NAME} from '../utils/services/helpers';
 import { graphQlHeaders } from '../utils/services/interceptor';
+import { eventDetails } from "../api/details";
+import { setTabData, setTabEdit } from '../store/reducers/tabEditReducer';
 
 const useLibrary = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
@@ -18,7 +20,7 @@ const useLibrary = () => {
     (state: RootState) => state.refinedSearch
   );
 
-  const { edit } = useSelector(
+  const { edit, tabData } = useSelector(
     (state: RootState) => state.tabEdit
   );
 
@@ -70,26 +72,33 @@ const useLibrary = () => {
 
   useEffect(() => {
     if (addData) {
-      // createMediaAssociateMutation({variables: {
-      //   "place_unique_id": place?.id,
-      //   "visit_unique_id": data.createVisit.data.id
-      // media_unique_id: addData.createMedia.data.id
-      // }});
-      dispatch(toggleShowAddSuccess(true))
+      createMediaAssociateMutation({variables: {
+        // "place_unique_id": place?.id,
+        // "visit_unique_id": data.createVisit.data.id,
+        "place_unique_id": 2,
+        "media_unique_id": addData.createMedia.data.id
+      }});
 
-      /** re-direct */
-      // navigate(`/search-results/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true})
-      navigate(`/search-results/Library`, {replace: true})
-    }
-
-    if(mediaAssociate) {
-      dispatch(toggleShowAddSuccess(true))
-
-      /** re-direct */
-      navigate(`/search-results/Library`, {replace: true})
+      // /** re-direct */
+      // // navigate(`/search-results/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true})
 
     }
-  }, [addData, mediaAssociate])
+
+    if(updateData) {
+      dispatch(toggleShowEditSuccess(true))
+
+      /** re-direct */
+      navigate(`/search-results/Library`, {replace: true})
+
+    }
+  }, [addData, updateData])
+
+  useEffect(() => {
+    if (mediaAssociate) {
+            dispatch(toggleShowAddSuccess(true));
+          navigate(`/search-results/Library`, {replace: true})
+    }
+  }, [mediaAssociate])
   
   const fetchData = (skip: number = libItem.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);
@@ -150,15 +159,25 @@ const useLibrary = () => {
       data.visitUIPath = `${webUrl}/search-results/Events/${uniqueId}`;
       createLibraryMutation({variables: data})
     }
-    // if (edit && tabData?.id) {
-    //   updateLibraryMutation({
-    //     variables: {
-    //       ...data,
-    //       id: event.id
-    //     }
-    //   })
-    // }
+    if (edit && tabData?.id) {
+      updateLibraryMutation({
+        variables: {
+          ...data,
+          id: tabData.id
+        }
+      })
+    }
   }
+
+  const setEdit = async (payload: any) => {
+    if (payload) {
+      const payloadRes = await eventDetails(payload.attributes.uniqueId);
+      dispatch(setTabData(payloadRes));
+      dispatch(setTabEdit(true));
+      dispatch(toggleNewItemWindow(true))
+      dispatch(setAddNewItemWindowType(EVENTS_TAB_NAME))
+    }
+  };
 
   return {
     loading,
@@ -166,7 +185,8 @@ const useLibrary = () => {
     data,
     hasMoreData,
     fetchLibraryItems: fetchData,
-    createLibrary
+    createLibrary,
+    setEdit
   };
 };
 
