@@ -13,7 +13,7 @@ import { Meta } from "../../../types/Place";
 import { RootState } from "../../../store";
 import { useSelector } from "react-redux";
 import {formatWebDate, formatBytes} from '../../../utils/services/helpers';
-import {MoreOptionsComponent} from '../Media/ListView/MoreOption';
+import MoreOptionsComponent from '../Places/ListView/MoreOption';
 import { Media } from "../../../types/Media";
 import {HtmlTooltip} from '../../../components/Tooltip';
 import { Typography } from "@mui/material";
@@ -24,7 +24,7 @@ const LibraryTab = () => {
   const { selectedCardIndex, library, places, totalCounts, libararyMetaData } =
     useSelector((state: RootState) => state.searchResults);
 
-  const { fetchLibraryItems, hasMoreData, loading } = useLibrary();
+  const { fetchLibraryItems, hasMoreData, loading, setEdit } = useLibrary();
   const tableHeaderJson: ColumnsType<any> = [
     {
       title: "NAME",
@@ -117,7 +117,7 @@ const LibraryTab = () => {
       fixed: "right",
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (
-        <MoreOptionsComponent id={record.id} record={record} />
+        <MoreOptionsComponent setEdit={setEdit} record={record} />
       ),
     },
   ];

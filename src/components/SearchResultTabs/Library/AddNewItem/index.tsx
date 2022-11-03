@@ -31,13 +31,6 @@ import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 import CloseIcon from '@mui/icons-material/Close';
 import AddedEvents from "../../../AssociationsList/AddedEvents";
 
-const commonSelectSxStyles = {
-  textAlign: "left",
-  "& .MuiSelect-select": {
-    padding: "0.5em 1em",
-    color: "var(--grey-text)",
-  },
-};
 const textInputSxStyles = {
   "& .MuiInputBase-input.MuiOutlinedInput-input": {
     border: "none",
@@ -81,14 +74,8 @@ export const stepperIconSx = {
 };
 
 const StepContent = ({
-  tabName,
-  options,
-  formState,
-  setFormState,
+  
   activeStep,
-  steps,
-  handleNext,
-  handleBack,
   formik,
 }: StepContentTypes) => {
   const { associatedPlaces, associatedEvents } = useSelector(
@@ -270,7 +257,8 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     (state: RootState) => state.searchResults
   );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
-  const { edit } = useSelector((state: RootState) => state.tabEdit);
+
+  const { edit, tabData } = useSelector((state: RootState) => state.tabEdit);
 
   const [activeStep, setActiveStep] = useState(0);
   const [formState, setFormState] = useState({

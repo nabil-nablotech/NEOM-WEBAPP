@@ -7,9 +7,9 @@ import { createMediaAssociate } from '../query/mediaAssociate';
 import { RootState } from '../store';
 import {modifyAssociatedEvents, modifyAssociatedPlaces, setAddNewItemWindowType, setLibrary, setLibraryMetaData, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess} from '../store/reducers/searchResultsReducer';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
-import {limit, getQueryObj, webUrl, generateUniqueId, EVENTS_TAB_NAME} from '../utils/services/helpers';
+import {limit, getQueryObj, webUrl, generateUniqueId, EVENTS_TAB_NAME, LIBRARY_TAB_NAME} from '../utils/services/helpers';
 import { graphQlHeaders } from '../utils/services/interceptor';
-import { eventDetails } from "../api/details";
+import { mediaDetails } from "../api/details";
 import { setTabData, setTabEdit } from '../store/reducers/tabEditReducer';
 
 const useLibrary = () => {
@@ -100,10 +100,6 @@ const useLibrary = () => {
   useEffect(() => {
     if (addData) {
       createAssociation();
-
-      // /** re-direct */
-      // // navigate(`/search-results/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true})
-
     }
 
     if(updateData) {
@@ -195,11 +191,12 @@ const useLibrary = () => {
 
   const setEdit = async (payload: any) => {
     if (payload) {
-      const payloadRes = await eventDetails(payload.attributes.uniqueId);
+      console.log('payload-----------', payload);
+      const payloadRes = await mediaDetails(payload.attributes.uniqueId);
       dispatch(setTabData(payloadRes));
       dispatch(setTabEdit(true));
       dispatch(toggleNewItemWindow(true))
-      dispatch(setAddNewItemWindowType(EVENTS_TAB_NAME))
+      dispatch(setAddNewItemWindowType(LIBRARY_TAB_NAME ))
     }
   };
 
