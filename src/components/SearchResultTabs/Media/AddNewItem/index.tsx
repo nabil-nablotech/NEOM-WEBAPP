@@ -410,7 +410,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     if (activeStep >= 2) {
       dispatch(toggleAssociationsStepOpen(true));
 
-      if(activeStep > 1) {
+      if(activeStep > 2) {
         dispatch(toggleAssociationsIconDisabled(true));
       } else  {
         dispatch(toggleAssociationsIconDisabled(false));
