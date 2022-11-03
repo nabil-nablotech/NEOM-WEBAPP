@@ -102,7 +102,21 @@ export type SearchResultsState2 = {
   associatedPlaces: InventoryAssociationType[] | []
   associatedEvents: InventoryAssociationType_Event[] | []
   addItemWindowMinimized: boolean | null
+  addItemProgressState: null | addItemProgressStateType
 };
+
+export type addItemProgressStateType = {
+  activeStep :number,
+  formData: {
+    place: string
+    eventDate: Date
+    recordingTeam: string
+    siteDescription: string
+    fieldNarrative: string
+    siteType: string
+    keywords: Array<string>,
+  }
+}
 
 export type FileDataType = {
   src?: string;

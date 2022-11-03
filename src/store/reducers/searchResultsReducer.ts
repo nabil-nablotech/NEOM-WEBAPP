@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { InventoryAssociationType, InventoryAssociationType_Event, SearchResultsState2, tabNameProps } from "../../types/SearchResultsTabsProps";
+import { addItemProgressStateType, InventoryAssociationType, InventoryAssociationType_Event, SearchResultsState2, tabNameProps } from "../../types/SearchResultsTabsProps";
 import { DashboardResponse } from "../../types/dashboard";
 import { Place, Meta } from "../../types/Place";
 import { Event } from "../../types/Event";
@@ -33,7 +33,8 @@ const initialState: SearchResultsState2 = {
   isAssociationsStepOpen: false,
   associatedPlaces: [],
   associatedEvents: [],
-  addItemWindowMinimized: null
+  addItemWindowMinimized: null,
+  addItemProgressState: null
 };
 
 export const searchResultsSlice = createSlice({
@@ -162,6 +163,9 @@ export const searchResultsSlice = createSlice({
     toggleAddItemWindowMinimized: (state, action: PayloadAction<boolean | null>) => {
       state.addItemWindowMinimized = action.payload;
     },
+    storeAddItemProgressState: (state, action: PayloadAction<addItemProgressStateType | null>) => {
+      state.addItemProgressState = action.payload;
+    },
   },
 });
 
@@ -193,7 +197,8 @@ export const {
   toggleAssociationsStepOpen,
   modifyAssociatedPlaces,
   modifyAssociatedEvents,
-  toggleAddItemWindowMinimized
+  toggleAddItemWindowMinimized,
+  storeAddItemProgressState
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

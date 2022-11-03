@@ -21,7 +21,7 @@ import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleAssociationsStepOpen, toggleNewItemWindow, toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, storeAddItemProgressState, toggleAddItemWindowMinimized, toggleAssociationsStepOpen, toggleNewItemWindow, toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import { useFormik } from "formik";
@@ -265,11 +265,11 @@ const StepContent = ({
 const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { showAddSuccess, associatedPlaces } = useSelector(
+  const { showAddSuccess, addItemProgressState, addNewItemWindowType } = useSelector(
     (state: RootState) => state.searchResults
   );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
-  const { edit, tabData } = useSelector((state: RootState) => state.tabEdit);
+  const { edit } = useSelector((state: RootState) => state.tabEdit);
 
   const [activeStep, setActiveStep] = useState(0);
   const [formState, setFormState] = useState({
@@ -312,7 +312,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     if (activeStep + 1 === steps.length) {
-      onHide();
+      handleHide();
       dispatch(toggleShowAddSuccess(true));
     }
 
@@ -322,7 +322,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
           ...data,
         });
       }
-      onHide()
+      handleHide()
       dispatch(toggleNewItemWindow(false))
     }
 
@@ -330,7 +330,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       create({
         ...data,
       });
-      onHide();
+      handleHide();
       dispatch(toggleNewItemWindow(false));
     }
     setSkipped(newSkipped);
@@ -341,6 +341,9 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       dispatch(toggleNewItemWindow(false))
       dispatch(setAddNewItemWindowType(null))
       dispatch(toggleAddItemWindowMinimized(null))
+
+      /** remove the data when change in add item type window occurs */
+      dispatch(storeAddItemProgressState(null))
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
@@ -386,6 +389,43 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     },
   });
 
+  useEffect(() => {
+    /** Effect needed to load history data,
+     * and remove the data when change in add item type window occurs
+     */
+    if(addItemProgressState && addItemProgressState.formData) {
+
+      setActiveStep(addItemProgressState.activeStep)
+
+      Object.keys(addItemProgressState.formData).forEach(keyName => {
+        // @ts-ignore
+        formik.setFieldValue(keyName, addItemProgressState.formData[keyName])
+      })
+    }
+
+  }, [])
+
+  useEffect(() => {
+
+   
+    // if(!addNewItemWindowType) {
+    //   dispatch(storeAddItemProgressState(null))
+    // }
+
+  }, [addNewItemWindowType])
+
+  const handleHide = () => {
+    onHide()
+
+    /** store data when unmounting */
+    dispatch(storeAddItemProgressState({
+      activeStep: activeStep,
+      formData: {
+        ...formik.values
+      }
+    }))
+  }
+
   return (
     <Box component="div">
       <form onSubmit={formik.handleSubmit}>
@@ -402,7 +442,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
             >
               <DefaultButton
                 variant="text"
-                onClick={(e) => onHide()}
+                onClick={(e) => handleHide()}
                 style={{
                   // paddingInline: 0,
                   minWidth: "fit-content",
