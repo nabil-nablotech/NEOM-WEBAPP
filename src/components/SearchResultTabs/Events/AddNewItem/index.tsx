@@ -31,6 +31,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
   setAddNewItemWindowType,
+  storeAddItemProgressState,
   toggleAddItemWindowMinimized,
   toggleNewItemWindow,
   toggleShowAddSuccess,
@@ -443,7 +444,7 @@ const StepContent = ({
 const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { showAddSuccess } = useSelector(
+  const { showAddSuccess, addItemProgressState } = useSelector(
     (state: RootState) => state.searchResults
   );
   const { edit, event, places } = useSelector((state: RootState) => state.event);
@@ -486,7 +487,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
           ...data,
         });
       }
-      onHide();
+      handleHide();
       dispatch(toggleShowAddSuccess(true));
       dispatch(toggleNewItemWindow(false));
     }
@@ -494,7 +495,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
       create({
         ...data,
       });
-      onHide();
+      handleHide();
       dispatch(toggleNewItemWindow(false));
     }
 
@@ -506,6 +507,9 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
       dispatch(toggleNewItemWindow(false))
       dispatch(setAddNewItemWindowType(null))
       dispatch(toggleAddItemWindowMinimized(null))
+
+      /** remove the data when change in add item type window occurs */
+      dispatch(storeAddItemProgressState(null))
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
@@ -573,6 +577,34 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
     },
   });
 
+  useEffect(() => {
+    /** Effect needed to load history data,
+     * and remove the data when change in add item type window occurs
+     */
+    if (addItemProgressState && addItemProgressState.formData) {
+
+      setActiveStep(addItemProgressState.activeStep)
+
+      Object.keys(addItemProgressState.formData).forEach(keyName => {
+        // @ts-ignore
+        formik.setFieldValue(keyName, addItemProgressState.formData[keyName])
+      })
+    }
+
+  }, [])
+
+  const handleHide = () => {
+    onHide()
+
+    /** store data when unmounting */
+    dispatch(storeAddItemProgressState({
+      activeStep: activeStep,
+      formData: {
+        ...formik.values
+      }
+    }))
+  }
+
   const handleChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -597,7 +629,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
             >
               <DefaultButton
                 variant="text"
-                onClick={(e) => onHide()}
+                onClick={(e) => handleHide()}
                 style={{
                   // paddingInline: 0,
                   minWidth: "fit-content",

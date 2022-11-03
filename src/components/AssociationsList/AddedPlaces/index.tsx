@@ -1,24 +1,18 @@
 import {
     Box
 } from "@mui/material";
-import { AddPlacesTypes } from "../../../types/AddItemTypes";
-import { Place } from "../../../types/Place";
+import { AddPlaceAssociationTypes } from "../../../types/AddItemTypes";
 import styles from '../index.module.css'
-import InventoryItem from "../ItemRow";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { modifyAssociatedPlaces } from "../../../store/reducers/searchResultsReducer";
-import { RootState } from "../../../store";
 import { InventoryAssociationType } from "../../../types/SearchResultsTabsProps";
+import PlaceInventoryItem from "../ItemRowPlaces";
 
 const AddedPlaces = ({
     list
-}: AddPlacesTypes) => {
+}: AddPlaceAssociationTypes) => {
 
     const dispatch = useDispatch()
-
-    const { associatedPlaces } = useSelector(
-        (state: RootState) => state.searchResults
-      );
 
     const handleRemoveItem = (e: React.MouseEvent, id: number) => {
         dispatch(modifyAssociatedPlaces({
@@ -36,7 +30,7 @@ const AddedPlaces = ({
                 {
                     list?.map((place: InventoryAssociationType) => (
                         <Box component="div">
-                            <InventoryItem
+                            <PlaceInventoryItem
                                 item={{
                                     id: Number(place.id),
                                     placeNameEnglish: place.placeNameEnglish,

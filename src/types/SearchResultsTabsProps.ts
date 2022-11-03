@@ -65,6 +65,13 @@ export type InventoryAssociationType = {
   placeNameArabic: string
   placeNumber: string | null
 }
+export type InventoryAssociationType_Event = {
+  id: string
+  visitNumber: string
+  placeNameEnglish: string
+  placeNameArabic: string
+  placeNumber: string | null
+}
 
 export type SearchResultsState2 = {
   selectedCardIndex: number;
@@ -93,9 +100,68 @@ export type SearchResultsState2 = {
   addNewItemWindowType: tabNameProps | null
   isAssociationsStepOpen: boolean
   associatedPlaces: InventoryAssociationType[] | []
-  associatedEvents: InventoryAssociationType[] | []
+  associatedEvents: InventoryAssociationType_Event[] | []
   addItemWindowMinimized: boolean | null
+  addItemProgressState: null | addItemProgressPayload
 };
+
+export type addItemProgressPayload = addItemProgressStateType | addPlaceProgressStateType | addEventProgressStateType
+
+export type addItemProgressStateType = {
+  activeStep :number,
+  formData: {
+    place: string
+    eventDate: Date
+    recordingTeam: string
+    siteDescription: string
+    fieldNarrative: string
+    siteType: string
+    keywords: Array<string>,
+  }
+}
+export type addPlaceProgressStateType = {
+  activeStep :number
+  formData: {
+    placeNumber: string
+    placeNameEnglish: string
+    placeNameArabic: string
+    siteDescription: string
+    siteType: string[],
+    period: string[],
+    stateOfConservation: string
+    risk: string
+    tourismValue: string
+    researchValue: string
+    artifacts: string
+    recommendation: string
+    latitude: number | null,
+    longitude: number | null,
+    keywords: string[],
+  }
+}
+export type addEventProgressStateType = {
+  activeStep :number
+  formData: {
+    place: string,
+    eventDate: Date | undefined,
+    recordingTeam: string
+    visitNumber: string | Number | null
+    siteDescription: string
+    fieldNarrative: string
+    artifacts: string
+    latitude: Number | number | null,
+    longitude: Number | number | null,
+    assessmentType: string
+    stateOfConservation: string
+    siteType: string | never[]
+    risk: string
+    tourismValue: string
+    researchValue: string
+    recommendation: string
+    period: string[]
+    keywords: string | never[]
+  }
+}
 
 export type FileDataType = {
   src?: string;

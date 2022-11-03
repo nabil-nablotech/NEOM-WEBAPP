@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { InventoryAssociationType, SearchResultsState2, tabNameProps } from "../../types/SearchResultsTabsProps";
+import { addItemProgressPayload, addItemProgressStateType, InventoryAssociationType, InventoryAssociationType_Event, SearchResultsState2, tabNameProps } from "../../types/SearchResultsTabsProps";
 import { DashboardResponse } from "../../types/dashboard";
 import { Place, Meta } from "../../types/Place";
 import { Event } from "../../types/Event";
@@ -33,7 +33,8 @@ const initialState: SearchResultsState2 = {
   isAssociationsStepOpen: false,
   associatedPlaces: [],
   associatedEvents: [],
-  addItemWindowMinimized: null
+  addItemWindowMinimized: null,
+  addItemProgressState: null
 };
 
 export const searchResultsSlice = createSlice({
@@ -137,14 +138,14 @@ export const searchResultsSlice = createSlice({
         state.associatedPlaces = [...state.associatedPlaces, action.payload.newItem];
       }
     },
-    modifyAssociatedEvents: (state, action: PayloadAction<{newItem: InventoryAssociationType | null, removeId: number | null}>) => {
+    modifyAssociatedEvents: (state, action: PayloadAction<{newItem: InventoryAssociationType_Event | null, removeId: string | null}>) => {
 
       // remove flow
       if (
         !action.payload.newItem &&
-        (action.payload.removeId || action.payload.removeId === 0)
+        (action.payload.removeId)
       ) {
-        state.associatedEvents = state.associatedEvents.filter(item => item.id !== action.payload.removeId)
+        state.associatedEvents = state.associatedEvents.filter(item => Number(item.id) !== Number(action.payload.removeId))
       }
 
       // add flow
@@ -161,6 +162,9 @@ export const searchResultsSlice = createSlice({
     },
     toggleAddItemWindowMinimized: (state, action: PayloadAction<boolean | null>) => {
       state.addItemWindowMinimized = action.payload;
+    },
+    storeAddItemProgressState: (state, action: PayloadAction<addItemProgressPayload | null>) => {
+      state.addItemProgressState = action.payload;
     },
   },
 });
@@ -193,7 +197,8 @@ export const {
   toggleAssociationsStepOpen,
   modifyAssociatedPlaces,
   modifyAssociatedEvents,
-  toggleAddItemWindowMinimized
+  toggleAddItemWindowMinimized,
+  storeAddItemProgressState
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

@@ -2,13 +2,13 @@ import dayjs from "dayjs";
 import styled from "styled-components";
 import { StyledAntTable } from "../../components/StyledAntTable";
 import { MediaAssociates2, Place, PlaceApi } from "../../types/Place";
-import { InventoryAssociationType, tabNameProps } from "../../types/SearchResultsTabsProps";
+import { InventoryAssociationType, InventoryAssociationType_Event, tabNameProps } from "../../types/SearchResultsTabsProps";
 import * as Yup from 'yup';
 import { ColumnType } from "antd/lib/table";
 import { Event } from "../../types/Event";
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://b159-117-251-211-219.ngrok.io`;
+// export const baseUrl = `https://9fc5-117-214-58-33.in.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -372,6 +372,15 @@ export const isRecordAttached = (record: Place | Event , list: Array<InventoryAs
   
   return list.some(item => {
     return (item.id === parseInt(record.id))
+  })
+
+}
+export const isEventRecordAttached = (record: Place | Event , list: Array<InventoryAssociationType_Event>, type: string = '') => {
+
+  if (!list || !record) return false
+  
+  return list.some(item => {
+    return (parseInt(item.id) === parseInt(record.id))
   })
 
 }

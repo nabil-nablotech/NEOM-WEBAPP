@@ -10,7 +10,7 @@ const MoreOptionsComponent = ({
     dispatch,
     setEdit
 }: {
-    id: string;
+    id: string | number;
     record: Event;
     dispatch: any
     setEdit: (payload: Event) => void
