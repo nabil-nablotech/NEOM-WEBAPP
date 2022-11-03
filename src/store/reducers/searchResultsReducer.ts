@@ -34,7 +34,8 @@ const initialState: SearchResultsState2 = {
   associatedPlaces: [],
   associatedEvents: [],
   addItemWindowMinimized: null,
-  addItemProgressState: null
+  addItemProgressState: null,
+  isAssociationsIconsDisabled: false
 };
 
 export const searchResultsSlice = createSlice({
@@ -115,6 +116,9 @@ export const searchResultsSlice = createSlice({
     },
     toggleAssociationsStepOpen: (state, action: PayloadAction<boolean>) => {
       state.isAssociationsStepOpen = action.payload;
+    },
+    toggleAssociationsIconDisabled: (state, action: PayloadAction<boolean>) => {
+      state.isAssociationsIconsDisabled = action.payload;
     },
     modifyAssociatedPlaces: (state, action: PayloadAction<{newItem: InventoryAssociationType | null, removeId: number | null}>) => {
 
@@ -198,7 +202,8 @@ export const {
   modifyAssociatedPlaces,
   modifyAssociatedEvents,
   toggleAddItemWindowMinimized,
-  storeAddItemProgressState
+  storeAddItemProgressState,
+  toggleAssociationsIconDisabled
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

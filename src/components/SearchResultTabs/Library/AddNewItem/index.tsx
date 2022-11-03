@@ -21,7 +21,7 @@ import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setAddNewItemWindowType, storeAddItemProgressState, toggleAddItemWindowMinimized, toggleAssociationsStepOpen, toggleNewItemWindow, toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, storeAddItemProgressState, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleNewItemWindow, toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import { useFormik } from "formik";
@@ -200,6 +200,7 @@ const StepContent = ({
                   position: 'relative',
                   top: '3px',
                 }}
+                className="remove-motion"
                 onClick={e => {
                   
                 }}
@@ -291,6 +292,12 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
 
     if (activeStep >= 1) {
       dispatch(toggleAssociationsStepOpen(true));
+
+      if(activeStep > 1) {
+        dispatch(toggleAssociationsIconDisabled(true));
+      } else  {
+        dispatch(toggleAssociationsIconDisabled(false));
+      }
     } else {
       dispatch(toggleAssociationsStepOpen(false));
     }
