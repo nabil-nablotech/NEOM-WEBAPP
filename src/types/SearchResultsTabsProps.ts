@@ -112,11 +112,11 @@ export type addItemProgressStateType = {
   activeStep :number,
   formData: {
     place: string
-    eventDate: Date
-    recordingTeam: string
-    siteDescription: string
-    fieldNarrative: string
-    siteType: string
+    eventDate?: Date
+    recordingTeam?: string
+    siteDescription?: string
+    fieldNarrative?: string
+    siteType?: string
     keywords: Array<string>,
   }
 }

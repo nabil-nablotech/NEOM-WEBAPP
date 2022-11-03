@@ -191,7 +191,6 @@ const useLibrary = () => {
 
   const setEdit = async (payload: any) => {
     if (payload) {
-      console.log('payload-----------', payload);
       const payloadRes = await mediaDetails(payload.attributes.uniqueId);
       dispatch(setTabData(payloadRes));
       dispatch(setTabEdit(true));

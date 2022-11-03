@@ -6,7 +6,8 @@ import {
   Stepper,
   Typography,
   StepButton,
-  Chip
+  Chip,
+  Grid
 } from "@mui/material";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -320,7 +321,6 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       handleHide()
       dispatch(toggleNewItemWindow(false))
     }
-
     if (edit && create && data) {
       create({
         ...data,
@@ -328,6 +328,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       handleHide();
       dispatch(toggleNewItemWindow(false));
     }
+
     setSkipped(newSkipped);
   };
 
@@ -372,11 +373,10 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   const formik = useFormik({
     initialValues: {
       place: "",
-      eventDate: new Date(),
-      recordingTeam: "",
-      siteDescription: "",
-      fieldNarrative: "",
-      siteType: "",
+      title: edit ? tabData?.title : '',
+      description: edit ? tabData?.description: "",
+      referenceUrl: edit ? tabData?.referenceUrl: "",
+      citation: edit ? tabData?.citation: "",
       keywords: [],
     },
     onSubmit: (values) => {
@@ -445,7 +445,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
               component="h4"
               style={{}}
             >
-              Add Library
+              {edit ? "Edit" : "Add"} Library
             </Typography>
             <Stepper
               activeStep={activeStep}
@@ -508,10 +508,29 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
                 paddingInline: 0,
               }}
             />
-            <Button
+            {/* <Button
               label={activeStep === steps.length - 1 ? "Add" : "Next"}
               type="submit"
-            />
+            /> */}
+            <Grid item display={"flex"}>
+              {!edit && (
+                <Button
+                  label={activeStep === steps.length - 1 ? "Add" : "Next"}
+                  type="submit"
+                  disabled={!(formik.values.title.trim().length > 0 && formik.values.description.trim().length > 0)}
+                />
+              )}
+              {edit && activeStep !== steps.length - 1 && (
+                <Button
+                  colors={["#fff", "var(--table-black-text)", "none"]}
+                  label={"Next"}
+                  onClick={(
+                    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                  ) => handleNext(e, undefined)}
+                />
+              )}
+              {edit && <Button label={"Update"} type="submit" />}
+            </Grid>
           </Box>
         </Box>
       </form>
