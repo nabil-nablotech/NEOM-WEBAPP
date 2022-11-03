@@ -132,6 +132,9 @@ const EventDetailsPage = () => {
 
     const {loading: eventLoading, data: eventDetails, setEdit} = useEventDetails();
 
+    let selectedPlaceObjIndex: number = 0
+    let selectedPlaceObj: Place = places[0]
+    
     useEffect(() => {
         // if (eventDetails) {
         //     dispatch(setActiveEventItem(eventDetails))
