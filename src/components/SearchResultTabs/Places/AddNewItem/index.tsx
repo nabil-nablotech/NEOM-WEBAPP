@@ -1,4 +1,4 @@
-import { Box, Button as DefaultButton, Step, StepLabel, Stepper, Typography, Chip, StepButton } from '@mui/material';
+import { Box, Grid, Button as DefaultButton, Step, StepLabel, Stepper, Typography, Chip, StepButton } from '@mui/material';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AddNewItemProps, StepContentTypes } from '../../../../types/CustomDrawerTypes';
@@ -340,7 +340,7 @@ const StepContent = ({
                             gap: '5px'
                         }}>
                             {
-                                formik.values.keywords.map((item: string, index: any) => (
+                                formik.values.keywords?.map((item: string, index: any) => (
                                     <Chip key={index} size="small" variant="outlined" label={item}
                                         deleteIcon={<CloseIcon fontSize="small" />}
                                         onDelete={e => {
@@ -368,6 +368,8 @@ const AddNewPlace = ({
 
     const { showAddSuccess } = useSelector((state: RootState) => state.searchResults);
     const { options } = useSelector((state: RootState) => state.refinedSearch);
+
+    const { edit, tabData } = useSelector((state: RootState) => state.tabEdit);
 
     const [activeStep, setActiveStep] = useState(0);
     const [formState, setFormState] = useState({
@@ -402,15 +404,22 @@ const AddNewPlace = ({
 
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
-        if (activeStep + 1 === steps.length) {
-            if (create) {
+        if (activeStep + 1 === steps.length && data) {
+            if (create && !edit) {
                 create({
-                    ...data
+                  ...data,
                 });
-            }
+              }
             onHide()
             dispatch(toggleNewItemWindow(false))
         }
+        if (edit && create && data) {
+            create({
+              ...data,
+            });
+            onHide();
+            dispatch(toggleNewItemWindow(false));
+          }
 
         setSkipped(newSkipped);
     };
@@ -452,21 +461,21 @@ const AddNewPlace = ({
 
     const formik = useFormik({
         initialValues: {
-            placeNumber: '',
-            placeNameEnglish: '',
-            placeNameArabic: '',
-            siteDescription: '',
-            siteType: [],
-            period: [],
-            stateOfConservation: '',
-            risk: '',
-            tourismValue: '',
-            researchValue: '',
-            artifacts: '',
-            recommendation: '',
-            latitude: null,
-            longitude: null,
-            keywords: []
+            placeNumber: edit ? tabData.placeNumber : '',
+            placeNameEnglish: edit ? tabData?.placeNameEnglish : '',
+            placeNameArabic: edit ? tabData?.placeNameArabic : '',
+            siteDescription: edit ? tabData?.siteDescription : '',
+            siteType: (edit && tabData?.siteType) ? tabData?.siteType : [],
+            period: (edit && tabData?.period) ? tabData?.period : [],
+            stateOfConservation: edit && tabData?.stateOfConservation?.length > 0 ? tabData?.stateOfConservation[0] : '',
+            risk: edit && tabData?.risk?.length > 0 ? tabData?.risk[0] : '',
+            tourismValue: edit && tabData?.tourismValue.length > 0 ? tabData?.tourismValue[0] : '',
+            researchValue: edit && tabData?.researchValue?.length > 0 ? tabData?.researchValue[0] : '',
+            artifacts: (edit && tabData?.artifacts?.length > 0) ? tabData?.artifacts[0] : '',
+            recommendation: edit ? tabData?.recommendation[0] : '',
+            latitude: edit ? tabData?.latitude : null,
+            longitude: edit ? tabData?.longitude : null,
+            keywords: (edit && tabData?.keywords) ? tabData?.keywords : [],
         },
         validate: values => {
             if (!values.placeNumber) {
@@ -505,7 +514,7 @@ const AddNewPlace = ({
                         </Box>
                         <Typography className={`${styles['add-title']}`} variant="h4" component="h4" style={{
                         }}>
-                            Add Place
+                            {edit ? "Edit" : "Add"} Place
                         </Typography>
                         <Stepper activeStep={activeStep} alternativeLabel
                             className={`${styles['stepper']}`}
@@ -567,11 +576,26 @@ const AddNewPlace = ({
                                 paddingInline: 0
                             }}
                         />
-                        <Button
+                         <Grid item display={"flex"}>
+                        {!edit &&<Button
                             label={activeStep === steps.length - 1 ? 'Add' : 'Next'}
                             type="submit"
                             disabled={!(formik.values.placeNumber.length > 0)}
-                        />
+                        />}
+                        {edit && activeStep !== steps.length - 1 && (
+                <Button
+                  colors={["#fff", "var(--table-black-text)", "none"]}
+                  label={"Next"}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => handleNext(e, undefined)}
+                />
+                            )}
+                            {edit && (
+                                <Button
+                                label={"Update"}
+                                type="submit"
+                                />
+                            )}
+              </Grid>
                     </Box>
                 </Box>
             </form>

@@ -1,12 +1,14 @@
-import {useQuery} from '@apollo/client';
+import {useQuery, useMutation} from '@apollo/client';
 import { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import { useLocation, useParams } from 'react-router-dom';
-import { library } from "../query/library";
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import { addLibrary, library, updateLibrary } from "../query/library";
+import { createMediaAssociate } from '../query/mediaAssociate';
 import { RootState } from '../store';
-import {setLibrary, setLibraryMetaData, setSearchText} from '../store/reducers/searchResultsReducer';
+import {setLibrary, setLibraryMetaData, setSearchText, toggleShowAddSuccess} from '../store/reducers/searchResultsReducer';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
-import {limit, getQueryObj} from '../utils/services/helpers';
+import {limit, getQueryObj, webUrl, generateUniqueId} from '../utils/services/helpers';
+import { graphQlHeaders } from '../utils/services/interceptor';
 
 const useLibrary = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
@@ -15,9 +17,15 @@ const useLibrary = () => {
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
   );
+
+  const { edit, tabData } = useSelector(
+    (state: RootState) => state.tabEdit
+  );
+
   const {search} = useLocation();
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // const searchParams = decodeURIComponent(search).replace('?search=', '');
@@ -34,6 +42,11 @@ const useLibrary = () => {
     await dispatch(setLibrary([]));
     await dispatch(setLibraryMetaData(null));
   };
+
+  const [createLibraryMutation, { loading: addLoading, error: addErr, data: addData }] = useMutation(addLibrary, graphQlHeaders());
+  const [updateLibraryMutation, { loading:updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateLibrary, graphQlHeaders());
+  const [createMediaAssociateMutation, { loading: mediaAssociateload, error: mediaAssociateErr, data: mediaAssociate }] = useMutation(createMediaAssociate, graphQlHeaders());
+
 
   /**
    * fetch places with two words
@@ -58,6 +71,29 @@ const useLibrary = () => {
         data?.medias.meta.pagination.page);
     }
   }, [data])
+
+  useEffect(() => {
+    if (addData) {
+      // createMediaAssociateMutation({variables: {
+      //   "place_unique_id": place?.id,
+      //   "visit_unique_id": data.createVisit.data.id
+      // media_unique_id: addData.createMedia.data.id
+      // }});
+      dispatch(toggleShowAddSuccess(true))
+
+      /** re-direct */
+      // navigate(`/search-results/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true})
+      navigate(`/search-results/Library`, {replace: true})
+    }
+
+    if(mediaAssociate) {
+      dispatch(toggleShowAddSuccess(true))
+
+      /** re-direct */
+      navigate(`/search-results/Library`, {replace: true})
+
+    }
+  }, [addData, mediaAssociate])
   
   const fetchData = (skip: number = libItem.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);
@@ -86,12 +122,42 @@ const useLibrary = () => {
     }
   };
  
+  const createLibrary = async (payload: any | undefined) => {
+    const uniqueId = generateUniqueId();
+    const keywords = payload.keywords;
+    const data = {
+      ...payload,
+      visitNumber: parseFloat(payload.visitNumber),
+
+      asset_config_id: 1,
+      keywords: keywords,
+      siteType: payload.siteType && payload.siteType,
+      "latitude": payload.latitude && parseFloat(payload.latitude),
+      "longitude": payload.longitude && parseFloat(payload.longitude),
+      "categoryType": payload.categoryType && [payload.categoryType],
+    }
+    if (!edit) {
+      data.uniqueId = uniqueId;
+      data.visitUIPath = `${webUrl}/search-results/Events/${uniqueId}`;
+      createLibraryMutation({variables: data})
+    }
+    // if (edit && tabData?.id) {
+    //   updateLibraryMutation({
+    //     variables: {
+    //       ...data,
+    //       id: event.id
+    //     }
+    //   })
+    // }
+  }
+
   return {
     loading,
     error,
     data,
     hasMoreData,
-    fetchLibraryItems: fetchData
+    fetchLibraryItems: fetchData,
+    createLibrary
   };
 };
 

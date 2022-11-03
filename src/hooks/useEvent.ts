@@ -11,7 +11,7 @@ import {
   setEventMetaData,
   setSearchText,
   toggleShowAddSuccess,
-  toggleNewItemWindow, setAddNewItemWindowType
+  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess
 } from "../store/reducers/searchResultsReducer";
 import {setEventEdit, setPlaces, setEventData} from '../store/reducers/eventReducer';
 import {limit, getQueryObj, generateUniqueId, webUrl, EVENTS_TAB_NAME} from '../utils/services/helpers';
@@ -104,14 +104,6 @@ const useEvent = () => {
         "visit_unique_id": data.createVisit.data.id
       }});
     }
-
-    if(data) {
-      dispatch(toggleShowAddSuccess(true))
-
-      /** re-direct */
-      navigate(`/search-results/Events/${data.createVisit.data.attributes.uniqueId}`, {replace: true})
-
-    }
   }, [data])
 
   useEffect(() => {
@@ -119,7 +111,7 @@ const useEvent = () => {
       fetchData(0);
       if (edit) {
         dispatch(setEventEdit(false))
-        // dispatch(toggleShowAddSuccess(true))
+        dispatch(toggleShowEditSuccess(false))
 
         /** re-direct */
         navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, {replace: true})
@@ -130,10 +122,10 @@ const useEvent = () => {
 
   useEffect(() => {
     if (visitAssociate) {
-      updateEventMuation({variables: {
-        id: Number(data.createVisit.data.id),
-        visit_associate: Number(visitAssociate.createVisitAssociate.data.id)
-      }});
+      dispatch(toggleShowAddSuccess(true))
+
+      /** re-direct */
+      navigate(`/search-results/Events/${data.createVisit.data.attributes.uniqueId}`, {replace: true})
     }
   }, [visitAssociate])
 
@@ -237,7 +229,6 @@ const useEvent = () => {
       createEventMuation({variables: data})
     }
     if (edit && event?.id) {
-      // data.visitUIPath = `${webUrl}/search-results/Events/${payload.uniqueId}`;
       updateEventMuation({
         variables: {
           ...data,
@@ -272,6 +263,15 @@ const useEvent = () => {
     }
   };
 
+  const deleteEvent = async (id: number) => {
+    updateEventMuation({
+      variables: {
+        id: id,
+        deleted: true
+      }
+    })
+  }
+
   return {
     loading: refineLoading,
     error: refineErrorData,
@@ -280,9 +280,10 @@ const useEvent = () => {
     hasMoreData,
     fetchEvents: fetchData,
     clearSearch: clearTextSearch,
-    createEvent: createEvent,
+    createEvent,
     setSearchValue,
     setEdit,
+    deleteEvent
   };
 };
 

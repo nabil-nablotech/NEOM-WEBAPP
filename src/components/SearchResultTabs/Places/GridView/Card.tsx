@@ -10,6 +10,7 @@ import MoreIcon from "../../../../assets/images/searchResults/MoreMenu.svg";
 import {baseUrl} from "../../../../utils/services/helpers";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
+import MoreOptionsComponent from "../ListView/MoreOption";
 
 export const Card = ({
   img,
@@ -17,24 +18,10 @@ export const Card = ({
   subTitle,
   dateString,
   period,
+  setEdit,
+  record
 }: GridViewCard_Places) => {
 
-  const menuItems = [
-    {
-      label: "Share",
-      action: () => { },
-    },
-    {
-      label: "Edit",
-      action: () => {
-      },
-    },
-    {
-      label: "Delete",
-      action: () => {
-      },
-    },
-  ]
 
   return (
     <>
@@ -79,10 +66,16 @@ export const Card = ({
               className={`${gridStyles["more-icon-span"]}`}
               component={"span"}
             >
-              <CustomMoreOptionsComponent
-                moreIconClassName={`${gridStyles["more-icon"]}`}
-                menuActions={menuItems}
-              />
+             <Box
+                className={`${gridStyles["more-icon"]}`}
+                component={"span"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log('click on more')
+                }}
+              >
+                <MoreOptionsComponent setEdit={setEdit} record={record} />
+              </Box>
             </Box>
           </Grid>
         </Grid>

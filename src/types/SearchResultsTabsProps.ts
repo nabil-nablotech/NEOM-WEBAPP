@@ -23,6 +23,16 @@ export interface TabPanelProps {
 
 export type tabNameProps = "Places" | "Events" | "Library" | "Media";
 
+export type GridViewCard_Media = {
+  itemIndex?: number;
+  img?: string;
+  title: string;
+  subTitle: string;
+  dateString: string;
+  period?: string[] | null;
+  onClick?: ((e: React.MouseEvent<Element, React.MouseEvent>) => void) &
+    React.MouseEvent<Element, React.MouseEvent>;
+};
 export type GridViewCard_Places = {
   itemIndex?: number;
   img?: string;
@@ -32,6 +42,8 @@ export type GridViewCard_Places = {
   period?: string[] | null;
   onClick?: ((e: React.MouseEvent<Element, React.MouseEvent>) => void) &
     React.MouseEvent<Element, React.MouseEvent>;
+  setEdit: (payload: Place) => void;
+  record: Place
 };
 export type GridViewCard_Events = {
   // key?: number
@@ -46,6 +58,13 @@ export type GridViewCard_Events = {
   id: string;
   dispatch: any
 };
+
+export type InventoryAssociationType = {
+  id: number
+  placeNameEnglish: string
+  placeNameArabic: string
+  placeNumber: string | null
+}
 
 export type SearchResultsState2 = {
   selectedCardIndex: number;
@@ -63,6 +82,7 @@ export type SearchResultsState2 = {
   activeTab: tabNameProps | "";
   newItemWindowOpen: boolean;
   showAddSuccess: boolean;
+  showEditSuccess: boolean;
   activePlaceItem: Place | null;
   activePlaceItemIndex: number;
   activeEventItem: EventApi | null;
@@ -72,8 +92,8 @@ export type SearchResultsState2 = {
   isOpenGalleryView: boolean
   addNewItemWindowType: tabNameProps | null
   isAssociationsStepOpen: boolean
-  associatedPlaces: Place[] | []
-  associatedEvents: Event[]
+  associatedPlaces: InventoryAssociationType[] | []
+  associatedEvents: InventoryAssociationType[] | []
   addItemWindowMinimized: boolean | null
 };
 
@@ -133,4 +153,5 @@ export type DetachedIconTypes ={
   className?: string
   style?: React.CSSProperties
   onClick: (e: React.MouseEvent<HTMLImageElement>) => void
+  shouldShowAttachIcon?: boolean
 }

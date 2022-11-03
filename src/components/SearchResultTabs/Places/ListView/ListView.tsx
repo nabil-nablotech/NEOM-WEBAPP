@@ -5,7 +5,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { User } from "../../../../types/User";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
-import { antTablePaginationCss, DETACH_ICON_CLASSNAME, shouldAddAtttachColumnHeader } from '../../../../utils/services/helpers';
+import { antTablePaginationCss, DETACH_ICON_CLASSNAME, isRecordAttached, shouldAddAtttachColumnHeader } from '../../../../utils/services/helpers';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
@@ -16,6 +16,8 @@ import { RootState } from "../../../../store";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import { useDispatch } from "react-redux";
 import { modifyAssociatedPlaces } from "../../../../store/reducers/searchResultsReducer";
+import MoreOptionsComponent from './MoreOption';
+import { InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
  
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -115,42 +117,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
   ${antTablePaginationCss}
 `;
 
-const MoreOptionsComponent = ({ record, id }: { id: number; record: User }) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (e: any) => {
-    setAnchorEl(e.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const showRecoveryLink = record.recoveryToken;
-  return (
-    <>
-      <div className="">
-        <MoreHorizIcon className="more-menu-div" />
-      </div>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-      >
-        <MenuItem key={1}>Menu 1</MenuItem>
-        <MenuItem key={2}>Menu 2</MenuItem>
-      </Menu>
-    </>
-  );
-};
-
 function displayMultiple(value: any, index: number, key: string) { return value[key].data.map((x: FieldOption) => `${x.attributes.translation.data.attributes.locale[0].value}; `) }
-
-
-
 
 const ListView = (props: PlacesProps) => {
 
@@ -236,15 +203,24 @@ const ListView = (props: PlacesProps) => {
           key: "action",
           fixed: 'right',
           className: 'more-menu-ant-cell',
-          render: (value: any, record: User) => (
-              <MoreOptionsComponent id={record.id} record={record} />
+          render: (value: any, record: Place) => (
+              <MoreOptionsComponent setEdit={props.setEdit} record={record} />
           ),
       },
   ])
 
 
   const handleAttachClick = (e:any, record: Place) => {
-    dispatch(modifyAssociatedPlaces([...associatedPlaces, record]))
+    const data: InventoryAssociationType = {
+      id: Number(record.id),
+      placeNameEnglish: record.attributes.placeNameEnglish,
+      placeNameArabic: record.attributes.placeNameArabic,
+      placeNumber: record.attributes.placeNumber,
+    }
+    dispatch(modifyAssociatedPlaces({
+      newItem: data,
+      removeId: null
+    }))
   }
 
   const attachIconColumnHeader: any = useMemo(() => ({
@@ -261,13 +237,13 @@ const ListView = (props: PlacesProps) => {
             position: 'relative',
             top: '3px',
           }}
+          shouldShowAttachIcon={isRecordAttached(record, associatedPlaces)}
           onClick={e => {
-            handleAttachClick(e, record)
           }}
         />
       </Box>
     }
-  }), [associatedPlaces]
+  }), [associatedPlaces.length]
   )
 
     const {data, hasMoreData, fetchData, loading} = props;
@@ -282,6 +258,24 @@ const ListView = (props: PlacesProps) => {
         }
  
     }, []);
+
+    /** Effect needed to refresh the headers, 
+     * when associations have changed.
+     */
+    useEffect(() => {
+      setTableHeaderJson(state => state.filter(item => {
+        return shouldAddAtttachColumnHeader(item)
+      }))
+
+      setTableHeaderJson(state => {
+        let newState = [...state]
+        if(newState.every(item => shouldAddAtttachColumnHeader(item))) {
+          newState = [attachIconColumnHeader , ...state]
+        }
+
+        return newState 
+      })
+    }, [associatedPlaces]);
 
     useEffect(() => {
 
@@ -332,17 +326,17 @@ const ListView = (props: PlacesProps) => {
                         background: "transparent",
                     }}
                     onRow={(record: any, rowIndex) => {
-                        return {
-                          onClick: (event: React.MouseEvent<HTMLElement>) => {
-                            const target = event.target as Element;
-                            const clsList = target.classList 
+                      return {
+                        onClick: (event: React.MouseEvent<HTMLElement>) => {
+                          const target = event.target as Element;
+                          const clsList = target.classList
 
-                            if([...clsList].includes(DETACH_ICON_CLASSNAME)) {
-                              handleAttachClick(event, record)
-                            }
-                          }, // click row
-                        };
-                      }}
+                          if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
+                            handleAttachClick(event, record)
+                          }
+                        }, // click row
+                      };
+                    }}
                 />
             </InfiniteScroll>
         </Box>

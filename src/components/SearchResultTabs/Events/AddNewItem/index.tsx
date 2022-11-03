@@ -114,7 +114,7 @@ const StepContent = ({
               className={`${styles["custom-search-field"]}`}
               label="Search Place*"
               placeholder="Search Place*"
-              value={formik.values.place}
+              value={formik.values.place || ''}
               // defaultValue={formik.}
               handleClear={() => {}}
               itemsList={places || []}
@@ -446,9 +446,8 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
   const { showAddSuccess } = useSelector(
     (state: RootState) => state.searchResults
   );
-  const { edit, event } = useSelector((state: RootState) => state.event);
+  const { edit, event, places } = useSelector((state: RootState) => state.event);
   const { options } = useSelector((state: RootState) => state.refinedSearch);
-  const { places } = useSelector((state: RootState) => state.event);
 
   const [activeStep, setActiveStep] = useState(0);
 
@@ -540,7 +539,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
 
   const formik = useFormik({
     initialValues: {
-      place: edit ? event?.visit_associate?.place_unique_id : '',
+      place: (edit && event?.visit_associate && event?.visit_associate?.place_unique_id) ? event?.visit_associate?.place_unique_id : {},
       eventDate:
         edit && event.visitDate ? new Date(event.visitDate) : undefined,
       recordingTeam: edit ? event?.recordingTeam : "",
@@ -721,13 +720,6 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
                 <Button
                   colors={["#fff", "var(--table-black-text)", "none"]}
                   label={"Next"}
-                  // type="submit"
-                  // disabled={
-                  //   !(
-                  //     formik.values?.visitNumber?.length > 0 &&
-                  //     formik.values.place
-                  //   )
-                  // }
                   onClick={handleNext}
                 />
               )}

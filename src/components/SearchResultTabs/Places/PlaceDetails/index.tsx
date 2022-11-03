@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Box, Button, Grid } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
+import { InventoryAssociationType, tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import styles from './index.module.css'
 import gridStyles from '../GridView/index.module.css'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
@@ -15,7 +15,7 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
-import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, checkIsNew } from "../../../../utils/services/helpers";
+import { antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, checkIsNew, isRecordAttached, isInventoryDetailAttached } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
@@ -25,7 +25,7 @@ import useMedia from "../../../../hooks/useMedia";
 import CommentsSection from "../../../CommentsSection";
 import RenderInitials from "../../../RenderInitials";
 import { useDispatch } from "react-redux";
-import { setActiveEventItem, setActiveEventItemIndex, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../../store/reducers/searchResultsReducer";
+import { modifyAssociatedPlaces, setActiveEventItem, setActiveEventItemIndex, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
 import usePlace from "../../../../hooks/usePlace";
@@ -36,6 +36,8 @@ import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
 import NoTextPresent from "../../../NoDataScreens/NoText";
 import {isEmpty} from 'lodash'
 import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
+import DetachedIcon from "../../../Icons/DetachedIcon";
+import MoreOption from '../ListView/MoreOption'
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -125,7 +127,7 @@ const PlaceDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
     const navigate = useNavigate();
 
-    const { places, library, events, media } = useSelector(
+    const { places, library, events, media, isAssociationsStepOpen, associatedPlaces } = useSelector(
         (state: RootState) => state.searchResults
     );
     const { data } = useSelector((state: RootState) => state.login);
@@ -339,7 +341,7 @@ const PlaceDetailsPage = () => {
     ];
 
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
-    const { loading: placeLoading, error, data: placeData } = usePlaceDetails();
+    const { loading: placeLoading, error, data: placeData, setEdit } = usePlaceDetails();
     // const { mapEvents } = usePlace();
 
     const dispatch = useDispatch()
@@ -382,8 +384,7 @@ const PlaceDetailsPage = () => {
         placeUIPath, media_associates, libraryItems, visit_associates,
     } = placeData
     
-    const {latitude, longitude} = placeData
-
+    const {latitude, longitude} = placeData;
     return (
         <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -590,9 +591,33 @@ const PlaceDetailsPage = () => {
                             <Grid item className={`${styles['title-section-grid']}`}>
                                 <Box component="div" className={`${styles['more-icon-box']}`}
                                 >
-                                    <CustomMoreOptionsComponent
-                                        menuActions={menuItems}
-                                    />
+                                    {isAssociationsStepOpen ?
+                                        <DetachedIcon
+                                            style={{
+                                                // height: '18px',
+                                                // position: 'relative',
+                                                // top: '3px',
+                                            }}
+                                            shouldShowAttachIcon={isInventoryDetailAttached(placeData, associatedPlaces)}
+                                            onClick={e => {
+                                                const data: InventoryAssociationType = {
+                                                    id: Number(placeData.id),
+                                                    placeNameEnglish: placeData.placeNameEnglish,
+                                                    placeNameArabic: placeData.placeNameArabic,
+                                                    placeNumber: placeData.placeNumber,
+                                                }
+
+                                                dispatch(modifyAssociatedPlaces({
+                                                    newItem: data,
+                                                    removeId: null
+                                                }))
+                                            }}
+                                        /> :
+                                        // <></>: 
+                                        <MoreOption
+                                        setEdit={setEdit}
+                                        record={placeData}
+                                        />}
                                 </Box>
                             </Grid>
                         </Grid>

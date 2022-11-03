@@ -1,6 +1,5 @@
 
 import Box from '@mui/material/Box';
-import { GridViewCard_Places } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'
 import commonStyles from '../../index.module.css'
 import { Grid } from '@mui/material';

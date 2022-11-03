@@ -1,19 +1,14 @@
 import { useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { Event } from '../../../../types/Event';
-import { setEventData, setEventEdit } from '../../../../store/reducers/eventReducer';
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";  
+import { Place } from '../../../../types/Place';
 
 const MoreOptionsComponent = ({
     record,
-    id,
-    dispatch,
     setEdit
 }: {
-    id: string;
-    record: Event;
-    dispatch: any
-    setEdit: (payload: Event) => void
+    record: any;
+    setEdit: (payload: Place) => void
 }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
@@ -60,7 +55,5 @@ const MoreOptionsComponent = ({
 };
 
 export default MoreOptionsComponent;
-function setEditEvent(arg0: boolean): any {
-    throw new Error('Function not implemented.');
-}
+
 

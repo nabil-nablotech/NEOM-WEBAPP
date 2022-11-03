@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SearchResultsState2, tabNameProps } from "../../types/SearchResultsTabsProps";
+import { InventoryAssociationType, SearchResultsState2, tabNameProps } from "../../types/SearchResultsTabsProps";
 import { DashboardResponse } from "../../types/dashboard";
 import { Place, Meta } from "../../types/Place";
 import { Event } from "../../types/Event";
@@ -21,6 +21,7 @@ const initialState: SearchResultsState2 = {
   activeTab: '',
   newItemWindowOpen: false,
   showAddSuccess: false,
+  showEditSuccess: false,
   activePlaceItem: null,
   activePlaceItemIndex: 0,
   activeEventItem: null,
@@ -81,6 +82,9 @@ export const searchResultsSlice = createSlice({
     toggleShowAddSuccess: (state, action: PayloadAction<boolean>) => {
       state.showAddSuccess = action.payload;
     },
+    toggleShowEditSuccess: (state, action: PayloadAction<boolean>) => {
+      state.showEditSuccess = action.payload;
+    },
     setActiveMediaItem: (state, action: PayloadAction<Object | any>) => {
       state.activeMediaItem = action.payload;
     },
@@ -111,11 +115,49 @@ export const searchResultsSlice = createSlice({
     toggleAssociationsStepOpen: (state, action: PayloadAction<boolean>) => {
       state.isAssociationsStepOpen = action.payload;
     },
-    modifyAssociatedPlaces: (state, action: PayloadAction<Place[] | []>) => {
-      state.associatedPlaces = action.payload;
+    modifyAssociatedPlaces: (state, action: PayloadAction<{newItem: InventoryAssociationType | null, removeId: number | null}>) => {
+
+      // remove flow
+      if (
+        !action.payload.newItem &&
+        (action.payload.removeId || action.payload.removeId === 0)
+      ) {
+        state.associatedPlaces = state.associatedPlaces.filter(item => item.id !== action.payload.removeId)
+      }
+
+      // add flow
+      if (
+        action.payload.newItem &&
+        !action.payload.removeId
+        &&
+        (
+          state.associatedPlaces.every(item => item.id !== action.payload.newItem?.id)
+        )
+      ) {
+        state.associatedPlaces = [...state.associatedPlaces, action.payload.newItem];
+      }
     },
-    modifyAssociatedEvents: (state, action: PayloadAction<Event[] | []>) => {
-      state.associatedEvents = action.payload;
+    modifyAssociatedEvents: (state, action: PayloadAction<{newItem: InventoryAssociationType | null, removeId: number | null}>) => {
+
+      // remove flow
+      if (
+        !action.payload.newItem &&
+        (action.payload.removeId || action.payload.removeId === 0)
+      ) {
+        state.associatedEvents = state.associatedEvents.filter(item => item.id !== action.payload.removeId)
+      }
+
+      // add flow
+      if (
+        action.payload.newItem &&
+        !action.payload.removeId
+        &&
+        (
+          state.associatedEvents.every(item => item.id !== action.payload.newItem?.id)
+        )
+      ) {
+        state.associatedEvents = [...state.associatedEvents, action.payload.newItem];
+      }
     },
     toggleAddItemWindowMinimized: (state, action: PayloadAction<boolean | null>) => {
       state.addItemWindowMinimized = action.payload;
@@ -138,6 +180,7 @@ export const {
   setActiveTab,
   toggleNewItemWindow,
   toggleShowAddSuccess,
+  toggleShowEditSuccess,
   setActivePlaceItem,
   setActivePlaceItemIndex,
   setActiveEventItem,

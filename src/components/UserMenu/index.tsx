@@ -24,6 +24,8 @@ import useEvent from "../../hooks/useEvent";
 import AddNewLibraryItem from "../SearchResultTabs/Library/AddNewItem";
 import { setEventEdit } from "../../store/reducers/eventReducer";
 import AddItemCollapsedWindow from "../AddItemCollapsedWindow";
+import { setTabEdit } from "../../store/reducers/tabEditReducer";
+import useLibrary from "../../hooks/useLibrary";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -39,6 +41,7 @@ function UserMenuComponent() {
   const {newItemWindowOpen, addNewItemWindowType, addItemWindowMinimized} = useSelector((state: RootState) => state.searchResults);
   const { createPlace  } = usePlace();
   const { createEvent, setSearchValue } = useEvent();
+  const { createLibrary } = useLibrary();
 
   const open = Boolean(anchorEl);
   const admin = getRole() === 'Admin';
@@ -99,6 +102,12 @@ function UserMenuComponent() {
   const handlePlus = () => {
     dispatch(toggleNewItemWindow(!newItemWindowOpen));
     dispatch(setEventEdit(false));
+    dispatch(setTabEdit(false));
+  }
+
+  const onHide = () => {
+    dispatch(toggleAddItemWindowMinimized(true))
+    dispatch(toggleNewItemWindow(false))
   }
 
   return (
@@ -144,19 +153,19 @@ function UserMenuComponent() {
           }
           {
             addNewItemWindowType === PLACES_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewPlace create={createPlace} onHide={() => dispatch(toggleAddItemWindowMinimized(true))} />
+            <AddNewPlace create={createPlace} onHide={() => onHide()} />
           }
           {
             addNewItemWindowType === EVENTS_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewEvent create={createEvent} setSearchValue={setSearchValue} onHide={() => dispatch(toggleAddItemWindowMinimized(true))} />
+            <AddNewEvent create={createEvent} setSearchValue={setSearchValue} onHide={() => onHide()} />
           }
           {
             addNewItemWindowType === LIBRARY_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewLibraryItem onHide={() => dispatch(toggleAddItemWindowMinimized(true))} />
+            <AddNewLibraryItem create={createLibrary} onHide={() => onHide()} />
           }
           {
             addNewItemWindowType === MEDIA_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewMedia onHide={() => dispatch(toggleAddItemWindowMinimized(true))} />
+            <AddNewMedia onHide={() => onHide()} />
           }
       </CustomDrawer>
       {addNewItemWindowType && addItemWindowMinimized && <AddItemCollapsedWindow />}
