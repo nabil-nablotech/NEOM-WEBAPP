@@ -3,16 +3,16 @@ import { Menu, MenuItem } from '@mui/material';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Event } from '../../../../types/Event';
 import { setEventData, setEventEdit } from '../../../../store/reducers/eventReducer';
+import { getRole } from "../../../../utils/storage/storage";
+
+const superEditor = getRole() === 'SuperEditor';
+const editor = getRole() === 'Editor';
 
 const MoreOptionsComponent = ({
     record,
-    id,
-    dispatch,
     setEdit
 }: {
-    id: string;
     record: Event;
-    dispatch: any
     setEdit: (payload: Event) => void
 }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);

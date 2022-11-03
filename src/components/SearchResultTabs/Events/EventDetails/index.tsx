@@ -14,6 +14,7 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
+import {getRole} from '../../../../utils/storage/storage';
 import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatBytes, formatWebDate, stringAvatar,
     isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT,  } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
@@ -122,6 +123,10 @@ const StyledTableWrapper = styled(StyledAntTable)`
     }
     ${antTablePaginationCss}
 `
+
+const superEditor = getRole() === 'SuperEditor';
+const editor = getRole() === 'Editor';
+
 const EventDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
     const navigate = useNavigate();
@@ -136,13 +141,6 @@ const EventDetailsPage = () => {
 
     const {loading: eventLoading, data: eventDetails, setEdit} = useEventDetails();
 
-    useEffect(() => {
-        // if (eventDetails) {
-        //     dispatch(setActiveEventItem(eventDetails))
-        //     dispatch(setActiveEventItemIndex(0))
-        // }
-    }, [])
-
     places.forEach((placeItem: Place, inx: number) => {
         if (placeItem.attributes.uniqueId === uniqueId) {
             selectedPlaceObj = placeItem
@@ -153,9 +151,6 @@ const EventDetailsPage = () => {
     // get from api
     const [isCopyDone, setCopyDone] = useState<boolean>(false)
 
-
-    // const { fetchLibraryItems, hasMoreData, loading } = useLibrary();
-
     const {
         anchorEl,
         open,
@@ -163,7 +158,6 @@ const EventDetailsPage = () => {
         handleClose,
         handleSettingsClose
     } = useAnchor()
-
 
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
     const dispatch = useDispatch()
@@ -202,8 +196,6 @@ const EventDetailsPage = () => {
             mediaGridActiveItems + (mediaGallery?.length - mediaGridActiveItems)
         )
 
-
-    
     const {latitude, longitude} = eventDetails
 
     if (visit_associate?.place_unique_id) {
@@ -211,10 +203,6 @@ const EventDetailsPage = () => {
     }
     
     const menuItems = [
-        {
-            label: "Share",
-            action: () => { },
-        },
         {
             label: "Edit",
             action: () => {

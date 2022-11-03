@@ -67,7 +67,7 @@ export const Card = ({
                   console.log('click on more')
                 }}
               >
-                <MoreOptionsComponent setEdit={setEdit} record={record} id={id} dispatch={dispatch}  />
+                <MoreOptionsComponent setEdit={setEdit} record={record} />
               </Box>
             </Box>
           </Grid>

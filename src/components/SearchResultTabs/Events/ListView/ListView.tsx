@@ -229,7 +229,7 @@ const ListView = (props: EventsProps) => {
             className: 'more-menu-ant-cell',
             render: (value: any, record: Event) => (
 
-                <MoreOptionsComponent setEdit={props.setEdit} dispatch={dispatch} id={record.id} record={record} />
+                <MoreOptionsComponent setEdit={props.setEdit} record={record} />
             ),
         },
     ]

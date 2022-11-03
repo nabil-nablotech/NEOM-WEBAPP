@@ -161,24 +161,6 @@ const PlaceDetailsPage = () => {
     const [isMoreTitleMenuOpen, setMoreTitleMenuOpen] = useState<false>(false)
     const [isSeeMoreHidden, toggleSeeMoreHidden] = useState<boolean>(false)
     const [isCopyDone, setCopyDone] = useState<boolean>(false)
-
-    const menuItems = [
-        {
-            label: "Share",
-            action: () => { },
-        },
-        {
-            label: "Edit",
-            action: () => {
-            },
-        },
-        {
-            label: "Delete",
-            action: () => {
-            },
-        },
-    ]
-
     // const { fetchLibraryItems, hasMoreData, loading } = useLibrary();
 
     const {
