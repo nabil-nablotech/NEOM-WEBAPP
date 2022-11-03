@@ -1,7 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { EventApi, VisitIdProps } from "../../types/Event";
-import { Place } from "../../types/Place";
-import { Options } from "../../types/RefinedSeachTypes";
 
 export const initialValue = {
   stateOfConservation: [] || undefined,

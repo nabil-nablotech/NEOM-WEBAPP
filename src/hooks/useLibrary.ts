@@ -5,7 +5,7 @@ import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { addLibrary, library, updateLibrary } from "../query/library";
 import { createMediaAssociate } from '../query/mediaAssociate';
 import { RootState } from '../store';
-import {setLibrary, setLibraryMetaData, setSearchText, toggleShowAddSuccess} from '../store/reducers/searchResultsReducer';
+import {setLibrary, setLibraryMetaData, toggleShowAddSuccess} from '../store/reducers/searchResultsReducer';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
 import {limit, getQueryObj, webUrl, generateUniqueId} from '../utils/services/helpers';
 import { graphQlHeaders } from '../utils/services/interceptor';
@@ -18,7 +18,7 @@ const useLibrary = () => {
     (state: RootState) => state.refinedSearch
   );
 
-  const { edit, tabData } = useSelector(
+  const { edit } = useSelector(
     (state: RootState) => state.tabEdit
   );
 
@@ -28,10 +28,6 @@ const useLibrary = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // const searchParams = decodeURIComponent(search).replace('?search=', '');
-    // if (searchParams.length > 2) {
-    //   dispatch(setSearchText(searchParams))
-    // }
     resetLib();
     if (tabName === "Library") {
       fetchData(0);

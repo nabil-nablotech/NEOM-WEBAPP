@@ -56,11 +56,17 @@ export type GridViewCard_Events = {
   setEdit: (item: Event) => void
   record: Event;
   id: string;
-  dispatch: any
 };
 
 export type InventoryAssociationType = {
   id: number
+  placeNameEnglish: string
+  placeNameArabic: string
+  placeNumber: string | null
+}
+export type InventoryAssociationType_Event = {
+  id: string
+  visitNumber: string
   placeNameEnglish: string
   placeNameArabic: string
   placeNumber: string | null
@@ -93,9 +99,85 @@ export type SearchResultsState2 = {
   addNewItemWindowType: tabNameProps | null
   isAssociationsStepOpen: boolean
   associatedPlaces: InventoryAssociationType[] | []
-  associatedEvents: InventoryAssociationType[] | []
+  associatedEvents: InventoryAssociationType_Event[] | []
   addItemWindowMinimized: boolean | null
+  addItemProgressState: null | addItemProgressPayload
+  isAssociationsIconsDisabled: boolean
 };
+
+export type addItemProgressPayload = addItemProgressStateType | addPlaceProgressStateType | 
+  addEventProgressStateType | addMediaProgressStateType
+
+export type addItemProgressStateType = {
+  activeStep :number,
+  formData: {
+    place: string
+    eventDate: Date
+    recordingTeam: string
+    siteDescription: string
+    fieldNarrative: string
+    siteType: string
+    keywords: Array<string>,
+  }
+}
+export type addPlaceProgressStateType = {
+  activeStep :number
+  formData: {
+    placeNumber: string
+    placeNameEnglish: string
+    placeNameArabic: string
+    siteDescription: string
+    siteType: string[],
+    period: string[],
+    stateOfConservation: string
+    risk: string
+    tourismValue: string
+    researchValue: string
+    artifacts: string
+    recommendation: string
+    latitude: number | null,
+    longitude: number | null,
+    keywords: string[],
+  }
+}
+export type addEventProgressStateType = {
+  activeStep :number
+  formData: {
+    place: string,
+    eventDate: Date | undefined,
+    recordingTeam: string
+    visitNumber: string | Number | null
+    siteDescription: string
+    fieldNarrative: string
+    artifacts: string
+    latitude: Number | number | null,
+    longitude: Number | number | null,
+    assessmentType: string
+    stateOfConservation: string
+    siteType: string | never[]
+    risk: string
+    tourismValue: string
+    researchValue: string
+    recommendation: string
+    period: string[]
+    keywords: string | never[]
+  }
+}
+export type addMediaProgressStateType = {
+  activeStep :number
+  formData: {
+    mediaType: string
+    title: string
+    bearing: string
+    description: string
+    Author: string
+    categoryType: string[]
+    latitude: null,
+    longitude: null,
+    refrerenceUrl: string
+    keywords: string[]
+  }
+}
 
 export type FileDataType = {
   src?: string;

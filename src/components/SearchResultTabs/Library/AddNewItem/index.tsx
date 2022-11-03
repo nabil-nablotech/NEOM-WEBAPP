@@ -21,7 +21,7 @@ import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleAssociationsStepOpen, toggleNewItemWindow, toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, storeAddItemProgressState, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleNewItemWindow, toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import { useFormik } from "formik";
@@ -29,6 +29,7 @@ import FileUpload from "../../../Upload/FileUpload";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 import CloseIcon from '@mui/icons-material/Close';
+import AddedEvents from "../../../AssociationsList/AddedEvents";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -90,7 +91,7 @@ const StepContent = ({
   handleBack,
   formik,
 }: StepContentTypes) => {
-  const { associatedPlaces } = useSelector(
+  const { associatedPlaces, associatedEvents } = useSelector(
     (state: RootState) => state.searchResults
   );
   const [currentKeyword, setCurrentKeyword] = useState<string>('')
@@ -199,6 +200,7 @@ const StepContent = ({
                   position: 'relative',
                   top: '3px',
                 }}
+                className="remove-motion"
                 onClick={e => {
                   
                 }}
@@ -207,6 +209,9 @@ const StepContent = ({
             </Box>
             <AddedPlaces
               list={associatedPlaces}
+            />
+            <AddedEvents
+              list={associatedEvents}
             />
           </Box>
         )}
@@ -261,11 +266,11 @@ const StepContent = ({
 const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { showAddSuccess, associatedPlaces } = useSelector(
+  const { showAddSuccess, addItemProgressState, addNewItemWindowType } = useSelector(
     (state: RootState) => state.searchResults
   );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
-  const { edit, tabData } = useSelector((state: RootState) => state.tabEdit);
+  const { edit } = useSelector((state: RootState) => state.tabEdit);
 
   const [activeStep, setActiveStep] = useState(0);
   const [formState, setFormState] = useState({
@@ -287,6 +292,12 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
 
     if (activeStep >= 1) {
       dispatch(toggleAssociationsStepOpen(true));
+
+      if(activeStep > 1) {
+        dispatch(toggleAssociationsIconDisabled(true));
+      } else  {
+        dispatch(toggleAssociationsIconDisabled(false));
+      }
     } else {
       dispatch(toggleAssociationsStepOpen(false));
     }
@@ -308,7 +319,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     if (activeStep + 1 === steps.length) {
-      onHide();
+      handleHide();
       dispatch(toggleShowAddSuccess(true));
     }
 
@@ -318,7 +329,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
           ...data,
         });
       }
-      onHide()
+      handleHide()
       dispatch(toggleNewItemWindow(false))
     }
 
@@ -326,7 +337,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       create({
         ...data,
       });
-      onHide();
+      handleHide();
       dispatch(toggleNewItemWindow(false));
     }
     setSkipped(newSkipped);
@@ -337,6 +348,9 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       dispatch(toggleNewItemWindow(false))
       dispatch(setAddNewItemWindowType(null))
       dispatch(toggleAddItemWindowMinimized(null))
+
+      /** remove the data when change in add item type window occurs */
+      dispatch(storeAddItemProgressState(null))
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
@@ -382,6 +396,34 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     },
   });
 
+  useEffect(() => {
+    /** Effect needed to load history data,
+     * and remove the data when change in add item type window occurs
+     */
+    if(addItemProgressState && addItemProgressState.formData) {
+
+      setActiveStep(addItemProgressState.activeStep)
+
+      Object.keys(addItemProgressState.formData).forEach(keyName => {
+        // @ts-ignore
+        formik.setFieldValue(keyName, addItemProgressState.formData[keyName])
+      })
+    }
+
+  }, [])
+
+  const handleHide = () => {
+    onHide()
+
+    /** store data when unmounting */
+    dispatch(storeAddItemProgressState({
+      activeStep: activeStep,
+      formData: {
+        ...formik.values
+      }
+    }))
+  }
+
   return (
     <Box component="div">
       <form onSubmit={formik.handleSubmit}>
@@ -398,7 +440,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
             >
               <DefaultButton
                 variant="text"
-                onClick={(e) => onHide()}
+                onClick={(e) => handleHide()}
                 style={{
                   // paddingInline: 0,
                   minWidth: "fit-content",

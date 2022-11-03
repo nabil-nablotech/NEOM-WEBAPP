@@ -20,7 +20,11 @@ const AddItemCollapsedWindow = () => {
             component={"div"}
         >
             <Grid container className={`${styles['container']}`}>
-                <Grid item>Adding {addNewItemWindowType} item in progress</Grid>
+                <Grid item>
+                    <Box component="div">
+                        Adding {addNewItemWindowType} item <div className={`${styles['gold']}`}>In Progress</div>
+                    </Box>
+                </Grid>
                 <Grid item>
                     <Button
                         variant="text"
@@ -31,7 +35,6 @@ const AddItemCollapsedWindow = () => {
                         }}
                         style={{
                             minWidth: "fit-content",
-                            textTransform: 'unset',
                             padding: 0,
                             color: "var(--table-black-text)",
                         }}
@@ -39,7 +42,6 @@ const AddItemCollapsedWindow = () => {
                         Show
                     </Button>
                 </Grid>
-                <Grid item></Grid>
             </Grid>
 
         </Box>

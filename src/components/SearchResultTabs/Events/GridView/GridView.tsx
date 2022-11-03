@@ -80,7 +80,6 @@ const GridView = (props: EventsProps) => {
                                     handleClick={handleClick}
                                     record={item}
                                     id={item.id}
-                                    dispatch={dispatch}
                                     setEdit={setEdit}
                                 />
                             </Grid>

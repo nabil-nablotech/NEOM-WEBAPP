@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { placeDetails } from "../api/details";
 import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 import { PLACES_TAB_NAME } from "../utils/services/helpers";
@@ -9,7 +9,6 @@ import { toggleNewItemWindow, setAddNewItemWindowType } from "../store/reducers/
 import { RootState } from "../store";
 
 const usePlaceDetails = () => {
-  const { search } = useLocation();
   const { uniqueId } = useParams<{ uniqueId: string }>()
 
   const dispatch = useDispatch();

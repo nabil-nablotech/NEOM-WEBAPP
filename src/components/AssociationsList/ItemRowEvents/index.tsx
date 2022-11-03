@@ -3,26 +3,27 @@ import {
     Grid,
     Button
 } from "@mui/material";
-import { InventoryItemTypes } from "../../../types/AddItemTypes";
+import { EventInventoryItemTypes } from "../../../types/AddItemTypes";
 import styles from '../index.module.css'
 import CloseIcon from '@mui/icons-material/Close';
 
-const InventoryItem = ({
+const EventInventoryItem = ({
     item,
     handleRemoveItem
-}: InventoryItemTypes) => {
-
+}: EventInventoryItemTypes) => {
 
     return (
         <Box component="div" className={`${styles["inventory-item"]}`}>
+
             <Grid container className={`${styles['container']}`}>
                 <Grid item>{item.placeNameEnglish}</Grid>
                 <Grid item>{item.placeNameArabic}</Grid>
+                <Grid>{item.placeNumber}</Grid>
                 <Grid item className={`${styles["right-section"]}`} sx={{
-                        marginLeft: 'auto'
-                    }}>
+                    marginLeft: 'auto'
+                }}>
                     <Grid container className={`${styles['right-container']}`} >
-                        <Grid>{item.placeNumber}</Grid>
+                        <Grid>{item.visitNumber ? `Visit ${item.visitNumber}` : ''}</Grid>
                         <Grid>
                             <Button variant="text" onClick={e => handleRemoveItem(e, item.id)}
                                 style={{
@@ -41,4 +42,4 @@ const InventoryItem = ({
     );
 }
 
-export default InventoryItem;
+export default EventInventoryItem;

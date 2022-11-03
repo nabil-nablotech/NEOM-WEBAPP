@@ -72,6 +72,11 @@ const StepContent = () => {
 const AddNewItem = ({
     onClose
 }: AddNewItemPaneProps) => {
+
+    const handleClose = () => {
+        onClose()
+    }
+
     return (
         <Box component={"div"} className={`${styles['add-new-item-parent']}`}>
             <Box component="div" className={`${placeStyles['add-new-item-container']}`}>
@@ -83,7 +88,7 @@ const AddNewItem = ({
                             marginLeft: 'auto',
                             width: 'fit-content'
                         }}>
-                        <DefaultButton variant="text" onClick={e => onClose()}
+                        <DefaultButton variant="text" onClick={e => handleClose()}
                             style={{
                                 // paddingInline: 0,
                                 minWidth: 'fit-content',
@@ -114,7 +119,7 @@ const AddNewItem = ({
                         colors={["#fff", "var(--table-black-text)", "none"]}
                         className={`${placeStyles["plain-whitee-btn"]}`}
                         label={'Cancel'}
-                        onClick={e => onClose()}
+                        onClick={e => handleClose()}
                         style={{
                             paddingInline: 0
                         }}

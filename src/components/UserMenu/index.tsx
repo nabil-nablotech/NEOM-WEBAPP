@@ -11,7 +11,7 @@ import { RootState } from "../../store";
 import { getRole } from "../../utils/storage/storage";
 
 import MenuList from "../MenuList";
-import { Box } from "@mui/material";
+import { Box, LinearProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { toggleAddItemWindowMinimized, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
 import CustomDrawer from "../CustomDrawer";
@@ -26,6 +26,7 @@ import { setEventEdit } from "../../store/reducers/eventReducer";
 import AddItemCollapsedWindow from "../AddItemCollapsedWindow";
 import { setTabEdit } from "../../store/reducers/tabEditReducer";
 import useLibrary from "../../hooks/useLibrary";
+import useMedia from "../../hooks/useMedia";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -38,10 +39,11 @@ function UserMenuComponent() {
   const { clientLogout } = useLogout();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [anchorElSettings, setAnchorElSettings] = React.useState<null | HTMLElement>(null);
-  const {newItemWindowOpen, addNewItemWindowType, addItemWindowMinimized} = useSelector((state: RootState) => state.searchResults);
-  const { createPlace  } = usePlace();
+  const { newItemWindowOpen, addNewItemWindowType, addItemWindowMinimized } = useSelector((state: RootState) => state.searchResults);
+  const { createPlace } = usePlace();
   const { createEvent, setSearchValue } = useEvent();
   const { createLibrary } = useLibrary();
+  const { createMedia } = useMedia();
 
   const open = Boolean(anchorEl);
   const admin = getRole() === 'Admin';
@@ -78,9 +80,9 @@ function UserMenuComponent() {
   const menuItems = [
     {
       label: "Support",
-      handleClickMenuItem: () => {},
+      handleClickMenuItem: () => { },
       render: () => <a href="mailto: support@neomheritage.com?subject = Neom Heritage Support" rel="noreferrer" target={"_blank"}>
-      Help & Support
+        Help & Support
       </a>
     },
     {
@@ -101,7 +103,9 @@ function UserMenuComponent() {
   ]
 
   const handlePlus = () => {
-    dispatch(toggleNewItemWindow(!newItemWindowOpen));
+    if(!addItemWindowMinimized) {
+      dispatch(toggleNewItemWindow(!newItemWindowOpen));
+    }
     dispatch(setEventEdit(false));
     dispatch(setTabEdit(false));
   }
@@ -121,10 +125,24 @@ function UserMenuComponent() {
         marginLeft: 'auto',
         marginRight: '1em'
       }}>
-        {true && <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }} onClick={
-          e => handlePlus()
-        }/>}
-        {admin && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
+        <Box component={"div"}>
+          <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }} onClick={
+            e => handlePlus()
+          } />
+          {addItemWindowMinimized &&
+            <Box component={"div"} sx={{
+              '& .MuiLinearProgress-bar.MuiLinearProgress-barColorPrimary': {
+                backgroundColor: 'var(--clr-gold)',
+
+              }
+            }} >
+              <LinearProgress variant="determinate" value={50} sx={{
+                backgroundColor: 'rgba(255, 255, 255, 0.2);',
+              }} />
+            </Box>
+          }
+        </Box>
+        {true && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
         <InitialsWrapper
           id="long-button"
           //@ts-ignore
@@ -166,10 +184,14 @@ function UserMenuComponent() {
           }
           {
             addNewItemWindowType === MEDIA_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewMedia onHide={() => onHide()} />
+            <AddNewMedia create={createMedia} onHide={() => onHide()} />
           }
-      </CustomDrawer>
-      {addNewItemWindowType && addItemWindowMinimized && <AddItemCollapsedWindow />}
+        </CustomDrawer>
+        {
+          addNewItemWindowType &&
+          addItemWindowMinimized &&
+          <AddItemCollapsedWindow />
+        }
       </Box>
     </>
   );
