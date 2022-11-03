@@ -153,13 +153,13 @@ export type addEventProgressStateType = {
     longitude: Number | number | null,
     assessmentType: string
     stateOfConservation: string
-    siteType: string[]
+    siteType: string | never[]
     risk: string
     tourismValue: string
     researchValue: string
     recommendation: string
     period: string[]
-    keywords: string[]
+    keywords: string | never[]
   }
 }
 
