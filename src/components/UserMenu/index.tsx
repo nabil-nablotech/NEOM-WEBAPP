@@ -11,7 +11,7 @@ import { RootState } from "../../store";
 import { getRole } from "../../utils/storage/storage";
 
 import MenuList from "../MenuList";
-import { Box } from "@mui/material";
+import { Box, LinearProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { toggleAddItemWindowMinimized, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
 import CustomDrawer from "../CustomDrawer";
@@ -124,9 +124,23 @@ function UserMenuComponent() {
         marginLeft: 'auto',
         marginRight: '1em'
       }}>
-        <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }} onClick={
-          e => handlePlus()
-        } />
+        <Box component={"div"}>
+          <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }} onClick={
+            e => handlePlus()
+          } />
+          {addItemWindowMinimized &&
+            <Box component={"div"} sx={{
+              '& .MuiLinearProgress-bar.MuiLinearProgress-barColorPrimary': {
+                backgroundColor: 'var(--clr-gold)',
+
+              }
+            }} >
+              <LinearProgress variant="determinate" value={50} sx={{
+                backgroundColor: 'rgba(255, 255, 255, 0.2);',
+              }} />
+            </Box>
+          }
+        </Box>
         {true && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
         <InitialsWrapper
           id="long-button"

@@ -33,6 +33,8 @@ import {
   toggleNewItemWindow,
   toggleShowAddSuccess,
   toggleAssociationsStepOpen,
+  storeAddItemProgressState,
+  toggleAssociationsIconDisabled,
 } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
@@ -302,6 +304,7 @@ const StepContent = ({
                   position: "relative",
                   top: "3px",
                 }}
+                className="remove-motion"
                 onClick={(e) => {}}
               />{" "}
               to select the places and events you want to associate this library
@@ -372,7 +375,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
   const { options } = useSelector((state: RootState) => state.refinedSearch);
 
-  const { showAddSuccess } = useSelector(
+  const { showAddSuccess, addItemProgressState } = useSelector(
     (state: RootState) => state.searchResults
   );
 
@@ -401,9 +404,18 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
       dispatch(toggleShowAddSuccess(true));
     }
   }, [showAddSuccess]);
+
   useEffect(() => {
+
     if (activeStep >= 2) {
       dispatch(toggleAssociationsStepOpen(true));
+
+      if(activeStep > 1) {
+        dispatch(toggleAssociationsIconDisabled(true));
+      } else  {
+        dispatch(toggleAssociationsIconDisabled(false));
+      }
+      
     } else {
       dispatch(toggleAssociationsStepOpen(false));
     }
@@ -432,7 +444,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
           ...data,
         });
       }
-      onHide();
+      handleHide();
       dispatch(toggleShowAddSuccess(true));
       // dispatch(toggleNewItemWindow(false))
     }
@@ -445,6 +457,9 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
       dispatch(toggleNewItemWindow(false));
       dispatch(setAddNewItemWindowType(null));
       dispatch(toggleAddItemWindowMinimized(null));
+
+      /** remove the data when change in add item type window occurs */
+      dispatch(storeAddItemProgressState(null))
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
@@ -503,6 +518,34 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     },
   });
 
+  useEffect(() => {
+    /** Effect needed to load history data,
+     * and remove the data when change in add item type window occurs
+     */
+    if (addItemProgressState && addItemProgressState.formData) {
+
+      setActiveStep(addItemProgressState.activeStep)
+
+      Object.keys(addItemProgressState.formData).forEach(keyName => {
+        // @ts-ignore
+        formik.setFieldValue(keyName, addItemProgressState.formData[keyName])
+      })
+    }
+
+  }, [])
+
+  const handleHide = () => {
+    onHide()
+
+    /** store data when unmounting */
+    dispatch(storeAddItemProgressState({
+      activeStep: activeStep,
+      formData: {
+        ...formik.values
+      }
+    }))
+  }
+
   return (
     <Box component="div">
       <form onSubmit={formik.handleSubmit}>
@@ -519,7 +562,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
             >
               <DefaultButton
                 variant="text"
-                onClick={(e) => onHide()}
+                onClick={(e) => handleHide()}
                 style={{
                   // paddingInline: 0,
                   minWidth: "fit-content",
@@ -605,6 +648,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
+              gap: '1em'
             }}
           >
             <Button
@@ -617,11 +661,19 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
               }}
             />
             {activeStep > 0 && (
-              <Button
-                label="Back"
-                colors={["#fff", "var(--table-black-text)", "none"]}
-                onClick={handleBack}
-              />
+              <Box component="div" style={{
+                marginRight: 0,
+                marginLeft: 'auto',
+              }}>
+                <Button
+                  label="Back"
+                  colors={["#fff", "var(--table-black-text)", "none"]}
+                  onClick={handleBack}
+                  style={{
+                    border: '1px solid var(--table-black-text)',
+                  }}
+                />
+              </Box>
             )}
             <Grid item display={"flex"}>
               {activeStep == steps.length - 1 && (

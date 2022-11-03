@@ -105,7 +105,8 @@ export type SearchResultsState2 = {
   isAssociationsIconsDisabled: boolean
 };
 
-export type addItemProgressPayload = addItemProgressStateType | addPlaceProgressStateType | addEventProgressStateType
+export type addItemProgressPayload = addItemProgressStateType | addPlaceProgressStateType | 
+  addEventProgressStateType | addMediaProgressStateType
 
 export type addItemProgressStateType = {
   activeStep :number,
@@ -160,6 +161,21 @@ export type addEventProgressStateType = {
     recommendation: string
     period: string[]
     keywords: string | never[]
+  }
+}
+export type addMediaProgressStateType = {
+  activeStep :number
+  formData: {
+    mediaType: string
+    title: string
+    bearing: string
+    description: string
+    Author: string
+    categoryType: string[]
+    latitude: null,
+    longitude: null,
+    refrerenceUrl: string
+    keywords: string[]
   }
 }
 
