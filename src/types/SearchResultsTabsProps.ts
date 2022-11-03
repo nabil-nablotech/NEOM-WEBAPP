@@ -65,6 +65,13 @@ export type InventoryAssociationType = {
   placeNameArabic: string
   placeNumber: string | null
 }
+export type InventoryAssociationType_Event = {
+  id: string
+  visitNumber: string
+  placeNameEnglish: string
+  placeNameArabic: string
+  placeNumber: string | null
+}
 
 export type SearchResultsState2 = {
   selectedCardIndex: number;
@@ -93,7 +100,7 @@ export type SearchResultsState2 = {
   addNewItemWindowType: tabNameProps | null
   isAssociationsStepOpen: boolean
   associatedPlaces: InventoryAssociationType[] | []
-  associatedEvents: InventoryAssociationType[] | []
+  associatedEvents: InventoryAssociationType_Event[] | []
   addItemWindowMinimized: boolean | null
 };
 

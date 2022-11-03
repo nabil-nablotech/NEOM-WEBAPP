@@ -29,6 +29,7 @@ import FileUpload from "../../../Upload/FileUpload";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 import CloseIcon from '@mui/icons-material/Close';
+import AddedEvents from "../../../AssociationsList/AddedEvents";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -90,7 +91,7 @@ const StepContent = ({
   handleBack,
   formik,
 }: StepContentTypes) => {
-  const { associatedPlaces } = useSelector(
+  const { associatedPlaces, associatedEvents } = useSelector(
     (state: RootState) => state.searchResults
   );
   const [currentKeyword, setCurrentKeyword] = useState<string>('')
@@ -207,6 +208,9 @@ const StepContent = ({
             </Box>
             <AddedPlaces
               list={associatedPlaces}
+            />
+            <AddedEvents
+              list={associatedEvents}
             />
           </Box>
         )}

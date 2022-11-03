@@ -243,7 +243,7 @@ const ListView = (props: PlacesProps) => {
         />
       </Box>
     }
-  }), [associatedPlaces.length]
+  }), [associatedPlaces]
   )
 
     const {data, hasMoreData, fetchData, loading} = props;
