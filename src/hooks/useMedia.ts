@@ -1,12 +1,14 @@
-import { useQuery} from '@apollo/client';
+import { useQuery, useMutation} from '@apollo/client';
 import { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
-import { media, refineMedia } from "../query/media";
+import { media, refineMedia, addMedia, updateMedia } from "../query/media";
 import { RootState } from '../store';
-import {setMedia, setMediaMetaData} from '../store/reducers/searchResultsReducer'
+import {setMedia, setMediaMetaData} from '../store/reducers/searchResultsReducer';
+import { createMediaAssociate } from '../query/mediaAssociate';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
-import {limit, getQueryObj} from '../utils/services/helpers';
+import {limit, getQueryObj, webUrl, generateUniqueId} from '../utils/services/helpers';
+import { graphQlHeaders } from '../utils/services/interceptor';
 
 const useMedia = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
@@ -24,10 +26,18 @@ const useMedia = () => {
     }
   }, []);
 
+  const { edit, tabData } = useSelector(
+    (state: RootState) => state.tabEdit
+  );
+
   const resetMedia = async () => {
     await dispatch(setMedia([]));
     await dispatch(setMediaMetaData(null));
   };
+
+  const [createMediaMutation, { loading: addLoading, error: addErr, data: addData }] = useMutation(addMedia, graphQlHeaders());
+  const [updateMediaMutation, { loading:updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateMedia, graphQlHeaders());
+  const [createMediaAssociateMutation, { loading: mediaAssociateload, error: mediaAssociateErr, data: mediaAssociate }] = useMutation(createMediaAssociate, graphQlHeaders());
 
   /**
    * fetch places with two words
@@ -107,12 +117,57 @@ const useMedia = () => {
     //   refetchMediaItems({ search_one: searchWordArray[0] || '', search_two: searchWordArray[1] || '', search_three: searchWordArray[2] || '', limit: limit, skip: skip });
     // }
   };
+
+  const mediaType = (typeCode: string) => {
+    let media_type = 5;
+    switch (typeCode) {
+      case 'VIDEO':
+        media_type=6;
+        break;
+      case '3DMODEL':
+        media_type=7;
+        break;
+    }
+    return media_type;
+  }
  
+  const createMedia = async (payload: any | undefined) => {
+    const uniqueId = generateUniqueId();
+    const keywords = payload.keywords;
+    const data = {
+      ...payload,
+      title:payload.title,
+      description:payload.description,
+      bearing:payload.bearing,
+      Author:payload.Author,
+      asset_config_id: [mediaType(payload.mediaType)], // mediaType should be string
+      keywords: keywords,
+      latitude: payload.latitude && parseFloat(payload.latitude),
+      longitude: payload.longitude && parseFloat(payload.longitude),
+      categoryType: payload.categoryType && [payload.categoryType],
+      refrerenceUrl:payload.refrerenceUrl
+    }
+    if (!edit) {
+      data.uniqueId = uniqueId;
+      data.visitUIPath = `${webUrl}/search-results/Media/${uniqueId}`;
+      createMediaMutation({variables: data})
+    }
+    // if (edit && tabData?.id) {
+    //   updateMediaMutation({
+    //     variables: {
+    //       ...data,
+    //       id: event.id
+    //     }
+    //   })
+    // }
+  }
+
   return {
     loading: refineLoading,
     error: refineErrorData,
     data: refineMediaData,
     hasMoreData,
+    createMedia,
     fetchMediaItems: fetchData
   };
 };
