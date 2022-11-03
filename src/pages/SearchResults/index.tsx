@@ -164,7 +164,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       <PositionedSnackbar
         message={<ContinueEditing />}
         severity={"success"}
-        open={showAddSuccess}
+        open={showAddSuccess && !showEditSuccess}
         handleClose={() => dispatch(toggleShowAddSuccess(false))}
         duration={10000}
       />
