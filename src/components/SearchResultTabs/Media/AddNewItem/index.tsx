@@ -589,7 +589,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
               alternativeLabel
               className={`${styles["stepper"]} ${
                 tabName === MEDIA_TAB_NAME ? styles["add-media-stepper"] : ""
-              }`}
+              } ${styles["media-stepper"]}`}
             >
               {steps.map((label, index) => {
                 const stepProps: { completed?: boolean } = {};
