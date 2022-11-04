@@ -101,7 +101,7 @@ export const Card = ({
                       }))
                     }}
                   /> :
-                  <MoreOptionsComponent setEdit={setEdit} record={record} />
+                  <MoreOptionsComponent type="Places" setEdit={setEdit} record={record} />
                 }
               </Box>
             </Box>
