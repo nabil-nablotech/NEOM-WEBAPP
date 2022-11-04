@@ -96,18 +96,15 @@ export const StepperKeywordsComponent = ({
                         name: foundWordArray
                     });
 
-                    setShouldRenderList(true)
                     setIsComponentVisible(true);
 
                 } else {
-                    setShouldRenderList(false)
                     setIsComponentVisible(false);
 
                 }
             }
 
         } else {
-            setShouldRenderList(false)
             setIsComponentVisible(false);
             suggestions = []
         }
@@ -115,20 +112,7 @@ export const StepperKeywordsComponent = ({
         setSearch(state => ({ ...state, suggestions: suggestions }));
     };
 
-    const [shouldRenderList, setShouldRenderList] = useState<boolean>()
     const [showList, setShowList] = useState<Array<string> | []>([])
-
-    useEffect(() => {
-        setShouldRenderList(
-            search?.text.length > 0 &&
-            (
-                search?.suggestions.length > 0 &&
-                search?.suggestions.some((value: { name: string[] }) => value.name && value.name.length > 0)
-            ) &&
-            isComponentVisible
-        )
-
-    }, [search?.text, search?.suggestions.length, isComponentVisible])
 
     useEffect(() => {
         let currentList: string[] = []
@@ -160,7 +144,6 @@ export const StepperKeywordsComponent = ({
             text: "",
             suggestions: []
         });
-        setShouldRenderList(false)
         onKeyDown(value)
     };
 
@@ -169,6 +152,7 @@ export const StepperKeywordsComponent = ({
         onDelete(value)
     }
 
+    console.log('hex: ', search, )
     return (
         <>
 
@@ -245,7 +229,6 @@ export const StepperKeywordsComponent = ({
                         }}
                             onClick={e => {
                                 e.preventDefault()
-                                setShouldRenderList(false)
                             }}>
                             <CloseIcon fontSize="small" />
                         </Box>
