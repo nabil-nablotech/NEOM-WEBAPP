@@ -26,7 +26,8 @@
 }
 .title-section-grid {
     justify-content: space-between;
-    gap: 2em;
+    gap: 0;
+    flex-direction: row;
 }
 
 .title-section-left-item {

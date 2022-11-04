@@ -359,8 +359,8 @@ const EventDetailsPage = () => {
                 </Grid>
                 <Box component="div" className={`${styles['content-section']}`}>
                     <Box component="div" className={`${styles['title-section']}`}>
-                        <Grid container className={`${styles['title-section-grid']}`}>
-                            <Grid item className={`${styles['title-section-left-item']}`}>
+                        <Grid container>
+                            <Grid item sm={11} className={`${styles['title-section-left-item']}`}>
                                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
                                 {visit_associate?.place_unique_id?.placeNameEnglish && <Grid container>
@@ -388,7 +388,7 @@ const EventDetailsPage = () => {
                                     VISIT {visitNumber}
                                 </Box>
                             </Grid>
-                            <Grid item className={`${styles['title-section-grid']}`}>
+                            <Grid item sm={1} className={`${styles['title-section-grids']}`}>
                                 <Box component="div" className={`${styles['more-icon-box']}`}
                                 >
                                     {isAssociationsStepOpen ?

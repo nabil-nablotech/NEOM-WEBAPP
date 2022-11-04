@@ -8,7 +8,7 @@ import { ColumnType } from "antd/lib/table";
 import { Event, EventApi } from "../../types/Event";
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://9fc5-117-214-58-33.in.ngrok.io`;
+// export const baseUrl = `https://2e7f-117-251-213-46.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -322,10 +322,10 @@ export const AddPlaceFormSchema = Yup.object().shape({
 
 export const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>, callback?: () => void) => {
 
-  if(e.key === "Enter") {
+  if (e.key === "Enter") {
     e.preventDefault()
 
-    if(callback) callback()
+    if (callback) callback()
   }
 }
 
