@@ -544,7 +544,7 @@ const PlaceDetailsPage = () => {
                     }
                     <Box component="div" className={`${styles['title-section']}`}>
                         <Grid container className={`${styles['title-section-grid']}`}>
-                            <Grid item className={`${styles['title-section-left-item']}`}>
+                            <Grid item sm={11} className={`${styles['title-section-left-item']}`}>
                                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
                                 {placeNameEnglish && <Grid container>
@@ -563,7 +563,7 @@ const PlaceDetailsPage = () => {
                                     {placeNumber}
                                 </Box>
                             </Grid>
-                            <Grid item className={`${styles['title-section-grid']}`}>
+                            <Grid item sm={1}>
                                 <Box component="div" className={`${styles['more-icon-box']}`}
                                 >
                                     {isAssociationsStepOpen ?
