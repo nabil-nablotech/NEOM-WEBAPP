@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { Box, Chip } from '@mui/material';
 import { useSelector } from "react-redux";
@@ -85,6 +85,9 @@ export const StepperKeywordsComponent = ({
                     suggestions.push({
                         name: keyWordsData[tabName === 'Places' ? 'places' : tabName === 'Events' ? 'visits' : 'medias']?.data[i].attributes["keywords"].filter((element: string) => element.includes(value))
                     });
+                    setShouldRenderList(true)
+                } else {
+                    setShouldRenderList(false)
                 }
             }
         }
@@ -92,24 +95,34 @@ export const StepperKeywordsComponent = ({
         setSearch({ suggestions: suggestions, text: value });
     };
 
-    const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
+    const [shouldRenderList, setShouldRenderList] = useState<boolean>()
+
+    useEffect(() => {
+
+        setShouldRenderList(
+            search?.text.length > 0 &&
+            (
+                search?.suggestions.length > 0 &&
+                search?.suggestions.some((value: { name: string[] }) => value.name && value.name.length > 0)
+            ) &&
+            isComponentVisible
+        )
+
+    }, [search?.text, search?.suggestions.length, isComponentVisible])
 
     const suggestionSelected = (e: React.MouseEvent, value: any) => {
         const val: any = value;
+
         setIsComponentVisible(false);
-        if (!selectedValueCopy['keyWords']?.includes(val)) {
-            selectedValueCopy['keyWords'].push(val);
-        }
         setSearch({
             text: "",
             suggestions: []
         });
-
+        setShouldRenderList(false)
         onKeyDown(value)
     };
 
     const onDeleteKeyWord = (value: any) => {
-        selectedValueCopy['keyWords'] = selectedValueCopy['keyWords'].filter((element: string) => element !== value);
         onDelete(value)
     }
 
@@ -153,7 +166,7 @@ export const StepperKeywordsComponent = ({
                 }
 
             </div>
-            {search?.suggestions.length > 0 && isComponentVisible && (
+            {shouldRenderList && (
                 <AutoCompleteContainer>
                     {search?.suggestions.map((item: IData, index_) => (
                         <> {item.name?.map((val, index) => {
