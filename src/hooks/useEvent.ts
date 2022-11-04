@@ -69,7 +69,7 @@ const useEvent = () => {
   const [createEventMuation, { loading, error, data }] = useMutation(addEvent, graphQlHeaders());
   const [updateEventMuation, { loading:updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateEvent, graphQlHeaders());
   const [createVisitAssociateMuation, { loading: visitAssociateload, error: visitAssociateErr, data: visitAssociate }] = useMutation(createVisitAssociate, graphQlHeaders());
-  const{ loading:refineLoading, error:refineErrorData, data:refineEventData, refetch:refineSearchEvents} = useQuery(refineEvents);
+  const{ loading:refineLoading, error:refineErrorData, data:refineEventData, refetch:refineSearchEvents} = useQuery(refineEvents, graphQlHeaders());
 
   const { loading: placesLoading, error: placesErr, data: placeList, refetch: refetchPlaces } = useQuery(places, graphQlHeaders());
  

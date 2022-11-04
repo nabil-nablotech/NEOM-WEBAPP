@@ -14,7 +14,6 @@ import { StyledAntTable } from "../../../StyledAntTable";
 import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
-import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
 import { antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, checkIsNew, isRecordAttached, isPlaceDetailAttached } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
@@ -150,15 +149,7 @@ const PlaceDetailsPage = () => {
         }
     })
 
-    // get from api
-    let [images, setImages] = useState<any>([
-        'https://via.placeholder.com/150/92c952',
-        'https://via.placeholder.com/150/771796',
-        'https://via.placeholder.com/150/24f355',
-        'https://via.placeholder.com/150/d32776',
-        'https://via.placeholder.com/150/f66b97',
-    ])
-    const [isMoreTitleMenuOpen, setMoreTitleMenuOpen] = useState<false>(false)
+
     const [isSeeMoreHidden, toggleSeeMoreHidden] = useState<boolean>(false)
     const [isCopyDone, setCopyDone] = useState<boolean>(false)
     // const { fetchLibraryItems, hasMoreData, loading } = useLibrary();
@@ -245,7 +236,8 @@ const PlaceDetailsPage = () => {
             fixed: "right",
             className: "more-menu-ant-cell",
             render: (value: any, record: Media) => (
-                <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
+                // <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
+                <MoreOption type="Library" setEdit={setEdit} record={record} />
             ),
         },
     ];
@@ -317,7 +309,8 @@ const PlaceDetailsPage = () => {
             fixed: "right",
             className: "more-menu-ant-cell events-table-more-menu",
             render: (value: any, record: Media) => (
-                <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
+                // <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
+                <MoreOption type="Events" setEdit={setEdit} record={record} />
             ),
         },
     ];
@@ -597,6 +590,7 @@ const PlaceDetailsPage = () => {
                                         /> :
                                         // <></>: 
                                         <MoreOption
+                                            type="Places"
                                             setEdit={setEdit}
                                             record={placeData}
                                         />}

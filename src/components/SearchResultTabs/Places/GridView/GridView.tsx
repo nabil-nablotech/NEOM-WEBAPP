@@ -7,9 +7,12 @@ import gridStyles from "./index.module.css";
 import commonStyles from "../../index.module.css";
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 import {Card} from './Card';
-import { Place } from "../../../../types/Place";
+import { Place, PlaceApi } from "../../../../types/Place";
 import { useNavigate } from "react-router-dom";
 import {formatDateTime} from '../../../../utils/services/helpers';
+import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
+import { Media } from "../../../../types/Media";
+import { Event } from "../../../../types/Event";
 
 export type PlacesProps = {
   data: Place[];
@@ -17,7 +20,7 @@ export type PlacesProps = {
   hasMoreData: boolean;
   loading: boolean;
   totalData?: number;
-  setEdit: (payload: Place) => void
+  setEdit: (payload:  {record: Place | PlaceApi | Media | Event, type: tabNameProps}) => void
 }
 
 const GridView = (props: PlacesProps) => {

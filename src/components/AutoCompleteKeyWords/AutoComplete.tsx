@@ -11,6 +11,7 @@ import { mediaKeyWords } from "../../query/media";
 import styles from "./index.module.css";
 import { useParams } from "react-router-dom";
 import { tabNameProps } from "../../types/SearchResultsTabsProps";
+import { graphQlHeaders } from "../../utils/services/interceptor";
 
 import {
   AutoCompleteContainer,
@@ -33,7 +34,7 @@ let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   );
   const dispatch = useDispatch();
   let querySelected = tabName==='Places'?placesKeyWords:tabName==='Events'?eventsKeyWords:mediaKeyWords;
-  const { loading:keyWordsLoading, error:keyWordsErrorData, data:keyWordsData, refetch:keyWordsPlaces} = useQuery(querySelected);
+  const { loading:keyWordsLoading, error:keyWordsErrorData, data:keyWordsData, refetch:keyWordsPlaces} = useQuery(querySelected, graphQlHeaders());
   const [isComponentVisible, setIsComponentVisible] = useState(true);
 //   useEffect(() => {
 

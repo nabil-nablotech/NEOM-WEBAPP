@@ -217,12 +217,13 @@ const usePlace = () => {
   }
 
   const setEdit = async (payload: any) => {
-    if (payload) {
-      const payloadRes = await placeDetails(payload.attributes.uniqueId);
+    const {type, record} = payload;
+    if (record) {
+      const payloadRes = await placeDetails(record.attributes.uniqueId);
       dispatch(setTabData(payloadRes));
       dispatch(setTabEdit(true));
       dispatch(toggleNewItemWindow(true))
-      dispatch(setAddNewItemWindowType(PLACES_TAB_NAME))
+      dispatch(setAddNewItemWindowType(type))
     }
   };
 
