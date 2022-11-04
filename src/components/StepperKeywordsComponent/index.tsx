@@ -1,8 +1,6 @@
 import { ChangeEvent, useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { Box, Chip } from '@mui/material';
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
 import CloseIcon from '@mui/icons-material/Close';
 import styles from "./index.module.css";
 import { useParams } from "react-router-dom";
@@ -67,12 +65,9 @@ export const StepperKeywordsComponent = ({
         text: "",
         suggestions: []
     });
-    const { selectedValue } = useSelector(
-        (state: RootState) => state.refinedSearch
-    );
 
     let querySelected = tabName === 'Places' ? placesKeyWords : tabName === 'Events' ? eventsKeyWords : mediaKeyWords;
-    const { loading: keyWordsLoading, error: keyWordsErrorData, data: keyWordsData, refetch: keyWordsPlaces } = useQuery(querySelected);
+    const { data: keyWordsData, refetch: keyWordsPlaces } = useQuery(querySelected);
     const [isComponentVisible, setIsComponentVisible] = useState(true);
 
     const onTextChanged = (e: ChangeEvent<HTMLInputElement>) => {
@@ -80,16 +75,27 @@ export const StepperKeywordsComponent = ({
         let suggestions: any = [];
         if (value.length > 0) {
             keyWordsPlaces({ text: value });
+
             for (let i = 0; i < keyWordsData[tabName === 'Places' ? 'places' : tabName === 'Events' ? 'visits' : 'medias']?.data?.length; i++) {
-                if (keyWordsData[tabName === 'Places' ? 'places' : tabName === 'Events' ? 'visits' : 'medias']?.data[i]?.attributes?.keywords !== null) {
+                if (
+                    keyWordsData[tabName === 'Places' ? 'places' : tabName === 'Events' ? 'visits' : 'medias']?.data[i]?.attributes?.keywords !== null
+                ) {
+
+                    const foundWordArray: string[] = keyWordsData[tabName === 'Places' ? 'places' : tabName === 'Events' ? 'visits' : 'medias']?.data[i].attributes["keywords"].filter((element: string) => element.includes(value))
+
                     suggestions.push({
-                        name: keyWordsData[tabName === 'Places' ? 'places' : tabName === 'Events' ? 'visits' : 'medias']?.data[i].attributes["keywords"].filter((element: string) => element.includes(value))
+                        name: foundWordArray
                     });
+
                     setShouldRenderList(true)
                 } else {
                     setShouldRenderList(false)
                 }
             }
+
+        } else {
+            setShouldRenderList(false)
+            suggestions = []
         }
         setIsComponentVisible(true);
         setSearch({ suggestions: suggestions, text: value });
@@ -111,7 +117,6 @@ export const StepperKeywordsComponent = ({
     }, [search?.text, search?.suggestions.length, isComponentVisible])
 
     const suggestionSelected = (e: React.MouseEvent, value: any) => {
-        const val: any = value;
 
         setIsComponentVisible(false);
         setSearch({
@@ -123,6 +128,7 @@ export const StepperKeywordsComponent = ({
     };
 
     const onDeleteKeyWord = (value: any) => {
+        setIsComponentVisible(false)
         onDelete(value)
     }
 
@@ -170,6 +176,10 @@ export const StepperKeywordsComponent = ({
                 <AutoCompleteContainer>
                     {search?.suggestions.map((item: IData, index_) => (
                         <> {item.name?.map((val, index) => {
+
+                            /**dont show keywords being already added in chips */
+                            if (currentKeywordArray.some(ele => ele === val)) return <></>
+
                             return (
                                 <div key={index_}>
                                     <AutoCompleteItem key={index}>
