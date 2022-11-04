@@ -7,7 +7,7 @@ import { createMediaAssociate } from '../query/mediaAssociate';
 import { RootState } from '../store';
 import { resetMediaAssociation, setAddNewItemWindowType, setLibrary, setLibraryMetaData, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess} from '../store/reducers/searchResultsReducer';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
-import {limit, getQueryObj, webUrl, generateUniqueId, EVENTS_TAB_NAME, LIBRARY_TAB_NAME} from '../utils/services/helpers';
+import {limit, getQueryObj, webUrl, generateUniqueId, EVENTS_TAB_NAME, LIBRARY_TAB_NAME, formatBytes} from '../utils/services/helpers';
 import { graphQlHeaders } from '../utils/services/interceptor';
 import { mediaDetails } from "../api/details";
 import { setTabData, setTabEdit } from '../store/reducers/tabEditReducer';
@@ -148,17 +148,25 @@ const useLibrary = () => {
     const data = {
       ...payload,
       visitNumber: parseFloat(payload.visitNumber),
-
       asset_config_id: [mediaType(payload.documentType)], // documentType should be string and media type
       keywords: keywords,
       siteType: payload.siteType && payload.siteType,
       "latitude": payload.latitude && parseFloat(payload.latitude),
       "longitude": payload.longitude && parseFloat(payload.longitude),
       "categoryType": payload.categoryType && [payload.categoryType],
+      object: payload?.object?.id,
+      fileSize: formatBytes(payload?.object?.size),
+      storage: payload?.object?.provider,
+      make: "",
+      model: "",
+      depth: "",
+      dimension: `${payload?.object?.height}x${payload?.object?.width}`,
+      modified: new Date(),
     }
     if (!edit) {
       data.uniqueId = uniqueId;
       data.visitUIPath = `${webUrl}/search-results/Events/${uniqueId}`;
+      data.created = new Date();
       createLibraryMutation({variables: data})
     }
     if (edit && tabData?.id) {
@@ -173,7 +181,8 @@ const useLibrary = () => {
 
   const setEdit = async (payload: any) => {
     if (payload) {
-      const payloadRes = await mediaDetails(payload.attributes.uniqueId);
+      const {record} = payload;
+      const payloadRes = await mediaDetails(record.attributes.uniqueId);
       dispatch(setTabData(payloadRes));
       dispatch(setTabEdit(true));
       dispatch(toggleNewItemWindow(true))

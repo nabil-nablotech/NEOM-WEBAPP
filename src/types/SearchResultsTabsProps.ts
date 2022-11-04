@@ -32,6 +32,8 @@ export type GridViewCard_Media = {
   period?: string[] | null;
   onClick?: ((e: React.MouseEvent<Element, React.MouseEvent>) => void) &
     React.MouseEvent<Element, React.MouseEvent>;
+    setEdit: (payload: Media) => void;
+  record: Media
 };
 export type GridViewCard_Places = {
   itemIndex?: number;
@@ -166,7 +168,7 @@ export type addEventProgressStateType = {
 export type addMediaProgressStateType = {
   activeStep :number
   formData: {
-    mediaType: string
+    media_type: string
     title: string
     bearing: string
     description: string
@@ -174,7 +176,7 @@ export type addMediaProgressStateType = {
     categoryType: string[]
     latitude: null,
     longitude: null,
-    refrerenceUrl: string
+    referenceURL: string
     keywords: string[]
   }
 }

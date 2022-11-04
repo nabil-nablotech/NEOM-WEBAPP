@@ -38,7 +38,7 @@ import {
 } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
-import { addItemMediaSteps } from "./../../../../utils/services/helpers";
+import { addItemMediaSteps, baseUrl } from "./../../../../utils/services/helpers";
 import CustomUpload from "../../../Upload/ImageUpload";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useFormik } from "formik";
@@ -48,6 +48,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 import AddedEvents from "../../../AssociationsList/AddedEvents";
+import StepContent from './form';
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -98,279 +99,6 @@ export const stepperIconSx = {
   },
 };
 
-const StepContent = ({
-  tabName,
-  formState,
-  setFormState,
-  activeStep,
-  steps,
-  handleNext,
-  handleBack,
-  options,
-  formik,
-}: StepContentTypes) => {
-  const { associatedPlaces, associatedEvents } = useSelector(
-    (state: RootState) => state.searchResults
-  );
-
-  const handleSelectChange = (
-    e: React.SyntheticEvent,
-    value: string[] | [],
-    stateName: string
-  ) => {
-    e.preventDefault();
-    formik.setFieldValue(stateName, [
-      ...new Set([...formik.values[stateName], ...value]),
-    ]);
-  };
-
-  const [mediaKeywords, setMediaKeywords] = useState<Array<string>>([]);
-  const [currentKeyword, setCurrentKeyword] = useState<string>("");
-
-  return (
-    <>
-      <Box component="div" className={`${styles["form"]}`}>
-        {activeStep === 0 && (
-          <>
-            <DropdownComponent
-              className={`${styles["media-type"]}`}
-              label={"Media Type"}
-              name="media-type"
-              value={formik.values.mediaType}
-              // handleChange={(e) => setFormState((state: any) => ({
-              //     ...state,
-              //     mediaType: e.target.value
-              // }))}
-
-              handleChange={(e: SelectChangeEvent<string | string[]>) => {
-                formik.setFieldValue("mediaType", e.target.value);
-              }}
-              handleClear={(e: React.MouseEvent) => {}}
-              itemsList={[
-                {
-                  label: "Image",
-                  value: "Image",
-                },
-                {
-                  label: "Video",
-                  value: "Video",
-                },
-                {
-                  label: "3D Model",
-                  value: "3D Model",
-                },
-              ]}
-              selectStylesSx={commonSelectSxStyles}
-              formControlSx={commonFormControlSxStyles}
-            />
-            {formik.values.mediaType === "Image" && (
-              <>
-                <CustomUpload title={"Drag and drop your file here"} />
-              </>
-            )}
-          </>
-        )}
-        {activeStep === 1 && (
-          <>
-            <TextInput
-              className={`${styles["english-name"]}`}
-              label="Title*"
-              name="title"
-              value={formik.values.title}
-              onChange={(e) => {
-                formik.setFieldValue("title", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            <TextInput
-              className={`${styles["site-description"]}`}
-              label="Description"
-              name="description"
-              value={formik.values.description}
-              onChange={(e) => {
-                formik.setFieldValue("description", e.target.value);
-              }}
-              multiline
-              minRows={3}
-              maxRows={3}
-              sx={{
-                ...textInputSxStyles,
-                marginBottom: "4em",
-                "& .MuiInputBase-inputMultiline": {
-                  paddingInline: "0 !important",
-                },
-              }}
-              formControlSx={{
-                ...commonFormControlSxStyles,
-              }}
-            />
-            <TextInput
-              className={`${styles["english-name"]}`}
-              label="Bearing"
-              name="bearing"
-              value={formik.values.bearing}
-              onChange={(e) => {
-                formik.setFieldValue("bearing", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            <TextInput
-              className={`${styles["english-name"]}`}
-              label="Author"
-              name="Author"
-              value={formik.values.Author}
-              onChange={(e) => {
-                formik.setFieldValue("Author", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            <AutoComplete
-              className={`${styles["dropdown"]}`}
-              label={"Category Type"}
-              name="categoryType"
-              value={[...formik.values.categoryType]}
-              multiple={true}
-              handleSelectChange={(e, value) =>
-                handleSelectChange(e, value, "categoryType")
-              }
-              handleClear={(e) => {}}
-              itemsList={options?.actionType || []}
-              selectStylesSx={commonSelectSxStyles}
-              formControlSx={commonFormControlSxStyles}
-            />
-            <TextInput
-              className={`${styles["english-name"]}`}
-              label="Longitude"
-              name="longitude"
-              value={formik.values.longitude}
-              onChange={(e) => {
-                formik.setFieldValue("longitude", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            <TextInput
-              className={`${styles["english-name"]}`}
-              label="Latitude"
-              name="latitude"
-              value={formik.values.latitude}
-              onChange={(e) => {
-                formik.setFieldValue("latitude", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            <TextInput
-              className={`${styles["english-name"]}`}
-              label="Reference URL"
-              name="refrerenceUrl"
-              value={formik.values.refrerenceUrl}
-              onChange={(e) => {
-                formik.setFieldValue("refrerenceUrl", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-          </>
-        )}
-        {activeStep === 2 && (
-          <Box component="div">
-            <Box
-              component="div"
-              style={{
-                display: "inline-block",
-                lineHeight: 1.5,
-              }}
-            >
-              Click on{" "}
-              <DetachedIcon
-                style={{
-                  height: "18px",
-                  position: "relative",
-                  top: "3px",
-                }}
-                className="remove-motion"
-                onClick={(e) => {}}
-              />{" "}
-              to select the places and events you want to associate this library
-              item to.
-            </Box>
-            <AddedPlaces list={associatedPlaces} />
-            <AddedEvents list={associatedEvents} />
-          </Box>
-        )}
-        {activeStep === 3 && (
-          <>
-            <Box component="div">Make your content discoverable</Box>
-            <TextInput
-              className={`${styles["english-name"]}`}
-              id="keyword-div"
-              label="Add Keywords"
-              name="keywords"
-              value={currentKeyword}
-              onChange={(e) => {
-                setCurrentKeyword(e.target.value);
-              }}
-              onKeyDown={(e) => {
-                handleEnter(e, () => {
-                  formik.setFieldValue("keywords", [
-                    ...new Set([...formik.values.keywords, currentKeyword]),
-                  ]);
-                  setCurrentKeyword("");
-                });
-              }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            {
-              <Box
-                component="div"
-                style={{
-                  display: "flex",
-                  gap: "5px",
-                }}
-              >
-                {formik.values.keywords.map((item: string, index: any) => (
-                  <Chip
-                    key={index}
-                    size="small"
-                    variant="outlined"
-                    label={item}
-                    deleteIcon={<CloseIcon fontSize="small" />}
-                    onDelete={(e) => {
-                      const newArr = [...formik.values.keywords].filter(
-                        (element: string) => element !== item
-                      );
-                      formik.setFieldValue("keywords", [...new Set(newArr)]);
-                    }}
-                  />
-                ))}
-              </Box>
-            }
-          </>
-        )}
-      </Box>
-    </>
-  );
-};
-
 const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
   const { options } = useSelector((state: RootState) => state.refinedSearch);
@@ -378,7 +106,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
   const { showAddSuccess, addItemProgressState } = useSelector(
     (state: RootState) => state.searchResults
   );
-
+  const { edit, tabData } = useSelector((state: RootState) => state.tabEdit);
   const [activeStep, setActiveStep] = useState(0);
   const [formState, setFormState] = useState({
     siteDescription: "",
@@ -399,6 +127,38 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
 
   const dispatch = useDispatch();
 
+  let mediaInitialValue = {
+    media_type: edit ? tabData.media_type[0].typeCode : "",
+    title: edit ? tabData.title : "",
+    bearing: edit ? tabData.bearing : "",
+    description: edit ? tabData.description : "",
+    Author: edit ? tabData.Author : "",
+    categoryType: edit ? tabData?.categoryType : [],
+    latitude: edit ? tabData?.latitude : null,
+    longitude: edit ? tabData?.longitude : null,
+    referenceURL: edit ? tabData?.referenceURL : "",
+    keywords: edit && tabData?.keywords ? tabData?.keywords : [],
+    object: edit ? tabData?.object.url : "",
+    mediaType: "", 
+    refrerenceUrl: ""
+  }
+  const formik = useFormik({
+    initialValues: mediaInitialValue,
+    validate: (values) => {
+      if (!values.title && activeStep == 1) {
+        setFormError("Image Title is required");
+      } else {
+        setFormError("");
+      }
+    },
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+      if (!formError) {
+        handleNext(null, values);
+      }
+    },
+  });
+
   useEffect(() => {
     if (showAddSuccess) {
       dispatch(toggleShowAddSuccess(true));
@@ -410,12 +170,12 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     if (activeStep >= 2) {
       dispatch(toggleAssociationsStepOpen(true));
 
-      if(activeStep > 2) {
+      if (activeStep > 2) {
         dispatch(toggleAssociationsIconDisabled(true));
-      } else  {
+      } else {
         dispatch(toggleAssociationsIconDisabled(false));
       }
-      
+
     } else {
       dispatch(toggleAssociationsStepOpen(false));
     }
@@ -493,33 +253,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     }
   };
 
-  const formik = useFormik({
-    initialValues: {
-      mediaType: "",
-      title: "",
-      bearing: "",
-      description: "",
-      Author: "",
-      categoryType: [],
-      latitude: null,
-      longitude: null,
-      refrerenceUrl: "",
-      keywords: [],
-    },
-    validate: (values) => {
-      if (!values.title && activeStep == 1) {
-        setFormError("Image Title is required");
-      } else {
-        setFormError("");
-      }
-    },
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-      if (!formError) {
-        handleNext(null, values);
-      }
-    },
-  });
+
 
   useEffect(() => {
     /** Effect needed to load history data,
@@ -587,9 +321,8 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
             <Stepper
               activeStep={activeStep}
               alternativeLabel
-              className={`${styles["stepper"]} ${
-                tabName === MEDIA_TAB_NAME ? styles["add-media-stepper"] : ""
-              } ${styles["media-stepper"]}`}
+              className={`${styles["stepper"]} ${tabName === MEDIA_TAB_NAME ? styles["add-media-stepper"] : ""
+                } ${styles["media-stepper"]}`}
             >
               {steps.map((label, index) => {
                 const stepProps: { completed?: boolean } = {};

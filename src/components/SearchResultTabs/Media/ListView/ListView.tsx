@@ -8,8 +8,8 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import commonStyles from "../../index.module.css";
 import { Loader } from "../../../Loader";
 import { MediaProps } from "../GridView/GridView";
-import {formatWebDate, formatBytes} from '../../../../utils/services/helpers'
-import {MoreOptionsComponent} from './MoreOption';
+import { formatWebDate, formatBytes } from '../../../../utils/services/helpers'
+import { MoreOptionsComponent } from './MoreOption';
 import { Media } from "../../../../types/Media";
 // import {CustomModal} from '../../../CustomModal';
 // import {MediaDetailsPage} from '../DetailsPage';
@@ -106,6 +106,8 @@ const StyledTableWrapper = styled(StyledAntTable)`
 `;
 
 const ListView = (props: MediaProps) => {
+  const { data, hasMoreData, fetchData, loading, setEdit } = props;
+
   const tableHeaderJson: ColumnsType<any> = [
     {
       title: "Image",
@@ -148,13 +150,13 @@ const ListView = (props: MediaProps) => {
       title: "SIZE",
       key: "attributes",
       dataIndex: "attributes",
-      render: (value, index) => formatBytes(value.imageMetadata.fileSize), 
+      render: (value, index) => formatBytes(value.imageMetadata.fileSize),
     },
     {
       title: "UPDATED",
       key: "attributes",
       dataIndex: "attributes",
-      render: (value, index) => formatWebDate(value.updatedAt), 
+      render: (value, index) => formatWebDate(value.updatedAt),
     },
     {
       title: "BEARING",
@@ -176,12 +178,11 @@ const ListView = (props: MediaProps) => {
       fixed: "right",
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (
-        <MoreOptionsComponent id={record.id} record={record} />
+        <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
       ),
     },
   ];
-  
-  const {data, hasMoreData, fetchData, loading} = props;
+
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [currentItemIndex, setCurrentItemIndex] = useState<number>(0);
@@ -205,7 +206,7 @@ const ListView = (props: MediaProps) => {
         dataLength={data.length} //This is important field to render the next data
         next={() => fetchData()}
         hasMore={hasMoreData}
-        loader={loading ? <Loader />: null}
+        loader={loading ? <Loader /> : null}
         endMessage={
           <p style={{ textAlign: "center" }}>
             <b>END OF RESULTS</b>
@@ -231,16 +232,16 @@ const ListView = (props: MediaProps) => {
               onClick: (event) => {
                 // click row
                 setModalOpen(true);
-                
+
                 if (typeof rowIndex === "number") {
                   dispatch(setActiveMediaItem(record))
                   dispatch(setActiveMediaItemIndex(rowIndex))
-                  navigate(`/search-results/Media/${record.attributes.uniqueId}`, {replace: true})
+                  navigate(`/search-results/Media/${record.attributes.uniqueId}`, { replace: true })
                 }
               },
             };
           }}
-          //   onC
+        //   onC
         ></StyledTableWrapper>
       </InfiniteScroll>
       <MediaDetailsModal

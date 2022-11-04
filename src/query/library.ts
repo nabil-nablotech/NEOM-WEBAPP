@@ -237,6 +237,7 @@ mutation CreateLibrary(
   $created: Date
   $modified: DateTime
   $asset_config_id: [ID]
+  $object: ID
 ) {
   createMedia(
     data: {
@@ -270,6 +271,7 @@ mutation CreateLibrary(
         created: $created
         modified: $modified
       }
+      object: $object
     }
   ) {
     data {
@@ -315,6 +317,7 @@ $dimension: String
 $created: Date
 $modified: DateTime
 $asset_config_id: [ID]
+$object: ID
 ) {
   updateMedia(
     id: $id,
@@ -334,6 +337,7 @@ $asset_config_id: [ID]
     objectURL: $objectURL
     referenceURL: $refrenceURL
     citation: $citation
+    object: $object
       imageMetadata: {
       fileName: $fileName
       longitude: $longitude
