@@ -72,6 +72,12 @@ export const StepperKeywordsComponent = ({
 
     const onTextChanged = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
+
+        setSearch(state => ({
+            ...state,
+            text: e.target.value || ''
+        }))
+
         let suggestions: any = [];
         if (value.length > 0) {
             keyWordsPlaces({ text: value });
@@ -98,7 +104,7 @@ export const StepperKeywordsComponent = ({
             suggestions = []
         }
         setIsComponentVisible(true);
-        setSearch({ suggestions: suggestions, text: value });
+        setSearch(state => ({ ...state, suggestions: suggestions }));
     };
 
     const [shouldRenderList, setShouldRenderList] = useState<boolean>()
