@@ -14,9 +14,11 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
-import {getRole} from '../../../../utils/storage/storage';
-import { antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate,
-    isEmptyValue, NO_DESCRIPTION, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, isEventDetailAttached } from "../../../../utils/services/helpers";
+import { getRole } from '../../../../utils/storage/storage';
+import {
+    antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate,
+    isEmptyValue, NO_DESCRIPTION, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, isEventDetailAttached
+} from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
@@ -25,7 +27,7 @@ import useMedia from "../../../../hooks/useMedia";
 import CommentsSection from "../../../CommentsSection";
 import RenderInitials from "../../../RenderInitials";
 import { useDispatch } from "react-redux";
-import {  modifyAssociatedEvents, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex } from "../../../../store/reducers/searchResultsReducer";
+import { modifyAssociatedEvents, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
 import YellowStar from '../../../../assets/images/searchResults/YellowStar.svg'
@@ -34,7 +36,7 @@ import useEventDetails from "../../../../hooks/useEventDetails";
 import Loader from "../../../Common/Loader";
 import MapView from "../../GoogleMap/MapView";
 import NoTextPresent from "../../../NoDataScreens/NoText";
-import {isEmpty} from 'lodash'
+import { isEmpty } from 'lodash'
 import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 
@@ -129,13 +131,13 @@ const editor = getRole() === 'Editor';
 const EventDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
     const navigate = useNavigate();
-    
+
     const { places, isAssociationsStepOpen, associatedEvents, media } = useSelector(
         (state: RootState) => state.searchResults
     );
     const { data } = useSelector((state: RootState) => state.login);
 
-    const {loading: eventLoading, data: eventDetails, setEdit} = useEventDetails();
+    const { loading: eventLoading, data: eventDetails, setEdit } = useEventDetails();
 
     let selectedPlaceObjIndex: number = 0
     let selectedPlaceObj: Place = places[0]
@@ -164,15 +166,15 @@ const EventDetailsPage = () => {
 
     let mediaCount = 8
     const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
-    if(isTablet) {
+    if (isTablet) {
         mediaCount = 6
     }
 
-    if(eventLoading) {
+    if (eventLoading) {
         return <Loader />
     }
-    
-    if(!eventLoading && !eventDetails) {
+
+    if (!eventLoading && !eventDetails) {
         return <div>Cant fetch event</div>
     }
 
@@ -194,12 +196,12 @@ const EventDetailsPage = () => {
             mediaGridActiveItems + (mediaGallery?.length - mediaGridActiveItems)
         )
 
-    const {latitude, longitude} = eventDetails
+    const { latitude, longitude } = eventDetails
 
     if (visit_associate?.place_unique_id) {
 
     }
-    
+
     const menuItems = [
         {
             label: "Edit",
@@ -288,12 +290,12 @@ const EventDetailsPage = () => {
             fixed: "right",
             className: "more-menu-ant-cell",
             render: (value: any, record: Media) => (
-                <MoreOptionsComponent id={record.id} record={record} />
+                <MoreOptionsComponent setEdit={setEdit} record={record} id={record.id} />
             ),
         },
     ];
 
-    
+
     const actionsArray = [
         {
             label: 'Feature',
@@ -427,10 +429,10 @@ const EventDetailsPage = () => {
                                         className={`${styles['no-data-available']} ${styles['see-more-active']}`}
                                     >
                                         {siteDescription?.substring(0, 200)}
-                                    </Box>: 
-                                    <NoTextPresent
-                                        message={NO_DESCRIPTION}
-                                    />}
+                                    </Box> :
+                                        <NoTextPresent
+                                            message={NO_DESCRIPTION}
+                                        />}
 
                                 </Box>
                                 <Box component="div" className={`${styles['table']}`}>
@@ -472,7 +474,7 @@ const EventDetailsPage = () => {
                                                 {
                                                     !isEmpty(period) ? period.map((item, index) => (
                                                         <Box
-                                                        key={index}
+                                                            key={index}
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
                                                         >
@@ -491,7 +493,7 @@ const EventDetailsPage = () => {
                                             Field Narrative
                                         </Grid>
                                         {
-                                            !isEmptyValue(fieldNarrative) ? 
+                                            !isEmptyValue(fieldNarrative) ?
                                                 <Grid item>
                                                     {fieldNarrative}
                                                 </Grid> :
@@ -517,7 +519,7 @@ const EventDetailsPage = () => {
                                                         message={NO_TEXT}
                                                     />
                                                 </Grid>
-                                           
+
                                         }
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -763,14 +765,14 @@ const EventDetailsPage = () => {
                                     onClick={e => {
                                         e.preventDefault()
 
-                                        if( mediaGalleryLocal && mediaGallery && (mediaGalleryLocal.length === mediaGallery.length)) {
+                                        if (mediaGalleryLocal && mediaGallery && (mediaGalleryLocal.length === mediaGallery.length)) {
                                             setMediaGridActiveItems(8)
                                         } else {
                                             setMediaGridActiveItems(state => state + 8)
                                         }
                                     }}
                                 >
-                                    See { mediaGalleryLocal && mediaGallery && (mediaGalleryLocal.length === mediaGallery.length) ? 'Less': 'More'}
+                                    See {mediaGalleryLocal && mediaGallery && (mediaGalleryLocal.length === mediaGallery.length) ? 'Less' : 'More'}
                                 </Button>
                             </Grid>
                         </Grid>}

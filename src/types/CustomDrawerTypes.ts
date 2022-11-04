@@ -41,7 +41,8 @@ export type StepContentTypes = {
 }
 
 export type CustomUploadProps = {
-    title?: string
+    title?: string,
+    existingImageUrl?: string
 }
 
 export type InitialValues = {

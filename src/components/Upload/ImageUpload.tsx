@@ -39,10 +39,11 @@ const StyledUpload = styled(Upload)`
 `
 
 const ImageUpload = ({
-    title
+    title,
+    existingImageUrl
 }: CustomUploadProps) => {
     const [loading, setLoading] = useState(false);
-    const [imageUrl, setImageUrl] = useState<string>();
+    const [imageUrl, setImageUrl] = useState(existingImageUrl);
 
     const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
         if (info.file.status === 'uploading') {
@@ -72,19 +73,19 @@ const ImageUpload = ({
 
     return (
         <>
-        <StyledUpload
-            name="avatar"
-            listType="picture-card"
-            className={`upload-wrapper ${styles['upload-wrapper']}`}
-            showUploadList={false}
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            beforeUpload={beforeUpload}
-            onChange={handleChange}
+            <StyledUpload
+                name="avatar"
+                listType="picture-card"
+                className={`upload-wrapper ${styles['upload-wrapper']}`}
+                showUploadList={false}
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                beforeUpload={beforeUpload}
+                onChange={handleChange}
 
-        >
-            {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-        </StyledUpload>
-        <Typography className={`${styles['file-upload-bottom-text']}`}>Accepted file types: .jpg, .png</Typography>
+            >
+                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+            </StyledUpload>
+            <Typography className={`${styles['file-upload-bottom-text']}`}>Accepted file types: .jpg, .png</Typography>
         </>
     )
 };
