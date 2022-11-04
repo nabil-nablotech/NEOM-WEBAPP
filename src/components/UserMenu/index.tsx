@@ -11,9 +11,9 @@ import { RootState } from "../../store";
 import { getRole } from "../../utils/storage/storage";
 
 import MenuList from "../MenuList";
-import { Box } from "@mui/material";
+import { Box, LinearProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { toggleAddItemWindowMinimized, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
 import CustomDrawer from "../CustomDrawer";
 import AddNewItem from "../../pages/AddNewItem";
 import AddNewPlace from "../SearchResultTabs/Places/AddNewItem";
@@ -24,6 +24,9 @@ import useEvent from "../../hooks/useEvent";
 import AddNewLibraryItem from "../SearchResultTabs/Library/AddNewItem";
 import { setEventEdit } from "../../store/reducers/eventReducer";
 import AddItemCollapsedWindow from "../AddItemCollapsedWindow";
+import { setTabEdit } from "../../store/reducers/tabEditReducer";
+import useLibrary from "../../hooks/useLibrary";
+import useMedia from "../../hooks/useMedia";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -36,12 +39,15 @@ function UserMenuComponent() {
   const { clientLogout } = useLogout();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [anchorElSettings, setAnchorElSettings] = React.useState<null | HTMLElement>(null);
-  const {newItemWindowOpen, addNewItemWindowType, addItemWindowMinimized} = useSelector((state: RootState) => state.searchResults);
-  const { createPlace  } = usePlace();
+  const { newItemWindowOpen, addNewItemWindowType, addItemWindowMinimized } = useSelector((state: RootState) => state.searchResults);
+  const { createPlace } = usePlace();
   const { createEvent, setSearchValue } = useEvent();
+  const { createLibrary } = useLibrary();
+  const { createMedia } = useMedia();
 
   const open = Boolean(anchorEl);
   const admin = getRole() === 'Admin';
+  const editor = getRole() === 'Editor';
   const openSettings = Boolean(anchorElSettings);
   const dispatch = useDispatch()
 
@@ -74,9 +80,9 @@ function UserMenuComponent() {
   const menuItems = [
     {
       label: "Support",
-      handleClickMenuItem: () => {},
+      handleClickMenuItem: () => { },
       render: () => <a href="mailto: support@neomheritage.com?subject = Neom Heritage Support" rel="noreferrer" target={"_blank"}>
-      Help & Support
+        Help & Support
       </a>
     },
     {
@@ -97,8 +103,27 @@ function UserMenuComponent() {
   ]
 
   const handlePlus = () => {
-    dispatch(toggleNewItemWindow(!newItemWindowOpen));
+    if(!addItemWindowMinimized) {
+      dispatch(toggleNewItemWindow(!newItemWindowOpen));
+
+      if(addNewItemWindowType) { /** reset if already set  after add flow*/
+        dispatch(setAddNewItemWindowType(null))
+      }
+    }
+    
     dispatch(setEventEdit(false));
+    dispatch(setTabEdit(false));
+  }
+
+  const onHide = () => {
+    dispatch(toggleAddItemWindowMinimized(true))
+    dispatch(toggleNewItemWindow(false))
+  }
+  const onClose = () => {
+    
+    dispatch(toggleAssociationsIconDisabled(false))
+    dispatch(toggleAssociationsStepOpen(false))
+    dispatch(toggleNewItemWindow(false))
   }
 
   return (
@@ -111,9 +136,23 @@ function UserMenuComponent() {
         marginLeft: 'auto',
         marginRight: '1em'
       }}>
-        <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }} onClick={
-          e => handlePlus()
-        }/>
+        <Box component={"div"}>
+          <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }} onClick={
+            e => handlePlus()
+          } />
+          {addItemWindowMinimized &&
+            <Box component={"div"} sx={{
+              '& .MuiLinearProgress-bar.MuiLinearProgress-barColorPrimary': {
+                backgroundColor: 'var(--clr-gold)',
+
+              }
+            }} >
+              <LinearProgress variant="determinate" value={50} sx={{
+                backgroundColor: 'rgba(255, 255, 255, 0.2);',
+              }} />
+            </Box>
+          }
+        </Box>
         {true && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
         <InitialsWrapper
           id="long-button"
@@ -140,26 +179,30 @@ function UserMenuComponent() {
         />
         <CustomDrawer origin="right" isOpen={newItemWindowOpen} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}>
           {!addNewItemWindowType &&
-            <AddNewItem onClose={() => dispatch(toggleNewItemWindow(false))} />
+            <AddNewItem onClose={() => onClose()} />
           }
           {
             addNewItemWindowType === PLACES_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewPlace create={createPlace} onHide={() => dispatch(toggleAddItemWindowMinimized(true))} />
+            <AddNewPlace create={createPlace} onHide={() => onHide()} />
           }
           {
             addNewItemWindowType === EVENTS_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewEvent create={createEvent} setSearchValue={setSearchValue} onHide={() => dispatch(toggleAddItemWindowMinimized(true))} />
+            <AddNewEvent create={createEvent} setSearchValue={setSearchValue} onHide={() => onHide()} />
           }
           {
             addNewItemWindowType === LIBRARY_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewLibraryItem onHide={() => dispatch(toggleAddItemWindowMinimized(true))} />
+            <AddNewLibraryItem create={createLibrary} onHide={() => onHide()} />
           }
           {
             addNewItemWindowType === MEDIA_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewMedia onHide={() => dispatch(toggleAddItemWindowMinimized(true))} />
+            <AddNewMedia create={createMedia} onHide={() => onHide()} />
           }
-      </CustomDrawer>
-      {addNewItemWindowType && addItemWindowMinimized && <AddItemCollapsedWindow />}
+        </CustomDrawer>
+        {
+          addNewItemWindowType &&
+          addItemWindowMinimized &&
+          <AddItemCollapsedWindow />
+        }
       </Box>
     </>
   );

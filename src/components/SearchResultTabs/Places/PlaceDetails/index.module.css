@@ -9,7 +9,7 @@
     height: 400px;
 }
 .content-section {
-    max-width: 1200px;
+    width: 85vw;
     margin-inline: auto;
 }
 
@@ -39,7 +39,8 @@
 }
 .title-section-grid {
     justify-content: space-between;
-    gap: 2em;
+    gap: 0;
+    flex-direction: row;
 }
 
 .title-section-left-item {
@@ -183,6 +184,10 @@
 
 
 @media (min-width: 575px) and (max-width: 1025px) {
+
+    .content-section {
+        width: 90vw;
+    }
     .item-name ,
     .item-name-arabic,
     .item-number {

@@ -1,26 +1,24 @@
 import {
     Box
 } from "@mui/material";
-import { AddPlacesTypes } from "../../../types/AddItemTypes";
-import { Place } from "../../../types/Place";
+import { AddPlaceAssociationTypes } from "../../../types/AddItemTypes";
 import styles from '../index.module.css'
-import InventoryItem from "../ItemRow";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { modifyAssociatedPlaces } from "../../../store/reducers/searchResultsReducer";
-import { RootState } from "../../../store";
+import { InventoryAssociationType } from "../../../types/SearchResultsTabsProps";
+import PlaceInventoryItem from "../ItemRowPlaces";
 
 const AddedPlaces = ({
     list
-}: AddPlacesTypes) => {
+}: AddPlaceAssociationTypes) => {
 
     const dispatch = useDispatch()
 
-    const { associatedPlaces } = useSelector(
-        (state: RootState) => state.searchResults
-      );
-
-    const handleRemoveItem = (e: React.MouseEvent, uniqueId: string) => {
-        dispatch(modifyAssociatedPlaces(associatedPlaces.filter((place: Place) => place.attributes.uniqueId !== uniqueId)))
+    const handleRemoveItem = (e: React.MouseEvent, id: number) => {
+        dispatch(modifyAssociatedPlaces({
+            newItem: null,
+            removeId: id
+        }))
     }
 
     if(list.length === 0) return <></>
@@ -30,10 +28,15 @@ const AddedPlaces = ({
             <Box component="div" className={`${styles["title"]}`}>Places</Box>
             <Box component="div" className={`${styles["list"]}`}>
                 {
-                    list?.map((place: Place) => (
+                    list?.map((place: InventoryAssociationType) => (
                         <Box component="div">
-                            <InventoryItem
-                                item={place}
+                            <PlaceInventoryItem
+                                item={{
+                                    id: Number(place.id),
+                                    placeNameEnglish: place.placeNameEnglish,
+                                    placeNameArabic: place.placeNameArabic,
+                                    placeNumber: place.placeNumber,
+                                }}
                                 handleRemoveItem={handleRemoveItem}
                             />
                         </Box>

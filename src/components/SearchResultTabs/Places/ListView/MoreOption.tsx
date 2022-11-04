@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";  
+import { PlaceApi, Place } from '../../../../types/Place';
 import { Event } from '../../../../types/Event';
-import { Media } from '../../../../types/Media';
-import { setEventData, setEventEdit } from '../../../../store/reducers/eventReducer';
 import { getRole } from "../../../../utils/storage/storage";
 import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
+import { Media } from '../../../../types/Media';
 
 const superEditor = getRole() === 'SuperEditor';
 const editor = getRole() === 'Editor';
@@ -15,11 +15,12 @@ const MoreOptionsComponent = ({
     record,
     setEdit
 }: {
-    type: tabNameProps;
-    record: Event | Media;
-    setEdit: (payload:{record: Event | Media, type: tabNameProps}) => void
+    type: tabNameProps
+    record: any;
+    setEdit: (payload: {record: PlaceApi | Place | Media | Event, type: tabNameProps}) => void
 }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
     const open = Boolean(anchorEl);
     const handleClick = (e: any) => {
         e.stopPropagation();
@@ -64,7 +65,5 @@ const MoreOptionsComponent = ({
 };
 
 export default MoreOptionsComponent;
-function setEditEvent(arg0: boolean): any {
-    throw new Error('Function not implemented.');
-}
+
 

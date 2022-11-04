@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { Grid } from "@mui/material";
 import { format } from "date-fns";
 import { Event } from '../../../../types/Event'
+import { Media } from '../../../../types/Media'
 import gridStyles from './index.module.css'
 import commonStyles from '../../index.module.css'
 import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
@@ -14,13 +15,14 @@ import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsRe
 import {Card} from './Card';
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
 
 export type EventsProps = {
   data: Event[];
   handleNext: () => void;
   hasMoreData: boolean;
   loading: boolean;
-  setEdit:(record: Event) => void
+  setEdit:(payload: {record: Event | Media, type: tabNameProps}) => void
 }
 
 const GridView = (props: EventsProps) => {
@@ -69,7 +71,7 @@ const GridView = (props: EventsProps) => {
                             <Grid item key={index} sm={12} className={`${gridStyles['']}`} onClick={() => handleClick(item, index)}>
                                 <Card
                                     key={index}
-                                    img={item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data.attributes.object.data.attributes.url || ''}
+                                    img={item?.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url || ''}
                                     title={item.attributes.visit_associate.data?.attributes?.place_unique_id ? `${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data.attributes.placeNameEnglish}${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data.attributes.placeNameArabic} - ${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data.attributes.placeNumber}` : ''}
                                     subTitle={item.attributes?.siteDescription || ''}
                                     dateString={`${format(
@@ -80,7 +82,6 @@ const GridView = (props: EventsProps) => {
                                     handleClick={handleClick}
                                     record={item}
                                     id={item.id}
-                                    dispatch={dispatch}
                                     setEdit={setEdit}
                                 />
                             </Grid>

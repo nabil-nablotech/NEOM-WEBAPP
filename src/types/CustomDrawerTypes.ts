@@ -36,11 +36,13 @@ export type StepContentTypes = {
     handleNext: (e: any, data?: InitialValues) => void
     handleChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
     handleBack:  () => void
+    uploadImage?:  (options: any) => void
     formik?:any
 }
 
 export type CustomUploadProps = {
-    title?: string
+    title?: string,
+    existingImageUrl?: string
 }
 
 export type InitialValues = {

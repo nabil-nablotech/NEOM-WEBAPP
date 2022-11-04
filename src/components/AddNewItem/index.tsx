@@ -243,12 +243,12 @@ const StepContent = ({
                                 className={`${styles["media-type"]}`}
                                 label={"Media Type"}
                                 name="media-type"
-                                value={formState.mediaType}
+                                value={formState.media_type}
                                 handleChange={(e) => setFormState((state: any) => ({
                                     ...state,
-                                    mediaType: e.target.value
+                                    media_type: e.target.value
                                 }))}
-                                
+
                                 handleClear={(e) => { }}
                                 itemsList={[
                                     {
@@ -260,7 +260,7 @@ const StepContent = ({
                                 formControlSx={commonFormControlSxStyles}
                             />
                             {
-                                formState.mediaType === 'Image' &&
+                                formState.media_type.toLowerCase() === 'image' &&
                                 <>
                                     <CustomUpload
                                         title={'Drag and drop you file here'}
@@ -288,7 +288,7 @@ const StepContent = ({
                     />
                 </>
             }
-            
+
         </Box>
     </>
 }
@@ -379,14 +379,14 @@ const AddNewItem = ({
     return (
         <Box component="div">
             <Box component="div" className={`${styles['add-new-item-container']}`}>
-                
+
                 <Box component="div" className={`${styles['content-section']}`}>
                     <Box component="div" className={`${styles['hide-btn']}`}
                         style={{
-                        marginRight: 0,
-                        marginLeft: 'auto',
-                        width: 'fit-content'
-                    }}>
+                            marginRight: 0,
+                            marginLeft: 'auto',
+                            width: 'fit-content'
+                        }}>
                         <DefaultButton variant="text" onClick={e => onHide()}
                             style={{
                                 // paddingInline: 0,

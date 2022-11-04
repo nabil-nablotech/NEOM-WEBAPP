@@ -6,7 +6,7 @@ import {
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { toggleAddItemWindowMinimized } from "../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
 import styles from './index.module.css'
 
 const AddItemCollapsedWindow = () => {
@@ -20,14 +20,21 @@ const AddItemCollapsedWindow = () => {
             component={"div"}
         >
             <Grid container className={`${styles['container']}`}>
-                <Grid item>Adding {addNewItemWindowType} item in progress</Grid>
+                <Grid item>
+                    <Box component="div">
+                        Adding {addNewItemWindowType} item <div className={`${styles['gold']}`}>In Progress</div>
+                    </Box>
+                </Grid>
                 <Grid item>
                     <Button
                         variant="text"
-                        onClick={(e) => dispatch(toggleAddItemWindowMinimized(false))}
+                        onClick={(e) => {
+                            dispatch(toggleAddItemWindowMinimized(false))
+                            dispatch(toggleNewItemWindow(true))
+                            dispatch(setAddNewItemWindowType(addNewItemWindowType))
+                        }}
                         style={{
                             minWidth: "fit-content",
-                            textTransform: 'unset',
                             padding: 0,
                             color: "var(--table-black-text)",
                         }}
@@ -35,7 +42,6 @@ const AddItemCollapsedWindow = () => {
                         Show
                     </Button>
                 </Grid>
-                <Grid item></Grid>
             </Grid>
 
         </Box>

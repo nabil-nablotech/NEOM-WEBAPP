@@ -1,6 +1,5 @@
 
 import Box from '@mui/material/Box';
-import { GridViewCard_Places } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'
 import commonStyles from '../../index.module.css'
 import { Grid } from '@mui/material';
@@ -25,6 +24,7 @@ export type MediaProps = {
     hasMoreData: boolean;
     loading: boolean;
     totalData?: number;
+    setEdit: (payload: Media) => void
   }
 
 const GridView = (props: MediaProps) => {
@@ -32,7 +32,7 @@ const GridView = (props: MediaProps) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const {data, hasMoreData, fetchData, loading, totalData} = props;
+    const {data, hasMoreData, fetchData, loading, totalData, setEdit} = props;
 
     const { media } = useSelector(
         (state: RootState) => state.searchResults
@@ -74,6 +74,8 @@ const GridView = (props: MediaProps) => {
                                 title={item.attributes.media_associate.data.attributes.place_unique_id?.data !== null ? `${item.attributes.media_associate.data.attributes.place_unique_id?.data?.attributes?.placeNameEnglish}${item.attributes.media_associate.data.attributes.place_unique_id?.data?.attributes?.placeNameArabic}` : item.attributes.title}
                                 subTitle={item.attributes.description.substr(0, 40) + '...'}
                                 dateString={`Last login on ${format(new Date(item.attributes.updatedAt), 'yyyy-MM-dd')}`}
+                                setEdit={setEdit}
+                                record={item}
                             />
                             
                         </Grid>

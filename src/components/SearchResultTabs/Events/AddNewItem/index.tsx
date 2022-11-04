@@ -31,6 +31,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
   setAddNewItemWindowType,
+  storeAddItemProgressState,
   toggleAddItemWindowMinimized,
   toggleNewItemWindow,
   toggleShowAddSuccess,
@@ -42,6 +43,7 @@ import { useFormik } from "formik";
 import ReactDatePicker from "react-datepicker";
 import { Place } from "../../../../types/Place";
 import { setEventEdit } from "../../../../store/reducers/eventReducer";
+import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -103,7 +105,6 @@ const StepContent = ({
   places,
   handleChange,
 }: StepContentTypes) => {
-  const [currentKeyword, setCurrentKeyword] = useState<string>("");
 
   return (
     <>
@@ -114,7 +115,7 @@ const StepContent = ({
               className={`${styles["custom-search-field"]}`}
               label="Search Place*"
               placeholder="Search Place*"
-              value={formik.values.place}
+              value={formik.values.place || ''}
               // defaultValue={formik.}
               handleClear={() => {}}
               itemsList={places || []}
@@ -385,54 +386,22 @@ const StepContent = ({
         )}
         {activeStep === 1 && (
           <>
-            <Box component="div">Make your content discoverable</Box>
-            <TextInput
-              className={`${styles["english-name"]}`}
-              id="keyword-div"
-              label="Add Keywords"
-              name="keywords"
-              value={currentKeyword}
-              onChange={(e) => {
-                setCurrentKeyword(e.target.value);
+            <StepperKeywordsComponent
+              onKeyDown={(keywordString) => {
+                formik.setFieldValue("keywords", [
+                  ...new Set([...formik.values.keywords, keywordString]),
+                ].filter(ele => ele !== ''));
               }}
-              onKeyDown={(e) => {
-                handleEnter(e, () => {
-                  formik.setFieldValue("keywords", [
-                    ...new Set([...formik.values.keywords, currentKeyword]),
-                  ]);
-                  setCurrentKeyword("");
-                });
+
+              onDelete={(value) => {
+                const newArr = [...formik.values.keywords].filter(
+                  (element: string) => element !== value
+                );
+                formik.setFieldValue("keywords", [...new Set(newArr)]);
               }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
+
+              currentKeywordArray={formik.values.keywords}
             />
-            {
-              <Box
-                component="div"
-                style={{
-                  display: "flex",
-                  gap: "5px",
-                }}
-              >
-                {formik.values.keywords.map((item: string, index: any) => (
-                  <Chip
-                    key={index}
-                    size="small"
-                    variant="outlined"
-                    label={item}
-                    deleteIcon={<CloseIcon fontSize="small" />}
-                    onDelete={(e) => {
-                      const newArr = [...formik.values.keywords].filter(
-                        (element: string) => element !== item
-                      );
-                      formik.setFieldValue("keywords", [...new Set(newArr)]);
-                    }}
-                  />
-                ))}
-              </Box>
-            }
           </>
         )}
       </Box>
@@ -443,12 +412,11 @@ const StepContent = ({
 const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { showAddSuccess } = useSelector(
+  const { showAddSuccess, addItemProgressState } = useSelector(
     (state: RootState) => state.searchResults
   );
-  const { edit, event } = useSelector((state: RootState) => state.event);
+  const { edit, event, places } = useSelector((state: RootState) => state.event);
   const { options } = useSelector((state: RootState) => state.refinedSearch);
-  const { places } = useSelector((state: RootState) => state.event);
 
   const [activeStep, setActiveStep] = useState(0);
 
@@ -458,12 +426,6 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
   const [formError, setFormError] = useState<string>("");
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (showAddSuccess) {
-      dispatch(toggleShowAddSuccess(true));
-    }
-  }, [showAddSuccess]);
 
   const isStepOptional = (step: number) => {
     return step === 1;
@@ -487,15 +449,16 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
           ...data,
         });
       }
-      onHide();
+      handleReset();
       dispatch(toggleShowAddSuccess(true));
-      dispatch(toggleNewItemWindow(false));
+      dispatch(toggleNewItemWindow(false))
+      
     }
     if (edit && create && data) {
       create({
         ...data,
       });
-      onHide();
+      handleHide();
       dispatch(toggleNewItemWindow(false));
     }
 
@@ -506,7 +469,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
     if (activeStep === 0) {
       dispatch(toggleNewItemWindow(false))
       dispatch(setAddNewItemWindowType(null))
-      dispatch(toggleAddItemWindowMinimized(null))
+      handleReset();
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
@@ -529,7 +492,14 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
 
   const handleReset = () => {
     setActiveStep(0);
-  };
+
+    dispatch(toggleAddItemWindowMinimized(null))
+
+    /** remove the data when change in add item type window occurs */
+    dispatch(storeAddItemProgressState(null))
+
+    
+}
 
   const handleStep = (step: number) => () => {
     if (activeStep > step) {
@@ -540,7 +510,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
 
   const formik = useFormik({
     initialValues: {
-      place: edit ? event?.visit_associate?.place_unique_id : '',
+      place: (edit && event?.visit_associate && event?.visit_associate?.place_unique_id) ? event?.visit_associate?.place_unique_id : {},
       eventDate:
         edit && event.visitDate ? new Date(event.visitDate) : undefined,
       recordingTeam: edit ? event?.recordingTeam : "",
@@ -574,6 +544,34 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
     },
   });
 
+  useEffect(() => {
+    /** Effect needed to load history data,
+     * and remove the data when change in add item type window occurs
+     */
+    if (addItemProgressState && addItemProgressState.formData) {
+
+      setActiveStep(addItemProgressState.activeStep)
+
+      Object.keys(addItemProgressState.formData).forEach(keyName => {
+        // @ts-ignore
+        formik.setFieldValue(keyName, addItemProgressState.formData[keyName])
+      })
+    }
+
+  }, [])
+
+  const handleHide = () => {
+    onHide()
+
+    /** store data when unmounting */
+    dispatch(storeAddItemProgressState({
+      activeStep: activeStep,
+      formData: {
+        ...formik.values
+      }
+    }))
+  }
+
   const handleChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -598,7 +596,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
             >
               <DefaultButton
                 variant="text"
-                onClick={(e) => onHide()}
+                onClick={(e) => handleHide()}
                 style={{
                   // paddingInline: 0,
                   minWidth: "fit-content",
@@ -721,13 +719,6 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
                 <Button
                   colors={["#fff", "var(--table-black-text)", "none"]}
                   label={"Next"}
-                  // type="submit"
-                  // disabled={
-                  //   !(
-                  //     formik.values?.visitNumber?.length > 0 &&
-                  //     formik.values.place
-                  //   )
-                  // }
                   onClick={handleNext}
                 />
               )}

@@ -17,6 +17,7 @@ import useMedia from "../../hooks/useMedia";
 import {
   setActiveTab,
   toggleShowAddSuccess,
+  toggleShowEditSuccess
 } from "../../store/reducers/searchResultsReducer";
 import PositionedSnackbar from "../../components/Snackbar";
 import { PLACES_TAB_NAME } from "../../utils/services/helpers";
@@ -30,7 +31,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   const { data } = useRefinedSearch();
   const navigate = useNavigate();
   // const { searchText, activeTab, newItemWindowOpen, showAddSuccess } =
-  const { searchText, showAddSuccess } =
+  const { searchText, showAddSuccess,addNewItemWindowType, showEditSuccess } =
     useSelector((state: RootState) => state.searchResults);
   const { fetchEvents, clearSearch: clearEventSearch } = useEvent();
   const { fetchLibraryItems } = useLibrary();
@@ -112,7 +113,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         gap: '10px',
         alignItems: 'center'
       }}>
-        <Grid item>{`New ${tabName === PLACES_TAB_NAME ? "Place" : "Event"} added.`}</Grid>
+        <Grid item>{`New ${addNewItemWindowType} added.`}</Grid>
         <Grid item className={`${styles['continue-btn']}`}>
           <Button variant="text" onClick={e => { }}
             startIcon={<CreateOutlinedIcon fontSize="small" />}
@@ -134,6 +135,21 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
     </Box>
   }
 
+  const successMessage = () => {
+    let screen = 'Place';
+    switch (tabName) {
+      case 'Events':
+        screen = 'Event'
+        break;
+      case 'Library':
+        screen = 'Library'
+        break;
+      case 'Media':
+        screen = 'Media'
+        break;
+    }
+    return screen;
+  }
   return (
     <>
       <Header
@@ -148,9 +164,18 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       <PositionedSnackbar
         message={<ContinueEditing />}
         severity={"success"}
-        open={showAddSuccess}
+        open={showAddSuccess && !showEditSuccess}
         handleClose={() => dispatch(toggleShowAddSuccess(false))}
         duration={10000}
+      />
+      <PositionedSnackbar
+        message={`${successMessage()} updated`}
+        severity={"success"}
+        open={showEditSuccess}
+        handleClose={() => {
+          dispatch(toggleShowEditSuccess(false))
+        }}
+        duration={5000}
       />
     </>
   );

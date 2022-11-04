@@ -3,13 +3,16 @@ import Box from "@mui/material/Box";
 import { Grid } from "@mui/material";
 /** indicating that we can send html later on wherever we parse */
 import parse from "html-react-parser";
-import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
-import { GridViewCard_Places } from "../../../../types/SearchResultsTabsProps";
+import { GridViewCard_Places, InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
-import MoreIcon from "../../../../assets/images/searchResults/MoreMenu.svg";
-import {baseUrl} from "../../../../utils/services/helpers";
-import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
+import {baseUrl, isRecordAttached} from "../../../../utils/services/helpers";
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
+import MoreOptionsComponent from "../ListView/MoreOption";
+import { useSelector } from "react-redux";
+import DetachedIcon from "../../../Icons/DetachedIcon";
+import { modifyAssociatedPlaces } from "../../../../store/reducers/searchResultsReducer";
+import { RootState } from "../../../../store";
+import { useDispatch } from "react-redux";
 
 export const Card = ({
   img,
@@ -17,24 +20,14 @@ export const Card = ({
   subTitle,
   dateString,
   period,
+  setEdit,
+  record
 }: GridViewCard_Places) => {
+  const { isAssociationsStepOpen, associatedPlaces } = useSelector(
+    (state: RootState) => state.searchResults
+  );
 
-  const menuItems = [
-    {
-      label: "Share",
-      action: () => { },
-    },
-    {
-      label: "Edit",
-      action: () => {
-      },
-    },
-    {
-      label: "Delete",
-      action: () => {
-      },
-    },
-  ]
+  const dispatch = useDispatch()
 
   return (
     <>
@@ -79,10 +72,38 @@ export const Card = ({
               className={`${gridStyles["more-icon-span"]}`}
               component={"span"}
             >
-              <CustomMoreOptionsComponent
-                moreIconClassName={`${gridStyles["more-icon"]}`}
-                menuActions={menuItems}
-              />
+             <Box
+                className={`${gridStyles["more-icon"]}`}
+                component={"span"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log('click on more')
+                }}
+              >
+                {isAssociationsStepOpen ?
+                  <DetachedIcon
+                    style={{
+                      height: '18px',
+                      position: 'relative',
+                      top: '0.5em',
+                    }}
+                    shouldShowAttachIcon={isRecordAttached(record, associatedPlaces)}
+                    onClick={e => {
+                      const data: InventoryAssociationType = {
+                        id: Number(record.id),
+                        placeNameEnglish: record.attributes.placeNameEnglish,
+                        placeNameArabic: record.attributes.placeNameArabic,
+                        placeNumber: record.attributes.placeNumber,
+                      }
+                      dispatch(modifyAssociatedPlaces({
+                        newItem: data,
+                        removeId: null
+                      }))
+                    }}
+                  /> :
+                  <MoreOptionsComponent type="Places" setEdit={setEdit} record={record} />
+                }
+              </Box>
             </Box>
           </Grid>
         </Grid>

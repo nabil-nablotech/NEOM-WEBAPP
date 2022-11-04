@@ -19,9 +19,8 @@ const PlacesTab = () => {
     (state: RootState) => state.searchResults
   );
 
-  const { fetchPlaces, hasMoreData, loading, mapPlaces } = usePlace();
+  const { fetchPlaces, hasMoreData, loading, mapPlaces, setEdit } = usePlace();
   const [isFilter, setIsFilter] = useState(null);
-
   const { openStates, toggleOpenStates } = useToggledView({ count: 2 });
 
   const meta: Meta | null = placeMetaData;
@@ -76,7 +75,7 @@ const PlacesTab = () => {
           {openStates[0] && (
             <>
               <Grid item xl={6} lg={6} md={5} sm={5}>
-                <GridView key={1} totalData={meta?.pagination?.total} loading={loading} data={isFilter===null?places:places.filter((item)=>{return item.id===isFilter})} fetchData={fetchPlaces} hasMoreData={hasMoreData} />
+                <GridView setEdit={setEdit} key={1} totalData={meta?.pagination?.total} loading={loading} data={isFilter===null?places:places.filter((item)=>{return item.id===isFilter})} fetchData={fetchPlaces} hasMoreData={hasMoreData} />
               </Grid>
               {/* To-do: map view */}
               <Grid item xl={6} lg={6} md={7} sm={7} className={`${styles["map-section"]}`}>
@@ -91,7 +90,7 @@ const PlacesTab = () => {
                 width: "100%",
               }}
             >
-              <ListView key={3} loading={loading} data={isFilter===null?places:places.filter((item)=>{return item.id===isFilter})} fetchData={fetchPlaces} hasMoreData={hasMoreData} />
+              <ListView setEdit={setEdit} key={3} loading={loading} data={isFilter===null?places:places.filter((item)=>{return item.id===isFilter})} fetchData={fetchPlaces} hasMoreData={hasMoreData} />
             </Box>
           )}
         </Grid>

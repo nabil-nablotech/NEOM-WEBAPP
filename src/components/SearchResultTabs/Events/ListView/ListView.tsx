@@ -1,20 +1,22 @@
-import { useState, useEffect } from 'react';
-import { Box, Menu, MenuItem } from '@mui/material';
+import { useState, useEffect, useMemo } from 'react';
+import { Box } from '@mui/material';
 import { ColumnsType } from 'antd/lib/table';
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { User } from '../../../../types/User';
 import { StyledAntTable } from '../../../StyledAntTable';
 import styled from "styled-components";
-import { antTablePaginationCss } from '../../../../utils/services/helpers';
+import { antTablePaginationCss, DETACH_ICON_CLASSNAME, isEventRecordAttached, isRecordAttached, shouldAddAtttachColumnHeader } from '../../../../utils/services/helpers';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import {EventsProps} from '../GridView/GridView';
-import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
+import { modifyAssociatedEvents, setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 import MoreOptionsComponent from './MoreOption';
 import { Event } from '../../../../types/Event';
+import { InventoryAssociationType_Event } from '../../../../types/SearchResultsTabsProps';
+import DetachedIcon from '../../../Icons/DetachedIcon';
+import { RootState } from '../../../../store';
+import { useSelector } from 'react-redux';
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -101,55 +103,15 @@ const StyledTableWrapper = styled(StyledAntTable)`
     ${antTablePaginationCss}
 ` 
 
-// const MoreOptionsComponent = ({
-//     record,
-//     id,
-// }: {
-//     id: number;
-//     record: User;
-// }) => {
-//     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-//     const open = Boolean(anchorEl);
-//     const handleClick = (e: any) => {
-//         setAnchorEl(e.currentTarget);
-//     };
-//     const handleClose = () => {
-//         setAnchorEl(null);
-//     };
-
-//     return (
-//         <>
-//             <div
-//                 className=""
-//             >
-//                 <MoreHorizIcon className="more-menu-div" />
-//             </div>
-//             <Menu
-//                 id="basic-menu"
-//                 anchorEl={anchorEl}
-//                 open={open}
-//                 onClose={handleClose}
-//                 MenuListProps={{
-//                     "aria-labelledby": "basic-button",
-//                 }}
-//             >
-//                 <MenuItem
-//                     key={1}
-//                 >
-//                     Edit
-//                 </MenuItem>
-//                 <MenuItem key={2}>
-//                    Delete
-//                 </MenuItem>
-//             </Menu>
-//         </>
-//     );
-// };
-
 const ListView = (props: EventsProps) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const tableHeaderJson: ColumnsType<any> = [
+
+    const { isAssociationsStepOpen, associatedEvents, events } = useSelector(
+        (state: RootState) => state.searchResults
+      );
+
+      const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([
         {
             title: "NAME",
             key: `attributes`,
@@ -229,10 +191,49 @@ const ListView = (props: EventsProps) => {
             className: 'more-menu-ant-cell',
             render: (value: any, record: Event) => (
 
-                <MoreOptionsComponent setEdit={props.setEdit} dispatch={dispatch} id={record.id} record={record} />
+                <MoreOptionsComponent type="Events" setEdit={props.setEdit} record={record} />
             ),
         },
-    ]
+    ])
+
+    const handleAttachClick = (e: any, record: Event) => {
+        
+        const data: InventoryAssociationType_Event = {
+            id: record.id,
+            visitNumber: record.attributes.visitNumber,
+            placeNameEnglish: record.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish,
+            placeNameArabic: record.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameArabic,
+            placeNumber: record.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNumber,
+        }
+        dispatch(modifyAssociatedEvents({
+            newItem: data,
+            removeId: null
+        }))
+    }
+
+    const attachIconColumnHeader: any = useMemo(() => ({
+        title: "",
+        key: "action",
+        fixed: 'left',
+        width: "50px",
+        className: 'more-menu-ant-cell attach-icon',
+        render: (value: any, record: Event) => {
+
+            return <Box component="div">
+                <DetachedIcon
+                    style={{
+                        height: '18px',
+                        position: 'relative',
+                        top: '3px',
+                    }}
+                    shouldShowAttachIcon={isEventRecordAttached(record, associatedEvents)}
+                    onClick={e => {
+                    }}
+                />
+            </Box>
+        }
+    }), [associatedEvents]
+    )
 
     const {data, handleNext: fetchData, hasMoreData, loading} = props;
     useEffect(() => {
@@ -245,6 +246,45 @@ const ListView = (props: EventsProps) => {
         }
 
     }, []);
+
+
+    /** Effect needed to refresh the headers, 
+    * when associations have changed.
+    */
+    useEffect(() => {
+        setTableHeaderJson(state => state.filter(item => {
+            return shouldAddAtttachColumnHeader(item)
+        }))
+
+        setTableHeaderJson(state => {
+            let newState = [...state]
+            if (newState.every(item => shouldAddAtttachColumnHeader(item))) {
+                newState = [attachIconColumnHeader, ...state]
+            }
+
+            return newState
+        })
+    }, [associatedEvents]);
+
+    useEffect(() => {
+
+        if (isAssociationsStepOpen) {
+            setTableHeaderJson(state => {
+                let newState = [...state]
+                if (newState.every(item => shouldAddAtttachColumnHeader(item))) {
+                    newState = [attachIconColumnHeader, ...state]
+                }
+
+                return newState
+            })
+        } else {
+            setTableHeaderJson(state => state.filter(item => {
+                return shouldAddAtttachColumnHeader(item)
+            }))
+        }
+
+    }, [isAssociationsStepOpen]);
+  
 
     return (
         <Box component="div" id={'events-list-parent'}>
@@ -265,14 +305,21 @@ const ListView = (props: EventsProps) => {
                 {data.length > 0 ? <StyledTableWrapper
                     // className={`${styles["table-container"]}`}
                     rowKey={"id"}
-                    // onRow={(record: any, rowIndex) => {
-                    //     return {
-                    //       onClick: event => {
-                    //         dispatch(setSelectedCardIndex(rowIndex || record.id))
-                    //         navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
-                    //       }, // click row
-                    //     };
-                    //   }}
+                    onRow={(record: any, rowIndex) => {
+                        return {
+                          onClick: (event: React.MouseEvent<HTMLElement>) => {
+                            const target = event.target as Element;
+                            const clsList = target.classList
+
+                            if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
+                                handleAttachClick(event, record)
+                            } else {
+                                dispatch(setSelectedCardIndex(rowIndex || record.id))
+                                navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
+                            }
+                          }, // click row
+                        };
+                      }}
                     size="small"
                     columns={tableHeaderJson}
                     dataSource={data}

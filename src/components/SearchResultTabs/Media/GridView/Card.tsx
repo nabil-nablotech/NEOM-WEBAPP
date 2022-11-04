@@ -1,10 +1,11 @@
 
 import Box from '@mui/material/Box';
-import { GridViewCard_Places } from '../../../../types/SearchResultsTabsProps'
+import { GridViewCard_Media } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'
 import styles from './index.module.css'
 import { Grid } from '@mui/material';
 import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
+import { MoreOptionsComponent } from "../ListView/MoreOption";
 // import { usePaginatedArray } from '../../../../hooks/usePaginatedArray';
 /** indicating that we can send html later on wherever we parse */
 import { baseUrl } from '../../../../utils/services/helpers';
@@ -15,13 +16,15 @@ export const Card = ({
     img,
     title,
     subTitle,
-    dateString
-}: GridViewCard_Places) => {
+    dateString,
+    setEdit,
+    record
+}: GridViewCard_Media) => {
     return <>
         <Box component="div" className={`${gridStyles['card-container']}`} >
             <Grid container spacing={1} className={`${gridStyles['card-grid']}`}>
                 <Grid item sm={12} className={`${gridStyles['card-image-wrapper']}`}>
-                    
+
                     {
                         itemIndex === 1 ?
                             <>
@@ -62,8 +65,17 @@ export const Card = ({
                         <div className={`${gridStyles['card-title']}`}>{title}</div>
                     </Grid>
                     <Grid item sm={1}>
-                        <Box className={`${gridStyles['more-icon-span']}`} component={"span"}>
-                            <Box className={`${gridStyles['more-icon']}`} component="img" alt={""} src={MoreIcon}></Box>
+                        <Box className={`${gridStyles["more-icon-span"]}`} component={"span"}>
+                            <Box
+                                className={`${gridStyles["more-icon"]}`}
+                                component={"span"}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    console.log('click on more')
+                                }}
+                            >
+                                <MoreOptionsComponent setEdit={setEdit} record={record} id={record.id} />
+                            </Box>
                         </Box>
                     </Grid>
                 </Grid>

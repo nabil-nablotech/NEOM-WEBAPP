@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Box, Button, Grid } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
+import { InventoryAssociationType_Event, tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import styles from './index.module.css'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useSelector } from "react-redux";
@@ -13,19 +13,21 @@ import { StyledAntTable } from "../../../StyledAntTable";
 import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
-import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
-import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatBytes, formatWebDate, stringAvatar,
-    isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT,  } from "../../../../utils/services/helpers";
+import MoreOptionsComponent from "../ListView/MoreOption";
+import { getRole } from '../../../../utils/storage/storage';
+import {
+    antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate,
+    isEmptyValue, NO_DESCRIPTION, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, isEventDetailAttached
+} from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
 import styled from "styled-components";
-import { format } from "date-fns";
 import useMedia from "../../../../hooks/useMedia";
 import CommentsSection from "../../../CommentsSection";
 import RenderInitials from "../../../RenderInitials";
 import { useDispatch } from "react-redux";
-import {  setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex } from "../../../../store/reducers/searchResultsReducer";
+import { modifyAssociatedEvents, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
 import YellowStar from '../../../../assets/images/searchResults/YellowStar.svg'
@@ -33,10 +35,10 @@ import { useMediaQuery } from 'react-responsive'
 import useEventDetails from "../../../../hooks/useEventDetails";
 import Loader from "../../../Common/Loader";
 import MapView from "../../GoogleMap/MapView";
-import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
 import NoTextPresent from "../../../NoDataScreens/NoText";
-import {isEmpty} from 'lodash'
+import { isEmpty } from 'lodash'
 import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
+import DetachedIcon from "../../../Icons/DetachedIcon";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -122,40 +124,32 @@ const StyledTableWrapper = styled(StyledAntTable)`
     }
     ${antTablePaginationCss}
 `
+
+const superEditor = getRole() === 'SuperEditor';
+const editor = getRole() === 'Editor';
+
 const EventDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
     const navigate = useNavigate();
     const [isFilter, setIsFilter] = useState(null);
-    
-    const { places, library, events, media } = useSelector(
+    const { places, isAssociationsStepOpen, associatedEvents, media } = useSelector(
         (state: RootState) => state.searchResults
     );
     const { data } = useSelector((state: RootState) => state.login);
 
+    const { loading: eventLoading, data: eventDetails, setEdit } = useEventDetails();
+
     let selectedPlaceObjIndex: number = 0
     let selectedPlaceObj: Place = places[0]
-
-    const {loading: eventLoading, data: eventDetails, setEdit} = useEventDetails();
-
-    useEffect(() => {
-        // if (eventDetails) {
-        //     dispatch(setActiveEventItem(eventDetails))
-        //     dispatch(setActiveEventItemIndex(0))
-        // }
-    }, [])
 
     places.forEach((placeItem: Place, inx: number) => {
         if (placeItem.attributes.uniqueId === uniqueId) {
             selectedPlaceObj = placeItem
             selectedPlaceObjIndex = inx
         }
-    })
-
+    });
     // get from api
     const [isCopyDone, setCopyDone] = useState<boolean>(false)
-
-
-    // const { fetchLibraryItems, hasMoreData, loading } = useLibrary();
 
     const {
         anchorEl,
@@ -165,7 +159,6 @@ const EventDetailsPage = () => {
         handleSettingsClose
     } = useAnchor()
 
-
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
     const dispatch = useDispatch()
 
@@ -173,15 +166,15 @@ const EventDetailsPage = () => {
 
     let mediaCount = 8
     const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
-    if(isTablet) {
+    if (isTablet) {
         mediaCount = 6
     }
 
-    if(eventLoading) {
+    if (eventLoading) {
         return <Loader />
     }
-    
-    if(!eventLoading && !eventDetails) {
+
+    if (!eventLoading && !eventDetails) {
         return <div>Cant fetch event</div>
     }
 
@@ -203,23 +196,17 @@ const EventDetailsPage = () => {
             mediaGridActiveItems + (mediaGallery?.length - mediaGridActiveItems)
         )
 
-
-    
-    const {latitude, longitude} = eventDetails
+    const { latitude, longitude } = eventDetails
 
     if (visit_associate?.place_unique_id) {
 
     }
-    
+
     const menuItems = [
-        {
-            label: "Share",
-            action: () => { },
-        },
         {
             label: "Edit",
             action: () => {
-                setEdit()
+                setEdit({record: eventDetails, type: "Events"});
             },
         },
         {
@@ -280,7 +267,7 @@ const EventDetailsPage = () => {
                     }}
                 >
                     <Tooltip>
-                        {value.referenceURL ?? "static URL"}
+                        {value.referenceURL ?? ""}
                     </Tooltip>
                 </Box>
             ),
@@ -289,7 +276,7 @@ const EventDetailsPage = () => {
             title: "SIZE",
             key: "attributes",
             dataIndex: "media_unique_id",
-            render: (value, index) => value.object.size ? formatBytes(value.object.size) : "static size",
+            render: (value, index) => value?.object?.size ? formatBytes(value?.object?.size) : "",
         },
         {
             title: "UPDATED",
@@ -303,12 +290,12 @@ const EventDetailsPage = () => {
             fixed: "right",
             className: "more-menu-ant-cell",
             render: (value: any, record: Media) => (
-                <MoreOptionsComponent id={record.id} record={record} />
+                <MoreOptionsComponent type="Library" setEdit={setEdit} record={record} />
             ),
         },
     ];
 
-    
+
     const actionsArray = [
         {
             label: 'Feature',
@@ -372,8 +359,8 @@ const EventDetailsPage = () => {
                 </Grid>
                 <Box component="div" className={`${styles['content-section']}`}>
                     <Box component="div" className={`${styles['title-section']}`}>
-                        <Grid container className={`${styles['title-section-grid']}`}>
-                            <Grid item className={`${styles['title-section-left-item']}`}>
+                        <Grid container>
+                            <Grid item sm={11} className={`${styles['title-section-left-item']}`}>
                                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
                                 {visit_associate?.place_unique_id?.placeNameEnglish && <Grid container>
@@ -401,12 +388,31 @@ const EventDetailsPage = () => {
                                     VISIT {visitNumber}
                                 </Box>
                             </Grid>
-                            <Grid item className={`${styles['title-section-grid']}`}>
+                            <Grid item sm={1} className={`${styles['title-section-grids']}`}>
                                 <Box component="div" className={`${styles['more-icon-box']}`}
                                 >
-                                    <CustomMoreOptionsComponent
-                                        menuActions={menuItems}
-                                    />
+                                    {isAssociationsStepOpen ?
+                                        <DetachedIcon
+                                            style={{}}
+                                            shouldShowAttachIcon={isEventDetailAttached(eventDetails, associatedEvents)}
+                                            onClick={e => {
+                                                const data: InventoryAssociationType_Event = {
+                                                    id: eventDetails.id ? eventDetails.id.toString() : '',
+                                                    visitNumber: eventDetails.visitNumber,
+                                                    placeNameEnglish: eventDetails.visit_associate?.place_unique_id.placeNameEnglish ?? '',
+                                                    placeNameArabic: eventDetails.visit_associate?.place_unique_id.placeNameArabic ?? '',
+                                                    placeNumber: eventDetails.visit_associate?.place_unique_id.placeNumber ?? '',
+                                                }
+
+                                                dispatch(modifyAssociatedEvents({
+                                                    newItem: data,
+                                                    removeId: null
+                                                }))
+                                            }}
+                                        /> :
+                                        <CustomMoreOptionsComponent
+                                            menuActions={menuItems}
+                                        />}
                                 </Box>
                             </Grid>
                         </Grid>
@@ -423,10 +429,10 @@ const EventDetailsPage = () => {
                                         className={`${styles['no-data-available']} ${styles['see-more-active']}`}
                                     >
                                         {siteDescription?.substring(0, 200)}
-                                    </Box>: 
-                                    <NoTextPresent
-                                        message={NO_DESCRIPTION}
-                                    />}
+                                    </Box> :
+                                        <NoTextPresent
+                                            message={NO_DESCRIPTION}
+                                        />}
 
                                 </Box>
                                 <Box component="div" className={`${styles['table']}`}>
@@ -468,7 +474,7 @@ const EventDetailsPage = () => {
                                                 {
                                                     !isEmpty(period) ? period.map((item, index) => (
                                                         <Box
-                                                        key={index}
+                                                            key={index}
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
                                                         >
@@ -487,7 +493,7 @@ const EventDetailsPage = () => {
                                             Field Narrative
                                         </Grid>
                                         {
-                                            !isEmptyValue(fieldNarrative) ? 
+                                            !isEmptyValue(fieldNarrative) ?
                                                 <Grid item>
                                                     {fieldNarrative}
                                                 </Grid> :
@@ -513,7 +519,7 @@ const EventDetailsPage = () => {
                                                         message={NO_TEXT}
                                                     />
                                                 </Grid>
-                                           
+
                                         }
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -759,14 +765,14 @@ const EventDetailsPage = () => {
                                     onClick={e => {
                                         e.preventDefault()
 
-                                        if( mediaGalleryLocal && mediaGallery && (mediaGalleryLocal.length === mediaGallery.length)) {
+                                        if (mediaGalleryLocal && mediaGallery && (mediaGalleryLocal.length === mediaGallery.length)) {
                                             setMediaGridActiveItems(8)
                                         } else {
                                             setMediaGridActiveItems(state => state + 8)
                                         }
                                     }}
                                 >
-                                    See { mediaGalleryLocal && mediaGallery && (mediaGalleryLocal.length === mediaGallery.length) ? 'Less': 'More'}
+                                    See {mediaGalleryLocal && mediaGallery && (mediaGalleryLocal.length === mediaGallery.length) ? 'Less' : 'More'}
                                 </Button>
                             </Grid>
                         </Grid>}

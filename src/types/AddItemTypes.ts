@@ -1,10 +1,18 @@
-import { Place } from "./Place"
+import { InventoryAssociationType, InventoryAssociationType_Event } from "./SearchResultsTabsProps"
 
-export type AddPlacesTypes = {
-    list: Array<Place>
+export type AddPlaceAssociationTypes = {
+    list: Array<InventoryAssociationType>
 }
 
-export type InventoryItemTypes = {
-    item: Place
-    handleRemoveItem: (e: React.MouseEvent, uniqueId: string) =>  void
+export type PlaceInventoryItemTypes = {
+    item: InventoryAssociationType
+    handleRemoveItem: (e: React.MouseEvent, id: number) =>  void
+}
+export type AddEventAssociationTypes = {
+    list: Array<InventoryAssociationType_Event>
+}
+
+export type EventInventoryItemTypes = {
+    item: InventoryAssociationType_Event
+    handleRemoveItem: (e: React.MouseEvent, id: string) =>  void
 }

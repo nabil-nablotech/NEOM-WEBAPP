@@ -85,7 +85,7 @@ query librarySearchList(
         media_associate {
           data {
             attributes {
-              place_unique_id{
+              place_unique_ids{
                 data {
                   attributes {
                     placeNameArabic
@@ -194,7 +194,7 @@ query RefinedLibrarySearch(
         media_associate {
           data {
             attributes {
-              place_unique_id{
+              place_unique_ids{
                 data {
                   attributes {
                     placeNameArabic
@@ -207,6 +207,176 @@ query RefinedLibrarySearch(
         }
       }
     }
+  }
+}
+`;
+
+export const addLibrary = gql`
+mutation CreateLibrary(
+  $uniqueId: String
+  $title: String
+  $bearing: String
+  $Author: String
+  $description: String
+  $categoryType: JSON
+  $fileName: String
+  $latitude: Float
+  $longitude: Float
+  $featuredImage: Boolean
+  $objectURL: String
+  $refrenceURL: String
+  $citation: String
+  $keywords: JSON
+  $mediaUIPath: String
+  $fileSize: String
+  $storage: String
+  $make: String
+  $model: String
+  $depth: String
+  $dimension: String
+  $created: Date
+  $modified: DateTime
+  $asset_config_id: [ID]
+  $object: ID
+) {
+  createMedia(
+    data: {
+      uniqueId: $uniqueId
+      title: $title
+      bearing: $bearing
+      Author: $Author
+      description: $description
+      categoryType: $categoryType
+      latitude: $latitude
+      longitude: $longitude
+      deleted: false
+      keywords: $keywords
+      fileName: $fileName
+      media_type: $asset_config_id
+      featuredImage: $featuredImage
+      objectURL: $objectURL
+      referenceURL: $refrenceURL
+      citation: $citation
+      mediaUIPath: $mediaUIPath
+      imageMetadata: {
+        fileName: $fileName
+        longitude: $longitude
+        latitude: $latitude
+        fileSize: $fileSize
+        storage: $storage
+        make: $make
+        model: $model
+        depth: $depth
+        dimension: $dimension
+        created: $created
+        modified: $modified
+      }
+      object: $object
+    }
+  ) {
+    data {
+      id
+      attributes {
+        uniqueId
+        media_associate {
+          data {
+            id
+          }
+        }
+        media_type {
+          data{
+            attributes {
+              categoryCode
+              typeCode
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
+export const updateLibrary = gql`
+mutation UpdateMedia(
+  $id: ID!
+$title: String
+$bearing: String
+$Author: String
+$description: String
+$categoryType: JSON
+$fileName: String
+$latitude: Float
+$longitude: Float
+$featuredImage: Boolean
+$objectURL: String
+$refrenceURL: String
+$citation: String
+$keywords: JSON
+$fileSize: String
+$storage: String
+$make: String
+$model: String
+$depth: String
+$dimension: String
+$created: Date
+$modified: DateTime
+$asset_config_id: [ID]
+$object: ID
+) {
+  updateMedia(
+    id: $id,
+    data: {
+    title: $title
+    bearing: $bearing
+    Author: $Author
+    description: $description
+    categoryType: $categoryType
+    latitude: $latitude
+    longitude: $longitude
+    deleted: false
+    keywords: $keywords
+    fileName: $fileName
+    media_type: $asset_config_id
+    featuredImage: $featuredImage
+    objectURL: $objectURL
+    referenceURL: $refrenceURL
+    citation: $citation
+    object: $object
+      imageMetadata: {
+      fileName: $fileName
+      longitude: $longitude
+      latitude: $latitude
+      fileSize: $fileSize
+      storage: $storage
+      make: $make
+      model: $model
+      depth: $depth
+      dimension: $dimension
+      created: $created
+      modified: $modified
+    }
+    }
+  ) {
+    data {
+    id
+    attributes {
+      uniqueId
+      media_associate {
+        data {
+          id
+        }
+      }
+      media_type {
+        data{
+          attributes {
+            categoryCode
+            typeCode
+          }
+        }
+      }
+    }
+  }
   }
 }
 `;

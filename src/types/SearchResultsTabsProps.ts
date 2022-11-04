@@ -1,6 +1,6 @@
 import React from "react";
 import { DashboardResponse } from "./dashboard";
-import { Place, Meta, FieldOptions } from "./Place";
+import { Place, Meta, FieldOptions, PlaceApi } from "./Place";
 import { Event, EventApi } from "./Event";
 import { Media } from "./Media";
 
@@ -23,6 +23,18 @@ export interface TabPanelProps {
 
 export type tabNameProps = "Places" | "Events" | "Library" | "Media";
 
+export type GridViewCard_Media = {
+  itemIndex?: number;
+  img?: string;
+  title: string;
+  subTitle: string;
+  dateString: string;
+  period?: string[] | null;
+  onClick?: ((e: React.MouseEvent<Element, React.MouseEvent>) => void) &
+    React.MouseEvent<Element, React.MouseEvent>;
+    setEdit: (payload: Media) => void;
+  record: Media
+};
 export type GridViewCard_Places = {
   itemIndex?: number;
   img?: string;
@@ -32,6 +44,8 @@ export type GridViewCard_Places = {
   period?: string[] | null;
   onClick?: ((e: React.MouseEvent<Element, React.MouseEvent>) => void) &
     React.MouseEvent<Element, React.MouseEvent>;
+  setEdit: (payload: {record: Place | PlaceApi | Media | Event, type: tabNameProps}) => void;
+  record: Place
 };
 export type GridViewCard_Events = {
   // key?: number
@@ -41,11 +55,24 @@ export type GridViewCard_Events = {
   dateString: string;
   isNew: boolean;
   handleClick: (item: Event, index: number) => void
-  setEdit: (item: Event) => void
+  setEdit: (payload: {record: Media | Event, type: tabNameProps}) => void
   record: Event;
   id: string;
-  dispatch: any
 };
+
+export type InventoryAssociationType = {
+  id: number
+  placeNameEnglish: string
+  placeNameArabic: string
+  placeNumber: string | null
+}
+export type InventoryAssociationType_Event = {
+  id: string
+  visitNumber: string
+  placeNameEnglish: string
+  placeNameArabic: string
+  placeNumber: string | null
+}
 
 export type SearchResultsState2 = {
   selectedCardIndex: number;
@@ -63,6 +90,7 @@ export type SearchResultsState2 = {
   activeTab: tabNameProps | "";
   newItemWindowOpen: boolean;
   showAddSuccess: boolean;
+  showEditSuccess: boolean;
   activePlaceItem: Place | null;
   activePlaceItemIndex: number;
   activeEventItem: EventApi | null;
@@ -72,10 +100,86 @@ export type SearchResultsState2 = {
   isOpenGalleryView: boolean
   addNewItemWindowType: tabNameProps | null
   isAssociationsStepOpen: boolean
-  associatedPlaces: Place[] | []
-  associatedEvents: Event[]
+  associatedPlaces: InventoryAssociationType[] | []
+  associatedEvents: InventoryAssociationType_Event[] | []
   addItemWindowMinimized: boolean | null
+  addItemProgressState: null | addItemProgressPayload
+  isAssociationsIconsDisabled: boolean
 };
+
+export type addItemProgressPayload = addItemProgressStateType | addPlaceProgressStateType | 
+  addEventProgressStateType | addMediaProgressStateType
+
+export type addItemProgressStateType = {
+  activeStep :number,
+  formData: {
+    place: string
+    eventDate?: Date
+    recordingTeam?: string
+    siteDescription?: string
+    fieldNarrative?: string
+    siteType?: string
+    keywords: Array<string>,
+  }
+}
+export type addPlaceProgressStateType = {
+  activeStep :number
+  formData: {
+    placeNumber: string
+    placeNameEnglish: string
+    placeNameArabic: string
+    siteDescription: string
+    siteType: string[],
+    period: string[],
+    stateOfConservation: string
+    risk: string
+    tourismValue: string
+    researchValue: string
+    artifacts: string
+    recommendation: string
+    latitude: number | null,
+    longitude: number | null,
+    keywords: string[],
+  }
+}
+export type addEventProgressStateType = {
+  activeStep :number
+  formData: {
+    place: string,
+    eventDate: Date | undefined,
+    recordingTeam: string
+    visitNumber: string | Number | null
+    siteDescription: string
+    fieldNarrative: string
+    artifacts: string
+    latitude: Number | number | null,
+    longitude: Number | number | null,
+    assessmentType: string
+    stateOfConservation: string
+    siteType: string | never[]
+    risk: string
+    tourismValue: string
+    researchValue: string
+    recommendation: string
+    period: string[]
+    keywords: string | never[]
+  }
+}
+export type addMediaProgressStateType = {
+  activeStep :number
+  formData: {
+    media_type: string
+    title: string
+    bearing: string
+    description: string
+    Author: string
+    categoryType: string[]
+    latitude: null,
+    longitude: null,
+    referenceURL: string
+    keywords: string[]
+  }
+}
 
 export type FileDataType = {
   src?: string;

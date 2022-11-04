@@ -1,21 +1,29 @@
 import { useEffect } from "react";
-import { useMutation, useQuery } from "react-query";
-import { useDispatch } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
-import { placeDetails } from "../api/details";
+import { useMutation } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useNavigation, useParams } from "react-router-dom";
+import { mediaDetails, placeDetails } from "../api/details";
+import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
+import { PLACES_TAB_NAME } from "../utils/services/helpers";
+import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation } from "../store/reducers/searchResultsReducer";
+import { RootState } from "../store";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
+import { PlaceApi, Place } from "../types/Place";
+import { Media, MediaApi } from "../types/Media";
+import { Event } from "../types/Event";
 
 const usePlaceDetails = () => {
-  const { search } = useLocation();
-  const { uniqueId } = useParams<{ uniqueId: string }>()
+  const { uniqueId } = useParams<{ uniqueId: string }>();
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
+  const { edit } = useSelector((state:RootState) => state.tabEdit)
 
   useEffect(() => {
     if (uniqueId) {
       fetchPlaceDetails(uniqueId)
     }
-  }, [])
+  }, [edit, uniqueId])
 
   /**
    * fetch places with two words
@@ -24,10 +32,34 @@ const usePlaceDetails = () => {
     retry: false
   });
 
+  const setEdit = async (payload: {record: any, type: tabNameProps}) => {
+    if (payload) {
+      const {record, type} = payload;
+      let res: any | MediaApi={};
+      if (type === 'Places') {
+        res = await placeDetails(record.uniqueId);
+      }
+      if (type === 'Library' && record.media_unique_id) {
+        res = await mediaDetails(record.media_unique_id.uniqueId);
+        if (res?.media_associate) {
+          dispatch(setDefaultMediaAssociation({events: res.media_associate?.visit_unique_ids || [], places: res.media_associate?.place_unique_ids || [] }));
+        }
+      }
+      if (type === 'Events' && record.visit_unique_id) {
+        res = await mediaDetails(record.visit_unique_id.uniqueId);
+      }
+      dispatch(setTabData(res));
+      dispatch(setTabEdit(true));
+      dispatch(toggleNewItemWindow(true));
+      dispatch(setAddNewItemWindowType(type));
+    }
+  };
+
   return {
     loading: isLoading,
     error,
-    data
+    data,
+    setEdit
   };
 };
 

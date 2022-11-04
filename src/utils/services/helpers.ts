@@ -2,13 +2,13 @@ import dayjs from "dayjs";
 import styled from "styled-components";
 import { StyledAntTable } from "../../components/StyledAntTable";
 import { MediaAssociates2, Place, PlaceApi } from "../../types/Place";
-import { tabNameProps } from "../../types/SearchResultsTabsProps";
+import { InventoryAssociationType, InventoryAssociationType_Event, tabNameProps } from "../../types/SearchResultsTabsProps";
 import * as Yup from 'yup';
 import { ColumnType } from "antd/lib/table";
-import { Event } from "../../types/Event";
+import { Event, EventApi } from "../../types/Event";
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://b159-117-251-211-219.ngrok.io`;
+// export const baseUrl = `https://2e7f-117-251-213-46.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -322,10 +322,10 @@ export const AddPlaceFormSchema = Yup.object().shape({
 
 export const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>, callback?: () => void) => {
 
-  if(e.key === "Enter") {
+  if (e.key === "Enter") {
     e.preventDefault()
 
-    if(callback) callback()
+    if (callback) callback()
   }
 }
 
@@ -333,12 +333,17 @@ type isEmptyType = (value: any) => boolean
 
 
 export const isEmptyValue: isEmptyType = (value: any) => {
+
+  if(value === null || value === undefined) return true
+
   if (typeof value === 'string') return value === ''
+
   if (
     (typeof value === 'object') &&
     (Array.isArray(value)) &&
     value.length === 0
   ) return value.length === 0
+
   if (
     (typeof value === 'object') &&
     (Array.isArray(value)) &&
@@ -366,11 +371,42 @@ export const shouldAddAtttachColumnHeader = (item: ColumnType<any>) => {
   return (!item.className || item.className?.indexOf(ATTACH_ICON_CLASSNAME) === -1)
 }
 
-export const isRecordAttached = (record: Place | Event, list: Array<Place | Event>) => {
+export const isRecordAttached = (record: Place | Event , list: Array<InventoryAssociationType>, type: string = '') => {
 
-  if(!list || !record) return false
+  if (!list || !record) return false
+  
+  return list.some(item => {
+    return (item.id === parseInt(record.id))
+  })
+
+}
+export const isEventRecordAttached = (record: Place | Event , list: Array<InventoryAssociationType_Event>, type: string = '') => {
+
+  if (!list || !record) return false
+  
+  return list.some(item => {
+    return (parseInt(item.id) === parseInt(record.id))
+  })
+
+}
+export const isEventDetailAttached = (record: EventApi , list: Array<InventoryAssociationType_Event>, type: string = '') => {
+
+  if (!list || !record) return false
+
+  if (!record.id) return false
 
   return list.some(item => {
-    return (item.attributes.uniqueId === record.attributes.uniqueId)
-  }) 
+    return record.id && (item.id === record.id.toString())
+  })
+
+}
+
+export const isPlaceDetailAttached = (record: PlaceApi , list: Array<InventoryAssociationType>, type: string = '') => {
+
+  if (!list || !record) return false
+
+  return list.some(item => {
+    return (item.id === parseInt(record.id))
+  })
+
 }

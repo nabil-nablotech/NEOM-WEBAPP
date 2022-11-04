@@ -7,9 +7,12 @@ import gridStyles from "./index.module.css";
 import commonStyles from "../../index.module.css";
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 import {Card} from './Card';
-import { Place } from "../../../../types/Place";
+import { Place, PlaceApi } from "../../../../types/Place";
 import { useNavigate } from "react-router-dom";
 import {formatDateTime} from '../../../../utils/services/helpers';
+import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
+import { Media } from "../../../../types/Media";
+import { Event } from "../../../../types/Event";
 
 export type PlacesProps = {
   data: Place[];
@@ -17,11 +20,12 @@ export type PlacesProps = {
   hasMoreData: boolean;
   loading: boolean;
   totalData?: number;
+  setEdit: (payload:  {record: Place | PlaceApi | Media | Event, type: tabNameProps}) => void
 }
 
 const GridView = (props: PlacesProps) => {
 
-  const {data, loading, fetchData, hasMoreData, totalData} = props;
+  const {data, loading, fetchData, hasMoreData, totalData, setEdit} = props;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -68,11 +72,13 @@ const GridView = (props: PlacesProps) => {
               >
                 <Card
                   key={index}
-                  img={item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.object.data.attributes.url || ''}
+                  img={item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url || ''}
                   title={`${item.attributes?.placeNameEnglish.substr(0, 20)}${item.attributes?.placeNameArabic.substr(0, 20)} - ${item.attributes?.placeNumber}`}
                   subTitle={item.attributes?.siteDescription}
                   dateString={`Last login on ${formatDateTime(item.attributes.updatedAt)}`}
                   period={item?.attributes?.period}
+                  setEdit={setEdit}
+                  record={item}
                 />
               </Grid>
           ))}

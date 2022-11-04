@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Box, Button, Grid } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
+import { InventoryAssociationType, tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import styles from './index.module.css'
 import gridStyles from '../GridView/index.module.css'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
@@ -14,8 +14,7 @@ import { StyledAntTable } from "../../../StyledAntTable";
 import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
-import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
-import { antTablePaginationCss, baseUrl, computeArrayFromDelimiter, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, checkIsNew } from "../../../../utils/services/helpers";
+import { antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, checkIsNew, isRecordAttached, isPlaceDetailAttached } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
@@ -25,7 +24,7 @@ import useMedia from "../../../../hooks/useMedia";
 import CommentsSection from "../../../CommentsSection";
 import RenderInitials from "../../../RenderInitials";
 import { useDispatch } from "react-redux";
-import { setActiveEventItem, setActiveEventItemIndex, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../../store/reducers/searchResultsReducer";
+import { modifyAssociatedPlaces, setActiveEventItem, setActiveEventItemIndex, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
 import usePlace from "../../../../hooks/usePlace";
@@ -34,8 +33,10 @@ import Loader from "../../../Common/Loader";
 import MapView from "../../GoogleMap/MapView";
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
 import NoTextPresent from "../../../NoDataScreens/NoText";
-import {isEmpty} from 'lodash'
+import { isEmpty } from 'lodash'
 import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
+import DetachedIcon from "../../../Icons/DetachedIcon";
+import MoreOption from '../ListView/MoreOption'
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -120,13 +121,13 @@ const StyledTableWrapper = styled(StyledAntTable)`
         
     }
     ${antTablePaginationCss}
-` 
+`
 const PlaceDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
     const navigate = useNavigate();
     const [isFilter, setIsFilter] = useState(null)
 
-    const { places, library, events, media } = useSelector(
+    const { places, library, events, media, isAssociationsStepOpen, associatedPlaces } = useSelector(
         (state: RootState) => state.searchResults
     );
     const { data } = useSelector((state: RootState) => state.login);
@@ -136,7 +137,7 @@ const PlaceDetailsPage = () => {
 
 
     useEffect(() => {
-        if(selectedPlaceObj) {
+        if (selectedPlaceObj) {
             dispatch(setActivePlaceItem(selectedPlaceObj))
             dispatch(setActivePlaceItemIndex(selectedPlaceObjIndex))
         }
@@ -149,35 +150,9 @@ const PlaceDetailsPage = () => {
         }
     })
 
-    // get from api
-    let [images, setImages] = useState<any>([
-        'https://via.placeholder.com/150/92c952',
-        'https://via.placeholder.com/150/771796',
-        'https://via.placeholder.com/150/24f355',
-        'https://via.placeholder.com/150/d32776',
-        'https://via.placeholder.com/150/f66b97',
-    ])
-    const [isMoreTitleMenuOpen, setMoreTitleMenuOpen] = useState<false>(false)
+
     const [isSeeMoreHidden, toggleSeeMoreHidden] = useState<boolean>(false)
     const [isCopyDone, setCopyDone] = useState<boolean>(false)
-
-    const menuItems = [
-        {
-            label: "Share",
-            action: () => { },
-        },
-        {
-            label: "Edit",
-            action: () => {
-            },
-        },
-        {
-            label: "Delete",
-            action: () => {
-            },
-        },
-    ]
-
     // const { fetchLibraryItems, hasMoreData, loading } = useLibrary();
 
     const {
@@ -223,7 +198,7 @@ const PlaceDetailsPage = () => {
             className: "citation-column cell-citation",
             dataIndex: "media_unique_id", // temporary
             render: (value: any, index) => {
-                return value.citation ? value?.citation : '-';
+                return value.citation ? value?.citation : '';
             },
         },
         {
@@ -239,7 +214,7 @@ const PlaceDetailsPage = () => {
                     }}
                 >
                     <Tooltip>
-                        {value.referenceURL ?? "-"}
+                        {value?.referenceURL || ''}
                     </Tooltip>
                 </Box>
             ),
@@ -248,7 +223,7 @@ const PlaceDetailsPage = () => {
             title: "SIZE",
             key: "attributes",
             dataIndex: "media_unique_id",
-            render: (value, index) => value.object?.size ? formatBytes(value.object.size) : "-",
+            render: (value, index) => value.object?.size ? formatBytes(value.object.size) : "",
         },
         {
             title: "UPDATED",
@@ -262,7 +237,8 @@ const PlaceDetailsPage = () => {
             fixed: "right",
             className: "more-menu-ant-cell",
             render: (value: any, record: Media) => (
-                <MoreOptionsComponent id={record.id} record={record} />
+                // <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
+                <MoreOption type="Library" setEdit={setEdit} record={record} />
             ),
         },
     ];
@@ -280,11 +256,11 @@ const PlaceDetailsPage = () => {
                         component="img"
                         alt={""}
                         // src={value.thumbnailUrl}
-                        src={`${baseUrl}${value?.media_associates[0]?.media_unique_id.object.url}`}
+                        src={`${baseUrl}${value?.media_associates[0]?.media_unique_id?.object?.url}`}
                         style={{
                             maxWidth: '100%'
                         }}
-                    ></Box>: <NoImagePresent message="No media items to display"/>}
+                    ></Box> : <NoImagePresent message="No media items to display" />}
                 </>
             },
         },
@@ -294,7 +270,7 @@ const PlaceDetailsPage = () => {
             dataIndex: "new",
             className: "cell-new",
             // render: (value: any, index: any) => "New",
-            render: (value: any, index: any) => <div className={`${gridStyles["card-new-flag"]}`}>{checkIsNew(value?.createdAt) ? 'NEW!' : '' }</div>,
+            render: (value: any, index: any) => <div className={`${gridStyles["card-new-flag"]}`}>{checkIsNew(value?.createdAt) ? 'NEW!' : ''}</div>,
         },
         {
             title: "Type",
@@ -316,9 +292,9 @@ const PlaceDetailsPage = () => {
                 new Date(
                     // item.attributes.updatedAt
                     value?.visitDate
-                    ),
+                ),
                 "MM-dd-yyyy"
-              ) : '-',
+            ) : '-',
         },
         {
             title: "Participants",
@@ -334,13 +310,14 @@ const PlaceDetailsPage = () => {
             fixed: "right",
             className: "more-menu-ant-cell events-table-more-menu",
             render: (value: any, record: Media) => (
-                <MoreOptionsComponent id={record.id} record={record} />
+                // <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
+                <MoreOption type="Events" setEdit={setEdit} record={record} />
             ),
         },
     ];
 
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
-    const { loading: placeLoading, error, data: placeData } = usePlaceDetails();
+    const { loading: placeLoading, error, data: placeData, setEdit } = usePlaceDetails();
     // const { mapEvents } = usePlace();
 
     const dispatch = useDispatch()
@@ -350,24 +327,24 @@ const PlaceDetailsPage = () => {
          * 1st , 2nd etc.
          */
         e.preventDefault()
-        if(media.length >= itemIndex) {
-            navigate(`/search-results/Media/${media[itemIndex - 1].attributes.uniqueId}`, {replace: true})
+        if (media.length >= itemIndex) {
+            navigate(`/search-results/Media/${media[itemIndex - 1].attributes.uniqueId}`, { replace: true })
             dispatch(setActiveMediaItem(media[itemIndex - 1]))
             dispatch(setActiveMediaItemIndex(itemIndex - 1))
         }
     }
-    
+
     useEffect(() => {
-        if(placeData && (placeData?.siteDescription?.length < 500)) {
+        if (placeData && (placeData?.siteDescription?.length < 500)) {
             toggleSeeMoreHidden(true)
         }
     }, [placeData])
 
-    if(placeLoading) {
+    if (placeLoading) {
         return <Loader />
     }
-    
-    if(!placeLoading && !placeData) {
+
+    if (!placeLoading && !placeData) {
         return <div>Cant fetch places</div>
     }
 
@@ -375,16 +352,15 @@ const PlaceDetailsPage = () => {
         return null
     }
 
-    
+
     const {
         placeNameEnglish, placeNameArabic, placeNumber,
         siteDescription, siteType, period, stateOfConservation,
         risk, tourismValue, researchValue, recommendation,
         placeUIPath, media_associates, libraryItems, visit_associates,
     } = placeData
-    
-    const {latitude, longitude} = placeData
 
+    const { latitude, longitude } = placeData;
     return (
         <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -400,8 +376,8 @@ const PlaceDetailsPage = () => {
                             color: 'var(--table-black-text)',
                             textTransform: 'none'
                         }}
-                        sx={{ 
-                            '& .MuiButton-startIcon' : {
+                        sx={{
+                            '& .MuiButton-startIcon': {
                                 marginRight: '4px'
                             }
                         }}
@@ -412,7 +388,7 @@ const PlaceDetailsPage = () => {
                             dispatch(setActivePlaceItemIndex(0))
                             dispatch(setActiveMediaItem(null))
                             dispatch(setActiveMediaItemIndex(0))
-                            
+
                             navigate(`/search-results/${tabName}`, { replace: true })
                         }}
                     >
@@ -462,7 +438,7 @@ const PlaceDetailsPage = () => {
                                         {shallRenderMedia(1, media_associates) && <RenderFileData
                                             fileData={{
                                                 alt: "",
-                                                src: `${baseUrl}${media_associates[0].media_unique_id.object.url}`,
+                                                src: `${baseUrl}${media_associates[0]?.media_unique_id?.object?.url}`,
                                                 className: `${styles["single-image"]} ${styles["left-image"]}`
                                             }}
                                             fileType="image"
@@ -569,7 +545,7 @@ const PlaceDetailsPage = () => {
                     }
                     <Box component="div" className={`${styles['title-section']}`}>
                         <Grid container className={`${styles['title-section-grid']}`}>
-                            <Grid item className={`${styles['title-section-left-item']}`}>
+                            <Grid item sm={11} className={`${styles['title-section-left-item']}`}>
                                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
                                 {placeNameEnglish && <Grid container>
@@ -588,12 +564,37 @@ const PlaceDetailsPage = () => {
                                     {placeNumber}
                                 </Box>
                             </Grid>
-                            <Grid item className={`${styles['title-section-grid']}`}>
+                            <Grid item sm={1}>
                                 <Box component="div" className={`${styles['more-icon-box']}`}
                                 >
-                                    <CustomMoreOptionsComponent
-                                        menuActions={menuItems}
-                                    />
+                                    {isAssociationsStepOpen ?
+                                        <DetachedIcon
+                                            style={{
+                                                // height: '18px',
+                                                // position: 'relative',
+                                                // top: '3px',
+                                            }}
+                                            shouldShowAttachIcon={isPlaceDetailAttached(placeData, associatedPlaces)}
+                                            onClick={e => {
+                                                const data: InventoryAssociationType = {
+                                                    id: Number(placeData.id),
+                                                    placeNameEnglish: placeData.placeNameEnglish,
+                                                    placeNameArabic: placeData.placeNameArabic,
+                                                    placeNumber: placeData.placeNumber,
+                                                }
+
+                                                dispatch(modifyAssociatedPlaces({
+                                                    newItem: data,
+                                                    removeId: null
+                                                }))
+                                            }}
+                                        /> :
+                                        // <></>: 
+                                        <MoreOption
+                                            type="Places"
+                                            setEdit={setEdit}
+                                            record={placeData}
+                                        />}
                                 </Box>
                             </Grid>
                         </Grid>
@@ -607,21 +608,21 @@ const PlaceDetailsPage = () => {
                                 {
                                     <Box component="div" className={`${styles['site-desc']}`}>
                                         {siteDescription ?
-                                        <>
-                                            <Box component="div"
-                                                className={`${styles['site-desc-condensed']} ${isSeeMoreHidden ? styles['see-more-active'] : ''}`}
-                                            >
-                                                {siteDescription.substring(0, !isSeeMoreHidden ? 500 : siteDescription.length - 1)}
-                                            </Box>
-                                            {
-                                                !isSeeMoreHidden && <Box component="div" className={`${styles['see-more-box']}`} onClick={e => {
-                                                    toggleSeeMoreHidden(state => !state)
-                                                }}>{!isSeeMoreHidden ? '...See More' : ''}</Box>
-                                            }
-                                        </> :
-                                        <NoTextPresent
-                                            message={NO_DESCRIPTION}
-                                        />}
+                                            <>
+                                                <Box component="div"
+                                                    className={`${styles['site-desc-condensed']} ${isSeeMoreHidden ? styles['see-more-active'] : ''}`}
+                                                >
+                                                    {siteDescription.substring(0, !isSeeMoreHidden ? 500 : siteDescription.length - 1)}
+                                                </Box>
+                                                {
+                                                    !isSeeMoreHidden && <Box component="div" className={`${styles['see-more-box']}`} onClick={e => {
+                                                        toggleSeeMoreHidden(state => !state)
+                                                    }}>{!isSeeMoreHidden ? '...See More' : ''}</Box>
+                                                }
+                                            </> :
+                                            <NoTextPresent
+                                                message={NO_DESCRIPTION}
+                                            />}
                                     </Box>
                                 }
                                 <Box component="div" className={`${styles['table']}`}>
@@ -634,7 +635,7 @@ const PlaceDetailsPage = () => {
                                                 {
                                                     !isEmpty(siteType) ? siteType.map((item: string, index: number) => (
                                                         <Box
-                                                        key={index}
+                                                            key={index}
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
                                                         >
@@ -670,9 +671,9 @@ const PlaceDetailsPage = () => {
                                                             {item}
                                                         </Box>
                                                     )) :
-                                                    <NoTextPresent
-                                                        message={NO_TEXT}
-                                                    />
+                                                        <NoTextPresent
+                                                            message={NO_TEXT}
+                                                        />
                                                 }
                                             </Box>
                                         </Grid>
@@ -691,7 +692,7 @@ const PlaceDetailsPage = () => {
                                                         message={NO_TEXT}
                                                     />
                                                 </Grid>
-                                           
+
                                         }
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -725,7 +726,7 @@ const PlaceDetailsPage = () => {
                                                     />
                                                 </Grid>
                                         }
-                                        
+
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
@@ -756,7 +757,7 @@ const PlaceDetailsPage = () => {
                                             Recommendation
                                         </Grid>
                                         {
-                                            !isEmptyValue(recommendation) ? recommendation.map((item: string, index:number) =>
+                                            !isEmptyValue(recommendation) ? recommendation.map((item: string, index: number) =>
                                                 <Grid item key={index}>
                                                     {item}
                                                 </Grid>) :
@@ -836,7 +837,7 @@ const PlaceDetailsPage = () => {
                             <Box component="div">Library</Box>
                             {!isEmpty(libraryItems) && <Box component="div">{libraryItems.length} Items</Box>}
                         </Box>
-                        <Box component="div"  className={`${styles["table-wrapper"]}`}>
+                        <Box component="div" className={`${styles["table-wrapper"]}`}>
                             {
                                 !isEmpty(libraryItems) ?
                                     <StyledTableWrapper
@@ -863,7 +864,7 @@ const PlaceDetailsPage = () => {
                     <Box component="div" className={`${styles['events-section']} ${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Events</Box>
-                           {!isEmpty(visit_associates) && <Box component="div">{visit_associates.length} Items</Box>}
+                            {!isEmpty(visit_associates) && <Box component="div">{visit_associates.length} Items</Box>}
                         </Box>
                         <Box component="div" className={`${styles["table-wrapper"]}`}>
                             {

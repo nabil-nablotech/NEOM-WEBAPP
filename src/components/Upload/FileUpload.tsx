@@ -1,9 +1,13 @@
+import {useState} from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { Button, message, Upload } from 'antd';
 import { Box, Grid } from "@mui/material";
 import styled from 'styled-components';
 import styles from './index.module.css';
+import {uploadMedia} from '../../api/upload';
+import axios from 'axios';
+import { getToken } from '../../utils/storage/storage';
 
 const StyledFileUpload = styled.div`
   .anticon.anticon-upload {
@@ -23,13 +27,12 @@ const StyledFileUpload = styled.div`
   }
 `
 
-const props: UploadProps = {
-  name: 'file',
-  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  headers: {
-    authorization: 'authorization-text',
-  },
-  onChange(info) {
+const FileUpload = ({uploadImage, defaultImages}: {uploadImage: (options: any) => void , defaultImages: any[]}) => {
+
+  const [defaultFileList, setDefaultFileList] = useState([]);
+
+  const handleChange = (info: any) => {
+    const nextState: any = {};
     if (info.file.status !== 'uploading') {
       console.log(info.file, info.fileList);
     }
@@ -38,10 +41,16 @@ const props: UploadProps = {
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name} file upload failed.`);
     }
-  },
-};
-
-const FileUpload = () => {
+    setDefaultFileList(info.fileList);
+  }
+  const props: UploadProps = {
+    name: 'file',
+    multiple: false,
+    maxCount: 1,
+    customRequest: uploadImage,
+    onChange: handleChange,
+    defaultFileList: defaultImages
+  };
   return <div>
     <Box component="div" className={`${styles['file-upload-wrapper']}`}>
       <Grid container style={{
