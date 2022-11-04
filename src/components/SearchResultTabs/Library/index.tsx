@@ -117,7 +117,7 @@ const LibraryTab = () => {
       fixed: "right",
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (
-        <MoreOptionsComponent setEdit={setEdit} record={record} />
+        <MoreOptionsComponent type="Library" setEdit={setEdit} record={record} />
       ),
     },
   ];

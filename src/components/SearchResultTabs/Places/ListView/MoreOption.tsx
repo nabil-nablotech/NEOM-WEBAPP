@@ -1,18 +1,23 @@
 import { useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";  
-import { Place } from '../../../../types/Place';
+import { PlaceApi, Place } from '../../../../types/Place';
+import { Event } from '../../../../types/Event';
 import { getRole } from "../../../../utils/storage/storage";
+import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
+import { Media } from '../../../../types/Media';
 
 const superEditor = getRole() === 'SuperEditor';
 const editor = getRole() === 'Editor';
 
 const MoreOptionsComponent = ({
+    type,
     record,
     setEdit
 }: {
+    type: tabNameProps
     record: any;
-    setEdit: (payload: Place) => void
+    setEdit: (payload: {record: PlaceApi | Place | Media | Event, type: tabNameProps}) => void
 }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -45,7 +50,7 @@ const MoreOptionsComponent = ({
                 <MenuItem
                     key={1}
                     onClick={() => {
-                        setEdit(record);
+                        setEdit({record, type});
                         handleClose();
                     }}
                 >

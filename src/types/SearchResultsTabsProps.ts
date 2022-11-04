@@ -1,6 +1,6 @@
 import React from "react";
 import { DashboardResponse } from "./dashboard";
-import { Place, Meta, FieldOptions } from "./Place";
+import { Place, Meta, FieldOptions, PlaceApi } from "./Place";
 import { Event, EventApi } from "./Event";
 import { Media } from "./Media";
 
@@ -42,7 +42,7 @@ export type GridViewCard_Places = {
   period?: string[] | null;
   onClick?: ((e: React.MouseEvent<Element, React.MouseEvent>) => void) &
     React.MouseEvent<Element, React.MouseEvent>;
-  setEdit: (payload: Place) => void;
+  setEdit: (payload: {record: Place | PlaceApi | Media | Event, type: tabNameProps}) => void;
   record: Place
 };
 export type GridViewCard_Events = {

@@ -204,7 +204,7 @@ const ListView = (props: PlacesProps) => {
           fixed: 'right',
           className: 'more-menu-ant-cell',
           render: (value: any, record: Place) => (
-              <MoreOptionsComponent setEdit={props.setEdit} record={record} />
+              <MoreOptionsComponent type="Places" setEdit={props.setEdit} record={record} />
           ),
       },
   ])
