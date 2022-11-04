@@ -85,7 +85,7 @@ query librarySearchList(
         media_associate {
           data {
             attributes {
-              place_unique_id{
+              place_unique_ids{
                 data {
                   attributes {
                     placeNameArabic
@@ -194,7 +194,7 @@ query RefinedLibrarySearch(
         media_associate {
           data {
             attributes {
-              place_unique_id{
+              place_unique_ids{
                 data {
                   attributes {
                     placeNameArabic

@@ -164,6 +164,10 @@ export const searchResultsSlice = createSlice({
         state.associatedEvents = [...state.associatedEvents, action.payload.newItem];
       }
     },
+    resetMediaAssociation: (state, action: PayloadAction<null>) => {
+      state.associatedEvents=[];
+      state.associatedPlaces=[];
+    },
     toggleAddItemWindowMinimized: (state, action: PayloadAction<boolean | null>) => {
       state.addItemWindowMinimized = action.payload;
     },
@@ -201,6 +205,7 @@ export const {
   toggleAssociationsStepOpen,
   modifyAssociatedPlaces,
   modifyAssociatedEvents,
+  resetMediaAssociation,
   toggleAddItemWindowMinimized,
   storeAddItemProgressState,
   toggleAssociationsIconDisabled

@@ -5,7 +5,7 @@ import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { addLibrary, library, updateLibrary } from "../query/library";
 import { createMediaAssociate } from '../query/mediaAssociate';
 import { RootState } from '../store';
-import {modifyAssociatedEvents, modifyAssociatedPlaces, setAddNewItemWindowType, setLibrary, setLibraryMetaData, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess} from '../store/reducers/searchResultsReducer';
+import { resetMediaAssociation, setAddNewItemWindowType, setLibrary, setLibraryMetaData, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess} from '../store/reducers/searchResultsReducer';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
 import {limit, getQueryObj, webUrl, generateUniqueId, EVENTS_TAB_NAME, LIBRARY_TAB_NAME} from '../utils/services/helpers';
 import { graphQlHeaders } from '../utils/services/interceptor';
@@ -72,29 +72,13 @@ const useLibrary = () => {
 
   const createAssociation = async () => {
     if (associatedPlaces.length > 0) {
-      for(let i = 0; i < associatedPlaces.length; i++) {
-        await createMediaAssociateMutation({variables: {
-          "place_unique_id": associatedPlaces[i].id,
-          "media_unique_id": addData.createMedia.data.id
-        }});
-        await dispatch(modifyAssociatedPlaces({
-          newItem: null,
-          removeId: associatedPlaces[i].id
-        }))
-      }
+      await createMediaAssociateMutation({variables: {
+        "place_unique_ids": associatedPlaces.map(x => x.id),
+        "visit_unique_ids": associatedEvents.map(x => x.id),
+        "media_unique_id": addData.createMedia.data.id
+      }});
     }
-    if (associatedEvents.length > 0) {
-      for(let i = 0; i < associatedEvents.length; i++) {
-        await createMediaAssociateMutation({variables: {
-          "visit_unique_id": associatedEvents[i].id,
-          "media_unique_id": addData.createMedia.data.id
-        }});
-        await dispatch(modifyAssociatedEvents({
-          newItem: null,
-          removeId: associatedEvents[i].id
-        }))
-      }
-    }
+
   }
 
   useEffect(() => {
@@ -112,11 +96,9 @@ const useLibrary = () => {
 
   useEffect(() => {
     if (mediaAssociate) {
-      
-      if (associatedPlaces.length === 0) {
-        dispatch(toggleShowAddSuccess(true));
-        navigate(`/search-results/Library`, {replace: true})
-      }
+      dispatch(resetMediaAssociation(null));
+      dispatch(toggleShowAddSuccess(true));
+      navigate(`/search-results/Library`, {replace: true})
     }
   }, [mediaAssociate])
   

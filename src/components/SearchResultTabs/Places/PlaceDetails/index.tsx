@@ -206,7 +206,7 @@ const PlaceDetailsPage = () => {
             className: "citation-column cell-citation",
             dataIndex: "media_unique_id", // temporary
             render: (value: any, index) => {
-                return value.citation ? value?.citation : '-';
+                return value.citation ? value?.citation : '';
             },
         },
         {
@@ -222,7 +222,7 @@ const PlaceDetailsPage = () => {
                     }}
                 >
                     <Tooltip>
-                        {value.referenceURL ?? "-"}
+                        {value?.referenceURL || ''}
                     </Tooltip>
                 </Box>
             ),
@@ -231,7 +231,7 @@ const PlaceDetailsPage = () => {
             title: "SIZE",
             key: "attributes",
             dataIndex: "media_unique_id",
-            render: (value, index) => value.object?.size ? formatBytes(value.object.size) : "-",
+            render: (value, index) => value.object?.size ? formatBytes(value.object.size) : "",
         },
         {
             title: "UPDATED",
@@ -263,7 +263,7 @@ const PlaceDetailsPage = () => {
                         component="img"
                         alt={""}
                         // src={value.thumbnailUrl}
-                        src={`${baseUrl}${value?.media_associates[0]?.media_unique_id.object.url}`}
+                        src={`${baseUrl}${value?.media_associates[0]?.media_unique_id?.object?.url}`}
                         style={{
                             maxWidth: '100%'
                         }}
@@ -444,7 +444,7 @@ const PlaceDetailsPage = () => {
                                         {shallRenderMedia(1, media_associates) && <RenderFileData
                                             fileData={{
                                                 alt: "",
-                                                src: `${baseUrl}${media_associates[0].media_unique_id.object.url}`,
+                                                src: `${baseUrl}${media_associates[0]?.media_unique_id?.object?.url}`,
                                                 className: `${styles["single-image"]} ${styles["left-image"]}`
                                             }}
                                             fileType="image"
