@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { addLibrary, library, updateLibrary } from "../query/library";
-import { createMediaAssociate } from '../query/mediaAssociate';
+import { createMediaAssociate, updateMediaAssociate } from '../query/mediaAssociate';
 import { RootState } from '../store';
 import { resetMediaAssociation, setAddNewItemWindowType, setDefaultMediaAssociation, setLibrary, setLibraryMetaData, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess} from '../store/reducers/searchResultsReducer';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
-import {limit, getQueryObj, webUrl, generateUniqueId, EVENTS_TAB_NAME, LIBRARY_TAB_NAME, formatBytes} from '../utils/services/helpers';
+import {limit, getQueryObj, webUrl, generateUniqueId, LIBRARY_TAB_NAME, formatBytes} from '../utils/services/helpers';
 import { graphQlHeaders } from '../utils/services/interceptor';
 import { mediaDetails } from "../api/details";
 import { setTabData, setTabEdit } from '../store/reducers/tabEditReducer';
@@ -44,6 +44,7 @@ const useLibrary = () => {
   const [createLibraryMutation, { loading: addLoading, error: addErr, data: addData }] = useMutation(addLibrary, graphQlHeaders());
   const [updateLibraryMutation, { loading:updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateLibrary, graphQlHeaders());
   const [createMediaAssociateMutation, { loading: mediaAssociateload, error: mediaAssociateErr, data: mediaAssociate }] = useMutation(createMediaAssociate, graphQlHeaders());
+  const [updateMediaAssociateMutation, { loading: updateMediaAssociateload, error: updateMediaAssociateErr, data: updateMediaAssociateData }] = useMutation(updateMediaAssociate, graphQlHeaders());
 
 
   /**
@@ -70,12 +71,12 @@ const useLibrary = () => {
     }
   }, [data])
 
-  const createAssociation = async () => {
-    if (associatedPlaces.length > 0) {
+  const createAssociation = async (mediaId: number) => {
+    if (associatedPlaces.length > 0 || associatedEvents.length > 0) {
       await createMediaAssociateMutation({variables: {
         "place_unique_ids": associatedPlaces.map(x => x.id),
         "visit_unique_ids": associatedEvents.map(x => x.id),
-        "media_unique_id": addData.createMedia.data.id
+        "media_unique_id": mediaId
       }});
     }
 
@@ -83,10 +84,24 @@ const useLibrary = () => {
 
   useEffect(() => {
     if (addData) {
-      createAssociation();
+      createAssociation(addData.createMedia.data.id);
     }
 
     if(updateData) {
+      console.log('updateData', updateData);
+      if (updateData?.updateMedia.data.attributes?.media_associate?.data?.id) {
+        updateMediaAssociateMutation({
+          variables: {
+            "id": updateData?.updateMedia?.data.attributes?.media_associate?.data?.id,
+            "place_unique_ids": associatedPlaces.map(x => x.id),
+            "visit_unique_ids": associatedEvents.map(x => x.id),
+          }
+        })
+      } else {
+        
+      console.log('updateData inside else create Association', updateData);
+        createAssociation(Number(updateData?.updateMedia.data.id));
+      }
       dispatch(toggleShowEditSuccess(true))
 
       /** re-direct */

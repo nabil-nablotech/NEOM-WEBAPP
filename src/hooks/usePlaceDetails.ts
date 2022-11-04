@@ -35,7 +35,6 @@ const usePlaceDetails = () => {
   const setEdit = async (payload: {record: any, type: tabNameProps}) => {
     if (payload) {
       const {record, type} = payload;
-      console.log(payload, 'place details', type);
       let res: any | MediaApi={};
       if (type === 'Places') {
         res = await placeDetails(record.uniqueId);

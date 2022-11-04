@@ -27,7 +27,7 @@ const StyledFileUpload = styled.div`
   }
 `
 
-const FileUpload = ({uploadImage}: {uploadImage: (options: any) => void }) => {
+const FileUpload = ({uploadImage, defaultImages}: {uploadImage: (options: any) => void , defaultImages: any[]}) => {
 
   const [defaultFileList, setDefaultFileList] = useState([]);
 
@@ -49,7 +49,7 @@ const FileUpload = ({uploadImage}: {uploadImage: (options: any) => void }) => {
     maxCount: 1,
     customRequest: uploadImage,
     onChange: handleChange,
-    defaultFileList: defaultFileList
+    defaultFileList: defaultImages
   };
   return <div>
     <Box component="div" className={`${styles['file-upload-wrapper']}`}>
