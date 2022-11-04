@@ -391,7 +391,11 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
               colors={["#fff", "var(--table-black-text)", "none"]}
               className={`${styles["plain-whitee-btn"]}`}
               label="Cancel"
-              onClick={(e) => handleBack()}
+              onClick={(e) => {
+                dispatch(toggleNewItemWindow(false))
+                dispatch(setAddNewItemWindowType(null))
+                handleReset()
+              }}
               style={{
                 paddingInline: 0,
               }}
