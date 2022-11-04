@@ -38,7 +38,7 @@ import {
 } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
-import { addItemMediaSteps } from "./../../../../utils/services/helpers";
+import { addItemMediaSteps, baseUrl } from "./../../../../utils/services/helpers";
 import CustomUpload from "../../../Upload/ImageUpload";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useFormik } from "formik";
@@ -165,7 +165,7 @@ const StepContent = ({
             />
             {formik.values.media_type.toLowerCase() === "image" && (
               <>
-                <CustomUpload title={"Drag and drop your file here"} />
+                <CustomUpload title={"Drag and drop your file here"} existingImageUrl={`${baseUrl}${formik.values.object}`} />
               </>
             )}
           </>
@@ -411,6 +411,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     longitude: edit ? tabData?.longitude : null,
     referenceURL: edit ? tabData?.referenceURL : "",
     keywords: edit ? tabData?.keywords : [],
+    object: edit ? tabData?.object.url : ""
   }
   const formik = useFormik({
     initialValues: mediaInitialValue,
