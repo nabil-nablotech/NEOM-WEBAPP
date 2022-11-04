@@ -5,7 +5,7 @@ import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { addLibrary, library, updateLibrary } from "../query/library";
 import { createMediaAssociate } from '../query/mediaAssociate';
 import { RootState } from '../store';
-import { resetMediaAssociation, setAddNewItemWindowType, setLibrary, setLibraryMetaData, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess} from '../store/reducers/searchResultsReducer';
+import { resetMediaAssociation, setAddNewItemWindowType, setDefaultMediaAssociation, setLibrary, setLibraryMetaData, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess} from '../store/reducers/searchResultsReducer';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
 import {limit, getQueryObj, webUrl, generateUniqueId, EVENTS_TAB_NAME, LIBRARY_TAB_NAME, formatBytes} from '../utils/services/helpers';
 import { graphQlHeaders } from '../utils/services/interceptor';
@@ -185,8 +185,9 @@ const useLibrary = () => {
       const payloadRes = await mediaDetails(record.attributes.uniqueId);
       dispatch(setTabData(payloadRes));
       dispatch(setTabEdit(true));
-      dispatch(toggleNewItemWindow(true))
-      dispatch(setAddNewItemWindowType(LIBRARY_TAB_NAME ))
+      dispatch(toggleNewItemWindow(true));
+      dispatch(setAddNewItemWindowType(LIBRARY_TAB_NAME ));
+      dispatch(setDefaultMediaAssociation({events: payloadRes.media_associate?.visit_unique_ids || [], places: payloadRes.media_associate?.place_unique_ids || [] }));
     }
   };
 

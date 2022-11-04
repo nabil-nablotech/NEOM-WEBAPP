@@ -1,5 +1,5 @@
-import { NullValueNode } from "graphql";
 import { Place } from "./Place";
+import { InventoryAssociationType_Event, InventoryAssociationType } from "./SearchResultsTabsProps";
 
 export type PlaceUnique = {
   place_unique_id: {
@@ -69,6 +69,8 @@ export type MediaApi = {
     };
   };
   media_associate: {
+    visit_unique_ids: InventoryAssociationType_Event[],
+    place_unique_ids: InventoryAssociationType[],
     data: {
     attributes: PlaceUnique;
   }
