@@ -80,7 +80,7 @@ const MediaTab = () => {
                         <GridView />
                     </Grid>} */}
                      {openStates[0] &&  <Grid item xl={12}>
-                        <GridView totalData={meta?.pagination?.total} loading={loading} data={media} fetchData={fetchMediaItems} hasMoreData={hasMoreData} />
+                        <GridView key={5} totalData={meta?.pagination?.total} loading={loading} data={media} fetchData={fetchMediaItems} hasMoreData={hasMoreData} />
                     </Grid>}
                     {/* To-do: map view */}
                     {/* <Grid item xl={6} lg={6} md={7} sm={7}>

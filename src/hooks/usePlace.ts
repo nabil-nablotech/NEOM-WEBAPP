@@ -89,9 +89,8 @@ const usePlace = () => {
       let dummyArray: any = [];
       for (let i = 0; i < refinePlaceData?.places?.data?.length; i++) {
         if (refinePlaceData?.places?.data[i]?.attributes?.latitude && refinePlaceData?.places?.data[i]?.attributes?.longitude) {
-
           dummyArray.push({
-            id: i,
+            id:refinePlaceData?.places?.data[i].id,
             name: refinePlaceData?.places?.data[i].attributes["placeNameEnglish"],
             position: {
               lat: refinePlaceData?.places?.data[i].attributes["latitude"],

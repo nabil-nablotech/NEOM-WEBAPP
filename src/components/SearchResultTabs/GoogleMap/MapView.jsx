@@ -14,7 +14,7 @@ const containerStyle = {
 var URL = "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png";
 
 
-const MapView = ({marker}) => {
+const MapView = ({marker, filterId}) => {
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -44,12 +44,16 @@ const MapView = ({marker}) => {
   })
 
   const handleActiveMarker = (marker) => {
+    filterId(marker)
     if (marker === activeMarker) {
       return;
     }
     setActiveMarker(marker);
   };
-
+  const handleCloseMarker = () => {
+    filterId(null);
+    setActiveMarker(null)
+  };
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
@@ -57,11 +61,11 @@ const MapView = ({marker}) => {
       options={{ styles: MapStyles.dark }}
       onLoad={onLoad}
       onUnmount={onUnmount}
-      onClick={() => setActiveMarker(null)}
+      onClick={() => handleCloseMarker()}
     >
-      {marker?.map(({id, name, position}) => (
+      {marker?.map(({id, name, position}, index) => (
         <Marker
-          key={id}
+          key={index}
           position={position}
           icon={{
             url: URL,
@@ -69,7 +73,7 @@ const MapView = ({marker}) => {
           onClick={() => handleActiveMarker(id)}
         >
           {activeMarker === id ? (
-            <InfoWindow onCloseClick={() => setActiveMarker(null)}>
+            <InfoWindow onCloseClick={() => handleCloseMarker()}>
               <div>{name}</div>
             </InfoWindow>
           ) : null}

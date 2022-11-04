@@ -91,7 +91,15 @@ const useEvent = () => {
 
         let dummyArray:any = [];
         for (let i = 0; i < refineEventData?.visits?.data?.length; i++) {
-            if (refineEventData?.visits?.data[i]?.attributes?.latitude && refineEventData?.visits?.data[i]?.attributes?.longitude) dummyArray.push({id:i,name:refineEventData?.visits?.data[i].attributes['recordingTeam'],position:{lat:refineEventData?.visits?.data[i]?.attributes?.latitude,lng:refineEventData?.visits?.data[i]?.attributes?.longitude}})
+            if (refineEventData?.visits?.data[i]?.attributes?.latitude && refineEventData?.visits?.data[i]?.attributes?.longitude) 
+            dummyArray.push({
+              id:refineEventData?.visits?.data[i].id,
+              name:refineEventData?.visits?.data[i].attributes['recordingTeam'],
+              position:{
+                lat:refineEventData?.visits?.data[i]?.attributes?.latitude,
+                lng:refineEventData?.visits?.data[i]?.attributes?.longitude
+              }
+            })
         }
           setMapEvents(dummyArray)
     }
