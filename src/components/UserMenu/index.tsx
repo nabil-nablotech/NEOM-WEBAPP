@@ -13,7 +13,7 @@ import { getRole } from "../../utils/storage/storage";
 import MenuList from "../MenuList";
 import { Box, LinearProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { toggleAddItemWindowMinimized, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
 import CustomDrawer from "../CustomDrawer";
 import AddNewItem from "../../pages/AddNewItem";
 import AddNewPlace from "../SearchResultTabs/Places/AddNewItem";
@@ -105,7 +105,12 @@ function UserMenuComponent() {
   const handlePlus = () => {
     if(!addItemWindowMinimized) {
       dispatch(toggleNewItemWindow(!newItemWindowOpen));
+
+      if(addNewItemWindowType) { /** reset if already set  after add flow*/
+        dispatch(setAddNewItemWindowType(null))
+      }
     }
+    
     dispatch(setEventEdit(false));
     dispatch(setTabEdit(false));
   }

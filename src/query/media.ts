@@ -183,7 +183,7 @@ export const refineMedia = gql`
           media_associate {
             data {
               attributes {
-                place_unique_id {
+                place_unique_ids {
                   data {
                     attributes {
                       placeNameArabic

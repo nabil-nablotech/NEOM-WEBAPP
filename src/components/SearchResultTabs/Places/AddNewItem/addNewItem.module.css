@@ -37,6 +37,9 @@
     max-width: 60%;
     margin-inline: auto;
 }
+.stepper.media-stepper {
+    max-width: 100%;
+}
 .stepper.add-media-stepper {
     max-width: 100%;
 }

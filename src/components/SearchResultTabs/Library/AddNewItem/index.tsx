@@ -6,7 +6,8 @@ import {
   Stepper,
   Typography,
   StepButton,
-  Chip
+  Chip,
+  Grid
 } from "@mui/material";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -31,13 +32,6 @@ import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 import CloseIcon from '@mui/icons-material/Close';
 import AddedEvents from "../../../AssociationsList/AddedEvents";
 
-const commonSelectSxStyles = {
-  textAlign: "left",
-  "& .MuiSelect-select": {
-    padding: "0.5em 1em",
-    color: "var(--grey-text)",
-  },
-};
 const textInputSxStyles = {
   "& .MuiInputBase-input.MuiOutlinedInput-input": {
     border: "none",
@@ -81,14 +75,8 @@ export const stepperIconSx = {
 };
 
 const StepContent = ({
-  tabName,
-  options,
-  formState,
-  setFormState,
+  
   activeStep,
-  steps,
-  handleNext,
-  handleBack,
   formik,
 }: StepContentTypes) => {
   const { associatedPlaces, associatedEvents } = useSelector(
@@ -270,7 +258,8 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     (state: RootState) => state.searchResults
   );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
-  const { edit } = useSelector((state: RootState) => state.tabEdit);
+
+  const { edit, tabData } = useSelector((state: RootState) => state.tabEdit);
 
   const [activeStep, setActiveStep] = useState(0);
   const [formState, setFormState] = useState({
@@ -281,12 +270,6 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   const [steps, setSteps] = useState<Array<string>>(addItemLibrarySteps);
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (showAddSuccess) {
-      dispatch(toggleShowAddSuccess(true));
-    }
-  }, [showAddSuccess]);
 
   useEffect(() => {
 
@@ -318,10 +301,6 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     }
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if (activeStep + 1 === steps.length) {
-      handleHide();
-      dispatch(toggleShowAddSuccess(true));
-    }
 
     if (activeStep + 1 === steps.length && data) {
       if (create && !edit) {
@@ -329,10 +308,10 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
           ...data,
         });
       }
-      handleHide()
+      handleReset()
+      dispatch(toggleShowAddSuccess(true));
       dispatch(toggleNewItemWindow(false))
     }
-
     if (edit && create && data) {
       create({
         ...data,
@@ -340,6 +319,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       handleHide();
       dispatch(toggleNewItemWindow(false));
     }
+
     setSkipped(newSkipped);
   };
 
@@ -347,10 +327,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     if (activeStep === 0) {
       dispatch(toggleNewItemWindow(false))
       dispatch(setAddNewItemWindowType(null))
-      dispatch(toggleAddItemWindowMinimized(null))
-
-      /** remove the data when change in add item type window occurs */
-      dispatch(storeAddItemProgressState(null))
+      handleReset()
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
@@ -373,7 +350,14 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
 
   const handleReset = () => {
     setActiveStep(0);
-  };
+
+    dispatch(toggleAddItemWindowMinimized(null))
+
+    /** remove the data when change in add item type window occurs */
+    dispatch(storeAddItemProgressState(null))
+
+    
+}
 
   const handleStep = (step: number) => () => {
     if (activeStep > step) {
@@ -384,11 +368,10 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   const formik = useFormik({
     initialValues: {
       place: "",
-      eventDate: new Date(),
-      recordingTeam: "",
-      siteDescription: "",
-      fieldNarrative: "",
-      siteType: "",
+      title: edit ? tabData?.title : '',
+      description: edit ? tabData?.description: "",
+      referenceUrl: edit ? tabData?.referenceUrl: "",
+      citation: edit ? tabData?.citation: "",
       keywords: [],
     },
     onSubmit: (values) => {
@@ -457,7 +440,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
               component="h4"
               style={{}}
             >
-              Add Library
+              {edit ? "Edit" : "Add"} Library
             </Typography>
             <Stepper
               activeStep={activeStep}
@@ -520,10 +503,29 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
                 paddingInline: 0,
               }}
             />
-            <Button
+            {/* <Button
               label={activeStep === steps.length - 1 ? "Add" : "Next"}
               type="submit"
-            />
+            /> */}
+            <Grid item display={"flex"}>
+              {!edit && (
+                <Button
+                  label={activeStep === steps.length - 1 ? "Add" : "Next"}
+                  type="submit"
+                  disabled={!(formik.values.title.trim().length > 0 && formik.values.description.trim().length > 0)}
+                />
+              )}
+              {edit && activeStep !== steps.length - 1 && (
+                <Button
+                  colors={["#fff", "var(--table-black-text)", "none"]}
+                  label={"Next"}
+                  onClick={(
+                    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                  ) => handleNext(e, undefined)}
+                />
+              )}
+              {edit && <Button label={"Update"} type="submit" />}
+            </Grid>
           </Box>
         </Box>
       </form>
