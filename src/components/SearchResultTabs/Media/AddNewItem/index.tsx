@@ -399,6 +399,35 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
 
   const dispatch = useDispatch();
 
+    let mediaInitialValue = {
+      mediaType: "",
+      title: "",
+      bearing: "",
+      description: "",
+      Author: "",
+      categoryType: [],
+      latitude: null,
+      longitude: null,
+      refrerenceUrl: "",
+      keywords: [],
+    }
+  const formik = useFormik({
+    initialValues: mediaInitialValue,
+    validate: (values) => {
+      if (!values.title && activeStep == 1) {
+        setFormError("Image Title is required");
+      } else {
+        setFormError("");
+      }
+    },
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+      if (!formError) {
+        handleNext(null, values);
+      }
+    },
+  });
+
   useEffect(() => {
     if (showAddSuccess) {
       dispatch(toggleShowAddSuccess(true));
@@ -490,33 +519,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     }
   };
 
-  const formik = useFormik({
-    initialValues: {
-      mediaType: "",
-      title: "",
-      bearing: "",
-      description: "",
-      Author: "",
-      categoryType: [],
-      latitude: null,
-      longitude: null,
-      refrerenceUrl: "",
-      keywords: [],
-    },
-    validate: (values) => {
-      if (!values.title && activeStep == 1) {
-        setFormError("Image Title is required");
-      } else {
-        setFormError("");
-      }
-    },
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-      if (!formError) {
-        handleNext(null, values);
-      }
-    },
-  });
+  
 
   useEffect(() => {
     /** Effect needed to load history data,
