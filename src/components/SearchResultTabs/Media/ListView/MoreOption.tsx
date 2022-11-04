@@ -7,16 +7,16 @@ export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payloa
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
   const handleClick = (e: any) => {
+    e.stopPropagation();
     setAnchorEl(e.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  // const showRecoveryLink = record.recoveryToken;
   return (
     <>
-      <div className="">
+      <div className="" onClick={handleClick}>
         <MoreHorizIcon className="more-menu-div" />
       </div>
       <Menu
@@ -38,7 +38,7 @@ export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payloa
         >
           Edit
         </MenuItem>
-        <MenuItem key={2}>Delete</MenuItem>
+        <MenuItem key={3}>Delete</MenuItem>
       </Menu>
     </>
   );
