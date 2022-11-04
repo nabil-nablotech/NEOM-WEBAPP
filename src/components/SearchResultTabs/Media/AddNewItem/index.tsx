@@ -48,6 +48,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 import AddedEvents from "../../../AssociationsList/AddedEvents";
+import StepContent from './form';
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -98,279 +99,6 @@ export const stepperIconSx = {
   },
 };
 
-const StepContent = ({
-  tabName,
-  formState,
-  setFormState,
-  activeStep,
-  steps,
-  handleNext,
-  handleBack,
-  options,
-  formik,
-}: StepContentTypes) => {
-  const { associatedPlaces, associatedEvents } = useSelector(
-    (state: RootState) => state.searchResults
-  );
-  console.log("====formik", formik.values)
-  const handleSelectChange = (
-    e: React.SyntheticEvent,
-    value: string[] | [],
-    stateName: string
-  ) => {
-    e.preventDefault();
-    formik.setFieldValue(stateName, [
-      ...new Set([...formik.values[stateName], ...value]),
-    ]);
-  };
-
-  const [mediaKeywords, setMediaKeywords] = useState<Array<string>>([]);
-  const [currentKeyword, setCurrentKeyword] = useState<string>("");
-
-  return (
-    <>
-      <Box component="div" className={`${styles["form"]}`}>
-        {activeStep === 0 && (
-          <>
-            <DropdownComponent
-              className={`${styles["media-type"]}`}
-              label={"Media Type"}
-              name="media-type"
-              value={formik.values.media_type}
-              // handleChange={(e) => setFormState((state: any) => ({
-              //     ...state,
-              //     media_type: e.target.value
-              // }))}
-
-              handleChange={(e: SelectChangeEvent<string | string[]>) => {
-                formik.setFieldValue("media_type", e.target.value);
-              }}
-              handleClear={(e: React.MouseEvent) => { }}
-              itemsList={[
-                {
-                  label: "Image",
-                  value: "IMAGE",
-                },
-                {
-                  label: "Video",
-                  value: "VIDEO",
-                },
-                {
-                  label: "3D Model",
-                  value: "3DMODEL",
-                },
-              ]}
-              selectStylesSx={commonSelectSxStyles}
-              formControlSx={commonFormControlSxStyles}
-            />
-            {formik.values.media_type.toLowerCase() === "image" && (
-              <>
-                <CustomUpload title={"Drag and drop your file here"} existingImageUrl={`${baseUrl}${formik.values.object}`} />
-              </>
-            )}
-          </>
-        )}
-        {activeStep === 1 && (
-          <>
-            <TextInput
-              className={`${styles["english-name"]}`}
-              label="Title*"
-              name="title"
-              value={formik.values.title}
-              onChange={(e) => {
-                formik.setFieldValue("title", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            <TextInput
-              className={`${styles["site-description"]}`}
-              label="Description"
-              name="description"
-              value={formik.values.description}
-              onChange={(e) => {
-                formik.setFieldValue("description", e.target.value);
-              }}
-              multiline
-              minRows={3}
-              maxRows={3}
-              sx={{
-                ...textInputSxStyles,
-                marginBottom: "4em",
-                "& .MuiInputBase-inputMultiline": {
-                  paddingInline: "0 !important",
-                },
-              }}
-              formControlSx={{
-                ...commonFormControlSxStyles,
-              }}
-            />
-            <TextInput
-              className={`${styles["english-name"]}`}
-              label="Bearing"
-              name="bearing"
-              value={formik.values.bearing}
-              onChange={(e) => {
-                formik.setFieldValue("bearing", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            <TextInput
-              className={`${styles["english-name"]}`}
-              label="Author"
-              name="Author"
-              value={formik.values.Author}
-              onChange={(e) => {
-                formik.setFieldValue("Author", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            <AutoComplete
-              className={`${styles["dropdown"]}`}
-              label={"Category Type"}
-              name="categoryType"
-              value={[...formik.values.categoryType]}
-              multiple={true}
-              handleSelectChange={(e, value) =>
-                handleSelectChange(e, value, "categoryType")
-              }
-              handleClear={(e) => { }}
-              itemsList={options?.actionType || []}
-              selectStylesSx={commonSelectSxStyles}
-              formControlSx={commonFormControlSxStyles}
-            />
-            <TextInput
-              className={`${styles["english-name"]}`}
-              label="Longitude"
-              name="longitude"
-              value={formik.values.longitude}
-              onChange={(e) => {
-                formik.setFieldValue("longitude", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            <TextInput
-              className={`${styles["english-name"]}`}
-              label="Latitude"
-              name="latitude"
-              value={formik.values.latitude}
-              onChange={(e) => {
-                formik.setFieldValue("latitude", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            <TextInput
-              className={`${styles["english-name"]}`}
-              label="Reference URL"
-              name="referenceURL"
-              value={formik.values.referenceURL}
-              onChange={(e) => {
-                formik.setFieldValue("referenceURL", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-          </>
-        )}
-        {activeStep === 2 && (
-          <Box component="div">
-            <Box
-              component="div"
-              style={{
-                display: "inline-block",
-                lineHeight: 1.5,
-              }}
-            >
-              Click on{" "}
-              <DetachedIcon
-                style={{
-                  height: "18px",
-                  position: "relative",
-                  top: "3px",
-                }}
-                className="remove-motion"
-                onClick={(e) => { }}
-              />{" "}
-              to select the places and events you want to associate this library
-              item to.
-            </Box>
-            <AddedPlaces list={associatedPlaces} />
-            <AddedEvents list={associatedEvents} />
-          </Box>
-        )}
-        {activeStep === 3 && (
-          <>
-            <Box component="div">Make your content discoverable</Box>
-            <TextInput
-              className={`${styles["english-name"]}`}
-              id="keyword-div"
-              label="Add Keywords"
-              name="keywords"
-              value={currentKeyword}
-              onChange={(e) => {
-                setCurrentKeyword(e.target.value);
-              }}
-              onKeyDown={(e) => {
-                handleEnter(e, () => {
-                  formik.setFieldValue("keywords", [
-                    ...new Set([...formik.values.keywords, currentKeyword]),
-                  ]);
-                  setCurrentKeyword("");
-                });
-              }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            {
-              <Box
-                component="div"
-                style={{
-                  display: "flex",
-                  gap: "5px",
-                }}
-              >
-                {formik.values.keywords.map((item: string, index: any) => (
-                  <Chip
-                    key={index}
-                    size="small"
-                    variant="outlined"
-                    label={item}
-                    deleteIcon={<CloseIcon fontSize="small" />}
-                    onDelete={(e) => {
-                      const newArr = [...formik.values.keywords].filter(
-                        (element: string) => element !== item
-                      );
-                      formik.setFieldValue("keywords", [...new Set(newArr)]);
-                    }}
-                  />
-                ))}
-              </Box>
-            }
-          </>
-        )}
-      </Box>
-    </>
-  );
-};
-
 const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
   const { options } = useSelector((state: RootState) => state.refinedSearch);
@@ -379,7 +107,6 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     (state: RootState) => state.searchResults
   );
   const { edit, tabData } = useSelector((state: RootState) => state.tabEdit);
-  console.log("tabData", edit, tabData)
   const [activeStep, setActiveStep] = useState(0);
   const [formState, setFormState] = useState({
     siteDescription: "",
@@ -410,8 +137,10 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     latitude: edit ? tabData?.latitude : null,
     longitude: edit ? tabData?.longitude : null,
     referenceURL: edit ? tabData?.referenceURL : "",
-    keywords: edit ? tabData?.keywords : [],
-    object: edit ? tabData?.object.url : ""
+    keywords: edit && tabData?.keywords ? tabData?.keywords : [],
+    object: edit ? tabData?.object.url : "",
+    mediaType: "", 
+    refrerenceUrl: ""
   }
   const formik = useFormik({
     initialValues: mediaInitialValue,
