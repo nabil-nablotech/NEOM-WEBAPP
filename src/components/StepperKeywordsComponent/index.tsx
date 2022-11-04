@@ -170,63 +170,94 @@ export const StepperKeywordsComponent = ({
         <>
 
             <Box component="div">Make your content discoverable</Box>
-            <div >
-                <TextInput
-                    className={`${styles["english-name"]}`}
-                    id="keyword-div"
-                    label="Add Keywords"
-                    name="keywords"
-                    value={search.text}
-                    onChange={onTextChanged}
-                    onKeyDown={e => {
-                        handleEnter(e, () => {
-                            onKeyDown(search.text)
-                        });
-                    }}
-                    sx={{
-                        ...textInputSxStyles,
-                    }}
-                    formControlSx={commonFormControlSxStyles}
-                />
-                {
+            <Box component="div" onFocus={e => {
+                console.log('hex: ', e.target)
+
+            }}>
+                <div >
+                    <TextInput
+                        className={`${styles["english-name"]}`}
+                        id="keyword-div"
+                        label="Add Keywords"
+                        name="keywords"
+                        value={search.text}
+                        onChange={onTextChanged}
+                        onBlur={e => {
+                            console.log('hex: ', e)
+                        }}
+                        onKeyDown={e => {
+                            handleEnter(e, () => {
+                                onKeyDown(search.text)
+                            });
+                        }}
+                        sx={{
+                            ...textInputSxStyles,
+                        }}
+                        formControlSx={commonFormControlSxStyles}
+                    />
+                    {
+                        <Box component="div" style={{
+                            display: 'flex',
+                            gap: '5px',
+                            marginTop: "5px"
+                        }}>
+                            {
+                                currentKeywordArray && currentKeywordArray.length > 0 && currentKeywordArray.map((item: any, index: any) => (
+                                    <Chip key={index} size="small" variant="outlined" label={item}
+                                        deleteIcon={<CloseIcon fontSize="small" />}
+                                        onDelete={e => { onDeleteKeyWord(item) }}
+                                    />
+                                ))
+                            }
+                        </Box>
+                    }
+
+                </div>
+                {shouldRenderList && (
                     <Box component="div" style={{
-                        display: 'flex',
-                        gap: '5px',
-                        marginTop: "5px"
+                        position: 'relative',
+                        width: '56%'
                     }}>
-                        {
-                            currentKeywordArray && currentKeywordArray.length > 0 && currentKeywordArray.map((item: any, index: any) => (
-                                <Chip key={index} size="small" variant="outlined" label={item}
-                                    deleteIcon={<CloseIcon fontSize="small" />}
-                                    onDelete={e => { onDeleteKeyWord(item) }}
-                                />
-                            ))
-                        }
+                        <Box component="div" style={{
+                            position: 'absolute',
+                            height: '1.4em',
+                            top: '-5px',
+                            right: 0,
+                            zIndex: 2,
+                            cursor: 'pointer',
+                            backgroundColor: '#fff',
+                            borderRadius: '50px',
+                            border: '1px solid #000'
+                        }}
+                            onClick={e => {
+                                e.preventDefault()
+                                setShouldRenderList(false)
+                            }}>
+                            <CloseIcon fontSize="small" />
+                        </Box>
+                        <AutoCompleteContainer>
+
+                            <> {showList?.map((val: string, index) => {
+
+                                /**dont show keywords being already added in chips */
+                                if (currentKeywordArray.some(ele => ele === val)) return <></>
+
+                                return (
+                                    <div key={index}>
+                                        <AutoCompleteItem>
+                                            <AutoCompleteItemButton
+                                                onClick={(e) => suggestionSelected(e, val)}
+                                            >
+                                                {val}
+                                            </AutoCompleteItemButton>
+                                        </AutoCompleteItem>
+                                    </div>
+                                )
+                            })}</>
+                        </AutoCompleteContainer>
                     </Box>
-                }
-
-            </div>
-            {shouldRenderList && (
-                <AutoCompleteContainer>
-                    <> {showList?.map((val: string, index) => {
-
-                        /**dont show keywords being already added in chips */
-                        if (currentKeywordArray.some(ele => ele === val)) return <></>
-
-                        return (
-                            <div key={index}>
-                                <AutoCompleteItem>
-                                    <AutoCompleteItemButton
-                                        onClick={(e) => suggestionSelected(e, val)}
-                                    >
-                                        {val}
-                                    </AutoCompleteItemButton>
-                                </AutoCompleteItem>
-                            </div>
-                        )
-                    })}</>
-                </AutoCompleteContainer>
-            )}
+                )}
+            </Box>
         </>
     );
 };
