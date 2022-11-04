@@ -168,6 +168,10 @@ export const searchResultsSlice = createSlice({
       state.associatedEvents=[];
       state.associatedPlaces=[];
     },
+    setDefaultMediaAssociation: (state, action: PayloadAction<{events: InventoryAssociationType_Event[], places: InventoryAssociationType[]}>) => {
+      state.associatedEvents=action.payload.events;
+      state.associatedPlaces=action.payload.places;
+    },
     toggleAddItemWindowMinimized: (state, action: PayloadAction<boolean | null>) => {
       state.addItemWindowMinimized = action.payload;
     },
@@ -206,6 +210,7 @@ export const {
   modifyAssociatedPlaces,
   modifyAssociatedEvents,
   resetMediaAssociation,
+  setDefaultMediaAssociation,
   toggleAddItemWindowMinimized,
   storeAddItemProgressState,
   toggleAssociationsIconDisabled
