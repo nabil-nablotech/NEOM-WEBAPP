@@ -188,6 +188,7 @@ export const StepperKeywordsComponent = ({
                         onKeyDown={e => {
                             handleEnter(e, () => {
                                 onKeyDown(search.text)
+                                setSearch(state => ({ ...state, text: '' }));
                             });
                         }}
                         sx={{

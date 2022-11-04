@@ -24,6 +24,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 import AddedEvents from "../../../AssociationsList/AddedEvents";
+import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -292,54 +293,22 @@ const StepContent = ({
         )}
         {activeStep === 3 && (
           <>
-            <Box component="div">Make your content discoverable</Box>
-            <TextInput
-              className={`${styles["english-name"]}`}
-              id="keyword-div"
-              label="Add Keywords"
-              name="keywords"
-              value={currentKeyword}
-              onChange={(e) => {
-                setCurrentKeyword(e.target.value);
+            <StepperKeywordsComponent
+              onKeyDown={(keywordString) => {
+                formik.setFieldValue("keywords", [
+                  ...new Set([...formik.values.keywords, keywordString]),
+                ].filter(ele => ele !== ''));
               }}
-              onKeyDown={(e) => {
-                handleEnter(e, () => {
-                  formik.setFieldValue("keywords", [
-                    ...new Set([...formik.values.keywords, currentKeyword]),
-                  ]);
-                  setCurrentKeyword("");
-                });
+
+              onDelete={(value) => {
+                const newArr = [...formik.values.keywords].filter(
+                  (element: string) => element !== value
+                );
+                formik.setFieldValue("keywords", [...new Set(newArr)]);
               }}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
+
+              currentKeywordArray={formik.values.keywords}
             />
-            {
-              <Box
-                component="div"
-                style={{
-                  display: "flex",
-                  gap: "5px",
-                }}
-              >
-                {formik.values?.keywords?.map((item: string, index: any) => (
-                  <Chip
-                    key={index}
-                    size="small"
-                    variant="outlined"
-                    label={item}
-                    deleteIcon={<CloseIcon fontSize="small" />}
-                    onDelete={(e) => {
-                      const newArr = [...formik.values.keywords].filter(
-                        (element: string) => element !== item
-                      );
-                      formik.setFieldValue("keywords", [...new Set(newArr)]);
-                    }}
-                  />
-                ))}
-              </Box>
-            }
           </>
         )}
       </Box>
