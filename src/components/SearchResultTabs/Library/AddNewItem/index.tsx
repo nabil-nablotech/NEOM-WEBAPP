@@ -16,7 +16,7 @@ import {
   StepContentTypes,
 } from "../../../../types/CustomDrawerTypes";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
-import { addItemLibrarySteps, handleEnter } from "../../../../utils/services/helpers";
+import { addItemLibrarySteps, baseUrl, handleEnter } from "../../../../utils/services/helpers";
 import styles from '../../Places/AddNewItem/addNewItem.module.css'
 import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
@@ -31,6 +31,9 @@ import DetachedIcon from "../../../Icons/DetachedIcon";
 import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 import CloseIcon from '@mui/icons-material/Close';
 import AddedEvents from "../../../AssociationsList/AddedEvents";
+import axios from 'axios';
+import { getToken } from "../../../../utils/storage/storage";
+import StepContent from './form';
 
 const textInputSxStyles = {
   "& .MuiInputBase-input.MuiOutlinedInput-input": {
@@ -72,183 +75,6 @@ export const stepperIconSx = {
     color: "var(--table-black-text)",
     border: "none",
   },
-};
-
-const StepContent = ({
-  
-  activeStep,
-  formik,
-}: StepContentTypes) => {
-  const { associatedPlaces, associatedEvents } = useSelector(
-    (state: RootState) => state.searchResults
-  );
-  const [currentKeyword, setCurrentKeyword] = useState<string>('')
-
-  return (
-    <>
-      <Box component="div" className={`${styles["form"]}`}>
-        {activeStep === 0 && (
-          <>
-            <FileUpload />
-            <TextInput
-              required
-              className={`${styles["title"]}`}
-              label="Title"
-              name="title"
-              multiline
-              minRows={2}
-              maxRows={2}
-              value={formik.values.title}
-              onChange={(e) => {
-                formik.setFieldValue("title", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-                marginBottom: "4em",
-                "& .MuiInputBase-inputMultiline": {
-                  paddingInline: "0 !important",
-                },
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            <TextInput
-              required
-              className={`${styles["description"]}`}
-              label="Description"
-              name="description"
-              multiline
-              minRows={3}
-              maxRows={3}
-              value={formik.values.description}
-              onChange={(e) => {
-                formik.setFieldValue("description", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-                marginBottom: "4em",
-                "& .MuiInputBase-inputMultiline": {
-                  paddingInline: "0 !important",
-                },
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            <TextInput
-              className={`${styles["referenceUrl"]}`}
-              label="Reference URL"
-              name="referenceUrl"
-              multiline
-              minRows={2}
-              maxRows={2}
-              value={formik.values.referenceUrl}
-              onChange={(e) => {
-                formik.setFieldValue("referenceUrl", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-                marginBottom: "4em",
-                "& .MuiInputBase-inputMultiline": {
-                  paddingInline: "0 !important",
-                },
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            <TextInput
-              className={`${styles["citation"]}`}
-              label="Citation"
-              name="citation"
-              multiline
-              minRows={3}
-              maxRows={3}
-              value={formik.values.citation}
-              onChange={(e) => {
-                formik.setFieldValue("citation", e.target.value);
-              }}
-              sx={{
-                ...textInputSxStyles,
-                marginBottom: "4em",
-                "& .MuiInputBase-inputMultiline": {
-                  paddingInline: "0 !important",
-                },
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            
-          </>
-        )}
-        {activeStep === 1 && (
-          <Box component="div">
-            <Box component="div" style={{
-              display: 'inline-block',
-              lineHeight: 1.5
-            }}>
-              Click on{' '}
-              <DetachedIcon
-                style={{
-                  height: '18px',
-                  position: 'relative',
-                  top: '3px',
-                }}
-                className="remove-motion"
-                onClick={e => {
-                  
-                }}
-              />
-              {' '}to select the places and events you want to associate this library item to.
-            </Box>
-            <AddedPlaces
-              list={associatedPlaces}
-            />
-            <AddedEvents
-              list={associatedEvents}
-            />
-          </Box>
-        )}
-        {activeStep === 2 && <>
-          <>
-            <Box component="div">Make your content discoverable</Box>
-            <TextInput
-              className={`${styles["english-name"]}`}
-              id="keyword-div"
-              label="Add Keywords"
-              name="keywords"
-              value={currentKeyword}
-              onChange={(e) => {
-                setCurrentKeyword(e.target.value)
-              }}
-              onKeyDown={e => {
-                handleEnter(e, () => {
-                  formik.setFieldValue('keywords', [...new Set([...formik.values.keywords, currentKeyword])])
-                  setCurrentKeyword('')
-                })
-              }}
-              sx={{
-                ...textInputSxStyles
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-            {
-              <Box component="div" style={{
-                display: 'flex',
-                gap: '5px'
-              }}>
-                {
-                  formik.values.keywords.map((item: string, index: any) => (
-                    <Chip key={index} size="small" variant="outlined" label={item}
-                      deleteIcon={<CloseIcon fontSize="small" />}
-                      onDelete={e => {
-                        const newArr = [...formik.values.keywords].filter((element: string) => element !== item)
-                        formik.setFieldValue('keywords', [...new Set(newArr)])
-                      }}
-                    />
-                  ))
-                }
-              </Box>
-            }
-          </>
-        </>}
-      </Box>
-    </>
-  );
 };
 
 const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
@@ -316,8 +142,9 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       create({
         ...data,
       });
-      handleHide();
-      dispatch(toggleNewItemWindow(false));
+      handleReset();
+      // handleHide();
+      // dispatch(toggleNewItemWindow(false));
     }
 
     setSkipped(newSkipped);
@@ -348,6 +175,8 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     });
   };
 
+  
+
   const handleReset = () => {
     setActiveStep(0);
 
@@ -368,6 +197,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   const formik = useFormik({
     initialValues: {
       place: "",
+      object: edit ? [tabData?.object] : undefined,
       title: edit ? tabData?.title : '',
       description: edit ? tabData?.description: "",
       referenceUrl: edit ? tabData?.referenceUrl: "",
@@ -406,6 +236,35 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       }
     }))
   }
+
+  const uploadImage = async (options: any) => {
+    const { onSuccess, onError, file, onProgress } = options;
+
+    const fmData = new FormData();
+    const config: any = {
+      headers: { "content-type": "multipart/form-data", "authorization": `Bearer ${getToken()}` },
+      onUploadProgress: (event: any) => {
+        const percent = Math.floor((event.loaded / event.total) * 100);
+
+        onProgress({ percent: (event.loaded / event.total) * 100 });
+      }
+    };
+    fmData.append("files", file, file.name);
+    try {
+      
+      const res = await axios.post(
+        `${baseUrl}/api/upload`,
+        fmData,
+        config
+      );
+      formik.values.object = res.data[0];
+      onSuccess("Ok");
+    } catch (err) {
+      console.log("Eroor: ", err);
+      const error = new Error("Some error");
+      onError({ err });
+    }
+  };
 
   return (
     <Box component="div">
@@ -481,6 +340,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
                   handleNext={handleNext}
                   formik={formik}
                   handleBack={handleBack}
+                  uploadImage={uploadImage}
                 />
               </React.Fragment>
             </>

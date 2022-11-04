@@ -112,7 +112,6 @@ export const searchResultsSlice = createSlice({
       state.searchApply = action.payload;
     },
     setAddNewItemWindowType: (state, action: PayloadAction<tabNameProps | null>) => {
-      console.log('inside setAddNewItemWindowType', action.payload);
       state.addNewItemWindowType = action.payload;
     },
     toggleAssociationsStepOpen: (state, action: PayloadAction<boolean>) => {

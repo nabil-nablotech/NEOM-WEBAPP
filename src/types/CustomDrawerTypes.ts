@@ -36,6 +36,7 @@ export type StepContentTypes = {
     handleNext: (e: any, data?: InitialValues) => void
     handleChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
     handleBack:  () => void
+    uploadImage?:  (options: any) => void
     formik?:any
 }
 
