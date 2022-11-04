@@ -34,7 +34,7 @@ import Loader from "../../../Common/Loader";
 import MapView from "../../GoogleMap/MapView";
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
 import NoTextPresent from "../../../NoDataScreens/NoText";
-import {isEmpty} from 'lodash'
+import { isEmpty } from 'lodash'
 import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import MoreOption from '../ListView/MoreOption'
@@ -122,7 +122,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
         
     }
     ${antTablePaginationCss}
-` 
+`
 const PlaceDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
     const navigate = useNavigate();
@@ -137,7 +137,7 @@ const PlaceDetailsPage = () => {
 
 
     useEffect(() => {
-        if(selectedPlaceObj) {
+        if (selectedPlaceObj) {
             dispatch(setActivePlaceItem(selectedPlaceObj))
             dispatch(setActivePlaceItemIndex(selectedPlaceObjIndex))
         }
@@ -245,7 +245,7 @@ const PlaceDetailsPage = () => {
             fixed: "right",
             className: "more-menu-ant-cell",
             render: (value: any, record: Media) => (
-                <MoreOptionsComponent id={record.id} record={record} />
+                <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
             ),
         },
     ];
@@ -267,7 +267,7 @@ const PlaceDetailsPage = () => {
                         style={{
                             maxWidth: '100%'
                         }}
-                    ></Box>: <NoImagePresent message="No media items to display"/>}
+                    ></Box> : <NoImagePresent message="No media items to display" />}
                 </>
             },
         },
@@ -277,7 +277,7 @@ const PlaceDetailsPage = () => {
             dataIndex: "new",
             className: "cell-new",
             // render: (value: any, index: any) => "New",
-            render: (value: any, index: any) => <div className={`${gridStyles["card-new-flag"]}`}>{checkIsNew(value?.createdAt) ? 'NEW!' : '' }</div>,
+            render: (value: any, index: any) => <div className={`${gridStyles["card-new-flag"]}`}>{checkIsNew(value?.createdAt) ? 'NEW!' : ''}</div>,
         },
         {
             title: "Type",
@@ -299,9 +299,9 @@ const PlaceDetailsPage = () => {
                 new Date(
                     // item.attributes.updatedAt
                     value?.visitDate
-                    ),
+                ),
                 "MM-dd-yyyy"
-              ) : '-',
+            ) : '-',
         },
         {
             title: "Participants",
@@ -317,7 +317,7 @@ const PlaceDetailsPage = () => {
             fixed: "right",
             className: "more-menu-ant-cell events-table-more-menu",
             render: (value: any, record: Media) => (
-                <MoreOptionsComponent id={record.id} record={record} />
+                <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
             ),
         },
     ];
@@ -333,24 +333,24 @@ const PlaceDetailsPage = () => {
          * 1st , 2nd etc.
          */
         e.preventDefault()
-        if(media.length >= itemIndex) {
-            navigate(`/search-results/Media/${media[itemIndex - 1].attributes.uniqueId}`, {replace: true})
+        if (media.length >= itemIndex) {
+            navigate(`/search-results/Media/${media[itemIndex - 1].attributes.uniqueId}`, { replace: true })
             dispatch(setActiveMediaItem(media[itemIndex - 1]))
             dispatch(setActiveMediaItemIndex(itemIndex - 1))
         }
     }
-    
+
     useEffect(() => {
-        if(placeData && (placeData?.siteDescription?.length < 500)) {
+        if (placeData && (placeData?.siteDescription?.length < 500)) {
             toggleSeeMoreHidden(true)
         }
     }, [placeData])
 
-    if(placeLoading) {
+    if (placeLoading) {
         return <Loader />
     }
-    
-    if(!placeLoading && !placeData) {
+
+    if (!placeLoading && !placeData) {
         return <div>Cant fetch places</div>
     }
 
@@ -358,15 +358,15 @@ const PlaceDetailsPage = () => {
         return null
     }
 
-    
+
     const {
         placeNameEnglish, placeNameArabic, placeNumber,
         siteDescription, siteType, period, stateOfConservation,
         risk, tourismValue, researchValue, recommendation,
         placeUIPath, media_associates, libraryItems, visit_associates,
     } = placeData
-    
-    const {latitude, longitude} = placeData;
+
+    const { latitude, longitude } = placeData;
     return (
         <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -382,8 +382,8 @@ const PlaceDetailsPage = () => {
                             color: 'var(--table-black-text)',
                             textTransform: 'none'
                         }}
-                        sx={{ 
-                            '& .MuiButton-startIcon' : {
+                        sx={{
+                            '& .MuiButton-startIcon': {
                                 marginRight: '4px'
                             }
                         }}
@@ -394,7 +394,7 @@ const PlaceDetailsPage = () => {
                             dispatch(setActivePlaceItemIndex(0))
                             dispatch(setActiveMediaItem(null))
                             dispatch(setActiveMediaItemIndex(0))
-                            
+
                             navigate(`/search-results/${tabName}`, { replace: true })
                         }}
                     >
@@ -597,8 +597,8 @@ const PlaceDetailsPage = () => {
                                         /> :
                                         // <></>: 
                                         <MoreOption
-                                        setEdit={setEdit}
-                                        record={placeData}
+                                            setEdit={setEdit}
+                                            record={placeData}
                                         />}
                                 </Box>
                             </Grid>
@@ -613,21 +613,21 @@ const PlaceDetailsPage = () => {
                                 {
                                     <Box component="div" className={`${styles['site-desc']}`}>
                                         {siteDescription ?
-                                        <>
-                                            <Box component="div"
-                                                className={`${styles['site-desc-condensed']} ${isSeeMoreHidden ? styles['see-more-active'] : ''}`}
-                                            >
-                                                {siteDescription.substring(0, !isSeeMoreHidden ? 500 : siteDescription.length - 1)}
-                                            </Box>
-                                            {
-                                                !isSeeMoreHidden && <Box component="div" className={`${styles['see-more-box']}`} onClick={e => {
-                                                    toggleSeeMoreHidden(state => !state)
-                                                }}>{!isSeeMoreHidden ? '...See More' : ''}</Box>
-                                            }
-                                        </> :
-                                        <NoTextPresent
-                                            message={NO_DESCRIPTION}
-                                        />}
+                                            <>
+                                                <Box component="div"
+                                                    className={`${styles['site-desc-condensed']} ${isSeeMoreHidden ? styles['see-more-active'] : ''}`}
+                                                >
+                                                    {siteDescription.substring(0, !isSeeMoreHidden ? 500 : siteDescription.length - 1)}
+                                                </Box>
+                                                {
+                                                    !isSeeMoreHidden && <Box component="div" className={`${styles['see-more-box']}`} onClick={e => {
+                                                        toggleSeeMoreHidden(state => !state)
+                                                    }}>{!isSeeMoreHidden ? '...See More' : ''}</Box>
+                                                }
+                                            </> :
+                                            <NoTextPresent
+                                                message={NO_DESCRIPTION}
+                                            />}
                                     </Box>
                                 }
                                 <Box component="div" className={`${styles['table']}`}>
@@ -640,7 +640,7 @@ const PlaceDetailsPage = () => {
                                                 {
                                                     !isEmpty(siteType) ? siteType.map((item: string, index: number) => (
                                                         <Box
-                                                        key={index}
+                                                            key={index}
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
                                                         >
@@ -676,9 +676,9 @@ const PlaceDetailsPage = () => {
                                                             {item}
                                                         </Box>
                                                     )) :
-                                                    <NoTextPresent
-                                                        message={NO_TEXT}
-                                                    />
+                                                        <NoTextPresent
+                                                            message={NO_TEXT}
+                                                        />
                                                 }
                                             </Box>
                                         </Grid>
@@ -697,7 +697,7 @@ const PlaceDetailsPage = () => {
                                                         message={NO_TEXT}
                                                     />
                                                 </Grid>
-                                           
+
                                         }
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
@@ -731,7 +731,7 @@ const PlaceDetailsPage = () => {
                                                     />
                                                 </Grid>
                                         }
-                                        
+
                                     </Grid>
                                     <Grid container className={`${styles['table-row']}`}>
                                         <Grid item sm={5} md={4} className={`${styles['table-parameter']}`}>
@@ -762,7 +762,7 @@ const PlaceDetailsPage = () => {
                                             Recommendation
                                         </Grid>
                                         {
-                                            !isEmptyValue(recommendation) ? recommendation.map((item: string, index:number) =>
+                                            !isEmptyValue(recommendation) ? recommendation.map((item: string, index: number) =>
                                                 <Grid item key={index}>
                                                     {item}
                                                 </Grid>) :
@@ -842,7 +842,7 @@ const PlaceDetailsPage = () => {
                             <Box component="div">Library</Box>
                             {!isEmpty(libraryItems) && <Box component="div">{libraryItems.length} Items</Box>}
                         </Box>
-                        <Box component="div"  className={`${styles["table-wrapper"]}`}>
+                        <Box component="div" className={`${styles["table-wrapper"]}`}>
                             {
                                 !isEmpty(libraryItems) ?
                                     <StyledTableWrapper
@@ -869,7 +869,7 @@ const PlaceDetailsPage = () => {
                     <Box component="div" className={`${styles['events-section']} ${styles['heading']} ${styles['text-left']}`}>
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Events</Box>
-                           {!isEmpty(visit_associates) && <Box component="div">{visit_associates.length} Items</Box>}
+                            {!isEmpty(visit_associates) && <Box component="div">{visit_associates.length} Items</Box>}
                         </Box>
                         <Box component="div" className={`${styles["table-wrapper"]}`}>
                             {

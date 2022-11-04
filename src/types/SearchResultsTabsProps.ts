@@ -32,6 +32,8 @@ export type GridViewCard_Media = {
   period?: string[] | null;
   onClick?: ((e: React.MouseEvent<Element, React.MouseEvent>) => void) &
     React.MouseEvent<Element, React.MouseEvent>;
+    setEdit: (payload: Media) => void;
+  record: Media
 };
 export type GridViewCard_Places = {
   itemIndex?: number;
