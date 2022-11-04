@@ -13,7 +13,7 @@ import { getRole } from "../../utils/storage/storage";
 import MenuList from "../MenuList";
 import { Box, LinearProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
 import CustomDrawer from "../CustomDrawer";
 import AddNewItem from "../../pages/AddNewItem";
 import AddNewPlace from "../SearchResultTabs/Places/AddNewItem";
@@ -119,6 +119,12 @@ function UserMenuComponent() {
     dispatch(toggleAddItemWindowMinimized(true))
     dispatch(toggleNewItemWindow(false))
   }
+  const onClose = () => {
+    
+    dispatch(toggleAssociationsIconDisabled(false))
+    dispatch(toggleAssociationsStepOpen(false))
+    dispatch(toggleNewItemWindow(false))
+  }
 
   return (
     <>
@@ -173,7 +179,7 @@ function UserMenuComponent() {
         />
         <CustomDrawer origin="right" isOpen={newItemWindowOpen} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}>
           {!addNewItemWindowType &&
-            <AddNewItem onClose={() => dispatch(toggleNewItemWindow(false))} />
+            <AddNewItem onClose={() => onClose()} />
           }
           {
             addNewItemWindowType === PLACES_TAB_NAME && !addItemWindowMinimized &&
