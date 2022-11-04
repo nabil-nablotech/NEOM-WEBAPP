@@ -112,7 +112,7 @@ const StepContent = ({
   const { associatedPlaces, associatedEvents } = useSelector(
     (state: RootState) => state.searchResults
   );
-
+  console.log("====formik", formik.values)
   const handleSelectChange = (
     e: React.SyntheticEvent,
     value: string[] | [],
@@ -136,34 +136,34 @@ const StepContent = ({
               className={`${styles["media-type"]}`}
               label={"Media Type"}
               name="media-type"
-              value={formik.values.mediaType}
+              value={formik.values.media_type}
               // handleChange={(e) => setFormState((state: any) => ({
               //     ...state,
-              //     mediaType: e.target.value
+              //     media_type: e.target.value
               // }))}
 
               handleChange={(e: SelectChangeEvent<string | string[]>) => {
-                formik.setFieldValue("mediaType", e.target.value);
+                formik.setFieldValue("media_type", e.target.value);
               }}
-              handleClear={(e: React.MouseEvent) => {}}
+              handleClear={(e: React.MouseEvent) => { }}
               itemsList={[
                 {
                   label: "Image",
-                  value: "Image",
+                  value: "IMAGE",
                 },
                 {
                   label: "Video",
-                  value: "Video",
+                  value: "VIDEO",
                 },
                 {
                   label: "3D Model",
-                  value: "3D Model",
+                  value: "3DMODEL",
                 },
               ]}
               selectStylesSx={commonSelectSxStyles}
               formControlSx={commonFormControlSxStyles}
             />
-            {formik.values.mediaType === "Image" && (
+            {formik.values.media_type.toLowerCase() === "image" && (
               <>
                 <CustomUpload title={"Drag and drop your file here"} />
               </>
@@ -242,7 +242,7 @@ const StepContent = ({
               handleSelectChange={(e, value) =>
                 handleSelectChange(e, value, "categoryType")
               }
-              handleClear={(e) => {}}
+              handleClear={(e) => { }}
               itemsList={options?.actionType || []}
               selectStylesSx={commonSelectSxStyles}
               formControlSx={commonFormControlSxStyles}
@@ -276,10 +276,10 @@ const StepContent = ({
             <TextInput
               className={`${styles["english-name"]}`}
               label="Reference URL"
-              name="refrerenceUrl"
-              value={formik.values.refrerenceUrl}
+              name="referenceURL"
+              value={formik.values.referenceURL}
               onChange={(e) => {
-                formik.setFieldValue("refrerenceUrl", e.target.value);
+                formik.setFieldValue("referenceURL", e.target.value);
               }}
               sx={{
                 ...textInputSxStyles,
@@ -305,7 +305,7 @@ const StepContent = ({
                   top: "3px",
                 }}
                 className="remove-motion"
-                onClick={(e) => {}}
+                onClick={(e) => { }}
               />{" "}
               to select the places and events you want to associate this library
               item to.
@@ -378,7 +378,8 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
   const { showAddSuccess, addItemProgressState } = useSelector(
     (state: RootState) => state.searchResults
   );
-
+  const { edit, tabData } = useSelector((state: RootState) => state.tabEdit);
+  console.log("tabData", edit, tabData)
   const [activeStep, setActiveStep] = useState(0);
   const [formState, setFormState] = useState({
     siteDescription: "",
@@ -399,18 +400,18 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
 
   const dispatch = useDispatch();
 
-    let mediaInitialValue = {
-      mediaType: "",
-      title: "",
-      bearing: "",
-      description: "",
-      Author: "",
-      categoryType: [],
-      latitude: null,
-      longitude: null,
-      refrerenceUrl: "",
-      keywords: [],
-    }
+  let mediaInitialValue = {
+    media_type: edit ? tabData.media_type[0].typeCode : "",
+    title: edit ? tabData.title : "",
+    bearing: edit ? tabData.bearing : "",
+    description: edit ? tabData.description : "",
+    Author: edit ? tabData.Author : "",
+    categoryType: edit ? tabData?.categoryType : [],
+    latitude: edit ? tabData?.latitude : null,
+    longitude: edit ? tabData?.longitude : null,
+    referenceURL: edit ? tabData?.referenceURL : "",
+    keywords: edit ? tabData?.keywords : [],
+  }
   const formik = useFormik({
     initialValues: mediaInitialValue,
     validate: (values) => {
@@ -439,12 +440,12 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     if (activeStep >= 2) {
       dispatch(toggleAssociationsStepOpen(true));
 
-      if(activeStep > 2) {
+      if (activeStep > 2) {
         dispatch(toggleAssociationsIconDisabled(true));
-      } else  {
+      } else {
         dispatch(toggleAssociationsIconDisabled(false));
       }
-      
+
     } else {
       dispatch(toggleAssociationsStepOpen(false));
     }
@@ -522,7 +523,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     }
   };
 
-  
+
 
   useEffect(() => {
     /** Effect needed to load history data,
@@ -590,9 +591,8 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
             <Stepper
               activeStep={activeStep}
               alternativeLabel
-              className={`${styles["stepper"]} ${
-                tabName === MEDIA_TAB_NAME ? styles["add-media-stepper"] : ""
-              } ${styles["media-stepper"]}`}
+              className={`${styles["stepper"]} ${tabName === MEDIA_TAB_NAME ? styles["add-media-stepper"] : ""
+                } ${styles["media-stepper"]}`}
             >
               {steps.map((label, index) => {
                 const stepProps: { completed?: boolean } = {};

@@ -154,12 +154,12 @@ const useMedia = () => {
       description:payload.description,
       bearing:payload.bearing,
       Author:payload.Author,
-      asset_config_id: [mediaType(payload.mediaType)], // mediaType should be string
+      asset_config_id: [mediaType(payload.media_type)], // mediaType should be string
       keywords: keywords,
       latitude: payload.latitude && parseFloat(payload.latitude),
       longitude: payload.longitude && parseFloat(payload.longitude),
       categoryType: payload.categoryType && [payload.categoryType],
-      refrerenceUrl:payload.refrerenceUrl
+      referenceURL:payload.referenceURL
     }
     if (!edit) {
       data.uniqueId = uniqueId;
@@ -179,6 +179,7 @@ const useMedia = () => {
   const setEdit = async (payload: any) => {
     if (payload) {
       const payloadRes = await mediaDetails(payload.attributes.uniqueId);
+      console.log("payloadRes", payloadRes)
       dispatch(setTabData(payloadRes));
       dispatch(setTabEdit(true));
       dispatch(toggleNewItemWindow(true))

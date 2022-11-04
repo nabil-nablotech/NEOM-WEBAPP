@@ -168,7 +168,7 @@ export type addEventProgressStateType = {
 export type addMediaProgressStateType = {
   activeStep :number
   formData: {
-    mediaType: string
+    media_type: string
     title: string
     bearing: string
     description: string
@@ -176,7 +176,7 @@ export type addMediaProgressStateType = {
     categoryType: string[]
     latitude: null,
     longitude: null,
-    refrerenceUrl: string
+    referenceURL: string
     keywords: string[]
   }
 }
