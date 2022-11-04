@@ -94,23 +94,28 @@ export const StepperKeywordsComponent = ({
                     });
 
                     setShouldRenderList(true)
+                    setIsComponentVisible(true);
+
                 } else {
                     setShouldRenderList(false)
+                    setIsComponentVisible(false);
+
                 }
             }
 
         } else {
             setShouldRenderList(false)
+            setIsComponentVisible(false);
             suggestions = []
         }
-        setIsComponentVisible(true);
+
         setSearch(state => ({ ...state, suggestions: suggestions }));
     };
 
     const [shouldRenderList, setShouldRenderList] = useState<boolean>()
+    const [showList, setShowList] = useState<Array<string> | []>([])
 
     useEffect(() => {
-
         setShouldRenderList(
             search?.text.length > 0 &&
             (
@@ -121,6 +126,29 @@ export const StepperKeywordsComponent = ({
         )
 
     }, [search?.text, search?.suggestions.length, isComponentVisible])
+
+    useEffect(() => {
+        let currentList: string[] = []
+
+        if (search.suggestions.length > 0) {
+
+            search.suggestions.forEach((suggestion: { name: Array<string> | [] }) => {
+
+                if (suggestion?.name && suggestion?.name?.length > 0) {
+                    for (let val of suggestion.name) {
+
+                        if (!currentList.includes(val)) {
+
+                            currentList.push(val)
+                        }
+                    }
+                }
+            })
+        }
+
+        setShowList(currentList)
+
+    }, [search])
 
     const suggestionSelected = (e: React.MouseEvent, value: any) => {
 
@@ -180,26 +208,23 @@ export const StepperKeywordsComponent = ({
             </div>
             {shouldRenderList && (
                 <AutoCompleteContainer>
-                    {search?.suggestions.map((item: IData, index_) => (
-                        <> {item.name?.map((val, index) => {
+                    <> {showList?.map((val: string, index) => {
 
-                            /**dont show keywords being already added in chips */
-                            if (currentKeywordArray.some(ele => ele === val)) return <></>
+                        /**dont show keywords being already added in chips */
+                        if (currentKeywordArray.some(ele => ele === val)) return <></>
 
-                            return (
-                                <div key={index_}>
-                                    <AutoCompleteItem key={index}>
-                                        <AutoCompleteItemButton
-                                            key={index}
-                                            onClick={(e) => suggestionSelected(e, val)}
-                                        >
-                                            {val}
-                                        </AutoCompleteItemButton>
-                                    </AutoCompleteItem>
-                                </div>
-                            )
-                        })}</>
-                    ))}
+                        return (
+                            <div key={index}>
+                                <AutoCompleteItem>
+                                    <AutoCompleteItemButton
+                                        onClick={(e) => suggestionSelected(e, val)}
+                                    >
+                                        {val}
+                                    </AutoCompleteItemButton>
+                                </AutoCompleteItem>
+                            </div>
+                        )
+                    })}</>
                 </AutoCompleteContainer>
             )}
         </>
