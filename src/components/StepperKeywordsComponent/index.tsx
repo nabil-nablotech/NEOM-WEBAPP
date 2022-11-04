@@ -1,6 +1,6 @@
-import { ChangeEvent, useState, useEffect } from "react";
+import { ChangeEvent, useState, useEffect, SyntheticEvent } from "react";
 import { useQuery } from "@apollo/client";
-import { Box, Chip } from '@mui/material';
+import { Box, Chip, Autocomplete } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from "./index.module.css";
 import { useParams } from "react-router-dom";
@@ -16,6 +16,8 @@ import {
     AutoCompleteItemButton
 } from "./styles";
 import { handleEnter } from "../../utils/services/helpers";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 
 const textInputSxStyles = {
@@ -65,8 +67,9 @@ export const StepperKeywordsComponent = ({
         text: "",
         suggestions: []
     });
+    const { addNewItemWindowType } = useSelector((state: RootState) => state.searchResults);
 
-    let querySelected = tabName === 'Places' ? placesKeyWords : tabName === 'Events' ? eventsKeyWords : mediaKeyWords;
+    let querySelected = addNewItemWindowType === 'Places' ? placesKeyWords : addNewItemWindowType === 'Events' ? eventsKeyWords : mediaKeyWords;
     const { data: keyWordsData, refetch: keyWordsPlaces } = useQuery(querySelected);
     const [isComponentVisible, setIsComponentVisible] = useState(true);
 
@@ -82,12 +85,12 @@ export const StepperKeywordsComponent = ({
         if (value.length > 0) {
             keyWordsPlaces({ text: value });
 
-            for (let i = 0; i < keyWordsData[tabName === 'Places' ? 'places' : tabName === 'Events' ? 'visits' : 'medias']?.data?.length; i++) {
+            for (let i = 0; i < keyWordsData[addNewItemWindowType === 'Places' ? 'places' : addNewItemWindowType === 'Events' ? 'visits' : 'medias']?.data?.length; i++) {
                 if (
-                    keyWordsData[tabName === 'Places' ? 'places' : tabName === 'Events' ? 'visits' : 'medias']?.data[i]?.attributes?.keywords !== null
+                    keyWordsData[addNewItemWindowType === 'Places' ? 'places' : addNewItemWindowType === 'Events' ? 'visits' : 'medias']?.data[i]?.attributes?.keywords !== null
                 ) {
 
-                    const foundWordArray: string[] = keyWordsData[tabName === 'Places' ? 'places' : tabName === 'Events' ? 'visits' : 'medias']?.data[i].attributes["keywords"].filter((element: string) => element.includes(value))
+                    const foundWordArray: string[] = keyWordsData[addNewItemWindowType === 'Places' ? 'places' : addNewItemWindowType === 'Events' ? 'visits' : 'medias']?.data[i].attributes["keywords"].filter((element: string) => element.includes(value))
 
                     suggestions.push({
                         name: foundWordArray
@@ -150,7 +153,7 @@ export const StepperKeywordsComponent = ({
 
     }, [search])
 
-    const suggestionSelected = (e: React.MouseEvent, value: any) => {
+    const suggestionSelected = (value: any) => {
 
         setIsComponentVisible(false);
         setSearch({
@@ -170,51 +173,61 @@ export const StepperKeywordsComponent = ({
         <>
 
             <Box component="div">Make your content discoverable</Box>
-            <Box component="div" onFocus={e => {
-                console.log('hex: ', e.target)
+            <Box component="div">
+                <Autocomplete
+                    id="free-solo-demo"
+                    freeSolo
+                    inputValue={search.text}
+                    options={search.text ? showList.map((option) => option) : []}
+                    renderInput={(params) => {
+                        const newObj = { ...params }
 
-            }}>
-                <div >
-                    <TextInput
-                        className={`${styles["english-name"]}`}
-                        id="keyword-div"
-                        label="Add Keywords"
-                        name="keywords"
-                        value={search.text}
-                        onChange={onTextChanged}
-                        onBlur={e => {
-                            console.log('hex: ', e)
-                        }}
-                        onKeyDown={e => {
-                            handleEnter(e, () => {
-                                onKeyDown(search.text)
-                                setSearch(state => ({ ...state, text: '' }));
-                            });
-                        }}
-                        sx={{
-                            ...textInputSxStyles,
-                        }}
-                        formControlSx={commonFormControlSxStyles}
-                    />
+                        delete newObj.inputProps.value
+
+                        return <>
+                            <TextInput
+                                {...newObj}
+                                className={`${styles["english-name"]}`}
+                                id="keyword-div"
+                                label="Add Keywords"
+                                name="keywords"
+                                value={search.text}
+                                onChange={onTextChanged}
+                                onKeyDown={e => {
+                                    handleEnter(e, () => {
+                                        onKeyDown(search.text)
+                                    });
+                                }}
+                                sx={{
+                                    ...textInputSxStyles,
+                                }}
+                                formControlSx={commonFormControlSxStyles}
+                            />
+                        </>
+                    }}
+                    onChange={(event: SyntheticEvent<Element, Event>, value: string | null) => {
+
+                        if (value !== null) {
+                            suggestionSelected(value)
+                        }
+                    }}
+                />
+                <Box component="div" style={{
+                    display: 'flex',
+                    gap: '5px',
+                    marginTop: "1em",
+                    flexWrap: 'wrap'
+                }}>
                     {
-                        <Box component="div" style={{
-                            display: 'flex',
-                            gap: '5px',
-                            marginTop: "5px"
-                        }}>
-                            {
-                                currentKeywordArray && currentKeywordArray.length > 0 && currentKeywordArray.map((item: any, index: any) => (
-                                    <Chip key={index} size="small" variant="outlined" label={item}
-                                        deleteIcon={<CloseIcon fontSize="small" />}
-                                        onDelete={e => { onDeleteKeyWord(item) }}
-                                    />
-                                ))
-                            }
-                        </Box>
+                        currentKeywordArray && currentKeywordArray.length > 0 && currentKeywordArray.map((item: any, index: any) => (
+                            <Chip key={index} size="small" variant="outlined" label={item}
+                                deleteIcon={<CloseIcon fontSize="small" />}
+                                onDelete={e => { onDeleteKeyWord(item) }}
+                            />
+                        ))
                     }
-
-                </div>
-                {shouldRenderList && (
+                </Box>
+                {false && (
                     <Box component="div" style={{
                         position: 'relative',
                         width: '56%'
@@ -236,6 +249,7 @@ export const StepperKeywordsComponent = ({
                             }}>
                             <CloseIcon fontSize="small" />
                         </Box>
+
                         <AutoCompleteContainer>
 
                             <> {showList?.map((val: string, index) => {
@@ -247,7 +261,7 @@ export const StepperKeywordsComponent = ({
                                     <div key={index}>
                                         <AutoCompleteItem>
                                             <AutoCompleteItemButton
-                                                onClick={(e) => suggestionSelected(e, val)}
+                                                onClick={(e) => suggestionSelected(val)}
                                             >
                                                 {val}
                                             </AutoCompleteItemButton>
