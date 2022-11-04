@@ -402,111 +402,174 @@ const StepContent = ({
 const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { showAddSuccess, addItemProgressState } = useSelector(
-    (state: RootState) => state.searchResults
-  );
-  const { options } = useSelector((state: RootState) => state.refinedSearch);
+  const { showAddSuccess, addItemProgressState } = useSelector((state: RootState) => state.searchResults);
+    const { options } = useSelector((state: RootState) => state.refinedSearch);
 
-  const { edit, tabData } = useSelector((state: RootState) => state.tabEdit);
+    const { edit, tabData } = useSelector((state: RootState) => state.tabEdit);
 
-  const [activeStep, setActiveStep] = useState(0);
-  const [formState, setFormState] = useState({
-    siteDescription: "",
-  });
-  const [skipped, setSkipped] = useState(new Set<number>());
-  const [formError, setFormError] = useState<string>("");
-
-  const [steps, setSteps] = useState<Array<string>>(addItemDefaultSteps);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (showAddSuccess) {
-      dispatch(toggleShowAddSuccess(true));
-    }
-  }, [showAddSuccess]);
-
-  const isStepOptional = (step: number) => {
-    return step === 1;
-  };
-
-  const isStepSkipped = (step: number) => {
-    return skipped.has(step);
-  };
-  const handleNext = (e: any, data: any) => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-
-    if (activeStep + 1 === steps.length && data) {
-      if (create && !edit) {
-        create({
-          ...data,
-        });
-      }
-      handleHide();
-      dispatch(toggleNewItemWindow(false));
-    }
-    if (edit && create && data) {
-      create({
-        ...data,
-      });
-      handleHide();
-      dispatch(toggleNewItemWindow(false));
-    }
-
-    setSkipped(newSkipped);
-  };
-
-  const handleBack = () => {
-    if (activeStep === 0) {
-      dispatch(toggleNewItemWindow(false));
-      dispatch(setAddNewItemWindowType(null));
-      dispatch(toggleAddItemWindowMinimized(null));
-
-      /** remove the data when change in add item type window occurs */
-      dispatch(storeAddItemProgressState(null));
-    } else {
-      setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    }
-  };
-
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
+    const [activeStep, setActiveStep] = useState(0);
+    const [formState, setFormState] = useState({
+        siteDescription: ''
     });
-  };
+    const [skipped, setSkipped] = useState(new Set<number>());
+    const [formError, setFormError] = useState<string>('');
 
-  const handleHide = () => {
-    onHide();
+    const [steps, setSteps] = useState<Array<string>>(addItemDefaultSteps)
 
-    /** store data when unmounting */
-    dispatch(
-      storeAddItemProgressState({
-        activeStep: activeStep,
-        formData: {
-          ...formik.values,
-        },
-      })
-    );
-  };
+    const dispatch = useDispatch()
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+    const isStepOptional = (step: number) => {
+        return step === 1;
+    };
+
+    const isStepSkipped = (step: number) => {
+        return skipped.has(step);
+    };
+    const handleNext = (e: any, data: any) => {
+        let newSkipped = skipped;
+        if (isStepSkipped(activeStep)) {
+            newSkipped = new Set(newSkipped.values());
+            newSkipped.delete(activeStep);
+        }
+
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
+        if (activeStep + 1 === steps.length && data) {
+            if (create && !edit) {
+                create({
+                  ...data,
+                });
+              }
+            handleReset()
+            dispatch(toggleShowAddSuccess(true));
+            dispatch(toggleNewItemWindow(false))
+
+        }
+        if (edit && create && data) {
+            create({
+              ...data,
+            });
+            handleHide();
+            dispatch(toggleNewItemWindow(false));
+          }
+
+        setSkipped(newSkipped);
+    };
+
+    const handleBack = () => {
+        if (activeStep === 0) {
+            dispatch(toggleNewItemWindow(false))
+            dispatch(setAddNewItemWindowType(null))
+            handleReset()
+        } else {
+            setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        }
+    };
+
+    const handleSkip = () => {
+        if (!isStepOptional(activeStep)) {
+            // You probably want to guard against something like this,
+            // it should never occur unless someone's actively trying to break something.
+            throw new Error("You can't skip a step that isn't optional.");
+        }
+
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        setSkipped((prevSkipped) => {
+            const newSkipped = new Set(prevSkipped.values());
+            newSkipped.add(activeStep);
+            return newSkipped;
+        });
+    };
+
+    const handleHide = () => {
+        onHide()
+
+        /** store data when unmounting */
+        dispatch(storeAddItemProgressState({
+            activeStep: activeStep,
+            formData: {
+                ...formik.values
+            }
+        }))
+    }
+
+    const handleReset = () => {
+        setActiveStep(0);
+
+        dispatch(toggleAddItemWindowMinimized(null))
+
+        /** remove the data when change in add item type window occurs */
+        dispatch(storeAddItemProgressState(null))
+        
+    }
+
+//     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
+//     if (activeStep + 1 === steps.length && data) {
+//       if (create && !edit) {
+//         create({
+//           ...data,
+//         });
+//       }
+//       handleHide();
+//       dispatch(toggleNewItemWindow(false));
+//     }
+//     if (edit && create && data) {
+//       create({
+//         ...data,
+//       });
+//       handleHide();
+//       dispatch(toggleNewItemWindow(false));
+//     }
+
+//     setSkipped(newSkipped);
+//   };
+
+//   const handleBack = () => {
+//     if (activeStep === 0) {
+//       dispatch(toggleNewItemWindow(false));
+//       dispatch(setAddNewItemWindowType(null));
+//       dispatch(toggleAddItemWindowMinimized(null));
+
+//       /** remove the data when change in add item type window occurs */
+//       dispatch(storeAddItemProgressState(null));
+//     } else {
+//       setActiveStep((prevActiveStep) => prevActiveStep - 1);
+//     }
+//   };
+
+//   const handleSkip = () => {
+//     if (!isStepOptional(activeStep)) {
+//       // You probably want to guard against something like this,
+//       // it should never occur unless someone's actively trying to break something.
+//       throw new Error("You can't skip a step that isn't optional.");
+//     }
+
+//     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+//     setSkipped((prevSkipped) => {
+//       const newSkipped = new Set(prevSkipped.values());
+//       newSkipped.add(activeStep);
+//       return newSkipped;
+//     });
+//   };
+
+//   const handleHide = () => {
+//     onHide();
+
+//     /** store data when unmounting */
+//     dispatch(
+//       storeAddItemProgressState({
+//         activeStep: activeStep,
+//         formData: {
+//           ...formik.values,
+//         },
+//       })
+//     );
+//   };
+
+//   const handleReset = () => {
+//     setActiveStep(0);
+//   };
 
   const handleStep = (step: number) => () => {
     if (activeStep > step) {

@@ -172,7 +172,9 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         message={`${successMessage()} updated`}
         severity={"success"}
         open={showEditSuccess}
-        handleClose={() => dispatch(toggleShowEditSuccess(false))}
+        handleClose={() => {
+          dispatch(toggleShowEditSuccess(false))
+        }}
         duration={5000}
       />
     </>

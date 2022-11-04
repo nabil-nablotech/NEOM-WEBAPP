@@ -272,12 +272,6 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (showAddSuccess) {
-      dispatch(toggleShowAddSuccess(true));
-    }
-  }, [showAddSuccess]);
-
-  useEffect(() => {
 
     if (activeStep >= 1) {
       dispatch(toggleAssociationsStepOpen(true));
@@ -307,10 +301,6 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     }
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if (activeStep + 1 === steps.length) {
-      handleHide();
-      dispatch(toggleShowAddSuccess(true));
-    }
 
     if (activeStep + 1 === steps.length && data) {
       if (create && !edit) {
@@ -318,7 +308,8 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
           ...data,
         });
       }
-      handleHide()
+      handleReset()
+      dispatch(toggleShowAddSuccess(true));
       dispatch(toggleNewItemWindow(false))
     }
     if (edit && create && data) {
@@ -336,10 +327,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     if (activeStep === 0) {
       dispatch(toggleNewItemWindow(false))
       dispatch(setAddNewItemWindowType(null))
-      dispatch(toggleAddItemWindowMinimized(null))
-
-      /** remove the data when change in add item type window occurs */
-      dispatch(storeAddItemProgressState(null))
+      handleReset()
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
@@ -362,7 +350,14 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
 
   const handleReset = () => {
     setActiveStep(0);
-  };
+
+    dispatch(toggleAddItemWindowMinimized(null))
+
+    /** remove the data when change in add item type window occurs */
+    dispatch(storeAddItemProgressState(null))
+
+    
+}
 
   const handleStep = (step: number) => () => {
     if (activeStep > step) {

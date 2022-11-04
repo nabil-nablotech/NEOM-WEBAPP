@@ -444,9 +444,9 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
           ...data,
         });
       }
-      handleHide();
+      handleReset()
       dispatch(toggleShowAddSuccess(true));
-      // dispatch(toggleNewItemWindow(false))
+      dispatch(toggleNewItemWindow(false))
     }
 
     setSkipped(newSkipped);
@@ -454,12 +454,9 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
 
   const handleBack = () => {
     if (activeStep === 0) {
-      dispatch(toggleNewItemWindow(false));
-      dispatch(setAddNewItemWindowType(null));
-      dispatch(toggleAddItemWindowMinimized(null));
-
-      /** remove the data when change in add item type window occurs */
-      dispatch(storeAddItemProgressState(null))
+      dispatch(toggleNewItemWindow(false))
+      dispatch(setAddNewItemWindowType(null))
+      handleReset()
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
@@ -482,7 +479,13 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
 
   const handleReset = () => {
     setActiveStep(0);
-  };
+
+    dispatch(toggleAddItemWindowMinimized(null))
+
+    /** remove the data when change in add item type window occurs */
+    dispatch(storeAddItemProgressState(null))
+
+  }
 
   const handleStep = (step: number) => () => {
     if (activeStep > step) {
@@ -586,7 +589,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
               alternativeLabel
               className={`${styles["stepper"]} ${
                 tabName === MEDIA_TAB_NAME ? styles["add-media-stepper"] : ""
-              }`}
+              } ${styles["media-stepper"]}`}
             >
               {steps.map((label, index) => {
                 const stepProps: { completed?: boolean } = {};
@@ -655,7 +658,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
               colors={["#fff", "var(--table-black-text)", "none"]}
               className={`${styles["plain-whitee-btn"]}`}
               label="Cancel"
-              onClick={(e) => handleReset()}
+              onClick={(e) => handleBack()}
               style={{
                 paddingInline: 0,
               }}
