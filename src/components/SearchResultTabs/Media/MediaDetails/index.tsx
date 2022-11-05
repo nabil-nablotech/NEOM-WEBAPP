@@ -23,6 +23,9 @@ import ModelViewer from '../../../Model';
 import { useEffect } from 'react';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
+import { isDocumentTypeImage } from '../../../../utils/services/helpers';
+import dayjs from 'dayjs';
+import { Place } from '../../../../types/Place';
 
 const MediaDetailsPage = ({
     currentItemIndex,
@@ -35,7 +38,7 @@ const MediaDetailsPage = ({
         e: React.MouseEvent<HTMLElement>
         action: string
     }
-    const { media, activeMediaItemIndex } = useSelector(
+    const { media, activeMediaItemIndex, places } = useSelector(
         (state: RootState) => state.searchResults
     );
 
@@ -51,16 +54,25 @@ const MediaDetailsPage = ({
         /** To-do: make this flag based on a api variable */
         // setMediaType("image")
         // setMediaType("video")
-        setMediaType("3d")
-    }, [])
+        // setMediaType("3d")
+
+        if(mediaDetails && mediaDetails.object && isDocumentTypeImage(mediaDetails.object.ext)) {
+            setMediaType("image")
+        }
+    }, [mediaDetails])
 
     if(!mediaDetails) {
         return <>Cant display Media Details</>
     }
+
+    const {
+        description, title, id, objectURL, featuredImage, referenceURL, citation,
+        categoryType, Author, bearing, 
+    } = mediaDetails
+
+    const locationRef = window.location.href
+
     // console.log('hex: ', mediaDetails)
-    const {description, title, id, objectURL, referanceUrl, citation} = mediaDetails
-
-
 
     const handleNextOrPrevious = (e: handleAction['e'], action: handleAction['action']) => {
         e.preventDefault()
@@ -154,7 +166,7 @@ const MediaDetailsPage = ({
                                         </Box>
                                     </Grid>
                                     <Grid item>
-                                        <Box component="div">
+                                        {featuredImage && <Box component="div">
                                             <Box component="div" className={`${styles['star-icon-box']}`}>
                                                 <Box
                                                     component="img"
@@ -163,7 +175,7 @@ const MediaDetailsPage = ({
                                                 ></Box>
                                                 <Box component="div">Featured</Box>
                                             </Box>
-                                        </Box>
+                                        </Box>}
                                     </Grid>
                                     <Grid item sm={1} className={`${styles['more-icon-grid-item']}`} style={{
                                         marginLeft: 'auto'
@@ -174,38 +186,54 @@ const MediaDetailsPage = ({
                                         />
                                     </Grid>
                                 </Grid>
-                                <Grid item sm={10} md={8} lg={9} style={{ marginTop: '1em' }}>
-                                    Ed ut perspiciatis unde omnis iste natus error sit voluptatem
-                                    accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                                    quae ab illo inventore.
-                                </Grid>
                             </Grid>
 
                         </Grid>
                         <Grid container >
                             <Grid item lg={6} md={6} sm={5}>
+                            <Box component="div" className={`${styles[`bottom-grid`]}`} >
+                                <p>ID: {id}</p>
+                                <br />
+                                <div>{description}</div>
+                            </Box>
                                 <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                     <p>Details</p>
-                                    <div>Unit Number: 12345</div>
-                                    <div>Type: Artifact</div>
-                                    <div>Bearing: Detail</div>
+                                    <div>Author: {Author}</div>
+                                    <div>Category Type: {categoryType.join(', ')}</div>
+                                    <div>Bearing: {bearing}</div>
+                                    <div>Source URL: {referenceURL}</div>
+                                    <div>Citation: {citation}</div>
+                                    <div>Item URL: {locationRef}</div>
                                 </Box>
-                                <Box component="div" className={`${styles[`bottom-grid`]}`} >
-                                    <p>Recorded</p>
-                                    <div>Date: 08/04/2022 7:41:10 AM</div>
-                                    <div>By: Harland Ash</div>
-                                </Box>
-                                <Box component="div" className={`${styles[`bottom-grid`]}`} >
-                                    <p>Metadata</p>
-                                    <div>Size: 10MB</div>
-                                    <div>Date: 08/04/2022</div>
-                                    <div>Dimensions: 1024x768</div>
-                                    <div>Extensions: png</div>
-                                </Box>
-                                <Box component="div" className={`${styles[`bottom-grid`]}`} >
-                                    <p>Assiciations</p>
-                                    <div>Al-Muwaylih بئر فُحَيْماَن</div>
-                                </Box>
+                                    {
+                                        mediaDetails.object && <Box component="div" className={`${styles[`bottom-grid`]}`} >
+                                            <p>Metadata</p>
+                                            <div>File Name: {mediaDetails.object.name}</div>
+                                            <div>
+                                                <span>Created: <span>{`${dayjs(mediaDetails.object.createdAt).format("MM/DD/YYYY")}`}</span></span>
+                                            </div>
+                                            <div>
+                                                <span>Modified: <span>{`${dayjs(mediaDetails.object.updatedAt).format("MM/DD/YYYY")}`}</span></span>
+                                            </div>
+                                            <div>Size: {mediaDetails.object.size}MB</div>
+
+                                            <div>Storage: -</div>
+                                            <div>Depth: -</div>
+                                            <div>Dimensions: {mediaDetails.object.width}x{mediaDetails.object.height}</div>
+                                            <div>Make: -</div>
+                                            <div>Model: -</div>
+                                            <div>Extensions: {mediaDetails.object.ext && mediaDetails.object.ext.replace('.', '')}</div>
+                                        </Box>
+                                    }
+                                    <Box component="div" className={`${styles[`bottom-grid`]}`} >
+                                        <p>Associations</p>
+                                        {
+                                            (places && places.length > 0) &&
+                                            places.map((placeObj: Place) => (
+                                                <div>{placeObj.attributes.placeNameEnglish} {placeObj.attributes.placeNameArabic}</div>
+                                            ))
+                                        }
+                                    </Box>
                             </Grid>
                             <Grid item lg={6} md={6} sm={7}>
                                 <Box className={`${styles['map-image']}`} component="img" alt={""} src={currentRecord.thumbnailUrl} />
