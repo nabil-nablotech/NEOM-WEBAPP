@@ -104,13 +104,14 @@ allowFullScreen
     return <div dangerouslySetInnerHTML={{ __html: data }} />;
   };
 
-  const handleUrl = (url: string) => {
+  const handleUrl = () => {
+    console.log('url', formik.values.url)
     return (
       <iframe
         width="338"
         height="190"
         onError={(e) => console.log(e, "error")}
-        src={url}
+        src={formik.values.url}
         srcDoc={
           '<div className="no-preview-url> <img src={iconUrl} width="338" /></div>'
         }
@@ -138,6 +139,15 @@ allowFullScreen
                 )}
       </>
     )
+  }
+
+  const validateUrl = () => {
+    const regex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
+    if (regex.test(formik.values.url)) {
+      formik.setFieldValue("valid", true);
+    } else {
+      formik.setFieldValue("valid", false);
+    }
   }
   return (
     <>
@@ -247,12 +257,23 @@ allowFullScreen
                           }}
                           formControlSx={commonFormControlSxStyles}
                         />
-                        {formik.values.url && (
+                         {!formik.values.valid && formik.values.url?.length > 10 && <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
+                            <Button
+                              colors={["#fff", "var(--table-black-text)"]}
+                              variant="outlined"
+                              
+                              label={"VALIDATE"}
+                              onClick={() => {
+                                validateUrl()
+                              }}
+                            />
+                        </Box>}
+                        {formik.values.valid && (
                           <Box
                             component={"div"}
                             className={`${styles["embed-box"]}`}
                           >
-                            {handleUrl(formik.values.url)}
+                            {handleUrl()}
                             <Typography
                               mt={1}
                               className={`${styles["file-upload-url-bottom-text"]}`}

@@ -35,7 +35,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
     useSelector((state: RootState) => state.searchResults);
   const { fetchEvents, clearSearch: clearEventSearch } = useEvent();
   const { fetchLibraryItems } = useLibrary();
-  const { fetchPlaces, clearSearch: clearPlaceSearch } = usePlace();
+  const { fetchPlaces, clearSearch: clearPlaceSearch, setEdit } = usePlace();
   const { fetchMediaItems } = useMedia();
 
   const dispatch = useDispatch();
@@ -115,7 +115,9 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       }}>
         <Grid item>{`New ${addNewItemWindowType} added.`}</Grid>
         <Grid item className={`${styles['continue-btn']}`}>
-          <Button variant="text" onClick={e => { }}
+          <Button variant="text" onClick={e => {
+            setEdit({record: {}, type: addNewItemWindowType})
+           }}
             startIcon={<CreateOutlinedIcon fontSize="small" />}
             style={{
               minWidth: 'fit-content',

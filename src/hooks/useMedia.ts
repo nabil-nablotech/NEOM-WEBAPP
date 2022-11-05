@@ -103,9 +103,7 @@ const useMedia = () => {
         createAssociation(Number(updateData?.updateMedia.data.id));
       }
 
-      dispatch(toggleShowEditSuccess(true))
-
-      dispatch(setAddNewItemWindowType(null));
+      dispatch(toggleShowEditSuccess(true));
       
       dispatch(storeAddItemProgressState(null));
       /** re-direct */
@@ -118,7 +116,6 @@ const useMedia = () => {
   useEffect(() => {
     let id = null;
     if (addData) {
-
       id = addData?.createMedia?.data?.attributes?.uniqueId;
     }
     if(updateMediaAssociateData) {
@@ -127,7 +124,6 @@ const useMedia = () => {
     if (mediaAssociate) {
       dispatch(resetMediaAssociation(null));
       if (id) {
-        dispatch(setAddNewItemWindowType(null));
         
       dispatch(storeAddItemProgressState(null));
         navigate(`/search-results/Media/${id}`, {replace: true})
