@@ -208,13 +208,35 @@ export const StepperKeywordsComponent = ({
             }
         })
 
-        setCurrentlyShownList(list)
+        setCurrentlyShownList(createSelectedFirstList(list))
         setPreloadedKeywordsList(list)
     }
 
     useEffect(() => {
         loadKeywordsList()
     }, [])
+
+    const createSelectedFirstList = (list: string[] | []) => {
+        let newArr: string[] | [] = []
+
+        list.forEach(item => {
+            let isSelected = false
+
+            if (currentKeywordArray.length > 0) {
+                // @ts-ignore
+                isSelected = currentKeywordArray.includes(item)
+            }
+
+            if (isSelected) {
+                newArr = [item, ...newArr]
+            } else {
+                newArr = [...newArr, item]
+            }
+
+        })
+
+        return newArr
+    }
 
     useEffect(() => {
 
@@ -238,7 +260,7 @@ export const StepperKeywordsComponent = ({
                 }
             })
         }
-        setCurrentlyShownList(newList)
+        setCurrentlyShownList(createSelectedFirstList(newList))
 
     }, [currentKeywordArray, currentlyShownList.length > 0])
 
@@ -298,7 +320,7 @@ export const StepperKeywordsComponent = ({
         onDelete(value)
 
         if (!detectLowerCaseStringInArray(value, preloadedKeywordsList)) {
-            setCurrentlyShownList(state => state.filter(item => item !== value))
+            setCurrentlyShownList(state => createSelectedFirstList(state.filter(item => item !== value)))
         }
     }
 
@@ -309,7 +331,7 @@ export const StepperKeywordsComponent = ({
                 setCurrentKeywordsArray(currentlyShownList)
             } else {
                 setCurrentKeywordsArray([])
-                setCurrentlyShownList([...preloadedKeywordsList])
+                setCurrentlyShownList(createSelectedFirstList([...preloadedKeywordsList]))
             }
         }
 
