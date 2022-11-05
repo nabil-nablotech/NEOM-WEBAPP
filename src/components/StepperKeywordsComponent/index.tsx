@@ -254,7 +254,18 @@ export const StepperKeywordsComponent = ({
                 if (suggestion?.name && suggestion?.name?.length > 0) {
                     for (let val of suggestion.name) {
 
-                        if (!detectLowerCaseStringInArray(val, currentList)) {
+                        if (
+                            !detectLowerCaseStringInArray(val, currentList) &&
+
+                            /** push into array only if not already selected */
+                            (
+                                currentKeywordArray.length === 0 ||
+                                (
+                                    (currentKeywordArray.length > 0) &&
+                                    !detectLowerCaseStringInArray(val, currentKeywordArray)
+                                )
+                            )
+                        ) {
                             currentList.push(val)
                         }
                     }
@@ -276,6 +287,7 @@ export const StepperKeywordsComponent = ({
                     suggestions: []
                 });
                 onKeyDown(value)
+
             }
         }
 
