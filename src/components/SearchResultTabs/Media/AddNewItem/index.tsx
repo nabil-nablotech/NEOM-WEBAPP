@@ -38,39 +38,6 @@ import StepContent from './form';
 import axios from 'axios';
 import { getToken } from "../../../../utils/storage/storage";
 
-const commonSelectSxStyles = {
-  textAlign: "left",
-  "& .MuiSelect-select": {
-    padding: "0.5em 1em",
-    color: "var(--grey-text)",
-  },
-};
-const textInputSxStyles = {
-  "& .MuiInputBase-input.MuiOutlinedInput-input": {
-    border: "none",
-  },
-  "& .MuiFormLabel-root.MuiInputLabel-root ": {},
-  "& .MuiInputBase-input.MuiOutlinedInput-input ": {
-    lineHeight: "1.2",
-    border: "1.4px solid #fff",
-    padding: "0.5em 1em",
-    height: "1.4em",
-  },
-  "& .MuiOutlinedInput-notchedOutline span": {
-    opacity: 1,
-  },
-  "& .MuiOutlinedInput-notchedOutline legend": {
-    color: "transparent",
-  },
-};
-const commonFormControlSxStyles = {
-  width: "100%",
-  flexGrow: 0,
-  "& .MuiInputBase-root": {
-    backgroundColor: "#fff",
-  },
-};
-
 export const stepperIconSx = {
   color: "#fff",
   border: "1px solid var(--table-black-text)",
@@ -116,7 +83,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
   const dispatch = useDispatch();
 
   let mediaInitialValue = {
-    media_type: edit ? tabData.media_type[0].typeCode : "",
+    media_type: edit ? tabData?.media_type[0]?.typeCode : "",
     title: edit ? tabData.title : "",
     bearing: edit ? tabData.bearing : "",
     description: edit ? tabData.description : "",
@@ -126,7 +93,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     longitude: edit ? tabData?.longitude : null,
     referenceURL: edit ? tabData?.referenceURL : "",
     keywords: edit && tabData?.keywords ? tabData?.keywords : [],
-    object: edit ? tabData?.object : "",
+    object: edit && tabData?.object ? [tabData?.object] : undefined,
     mediaType: "", 
     refrerenceUrl: ""
   }
@@ -140,7 +107,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
       }
     },
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      // alert(JSON.stringify(values, null, 2));
       if (!formError) {
         handleNext(null, values);
       }
@@ -186,15 +153,23 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
-    if (activeStep + 1 === steps.length) {
-      if (create) {
+    if (activeStep + 1 === steps.length && data) {
+      if (create && !edit) {
         create({
           ...data,
         });
+        dispatch(toggleShowAddSuccess(true));
       }
-      handleReset()
-      dispatch(toggleShowAddSuccess(true));
+      handleReset();
       dispatch(toggleNewItemWindow(false))
+    }
+    if (edit && create && data) {
+      create({
+        ...data,
+      });
+      handleReset();
+      handleHide();
+      dispatch(toggleNewItemWindow(false));
     }
 
     setSkipped(newSkipped);
@@ -333,7 +308,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
               component="h4"
               style={{}}
             >
-              Add Media
+              {edit ? "Edit" : "Add"} Media
             </Typography>
             <Stepper
               activeStep={activeStep}
@@ -385,6 +360,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
                   handleBack={handleBack}
                   options={options}
                   formik={formik}
+                  uploadImage={uploadImage}
                 />
               </React.Fragment>
             </>
@@ -433,22 +409,23 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
               </Box>
             )}
             <Grid item display={"flex"}>
-              {activeStep == steps.length - 1 && (
+            {!edit && (
                 <Button
-                  label="Add"
+                  label={activeStep === steps.length - 1 ? "Add" : "Next"}
                   type="submit"
-                  disabled={!(formik.values.title.length > 0)}
+                  // disabled={!(formik.values.title.trim().length > 0)}
                 />
               )}
-              {activeStep !== steps.length - 1 && (
+              {edit && activeStep !== steps.length - 1 && (
                 <Button
+                  colors={["#fff", "var(--table-black-text)", "none"]}
                   label={"Next"}
                   onClick={(
                     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
                   ) => handleNext(e, undefined)}
                 />
               )}
-              {/* {<Button label={"Update"} type="submit" />} */}
+              {edit && <Button label={"Update"} type="submit" />}
             </Grid>
           </Box>
         </Box>

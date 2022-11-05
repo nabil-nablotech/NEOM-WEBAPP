@@ -137,6 +137,7 @@ export const refineMedia = gql`
           { keywords: { containsi: $keywords } }
         ]
       }
+      sort: "updatedAt:desc"
     ) {
       meta {
         pagination {
@@ -201,22 +202,21 @@ export const refineMedia = gql`
 `;
 
 export const addMedia = gql`
-mutation createMedia(
-  $uniqueId: String
-  $title: String
-  $bearing: String
-  $Author: String
-  $object: ID
-  $description: String
-  $categoryType: JSON
-  $featuredImage: Boolean
-  $objectURL: String
-  $referenceURL: String
-  $citation: String
-  $keywords: JSON
-  $mediaUIPath: String
-  $deleted: Boolean
-  $media_type: [ID]
+  mutation createMedia(
+    $uniqueId: String
+    $title: String
+    $bearing: String
+    $Author: String
+    $object: ID
+    $description: String
+    $categoryType: JSON
+    $featuredImage: Boolean
+    $objectURL: String
+    $referenceURL: String
+    $citation: String
+    $keywords: JSON
+    $mediaUIPath: String
+    $media_type: [ID]
     $fileName: String
     $longitude: Float
     $latitude: Float
@@ -228,70 +228,66 @@ mutation createMedia(
     $dimension: String
     $created: Date
     $modified: DateTime
-) {
-  createMedia(
-    data: {
-      uniqueId: $uniqueId
-      title: $title
-      bearing: $bearing
-      object: $object
-      Author: $Author
-      description: $description
-      categoryType: $categoryType
-      fileName: $fileName
-      longitude: $longitude
-      latitude: $latitude
-      featuredImage: $featuredImage
-      objectURL: $objectURL
-      referenceURL: $referenceURL
-      citation: $citation
-      keywords: $keywords
-      mediaUIPath: $mediaUIPath
-      deleted: $deleted
-      imageMetadata: {
+    $asset_config_id: [ID]
+  ) {
+    createMedia(
+      data: {
+        uniqueId: $uniqueId
+        title: $title
+        bearing: $bearing
+        object: $object
+        Author: $Author
+        description: $description
+        categoryType: $categoryType
         fileName: $fileName
         longitude: $longitude
         latitude: $latitude
-        fileSize: $fileSize
-        storage: $storage
-        make: $make
-        model: $model
-        depth: $depth
-        dimension: $dimension
-        created: $created
-        modified: $modified
+        featuredImage: $featuredImage
+        objectURL: $objectURL
+        referenceURL: $referenceURL
+        citation: $citation
+        keywords: $keywords
+        mediaUIPath: $mediaUIPath
+        deleted: false
+        imageMetadata: {
+          fileName: $fileName
+          longitude: $longitude
+          latitude: $latitude
+          fileSize: $fileSize
+          storage: $storage
+          make: $make
+          model: $model
+          depth: $depth
+          dimension: $dimension
+          created: $created
+          modified: $modified
+        }
+        media_type: $asset_config_id
       }
-      media_type: $media_type
-    }
-  ) {
-    data {
-      id
+    ) {
+      data {
+        id
+      }
     }
   }
-}
 `;
 
 export const updateMedia = gql`
-mutation UpdateMedia(
-  $id: ID!
-  $uniqueId: String
-  $title: String
-  $bearing: String
-  $Author: String
-  $object: ID
-  $description: String
-  $categoryType: JSON
-  $featuredImage: Boolean
-  $objectURL: String
-  $referenceURL: String
-  $citation: String
-  $keywords: JSON
-  $mediaUIPath: String
-  $deleted: Boolean
-  $media_type: [ID]
+  mutation UpdateMedia(
+    $id: ID!
+    $title: String
+    $bearing: String
+    $Author: String
+    $description: String
+    $categoryType: JSON
     $fileName: String
-    $longitude: Float
     $latitude: Float
+    $longitude: Float
+    $featuredImage: Boolean
+    $objectURL: String
+    $refrenceURL: String
+    $citation: String
+    $keywords: JSON
     $fileSize: String
     $storage: String
     $make: String
@@ -300,73 +296,72 @@ mutation UpdateMedia(
     $dimension: String
     $created: Date
     $modified: DateTime
-) {
-  updateMedia(
-    id: $id
-    data: {
-      uniqueId: $uniqueId
-      title: $title
-      bearing: $bearing
-      object: $object
-      Author: $Author
-      description: $description
-      categoryType: $categoryType
-      fileName: $fileName
-      longitude: $longitude
-      latitude: $latitude
-      featuredImage: $featuredImage
-      objectURL: $objectURL
-      referenceURL: $referenceURL
-      citation: $citation
-      keywords: $keywords
-      mediaUIPath: $mediaUIPath
-      deleted: $deleted
-      imageMetadata: {
-        fileName: $fileName
-        longitude: $longitude
-        latitude: $latitude
-        fileSize: $fileSize
-        storage: $storage
-        make: $make
-        model: $model
-        depth: $depth
-        dimension: $dimension
-        created: $created
-        modified: $modified
-      }
-      media_type: $media_type
-    }
+    $asset_config_id: [ID]
+    $object: ID
+    $deleted: Boolean
   ) {
-    data {
-      id
-      attributes {
-        uniqueId
-        media_type {
-          data {
-            id
-            attributes {
-              categoryCode
-              typeCode
+    updateMedia(
+      id: $id
+      data: {
+        title: $title
+        bearing: $bearing
+        Author: $Author
+        description: $description
+        categoryType: $categoryType
+        latitude: $latitude
+        longitude: $longitude
+        deleted: $deleted
+        keywords: $keywords
+        fileName: $fileName
+        media_type: $asset_config_id
+        featuredImage: $featuredImage
+        objectURL: $objectURL
+        referenceURL: $refrenceURL
+        citation: $citation
+        object: $object
+        imageMetadata: {
+          fileName: $fileName
+          longitude: $longitude
+          latitude: $latitude
+          fileSize: $fileSize
+          storage: $storage
+          make: $make
+          model: $model
+          depth: $depth
+          dimension: $dimension
+          created: $created
+          modified: $modified
+        }
+      }
+    ) {
+      data {
+        id
+        attributes {
+          uniqueId
+          media_associate {
+            data {
+              id
+            }
+          }
+          media_type {
+            data {
+              attributes {
+                categoryCode
+                typeCode
+              }
             }
           }
         }
       }
     }
   }
-}
 `;
 
 export const mediaKeyWords = gql`
-  query MediaKeyWordsSearch(
-    $text: JSON
-  ) {
+  query MediaKeyWordsSearch($text: JSON) {
     medias(
-      pagination: { limit: 10, start: 0}
-      filters: {
-        or: [
-          { keywords: { contains: $text } }
-        ]
-      }
+      pagination: { limit: 10, start: 0 }
+      filters: { or: [{ keywords: { contains: $text } }] }
     ) {
       data {
         id

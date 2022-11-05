@@ -41,6 +41,11 @@ const useLibrary = () => {
     await dispatch(setLibraryMetaData(null));
   };
 
+  const resetEdit = () => {
+    dispatch(setTabData({}));
+    dispatch(setTabEdit(false));
+  }
+
   const [createLibraryMutation, { loading: addLoading, error: addErr, data: addData }] = useMutation(addLibrary, graphQlHeaders());
   const [updateLibraryMutation, { loading:updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateLibrary, graphQlHeaders());
   const [createMediaAssociateMutation, { loading: mediaAssociateload, error: mediaAssociateErr, data: mediaAssociate }] = useMutation(createMediaAssociate, graphQlHeaders());
@@ -88,7 +93,7 @@ const useLibrary = () => {
     }
 
     if(updateData) {
-      console.log('updateData', updateData);
+      resetEdit();
       if (updateData?.updateMedia.data.attributes?.media_associate?.data?.id) {
         updateMediaAssociateMutation({
           variables: {
@@ -98,14 +103,14 @@ const useLibrary = () => {
           }
         })
       } else {
-        
-      console.log('updateData inside else create Association', updateData);
+      
         createAssociation(Number(updateData?.updateMedia.data.id));
       }
       dispatch(toggleShowEditSuccess(true))
 
       /** re-direct */
       navigate(`/search-results/Library`, {replace: true})
+      dispatch(setAddNewItemWindowType(null))
     }
   }, [addData, updateData])
 
@@ -114,6 +119,7 @@ const useLibrary = () => {
       dispatch(resetMediaAssociation(null));
       dispatch(toggleShowAddSuccess(true));
       navigate(`/search-results/Library`, {replace: true})
+      dispatch(setAddNewItemWindowType(null))
     }
   }, [mediaAssociate])
   
@@ -168,7 +174,7 @@ const useLibrary = () => {
       siteType: payload.siteType && payload.siteType,
       "latitude": payload.latitude && parseFloat(payload.latitude),
       "longitude": payload.longitude && parseFloat(payload.longitude),
-      "categoryType": payload.categoryType && [payload.categoryType],
+      "categoryType": payload.categoryType && payload.categoryType,
       object: payload?.object?.id,
       fileSize: formatBytes(payload?.object?.size),
       storage: payload?.object?.provider,
@@ -180,7 +186,6 @@ const useLibrary = () => {
     }
     if (!edit) {
       data.uniqueId = uniqueId;
-      data.visitUIPath = `${webUrl}/search-results/Events/${uniqueId}`;
       data.created = new Date();
       createLibraryMutation({variables: data})
     }

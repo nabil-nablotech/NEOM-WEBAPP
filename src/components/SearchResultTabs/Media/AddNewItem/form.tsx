@@ -1,15 +1,11 @@
 import {
   Box,
   Button as DefaultButton,
-  Chip,
 } from "@mui/material";
 import React, { useState } from "react";
 import {
   StepContentTypes,
 } from "../../../../types/CustomDrawerTypes";
-import {
-  handleEnter,
-} from "../../../../utils/services/helpers";
 import styles from "../../Places/AddNewItem/addNewItem.module.css";
 import TextInput from "../../../../components/TextInput";
 import DropdownComponent from "../../../Dropdown/index";
@@ -19,7 +15,6 @@ import { baseUrl } from "./../../../../utils/services/helpers";
 import CustomUpload from "../../../Upload/ImageUpload";
 import { SelectChangeEvent } from "@mui/material/Select";
 import AutoComplete from "../../../AutoComplete";
-import CloseIcon from "@mui/icons-material/Close";
 
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import AddedPlaces from "../../../AssociationsList/AddedPlaces";
@@ -101,9 +96,6 @@ const StepContent = ({
     ]);
   };
 
-  const [mediaKeywords, setMediaKeywords] = useState<Array<string>>([]);
-  const [currentKeyword, setCurrentKeyword] = useState<string>("");
-
   return (
     <>
       <Box component="div" className={`${styles["form"]}`}>
@@ -140,9 +132,9 @@ const StepContent = ({
               selectStylesSx={commonSelectSxStyles}
               formControlSx={commonFormControlSxStyles}
             />
-            {formik.values.media_type.toLowerCase() === "image" && (
+            {formik.values?.media_type.toLowerCase() === "image" && (
               <>
-                <CustomUpload defaultImages={formik.values.object}  uploadImage={uploadImage} title={"Drag and drop your file here"} existingImageUrl={`${baseUrl}${formik.values.object}`} />
+                <CustomUpload defaultImages={formik.values.object}  uploadImage={uploadImage} title={"Drag and drop your file here"} existingImageUrl={`${baseUrl}${formik.values.object.url}`} />
               </>
             )}
           </>
@@ -214,7 +206,7 @@ const StepContent = ({
               className={`${styles["dropdown"]}`}
               label={"Category Type"}
               name="categoryType"
-              value={[...formik.values.categoryType]}
+              value={formik.values.categoryType}
               multiple={true}
               handleSelectChange={(e, value) =>
                 handleSelectChange(e, value, "categoryType")
