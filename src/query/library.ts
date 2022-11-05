@@ -323,6 +323,7 @@ $created: Date
 $modified: DateTime
 $asset_config_id: [ID]
 $object: ID
+$deleted: Boolean
 ) {
   updateMedia(
     id: $id,
@@ -334,7 +335,7 @@ $object: ID
     categoryType: $categoryType
     latitude: $latitude
     longitude: $longitude
-    deleted: false
+    deleted: $deleted
     keywords: $keywords
     fileName: $fileName
     media_type: $asset_config_id

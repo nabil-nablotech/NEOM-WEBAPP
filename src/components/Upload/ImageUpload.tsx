@@ -48,18 +48,22 @@ const ImageUpload = ({
     const [imageUrl, setImageUrl] = useState(existingImageUrl);
 
     const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
-        if (info.file.status === 'uploading') {
+        const nextState: any = {};
+        if (info.file.status !== 'uploading') {
             setLoading(true);
-            return;
         }
         if (info.file.status === 'done') {
-            // Get this url from response in real world.
-            getBase64(info.file.originFileObj as RcFile, url => {
-                setLoading(false);
-                setImageUrl(url);
-            });
+            setLoading(false);
+          message.success(`${info.file.name} file uploaded successfully`);
+          // Get this url from response in real world.
+          getBase64(info.file.originFileObj as RcFile, url => {
+             setLoading(false);
+             setImageUrl(url);
+         });
+        } else if (info.file.status === 'error') {
+          message.error(`${info.file.name} file upload failed.`);
         }
-    };
+      }
 
 
     const uploadButton = (
@@ -77,16 +81,12 @@ const ImageUpload = ({
     return (
         <>
             <StyledUpload
-                name="avatar"
-                listType="picture-card"
-                className={`upload-wrapper ${styles['upload-wrapper']}`}
-                showUploadList={false}
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                beforeUpload={beforeUpload}
+                name={'file'}
+                multiple={false}
+                maxCount={1}
                 onChange={handleChange}
                 customRequest={uploadImage}
                 defaultFileList={defaultImages || []}
-
             >
                 {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
             </StyledUpload>
