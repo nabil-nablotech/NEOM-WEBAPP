@@ -97,6 +97,8 @@ export type SearchResultsState2 = {
   activeEventItemIndex: number;
   activeMediaItem: Media | null;
   activeMediaItemIndex: number;
+  activeLibraryItem: Media | null;
+  activeLibraryItemIndex: number;
   isOpenGalleryView: boolean
   addNewItemWindowType: tabNameProps | null
   isAssociationsStepOpen: boolean
@@ -218,6 +220,11 @@ export type VideoModalProps = {
 };
 
 export type MediaDetailsPageProps = {
+  currentItemIndex: any;
+  data: any;
+  currentRecord: any;
+};
+export type LibraryDetailsPageProps = {
   currentItemIndex: any;
   data: any;
   currentRecord: any;
