@@ -8,7 +8,7 @@ import { placesAddKeyWords } from "../../query/places";
 import { eventsAddKeyWords } from "../../query/events";
 import { mediaAddKeyWords } from "../../query/media";
 import TextInput from "../../components/TextInput";
-
+import Button from "../../components/Button";
 import { detectLowerCaseStringInArray, handleEnter } from "../../utils/services/helpers";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -63,6 +63,68 @@ type PropsPassed = {
     onDelete: (str: string) => void
     currentKeywordArray: string[] | []
 }
+
+type CustomChipTypes = {
+    index: number
+    item: string
+    currentKeywordArray: string[] | []
+    onDeleteKeyWord: (value: any) => void
+    suggestionSelected: (value: any) => void
+}
+
+const CustomChip = ({
+    index,
+    item,
+    currentKeywordArray,
+    onDeleteKeyWord,
+    suggestionSelected
+}: CustomChipTypes) => {
+    let isSelected = false
+
+    if (currentKeywordArray.length > 0) {
+        // @ts-ignore
+        isSelected = currentKeywordArray.includes(item)
+    }
+
+    const handleClick = (e: React.MouseEvent) => {
+        e.preventDefault()
+        if (isSelected) {
+            onDeleteKeyWord(item)
+        } else {
+            suggestionSelected(item)
+        }
+    }
+
+    return <>
+        <Box component="div" key={index} onClick={e => {
+            handleClick(e)
+        }}>
+
+            <Chip size="small" variant="outlined" label={item}
+                deleteIcon={
+                    isSelected ? <CloseIcon fontSize="small"
+                        style={{
+                            color: isSelected ? 'inherit' : 'gray'
+                        }}
+                    /> :
+                        <AddIcon fontSize="small" />
+                }
+                clickable={true}
+                onDelete={e => {
+                    /**dont delete else icons wont appear */
+                    handleClick(e)
+                }}
+                sx={{
+                    border: isSelected ? '1px solid #000' : '1px dashed gray',
+                    color: isSelected ? 'inherit' : 'gray',
+                    borderRadius: '10px'
+                }}
+            />
+        </Box>
+    </>
+
+}
+
 export const StepperKeywordsComponent = ({
     onKeyDown,
     onDelete,
@@ -75,6 +137,7 @@ export const StepperKeywordsComponent = ({
     });
     const { addNewItemWindowType } = useSelector((state: RootState) => state.searchResults);
     const [completeList, setCompleteList] = useState<string[] | []>([])
+    const [selectAll, setSelectAll] = useState<boolean>(false)
 
     const apiKeyword = addNewItemWindowType === 'Places' ? 'places' : addNewItemWindowType === 'Events' ? 'visits' : 'medias'
 
@@ -200,6 +263,21 @@ export const StepperKeywordsComponent = ({
 
     }, [search, completeList])
 
+    useEffect(() => {
+        if (completeList.length > 0) {
+            if (selectAll) {
+                completeList.forEach(val => {
+                    suggestionSelected(val)
+                })
+
+            } else {
+                currentKeywordArray.forEach(val => {
+                    onDeleteKeyWord(val)
+                })
+            }
+        }
+    }, [selectAll, completeList, currentKeywordArray])
+
     const suggestionSelected = (value: any) => {
 
         if (value && value !== '') {
@@ -219,55 +297,6 @@ export const StepperKeywordsComponent = ({
         onDelete(value)
     }
 
-    const CustomChip = ({
-        index,
-        item
-    }: { index: number, item: string }) => {
-        let isSelected = false
-
-        if (currentKeywordArray.length > 0) {
-            // @ts-ignore
-            isSelected = currentKeywordArray.includes(item)
-        }
-
-        const handleClick = (e: React.MouseEvent) => {
-            e.preventDefault()
-            if (isSelected) {
-                onDeleteKeyWord(item)
-            } else {
-                suggestionSelected(item)
-            }
-        }
-
-        return <>
-            <Box component="div" key={index} onClick={e => {
-                handleClick(e)
-            }}>
-
-                <Chip size="small" variant="outlined" label={item}
-                    deleteIcon={
-                        isSelected ? <CloseIcon fontSize="small"
-                            style={{
-                                color: isSelected ? 'inherit' : 'gray'
-                            }}
-                        /> :
-                            <AddIcon fontSize="small" />
-                    }
-                    clickable={true}
-                    onDelete={e => {
-                        /**dont delete else icons wont appear */
-                        handleClick(e)
-                    }}
-                    sx={{
-                        border: isSelected ? '1px solid #000' : '1px dashed gray',
-                        color: isSelected ? 'inherit' : 'gray',
-                        borderRadius: '10px'
-                    }}
-                />
-            </Box>
-        </>
-
-    }
 
     return (
         <>
@@ -312,6 +341,19 @@ export const StepperKeywordsComponent = ({
                         }
                     }}
                 />
+                <Box component="div">
+                    <Button
+                        colors={["#fff", "var(--table-black-text)", "none"]}
+                        className={`${styles["plain-whitee-btn"]}`}
+                        label={selectAll ? "Remove all" : "Select all"}
+                        onClick={e => {
+                            setSelectAll(state => !state)
+                        }}
+                        style={{
+                            paddingInline: 0,
+                        }}
+                    />
+                </Box>
                 <Box component="div" style={{
                     display: 'flex',
                     gap: '5px',
@@ -323,6 +365,9 @@ export const StepperKeywordsComponent = ({
                             <CustomChip
                                 index={index}
                                 item={item}
+                                currentKeywordArray={currentKeywordArray}
+                                onDeleteKeyWord={onDeleteKeyWord}
+                                suggestionSelected={suggestionSelected}
                             />
                         </>
                         )
