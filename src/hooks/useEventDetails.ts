@@ -9,6 +9,7 @@ import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociatio
 import { EVENTS_TAB_NAME } from "../utils/services/helpers";
 import { RootState } from "../store";
 import { MediaApi } from "../types/Media";
+import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 
 const useEventDetails = () => {
   let { uniqueId } = useParams<{ tabName?: tabNameProps; uniqueId: string }>();
@@ -55,6 +56,8 @@ const useEventDetails = () => {
       if (type === 'Events' && record.uniqueId) {
         res = record;
       }
+      dispatch(setTabEdit(true));
+      dispatch(setTabData(res));
       dispatch(setEventData(res));
       dispatch(setEventEdit(true));
       dispatch(toggleNewItemWindow(true));

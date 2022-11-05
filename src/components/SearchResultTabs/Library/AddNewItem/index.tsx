@@ -102,9 +102,9 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     if (activeStep >= 1) {
       dispatch(toggleAssociationsStepOpen(true));
 
-      if(activeStep > 1) {
+      if (activeStep > 1) {
         dispatch(toggleAssociationsIconDisabled(true));
-      } else  {
+      } else {
         dispatch(toggleAssociationsIconDisabled(false));
       }
     } else {
@@ -175,7 +175,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     });
   };
 
-  
+
 
   const handleReset = () => {
     setActiveStep(0);
@@ -185,8 +185,8 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     /** remove the data when change in add item type window occurs */
     dispatch(storeAddItemProgressState(null))
 
-    
-}
+
+  }
 
   const handleStep = (step: number) => () => {
     if (activeStep > step) {
@@ -199,9 +199,9 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       place: "",
       object: edit && tabData?.object ? [tabData?.object] : undefined,
       title: edit ? tabData?.title : '',
-      description: edit ? tabData?.description: "",
-      referenceUrl: edit ? tabData?.referenceUrl: "",
-      citation: edit ? tabData?.citation: "",
+      description: edit ? tabData?.description : "",
+      referenceUrl: edit ? tabData?.referenceUrl : "",
+      citation: edit ? tabData?.citation : "",
       keywords: [],
     },
     onSubmit: (values) => {
@@ -213,7 +213,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     /** Effect needed to load history data,
      * and remove the data when change in add item type window occurs
      */
-    if(addItemProgressState && addItemProgressState.formData) {
+    if (addItemProgressState && addItemProgressState.formData) {
 
       setActiveStep(addItemProgressState.activeStep)
 
@@ -251,7 +251,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     };
     fmData.append("files", file, file.name);
     try {
-      
+
       const res = await axios.post(
         `${baseUrl}/api/upload`,
         fmData,
@@ -260,7 +260,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       formik.values.object = res.data[0];
       onSuccess("Ok");
     } catch (err) {
-      console.log("Eroor: ", err);
+      console.log("Error: ", err);
       const error = new Error("Some error");
       onError({ err });
     }
