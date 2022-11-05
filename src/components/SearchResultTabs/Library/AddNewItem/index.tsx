@@ -143,8 +143,8 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
         ...data,
       });
       handleReset();
-      // handleHide();
-      // dispatch(toggleNewItemWindow(false));
+      handleHide();
+      dispatch(toggleNewItemWindow(false));
     }
 
     setSkipped(newSkipped);
@@ -197,7 +197,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   const formik = useFormik({
     initialValues: {
       place: "",
-      object: edit ? [tabData?.object] : undefined,
+      object: edit && tabData?.object ? [tabData?.object] : undefined,
       title: edit ? tabData?.title : '',
       description: edit ? tabData?.description: "",
       referenceUrl: edit ? tabData?.referenceUrl: "",
