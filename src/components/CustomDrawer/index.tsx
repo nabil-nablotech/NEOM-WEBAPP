@@ -11,7 +11,7 @@ const CustomDrawer = ({
 
     return (
         <Box component="div" style={{
-            zIndex: '33'
+            zIndex: '3333'
         }} sx={{
             '& .MuiModal-root.MuiDrawer-root': {
                 left: 'unset'

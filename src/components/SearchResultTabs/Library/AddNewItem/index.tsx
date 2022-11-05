@@ -22,7 +22,7 @@ import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setAddNewItemWindowType, storeAddItemProgressState, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleNewItemWindow, toggleShowAddSuccess } from "../../../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, storeAddItemProgressState, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import { useFormik } from "formik";
@@ -133,17 +133,17 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
         create({
           ...data,
         });
+        handleReset()
+        dispatch(toggleShowAddSuccess(true));
+        dispatch(toggleNewItemWindow(false))
       }
-      handleReset()
-      dispatch(toggleShowAddSuccess(true));
-      dispatch(toggleNewItemWindow(false))
     }
     if (edit && create && data) {
       create({
         ...data,
       });
       handleReset();
-      handleHide();
+      dispatch(toggleShowEditSuccess(true));
       dispatch(toggleNewItemWindow(false));
     }
 

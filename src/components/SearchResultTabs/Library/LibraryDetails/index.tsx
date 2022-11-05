@@ -49,7 +49,7 @@ const LibraryDetailsPage = ({
             label: "Edit",
             action: () => {
                 setEdit({record: libraryDetails, type: "Library"})
-                handleClose();
+                // handleClose();
             },
         },
         {
@@ -183,9 +183,7 @@ export const LibraryDetailsModal = () => {
 
     const handleClose = () => {
         setModalOpen(false)
-        dispatch(setActiveLibraryItem(null))
-        dispatch(setActiveLibraryItemIndex(0))
-        navigate(`/search-results/Media`, { replace: true, state: null })
+        navigate(`/search-results/Library`, { replace: true, state: null })
     }
 
 

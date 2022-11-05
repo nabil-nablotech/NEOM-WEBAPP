@@ -33,6 +33,7 @@ import {
   toggleAddItemWindowMinimized,
   toggleNewItemWindow,
   toggleShowAddSuccess,
+  toggleShowEditSuccess,
 } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
@@ -405,22 +406,23 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
 
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
-        if (activeStep + 1 === steps.length && data) {
-            if (create && !edit) {
-                create({
-                  ...data,
-                });
-              }
-            handleReset()
-            dispatch(toggleShowAddSuccess(true));
-            dispatch(toggleNewItemWindow(false))
-
+      if (activeStep + 1 === steps.length && data) {
+        if (create && !edit) {
+          create({
+            ...data,
+          });
+          handleReset()
+          dispatch(toggleShowAddSuccess(true));
+          dispatch(toggleNewItemWindow(false))
         }
+
+      }
         if (edit && create && data) {
             create({
               ...data,
             });
-            handleHide();
+            handleReset();
+            dispatch(toggleShowEditSuccess(true));
             dispatch(toggleNewItemWindow(false));
           }
 
