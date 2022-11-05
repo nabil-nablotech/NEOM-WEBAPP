@@ -125,6 +125,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
 const PlaceDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
     const navigate = useNavigate();
+    const [isFilter, setIsFilter] = useState(null)
 
     const { places, library, events, media, isAssociationsStepOpen, associatedPlaces } = useSelector(
         (state: RootState) => state.searchResults
@@ -800,7 +801,7 @@ const PlaceDetailsPage = () => {
                                 {
                                     (latitude && longitude) ?
                                         <>
-                                            <MapView key={4} marker={[{
+                                            <MapView filterId={setIsFilter} key={4} marker={[{
                                                 id: 0,
                                                 name: `${placeNameEnglish}`,
                                                 position: {

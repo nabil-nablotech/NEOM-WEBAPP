@@ -278,6 +278,11 @@ mutation CreateLibrary(
       id
       attributes {
         uniqueId
+        media_associate {
+          data {
+            id
+          }
+        }
         media_type {
           data{
             attributes {
@@ -357,6 +362,11 @@ $object: ID
     id
     attributes {
       uniqueId
+      media_associate {
+        data {
+          id
+        }
+      }
       media_type {
         data{
           attributes {

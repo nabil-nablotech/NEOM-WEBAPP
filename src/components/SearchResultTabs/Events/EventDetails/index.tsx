@@ -13,7 +13,7 @@ import { StyledAntTable } from "../../../StyledAntTable";
 import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
-import { MoreOptionsComponent } from "../../Media/ListView/MoreOption";
+import MoreOptionsComponent from "../ListView/MoreOption";
 import { getRole } from '../../../../utils/storage/storage';
 import {
     antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate,
@@ -131,7 +131,7 @@ const editor = getRole() === 'Editor';
 const EventDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
     const navigate = useNavigate();
-
+    const [isFilter, setIsFilter] = useState(null);
     const { places, isAssociationsStepOpen, associatedEvents, media } = useSelector(
         (state: RootState) => state.searchResults
     );
@@ -206,7 +206,7 @@ const EventDetailsPage = () => {
         {
             label: "Edit",
             action: () => {
-                setEdit()
+                setEdit({record: eventDetails, type: "Events"});
             },
         },
         {
@@ -267,7 +267,7 @@ const EventDetailsPage = () => {
                     }}
                 >
                     <Tooltip>
-                        {value.referenceURL ?? "static URL"}
+                        {value.referenceURL ?? ""}
                     </Tooltip>
                 </Box>
             ),
@@ -276,7 +276,7 @@ const EventDetailsPage = () => {
             title: "SIZE",
             key: "attributes",
             dataIndex: "media_unique_id",
-            render: (value, index) => value.object.size ? formatBytes(value.object.size) : "static size",
+            render: (value, index) => value?.object?.size ? formatBytes(value?.object?.size) : "",
         },
         {
             title: "UPDATED",
@@ -290,7 +290,7 @@ const EventDetailsPage = () => {
             fixed: "right",
             className: "more-menu-ant-cell",
             render: (value: any, record: Media) => (
-                <MoreOptionsComponent setEdit={setEdit} record={record} id={record.id} />
+                <MoreOptionsComponent type="Library" setEdit={setEdit} record={record} />
             ),
         },
     ];
@@ -619,7 +619,7 @@ const EventDetailsPage = () => {
                                 {
                                     (latitude && longitude) ?
                                         <>
-                                            <MapView key={4} marker={[{
+                                            <MapView key={4} filterId={setIsFilter} marker={[{
                                                 id: 0,
                                                 name: "P event name",
                                                 position: {

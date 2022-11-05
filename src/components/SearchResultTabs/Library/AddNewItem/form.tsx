@@ -83,7 +83,7 @@ const StepContent = ({
       <Box component="div" className={`${styles["form"]}`}>
         {activeStep === 0 && (
           <>
-            {uploadImage && <FileUpload uploadImage={uploadImage} />}
+            {uploadImage && <FileUpload defaultImages={formik.values.object || []} uploadImage={uploadImage} />}
             <TextInput
               required
               className={`${styles["title"]}`}

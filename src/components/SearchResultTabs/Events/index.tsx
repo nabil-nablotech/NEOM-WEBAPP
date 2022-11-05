@@ -17,12 +17,11 @@ import { Meta } from '../../../types/Place';
 import MapView from '../GoogleMap/MapView';
 
 const PlacesTab = () => {
-    
   const { selectedCardIndex, events, totalCounts, eventMetaData } = useSelector(
     (state: RootState) => state.searchResults
   );
   const [img, setimg] = useState(MapImg1);
-
+  const [isFilter, setIsFilter] = useState(null);
   const { fetchEvents, hasMoreData, loading, mapEvents, setEdit } = useEvent();
 
     useEffect(() => {
@@ -73,18 +72,18 @@ const PlacesTab = () => {
             <Box component={'section'} className={`${styles['result-section']}`}>
                 <Grid container spacing={1}>
                     {openStates[0] && <><Grid item xl={6} lg={6} md={5} sm={5}>
-                        <GridView key={10} loading={loading} data={events} handleNext={handleNext} setEdit={setEdit} hasMoreData={hasMoreData}  />
+                        <GridView key={10} loading={loading} data={isFilter===null?events:events.filter((item)=>{return item.id===isFilter})} handleNext={handleNext} setEdit={setEdit} hasMoreData={hasMoreData}  />
                     </Grid>
                     {/* To-do: map view */}
                     <Grid item xl={6} lg={6} md={7} sm={7} className={`${styles["map-section"]}`}>                     
-                        {mapEvents !== null ? <MapView key={11} marker={mapEvents}/>:<></>}
+                        {mapEvents !== null ? <MapView key={11} filterId={setIsFilter} marker={mapEvents}/>:<></>}
                     </Grid></>}
                     {
                         openStates[1] &&
                         <Box component={'div'} style={{
                             width: '100%'
                         }}>
-                            <ListView setEdit={setEdit} key={12} loading={loading} data={events} handleNext={handleNext} hasMoreData={hasMoreData} />
+                            <ListView setEdit={setEdit} key={12} loading={loading} data={isFilter===null?events:events.filter((item)=>{return item.id===isFilter})} handleNext={handleNext} hasMoreData={hasMoreData} />
                         </Box>
                     }
                 </Grid>

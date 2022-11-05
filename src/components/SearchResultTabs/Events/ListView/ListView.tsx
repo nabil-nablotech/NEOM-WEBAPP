@@ -103,51 +103,6 @@ const StyledTableWrapper = styled(StyledAntTable)`
     ${antTablePaginationCss}
 ` 
 
-// const MoreOptionsComponent = ({
-//     record,
-//     id,
-// }: {
-//     id: number;
-//     record: User;
-// }) => {
-//     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-//     const open = Boolean(anchorEl);
-//     const handleClick = (e: any) => {
-//         setAnchorEl(e.currentTarget);
-//     };
-//     const handleClose = () => {
-//         setAnchorEl(null);
-//     };
-
-//     return (
-//         <>
-//             <div
-//                 className=""
-//             >
-//                 <MoreHorizIcon className="more-menu-div" />
-//             </div>
-//             <Menu
-//                 id="basic-menu"
-//                 anchorEl={anchorEl}
-//                 open={open}
-//                 onClose={handleClose}
-//                 MenuListProps={{
-//                     "aria-labelledby": "basic-button",
-//                 }}
-//             >
-//                 <MenuItem
-//                     key={1}
-//                 >
-//                     Edit
-//                 </MenuItem>
-//                 <MenuItem key={2}>
-//                    Delete
-//                 </MenuItem>
-//             </Menu>
-//         </>
-//     );
-// };
-
 const ListView = (props: EventsProps) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -236,7 +191,7 @@ const ListView = (props: EventsProps) => {
             className: 'more-menu-ant-cell',
             render: (value: any, record: Event) => (
 
-                <MoreOptionsComponent setEdit={props.setEdit} record={record} />
+                <MoreOptionsComponent type="Events" setEdit={props.setEdit} record={record} />
             ),
         },
     ])

@@ -55,7 +55,7 @@ export type GridViewCard_Events = {
   dateString: string;
   isNew: boolean;
   handleClick: (item: Event, index: number) => void
-  setEdit: (item: Event) => void
+  setEdit: (payload: {record: Media | Event, type: tabNameProps}) => void
   record: Event;
   id: string;
 };
