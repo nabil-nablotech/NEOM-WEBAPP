@@ -18,6 +18,7 @@ import {
 import { handleEnter } from "../../utils/services/helpers";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
+import { graphQlHeaders } from "../../utils/services/interceptor";
 
 
 const textInputSxStyles = {
@@ -62,16 +63,16 @@ export const StepperKeywordsComponent = ({
     onDelete,
     currentKeywordArray
 }: PropsPassed) => {
-    let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
+
     const [search, setSearch] = useState({
         text: "",
         suggestions: []
     });
     const { addNewItemWindowType } = useSelector((state: RootState) => state.searchResults);
+    const [completeList, setCompleteList] = useState()
 
     let querySelected = addNewItemWindowType === 'Places' ? placesKeyWords : addNewItemWindowType === 'Events' ? eventsKeyWords : mediaKeyWords;
-    const { data: keyWordsData, refetch: keyWordsPlaces } = useQuery(querySelected);
-    const [isComponentVisible, setIsComponentVisible] = useState(true);
+    const { data: keyWordsData, refetch: keyWordsPlaces } = useQuery(querySelected, graphQlHeaders());
 
     const onTextChanged = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -96,16 +97,13 @@ export const StepperKeywordsComponent = ({
                         name: foundWordArray
                     });
 
-                    setIsComponentVisible(true);
 
                 } else {
-                    setIsComponentVisible(false);
 
                 }
             }
 
         } else {
-            setIsComponentVisible(false);
             suggestions = []
         }
 
@@ -113,6 +111,20 @@ export const StepperKeywordsComponent = ({
     };
 
     const [showList, setShowList] = useState<Array<string> | []>([])
+
+    useEffect(() => {
+        keyWordsPlaces({ text: '' });
+
+    }, [])
+
+    useEffect(() => {
+       console.log('hex: ref:', keyWordsData)
+
+    //    keyWordsData.map(item => item.atttributes.keywords)
+
+    //    [...arr.atttributes.keywords]
+
+    }, [keyWordsData])
 
     useEffect(() => {
         let currentList: string[] = []
@@ -139,7 +151,6 @@ export const StepperKeywordsComponent = ({
 
     const suggestionSelected = (value: any) => {
 
-        setIsComponentVisible(false);
         setSearch({
             text: "",
             suggestions: []
@@ -148,7 +159,6 @@ export const StepperKeywordsComponent = ({
     };
 
     const onDeleteKeyWord = (value: any) => {
-        setIsComponentVisible(false)
         onDelete(value)
     }
 
