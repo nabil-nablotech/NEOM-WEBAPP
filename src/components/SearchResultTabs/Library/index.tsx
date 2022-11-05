@@ -17,12 +17,18 @@ import MoreOptionsComponent from '../Places/ListView/MoreOption';
 import { Media } from "../../../types/Media";
 import {HtmlTooltip} from '../../../components/Tooltip';
 import { Typography } from "@mui/material";
+import { setSelectedCardIndex } from "../../../store/reducers/searchResultsReducer";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 let viewWidths = ["20vw", "20vw", "20vw", "20vw", "5vw"];
 
 const LibraryTab = () => {
   const { selectedCardIndex, library, places, totalCounts, libararyMetaData } =
     useSelector((state: RootState) => state.searchResults);
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const { fetchLibraryItems, hasMoreData, loading, setEdit } = useLibrary();
   const tableHeaderJson: ColumnsType<any> = [
@@ -193,6 +199,15 @@ const LibraryTab = () => {
             scroll={{ y: 500, scrollToFirstRowOnChange: true }}
             style={{
               background: "transparent",
+            }}
+            onRow={(record: any, rowIndex) => {
+              return {
+                onClick: (event: React.MouseEvent<HTMLElement>) => {
+
+                  dispatch(setSelectedCardIndex(rowIndex || record.id))
+                  navigate(`/search-results/Library/${record.attributes.uniqueId}`, { replace: true })
+                },
+              };
             }}
           ></StyledAntTable>
         </InfiniteScroll>
