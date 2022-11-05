@@ -17,7 +17,7 @@ const MoreOptionsComponent = ({
 }: {
     type: tabNameProps;
     record: Event | Media;
-    setEdit: (payload:{record: Event | Media, type: tabNameProps}) => void
+    setEdit: (payload: { record: Event | Media, type: tabNameProps }) => void
 }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
@@ -49,14 +49,14 @@ const MoreOptionsComponent = ({
                 <MenuItem
                     key={1}
                     onClick={() => {
-                        setEdit({record, type});
+                        setEdit({ record: record, type });
                         handleClose();
                     }}
                 >
                     Edit
                 </MenuItem>
                 <MenuItem key={2}>
-                   Delete
+                    Delete
                 </MenuItem>
             </Menu>
         </>
