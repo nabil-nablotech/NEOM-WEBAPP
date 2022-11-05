@@ -13,6 +13,7 @@ import { detectLowerCaseStringInArray, handleEnter } from "../../utils/services/
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { graphQlHeaders } from "../../utils/services/interceptor";
+import Loader from "../Common/Loader";
 
 
 const textInputSxStyles = {
@@ -146,7 +147,7 @@ export const StepperKeywordsComponent = ({
 
     let querySelected = addNewItemWindowType === 'Places' ? placesAddKeyWords : addNewItemWindowType === 'Events' ? eventsAddKeyWords : mediaAddKeyWords;
 
-    const { data: keyWordsData, refetch: keyWordsPlaces } = useQuery(querySelected, graphQlHeaders());
+    const { loading, data: keyWordsData, refetch: keyWordsPlaces } = useQuery(querySelected, graphQlHeaders());
 
     const onTextChanged = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -406,6 +407,9 @@ export const StepperKeywordsComponent = ({
                     marginTop: "1em",
                     flexWrap: 'wrap'
                 }}>
+                    {
+                        loading && <Loader />
+                    }
                     {
                         currentlyShownList && currentlyShownList.length > 0 && currentlyShownList.map((item: string, index: any) => <>
                             <CustomChip
