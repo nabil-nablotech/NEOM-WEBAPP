@@ -198,13 +198,13 @@ const useMedia = () => {
       "latitude": payload.latitude && parseFloat(payload.latitude),
       "longitude": payload.longitude && parseFloat(payload.longitude),
       "categoryType": payload.categoryType && payload?.categoryType,
-      object: payload?.object?.id,
-      fileSize: formatBytes(payload?.object?.size),
-      storage: payload?.object?.provider,
+      object:payload?.object[0].id,
+      fileSize: formatBytes(parseFloat(payload?.object[0]?.size)),
+      storage: payload?.object[0]?.provider,
+      dimension: `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
       make: "",
       model: "",
       depth: "",
-      dimension: `${payload?.object?.height}x${payload?.object?.width}`,
       modified: new Date(),
     }
     if (!edit) {

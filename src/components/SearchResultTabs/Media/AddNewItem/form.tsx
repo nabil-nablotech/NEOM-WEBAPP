@@ -16,6 +16,7 @@ import DetachedIcon from "../../../Icons/DetachedIcon";
 import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 import AddedEvents from "../../../AssociationsList/AddedEvents";
 import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
+import iconUrl from '../../../../assets/images/icon-URL.png';
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -113,7 +114,9 @@ const StepContent = ({
       <iframe
         width="338"
         height="190"
+        onError={(e) => console.log(e, 'error')}
         src={url}
+        srcDoc={'<div className="no-preview-url> <img src={iconUrl} width="338" /></div>'}
         title="YouTube video player"
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

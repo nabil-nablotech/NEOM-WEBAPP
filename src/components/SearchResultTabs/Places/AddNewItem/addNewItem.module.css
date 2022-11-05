@@ -115,3 +115,7 @@
     color: black!important;
     text-align: center!important;
 }
+
+.no-preview-url {
+    background: #13100D80;
+}
