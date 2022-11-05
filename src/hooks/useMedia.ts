@@ -183,6 +183,7 @@ const useMedia = () => {
   }
  
   const createMedia = async (payload: any | undefined) => {
+    console.log('inside craete media', payload)
     const uniqueId = generateUniqueId();
     const keywords = payload.keywords;
     const data = {
@@ -194,10 +195,10 @@ const useMedia = () => {
       "latitude": payload.latitude && parseFloat(payload.latitude),
       "longitude": payload.longitude && parseFloat(payload.longitude),
       "categoryType": payload.categoryType && payload?.categoryType,
-      object:payload?.object[0].id,
-      fileSize: formatBytes(parseFloat(payload?.object[0]?.size)),
-      storage: payload?.object[0]?.provider,
-      dimension: `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
+      object: payload?.object && payload?.object[0].id,
+      fileSize: payload?.object && formatBytes(parseFloat(payload?.object[0]?.size)),
+      storage: payload?.object && payload?.object[0]?.provider,
+      dimension: payload?.object && `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
       refrenceURL: payload?.url,
       objectURL: payload?.embedCode,
       make: "",

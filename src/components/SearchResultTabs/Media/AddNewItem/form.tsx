@@ -105,7 +105,6 @@ allowFullScreen
   };
 
   const handleUrl = () => {
-    console.log('url', formik.values.url)
     return (
       <iframe
         width="338"
