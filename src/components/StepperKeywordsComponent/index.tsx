@@ -8,7 +8,7 @@ import { placesAddKeyWords } from "../../query/places";
 import { eventsAddKeyWords } from "../../query/events";
 import { mediaAddKeyWords } from "../../query/media";
 import TextInput from "../../components/TextInput";
-
+import Button from "../../components/Button";
 import { detectLowerCaseStringInArray, handleEnter } from "../../utils/services/helpers";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -62,11 +62,75 @@ type PropsPassed = {
     onKeyDown: (str: string) => void
     onDelete: (str: string) => void
     currentKeywordArray: string[] | []
+    setCurrentKeywordsArray: (arr: string[]) => void
 }
+
+type CustomChipTypes = {
+    index: number
+    item: string
+    currentKeywordArray: string[] | []
+    onDeleteKeyWord: (value: any) => void
+    suggestionSelected: (value: any) => void
+}
+
+const CustomChip = ({
+    index,
+    item,
+    currentKeywordArray,
+    onDeleteKeyWord,
+    suggestionSelected
+}: CustomChipTypes) => {
+    let isSelected = false
+
+    if (currentKeywordArray.length > 0) {
+        // @ts-ignore
+        isSelected = currentKeywordArray.includes(item)
+    }
+
+    const handleClick = (e: React.MouseEvent) => {
+        e.preventDefault()
+        if (isSelected) {
+            onDeleteKeyWord(item)
+        } else {
+            suggestionSelected(item)
+        }
+    }
+
+    return <>
+        <Box component="div" key={index} onClick={e => {
+            handleClick(e)
+        }}>
+
+            <Chip size="small" variant="outlined" label={item}
+                deleteIcon={
+                    isSelected ? <CloseIcon fontSize="small"
+                        style={{
+                            color: isSelected ? 'inherit' : 'gray'
+                        }}
+                    /> :
+                        <AddIcon fontSize="small" />
+                }
+                clickable={true}
+                onDelete={e => {
+                    /**dont delete else icons wont appear */
+                    handleClick(e)
+                }}
+                sx={{
+                    border: isSelected ? '1px solid #000' : '1px dashed gray',
+                    color: isSelected ? 'inherit' : 'gray',
+                    borderRadius: '10px'
+                }}
+            />
+        </Box>
+    </>
+
+}
+
 export const StepperKeywordsComponent = ({
     onKeyDown,
     onDelete,
-    currentKeywordArray
+    currentKeywordArray,
+    setCurrentKeywordsArray
 }: PropsPassed) => {
 
     const [search, setSearch] = useState({
@@ -74,7 +138,9 @@ export const StepperKeywordsComponent = ({
         suggestions: []
     });
     const { addNewItemWindowType } = useSelector((state: RootState) => state.searchResults);
-    const [completeList, setCompleteList] = useState<string[] | []>([])
+    const [currentlyShownList, setCurrentlyShownList] = useState<string[] | []>([])
+    const [preloadedKeywordsList, setPreloadedKeywordsList] = useState<string[] | []>([])
+    const [selectAll, setSelectAll] = useState<boolean>(false)
 
     const apiKeyword = addNewItemWindowType === 'Places' ? 'places' : addNewItemWindowType === 'Events' ? 'visits' : 'medias'
 
@@ -120,7 +186,7 @@ export const StepperKeywordsComponent = ({
 
     const [showList, setShowList] = useState<Array<string> | []>([])
 
-    const defaultList = async () => {
+    const loadKeywordsList = async () => {
         const data = await keyWordsPlaces({ text: '' });
 
         // console.log('hex: ref:', data.data[apiKeyword].data.map((item: parent) => item.attributes.keywords))
@@ -142,43 +208,43 @@ export const StepperKeywordsComponent = ({
             }
         })
 
-
-        setCompleteList(list)
+        setCurrentlyShownList(list)
+        setPreloadedKeywordsList(list)
     }
 
     useEffect(() => {
-        defaultList()
+        loadKeywordsList()
     }, [])
 
     useEffect(() => {
 
-        let newList: string[] | [] = [...completeList]
+        let newList: string[] | [] = [...currentlyShownList]
 
         if (
             (currentKeywordArray.length > 0) &&
-            (completeList.length === 0)
+            (currentlyShownList.length === 0)
         ) {
             newList = [...currentKeywordArray]
         }
 
         if (
             (currentKeywordArray.length > 0) &&
-            (completeList.length > 0)
+            (currentlyShownList.length > 0)
         ) {
             currentKeywordArray.forEach((item: string) => {
-                if (!detectLowerCaseStringInArray(item, completeList)) {
+                if (!detectLowerCaseStringInArray(item, currentlyShownList)) {
 
                     newList = [item, ...newList]
                 }
             })
         }
+        setCurrentlyShownList(newList)
 
-        setCompleteList(newList)
-
-    }, [currentKeywordArray, completeList.length > 0])
+    }, [currentKeywordArray, currentlyShownList.length > 0])
 
 
     useEffect(() => {
+        /** set dropdown list based on inputs */
         let currentList: string[] = []
 
         if (search.suggestions.length > 0) {
@@ -188,7 +254,18 @@ export const StepperKeywordsComponent = ({
                 if (suggestion?.name && suggestion?.name?.length > 0) {
                     for (let val of suggestion.name) {
 
-                        if (!detectLowerCaseStringInArray(val, currentList)) {
+                        if (
+                            !detectLowerCaseStringInArray(val, currentList) &&
+
+                            /** push into array only if not already selected */
+                            (
+                                currentKeywordArray.length === 0 ||
+                                (
+                                    (currentKeywordArray.length > 0) &&
+                                    !detectLowerCaseStringInArray(val, currentKeywordArray)
+                                )
+                            )
+                        ) {
                             currentList.push(val)
                         }
                     }
@@ -198,11 +275,11 @@ export const StepperKeywordsComponent = ({
 
         setShowList(currentList)
 
-    }, [search, completeList])
+    }, [search, currentlyShownList])
 
     const suggestionSelected = (value: any) => {
 
-        if (value && value !== '') {
+        if (value && (value !== '')) {
 
             if (!detectLowerCaseStringInArray(value, currentKeywordArray)) {
                 setSearch({
@@ -210,62 +287,33 @@ export const StepperKeywordsComponent = ({
                     suggestions: []
                 });
                 onKeyDown(value)
+
             }
         }
 
     };
 
     const onDeleteKeyWord = (value: any) => {
+
         onDelete(value)
+
+        if (!detectLowerCaseStringInArray(value, preloadedKeywordsList)) {
+            setCurrentlyShownList(state => state.filter(item => item !== value))
+        }
     }
 
-    const CustomChip = ({
-        index,
-        item
-    }: { index: number, item: string }) => {
-        let isSelected = false
+    const handleSelectAll = () => {
 
-        if (currentKeywordArray.length > 0) {
-            // @ts-ignore
-            isSelected = currentKeywordArray.includes(item)
-        }
-
-        const handleClick = (e: React.MouseEvent) => {
-            e.preventDefault()
-            if (isSelected) {
-                onDeleteKeyWord(item)
+        if (currentlyShownList.length > 0) {
+            if (!selectAll) { // reverse flag
+                setCurrentKeywordsArray(currentlyShownList)
             } else {
-                suggestionSelected(item)
+                setCurrentKeywordsArray([])
+                setCurrentlyShownList([...preloadedKeywordsList])
             }
         }
 
-        return <>
-            <Box component="div" key={index} onClick={e => {
-                handleClick(e)
-            }}>
-
-                <Chip size="small" variant="outlined" label={item}
-                    deleteIcon={
-                        isSelected ? <CloseIcon fontSize="small"
-                            style={{
-                                color: isSelected ? 'inherit' : 'gray'
-                            }}
-                        /> :
-                            <AddIcon fontSize="small" />
-                    }
-                    clickable={true}
-                    onDelete={e => {
-                        /**dont delete else icons wont appear */
-                        handleClick(e)
-                    }}
-                    sx={{
-                        border: isSelected ? '1px solid #000' : '1px dashed gray',
-                        color: isSelected ? 'inherit' : 'gray',
-                        borderRadius: '10px'
-                    }}
-                />
-            </Box>
-        </>
+        setSelectAll(state => !state)
 
     }
 
@@ -312,6 +360,24 @@ export const StepperKeywordsComponent = ({
                         }
                     }}
                 />
+                <Box component="div">
+                    <Button
+                        colors={["#fff", "var(--table-black-text)", "none"]}
+                        className={`${styles["plain-whitee-btn"]}`}
+                        label={selectAll ? "Remove all" : "Select all"}
+                        onClick={e => {
+                            e.preventDefault()
+                            handleSelectAll()
+                        }}
+                        style={{
+                            paddingInline: 0,
+                            paddingBlock: 0,
+                            marginTop: '1em',
+                            lineHeight: '1em',
+                            height: 'fit-content'
+                        }}
+                    />
+                </Box>
                 <Box component="div" style={{
                     display: 'flex',
                     gap: '5px',
@@ -319,10 +385,13 @@ export const StepperKeywordsComponent = ({
                     flexWrap: 'wrap'
                 }}>
                     {
-                        completeList && completeList.length > 0 && completeList.map((item: string, index: any) => <>
+                        currentlyShownList && currentlyShownList.length > 0 && currentlyShownList.map((item: string, index: any) => <>
                             <CustomChip
                                 index={index}
                                 item={item}
+                                currentKeywordArray={currentKeywordArray}
+                                onDeleteKeyWord={onDeleteKeyWord}
+                                suggestionSelected={suggestionSelected}
                             />
                         </>
                         )
