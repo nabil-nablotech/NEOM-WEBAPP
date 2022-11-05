@@ -182,6 +182,8 @@ export const LibraryDetailsModal = () => {
 
     const handleClose = () => {
         setModalOpen(false)
+        dispatch(setActiveLibraryItem(null))
+        dispatch(setActiveLibraryItemIndex(0))
         navigate(`/search-results/Library`, { replace: true, state: null })
     }
 
@@ -208,10 +210,7 @@ export const LibraryDetailsModal = () => {
                             onClick={e => {
                                 e.preventDefault()
                                 /** resetters */
-                                dispatch(setActiveLibraryItem(null))
-                                dispatch(setActiveLibraryItemIndex(0))
-
-                                navigate(`/search-results/${tabName}`, { replace: true })
+                                handleClose()
                             }}
                         >
                             Back
