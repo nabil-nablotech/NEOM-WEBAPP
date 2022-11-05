@@ -40,7 +40,7 @@
 }
 .result-section {
     margin-block: 0.5em;
-    max-height: 80vh;
+    max-height: fit-content;
 }
 .map-section {
     min-height: 80vh;
