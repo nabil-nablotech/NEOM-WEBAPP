@@ -35,6 +35,7 @@ import {
   toggleAddItemWindowMinimized,
   toggleNewItemWindow,
   toggleShowAddSuccess,
+  toggleShowEditSuccess,
 } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
@@ -450,17 +451,18 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
         create({
           ...data,
         });
+        handleReset();
+        dispatch(toggleShowAddSuccess(true));
+        dispatch(toggleNewItemWindow(false))
       }
-      handleReset();
-      dispatch(toggleShowAddSuccess(true));
-      dispatch(toggleNewItemWindow(false))
       
     }
     if (edit && create && data) {
       create({
         ...data,
       });
-      handleHide();
+      handleReset();
+      dispatch(toggleShowEditSuccess(true));
       dispatch(toggleNewItemWindow(false));
     }
 
