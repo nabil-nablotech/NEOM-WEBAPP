@@ -28,6 +28,7 @@ const MediaDetailsPage = ({
     currentItemIndex,
     data,
     currentRecord,
+    handleClose
 }: MediaDetailsPageProps) => {
 
     type handleAction = {
@@ -41,7 +42,7 @@ const MediaDetailsPage = ({
     
     const dispatch = useDispatch()
 
-    const {data:mediaDetails} = useMediaDetails();
+    const {data:mediaDetails, setEdit} = useMediaDetails();
     
 
     let [mediaType, setMediaType] = useState<"image" | "video" | "3d">("image")
@@ -63,7 +64,6 @@ const MediaDetailsPage = ({
 
     const handleNextOrPrevious = (e: handleAction['e'], action: handleAction['action']) => {
         e.preventDefault()
-
         let newIndex = currentItemIndex
 
         if (action === 'next') {
@@ -85,12 +85,10 @@ const MediaDetailsPage = ({
 
     const menuItems = [
         {
-            label: "Share",
-            action: () => { },
-        },
-        {
             label: "Edit",
             action: () => {
+                setEdit({record: mediaDetails, type: "Media"});
+                handleClose()
             },
         },
         {
@@ -416,6 +414,7 @@ export const MediaDetailsModal = () => {
                 data={mediaDetails}
                 currentItemIndex={activeMediaItemIndex}
                 currentRecord={mediaDetails}
+                handleClose={handleClose}
             />
         </CustomModal>
     </>

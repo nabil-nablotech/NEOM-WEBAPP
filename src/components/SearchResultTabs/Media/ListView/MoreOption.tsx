@@ -28,7 +28,6 @@ export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payloa
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem key={1}>Share</MenuItem>
         <MenuItem
           key={2}
           onClick={() => {

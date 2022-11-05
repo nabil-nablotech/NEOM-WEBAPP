@@ -150,7 +150,7 @@ const ListView = (props: MediaProps) => {
       title: "SIZE",
       key: "attributes",
       dataIndex: "attributes",
-      render: (value, index) => formatBytes(value.imageMetadata.fileSize),
+      render: (value, index) => formatBytes(value?.imageMetadata?.fileSize),
     },
     {
       title: "UPDATED",
@@ -163,7 +163,7 @@ const ListView = (props: MediaProps) => {
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-bearing",
-      render: (value: any, index: any) => value.bearing?.substring(0, 2),
+      render: (value: any, index: any) => value?.bearing?.substring(0, 2),
     },
     {
       title: "FEATURED",

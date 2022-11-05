@@ -23,13 +23,14 @@ const LibraryDetailsPage = ({
     currentItemIndex,
     data,
     currentRecord,
+    handleClose
 }: LibraryDetailsPageProps) => {
 
     const { places } = useSelector(
         (state: RootState) => state.searchResults
     );
 
-    const { data: libraryDetails } = useLibraryDetails();
+    const { data: libraryDetails, setEdit } = useLibraryDetails();
 
     const locationRef = window.location.href
 
@@ -45,12 +46,10 @@ const LibraryDetailsPage = ({
 
     const menuItems = [
         {
-            label: "Share",
-            action: () => { },
-        },
-        {
             label: "Edit",
             action: () => {
+                setEdit({record: libraryDetails, type: "Library"})
+                handleClose();
             },
         },
         {
@@ -229,6 +228,7 @@ export const LibraryDetailsModal = () => {
                 data={libraryDetails}
                 currentItemIndex={activeMediaItemIndex}
                 currentRecord={libraryDetails}
+                handleClose={handleClose}
             />
         </CustomModal>
     </>

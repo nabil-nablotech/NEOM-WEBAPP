@@ -223,11 +223,13 @@ export type MediaDetailsPageProps = {
   currentItemIndex: any;
   data: any;
   currentRecord: any;
+  handleClose: () => any
 };
 export type LibraryDetailsPageProps = {
   currentItemIndex: any;
   data: any;
   currentRecord: any;
+  handleClose: () => any
 };
 
 type menuAction = {
