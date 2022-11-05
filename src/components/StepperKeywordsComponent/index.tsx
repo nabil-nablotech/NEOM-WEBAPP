@@ -137,6 +137,7 @@ export const StepperKeywordsComponent = ({
     });
     const { addNewItemWindowType } = useSelector((state: RootState) => state.searchResults);
     const [completeList, setCompleteList] = useState<string[] | []>([])
+    // const [selectedWordsList, setSelectedWordsList] = useState<string[] | []>([])
     const [selectAll, setSelectAll] = useState<boolean>(false)
 
     const apiKeyword = addNewItemWindowType === 'Places' ? 'places' : addNewItemWindowType === 'Events' ? 'visits' : 'medias'
@@ -205,8 +206,8 @@ export const StepperKeywordsComponent = ({
             }
         })
 
-
         setCompleteList(list)
+        // setSelectedWordsList(list)
     }
 
     useEffect(() => {
@@ -235,13 +236,14 @@ export const StepperKeywordsComponent = ({
                 }
             })
         }
-
         setCompleteList(newList)
+        // setSelectedWordsList(newList)
 
     }, [currentKeywordArray, completeList.length > 0])
 
 
     useEffect(() => {
+        /** set dropdown list based on inputs */
         let currentList: string[] = []
 
         if (search.suggestions.length > 0) {
@@ -263,9 +265,45 @@ export const StepperKeywordsComponent = ({
 
     }, [search, completeList])
 
-    useEffect(() => {
+    // useEffect(() => {
+    //     if (completeList.length > 0) {
+    //         if (selectAll) {
+    //             completeList.forEach(val => {
+    //                 suggestionSelected(val)
+    //             })
+
+    //         } else {
+    //             currentKeywordArray.forEach(val => {
+    //                 onDeleteKeyWord(val)
+    //             })
+    //         }
+    //     }
+    // }, [selectAll, completeList, currentKeywordArray])
+
+    const suggestionSelected = (value: any) => {
+
+        if (value && (value !== '')) {
+
+            if (!detectLowerCaseStringInArray(value, currentKeywordArray)) {
+                setSearch({
+                    text: "",
+                    suggestions: []
+                });
+                onKeyDown(value)
+                // setSelectedWordsList(state => [...new Set([...state, value])])
+            }
+        }
+
+    };
+
+    const onDeleteKeyWord = (value: any) => {
+        onDelete(value)
+    }
+
+    const handleSelectAll = () => {
+        setSelectAll(state => !state)
         if (completeList.length > 0) {
-            if (selectAll) {
+            if (!selectAll) { // reverse flag
                 completeList.forEach(val => {
                     suggestionSelected(val)
                 })
@@ -276,27 +314,7 @@ export const StepperKeywordsComponent = ({
                 })
             }
         }
-    }, [selectAll, completeList, currentKeywordArray])
-
-    const suggestionSelected = (value: any) => {
-
-        if (value && value !== '') {
-
-            if (!detectLowerCaseStringInArray(value, currentKeywordArray)) {
-                setSearch({
-                    text: "",
-                    suggestions: []
-                });
-                onKeyDown(value)
-            }
-        }
-
-    };
-
-    const onDeleteKeyWord = (value: any) => {
-        onDelete(value)
     }
-
 
     return (
         <>
@@ -347,10 +365,14 @@ export const StepperKeywordsComponent = ({
                         className={`${styles["plain-whitee-btn"]}`}
                         label={selectAll ? "Remove all" : "Select all"}
                         onClick={e => {
-                            setSelectAll(state => !state)
+                            handleSelectAll()
                         }}
                         style={{
                             paddingInline: 0,
+                            paddingBlock: 0,
+                            marginTop: '1em',
+                            lineHeight: '1em',
+                            height: 'fit-content'
                         }}
                     />
                 </Box>
