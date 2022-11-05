@@ -26,8 +26,6 @@ import { Place } from '../../../../types/Place';
 
 const MediaDetailsPage = ({
     currentItemIndex,
-    data,
-    currentRecord,
     handleClose
 }: MediaDetailsPageProps) => {
 
@@ -41,6 +39,7 @@ const MediaDetailsPage = ({
 
     
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const {data:mediaDetails, setEdit} = useMediaDetails();
     
@@ -69,26 +68,30 @@ const MediaDetailsPage = ({
 
     const locationRef = window.location.href
 
-    // console.log('hex: ', mediaDetails)
 
     const handleNextOrPrevious = (e: handleAction['e'], action: handleAction['action']) => {
         e.preventDefault()
         let newIndex = currentItemIndex
 
         if (action === 'next') {
-            if (newIndex + 1 < data.length) {
+            if (newIndex + 1 < media.length) {
                 newIndex = newIndex + 1
+                dispatch(setActiveMediaItem(media[newIndex]))
+                dispatch(setActiveMediaItemIndex(newIndex))
+                navigate(`/search-results/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
             }
-            dispatch(setActiveMediaItem(data[newIndex]))
-            dispatch(setActiveMediaItemIndex(newIndex))
+
         }
 
         if (action === 'previous') {
             if (newIndex - 1 >= 0) {
                 newIndex = newIndex - 1
+                
+                dispatch(setActiveMediaItem(media[newIndex]))
+                dispatch(setActiveMediaItemIndex(newIndex))
+                navigate(`/search-results/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
             }
-            dispatch(setActiveMediaItem(data[newIndex]))
-            dispatch(setActiveMediaItemIndex(newIndex))
+
         }
     }
 
@@ -124,12 +127,12 @@ const MediaDetailsPage = ({
 
                 {/* to-do: api parameter based conditions */}
                 {
-                    activeMediaItemIndex === 0 &&
-                    <Box className={`${styles['image']}`} component="img" alt={""} src={currentRecord.thumbnailUrl} />
+                    mediaType === "image" &&
+                    <Box className={`${styles['image']}`} component="img" alt={""} src={mediaDetails.thumbnailUrl} />
                 }
                 {/* static video */}
                 {
-                    activeMediaItemIndex === 1 &&
+                    mediaType === "video" &&
                     <RenderFileData
                         fileData={{
                             src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
@@ -141,7 +144,7 @@ const MediaDetailsPage = ({
                     />
                 }
                 {
-                    activeMediaItemIndex === 2 &&
+                    mediaType === "3d" &&
                     <Box component="div" className={`${styles['threeD-model-wrapper']}`}>
                         <ModelViewer
                         />
@@ -233,7 +236,7 @@ const MediaDetailsPage = ({
                                     </Box>
                             </Grid>
                             <Grid item lg={6} md={6} sm={7}>
-                                <Box className={`${styles['map-image']}`} component="img" alt={""} src={currentRecord.thumbnailUrl} />
+                                <Box className={`${styles['map-image']}`} component="img" alt={""} src={mediaDetails.thumbnailUrl} />
                                 <Grid container className={`${styles['map-loctn-details']}`} >
                                     <Grid item lg={5} md={5} sm={5}>
                                         <Grid container className={`${styles['map-loctn-line']}`}>
@@ -363,22 +366,10 @@ export const MediaDetailsModal = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch();
 
-    const { loading: mediaLoading, data: mediaDetails } = useMediaDetails();
-
-    const TotalMediaCount= (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates: 0
-
-
-    if (mediaLoading) {
-        return <Loader />
-    }
-
-    if (!mediaLoading && !mediaDetails) {
-        return <div>Cant fetch media</div>
-    }
-
-    if (!mediaDetails) {
-        return null
-    }
+    // const TotalMediaCount= (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates: 0
+    const TotalMediaCount= (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates
+    : media ? media.length : 0
+        
     
 
     const handleClose = () => {
@@ -439,9 +430,7 @@ export const MediaDetailsModal = () => {
             handleClose={() => handleClose()}
         >
             <MediaDetailsPage
-                data={mediaDetails}
                 currentItemIndex={activeMediaItemIndex}
-                currentRecord={mediaDetails}
                 handleClose={handleClose}
             />
         </CustomModal>
