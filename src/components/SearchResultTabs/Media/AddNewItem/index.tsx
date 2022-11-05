@@ -29,6 +29,7 @@ import {
   toggleAssociationsStepOpen,
   storeAddItemProgressState,
   toggleAssociationsIconDisabled,
+  toggleShowEditSuccess,
 } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
@@ -120,12 +121,6 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
   });
 
   useEffect(() => {
-    if (showAddSuccess) {
-      dispatch(toggleShowAddSuccess(true));
-    }
-  }, [showAddSuccess]);
-
-  useEffect(() => {
 
     if (activeStep >= 2) {
       dispatch(toggleAssociationsStepOpen(true));
@@ -163,17 +158,17 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
         create({
           ...data,
         });
+        handleReset();
         dispatch(toggleShowAddSuccess(true));
+        dispatch(toggleNewItemWindow(false))
       }
-      handleReset();
-      dispatch(toggleNewItemWindow(false))
     }
     if (edit && create && data) {
       create({
         ...data,
       });
       handleReset();
-      handleHide();
+      dispatch(toggleShowEditSuccess(true));
       dispatch(toggleNewItemWindow(false));
     }
 

@@ -221,8 +221,6 @@ export type VideoModalProps = {
 
 export type MediaDetailsPageProps = {
   currentItemIndex: any;
-  data: any;
-  currentRecord: any;
   handleClose: () => any
 };
 export type LibraryDetailsPageProps = {

@@ -320,12 +320,6 @@ const AddNewItem = ({
 
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        if (showAddSuccess) {
-            dispatch(toggleShowAddSuccess(true))
-        }
-    }, [showAddSuccess])
-
     const isStepOptional = (step: number) => {
         return step === 1;
     };

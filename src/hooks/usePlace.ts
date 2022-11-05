@@ -117,7 +117,7 @@ const usePlace = () => {
   useEffect(() => {
     if (data) {
       fetchData(0);
-      dispatch(toggleShowAddSuccess(true))
+      // dispatch(toggleShowAddSuccess(true))
 
       /** rdirect */
       navigate(`/search-results/Places/${data.createPlace.data.attributes.uniqueId}`, {replace: true})

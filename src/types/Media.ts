@@ -42,11 +42,13 @@ export type Media = {
   }
 };
 export type MediaApi = {
+  categoryType: string[] | []
+  Author: string
   id: string;
   thumbnailUrl?: string;
   title: string;
   description: string;
-  referanceUrl: string;
+  referenceURL: string;
   objectURL: string;
   fileName: string;
   bearing: string;
@@ -62,11 +64,14 @@ export type MediaApi = {
   };
   uniqueId: string;
   object: {
-    data: {
-      attributes: {
-        url: string;
-      };
-    };
+    url: string;
+    name: string
+    size: number
+    createdAt: string
+    updatedAt: string
+    ext: string
+    width: number
+    height: number
   };
   media_associate: {
     visit_unique_ids: InventoryAssociationType_Event[],
