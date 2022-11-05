@@ -292,12 +292,15 @@ export function formatBytes(bytes: number, decimals = 2) {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
 
+function zerofill(i: number) {
+  return (i < 10 ? '0' : '') + i;
+}
 export function formatStrapiDate(date: Date) {
   const newDate = new Date(date);
   if (newDate) {
     return `${newDate?.getFullYear()}-${
-      newDate?.getMonth() + 1
-    }-${newDate?.getDate()}`;
+      zerofill(newDate?.getMonth() + 1)
+    }-${zerofill(newDate?.getDate())}`;
   }
   return null;
 }

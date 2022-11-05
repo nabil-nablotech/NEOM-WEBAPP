@@ -130,7 +130,7 @@ const useMedia = () => {
         dispatch(setAddNewItemWindowType(null));
         
       dispatch(storeAddItemProgressState(null));
-        navigate(`/search-results/Media${id}`, {replace: true})
+        navigate(`/search-results/Media/${id}`, {replace: true})
       }
     }
   }, [mediaAssociate, updateMediaAssociateData])
@@ -202,6 +202,7 @@ const useMedia = () => {
       fileSize: formatBytes(parseFloat(payload?.object[0]?.size)),
       storage: payload?.object[0]?.provider,
       dimension: `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
+      refrenceURL: payload?.url,
       make: "",
       model: "",
       depth: "",
@@ -210,6 +211,7 @@ const useMedia = () => {
     if (!edit) {
       data.uniqueId = uniqueId;
       data.created = formatStrapiDate(new Date());
+      data.mediaUIPath = `${webUrl}/search-results/Media/${uniqueId}`;
       createMediaMutation({variables: data})
     }
     if (edit && tabData?.id) {

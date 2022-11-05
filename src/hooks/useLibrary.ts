@@ -190,6 +190,7 @@ const useLibrary = () => {
     if (!edit) {
       data.uniqueId = uniqueId;
       data.created = formatStrapiDate(new Date());
+      data.mediaUIPath = `${webUrl}/search-results/Library/${uniqueId}`;
       createLibraryMutation({variables: data})
     }
     if (edit && tabData?.id) {
