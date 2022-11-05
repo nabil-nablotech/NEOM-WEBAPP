@@ -271,7 +271,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
         fmData,
         config
       );
-      formik.values.object = res.data[0];
+      formik.values.object = res.data;
       onSuccess("Ok");
     } catch (err) {
       console.log("Eroor: ", err);
