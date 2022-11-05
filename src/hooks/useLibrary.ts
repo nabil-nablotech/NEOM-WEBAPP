@@ -5,9 +5,9 @@ import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { addLibrary, library, updateLibrary } from "../query/library";
 import { createMediaAssociate, updateMediaAssociate } from '../query/mediaAssociate';
 import { RootState } from '../store';
-import { resetMediaAssociation, setAddNewItemWindowType, setDefaultMediaAssociation, setLibrary, setLibraryMetaData, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess} from '../store/reducers/searchResultsReducer';
+import { resetMediaAssociation, setAddNewItemWindowType, setDefaultMediaAssociation, setLibrary, setLibraryMetaData, storeAddItemProgressState, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess} from '../store/reducers/searchResultsReducer';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
-import {limit, getQueryObj, webUrl, generateUniqueId, LIBRARY_TAB_NAME, formatBytes} from '../utils/services/helpers';
+import {limit, getQueryObj, webUrl, generateUniqueId, LIBRARY_TAB_NAME, formatBytes, formatDate, formatStrapiDate} from '../utils/services/helpers';
 import { graphQlHeaders } from '../utils/services/interceptor';
 import { mediaDetails } from "../api/details";
 import { setTabData, setTabEdit } from '../store/reducers/tabEditReducer';
@@ -93,7 +93,7 @@ const useLibrary = () => {
     }
 
     if(updateData) {
-      resetEdit();
+
       if (updateData?.updateMedia.data.attributes?.media_associate?.data?.id) {
         updateMediaAssociateMutation({
           variables: {
@@ -106,11 +106,13 @@ const useLibrary = () => {
       
         createAssociation(Number(updateData?.updateMedia.data.id));
       }
+      resetEdit();
+      dispatch(setAddNewItemWindowType(null));
+      dispatch(storeAddItemProgressState(null));
       dispatch(toggleShowEditSuccess(true))
 
       /** re-direct */
       navigate(`/search-results/Library`, {replace: true})
-      dispatch(setAddNewItemWindowType(null))
     }
   }, [addData, updateData])
 
@@ -118,8 +120,9 @@ const useLibrary = () => {
     if (mediaAssociate) {
       dispatch(resetMediaAssociation(null));
       dispatch(toggleShowAddSuccess(true));
+      dispatch(setAddNewItemWindowType(null));
+      dispatch(storeAddItemProgressState(null));
       navigate(`/search-results/Library`, {replace: true})
-      dispatch(setAddNewItemWindowType(null))
     }
   }, [mediaAssociate])
   
@@ -175,21 +178,25 @@ const useLibrary = () => {
       "latitude": payload.latitude && parseFloat(payload.latitude),
       "longitude": payload.longitude && parseFloat(payload.longitude),
       "categoryType": payload.categoryType && payload.categoryType,
-      object: payload?.object?.id,
-      fileSize: formatBytes(payload?.object?.size),
-      storage: payload?.object?.provider,
+      object:payload?.object[0].id,
+      fileSize: formatBytes(parseFloat(payload?.object[0]?.size)),
+      storage: payload?.object[0]?.provider,
+      dimension: `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
       make: "",
       model: "",
       depth: "",
-      dimension: `${payload?.object?.height}x${payload?.object?.width}`,
       modified: new Date(),
     }
     if (!edit) {
       data.uniqueId = uniqueId;
-      data.created = new Date();
+      data.created = formatStrapiDate(new Date());
       createLibraryMutation({variables: data})
     }
     if (edit && tabData?.id) {
+      data.object=payload?.object[0].id;
+      data.fileSize = formatBytes(parseFloat(payload?.object[0]?.size));
+      data.storage= payload?.object[0]?.provider;
+      data.dimension= `${payload?.object[0]?.height}x${payload?.object[0]?.width}`;
       updateLibraryMutation({
         variables: {
           ...data,

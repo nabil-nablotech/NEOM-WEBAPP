@@ -8,6 +8,7 @@ import { CustomUploadProps } from '../../types/CustomDrawerTypes';
 import { Box, Typography } from '@mui/material';
 import styles from './index.module.css'
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
+import UPloadImage from '../../assets/images/UploadVideoImage.png';
 
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
     const reader = new FileReader();
@@ -48,7 +49,6 @@ const ImageUpload = ({
     const [imageUrl, setImageUrl] = useState(existingImageUrl);
 
     const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
-        const nextState: any = {};
         if (info.file.status !== 'uploading') {
             setLoading(true);
         }
@@ -68,12 +68,12 @@ const ImageUpload = ({
 
     const uploadButton = (
         <div>
-            {loading ? <LoadingOutlined /> : <PlusOutlined />}
-            <Box component="div">
+            {/* {loading ? <LoadingOutlined /> : <PlusOutlined />} */}
+            <Box component="img" src={UPloadImage} alt="Upload your file" width={363}>
                 {/* WIP */}
-                <ImageOutlinedIcon />
+                {/* <ImageOutlinedIcon /> */}
             </Box>
-            <div style={{ marginTop: 8 }}>{title}</div>
+            {/* <div style={{ marginTop: 8 }}>{title}</div> */}
         </div>
     );
 
@@ -91,6 +91,7 @@ const ImageUpload = ({
                 {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
             </StyledUpload>
             <Typography className={`${styles['file-upload-bottom-text']}`}>Accepted file types: .jpg, .png</Typography>
+
         </>
     )
 };

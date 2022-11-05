@@ -95,7 +95,12 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     keywords: edit && tabData?.keywords ? tabData?.keywords : [],
     object: edit && tabData?.object ? [tabData?.object] : undefined,
     mediaType: "", 
-    refrerenceUrl: ""
+    refrerenceUrl: "",
+    showEmbeded: false,
+    embedCode: "",
+    submitEmbed: false,
+    showUrl: false,
+    url: ''
   }
   const formik = useFormik({
     initialValues: mediaInitialValue,

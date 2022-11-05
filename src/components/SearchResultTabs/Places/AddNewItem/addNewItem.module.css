@@ -64,3 +64,54 @@
 .visit-count {
     color: var(--grey-text);
 }
+
+.file-upload-url-bottom-text {
+    /* position: absolute; */
+    /* width: 262px; */
+    height: 11px;
+    /* top: 642px; */
+    cursor: pointer;
+    /* Notes 14px Gray */
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    /* or 171% */
+
+    letter-spacing: 0.5px;
+
+    /* Black 50% */
+    color: black!important;
+    text-align: center!important;
+}
+
+.embed-submit-button {
+    text-align: center!important;
+}
+.embed-box {
+    border-radius: 4px;
+    width: 363px;
+    height: 251px;
+    padding: 14px;
+    border: 1px solid #E8E9E9
+}
+
+.file-upload-url-text {
+    height: 11px;
+    cursor: pointer;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    /* or 171% */
+
+    letter-spacing: 0.5px;
+
+    /* Black 50% */
+    color: black!important;
+    text-align: center!important;
+}

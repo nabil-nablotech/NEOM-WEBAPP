@@ -2,8 +2,12 @@ import dayjs from "dayjs";
 import styled from "styled-components";
 import { StyledAntTable } from "../../components/StyledAntTable";
 import { MediaAssociates2, Place, PlaceApi } from "../../types/Place";
-import { InventoryAssociationType, InventoryAssociationType_Event, tabNameProps } from "../../types/SearchResultsTabsProps";
-import * as Yup from 'yup';
+import {
+  InventoryAssociationType,
+  InventoryAssociationType_Event,
+  tabNameProps,
+} from "../../types/SearchResultsTabsProps";
+import * as Yup from "yup";
 import { ColumnType } from "antd/lib/table";
 import { Event, EventApi } from "../../types/Event";
 
@@ -78,25 +82,25 @@ export function passwordGenerator() {
 
 export function copyToClipboard(str: string) {
   navigator.clipboard.writeText(str);
-};
+}
 
 export const staticValidationScheme = [
   {
-    name: '8 characters',
+    name: "8 characters",
     rule: /^.{8,}$/,
-    fulfilled: false
+    fulfilled: false,
   },
   {
-    name: '1 uppercase letter',
+    name: "1 uppercase letter",
     rule: /^(?=.*?[A-Z]).{1,}$/,
-    fulfilled: false
+    fulfilled: false,
   },
   {
-    name: '1 special character',
+    name: "1 special character",
     rule: /^(?=.*?[#?!@$%^&*-]).{1,}$/,
-    fulfilled: false
-  }
-]
+    fulfilled: false,
+  },
+];
 
 export const antTablePaginationCss = `
   .ant-pagination {
@@ -115,12 +119,12 @@ export const antTablePaginationCss = `
   .ant-select:not(.ant-select-customize-input) .ant-select-selector {
     background-color: transparent;
   }
-`
+`;
 
-export const PLACES_TAB_NAME = 'Places'
-export const EVENTS_TAB_NAME = 'Events'
-export const LIBRARY_TAB_NAME = 'Library'
-export const MEDIA_TAB_NAME = 'Media'
+export const PLACES_TAB_NAME = "Places";
+export const EVENTS_TAB_NAME = "Events";
+export const LIBRARY_TAB_NAME = "Library";
+export const MEDIA_TAB_NAME = "Media";
 
 export const tabIndexBasedOnName = (tabName: tabNameProps) => {
   switch (tabName) {
@@ -145,15 +149,20 @@ export const tabNameBasedOnIndex = (tabIndex: number) => {
       return LIBRARY_TAB_NAME;
     case 3:
       return MEDIA_TAB_NAME;
-    default: 
-      return PLACES_TAB_NAME
+    default:
+      return PLACES_TAB_NAME;
   }
 };
 
-export const addItemDefaultSteps = ['Item Details', 'Keywords']
+export const addItemDefaultSteps = ["Item Details", "Keywords"];
 
-export const addItemLibrarySteps = ['Item Details', 'Associations', 'Keywords']
-export const addItemMediaSteps = ['Media', 'Item Details', 'Associations', 'Keywords']
+export const addItemLibrarySteps = ["Item Details", "Associations", "Keywords"];
+export const addItemMediaSteps = [
+  "Media",
+  "Item Details",
+  "Associations",
+  "Keywords",
+];
 
 export const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -236,181 +245,206 @@ export const StyledTableWrapper = styled(StyledAntTable)`
       min-width: 20ch !important;
     }
   }
-${antTablePaginationCss}
+  ${antTablePaginationCss}
 `;
 
 export const commonSelectSxStyles = {
-  textAlign: 'left',
-  '& .MuiSelect-select': {
-      padding: '0.5em 1em',
-      color: 'var(--grey-text)'
-  }
-}
+  textAlign: "left",
+  "& .MuiSelect-select": {
+    padding: "0.5em 1em",
+    color: "var(--grey-text)",
+  },
+};
 export const textInputSxStyles = {
-
-  '& .MuiInputBase-input.MuiOutlinedInput-input': {
-      border: 'none'
+  "& .MuiInputBase-input.MuiOutlinedInput-input": {
+    border: "none",
   },
-  '& .MuiFormLabel-root.MuiInputLabel-root ': {
+  "& .MuiFormLabel-root.MuiInputLabel-root ": {},
+  "& .MuiInputBase-input.MuiOutlinedInput-input ": {
+    lineHeight: "1.2",
+    border: "1.4px solid #fff",
+    padding: "0.5em 1em",
+    height: "1.4em",
   },
-  '& .MuiInputBase-input.MuiOutlinedInput-input ': {
-      lineHeight: '1.2',
-      border: '1.4px solid #fff',
-      padding: '0.5em 1em',
-      height: '1.4em',
+  "& .MuiOutlinedInput-notchedOutline span": {
+    opacity: 1,
   },
-  '& .MuiOutlinedInput-notchedOutline span': {
-      opacity: 1
+  "& .MuiOutlinedInput-notchedOutline legend": {
+    color: "transparent",
   },
-  '& .MuiOutlinedInput-notchedOutline legend': {
-      color: 'transparent'
-  }
-
-}
+};
 export const commonFormControlSxStyles = {
-  width: '100%',
+  width: "100%",
   flexGrow: 0,
-  '& .MuiInputBase-root': {
-      backgroundColor: '#fff',
-  }
-}
+  "& .MuiInputBase-root": {
+    backgroundColor: "#fff",
+  },
+};
 export function formatBytes(bytes: number, decimals = 2) {
-  if (!+bytes) return '0 Bytes'
+  if (!+bytes) return "0 Bytes";
 
-  const k = 1024
-  const dm = decimals < 0 ? 0 : decimals
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}
+
+export function formatStrapiDate(date: Date) {
+  const newDate = new Date(date);
+  if (newDate) {
+    return `${newDate?.getFullYear()}-${
+      newDate?.getMonth() + 1
+    }-${newDate?.getDate()}`;
+  }
+  return null;
 }
 
 export const getQueryObj = (search: string) => {
-  const searchParams = decodeURIComponent(search).replace('?', '');
+  const searchParams = decodeURIComponent(search).replace("?", "");
   if (Boolean(searchParams)) {
     return JSON.parse(searchParams);
   }
-  return null
-}
+  return null;
+};
 
-export const computeArrayFromDelimiter = (wholeString: string, delimiter: string) => {
-  return wholeString.split(delimiter)
-}
+export const computeArrayFromDelimiter = (
+  wholeString: string,
+  delimiter: string
+) => {
+  return wholeString.split(delimiter);
+};
 
-export const shallRenderMedia = (mediaNo: number, mediaArray: MediaAssociates2) => {
-  if(!mediaArray) return false
+export const shallRenderMedia = (
+  mediaNo: number,
+  mediaArray: MediaAssociates2
+) => {
+  if (!mediaArray) return false;
 
-  if(mediaArray.length === mediaNo) {
-    return true
-  } else return false
-}
+  if (mediaArray.length === mediaNo) {
+    return true;
+  } else return false;
+};
 
 function randomString(len: number) {
   var p = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  return [...Array(len)].reduce(a=>a+p[~~(Math.random()*p.length)],'').toUpperCase();
+  return [...Array(len)]
+    .reduce((a) => a + p[~~(Math.random() * p.length)], "")
+    .toUpperCase();
 }
 
 export const generateUniqueId = () => {
-  return `${randomString(8)}-${randomString(4)}-${randomString(4)}-${randomString(4)}-${randomString(12)}`
-}
+  return `${randomString(8)}-${randomString(4)}-${randomString(
+    4
+  )}-${randomString(4)}-${randomString(12)}`;
+};
 
 export const AddPlaceFormSchema = Yup.object().shape({
-  placeNumber: Yup.string()
-    .required()
+  placeNumber: Yup.string().required(),
 });
 
-export const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>, callback?: () => void) => {
-
+export const handleEnter = (
+  e: React.KeyboardEvent<HTMLInputElement>,
+  callback?: () => void
+) => {
   if (e.key === "Enter") {
-    e.preventDefault()
+    e.preventDefault();
 
-    if (callback) callback()
+    if (callback) callback();
   }
-}
+};
 
-type isEmptyType = (value: any) => boolean
-
+type isEmptyType = (value: any) => boolean;
 
 export const isEmptyValue: isEmptyType = (value: any) => {
+  if (value === null || value === undefined) return true;
 
-  if(value === null || value === undefined) return true
+  if (typeof value === "string") return value === "";
 
-  if (typeof value === 'string') return value === ''
+  if (typeof value === "object" && Array.isArray(value) && value.length === 0)
+    return value.length === 0;
 
-  if (
-    (typeof value === 'object') &&
-    (Array.isArray(value)) &&
-    value.length === 0
-  ) return value.length === 0
+  if (typeof value === "object" && Array.isArray(value) && value.length === 1)
+    return isEmptyValue(value[0]);
 
-  if (
-    (typeof value === 'object') &&
-    (Array.isArray(value)) &&
-    value.length === 1
-  ) return isEmptyValue(value[0])
+  return false;
+};
 
-  return false
-}
-
-export const NO_TEXT = "No data available"
-export const NO_MEDIA = "No media items to display"
-export const NO_TABLE_ROWS = "No items to display"
-export const NO_LOCATION = "No location available"
-export const NO_DESCRIPTION = "No description available"
+export const NO_TEXT = "No data available";
+export const NO_MEDIA = "No media items to display";
+export const NO_TABLE_ROWS = "No items to display";
+export const NO_LOCATION = "No location available";
+export const NO_DESCRIPTION = "No description available";
 
 export const checkIsNew = (updatedDate: string) => {
   const expDate = dayjs(updatedDate).add(30, "d").toDate();
   return dayjs().isBefore(expDate);
-}
+};
 
-export const ATTACH_ICON_CLASSNAME = 'attach-icon'
-export const DETACH_ICON_CLASSNAME = 'detached-icon'
+export const ATTACH_ICON_CLASSNAME = "attach-icon";
+export const DETACH_ICON_CLASSNAME = "detached-icon";
 
 export const shouldAddAtttachColumnHeader = (item: ColumnType<any>) => {
-  return (!item.className || item.className?.indexOf(ATTACH_ICON_CLASSNAME) === -1)
-}
+  return (
+    !item.className || item.className?.indexOf(ATTACH_ICON_CLASSNAME) === -1
+  );
+};
 
-export const isRecordAttached = (record: Place | Event , list: Array<InventoryAssociationType>, type: string = '') => {
+export const isRecordAttached = (
+  record: Place | Event,
+  list: Array<InventoryAssociationType>,
+  type: string = ""
+) => {
+  if (!list || !record) return false;
 
-  if (!list || !record) return false
-  
-  return list.some(item => {
-    return (item.id === parseInt(record.id))
-  })
+  return list.some((item) => {
+    return item.id === parseInt(record.id);
+  });
+};
+export const isEventRecordAttached = (
+  record: Place | Event,
+  list: Array<InventoryAssociationType_Event>,
+  type: string = ""
+) => {
+  if (!list || !record) return false;
 
-}
-export const isEventRecordAttached = (record: Place | Event , list: Array<InventoryAssociationType_Event>, type: string = '') => {
+  return list.some((item) => {
+    return parseInt(item.id) === parseInt(record.id);
+  });
+};
+export const isEventDetailAttached = (
+  record: EventApi,
+  list: Array<InventoryAssociationType_Event>,
+  type: string = ""
+) => {
+  if (!list || !record) return false;
 
-  if (!list || !record) return false
-  
-  return list.some(item => {
-    return (parseInt(item.id) === parseInt(record.id))
-  })
+  if (!record.id) return false;
 
-}
-export const isEventDetailAttached = (record: EventApi , list: Array<InventoryAssociationType_Event>, type: string = '') => {
+  return list.some((item) => {
+    return record.id && item.id === record.id.toString();
+  });
+};
 
-  if (!list || !record) return false
+export const isPlaceDetailAttached = (
+  record: PlaceApi,
+  list: Array<InventoryAssociationType>,
+  type: string = ""
+) => {
+  if (!list || !record) return false;
 
-  if (!record.id) return false
+  return list.some((item) => {
+    return item.id === parseInt(record.id);
+  });
+};
 
-  return list.some(item => {
-    return record.id && (item.id === record.id.toString())
-  })
-
-}
-
-export const isPlaceDetailAttached = (record: PlaceApi , list: Array<InventoryAssociationType>, type: string = '') => {
-
-  if (!list || !record) return false
-
-  return list.some(item => {
-    return (item.id === parseInt(record.id))
-  })
-
-}
-
-export const detectLowerCaseStringInArray = (sourceString: string, destArr: string[]) => {
-  return destArr.some(item => item.toLowerCase() === sourceString.toLowerCase())
-}
+export const detectLowerCaseStringInArray = (
+  sourceString: string,
+  destArr: string[]
+) => {
+  return destArr.some(
+    (item) => item.toLowerCase() === sourceString.toLowerCase()
+  );
+};
