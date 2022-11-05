@@ -62,6 +62,7 @@ type PropsPassed = {
     onKeyDown: (str: string) => void
     onDelete: (str: string) => void
     currentKeywordArray: string[] | []
+    setCurrentKeywordsArray: (arr: string[]) => void
 }
 
 type CustomChipTypes = {
@@ -128,7 +129,8 @@ const CustomChip = ({
 export const StepperKeywordsComponent = ({
     onKeyDown,
     onDelete,
-    currentKeywordArray
+    currentKeywordArray,
+    setCurrentKeywordsArray
 }: PropsPassed) => {
 
     const [search, setSearch] = useState({
@@ -289,19 +291,17 @@ export const StepperKeywordsComponent = ({
     }
 
     const handleSelectAll = () => {
-        setSelectAll(state => !state)
+
         if (currentlyShownList.length > 0) {
             if (!selectAll) { // reverse flag
-                currentlyShownList.forEach(val => {
-                    suggestionSelected(val)
-                })
-
+                setCurrentKeywordsArray(currentlyShownList)
             } else {
-                currentKeywordArray.forEach(val => {
-                    onDeleteKeyWord(val)
-                })
+                setCurrentKeywordsArray([])
             }
         }
+
+        setSelectAll(state => !state)
+
     }
 
     return (
@@ -353,6 +353,7 @@ export const StepperKeywordsComponent = ({
                         className={`${styles["plain-whitee-btn"]}`}
                         label={selectAll ? "Remove all" : "Select all"}
                         onClick={e => {
+                            e.preventDefault()
                             handleSelectAll()
                         }}
                         style={{

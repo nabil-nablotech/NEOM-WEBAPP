@@ -401,6 +401,8 @@ const StepContent = ({
               }}
 
               currentKeywordArray={formik.values.keywords}
+
+              setCurrentKeywordsArray={(arr: string[]) =>  formik.setFieldValue("keywords", [...new Set(arr)])}
             />
           </>
         )}
