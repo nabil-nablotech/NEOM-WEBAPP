@@ -21,6 +21,8 @@ import { Place } from "../types/Place";
 import { places } from "../query/places";
 import { eventDetails } from "../api/details";
 
+import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
+
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [mapEvents, setMapEvents]= useState(null);
@@ -264,6 +266,8 @@ const useEvent = () => {
   const setEdit = async (payload: any) => {
     if (payload) {
       const payloadRes = await eventDetails(payload.attributes.uniqueId);
+      dispatch(setTabEdit(true));
+      dispatch(setTabData(payloadRes));
       dispatch(setEventData(payloadRes));
       dispatch(setEventEdit(true));
       dispatch(toggleNewItemWindow(true))
