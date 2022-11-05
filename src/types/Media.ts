@@ -76,3 +76,40 @@ export type MediaApi = {
   }
   }
 };
+
+export type MediaApi2 = {
+  id: string;
+  thumbnailUrl?: string;
+  title: string;
+  description: string;
+  referenceURL: string;
+  objectURL: string;
+  fileName: string;
+  bearing: string;
+  actionType: string;
+  featuredImage: boolean;
+  updatedAt: Date;
+  keywords: string[] | null;
+  citation: string;
+  latitude: Number;
+  longitude: Number;
+  imageMetadata: {
+    fileSize: Number;
+  };
+  uniqueId: string;
+  object: {
+    url: string;
+    name: string
+    size: number
+    createdAt: string
+    updatedAt: string
+    ext: string
+  };
+  media_associate: {
+    visit_unique_ids: InventoryAssociationType_Event[],
+    place_unique_ids: InventoryAssociationType[],
+    data: {
+    attributes: PlaceUnique;
+  }
+  }
+};

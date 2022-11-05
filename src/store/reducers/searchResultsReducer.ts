@@ -28,6 +28,8 @@ const initialState: SearchResultsState2 = {
   activeEventItemIndex: 0,
   activeMediaItem: null,
   activeMediaItemIndex: 0,
+  activeLibraryItem: null,
+  activeLibraryItemIndex: 0,
   isOpenGalleryView: false,
   addNewItemWindowType: null,
   isAssociationsStepOpen: false,
@@ -104,6 +106,12 @@ export const searchResultsSlice = createSlice({
     },
     setActivePlaceItemIndex: (state, action: PayloadAction<number>) => {
       state.activePlaceItemIndex = action.payload;
+    },
+    setActiveLibraryItem: (state, action: PayloadAction<Object | any>) => {
+      state.activeLibraryItem = action.payload;
+    },
+    setActiveLibraryItemIndex: (state, action: PayloadAction<number>) => {
+      state.activeLibraryItemIndex = action.payload;
     },
     toggleGalleryView: (state, action: PayloadAction<boolean>) => {
       state.isOpenGalleryView = action.payload;
@@ -203,6 +211,8 @@ export const {
   setActiveEventItemIndex,
   setActiveMediaItem,
   setActiveMediaItemIndex,
+  setActiveLibraryItem,
+  setActiveLibraryItemIndex,
   toggleGalleryView,
   setSearchApply,
   setAddNewItemWindowType,
