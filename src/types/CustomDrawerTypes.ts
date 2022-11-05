@@ -42,7 +42,9 @@ export type StepContentTypes = {
 
 export type CustomUploadProps = {
     title?: string,
-    existingImageUrl?: string
+    existingImageUrl?: string,
+    uploadImage?:  (options: any) => void
+    defaultImages?: any[]
 }
 
 export type InitialValues = {

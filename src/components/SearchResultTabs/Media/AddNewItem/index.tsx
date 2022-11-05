@@ -7,24 +7,18 @@ import {
   Stepper,
   Typography,
   StepButton,
-  Chip,
 } from "@mui/material";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   AddNewItemProps,
-  StepContentTypes,
 } from "../../../../types/CustomDrawerTypes";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import {
-  addItemDefaultSteps,
   MEDIA_TAB_NAME,
-  handleEnter,
 } from "../../../../utils/services/helpers";
 import styles from "../../Places/AddNewItem/addNewItem.module.css";
-import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
-import DropdownComponent from "../../../Dropdown/index";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
@@ -39,16 +33,10 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import { addItemMediaSteps, baseUrl } from "./../../../../utils/services/helpers";
-import CustomUpload from "../../../Upload/ImageUpload";
-import { SelectChangeEvent } from "@mui/material/Select";
 import { useFormik } from "formik";
-import AutoComplete from "../../../AutoComplete";
-import CloseIcon from "@mui/icons-material/Close";
-
-import DetachedIcon from "../../../Icons/DetachedIcon";
-import AddedPlaces from "../../../AssociationsList/AddedPlaces";
-import AddedEvents from "../../../AssociationsList/AddedEvents";
 import StepContent from './form';
+import axios from 'axios';
+import { getToken } from "../../../../utils/storage/storage";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -138,7 +126,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     longitude: edit ? tabData?.longitude : null,
     referenceURL: edit ? tabData?.referenceURL : "",
     keywords: edit && tabData?.keywords ? tabData?.keywords : [],
-    object: edit ? tabData?.object.url : "",
+    object: edit ? tabData?.object : "",
     mediaType: "", 
     refrerenceUrl: ""
   }
@@ -282,6 +270,35 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
       }
     }))
   }
+
+  const uploadImage = async (options: any) => {
+    const { onSuccess, onError, file, onProgress } = options;
+
+    const fmData = new FormData();
+    const config: any = {
+      headers: { "content-type": "multipart/form-data", "authorization": `Bearer ${getToken()}` },
+      onUploadProgress: (event: any) => {
+        const percent = Math.floor((event.loaded / event.total) * 100);
+
+        onProgress({ percent: (event.loaded / event.total) * 100 });
+      }
+    };
+    fmData.append("files", file, file.name);
+    try {
+      
+      const res = await axios.post(
+        `${baseUrl}/api/upload`,
+        fmData,
+        config
+      );
+      formik.values.object = res.data[0];
+      onSuccess("Ok");
+    } catch (err) {
+      console.log("Eroor: ", err);
+      const error = new Error("Some error");
+      onError({ err });
+    }
+  };
 
   return (
     <Box component="div">

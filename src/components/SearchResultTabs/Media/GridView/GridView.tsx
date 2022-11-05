@@ -70,10 +70,10 @@ const GridView = (props: MediaProps) => {
                     }}>
                             <Card
                                 itemIndex={index}
-                                img={item.attributes.object.data.attributes.url}
-                                title={item.attributes.media_associate.data.attributes.place_unique_id?.data !== null ? `${item.attributes.media_associate.data.attributes.place_unique_id?.data?.attributes?.placeNameEnglish}${item.attributes.media_associate.data.attributes.place_unique_id?.data?.attributes?.placeNameArabic}` : item.attributes.title}
-                                subTitle={item.attributes.description.substr(0, 40) + '...'}
-                                dateString={`Last login on ${format(new Date(item.attributes.updatedAt), 'yyyy-MM-dd')}`}
+                                img={item?.attributes?.object?.data?.attributes?.url}
+                                title={(item?.attributes?.media_associate?.data?.attributes?.place_unique_ids?.data !== null && item?.attributes?.media_associate?.data?.attributes?.place_unique_ids?.data.length > 0) ? `${item?.attributes?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes?.placeNameEnglish}${item.attributes.media_associate.data?.attributes?.place_unique_ids?.data[0]?.attributes?.placeNameArabic}` : item.attributes.title}
+                                subTitle={item?.attributes?.description.substr(0, 40) + '...'}
+                                dateString={`Last login on ${format(new Date(item?.attributes.updatedAt), 'yyyy-MM-dd')}`}
                                 setEdit={setEdit}
                                 record={item}
                             />
