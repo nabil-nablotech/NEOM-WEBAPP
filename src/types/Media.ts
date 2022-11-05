@@ -2,8 +2,8 @@ import { Place } from "./Place";
 import { InventoryAssociationType_Event, InventoryAssociationType } from "./SearchResultsTabsProps";
 
 export type PlaceUnique = {
-  place_unique_id: {
-    data: Place | null;
+  place_unique_ids: {
+    data: Place[] | null;
   };
 };
 

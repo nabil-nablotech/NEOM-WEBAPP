@@ -76,6 +76,7 @@ export const stepperIconSx = {
 };
 
 const StepContent = ({
+  uploadImage,
   tabName,
   formState,
   setFormState,
@@ -89,7 +90,6 @@ const StepContent = ({
   const { associatedPlaces, associatedEvents } = useSelector(
     (state: RootState) => state.searchResults
   );
-  console.log("====formik", formik.values)
   const handleSelectChange = (
     e: React.SyntheticEvent,
     value: string[] | [],
@@ -142,7 +142,7 @@ const StepContent = ({
             />
             {formik.values.media_type.toLowerCase() === "image" && (
               <>
-                <CustomUpload title={"Drag and drop your file here"} existingImageUrl={`${baseUrl}${formik.values.object}`} />
+                <CustomUpload defaultImages={formik.values.object}  uploadImage={uploadImage} title={"Drag and drop your file here"} existingImageUrl={`${baseUrl}${formik.values.object}`} />
               </>
             )}
           </>

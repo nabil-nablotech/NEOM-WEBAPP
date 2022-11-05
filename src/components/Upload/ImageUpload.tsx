@@ -40,7 +40,9 @@ const StyledUpload = styled(Upload)`
 
 const ImageUpload = ({
     title,
-    existingImageUrl
+    existingImageUrl,
+    uploadImage,
+    defaultImages
 }: CustomUploadProps) => {
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState(existingImageUrl);
@@ -58,6 +60,7 @@ const ImageUpload = ({
             });
         }
     };
+
 
     const uploadButton = (
         <div>
@@ -81,6 +84,8 @@ const ImageUpload = ({
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 beforeUpload={beforeUpload}
                 onChange={handleChange}
+                customRequest={uploadImage}
+                defaultFileList={defaultImages || []}
 
             >
                 {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
