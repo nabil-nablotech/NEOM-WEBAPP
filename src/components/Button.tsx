@@ -31,17 +31,19 @@ type CustomButtonProps = {
   colors?: Array<string>,
   style?:  React.CSSProperties | undefined
   type?: 'submit' | 'reset' | 'button'
+  variant?: 'outlined' | 'contained' | 'text'
 }
 
 export default function CustomizedButtons(props: CustomButtonProps) {
   const { label, disabled, onClick, className, 
     StartIcon, colors, style,
-    type
+    type,
+    variant
    } = props;
   return (
     <Stack spacing={2} direction="row" >
       <ColorButton className={className ? className : ''}
-        onClick={onClick} disabled={disabled} variant="contained"
+        onClick={onClick} disabled={disabled} variant={variant || "contained"}
         startIcon={StartIcon ? <StartIcon /> : null}
         type={type ? type : 'button'}
         style={{

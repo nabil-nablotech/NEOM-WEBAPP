@@ -16,7 +16,6 @@ import DetachedIcon from "../../../Icons/DetachedIcon";
 import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 import AddedEvents from "../../../AssociationsList/AddedEvents";
 import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
-import iconUrl from "../../../../assets/images/icon-URL.png";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -92,19 +91,17 @@ const StepContent = ({
       ...new Set([...formik.values[stateName], ...value]),
     ]);
   };
-
-  const handleEmbed = () => {
-    return (
-      <iframe
-        width="338"
-        height="190"
-        src="https://www.youtube.com/embed/C8AYzPxr_SE"
-        title="YouTube video player"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-      ></iframe>
-    );
+  const objectURL = `<iframe
+width="338"
+height="190"
+src="https://www.youtube.com/embed/C8AYzPxr_SE"
+title="YouTube video player"
+frameBorder="0"
+allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+allowFullScreen
+></iframe>`;
+  const handleEmbed = (data: string) => {
+    return <div dangerouslySetInnerHTML={{ __html: data }} />;
   };
 
   const handleUrl = (url: string) => {
@@ -124,6 +121,24 @@ const StepContent = ({
       ></iframe>
     );
   };
+
+  const renderEmbedSubmitButton = () => {
+    return(
+      <>
+      {formik.values.embedCode.length > 10 && (
+                  <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
+                    <Button
+                      colors={["#fff", "var(--table-black-text)"]}
+                      variant="outlined"
+                      
+                      label={"EMBED"}
+                      onClick={() => formik.setFieldValue("submitEmbed", true)}
+                    />
+                  </Box>
+                )}
+      </>
+    )
+  }
   return (
     <>
       <Box component="div" className={`${styles["form"]}`}>
@@ -173,6 +188,7 @@ const StepContent = ({
                       : ""
                   }
                 />
+                <Typography className={`${styles['file-upload-bottom-text']}`}>Accepted file types: .jpg, .png</Typography>
               </>
             )}
             {formik.values?.media_type.toLowerCase() === "video" && (
@@ -184,7 +200,7 @@ const StepContent = ({
                         component={"div"}
                         className={`${styles["embed-box"]}`}
                       >
-                        {handleEmbed()}
+                        {handleEmbed(formik.values.embedCode)}
                         <Typography
                           className={`${styles["file-upload-url-bottom-text"]}`}
                         >
@@ -247,28 +263,27 @@ const StepContent = ({
                         )}
                       </>
                     ) : (
+                      <>
+                      {formik.values?.object && formik.values?.object[0]?.url ? 
+                        <video width="338" height="190" controls>
+                        <source
+                          src={`${baseUrl}${formik.values.object[0].url}`}
+                          type="video/mp4"
+                        />
+                      </video> :
                       <CustomUpload
                         defaultImages={formik.values.object}
                         uploadImage={uploadImage}
                         title={"Drag and drop your file here"}
-                        existingImageUrl={
-                          formik.values?.object && formik.values?.object[0]?.url
-                            ? `${baseUrl}${formik.values?.object[0]?.url}`
-                            : ""
-                        }
+                        existingImageUrl={""}
                       />
+                      }
+                      </>
                     )}
                   </>
                 )}
 
-                {formik.values.embedCode.length > 10 && (
-                  <Button
-                    colors={["ffff"]}
-                    className={`${styles[".embed-submit-button"]}`}
-                    label={"EMBED"}
-                    onClick={() => formik.setFieldValue("submitEmbed", true)}
-                  />
-                )}
+                {renderEmbedSubmitButton()}
                 <Typography
                   onClick={() => {
                     formik.setFieldValue(
@@ -302,50 +317,38 @@ const StepContent = ({
             )}
             {formik.values?.media_type.toLowerCase() === "3DMODEL" && (
               <>
-                
                 {formik.values.submitEmbed ? (
-                      <Box
-                        component={"div"}
-                        className={`${styles["embed-box"]}`}
-                      >
-                        {handleEmbed()}
-                        <Typography
-                          className={`${styles["file-upload-url-bottom-text"]}`}
-                        >
-                          YouTube video player
-                        </Typography>
-                      </Box>
-                    ) : (
-                      <TextInput
-                        // className={`${styles["english-name"]}`}
-                        label="Embed Code"
-                        name="embedCode"
-                        multiline
-                        minRows={4}
-                        maxRows={4}
-                        value={formik.values.embedCode}
-                        onChange={(e) => {
-                          formik.setFieldValue("embedCode", e.target.value);
-                        }}
-                        sx={{
-                          ...textInputSxStyles,
-                          marginBottom: "8em",
-                          "& .MuiInputBase-inputMultiline": {
-                            paddingInline: "0 !important",
-                          },
-                        }}
-                        formControlSx={commonFormControlSxStyles}
-                      />
-                    )}
-                {formik.values.embedCode.length > 10 && (
-                  <Button
-                    className={`${styles[".embed-submit-button"]}`}
-                    label={"EMBED"}
-                    onClick={() => formik.setFieldValue("submitEmbed", true)}
+                  <Box component={"div"} className={`${styles["embed-box"]}`}>
+                    {handleEmbed(formik.values.embedCode)}
+                    <Typography
+                      className={`${styles["file-upload-url-bottom-text"]}`}
+                    >
+                      YouTube video player
+                    </Typography>
+                  </Box>
+                ) : (
+                  <TextInput
+                    // className={`${styles["english-name"]}`}
+                    label="Embed Code"
+                    name="embedCode"
+                    multiline
+                    minRows={4}
+                    maxRows={4}
+                    value={formik.values.embedCode}
+                    onChange={(e) => {
+                      formik.setFieldValue("embedCode", e.target.value);
+                    }}
+                    sx={{
+                      ...textInputSxStyles,
+                      marginBottom: "8em",
+                      "& .MuiInputBase-inputMultiline": {
+                        paddingInline: "0 !important",
+                      },
+                    }}
+                    formControlSx={commonFormControlSxStyles}
                   />
                 )}
-
-               
+                {renderEmbedSubmitButton()}
               </>
             )}
           </>

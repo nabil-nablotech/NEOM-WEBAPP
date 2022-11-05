@@ -90,7 +90,6 @@ const ImageUpload = ({
             >
                 {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
             </StyledUpload>
-            <Typography className={`${styles['file-upload-bottom-text']}`}>Accepted file types: .jpg, .png</Typography>
 
         </>
     )
