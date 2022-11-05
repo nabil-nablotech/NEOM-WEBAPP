@@ -136,8 +136,8 @@ export const StepperKeywordsComponent = ({
         suggestions: []
     });
     const { addNewItemWindowType } = useSelector((state: RootState) => state.searchResults);
-    const [completeList, setCompleteList] = useState<string[] | []>([])
-    // const [selectedWordsList, setSelectedWordsList] = useState<string[] | []>([])
+    const [currentlyShownList, setCurrentlyShownList] = useState<string[] | []>([])
+    const [preloadedKeywordsList, setPreloadedKeywordsList] = useState<string[] | []>([])
     const [selectAll, setSelectAll] = useState<boolean>(false)
 
     const apiKeyword = addNewItemWindowType === 'Places' ? 'places' : addNewItemWindowType === 'Events' ? 'visits' : 'medias'
@@ -184,7 +184,7 @@ export const StepperKeywordsComponent = ({
 
     const [showList, setShowList] = useState<Array<string> | []>([])
 
-    const defaultList = async () => {
+    const loadKeywordsList = async () => {
         const data = await keyWordsPlaces({ text: '' });
 
         // console.log('hex: ref:', data.data[apiKeyword].data.map((item: parent) => item.attributes.keywords))
@@ -206,40 +206,39 @@ export const StepperKeywordsComponent = ({
             }
         })
 
-        setCompleteList(list)
-        // setSelectedWordsList(list)
+        setCurrentlyShownList(list)
+        setPreloadedKeywordsList(list)
     }
 
     useEffect(() => {
-        defaultList()
+        loadKeywordsList()
     }, [])
 
     useEffect(() => {
 
-        let newList: string[] | [] = [...completeList]
+        let newList: string[] | [] = [...currentlyShownList]
 
         if (
             (currentKeywordArray.length > 0) &&
-            (completeList.length === 0)
+            (currentlyShownList.length === 0)
         ) {
             newList = [...currentKeywordArray]
         }
 
         if (
             (currentKeywordArray.length > 0) &&
-            (completeList.length > 0)
+            (currentlyShownList.length > 0)
         ) {
             currentKeywordArray.forEach((item: string) => {
-                if (!detectLowerCaseStringInArray(item, completeList)) {
+                if (!detectLowerCaseStringInArray(item, currentlyShownList)) {
 
                     newList = [item, ...newList]
                 }
             })
         }
-        setCompleteList(newList)
-        // setSelectedWordsList(newList)
+        setCurrentlyShownList(newList)
 
-    }, [currentKeywordArray, completeList.length > 0])
+    }, [currentKeywordArray, currentlyShownList.length > 0])
 
 
     useEffect(() => {
@@ -263,22 +262,7 @@ export const StepperKeywordsComponent = ({
 
         setShowList(currentList)
 
-    }, [search, completeList])
-
-    // useEffect(() => {
-    //     if (completeList.length > 0) {
-    //         if (selectAll) {
-    //             completeList.forEach(val => {
-    //                 suggestionSelected(val)
-    //             })
-
-    //         } else {
-    //             currentKeywordArray.forEach(val => {
-    //                 onDeleteKeyWord(val)
-    //             })
-    //         }
-    //     }
-    // }, [selectAll, completeList, currentKeywordArray])
+    }, [search, currentlyShownList])
 
     const suggestionSelected = (value: any) => {
 
@@ -290,21 +274,25 @@ export const StepperKeywordsComponent = ({
                     suggestions: []
                 });
                 onKeyDown(value)
-                // setSelectedWordsList(state => [...new Set([...state, value])])
             }
         }
 
     };
 
     const onDeleteKeyWord = (value: any) => {
+
         onDelete(value)
+
+        if (!detectLowerCaseStringInArray(value, preloadedKeywordsList)) {
+            setCurrentlyShownList(state => state.filter(item => item !== value))
+        }
     }
 
     const handleSelectAll = () => {
         setSelectAll(state => !state)
-        if (completeList.length > 0) {
+        if (currentlyShownList.length > 0) {
             if (!selectAll) { // reverse flag
-                completeList.forEach(val => {
+                currentlyShownList.forEach(val => {
                     suggestionSelected(val)
                 })
 
@@ -383,7 +371,7 @@ export const StepperKeywordsComponent = ({
                     flexWrap: 'wrap'
                 }}>
                     {
-                        completeList && completeList.length > 0 && completeList.map((item: string, index: any) => <>
+                        currentlyShownList && currentlyShownList.length > 0 && currentlyShownList.map((item: string, index: any) => <>
                             <CustomChip
                                 index={index}
                                 item={item}
