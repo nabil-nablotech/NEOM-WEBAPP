@@ -12,7 +12,7 @@ import { ColumnType } from "antd/lib/table";
 import { Event, EventApi } from "../../types/Event";
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://7899-117-214-56-161.in.ngrok.io`;
+// export const baseUrl = `https://0281-117-214-56-161.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -451,3 +451,5 @@ export const detectLowerCaseStringInArray = (
     (item) => item.toLowerCase() === sourceString.toLowerCase()
   );
 };
+    
+export const isDocumentTypeImage = (value: string) => ['.jpg', '.png', '.jpeg', '.webp'].includes(value)

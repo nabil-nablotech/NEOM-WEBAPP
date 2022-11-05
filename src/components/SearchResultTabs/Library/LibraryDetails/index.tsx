@@ -14,7 +14,7 @@ import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent'
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
 import useLibraryDetails from '../../../../hooks/useLibraryDetails';
-import { baseUrl } from '../../../../utils/services/helpers';
+import { baseUrl, isDocumentTypeImage } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import BlankDocImage from '../../../../assets/images/searchResults/BlankDocument.svg' 
@@ -60,7 +60,6 @@ const LibraryDetailsPage = ({
     ]
 
 
-    const isDocImage = ['.jpg', '.png', '.jpeg', '.webp'].includes(libraryDetails?.object?.ext)
 
     return <>
         <Box component="div" className={`${styles['details-page-wrapper']}`}>
@@ -68,7 +67,7 @@ const LibraryDetailsPage = ({
 
                 <Box component="div" className={`${styles['img-wrapper']}`} >
                     {
-                        isDocImage ?
+                        isDocumentTypeImage(libraryDetails?.object?.ext) ?
                             <Box className={`${styles['image']}`} component="img" alt={""} src={`${baseUrl}${libraryDetails?.object?.url}`} />
                             :
                             <>
@@ -183,6 +182,8 @@ export const LibraryDetailsModal = () => {
 
     const handleClose = () => {
         setModalOpen(false)
+        dispatch(setActiveLibraryItem(null))
+        dispatch(setActiveLibraryItemIndex(0))
         navigate(`/search-results/Library`, { replace: true, state: null })
     }
 
@@ -209,10 +210,7 @@ export const LibraryDetailsModal = () => {
                             onClick={e => {
                                 e.preventDefault()
                                 /** resetters */
-                                dispatch(setActiveLibraryItem(null))
-                                dispatch(setActiveLibraryItemIndex(0))
-
-                                navigate(`/search-results/${tabName}`, { replace: true })
+                                handleClose()
                             }}
                         >
                             Back
