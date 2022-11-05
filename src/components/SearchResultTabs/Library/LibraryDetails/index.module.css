@@ -80,6 +80,15 @@
     margin-inline: auto;
 }
 
+.blank-doc-image {
+    aspect-ratio: 1/1.2;
+    background-color: var(--no-map-bg);
+    height: 100%;
+    width: 99%;
+    padding: 7em;
+
+}
+
 @media (min-width: 575px) and (max-width: 1025px) {
     .bottom-desc-main-grid ,
     .bottom-desc-main-grid div{
