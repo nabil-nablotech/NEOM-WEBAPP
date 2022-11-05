@@ -8,7 +8,7 @@ import { ColumnType } from "antd/lib/table";
 import { Event, EventApi } from "../../types/Event";
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://2e7f-117-251-213-46.ngrok.io`;
+// export const baseUrl = `https://7899-117-214-56-161.in.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -409,4 +409,8 @@ export const isPlaceDetailAttached = (record: PlaceApi , list: Array<InventoryAs
     return (item.id === parseInt(record.id))
   })
 
+}
+
+export const detectLowerCaseStringInArray = (sourceString: string, destArr: string[]) => {
+  return destArr.some(item => item.toLowerCase() === sourceString.toLowerCase())
 }

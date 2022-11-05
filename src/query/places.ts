@@ -315,3 +315,24 @@ export const placesKeyWords = gql`
     }
   }
 `;
+export const placesAddKeyWords = gql`
+  query PlacesKeyWordsSearch(
+    $text: JSON
+  ) {
+    places(
+      pagination: { limit: 100, start: 0}
+      filters: {
+        and: [
+          { keywords: { containsi: $text } }
+        ]
+      }
+    ) {
+      data {
+        id
+        attributes {
+          keywords
+        }
+      }
+    }
+  }
+`;
