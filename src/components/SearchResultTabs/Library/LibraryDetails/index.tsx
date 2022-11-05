@@ -17,6 +17,7 @@ import useLibraryDetails from '../../../../hooks/useLibraryDetails';
 import { baseUrl } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
+import BlankDocImage from '../../../../assets/images/searchResults/BlankDocument.svg' 
 
 const LibraryDetailsPage = ({
     currentItemIndex,
@@ -41,8 +42,6 @@ const LibraryDetailsPage = ({
 
     } = libraryDetails
 
-    const { name, size, createdAt, updatedAt, ext } = libraryDetails.object
-
 
     const menuItems = [
         {
@@ -62,12 +61,26 @@ const LibraryDetailsPage = ({
     ]
 
 
+    const isDocImage = ['.jpg', '.png', '.jpeg', '.webp'].includes(libraryDetails?.object?.ext)
+
     return <>
         <Box component="div" className={`${styles['details-page-wrapper']}`}>
             <Box component="div">
 
                 <Box component="div" className={`${styles['img-wrapper']}`} >
-                    <Box className={`${styles['image']}`} component="img" alt={""} src={`${baseUrl}${libraryDetails?.object?.url}`} />
+                    {
+                        isDocImage ?
+                            <Box className={`${styles['image']}`} component="img" alt={""} src={`${baseUrl}${libraryDetails?.object?.url}`} />
+                            :
+                            <>
+                                <Box
+                                    component = "img"
+                                    src={BlankDocImage}
+                                    alt={""}
+                                    className={`${styles['blank-doc-image']}`}
+                                />
+                            </>
+                    }
                 </Box>
 
             </Box>
@@ -109,18 +122,20 @@ const LibraryDetailsPage = ({
                                 <div>Item URL: {locationRef}</div>
                             </Box>
 
-                            <Box component="div" className={`${styles[`bottom-grid`]}`} >
-                                <p>Metadata</p>
-                                <div>File Name: {name}</div>
-                                <div>Size: {size}MB</div>
-                                <div>
-                                    <span>Created: <span>{`${dayjs(createdAt).format("MM/DD/YYYY")}`}</span></span>
-                                </div>
-                                <div>
-                                    <span>Modified: <span>{`${dayjs(updatedAt).format("MM/DD/YYYY")}`}</span></span>
-                                </div>
-                                <div>Extensions: {ext && ext.replace('.', '')}</div>
-                            </Box>
+                            {
+                                libraryDetails.object && <Box component="div" className={`${styles[`bottom-grid`]}`} >
+                                    <p>Metadata</p>
+                                    <div>File Name: {libraryDetails.object.name}</div>
+                                    <div>Size: {libraryDetails.object.size}MB</div>
+                                    <div>
+                                        <span>Created: <span>{`${dayjs(libraryDetails.object.createdAt).format("MM/DD/YYYY")}`}</span></span>
+                                    </div>
+                                    <div>
+                                        <span>Modified: <span>{`${dayjs(libraryDetails.object.updatedAt).format("MM/DD/YYYY")}`}</span></span>
+                                    </div>
+                                    <div>Extensions: {libraryDetails.object.ext && libraryDetails.object.ext.replace('.', '')}</div>
+                                </Box>
+                            }
                             <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                 <p>Associations</p>
                                 {
