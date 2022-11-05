@@ -349,7 +349,7 @@ const StepContent = ({
               onKeyDown={(keywordString) => {
                 formik.setFieldValue("keywords", [
                   ...new Set([...formik.values.keywords, keywordString]),
-                ].filter(ele => ele !== ''));
+                ]);
               }}
 
               onDelete={(value) => {

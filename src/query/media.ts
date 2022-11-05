@@ -372,3 +372,24 @@ export const mediaKeyWords = gql`
     }
   }
 `;
+export const mediaAddKeyWords = gql`
+  query MediaKeyWordsSearch(
+    $text: JSON
+  ) {
+    medias(
+      pagination: { limit: 100, start: 0}
+      filters: {
+        or: [
+          { keywords: { contains: $text } }
+        ]
+      }
+    ) {
+      data {
+        id
+        attributes {
+          keywords
+        }
+      }
+    }
+  }
+`;

@@ -407,3 +407,24 @@ query EventsKeyWordsSearch(
   }
 }
 `;
+export const eventsAddKeyWords = gql`
+query EventsKeyWordsSearch(
+  $text: JSON
+  ){
+  visits(
+    pagination: { limit: 100, start: 0}
+    filters: {
+      and: [
+        { keywords: { containsi: $text } }
+      ]
+    }
+  ) {
+    data {
+      id
+      attributes {
+        keywords
+      }
+    }
+  }
+}
+`;
