@@ -309,6 +309,7 @@ export const StepperKeywordsComponent = ({
                 setCurrentKeywordsArray(currentlyShownList)
             } else {
                 setCurrentKeywordsArray([])
+                setCurrentlyShownList([...preloadedKeywordsList])
             }
         }
 
