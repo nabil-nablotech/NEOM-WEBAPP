@@ -1,11 +1,7 @@
-import {
-  Box,
-  Button as DefaultButton,
-} from "@mui/material";
+import { Box, Typography, Button as DefaultButton } from "@mui/material";
 import React, { useState } from "react";
-import {
-  StepContentTypes,
-} from "../../../../types/CustomDrawerTypes";
+import { StepContentTypes } from "../../../../types/CustomDrawerTypes";
+import Button from "../../../../components/Button";
 import styles from "../../Places/AddNewItem/addNewItem.module.css";
 import TextInput from "../../../../components/TextInput";
 import DropdownComponent from "../../../Dropdown/index";
@@ -96,6 +92,35 @@ const StepContent = ({
     ]);
   };
 
+  const handleEmbed = () => {
+
+    return (
+      <iframe
+        width="338"
+        height="190"
+        src="https://www.youtube.com/embed/C8AYzPxr_SE"
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      ></iframe>
+    );
+  };
+  
+  const handleUrl = (url: string) => {
+
+    return (
+      <iframe
+        width="338"
+        height="190"
+        src={url}
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      ></iframe>
+    );
+  };
   return (
     <>
       <Box component="div" className={`${styles["form"]}`}>
@@ -114,7 +139,7 @@ const StepContent = ({
               handleChange={(e: SelectChangeEvent<string | string[]>) => {
                 formik.setFieldValue("media_type", e.target.value);
               }}
-              handleClear={(e: React.MouseEvent) => { }}
+              handleClear={(e: React.MouseEvent) => {}}
               itemsList={[
                 {
                   label: "Image",
@@ -132,9 +157,134 @@ const StepContent = ({
               selectStylesSx={commonSelectSxStyles}
               formControlSx={commonFormControlSxStyles}
             />
+            
             {formik.values?.media_type.toLowerCase() === "image" && (
               <>
-                <CustomUpload defaultImages={formik.values.object}  uploadImage={uploadImage} title={"Drag and drop your file here"} existingImageUrl={`${baseUrl}${formik.values.object.url}`} />
+                <CustomUpload
+                  defaultImages={formik.values.object}
+                  uploadImage={uploadImage}
+                  title={"Drag and drop your file here"}
+                  existingImageUrl={
+                    formik.values?.object && formik.values?.object[0]?.url
+                      ? `${baseUrl}${formik.values?.object[0]?.url}`
+                      : ""
+                  }
+                />
+              </>
+            )}
+            {formik.values?.media_type.toLowerCase() === "video" && (
+              <>
+                {formik.values.showEmbeded ? (
+                  <>
+                  {formik.values.submitEmbed ? <Box component={'div'} className={`${styles["embed-box"]}`}>{handleEmbed()}
+                  <Typography
+                  className={`${styles["file-upload-url-bottom-text"]}`}
+                >
+                  YouTube video player
+                </Typography>
+                  </Box> : <TextInput
+                    // className={`${styles["english-name"]}`}
+                    label="Embed Code"
+                    name="embedCode"
+                    multiline
+                    minRows={4}
+                    maxRows={4}
+                    value={formik.values.embedCode}
+                    onChange={(e) => {
+                      formik.setFieldValue("embedCode", e.target.value);
+                    }}
+                    sx={{
+                      ...textInputSxStyles,
+                      marginBottom: "8em",
+                      "& .MuiInputBase-inputMultiline": {
+                        paddingInline: "0 !important",
+                      },
+                    }}
+                    formControlSx={commonFormControlSxStyles}
+                  />}
+                  </>
+                ) : (
+                  <>
+                  {formik.values.showUrl ? <>
+                  <TextInput
+                    className={`${styles["english-name"]}`}
+                    label="URL"
+                    name="url"
+                    value={formik.values.url}
+                    onChange={(e) => {
+                      formik.setFieldValue("url", e.target.value);
+                    }}
+                    sx={{
+                      ...textInputSxStyles,
+                    }}
+                    formControlSx={commonFormControlSxStyles}
+                  />
+                  {formik.values.url && <Box component={'div'} className={`${styles["embed-box"]}`}>{handleUrl(formik.values.url)}
+                  <Typography
+                  mt={1}
+                  className={`${styles["file-upload-url-bottom-text"]}`}
+                >
+                  YouTube video player
+                </Typography>
+                  </Box>}
+                  </> : <CustomUpload
+                  defaultImages={formik.values.object}
+                  uploadImage={uploadImage}
+                  title={"Drag and drop your file here"}
+                  existingImageUrl={
+                    formik.values?.object && formik.values?.object[0]?.url
+                      ? `${baseUrl}${formik.values?.object[0]?.url}`
+                      : ""
+                  }
+                />}
+                </>
+                )}
+
+                {formik.values.embedCode.length > 10 && <Button
+                  colors={['ffff']}
+                  className={`${styles[".embed-submit-button"]}`}
+                  label={"EMBED"}
+                  onClick={() => formik.setFieldValue("submitEmbed", true)}
+                />}
+                <Typography
+                  onClick={() => {
+                    formik.setFieldValue(
+                      "showEmbeded",
+                      !formik.values.showEmbeded
+                    )
+                    formik.setFieldValue(
+                      "showUrl",
+                      false
+                    )
+                  }
+                  }
+                  className={`${styles["file-upload-url-bottom-text"]}`}
+                >
+                  {formik.values.showEmbeded
+                    ? "Upload video instead"
+                    : "Add embed code instead"}
+                </Typography>
+                <Typography
+                  className={`${styles["file-upload-url-bottom-text"]}`}
+                >
+                  or
+                </Typography>
+                <Typography
+                  className={`${styles["file-upload-url-bottom-text"]}`}
+                  onClick={() => {
+                    formik.setFieldValue(
+                      "showEmbeded",
+                      false
+                    )
+                     formik.setFieldValue(
+                    "showUrl",
+                    !formik.values.showUrl
+                  )
+                  
+                }}
+                >
+                  Add URL
+                </Typography>
               </>
             )}
           </>
@@ -211,7 +361,7 @@ const StepContent = ({
               handleSelectChange={(e, value) =>
                 handleSelectChange(e, value, "categoryType")
               }
-              handleClear={(e) => { }}
+              handleClear={(e) => {}}
               itemsList={options?.actionType || []}
               selectStylesSx={commonSelectSxStyles}
               formControlSx={commonFormControlSxStyles}
@@ -274,7 +424,7 @@ const StepContent = ({
                   top: "3px",
                 }}
                 className="remove-motion"
-                onClick={(e) => { }}
+                onClick={(e) => {}}
               />{" "}
               to select the places and events you want to associate this library
               item to.
@@ -291,14 +441,12 @@ const StepContent = ({
                   ...new Set([...formik.values.keywords, keywordString]),
                 ]);
               }}
-
               onDelete={(value) => {
                 const newArr = [...formik.values.keywords].filter(
                   (element: string) => element !== value
                 );
                 formik.setFieldValue("keywords", [...new Set(newArr)]);
               }}
-
               currentKeywordArray={formik.values.keywords}
             />
           </>

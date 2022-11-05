@@ -7,10 +7,10 @@ import { addLibrary } from "../query/library";
 import { RootState } from '../store';
 import {setMedia, setMediaMetaData, 
   toggleShowAddSuccess,
-  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, resetMediaAssociation, setDefaultMediaAssociation} from '../store/reducers/searchResultsReducer';
+  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, resetMediaAssociation, setDefaultMediaAssociation, storeAddItemProgressState} from '../store/reducers/searchResultsReducer';
 import { createMediaAssociate, updateMediaAssociate } from '../query/mediaAssociate';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
-import {limit, getQueryObj, webUrl, generateUniqueId, MEDIA_TAB_NAME, formatBytes} from '../utils/services/helpers';
+import {limit, getQueryObj, webUrl, generateUniqueId, MEDIA_TAB_NAME, formatBytes, formatStrapiDate} from '../utils/services/helpers';
 import { graphQlHeaders } from '../utils/services/interceptor';
 import { mediaDetails } from "../api/details";
 import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
@@ -105,7 +105,9 @@ const useMedia = () => {
 
       dispatch(toggleShowEditSuccess(true))
 
-      dispatch(setAddNewItemWindowType(null))
+      dispatch(setAddNewItemWindowType(null));
+      
+      dispatch(storeAddItemProgressState(null));
       /** re-direct */
       navigate(`/search-results/Media/${updateData?.updateMedia.data.attributes.uniqueId}`, {replace: true})
       
@@ -126,6 +128,8 @@ const useMedia = () => {
       dispatch(resetMediaAssociation(null));
       if (id) {
         dispatch(setAddNewItemWindowType(null));
+        
+      dispatch(storeAddItemProgressState(null));
         navigate(`/search-results/Media${id}`, {replace: true})
       }
     }
@@ -205,9 +209,15 @@ const useMedia = () => {
     }
     if (!edit) {
       data.uniqueId = uniqueId;
+      data.created = formatStrapiDate(new Date());
       createMediaMutation({variables: data})
     }
     if (edit && tabData?.id) {
+      
+      data.object=payload?.object[0].id;
+      data.fileSize = formatBytes(parseFloat(payload?.object[0]?.size));
+      data.storage= payload?.object[0]?.provider;
+      data.dimension= `${payload?.object[0]?.height}x${payload?.object[0]?.width}`;
       updateMediaMutation({
         variables: {
           ...data,

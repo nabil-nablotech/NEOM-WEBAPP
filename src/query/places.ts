@@ -107,6 +107,7 @@ export const refinePlaces = gql`
           { keywords: { containsi: $keywords } }
         ]
       }
+      sort: "updatedAt:desc"
     ) {
       meta {
         pagination {

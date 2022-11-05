@@ -148,6 +148,7 @@ query RefinedLibrarySearch(
         }
       ]
     }
+    sort: "updatedAt:desc"
   ) {
     meta {
       pagination {
