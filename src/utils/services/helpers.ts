@@ -327,7 +327,7 @@ export const shallRenderMedia = (
 ) => {
   if (!mediaArray) return false;
 
-  if (mediaArray.length === mediaNo) {
+  if (mediaNo <= (mediaArray.length - 1) ) {
     return true;
   } else return false;
 };

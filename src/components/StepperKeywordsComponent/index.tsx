@@ -190,8 +190,6 @@ export const StepperKeywordsComponent = ({
     const loadKeywordsList = async () => {
         const data = await keyWordsPlaces({ text: '' });
 
-        // console.log('hex: ref:', data.data[apiKeyword].data.map((item: parent) => item.attributes.keywords))
-
         const list: string[] = []
 
         data.data[apiKeyword].data.forEach((item: parent) => {

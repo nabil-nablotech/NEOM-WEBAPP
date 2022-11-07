@@ -88,9 +88,17 @@ export const searchResultsSlice = createSlice({
     },
     toggleShowAddSuccess: (state, action: PayloadAction<boolean>) => {
       state.showAddSuccess = action.payload;
+
+      if(action.payload) {
+        state.addNewItemWindowType = null
+      }
     },
     toggleShowEditSuccess: (state, action: PayloadAction<boolean>) => {
       state.showEditSuccess = action.payload;
+
+      if(action.payload) {
+        state.addNewItemWindowType = null
+      }
     },
     setActiveMediaItem: (state, action: PayloadAction<Object | any>) => {
       state.activeMediaItem = action.payload;
@@ -124,6 +132,9 @@ export const searchResultsSlice = createSlice({
     },
     setAddNewItemWindowType: (state, action: PayloadAction<tabNameProps | null>) => {
       state.addNewItemWindowType = action.payload;
+      if(!action.payload) {
+        state.isAssociationsStepOpen = false
+      }
     },
     toggleAssociationsStepOpen: (state, action: PayloadAction<boolean>) => {
       state.isAssociationsStepOpen = action.payload;
