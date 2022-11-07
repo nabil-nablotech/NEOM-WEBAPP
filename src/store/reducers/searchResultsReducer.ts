@@ -194,6 +194,10 @@ export const searchResultsSlice = createSlice({
     },
     toggleConfirmOpenEdit: (state, action: PayloadAction<boolean>) => {
       state.confirmOpenEdit = action.payload;
+
+      if(state.addItemWindowMinimized) {
+        state.addItemWindowMinimized = false
+      }
     },
     setEditPayload: (state, action: PayloadAction<any>) => {
       state.editPayload = action.payload;
