@@ -38,7 +38,6 @@ const LibraryDetailsPage = ({
         return <>Cant display Library Details</>
     }
 
-    // console.log('hex: ', libraryDetails)
     const { description, title, id, referenceURL, citation,
 
     } = libraryDetails

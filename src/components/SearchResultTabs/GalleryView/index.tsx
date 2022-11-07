@@ -9,6 +9,7 @@ import YellowStar from '../../../assets/images/searchResults/YellowStar.svg'
 import { CustomMoreOptionsComponent } from "../../CustomMoreOptionsComponent";
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from "react";
+import { baseUrl } from "../../../utils/services/helpers";
 
 const GalleryView = () => {
     const dispatch = useDispatch()
@@ -43,7 +44,7 @@ const GalleryView = () => {
         }
 
     }, [activeMediaItem])
-
+// console.log('hex: ', places)
     return (
         <Box component="div" className={`${styles["gallery-container"]}`} style={{
         }}>
@@ -108,7 +109,7 @@ const GalleryView = () => {
                                         <RenderFileData
                                             fileData={{
                                                 alt: "",
-                                                src: itemObj.attributes.media_associates.data[0].attributes.media_unique_id.data.attributes.object.data.attributes.url,
+                                                src: `${baseUrl}${itemObj?.attributes.media_associates.data[0]?.attributes.media_unique_id.data?.attributes.object.data?.attributes.url}`,
                                                 // src: itemObj.media_unique_id.object.attributes.url,
                                                 className: styles['image']
                                             }}

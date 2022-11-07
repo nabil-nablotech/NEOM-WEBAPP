@@ -217,7 +217,7 @@ const usePlace = () => {
 
   useEffect(() => {
 
-    if (confirmOpenEdit && editPayload) {
+    if (confirmOpenEdit && editPayload && (tabName === PLACES_TAB_NAME)) {
 
       openEditFlow(editPayload)
       dispatch(toggleConfirmOpenEdit(false));

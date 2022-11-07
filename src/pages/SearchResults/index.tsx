@@ -35,7 +35,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
     useSelector((state: RootState) => state.searchResults);
   const { fetchEvents, clearSearch: clearEventSearch, setEdit: setEditEvents } = useEvent();
   const { fetchLibraryItems, setEdit: setEditLibrary } = useLibrary();
-  const { fetchPlaces, clearSearch: clearPlaceSearch, setEdit, setEdit: setEditPlaces } = usePlace();
+  const { fetchPlaces, clearSearch: clearPlaceSearch, setEdit: setEditPlaces } = usePlace();
   const { fetchMediaItems, setEdit: setEditMedia } = useMedia();
 
   const dispatch = useDispatch();

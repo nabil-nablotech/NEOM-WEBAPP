@@ -71,7 +71,7 @@ const usePlaceDetails = () => {
         dispatch(setTabData(res));
         dispatch(setTabEdit(true));
         dispatch(toggleNewItemWindow(true));
-        dispatch(setAddNewItemWindowType(type));
+        // dispatch(setAddNewItemWindowType(type));
       }
       if (type === 'Events' && record.visit_unique_id) {
         res = await eventDetails(record.visit_unique_id.uniqueId);
