@@ -12,6 +12,7 @@ export const CustomMoreOptionsComponent = ({
 
     const handleClick = (e: any) => {
         e.preventDefault()
+        e.stopPropagation();
         setAnchorEl(e.currentTarget);
     };
     const handleClose = () => {
@@ -40,6 +41,7 @@ export const CustomMoreOptionsComponent = ({
                 {
                     menuActions.map((item, inx) => (
                         <MenuItem key={inx} onClick={e => {
+                            e.stopPropagation();
                             item.action();
                             handleClose();
                         }}>{item.label}</MenuItem>
