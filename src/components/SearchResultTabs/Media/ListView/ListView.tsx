@@ -15,7 +15,6 @@ import { Media } from "../../../../types/Media";
 // import {MediaDetailsPage} from '../DetailsPage';
 // import styles from './index.module.css';
 // import CloseIcon from '@mui/icons-material/CloseOutlined';
-import { MediaDetailsModal } from "../MediaDetails";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -120,7 +119,7 @@ const ListView = (props: MediaProps) => {
             className={`media-table-image`}
             component="img"
             alt={""}
-            src={`${baseUrl}${value.object.data.attributes.url}`}
+            src={`${baseUrl}${value?.object?.data?.attributes?.url}`}
           ></Box>
         </>
       ),
@@ -241,11 +240,8 @@ const ListView = (props: MediaProps) => {
               },
             };
           }}
-        //   onC
         ></StyledTableWrapper>
       </InfiniteScroll>
-      <MediaDetailsModal
-      />
     </Box>
   );
 };
