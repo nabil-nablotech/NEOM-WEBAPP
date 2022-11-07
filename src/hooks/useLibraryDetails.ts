@@ -7,7 +7,7 @@ import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { MediaApi } from "../types/Media";
 import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 import { LIBRARY_TAB_NAME } from '../utils/services/helpers';
-import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation, toggleEditConfirmationWindowOpen } from "../store/reducers/searchResultsReducer";
+import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation, toggleEditConfirmationWindowOpen, setEditPayload, toggleConfirmOpenEdit } from "../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 
@@ -16,7 +16,7 @@ import { RootState } from "../store";
 const useLibraryDetails = () => {
   const { search } = useLocation();
   const { uniqueId } = useParams<{ uniqueId: string }>()
-  const { addNewItemWindowType} = useSelector((state: RootState) => state.searchResults);
+  const { addNewItemWindowType, confirmOpenEdit, editPayload} = useSelector((state: RootState) => state.searchResults);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -32,23 +32,43 @@ const useLibraryDetails = () => {
     retry: false
   });
 
-  const setEdit = async (payload: {record: any, type: tabNameProps}) => {
-    if (payload) {
-      if(addNewItemWindowType) {
-        dispatch(toggleEditConfirmationWindowOpen(true));
-      } else {
-        const {record, type} = payload;
-        let res: any | MediaApi={};
+  useEffect(() => {
+    if (confirmOpenEdit && editPayload) {
 
-        res = await libraryDetails(record.uniqueId);
-        if (res?.media_associate) {
-          dispatch(setDefaultMediaAssociation({events: res.media_associate?.visit_unique_ids || [], places: res.media_associate?.place_unique_ids || [] }));
-        }
-        dispatch(setTabData(res));
-        dispatch(setTabEdit(true));
-        dispatch(toggleNewItemWindow(true));
-        dispatch(setAddNewItemWindowType(LIBRARY_TAB_NAME));
+      openEditFlow(editPayload)
+      dispatch(toggleConfirmOpenEdit(false));
+      dispatch(setEditPayload(null));
+
+    }
+  }, [confirmOpenEdit])
+
+  const openEditFlow = async (payload: any) => {
+    if (payload) {
+
+      const { record, type } = payload;
+      let res: any | MediaApi = {};
+
+      res = await libraryDetails(record.uniqueId);
+      if (res?.media_associate) {
+        dispatch(setDefaultMediaAssociation({ events: res.media_associate?.visit_unique_ids || [], places: res.media_associate?.place_unique_ids || [] }));
       }
+      dispatch(setTabData(res));
+      dispatch(setTabEdit(true));
+      dispatch(toggleNewItemWindow(true));
+      dispatch(setAddNewItemWindowType(LIBRARY_TAB_NAME));
+    }
+  }
+
+
+  const setEdit = async (payload: {record: any, type: tabNameProps}) => {
+    if (addNewItemWindowType) {
+      /** Detect if user comes via forced edit */
+      dispatch(toggleEditConfirmationWindowOpen(true));
+      dispatch(setEditPayload(payload));
+
+    } else {
+      /** Detect if user comes via normal edit */
+      openEditFlow(payload)
     }
   };
 

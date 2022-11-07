@@ -8,7 +8,7 @@ import { RootState } from '../store';
 import {
   setMedia, setMediaMetaData,
   toggleShowAddSuccess,
-  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, resetMediaAssociation, setDefaultMediaAssociation, storeAddItemProgressState, toggleEditConfirmationWindowOpen} from '../store/reducers/searchResultsReducer';
+  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, resetMediaAssociation, setDefaultMediaAssociation, storeAddItemProgressState, toggleEditConfirmationWindowOpen, toggleConfirmOpenEdit, setEditPayload} from '../store/reducers/searchResultsReducer';
 import { createMediaAssociate, updateMediaAssociate } from '../query/mediaAssociate';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
 import { limit, getQueryObj, webUrl, generateUniqueId, MEDIA_TAB_NAME, formatBytes, formatStrapiDate } from '../utils/services/helpers';
@@ -20,7 +20,7 @@ const useMedia = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
 
   const {searchText, media: mediaItem, associatedPlaces, associatedEvents,
-    addNewItemWindowType } = useSelector((state: RootState) => state.searchResults);
+    addNewItemWindowType, confirmOpenEdit, editPayload } = useSelector((state: RootState) => state.searchResults);
   const {search} = useLocation();
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
@@ -226,18 +226,37 @@ const useMedia = () => {
     }
   }
 
-  const setEdit = async (payload: any) => {
+  useEffect(() => {
+    if (confirmOpenEdit && editPayload) {
+
+      openEditFlow(editPayload)
+      dispatch(toggleConfirmOpenEdit(false));
+      dispatch(setEditPayload(null));
+
+    }
+  }, [confirmOpenEdit])
+
+  const openEditFlow = async (payload: any) => {
     if (payload) {
-      if(addNewItemWindowType) {
-        dispatch(toggleEditConfirmationWindowOpen(true));
-      } else {
-        const payloadRes = await mediaDetails(payload.attributes.uniqueId);
-        dispatch(setTabData(payloadRes));
-        dispatch(setTabEdit(true));
-        dispatch(toggleNewItemWindow(true))
-        dispatch(setAddNewItemWindowType(MEDIA_TAB_NAME))
-        dispatch(setDefaultMediaAssociation({ events: payloadRes.media_associate?.visit_unique_ids || [], places: payloadRes.media_associate?.place_unique_ids || [] }));
-      }
+      const payloadRes = await mediaDetails(payload.attributes.uniqueId);
+      dispatch(setTabData(payloadRes));
+      dispatch(setTabEdit(true));
+      dispatch(toggleNewItemWindow(true))
+      dispatch(setAddNewItemWindowType(MEDIA_TAB_NAME))
+      dispatch(setDefaultMediaAssociation({ events: payloadRes.media_associate?.visit_unique_ids || [], places: payloadRes.media_associate?.place_unique_ids || [] }));
+    }
+  }
+
+
+  const setEdit = async (payload: any) => {
+    if (addNewItemWindowType) {
+      /** Detect if user comes via forced edit */
+      dispatch(toggleEditConfirmationWindowOpen(true));
+      dispatch(setEditPayload(payload));
+
+    } else {
+      /** Detect if user comes via normal edit */
+      openEditFlow(payload)
     }
   };
 

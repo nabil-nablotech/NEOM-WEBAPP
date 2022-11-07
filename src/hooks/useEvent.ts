@@ -296,8 +296,8 @@ const useEvent = () => {
   const setEdit = async (payload: any) => {
     if (addNewItemWindowType) {
       /** Detect if user comes via forced edit */
-        dispatch(toggleEditConfirmationWindowOpen(true));
-        dispatch(setEditPayload(payload));
+      dispatch(toggleEditConfirmationWindowOpen(true));
+      dispatch(setEditPayload(payload));
 
     } else {
       /** Detect if user comes via normal edit */
