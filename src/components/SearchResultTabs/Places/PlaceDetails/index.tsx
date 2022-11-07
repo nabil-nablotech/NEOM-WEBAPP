@@ -356,6 +356,7 @@ const PlaceDetailsPage = () => {
     } = placeData
 
     const { latitude, longitude } = placeData;
+
     return (
         <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -393,7 +394,7 @@ const PlaceDetailsPage = () => {
                 <Box component="div" className={`${styles['content-section']}`}>
                     {
                         // If you dont 1 image also, show placeholder section
-                        !shallRenderMedia(1, media_associates) ?
+                        !media_associates || (media_associates && media_associates.length < 0) ?
                             <Box component="div" className={`${styles['no-images-section']}`}>
                                 <NoImagePresent
                                     message={NO_MEDIA}
@@ -405,21 +406,25 @@ const PlaceDetailsPage = () => {
                                     right: 0,
                                     bottom: 0
                                 }}>
-                                    {shallRenderMedia(6, media_associates) && <Button variant="contained" type="button"
-                                        style={{
-                                            color: '#fff',
-                                            backgroundColor: 'var(--black-90-pct)',
-                                            borderRadius: '2em',
-                                            margin: '1em',
-                                            padding: '0.4em 1.2em'
-                                        }}
-                                        onClick={e => {
-                                            e.preventDefault()
-                                            dispatch(toggleGalleryView(true))
-                                        }}
-                                    >
-                                        View all
-                                    </Button>}
+                                    {
+                                        media_associates &&
+                                        media_associates.length > 5
+                                        && <Button variant="contained" type="button"
+                                            style={{
+                                                color: '#fff',
+                                                backgroundColor: 'var(--black-90-pct)',
+                                                borderRadius: '2em',
+                                                margin: '1em',
+                                                padding: '0.4em 1.2em'
+                                            }}
+                                            onClick={e => {
+                                                e.preventDefault()
+                                                dispatch(toggleGalleryView(true))
+                                            }}
+                                        >
+                                            View all
+                                        </Button>
+                                    }
                                 </Box>
                                 <Grid container className={`${styles['justify-center']} ${styles['image-grid-gap']}`}
                                     spacing={1}
