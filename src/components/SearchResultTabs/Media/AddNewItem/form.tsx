@@ -148,6 +148,36 @@ allowFullScreen
       formik.setFieldValue("valid", false);
     }
   }
+
+  const handleDropdown = (e: string | string[]) => {
+    formik.setFieldValue("media_type", e);
+    if (typeof e === 'string' && e.toLowerCase() === 'image') {
+      formik.setFieldValue("url", '');
+      formik.setFieldValue("showUrl", false);
+      formik.setFieldValue("embedCode", '');
+      formik.setFieldValue("showEmbeded", false);
+      formik.setFieldValue("submitEmbed", false);
+      formik.setFieldValue("valid", false);
+    }
+    else if (typeof e === 'string' && e.toLowerCase() === 'video') {
+      formik.setFieldValue("object", undefined);
+      formik.setFieldValue("url", '');
+      formik.setFieldValue("showUrl", false);
+      formik.setFieldValue("embedCode", '');
+      formik.setFieldValue("showEmbeded", false);
+      formik.setFieldValue("submitEmbed", false);
+      formik.setFieldValue("valid", false);
+    }
+    else if (typeof e === 'string' && e.toLowerCase() === '3dmodel') {
+      formik.setFieldValue("object", undefined);
+      formik.setFieldValue("url", '');
+      formik.setFieldValue("showUrl", false);
+      formik.setFieldValue("embedCode", '');
+      formik.setFieldValue("showEmbeded", false);
+      formik.setFieldValue("submitEmbed", false);
+      formik.setFieldValue("valid", false);
+    }
+  }
   return (
     <>
       <Box component="div" className={`${styles["form"]}`}>
@@ -164,7 +194,7 @@ allowFullScreen
               // }))}
 
               handleChange={(e: SelectChangeEvent<string | string[]>) => {
-                formik.setFieldValue("media_type", e.target.value);
+                handleDropdown(e.target.value)
               }}
               handleClear={(e: React.MouseEvent) => {}}
               itemsList={[
@@ -303,7 +333,7 @@ allowFullScreen
                   </>
                 )}
 
-                {renderEmbedSubmitButton()}
+                {formik.values.submitEmbed ? null : renderEmbedSubmitButton()}
                 <Typography
                   onClick={() => {
                     formik.setFieldValue(
@@ -335,16 +365,11 @@ allowFullScreen
                 </Typography>
               </>
             )}
-            {formik.values?.media_type.toLowerCase() === "3DMODEL" && (
+            {formik.values?.media_type.toLowerCase() === "3dmodel" && (
               <>
                 {formik.values.submitEmbed ? (
                   <Box component={"div"} className={`${styles["embed-box"]}`}>
                     {handleEmbed(formik.values.embedCode)}
-                    <Typography
-                      className={`${styles["file-upload-url-bottom-text"]}`}
-                    >
-                      YouTube video player
-                    </Typography>
                   </Box>
                 ) : (
                   <TextInput
@@ -352,8 +377,8 @@ allowFullScreen
                     label="Embed Code"
                     name="embedCode"
                     multiline
-                    minRows={4}
-                    maxRows={4}
+                    minRows={8}
+                    maxRows={8}
                     value={formik.values.embedCode}
                     onChange={(e) => {
                       formik.setFieldValue("embedCode", e.target.value);
@@ -368,7 +393,7 @@ allowFullScreen
                     formControlSx={commonFormControlSxStyles}
                   />
                 )}
-                {renderEmbedSubmitButton()}
+                {formik.values.submitEmbed ? null : renderEmbedSubmitButton()}
               </>
             )}
           </>

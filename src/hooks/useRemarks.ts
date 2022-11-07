@@ -1,0 +1,36 @@
+import { useEffect } from "react";
+import { useMutation } from "react-query";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { addRemarks, getRemarks } from "../api/remarks";
+import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation } from "../store/reducers/searchResultsReducer";
+
+const useRemarks = () => {
+  const { uniqueId } = useParams<{ uniqueId: string }>();
+
+  const dispatch = useDispatch();
+
+
+  /**
+   * add remarks api
+   */
+  const { isLoading: addLoading, error: addErr, data: addData, mutate: addRemarksMutation } = useMutation(addRemarks, {
+    retry: false
+  });
+  /**
+   * fetch remarks api
+   */
+  const { isLoading, error, data, mutate: getRemarksMutation } = useMutation(getRemarks, {
+    retry: false
+  });
+
+  return {
+    loading: isLoading,
+    error,
+    data,
+    addRemarksMutation,
+    getRemarksMutation
+  };
+};
+
+export default useRemarks;

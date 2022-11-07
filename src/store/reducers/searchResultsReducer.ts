@@ -37,7 +37,10 @@ const initialState: SearchResultsState2 = {
   associatedEvents: [],
   addItemWindowMinimized: null,
   addItemProgressState: null,
-  isAssociationsIconsDisabled: false
+  isAssociationsIconsDisabled: false,
+  isEditConfirmationWindowOpen: false,
+  confirmOpenEdit : false,
+  editPayload: null
 };
 
 export const searchResultsSlice = createSlice({
@@ -186,6 +189,19 @@ export const searchResultsSlice = createSlice({
     storeAddItemProgressState: (state, action: PayloadAction<addItemProgressPayload | null>) => {
       state.addItemProgressState = action.payload;
     },
+    toggleEditConfirmationWindowOpen: (state, action: PayloadAction<boolean>) => {
+      state.isEditConfirmationWindowOpen = action.payload;
+    },
+    toggleConfirmOpenEdit: (state, action: PayloadAction<boolean>) => {
+      state.confirmOpenEdit = action.payload;
+
+      if(action.payload && state.addItemWindowMinimized) {
+        state.addItemWindowMinimized = false
+      }
+    },
+    setEditPayload: (state, action: PayloadAction<any>) => {
+      state.editPayload = action.payload;
+    },
   },
 });
 
@@ -223,7 +239,10 @@ export const {
   setDefaultMediaAssociation,
   toggleAddItemWindowMinimized,
   storeAddItemProgressState,
-  toggleAssociationsIconDisabled
+  toggleAssociationsIconDisabled,
+  toggleEditConfirmationWindowOpen,
+  toggleConfirmOpenEdit,
+  setEditPayload
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

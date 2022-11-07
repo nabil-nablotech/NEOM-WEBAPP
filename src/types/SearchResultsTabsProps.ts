@@ -1,8 +1,10 @@
 import React from "react";
 import { DashboardResponse } from "./dashboard";
-import { Place, Meta, FieldOptions, PlaceApi } from "./Place";
+import { Place, Meta, FieldOptions, PlaceApi, MediaAssociateObj } from "./Place";
 import { Event, EventApi } from "./Event";
 import { Media } from "./Media";
+import { RemarksPayload } from "./Remarks";
+import { UseMutateFunction } from "react-query";
 
 export type SearchResultTabsProps = {
   tabIndex?: number;
@@ -55,7 +57,7 @@ export type GridViewCard_Events = {
   dateString: string;
   isNew: boolean;
   handleClick: (item: Event, index: number) => void
-  setEdit: (payload: {record: Media | Event, type: tabNameProps}) => void
+  setEdit: (payload: {record: Media | Event | MediaAssociateObj, type: tabNameProps}) => void
   record: Event;
   id: string;
 };
@@ -106,7 +108,10 @@ export type SearchResultsState2 = {
   associatedEvents: InventoryAssociationType_Event[] | []
   addItemWindowMinimized: boolean | null
   addItemProgressState: null | addItemProgressPayload
-  isAssociationsIconsDisabled: boolean
+  isAssociationsIconsDisabled: boolean,
+  isEditConfirmationWindowOpen: boolean
+  confirmOpenEdit: boolean,
+  editPayload: any
 };
 
 export type addItemProgressPayload = addItemProgressStateType | addPlaceProgressStateType | 
@@ -198,6 +203,9 @@ export type RenderFileDataProps = {
 
 export type CommentSectionProps = {
   SelfIcon: () => JSX.Element;
+  addRemarks: (payload: RemarksPayload) => void;
+  getRemarks: UseMutateFunction<any, unknown, any, unknown>;
+  remarks: any
 };
 
 export type commentType = {
@@ -210,7 +218,10 @@ export type commentType = {
 };
 export type SingleCommentProps = {
   SelfIcon: () => JSX.Element;
+  addRemarks: (payload: RemarksPayload) => void;
+  getRemarks: UseMutateFunction<any, unknown, any, unknown>;
   commentObj: commentType;
+  remarks: any
 };
 
 export type VideoModalProps = {

@@ -6,6 +6,7 @@ import { Media } from '../../../../types/Media';
 import { setEventData, setEventEdit } from '../../../../store/reducers/eventReducer';
 import { getRole } from "../../../../utils/storage/storage";
 import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
+import { MediaAssociateObj } from '../../../../types/Place';
 
 const superEditor = getRole() === 'SuperEditor';
 const editor = getRole() === 'Editor';
@@ -16,8 +17,8 @@ const MoreOptionsComponent = ({
     setEdit
 }: {
     type: tabNameProps;
-    record: Event | Media;
-    setEdit: (payload: { record: Event | Media, type: tabNameProps }) => void
+    record: Event | Media | MediaAssociateObj;
+    setEdit: (payload: { record: Event | Media | MediaAssociateObj, type: tabNameProps }) => void
 }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
@@ -48,7 +49,8 @@ const MoreOptionsComponent = ({
             >
                 <MenuItem
                     key={1}
-                    onClick={() => {
+                    onClick={(e) => {
+                        e.stopPropagation();
                         setEdit({ record: record, type });
                         handleClose();
                     }}
@@ -64,7 +66,4 @@ const MoreOptionsComponent = ({
 };
 
 export default MoreOptionsComponent;
-function setEditEvent(arg0: boolean): any {
-    throw new Error('Function not implemented.');
-}
 

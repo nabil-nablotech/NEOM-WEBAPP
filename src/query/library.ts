@@ -79,6 +79,7 @@ query librarySearchList(
             id
             attributes {
               url
+              size
             }
           }
         }
@@ -189,6 +190,7 @@ query RefinedLibrarySearch(
             id
             attributes {
               url
+              size
             }
           }
         }

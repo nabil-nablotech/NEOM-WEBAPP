@@ -49,7 +49,8 @@ const MoreOptionsComponent = ({
             >
                 <MenuItem
                     key={1}
-                    onClick={() => {
+                    onClick={(e) => {
+                        e.stopPropagation();
                         setEdit({record, type});
                         handleClose();
                     }}

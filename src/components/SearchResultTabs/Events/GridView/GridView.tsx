@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { Grid } from "@mui/material";
 import { format } from "date-fns";
 import { Event } from '../../../../types/Event'
+import { MediaAssociateObj } from '../../../../types/Place'
 import { Media } from '../../../../types/Media'
 import gridStyles from './index.module.css'
 import commonStyles from '../../index.module.css'
@@ -22,7 +23,7 @@ export type EventsProps = {
   handleNext: () => void;
   hasMoreData: boolean;
   loading: boolean;
-  setEdit:(payload: {record: Event | Media, type: tabNameProps}) => void
+  setEdit:(payload: {record: Event | Media | MediaAssociateObj, type: tabNameProps}) => void
 }
 
 const GridView = (props: EventsProps) => {

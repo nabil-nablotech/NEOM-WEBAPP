@@ -18,6 +18,7 @@ import { antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWeb
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
+import { Event } from "../../../../types/Event";
 import styled from "styled-components";
 import { format } from "date-fns";
 import useMedia from "../../../../hooks/useMedia";
@@ -37,6 +38,7 @@ import { isEmpty } from 'lodash'
 import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import MoreOption from '../ListView/MoreOption'
+import useRemarks from "../../../../hooks/useRemarks";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -127,7 +129,7 @@ const PlaceDetailsPage = () => {
     const navigate = useNavigate();
     const [isFilter, setIsFilter] = useState(null)
 
-    const { places, library, events, media, isAssociationsStepOpen, associatedPlaces } = useSelector(
+    const { places, media, isAssociationsStepOpen, associatedPlaces } = useSelector(
         (state: RootState) => state.searchResults
     );
     const { data } = useSelector((state: RootState) => state.login);
@@ -154,14 +156,6 @@ const PlaceDetailsPage = () => {
     const [isSeeMoreHidden, toggleSeeMoreHidden] = useState<boolean>(false)
     const [isCopyDone, setCopyDone] = useState<boolean>(false)
     // const { fetchLibraryItems, hasMoreData, loading } = useLibrary();
-
-    const {
-        anchorEl,
-        open,
-        handleClick,
-        handleClose,
-        handleSettingsClose
-    } = useAnchor()
 
     const tableHeaderJson: ColumnsType<any> = [
         {
@@ -243,7 +237,7 @@ const PlaceDetailsPage = () => {
         },
     ];
 
-    const tableHeaderJson_media: ColumnsType<any> = [
+    const tableHeaderJson_events: ColumnsType<any> = [
         {
             title: "",
             key: "visit_unique_id",
@@ -309,15 +303,16 @@ const PlaceDetailsPage = () => {
             key: "action",
             fixed: "right",
             className: "more-menu-ant-cell events-table-more-menu",
-            render: (value: any, record: Media) => (
+            render: (value: any, record: Event) => (
                 // <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
                 <MoreOption type="Events" setEdit={setEdit} record={record} />
             ),
         },
     ];
 
-    const { fetchMediaItems, hasMoreData, loading } = useMedia();
+    const { loading } = useMedia();
     const { loading: placeLoading, error, data: placeData, setEdit } = usePlaceDetails();
+    const {loading: loadingRemarks, data: remarks, addRemarksMutation, getRemarksMutation } = useRemarks();
     // const { mapEvents } = usePlace();
 
     const dispatch = useDispatch()
@@ -872,7 +867,7 @@ const PlaceDetailsPage = () => {
                                     <StyledTableWrapper
                                         rowKey={"id"}
                                         size="small"
-                                        columns={tableHeaderJson_media}
+                                        columns={tableHeaderJson_events}
                                         // dataSource={events.slice(0,1)}
                                         dataSource={visit_associates}
                                         pagination={false}
@@ -905,6 +900,9 @@ const PlaceDetailsPage = () => {
                             <Box component="div">Remarks</Box>
                         </Box>
                         <CommentsSection
+                            remarks={remarks}
+                            addRemarks={addRemarksMutation}
+                            getRemarks={getRemarksMutation}
                             SelfIcon={() => <RenderInitials firstName={data?.firstName} lastName={data?.lastName} />}
                         />
                     </Box>
