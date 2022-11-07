@@ -1,14 +1,13 @@
+import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import { Box, Grid } from '@mui/material';
-import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import styles from '../../NoDataScreens/index.module.css';
 
-const NoImagePresent = ({
+const NoVideoPresent = ({
     message,
-    style,
-    className
-}: { message: string, style?: React.CSSProperties, className?: string }) => {
+    style
+}: { message: string, style?: React.CSSProperties }) => {
     return (
-        <Box component="div" className={`${styles['wrapper']} ${className ? styles[className] : ''}`} style={{ ...style }}>
+        <Box component="div" className={`${styles['wrapper']} ${styles['no-video-wrapper']}`} style={{ ...style }}>
             <Grid container className={`${styles['content-grid']}`} style={{
                 flexDirection: 'column'
             }}>
@@ -16,7 +15,7 @@ const NoImagePresent = ({
                     display: 'flex',
                     justifyContent: 'center'
                 }}>
-                    <ImageOutlinedIcon className={`${styles['content-image']} ${styles['map-image']}`} />
+                    <VideocamOffIcon className={`${styles['content-image']} ${styles['map-image']}`} />
                 </Grid>
                 <Grid item className={`${styles['content-text']}`}>
                     {message}
@@ -26,4 +25,4 @@ const NoImagePresent = ({
     );
 }
 
-export default NoImagePresent;
+export default NoVideoPresent;

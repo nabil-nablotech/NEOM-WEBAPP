@@ -11,7 +11,10 @@ import { MediaProps } from "../GridView/GridView";
 import { formatWebDate, formatBytes } from '../../../../utils/services/helpers'
 import { MoreOptionsComponent } from './MoreOption';
 import { Media } from "../../../../types/Media";
-import { MediaDetailsModal } from "../MediaDetails";
+// import {CustomModal} from '../../../CustomModal';
+// import {MediaDetailsPage} from '../DetailsPage';
+// import styles from './index.module.css';
+// import CloseIcon from '@mui/icons-material/CloseOutlined';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -236,11 +239,8 @@ const ListView = (props: MediaProps) => {
               },
             };
           }}
-        //   onC
         ></StyledTableWrapper>
       </InfiniteScroll>
-      <MediaDetailsModal
-      />
     </Box>
   );
 };

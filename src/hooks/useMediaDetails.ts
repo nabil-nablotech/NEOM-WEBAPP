@@ -19,7 +19,7 @@ const useMediaDetails = () => {
     if (uniqueId) {
       fetchMediaDetails(uniqueId)
     }
-  }, [])
+  }, [uniqueId])
 
   /**
    * fetch places with two words

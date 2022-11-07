@@ -20,9 +20,11 @@ import ModelViewer from '../../../Model';
 import { useEffect } from 'react';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
-import { isDocumentTypeImage } from '../../../../utils/services/helpers';
+import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
+import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
+import NoImagePresent from '../../../NoDataScreens/NoImagePresent';
 
 const MediaDetailsPage = ({
     currentItemIndex,
@@ -43,7 +45,7 @@ const MediaDetailsPage = ({
 
     const {data:mediaDetails, setEdit} = useMediaDetails();
     
-
+    // console.log('hex: deta: ', mediaDetails)
     let [mediaType, setMediaType] = useState<"image" | "video" | "3d">("image")
 
     useEffect(() => {
@@ -52,9 +54,18 @@ const MediaDetailsPage = ({
         // setMediaType("video")
         // setMediaType("3d")
 
-        if(mediaDetails && mediaDetails.object && isDocumentTypeImage(mediaDetails.object.ext)) {
-            setMediaType("image")
+        
+        if (mediaDetails) {
+            if (
+                detectMediaRecordApiType(mediaDetails) === MEDIA_TYPE_VIDEO
+            ) {
+                setMediaType(MEDIA_TYPE_VIDEO)
+            } else if (detectMediaRecordApiType(mediaDetails) === MEDIA_TYPE_IMAGE) {
+                setMediaType(MEDIA_TYPE_IMAGE)
+            }
         }
+        
+
     }, [mediaDetails])
 
     if(!mediaDetails) {
@@ -63,15 +74,14 @@ const MediaDetailsPage = ({
 
     const {
         description, title, id, objectURL, featuredImage, referenceURL, citation,
-        categoryType, Author, bearing, 
+        categoryType, Author, bearing, latitude, longitude 
     } = mediaDetails
 
     const locationRef = window.location.href
 
-
     const handleNextOrPrevious = (e: handleAction['e'], action: handleAction['action']) => {
         e.preventDefault()
-        let newIndex = currentItemIndex
+        let newIndex = activeMediaItemIndex
 
         if (action === 'next') {
             if (newIndex + 1 < media.length) {
@@ -125,31 +135,64 @@ const MediaDetailsPage = ({
                     <ArrowForwardIosIcon className={`${styles['']}`} sx={{ color: '#fff' }} />
                 </Box>
 
-                {/* to-do: api parameter based conditions */}
-                {
-                    mediaType === "image" &&
-                    <Box className={`${styles['image']}`} component="img" alt={""} src={mediaDetails.thumbnailUrl} />
-                }
-                {/* static video */}
-                {
-                    mediaType === "video" &&
-                    <RenderFileData
-                        fileData={{
-                            src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
-                            className: `${styles["single-image"]}`,
-                            thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg", // thumbnail URL for youtube
-                            isOpened: true
-                        }}
-                        fileType="video"
-                    />
-                }
-                {
-                    mediaType === "3d" &&
-                    <Box component="div" className={`${styles['threeD-model-wrapper']}`}>
-                        <ModelViewer
+                <Box component="div" className={`${styles['media-player-wrapper']}`}>
+                    {/* to-do: api parameter based conditions */}
+                    {
+                        mediaType === MEDIA_TYPE_IMAGE &&
+                        <>
+                            {
+                                mediaDetails?.object?.url ?
+                                    <Box className={`${styles['image']}`} component="img" alt={""} src={`${baseUrl}${mediaDetails?.object?.url}`}
+                                    style={{
+                                        objectFit: (mediaDetails && (mediaDetails?.object.width / mediaDetails?.object.height > 1.5)) ? 'cover' : 'contain'
+                                    }}
+                                    /> :
+                                    <NoImagePresent
+                                        className="light-version"
+                                        message={NO_IMAGE}
+                                        style={{
+                                            backgroundColor: 'var(--blank-doc-bg)',
+                                            color: 'var(--no-map-bg)',
+                                            minHeight: '400px',
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                        }}
+                                    />
+                            }
+                        </>
+                    }
+                    {
+                        mediaType === MEDIA_TYPE_VIDEO &&
+                        <RenderFileData
+                            fileData={{
+                                src:
+                                    typeof mediaDetails.objectURL === 'string' ? // means its an iframe
+                                        mediaDetails.objectURL : (
+                                            typeof mediaDetails.object.url === 'string' ? //means its an uploaded video
+                                                `${baseUrl}${mediaDetails.object.url}` :
+                                                ''
+                                        )
+                                ,
+                                className: `${styles["single-image"]}`,
+                                thumbNail:
+                                // TO-DO : api based thumnail
+                                    // mediaDetails.object.url ?
+                                    // `${baseUrl}${mediaDetails.object.url}` :
+                                    "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg"
+                                , // thumbnail URL for youtube
+                                isOpened: true
+                            }}
+                            fileType="video"
                         />
-                    </Box>
-                }
+                    }
+                    {
+                        mediaType === MEDIA_TYPE_3D &&
+                        <Box component="div" className={`${styles['threeD-model-wrapper']}`}>
+                            <ModelViewer
+                            />
+                        </Box>
+                    }
+                </Box>
             </Box>
             <Box component="div" className={`${styles['desc']}`} >
                 {
@@ -159,14 +202,14 @@ const MediaDetailsPage = ({
                             justifyContent: 'space-between'
                         }}>
                             <Grid item sm={12} >
-                                <Grid container style={{ gap: '2em', alignItems: 'center' }}>
+                                <Grid container style={{ gap: '10px', alignItems: 'center' }}>
                                     <Grid item>
                                         <Box component="div" className={`${styles['overview-title']}`}>
                                             {title}
                                         </Box>
                                     </Grid>
-                                    <Grid item>
-                                        {featuredImage && <Box component="div">
+                                    {featuredImage && <Grid item>
+                                        <Box component="div">
                                             <Box component="div" className={`${styles['star-icon-box']}`}>
                                                 <Box
                                                     component="img"
@@ -175,8 +218,8 @@ const MediaDetailsPage = ({
                                                 ></Box>
                                                 <Box component="div">Featured</Box>
                                             </Box>
-                                        </Box>}
-                                    </Grid>
+                                        </Box>
+                                    </Grid>}
                                     <Grid item sm={1} className={`${styles['more-icon-grid-item']}`} style={{
                                         marginLeft: 'auto'
                                     }}>
@@ -189,22 +232,24 @@ const MediaDetailsPage = ({
                             </Grid>
 
                         </Grid>
-                        <Grid container >
-                            <Grid item lg={6} md={6} sm={5}>
-                            <Box component="div" className={`${styles[`bottom-grid`]}`} >
-                                <p>ID: {id}</p>
-                                <br />
-                                <div>{description}</div>
-                            </Box>
-                                <Box component="div" className={`${styles[`bottom-grid`]}`} >
-                                    <p>Details</p>
-                                    <div>Author: {Author}</div>
-                                    <div>Category Type: {categoryType.join(', ')}</div>
-                                    <div>Bearing: {bearing}</div>
-                                    <div>Source URL: {referenceURL}</div>
-                                    <div>Citation: {citation}</div>
-                                    <div>Item URL: {locationRef}</div>
-                                </Box>
+                        <Grid container style={{
+                            justifyContent: 'space-between'
+                        }}>
+                            <Grid item sm={6} lg={7}>
+                                    <Box component="div" className={`${styles[`bottom-grid`]}`} >
+                                        <p>ID: {id}</p>
+                                        <br />
+                                        <div>{description}</div>
+                                    </Box>
+                                    <Box component="div" className={`${styles[`bottom-grid`]}`} >
+                                        <p>Details</p>
+                                        <div>Author: {Author}</div>
+                                        <div>Category Type: {categoryType.join(', ')}</div>
+                                        <div>Bearing: {bearing}</div>
+                                        <div>Source URL: {referenceURL}</div>
+                                        <div>Citation: {citation}</div>
+                                        <div>Item URL: {locationRef}</div>
+                                    </Box>
                                     {
                                         mediaDetails.object && <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                             <p>Metadata</p>
@@ -235,22 +280,32 @@ const MediaDetailsPage = ({
                                         }
                                     </Box>
                             </Grid>
-                            <Grid item lg={6} md={6} sm={7}>
-                                <Box className={`${styles['map-image']}`} component="img" alt={""} src={mediaDetails.thumbnailUrl} />
-                                <Grid container className={`${styles['map-loctn-details']}`} >
-                                    <Grid item lg={5} md={5} sm={5}>
-                                        <Grid container className={`${styles['map-loctn-line']}`}>
-                                            <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                            <Grid item>28.090884</Grid>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid item lg={5} md={5} sm={6}>
-                                        <Grid container className={`${styles['map-loctn-line']}`}>
-                                            <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                            <Grid item>35.475373</Grid>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
+                            <Grid item sm={6} lg={5}>
+                                    {(latitude && longitude) ? <>
+                                        <Box className={`${styles['map-image']}`} component="img" alt={""} src={mediaDetails.thumbnailUrl} />
+                                        <Grid container className={`${styles['map-loctn-details']}`} >
+                                            <Grid item lg={5} md={5} sm={5}>
+                                                <Grid container className={`${styles['map-loctn-line']}`}>
+                                                    <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
+                                                    <Grid item>{`${latitude}`}</Grid>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid item lg={5} md={5} sm={6}>
+                                                <Grid container className={`${styles['map-loctn-line']}`}>
+                                                    <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
+                                                    <Grid item>{`${longitude}`}</Grid>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid> </>
+                                        :
+                                        <NoMapPresent
+                                            className="light-version"
+                                            message={NO_LOCATION}
+                                            style={{
+                                                backgroundColor: 'var(--blank-doc-bg)',
+                                                color: 'var(--no-map-bg)'
+                                            }}
+                                        />}
                             </Grid>
                         </Grid>
                     </Grid>
