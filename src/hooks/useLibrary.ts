@@ -107,12 +107,12 @@ const useLibrary = () => {
         createAssociation(Number(updateData?.updateMedia.data.id));
       }
       resetEdit();
-      dispatch(setAddNewItemWindowType(null));
+      // dispatch(setAddNewItemWindowType(null));
       dispatch(storeAddItemProgressState(null));
       dispatch(toggleShowEditSuccess(true))
 
       /** re-direct */
-      navigate(`/search-results/Library`, {replace: true})
+      navigate(`/search-results/Library/${updateData?.updateMedia.data.attributes.uniqueId}`, {replace: true})
     }
   }, [addData, updateData])
 
@@ -120,9 +120,9 @@ const useLibrary = () => {
     if (mediaAssociate) {
       dispatch(resetMediaAssociation(null));
       dispatch(toggleShowAddSuccess(true));
-      dispatch(setAddNewItemWindowType(null));
+      // dispatch(setAddNewItemWindowType(null));
       dispatch(storeAddItemProgressState(null));
-      navigate(`/search-results/Library`, {replace: true})
+      navigate(`/search-results/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true})
     }
   }, [mediaAssociate])
   
@@ -191,6 +191,7 @@ const useLibrary = () => {
       data.uniqueId = uniqueId;
       data.created = formatStrapiDate(new Date());
       data.mediaUIPath = `${webUrl}/search-results/Library/${uniqueId}`;
+      // console.log(data, 'data before library create')
       createLibraryMutation({variables: data})
     }
     if (edit && tabData?.id) {
@@ -206,6 +207,7 @@ const useLibrary = () => {
   const setEdit = async (payload: any) => {
     if (payload) {
       const {record} = payload;
+      console.log('records inside library', record)
       const payloadRes = await mediaDetails(record.attributes.uniqueId);
       dispatch(setTabData(payloadRes));
       dispatch(setTabEdit(true));

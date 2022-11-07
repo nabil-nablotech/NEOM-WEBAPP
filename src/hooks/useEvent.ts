@@ -273,6 +273,7 @@ const useEvent = () => {
       dispatch(setEventEdit(true));
       dispatch(toggleNewItemWindow(true))
       dispatch(setAddNewItemWindowType(EVENTS_TAB_NAME))
+      
     }
   };
 
