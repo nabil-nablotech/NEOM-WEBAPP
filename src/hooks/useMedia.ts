@@ -1,16 +1,18 @@
-import { useQuery, useMutation} from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { refineMedia, addMedia, updateMedia } from "../query/media";
 import { addLibrary } from "../query/library";
 import { RootState } from '../store';
-import {setMedia, setMediaMetaData, 
+import {
+  setMedia, setMediaMetaData,
   toggleShowAddSuccess,
-  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, resetMediaAssociation, setDefaultMediaAssociation, storeAddItemProgressState} from '../store/reducers/searchResultsReducer';
+  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, resetMediaAssociation, setDefaultMediaAssociation, storeAddItemProgressState
+} from '../store/reducers/searchResultsReducer';
 import { createMediaAssociate, updateMediaAssociate } from '../query/mediaAssociate';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
-import {limit, getQueryObj, webUrl, generateUniqueId, MEDIA_TAB_NAME, formatBytes, formatStrapiDate} from '../utils/services/helpers';
+import { limit, getQueryObj, webUrl, generateUniqueId, MEDIA_TAB_NAME, formatBytes, formatStrapiDate } from '../utils/services/helpers';
 import { graphQlHeaders } from '../utils/services/interceptor';
 import { mediaDetails } from "../api/details";
 import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
@@ -18,8 +20,8 @@ import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 const useMedia = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
 
-  const {searchText, media: mediaItem, associatedPlaces, associatedEvents} = useSelector((state: RootState) => state.searchResults);
-  const {search} = useLocation();
+  const { searchText, media: mediaItem, associatedPlaces, associatedEvents } = useSelector((state: RootState) => state.searchResults);
+  const { search } = useLocation();
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -42,17 +44,19 @@ const useMedia = () => {
   };
 
   const [createMediaMutation, { loading: addLoading, error: addErr, data: addData }] = useMutation(addLibrary, graphQlHeaders());
-  const [updateMediaMutation, { loading:updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateMedia, graphQlHeaders());
+  const [updateMediaMutation, { loading: updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateMedia, graphQlHeaders());
   const [createMediaAssociateMutation, { loading: mediaAssociateload, error: mediaAssociateErr, data: mediaAssociate }] = useMutation(createMediaAssociate, graphQlHeaders());
   const [updateMediaAssociateMutation, { loading: updateMediaAssociateload, error: updateMediaAssociateErr, data: updateMediaAssociateData }] = useMutation(updateMediaAssociate, graphQlHeaders());
 
   const createAssociation = async (mediaId: number) => {
     if (associatedPlaces.length > 0 || associatedEvents.length > 0) {
-      await createMediaAssociateMutation({variables: {
-        "place_unique_ids": associatedPlaces.map(x => x.id),
-        "visit_unique_ids": associatedEvents.map(x => x.id),
-        "media_unique_id": mediaId
-      }});
+      await createMediaAssociateMutation({
+        variables: {
+          "place_unique_ids": associatedPlaces.map(x => x.id),
+          "visit_unique_ids": associatedEvents.map(x => x.id),
+          "media_unique_id": mediaId
+        }
+      });
     }
 
   }
@@ -64,7 +68,7 @@ const useMedia = () => {
   /**
    * fetch places with two words
    */
-  const { loading:refineLoading, error:refineErrorData, data:refineMediaData, refetch: refineSearchMedia,  } = useQuery(refineMedia);
+  const { loading: refineLoading, error: refineErrorData, data: refineMediaData, refetch: refineSearchMedia, } = useQuery(refineMedia);
 
   useEffect(() => {
     if (refineMediaData?.medias) {
@@ -89,7 +93,7 @@ const useMedia = () => {
     if (addData) {
       createAssociation(addData.createMedia.data.id);
     }
-    if(updateData) {
+    if (updateData) {
       resetEdit();
       if (updateData?.updateMedia.data.attributes?.media_associate?.data?.id) {
         updateMediaAssociateMutation({
@@ -104,29 +108,29 @@ const useMedia = () => {
       }
 
       dispatch(toggleShowEditSuccess(true));
-      
+
       dispatch(storeAddItemProgressState(null));
       /** re-direct */
-      navigate(`/search-results/Media/${updateData?.updateMedia.data.attributes.uniqueId}`, {replace: true})
-      
+      navigate(`/search-results/Media/${updateData?.updateMedia.data.attributes.uniqueId}`, { replace: true })
+
     }
   }, [addData, updateData, addErr])
 
-  
+
   useEffect(() => {
     let id = null;
     if (addData) {
       id = addData?.createMedia?.data?.attributes?.uniqueId;
     }
-    if(updateMediaAssociateData) {
+    if (updateMediaAssociateData) {
       dispatch(resetMediaAssociation(null));
     }
     if (mediaAssociate) {
       dispatch(resetMediaAssociation(null));
       if (id) {
-        
-      dispatch(storeAddItemProgressState(null));
-        navigate(`/search-results/Media/${id}`, {replace: true})
+
+        dispatch(storeAddItemProgressState(null));
+        navigate(`/search-results/Media/${id}`, { replace: true })
       }
     }
   }, [mediaAssociate, updateMediaAssociateData])
@@ -137,18 +141,18 @@ const useMedia = () => {
     const searchWordArray = text?.split(' ') || [];
     const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData?.refinedSearch;
     copiedValue && Object.keys(copiedValue).map(x => {
-      if (copiedValue[x].length === 0) {delete copiedValue[x];}
+      if (copiedValue[x].length === 0) { delete copiedValue[x]; }
       return x;
     });
     const obj: any = {
       search_one: searchWordArray[0],
       search_two: searchWordArray[1],
       search_three: searchWordArray[2],
-      latitude: copiedValue&&copiedValue?.latitude && parseFloat(copiedValue?.latitude),
-      longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
-      categoryType: copiedValue&&copiedValue?.actionType && copiedValue?.actionType,
-      keywords: copiedValue&&copiedValue?.keyWords && copiedValue?.keyWords,
-      featuredImage: copiedValue&&copiedValue?.featuredImage,
+      latitude: copiedValue && copiedValue?.latitude && parseFloat(copiedValue?.latitude),
+      longitude: copiedValue && copiedValue?.longitude && parseFloat(copiedValue?.longitude),
+      categoryType: copiedValue && copiedValue?.actionType && copiedValue?.actionType,
+      keywords: copiedValue && copiedValue?.keyWords && copiedValue?.keyWords,
+      featuredImage: copiedValue && copiedValue?.featuredImage,
       text: searchWordArray,
       limit: limit,
       skip: skip,
@@ -159,11 +163,11 @@ const useMedia = () => {
       delete obj.search_two;
       delete obj.search_three;
       refineSearchMedia(obj)
-    } else  {
+    } else {
       refineSearchMedia(obj)
     }
     // if(Object.keys(copiedValue).length !== 0){
-      // refineSearchMedia(obj)
+    // refineSearchMedia(obj)
     // }else{
     //   refetchMediaItems({ search_one: searchWordArray[0] || '', search_two: searchWordArray[1] || '', search_three: searchWordArray[2] || '', limit: limit, skip: skip });
     // }
@@ -173,15 +177,15 @@ const useMedia = () => {
     let media_type = 5;
     switch (typeCode) {
       case 'VIDEO':
-        media_type=6;
+        media_type = 6;
         break;
       case '3DMODEL':
-        media_type=7;
+        media_type = 7;
         break;
     }
     return media_type;
   }
- 
+
   const createMedia = async (payload: any | undefined) => {
     console.log('inside craete media', payload)
     const uniqueId = generateUniqueId();
@@ -210,7 +214,7 @@ const useMedia = () => {
       data.uniqueId = uniqueId;
       data.created = formatStrapiDate(new Date());
       data.mediaUIPath = `${webUrl}/search-results/Media/${uniqueId}`;
-      createMediaMutation({variables: data})
+      createMediaMutation({ variables: data })
     }
     if (edit && tabData?.id) {
       updateMediaMutation({
@@ -221,7 +225,7 @@ const useMedia = () => {
       })
     }
   }
-  
+
   const setEdit = async (payload: any) => {
     if (payload) {
       const payloadRes = await mediaDetails(payload.attributes.uniqueId);
@@ -229,7 +233,7 @@ const useMedia = () => {
       dispatch(setTabEdit(true));
       dispatch(toggleNewItemWindow(true))
       dispatch(setAddNewItemWindowType(MEDIA_TAB_NAME))
-      dispatch(setDefaultMediaAssociation({events: payloadRes.media_associate?.visit_unique_ids || [], places: payloadRes.media_associate?.place_unique_ids || [] }));
+      dispatch(setDefaultMediaAssociation({ events: payloadRes.media_associate?.visit_unique_ids || [], places: payloadRes.media_associate?.place_unique_ids || [] }));
     }
   };
 
@@ -245,7 +249,8 @@ const useMedia = () => {
     createMedia,
     fetchMediaItems: fetchData,
     setEdit,
-    clearSearch: clearTextSearch
+    clearSearch: clearTextSearch,
+    searchData: getQueryObj(search)
   };
 };
 
