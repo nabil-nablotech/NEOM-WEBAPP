@@ -33,7 +33,8 @@ export const Card = ({
                                         src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
                                         className: `${styles['video-card-parent']}`,
                                         // thumbnail URL for youtube
-                                        thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg"
+                                        thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
+                                        thumbnailClassname: `${gridStyles['card-image']}`
                                     }}
                                     fileType="video"
                                 />

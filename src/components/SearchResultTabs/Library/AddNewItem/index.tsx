@@ -353,21 +353,37 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
+              gap: '1em'
             }}
           >
             <Button
               colors={["#fff", "var(--table-black-text)", "none"]}
               className={`${styles["plain-whitee-btn"]}`}
-              label={activeStep === 0 ? "Cancel" : "Back"}
-              onClick={handleBack}
+              label={"Cancel"}
+              onClick={(e) => {
+                dispatch(toggleNewItemWindow(false))
+                dispatch(setAddNewItemWindowType(null))
+                handleReset()
+              }}
               style={{
                 paddingInline: 0,
               }}
             />
-            {/* <Button
-              label={activeStep === steps.length - 1 ? "Add" : "Next"}
-              type="submit"
-            /> */}
+            {activeStep > 0 && (
+                <Box component="div" style={{
+                  marginRight: 0,
+                  marginLeft: 'auto',
+                }}>
+                  <Button
+                    label="Back"
+                    colors={["#fff", "var(--table-black-text)", "none"]}
+                    onClick={handleBack}
+                    style={{
+                      border: '1px solid var(--table-black-text)',
+                    }}
+                  />
+                </Box>
+              )}
             <Grid item display={"flex"}>
               {!edit && (
                 <Button

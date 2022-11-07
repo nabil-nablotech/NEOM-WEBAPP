@@ -45,7 +45,6 @@ const MediaDetailsPage = ({
 
     const {data:mediaDetails, setEdit} = useMediaDetails();
     
-    // console.log('hex: deta: ', mediaDetails)
     let [mediaType, setMediaType] = useState<"image" | "video" | "3d">("image")
 
     useEffect(() => {
