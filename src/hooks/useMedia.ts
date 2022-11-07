@@ -284,7 +284,8 @@ const useMedia = () => {
     fetchMediaItems: fetchData,
     setEdit,
     setEditMedia,
-    clearSearch: clearTextSearch
+    clearSearch: clearTextSearch,
+    searchData: getQueryObj(search)
   };
 };
 
