@@ -7,11 +7,14 @@ import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { MediaApi } from "../types/Media";
 import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 import { MEDIA_TAB_NAME } from '../utils/services/helpers';
-import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation } from "../store/reducers/searchResultsReducer";
+import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation, toggleEditConfirmationWindowOpen } from "../store/reducers/searchResultsReducer";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 const useMediaDetails = () => {
   const { search } = useLocation();
   const { uniqueId } = useParams<{ uniqueId: string }>()
+  const { addNewItemWindowType} = useSelector((state: RootState) => state.searchResults);
 
   const dispatch = useDispatch();
 
@@ -31,17 +34,21 @@ const useMediaDetails = () => {
   
   const setEdit = async (payload: {record: any, type: tabNameProps}) => {
     if (payload) {
-      const {record, type} = payload;
-      let res: any | MediaApi={};
+      if(addNewItemWindowType) {
+        dispatch(toggleEditConfirmationWindowOpen(true));
+      } else {
+        const {record, type} = payload;
+        let res: any | MediaApi={};
 
-      res = await mediaDetails(record.uniqueId);
-      if (res?.media_associate) {
-        dispatch(setDefaultMediaAssociation({events: res.media_associate?.visit_unique_ids || [], places: res.media_associate?.place_unique_ids || [] }));
+        res = await mediaDetails(record.uniqueId);
+        if (res?.media_associate) {
+          dispatch(setDefaultMediaAssociation({events: res.media_associate?.visit_unique_ids || [], places: res.media_associate?.place_unique_ids || [] }));
+        }
+        dispatch(setTabData(res));
+        dispatch(setTabEdit(true));
+        dispatch(toggleNewItemWindow(true));
+        dispatch(setAddNewItemWindowType(MEDIA_TAB_NAME));
       }
-      dispatch(setTabData(res));
-      dispatch(setTabEdit(true));
-      dispatch(toggleNewItemWindow(true));
-      dispatch(setAddNewItemWindowType(MEDIA_TAB_NAME));
     }
   };
 
