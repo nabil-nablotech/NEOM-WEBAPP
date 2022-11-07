@@ -13,8 +13,8 @@ import {
   toggleShowAddSuccess,
   toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess
 } from "../store/reducers/searchResultsReducer";
-import {setEventEdit, setPlaces, setEventData} from '../store/reducers/eventReducer';
-import {limit, getQueryObj, generateUniqueId, webUrl, EVENTS_TAB_NAME} from '../utils/services/helpers';
+import { setEventEdit, setPlaces, setEventData } from '../store/reducers/eventReducer';
+import { limit, getQueryObj, generateUniqueId, webUrl, EVENTS_TAB_NAME } from '../utils/services/helpers';
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { graphQlHeaders } from "../utils/services/interceptor";
 import { Place } from "../types/Place";
@@ -25,9 +25,9 @@ import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
-  const [mapEvents, setMapEvents]= useState(null);
-  const [place, setPlace]= useState<Place>();
-  
+  const [mapEvents, setMapEvents] = useState(null);
+  const [place, setPlace] = useState<Place>();
+
   const [searchValue, setSearchValue] = useState<string>('');
   const {
     searchText,
@@ -40,7 +40,7 @@ const useEvent = () => {
     (state: RootState) => state.event
   );
   const { search } = useLocation();
-  
+
   let { tabName, uniqueId: idParams } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -57,7 +57,7 @@ const useEvent = () => {
       }
     }
     resetEvents();
-      fetchData(0);
+    fetchData(0);
   }, []);
 
   const resetEvents = async () => {
@@ -69,12 +69,12 @@ const useEvent = () => {
    * fetch places with two words
    */
   const [createEventMuation, { loading, error, data }] = useMutation(addEvent, graphQlHeaders());
-  const [updateEventMuation, { loading:updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateEvent, graphQlHeaders());
+  const [updateEventMuation, { loading: updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateEvent, graphQlHeaders());
   const [createVisitAssociateMuation, { loading: visitAssociateload, error: visitAssociateErr, data: visitAssociate }] = useMutation(createVisitAssociate, graphQlHeaders());
-  const{ loading:refineLoading, error:refineErrorData, data:refineEventData, refetch:refineSearchEvents} = useQuery(refineEvents, graphQlHeaders());
+  const { loading: refineLoading, error: refineErrorData, data: refineEventData, refetch: refineSearchEvents } = useQuery(refineEvents, graphQlHeaders());
 
   const { loading: placesLoading, error: placesErr, data: placeList, refetch: refetchPlaces } = useQuery(places, graphQlHeaders());
- 
+
   useEffect(() => {
     if (refineEventData?.visits) {
       // update the data for the pagination
@@ -82,7 +82,7 @@ const useEvent = () => {
         dispatch(setEvents([...refineEventData?.visits?.data]));
       } else if (refineEventData?.visits.data.length > 0) {
         dispatch(setEvents([...eventsData, ...refineEventData?.visits?.data]));
-      }  else if (refineEventData?.visits?.meta.pagination.total === 0) {
+      } else if (refineEventData?.visits?.meta.pagination.total === 0) {
         dispatch(setEvents([]));
       }
       // update the meta data
@@ -91,28 +91,30 @@ const useEvent = () => {
       setHasMoreData(refineEventData?.visits?.meta.pagination.pageCount !==
         refineEventData?.visits.meta.pagination.page);
 
-        let dummyArray:any = [];
-        for (let i = 0; i < refineEventData?.visits?.data?.length; i++) {
-            if (refineEventData?.visits?.data[i]?.attributes?.latitude && refineEventData?.visits?.data[i]?.attributes?.longitude) 
-            dummyArray.push({
-              id:refineEventData?.visits?.data[i].id,
-              name:refineEventData?.visits?.data[i].attributes['recordingTeam'],
-              position:{
-                lat:refineEventData?.visits?.data[i]?.attributes?.latitude,
-                lng:refineEventData?.visits?.data[i]?.attributes?.longitude
-              }
-            })
-        }
-          setMapEvents(dummyArray)
+      let dummyArray: any = [];
+      for (let i = 0; i < refineEventData?.visits?.data?.length; i++) {
+        if (refineEventData?.visits?.data[i]?.attributes?.latitude && refineEventData?.visits?.data[i]?.attributes?.longitude)
+          dummyArray.push({
+            id: refineEventData?.visits?.data[i].id,
+            name: refineEventData?.visits?.data[i].attributes['recordingTeam'],
+            position: {
+              lat: refineEventData?.visits?.data[i]?.attributes?.latitude,
+              lng: refineEventData?.visits?.data[i]?.attributes?.longitude
+            }
+          })
+      }
+      setMapEvents(dummyArray)
     }
   }, [refineEventData]);
 
   useEffect(() => {
     if (data && place) {
-      createVisitAssociateMuation({variables: {
-        "place_unique_id": place?.id,
-        "visit_unique_id": data.createVisit.data.id
-      }});
+      createVisitAssociateMuation({
+        variables: {
+          "place_unique_id": place?.id,
+          "visit_unique_id": data.createVisit.data.id
+        }
+      });
     }
   }, [data])
 
@@ -124,7 +126,7 @@ const useEvent = () => {
         dispatch(toggleShowEditSuccess(false))
 
         /** re-direct */
-        navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, {replace: true})
+        navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
 
       }
     }
@@ -135,7 +137,7 @@ const useEvent = () => {
       dispatch(toggleShowAddSuccess(true))
 
       /** re-direct */
-      navigate(`/search-results/Events/${data.createVisit.data.attributes.uniqueId}`, {replace: true})
+      navigate(`/search-results/Events/${data.createVisit.data.attributes.uniqueId}`, { replace: true })
     }
   }, [visitAssociate])
 
@@ -155,10 +157,10 @@ const useEvent = () => {
     const searchData = getQueryObj(search);
     const text = local ? searchText : searchData?.search;
     const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData?.refinedSearch;
-    
+
     const searchWordArray = text?.split(' ') || [];
     copiedValue && Object.keys(copiedValue)?.map(x => {
-      if (copiedValue[x].length === 0) {delete copiedValue[x];}
+      if (copiedValue[x].length === 0) { delete copiedValue[x]; }
       return x;
     });
 
@@ -166,21 +168,21 @@ const useEvent = () => {
     const visitStartDate = (copiedValue?.startDate && startDate?.getFullYear()) ? `${startDate?.getFullYear()}-${startDate?.getMonth() + 1}-${startDate?.getDate()}` : undefined;
     const endDate = new Date(copiedValue?.endDate);
     const visitEndDate = (copiedValue?.endDate && endDate?.getFullYear()) ? `${endDate?.getFullYear()}-${endDate?.getMonth() + 1}-${endDate?.getDate()}` : undefined;
-    
+
     const obj: any = {
-      researchValue: copiedValue&&copiedValue?.researchValue && copiedValue?.researchValue,
-      tourismValue: copiedValue&&copiedValue.tourismValue && copiedValue?.tourismValue,
-      stateOfConservation: copiedValue&&copiedValue?.stateOfConservation && copiedValue?.stateOfConservation,
-      recommendation: copiedValue&&copiedValue?.recommendation && copiedValue?.recommendation,
-      risk: copiedValue&&copiedValue?.risk && copiedValue?.risk,
-      period: copiedValue&&copiedValue?.period && copiedValue?.period,
-      latitude: copiedValue&&copiedValue?.latitude && parseFloat(copiedValue?.latitude),
-      longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
-      artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts,
-      assessmentType: copiedValue&&copiedValue?.assessmentType && copiedValue?.assessmentType,
-      keywords: copiedValue&&copiedValue?.keyWords && copiedValue?.keyWords,
+      researchValue: copiedValue && copiedValue?.researchValue && copiedValue?.researchValue,
+      tourismValue: copiedValue && copiedValue.tourismValue && copiedValue?.tourismValue,
+      stateOfConservation: copiedValue && copiedValue?.stateOfConservation && copiedValue?.stateOfConservation,
+      recommendation: copiedValue && copiedValue?.recommendation && copiedValue?.recommendation,
+      risk: copiedValue && copiedValue?.risk && copiedValue?.risk,
+      period: copiedValue && copiedValue?.period && copiedValue?.period,
+      latitude: copiedValue && copiedValue?.latitude && parseFloat(copiedValue?.latitude),
+      longitude: copiedValue && copiedValue?.longitude && parseFloat(copiedValue?.longitude),
+      artifacts: copiedValue && copiedValue?.artifacts && copiedValue?.artifacts,
+      assessmentType: copiedValue && copiedValue?.assessmentType && copiedValue?.assessmentType,
+      keywords: copiedValue && copiedValue?.keyWords && copiedValue?.keyWords,
       startDate: visitStartDate && visitStartDate,
-      endDate: visitEndDate && visitEndDate,      
+      endDate: visitEndDate && visitEndDate,
       search_one: searchWordArray[0],
       search_two: searchWordArray[1],
       search_three: searchWordArray[2],
@@ -196,7 +198,7 @@ const useEvent = () => {
       delete obj.text;
       refineSearchEvents(obj)
     }
-    else { 
+    else {
       refineSearchEvents(obj)
     }
   };
@@ -236,7 +238,7 @@ const useEvent = () => {
     if (!edit) {
       data.uniqueId = uniqueId;
       data.visitUIPath = `${webUrl}/search-results/Events/${uniqueId}`;
-      createEventMuation({variables: data})
+      createEventMuation({ variables: data })
     }
     if (edit && event?.id) {
       updateEventMuation({
@@ -252,20 +254,33 @@ const useEvent = () => {
     const getData = setTimeout(() => filterPlaces(), 1000);
     return () => clearTimeout(getData)
   }, [searchValue])
-  
+
   const filterPlaces = () => {
     if (searchValue.trim().length > 2) {
       refetchPlaces({
         search: searchValue,
         limit: 100,
         skip: 0
-      }) 
+      })
     }
   }
 
   const setEdit = async (payload: any) => {
     if (payload) {
-      const {record, type} = payload
+      const { record, type } = payload
+      const payloadRes = await eventDetails(record.attributes.uniqueId);
+      dispatch(setTabEdit(true));
+      dispatch(setTabData(payloadRes));
+      dispatch(setEventData(payloadRes));
+      dispatch(setEventEdit(true));
+      dispatch(toggleNewItemWindow(true))
+      dispatch(setAddNewItemWindowType(EVENTS_TAB_NAME))
+    }
+  };
+
+  const setEditEvent = async (payload: any) => {
+    if (payload) {
+      const { record, type } = payload
       const payloadRes = await eventDetails(record.attributes.uniqueId);
       dispatch(setTabEdit(true));
       dispatch(setTabData(payloadRes));
@@ -296,6 +311,7 @@ const useEvent = () => {
     createEvent,
     setSearchValue,
     setEdit,
+    setEditEvent,
     deleteEvent
   };
 };
