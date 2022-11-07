@@ -57,99 +57,106 @@ export const places = gql`
 `;
 
 export const refinePlaces = gql`
-  query refinedSearch(
-    $text: JSON
-    $search_one: String
-    $search_two: String
-    $search_three: String
-    $researchValue: JSON
-    $tourismValue: JSON
-    $stateOfConservation: JSON
-    $recommendation: JSON
-    $risk: JSON
-    $period: JSON
-    $latitude: Float
-    $longitude: Float
-    $artifacts: JSON
-    $keywords: JSON
-    $limit: Int
-    $skip: Int
+query refinedSearch(
+  $text: JSON
+  $search_one: String
+  $search_two: String
+  $search_three: String
+  $researchValue: JSON
+  $tourismValue: JSON
+  $stateOfConservation: JSON
+  $recommendation: JSON
+  $risk: JSON
+  $period: JSON
+  $latitude: Float
+  $longitude: Float
+  $artifacts: JSON
+  $keywords: JSON
+  $limit: Int
+  $skip: Int
+) {
+  places(
+    pagination: { limit: $limit, start: $skip }
+    filters: {
+      or: [
+        { placeNameEnglish: { containsi: $search_one } }
+        { placeNameEnglish: { containsi: $search_two } }
+        { placeNameEnglish: { containsi: $search_three } }
+        { placeNameArabic: { containsi: $search_one } }
+        { placeNameArabic: { containsi: $search_two } }
+        { placeNameArabic: { containsi: $search_three } }
+        { siteDescription: { containsi: $search_one } }
+        { siteDescription: { containsi: $search_two } }
+        { siteDescription: { containsi: $search_three } }
+        { placeNumber: { containsi: $search_one } }
+        { placeNumber: { containsi: $search_two } }
+        { placeNumber: { containsi: $search_three } }
+        { keywords: { containsi: $text } }
+        { siteType: { containsi: $text } }
+      ]
+      and: [
+        { researchValue: { containsi: $researchValue } }
+        { tourismValue: { containsi: $tourismValue } }
+        { stateOfConservation: { containsi: $stateOfConservation } }
+        { recommendation: { containsi: $recommendation } }
+        { risk: { containsi: $risk } }
+        { artifacts: { containsi: $artifacts } }
+        { period: { containsi: $period } }
+        { latitude: { gte: $latitude } }
+        { longitude: { lte: $longitude } }
+        { keywords: { containsi: $keywords } }
+      ]
+    }
+    sort: "updatedAt:desc"
   ) {
-    places(
-      pagination: { limit: $limit, start: $skip }
-      filters: {
-        or: [
-          { placeNameEnglish: { containsi: $search_one } }
-          { placeNameEnglish: { containsi: $search_two } }
-          { placeNameEnglish: { containsi: $search_three } }
-          { placeNameArabic: { containsi: $search_one } }
-          { placeNameArabic: { containsi: $search_two } }
-          { placeNameArabic: { containsi: $search_three } }
-          { siteDescription: { containsi: $search_one } }
-          { siteDescription: { containsi: $search_two } }
-          { siteDescription: { containsi: $search_three } }
-          { placeNumber: { containsi: $search_one } }
-          { placeNumber: { containsi: $search_two } }
-          { placeNumber: { containsi: $search_three } }
-          { keywords: { containsi: $text } }
-          { siteType: { containsi: $text } }
-        ]
-        and: [
-          { researchValue: { containsi: $researchValue } }
-          { tourismValue: { containsi: $tourismValue } }
-          { stateOfConservation: { containsi: $stateOfConservation } }
-          { recommendation: { containsi: $recommendation } }
-          { risk: { containsi: $risk } }
-          { artifacts: { containsi: $artifacts } }
-          { period: { containsi: $period } }
-          { latitude: { gte: $latitude } }
-          { longitude: { lte: $longitude } }
-          { keywords: { containsi: $keywords } }
-        ]
+    meta {
+      pagination {
+        total
+        pageCount
+        pageSize
+        page
       }
-      sort: "updatedAt:desc"
-    ) {
-      meta {
-        pagination {
-          total
-          pageCount
-          pageSize
-          page
-        }
-      }
-      data {
-        id
-        attributes {
-          placeNameEnglish
-          placeNameArabic
-          siteDescription
-          updatedAt
-          keywords
-          placeNumber
-          latitude
-          longitude
-          uniqueId
-          period
-          researchValue
-          siteType
-          tourismValue
-          stateOfConservation
-          recommendation
-          risk
+    }
+    data {
+      id
+      attributes {
+        placeNameEnglish
+        placeNameArabic
+        siteDescription
+        updatedAt
+        keywords
+        placeNumber
+        latitude
+        longitude
+        uniqueId
+        period
+        researchValue
+        siteType
+        tourismValue
+        stateOfConservation
+        recommendation
+        risk
 
-          media_associates {
-            data {
-              attributes {
-                media_unique_id {
-                  data {
-                    id
-                    attributes {
-                      object {
-                        data {
-                          id
-                          attributes {
-                            url
-                          }
+        media_associates {
+          data {
+            attributes {
+              media_unique_id {
+                data {
+                  id
+                  attributes {
+                    media_type {
+                      data {
+                        attributes {
+                          typeCode
+                          categoryCode
+                        }
+                      }
+                    }
+                    object {
+                      data {
+                        id
+                        attributes {
+                          url
                         }
                       }
                     }
@@ -162,6 +169,8 @@ export const refinePlaces = gql`
       }
     }
   }
+}
+
 `;
 export const addPlace = gql`
   mutation CreatePlace(

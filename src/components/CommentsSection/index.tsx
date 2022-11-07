@@ -1,17 +1,17 @@
 import { ChangeEvent, useState } from 'react';
 import { Grid, Box } from "@mui/material";
 import { CommentSectionProps, SingleCommentProps } from '../../types/SearchResultsTabsProps';
-import { commonFormControlSxStyles, textInputSxStyles } from '../../utils/services/helpers';
+import { commonFormControlSxStyles, formatDateTime, textInputSxStyles } from '../../utils/services/helpers';
 import TextInput from "../../components/TextInput";
 import styles from './index.module.css'
 import { CustomMoreOptionsComponent } from '../CustomMoreOptionsComponent';
+import { Remark, ChildRemark, RemarkDetails } from '../../types/Remarks';
 
 const SingleComment = ({
     SelfIcon,
-    getRemarks,
-    remarks,
+    remark,
     addRemarks,
-    commentObj,
+    type
 }: SingleCommentProps) => {
 
     const actionsArray = [
@@ -32,7 +32,7 @@ const SingleComment = ({
                 alignItems: 'start',
                 gap: '0.5em',
                 marginBottom: '1em',
-                marginLeft: `calc(${commentObj.nestingLevel}* 10%)`
+                marginLeft: `calc(${1}* 10%)` // TODO: add nesting level hardcode
             }}>
                 <Grid item sm={1}>
                     <SelfIcon />
@@ -46,8 +46,8 @@ const SingleComment = ({
                             fontWeight: 'bold',
                             float: 'left',
                             marginRight: '0.5em'
-                        }}>{commentObj.commentor}</Box>
-                        <Box component="div">{commentObj.comment}</Box>
+                        }}>{type === "child" ? `${remark?.users_permissions_user?.firstName} ${remark?.users_permissions_user?.lastName}` : `${remark.remark_details?.users_permissions_user?.firstName} ${remark.remark_details?.users_permissions_user?.lastName}`}</Box>
+                        <Box component="div">{type === "child" ? remark?.description : remark?.remark_details.description}</Box>
                     </Box>
                     <Grid container style={{
                         color: 'var(--medium-gray)',
@@ -55,7 +55,7 @@ const SingleComment = ({
                     }}>
                         <Grid item style={{
                             marginRight: '1em'
-                        }}>{commentObj.timeStamp}</Grid>
+                        }}>{type === "child" ? formatDateTime(remark?.updatedAt) : formatDateTime(remark?.remark_details.updatedAt)}</Grid>
                         <Grid item style={{
                             marginRight: '2em'
                         }}>Reply</Grid>
@@ -68,17 +68,15 @@ const SingleComment = ({
                 </Grid>
             </Grid>
             {
-                commentObj.nestedCommentsCount > 0 ?
+                remark.remark_details?.child?.length > 0 ?
                     <>
-                        {
-                            commentObj.nestedComments && commentObj.nestedComments?.map((singleCommentItem, index: number) => (
+                        {remark.remark_details.child?.map((remark: any, index: number) => (
                                 <div key={index}>
                                     <SingleComment
-                                        remarks={remarks}
+                                        remark={remark}
                                         addRemarks={addRemarks}
-                                        getRemarks={getRemarks}
                                         SelfIcon={SelfIcon}
-                                        commentObj={singleCommentItem}
+                                        type="child"
                                     />
                                 </div>
                             ))
@@ -91,10 +89,11 @@ const SingleComment = ({
 }
 
 const CommentsSection = ({
+    id,
+    type,
     SelfIcon,
     remarks,
-    addRemarks,
-    getRemarks
+    addRemarks
 }: CommentSectionProps) => {
 
     const [inputs, setInputs] = useState('')
@@ -126,8 +125,15 @@ const CommentsSection = ({
     ]
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-       e.preventDefault();
-        console.log('e....', e.keyCode)
+        if (e.code === "Enter") {
+        e.preventDefault();
+        addRemarks({
+            id,
+            type: type,
+            description: inputs
+        })
+        setInputs('')
+       }
     }
 
     return (
@@ -148,8 +154,8 @@ const CommentsSection = ({
                         name="site-description"
                         value={inputs}
                         onChange={(e) => {
-                            e.preventDefault()
                             setInputs(e.target.value)
+                            e.preventDefault();
                         }}
                         onKeyDown={onKeyDown}
                         sx={{
@@ -165,14 +171,13 @@ const CommentsSection = ({
             </Grid>
             <Box component="div" className={`${styles['comments-list-parent-box']}`}>
                 {
-                    commentsJson.map((singleCommentItem, index: number) => (
+                    remarks && remarks.map((remark: Remark, index: number) => (
                         <div key={index}>
                             <SingleComment
-                                remarks={remarks}
+                                remark={remark}
                                 addRemarks={addRemarks}
-                                getRemarks={getRemarks}
                                 SelfIcon={SelfIcon}
-                                commentObj={singleCommentItem}
+                                // commentObj={singleCommentItem}
                             />
                         </div>
                     ))

@@ -39,6 +39,7 @@ import NoTextPresent from "../../../NoDataScreens/NoText";
 import { isEmpty } from 'lodash'
 import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
 import DetachedIcon from "../../../Icons/DetachedIcon";
+import useRemarks from "../../../../hooks/useRemarks";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -160,6 +161,8 @@ const EventDetailsPage = () => {
     } = useAnchor()
 
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
+    
+    const {loading: loadingRemarks, data: remarks, addRemarksMutation, getRemarksMutation } = useRemarks();
     const dispatch = useDispatch()
 
     const [mediaGridActiveItems, setMediaGridActiveItems] = useState<number>(0)
@@ -775,9 +778,13 @@ const EventDetailsPage = () => {
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Remarks</Box>
                         </Box>
-                        {/* <CommentsSection
+                        <CommentsSection
+                            id={eventDetails?.id.toString()}
+                            type={"Visit"}
+                            remarks={remarks}
+                            addRemarks={addRemarksMutation}
                             SelfIcon={() => <RenderInitials firstName={data?.firstName} lastName={data?.lastName} />}
-                        /> */}
+                        />
                     </Box>
                 </Box>
             </Grid>

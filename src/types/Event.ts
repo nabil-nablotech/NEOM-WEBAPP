@@ -41,7 +41,7 @@ export type EventApi = {
   createdAt: string
   deleted: boolean
   fieldNarrative: string
-  id?: number
+  id: number
   keywords: null | string[]
   latitude?: number
   libraryItems?: Media[]

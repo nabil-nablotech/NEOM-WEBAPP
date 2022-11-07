@@ -137,7 +137,6 @@ const PlaceDetailsPage = () => {
     let selectedPlaceObjIndex: number = 0
     let selectedPlaceObj: Place = places[0]
 
-
     useEffect(() => {
         if (selectedPlaceObj) {
             dispatch(setActivePlaceItem(selectedPlaceObj))
@@ -151,7 +150,6 @@ const PlaceDetailsPage = () => {
             selectedPlaceObjIndex = inx
         }
     })
-
 
     const [isSeeMoreHidden, toggleSeeMoreHidden] = useState<boolean>(false)
     const [isCopyDone, setCopyDone] = useState<boolean>(false)
@@ -313,6 +311,7 @@ const PlaceDetailsPage = () => {
     const { loading } = useMedia();
     const { loading: placeLoading, error, data: placeData, setEdit } = usePlaceDetails();
     const {loading: loadingRemarks, data: remarks, addRemarksMutation, getRemarksMutation } = useRemarks();
+    console.log('data', remarks);
     // const { mapEvents } = usePlace();
 
     const dispatch = useDispatch()
@@ -900,9 +899,10 @@ const PlaceDetailsPage = () => {
                             <Box component="div">Remarks</Box>
                         </Box>
                         <CommentsSection
+                            id={placeData?.id}
+                            type={"Place"}
                             remarks={remarks}
                             addRemarks={addRemarksMutation}
-                            getRemarks={getRemarksMutation}
                             SelfIcon={() => <RenderInitials firstName={data?.firstName} lastName={data?.lastName} />}
                         />
                     </Box>

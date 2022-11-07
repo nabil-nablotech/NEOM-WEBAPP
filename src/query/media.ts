@@ -361,7 +361,11 @@ export const mediaKeyWords = gql`
   query MediaKeyWordsSearch($text: JSON) {
     medias(
       pagination: { limit: 10, start: 0 }
-      filters: { or: [{ keywords: { contains: $text } }] }
+      filters: { or: [{ keywords: { contains: $text } }]
+      and: [
+          
+        { media_type: { categoryCode: { containsi: "MEDIA" } } }
+      ] }
     ) {
       data {
         id
@@ -381,6 +385,10 @@ export const mediaAddKeyWords = gql`
       filters: {
         or: [
           { keywords: { contains: $text } }
+        ]
+        and: [
+          
+          { media_type: { categoryCode: { containsi: "MEDIA" } } }
         ]
       }
     ) {

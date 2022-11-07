@@ -8,14 +8,22 @@ import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociatio
 const useRemarks = () => {
   const { uniqueId } = useParams<{ uniqueId: string }>();
 
-  const dispatch = useDispatch();
-
+  useEffect(() => {
+    if (uniqueId) {
+      getRemarksMutation(uniqueId)
+    }
+  }, [uniqueId])
 
   /**
    * add remarks api
    */
   const { isLoading: addLoading, error: addErr, data: addData, mutate: addRemarksMutation } = useMutation(addRemarks, {
-    retry: false
+    retry: false,
+    onSuccess: () => {
+      if (uniqueId) {
+        getRemarksMutation(uniqueId);
+      }
+    }
   });
   /**
    * fetch remarks api
@@ -23,6 +31,8 @@ const useRemarks = () => {
   const { isLoading, error, data, mutate: getRemarksMutation } = useMutation(getRemarks, {
     retry: false
   });
+
+  console.log(data, 'data inside hooks')
 
   return {
     loading: isLoading,

@@ -1,10 +1,9 @@
 import React from "react";
 import { DashboardResponse } from "./dashboard";
-import { Place, Meta, FieldOptions, PlaceApi, MediaAssociateObj } from "./Place";
+import { Place, Meta, PlaceApi, MediaAssociateObj } from "./Place";
 import { Event, EventApi } from "./Event";
 import { Media } from "./Media";
-import { RemarksPayload } from "./Remarks";
-import { UseMutateFunction } from "react-query";
+import { RemarksPayload, Remark, ChildRemark, RemarkDetails } from "./Remarks";
 
 export type SearchResultTabsProps = {
   tabIndex?: number;
@@ -202,10 +201,11 @@ export type RenderFileDataProps = {
 };
 
 export type CommentSectionProps = {
+  id: string;
+  type: "Place" | "Visit";
   SelfIcon: () => JSX.Element;
   addRemarks: (payload: RemarksPayload) => void;
-  getRemarks: UseMutateFunction<any, unknown, any, unknown>;
-  remarks: any
+  remarks?: Remark[]
 };
 
 export type commentType = {
@@ -219,9 +219,9 @@ export type commentType = {
 export type SingleCommentProps = {
   SelfIcon: () => JSX.Element;
   addRemarks: (payload: RemarksPayload) => void;
-  getRemarks: UseMutateFunction<any, unknown, any, unknown>;
-  commentObj: commentType;
-  remarks: any
+  commentObj?: commentType;
+  remark: Remark | ChildRemark | RemarkDetails | any;
+  type?: "child";
 };
 
 export type VideoModalProps = {
