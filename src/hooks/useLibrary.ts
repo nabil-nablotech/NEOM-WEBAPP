@@ -5,7 +5,7 @@ import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { addLibrary, library, updateLibrary } from "../query/library";
 import { createMediaAssociate, updateMediaAssociate } from '../query/mediaAssociate';
 import { RootState } from '../store';
-import { resetMediaAssociation, setAddNewItemWindowType, setDefaultMediaAssociation, setLibrary, setLibraryMetaData, storeAddItemProgressState, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess} from '../store/reducers/searchResultsReducer';
+import { resetMediaAssociation, setAddNewItemWindowType, setDefaultMediaAssociation, setLibrary, setLibraryMetaData, storeAddItemProgressState, toggleEditConfirmationWindowOpen, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess} from '../store/reducers/searchResultsReducer';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
 import {limit, getQueryObj, webUrl, generateUniqueId, LIBRARY_TAB_NAME, formatBytes, formatDate, formatStrapiDate} from '../utils/services/helpers';
 import { graphQlHeaders } from '../utils/services/interceptor';
@@ -15,7 +15,8 @@ import { setTabData, setTabEdit } from '../store/reducers/tabEditReducer';
 const useLibrary = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
 
-  const {searchText, library: libItem, associatedPlaces, associatedEvents} = useSelector((state: RootState) => state.searchResults);
+  const {searchText, library: libItem, associatedPlaces, associatedEvents,
+    addNewItemWindowType} = useSelector((state: RootState) => state.searchResults);
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
   );
@@ -206,14 +207,18 @@ const useLibrary = () => {
 
   const setEdit = async (payload: any) => {
     if (payload) {
-      const {record} = payload;
-      console.log('records inside library', record)
-      const payloadRes = await mediaDetails(record.attributes.uniqueId);
-      dispatch(setTabData(payloadRes));
-      dispatch(setTabEdit(true));
-      dispatch(toggleNewItemWindow(true));
-      dispatch(setAddNewItemWindowType(LIBRARY_TAB_NAME ));
-      dispatch(setDefaultMediaAssociation({events: payloadRes.media_associate?.visit_unique_ids || [], places: payloadRes.media_associate?.place_unique_ids || [] }));
+      if(addNewItemWindowType) {
+        dispatch(toggleEditConfirmationWindowOpen(true));
+      } else {
+        const {record} = payload;
+        console.log('records inside library', record)
+        const payloadRes = await mediaDetails(record.attributes.uniqueId);
+        dispatch(setTabData(payloadRes));
+        dispatch(setTabEdit(true));
+        dispatch(toggleNewItemWindow(true));
+        dispatch(setAddNewItemWindowType(LIBRARY_TAB_NAME ));
+        dispatch(setDefaultMediaAssociation({events: payloadRes.media_associate?.visit_unique_ids || [], places: payloadRes.media_associate?.place_unique_ids || [] }));
+      }
     }
   };
 

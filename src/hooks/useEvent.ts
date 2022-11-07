@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { addEvent, refineEvents, updateEvent } from "../query/events";
@@ -11,7 +11,7 @@ import {
   setEventMetaData,
   setSearchText,
   toggleShowAddSuccess,
-  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess
+  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, toggleEditConfirmationWindowOpen, toggleConfirmOpenEdit, setEditPayload
 } from "../store/reducers/searchResultsReducer";
 import { setEventEdit, setPlaces, setEventData } from '../store/reducers/eventReducer';
 import { limit, getQueryObj, generateUniqueId, webUrl, EVENTS_TAB_NAME } from '../utils/services/helpers';
@@ -29,14 +29,18 @@ const useEvent = () => {
   const [place, setPlace] = useState<Place>();
 
   const [searchValue, setSearchValue] = useState<string>('');
+
   const {
     searchText,
     events: eventsData,
+    addNewItemWindowType,
+    confirmOpenEdit,
+    editPayload
   } = useSelector((state: RootState) => state.searchResults);
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
   );
-  const { edit, event } = useSelector(
+  const { edit, event  } = useSelector(
     (state: RootState) => state.event
   );
   const { search } = useLocation();
@@ -265,7 +269,18 @@ const useEvent = () => {
     }
   }
 
-  const setEdit = async (payload: any) => {
+
+  useEffect(() => {
+    if (confirmOpenEdit && editPayload) {
+
+      openEditFlow(editPayload)
+      dispatch(toggleConfirmOpenEdit(false));
+      dispatch(setEditPayload(null));
+
+    }
+  }, [confirmOpenEdit])
+
+  const openEditFlow = async (payload: any) => {
     if (payload) {
       const { record, type } = payload
       const payloadRes = await eventDetails(record.attributes.uniqueId);
@@ -276,7 +291,21 @@ const useEvent = () => {
       dispatch(toggleNewItemWindow(true))
       dispatch(setAddNewItemWindowType(EVENTS_TAB_NAME))
     }
+  }
+
+  const setEdit = async (payload: any) => {
+    if (addNewItemWindowType) {
+      /** Detect if user comes via forced edit */
+        dispatch(toggleEditConfirmationWindowOpen(true));
+        dispatch(setEditPayload(payload));
+
+    } else {
+      /** Detect if user comes via normal edit */
+      openEditFlow(payload)
+    }
+    
   };
+
 
   const setEditEvent = async (payload: any) => {
     if (payload) {
@@ -291,6 +320,7 @@ const useEvent = () => {
       
     }
   };
+
 
   const deleteEvent = async (id: number) => {
     updateEventMuation({

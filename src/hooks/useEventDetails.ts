@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { eventDetails, mediaDetails } from "../api/details";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { setEventEdit, setEventData } from "../store/reducers/eventReducer";
-import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation } from "../store/reducers/searchResultsReducer";
+import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation, toggleEditConfirmationWindowOpen } from "../store/reducers/searchResultsReducer";
 import { EVENTS_TAB_NAME } from "../utils/services/helpers";
 import { RootState } from "../store";
 import { MediaApi } from "../types/Media";
@@ -15,6 +15,9 @@ const useEventDetails = () => {
   let { uniqueId } = useParams<{ tabName?: tabNameProps; uniqueId: string }>();
   const dispatch = useDispatch();
   const { edit } = useSelector((state:RootState) => state.event)
+  const { addNewItemWindowType } = useSelector(
+    (state: RootState) => state.searchResults
+  );
 
   useEffect(() => {
     if (uniqueId) {
@@ -45,29 +48,33 @@ const useEventDetails = () => {
 
   const setEdit = async (payload: {record: any, type: tabNameProps}) => {
     if (payload) {
-      const {record, type} = payload;
-      let res: any | MediaApi={};
-      if (type === 'Library' && record.media_unique_id) {
-        res = await mediaDetails(record.media_unique_id.uniqueId);
-        if (res?.media_associate) {
-          dispatch(setDefaultMediaAssociation({events: res.media_associate?.visit_unique_ids || [], places: res.media_associate?.place_unique_ids || [] }));
+      if(addNewItemWindowType) {
+        dispatch(toggleEditConfirmationWindowOpen(true));
+      } else {
+        const {record, type} = payload;
+        let res: any | MediaApi={};
+        if (type === 'Library' && record.media_unique_id) {
+          res = await mediaDetails(record.media_unique_id.uniqueId);
+          if (res?.media_associate) {
+            dispatch(setDefaultMediaAssociation({events: res.media_associate?.visit_unique_ids || [], places: res.media_associate?.place_unique_ids || [] }));
+          }
         }
-      }
-      if (type === 'Media' && record.media_unique_id) {
-        res = await mediaDetails(record.media_unique_id.uniqueId);
-        if (res?.media_associate) {
-          dispatch(setDefaultMediaAssociation({events: res.media_associate?.visit_unique_ids || [], places: res.media_associate?.place_unique_ids || [] }));
+        if (type === 'Media' && record.media_unique_id) {
+          res = await mediaDetails(record.media_unique_id.uniqueId);
+          if (res?.media_associate) {
+            dispatch(setDefaultMediaAssociation({events: res.media_associate?.visit_unique_ids || [], places: res.media_associate?.place_unique_ids || [] }));
+          }
         }
+        if (type === 'Events' && record.uniqueId) {
+          res = record;
+        }
+        dispatch(setTabEdit(true));
+        dispatch(setTabData(res));
+        dispatch(setEventData(res));
+        dispatch(setEventEdit(true));
+        dispatch(toggleNewItemWindow(true));
+        dispatch(setAddNewItemWindowType(type));
       }
-      if (type === 'Events' && record.uniqueId) {
-        res = record;
-      }
-      dispatch(setTabEdit(true));
-      dispatch(setTabData(res));
-      dispatch(setEventData(res));
-      dispatch(setEventEdit(true));
-      dispatch(toggleNewItemWindow(true));
-      dispatch(setAddNewItemWindowType(type));
     }
   };
 
