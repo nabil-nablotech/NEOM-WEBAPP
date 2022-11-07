@@ -107,12 +107,12 @@ const useLibrary = () => {
         createAssociation(Number(updateData?.updateMedia.data.id));
       }
       resetEdit();
-      dispatch(setAddNewItemWindowType(null));
+      // dispatch(setAddNewItemWindowType(null));
       dispatch(storeAddItemProgressState(null));
       dispatch(toggleShowEditSuccess(true))
 
       /** re-direct */
-      navigate(`/search-results/Library`, {replace: true})
+      navigate(`/search-results/Library/${updateData?.updateMedia.data.attributes.uniqueId}`, {replace: true})
     }
   }, [addData, updateData])
 
@@ -120,9 +120,9 @@ const useLibrary = () => {
     if (mediaAssociate) {
       dispatch(resetMediaAssociation(null));
       dispatch(toggleShowAddSuccess(true));
-      dispatch(setAddNewItemWindowType(null));
+      // dispatch(setAddNewItemWindowType(null));
       dispatch(storeAddItemProgressState(null));
-      navigate(`/search-results/Library`, {replace: true})
+      navigate(`/search-results/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true})
     }
   }, [mediaAssociate])
   
@@ -178,10 +178,10 @@ const useLibrary = () => {
       "latitude": payload.latitude && parseFloat(payload.latitude),
       "longitude": payload.longitude && parseFloat(payload.longitude),
       "categoryType": payload.categoryType && payload.categoryType,
-      object:payload?.object[0].id,
-      fileSize: formatBytes(parseFloat(payload?.object[0]?.size)),
-      storage: payload?.object[0]?.provider,
-      dimension: `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
+      object:payload?.object && payload?.object[0].id,
+      fileSize: payload?.object && formatBytes(payload?.object[0]?.size),
+      storage: payload?.object && payload?.object[0]?.provider,
+      dimension: payload?.object && `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
       make: "",
       model: "",
       depth: "",
@@ -191,13 +191,10 @@ const useLibrary = () => {
       data.uniqueId = uniqueId;
       data.created = formatStrapiDate(new Date());
       data.mediaUIPath = `${webUrl}/search-results/Library/${uniqueId}`;
+      // console.log(data, 'data before library create')
       createLibraryMutation({variables: data})
     }
     if (edit && tabData?.id) {
-      data.object=payload?.object[0].id;
-      data.fileSize = formatBytes(parseFloat(payload?.object[0]?.size));
-      data.storage= payload?.object[0]?.provider;
-      data.dimension= `${payload?.object[0]?.height}x${payload?.object[0]?.width}`;
       updateLibraryMutation({
         variables: {
           ...data,
@@ -210,6 +207,7 @@ const useLibrary = () => {
   const setEdit = async (payload: any) => {
     if (payload) {
       const {record} = payload;
+      console.log('records inside library', record)
       const payloadRes = await mediaDetails(record.attributes.uniqueId);
       dispatch(setTabData(payloadRes));
       dispatch(setTabEdit(true));

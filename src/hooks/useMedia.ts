@@ -103,9 +103,7 @@ const useMedia = () => {
         createAssociation(Number(updateData?.updateMedia.data.id));
       }
 
-      dispatch(toggleShowEditSuccess(true))
-
-      dispatch(setAddNewItemWindowType(null));
+      dispatch(toggleShowEditSuccess(true));
       
       dispatch(storeAddItemProgressState(null));
       /** re-direct */
@@ -118,7 +116,6 @@ const useMedia = () => {
   useEffect(() => {
     let id = null;
     if (addData) {
-
       id = addData?.createMedia?.data?.attributes?.uniqueId;
     }
     if(updateMediaAssociateData) {
@@ -127,7 +124,6 @@ const useMedia = () => {
     if (mediaAssociate) {
       dispatch(resetMediaAssociation(null));
       if (id) {
-        dispatch(setAddNewItemWindowType(null));
         
       dispatch(storeAddItemProgressState(null));
         navigate(`/search-results/Media/${id}`, {replace: true})
@@ -187,6 +183,7 @@ const useMedia = () => {
   }
  
   const createMedia = async (payload: any | undefined) => {
+    console.log('inside craete media', payload)
     const uniqueId = generateUniqueId();
     const keywords = payload.keywords;
     const data = {
@@ -198,10 +195,10 @@ const useMedia = () => {
       "latitude": payload.latitude && parseFloat(payload.latitude),
       "longitude": payload.longitude && parseFloat(payload.longitude),
       "categoryType": payload.categoryType && payload?.categoryType,
-      object:payload?.object[0].id,
-      fileSize: formatBytes(parseFloat(payload?.object[0]?.size)),
-      storage: payload?.object[0]?.provider,
-      dimension: `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
+      object: payload?.object && payload?.object[0].id,
+      fileSize: payload?.object && formatBytes(parseFloat(payload?.object[0]?.size)),
+      storage: payload?.object && payload?.object[0]?.provider,
+      dimension: payload?.object && `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
       refrenceURL: payload?.url,
       objectURL: payload?.embedCode,
       make: "",
@@ -216,11 +213,6 @@ const useMedia = () => {
       createMediaMutation({variables: data})
     }
     if (edit && tabData?.id) {
-      
-      data.object=payload?.object[0].id;
-      data.fileSize = formatBytes(parseFloat(payload?.object[0]?.size));
-      data.storage= payload?.object[0]?.provider;
-      data.dimension= `${payload?.object[0]?.height}x${payload?.object[0]?.width}`;
       updateMediaMutation({
         variables: {
           ...data,

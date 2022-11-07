@@ -27,16 +27,16 @@ import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import styles from './index.module.css'
 
 const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
-  let { tabName } = useParams<{ tabName?: tabNameProps }>();
-  const { data } = useRefinedSearch();
+  let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId?: string}>();
+  useRefinedSearch();
   const navigate = useNavigate();
   // const { searchText, activeTab, newItemWindowOpen, showAddSuccess } =
-  const { searchText, showAddSuccess,addNewItemWindowType, showEditSuccess } =
+  const { searchText, showAddSuccess,addNewItemWindowType, showEditSuccess} =
     useSelector((state: RootState) => state.searchResults);
-  const { fetchEvents, clearSearch: clearEventSearch } = useEvent();
-  const { fetchLibraryItems } = useLibrary();
-  const { fetchPlaces, clearSearch: clearPlaceSearch } = usePlace();
-  const { fetchMediaItems } = useMedia();
+  const { fetchEvents, clearSearch: clearEventSearch, setEdit: setEditEvents } = useEvent();
+  const { fetchLibraryItems, setEdit: setEditLibrary } = useLibrary();
+  const { fetchPlaces, clearSearch: clearPlaceSearch, setEdit, setEdit: setEditPlaces } = usePlace();
+  const { fetchMediaItems, setEdit: setEditMedia } = useMedia();
 
   const dispatch = useDispatch();
 
@@ -106,6 +106,36 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
     await navigate("/");
   };
 
+  const handleEdit = () => {
+    if (uniqueId) {
+      let record = {}
+      switch (addNewItemWindowType) {
+        case 'Media':
+          setEditMedia({attributes: {
+            uniqueId
+          }});
+          break;
+        case 'Library':
+          setEditLibrary({record: {attributes: {
+            uniqueId
+          }}, type: addNewItemWindowType})
+          break;
+        case 'Events':
+          setEditEvents({record: {attributes: {
+            uniqueId
+          }}, type: addNewItemWindowType})
+          break;
+        case 'Places':
+          setEditPlaces({record: {attributes: {
+            uniqueId
+          }}, type: addNewItemWindowType})
+          break;
+      }
+      dispatch(toggleShowAddSuccess(false));
+      return record;
+    }
+  }
+
   const ContinueEditing = () => {
     
     return <Box component="div">
@@ -115,7 +145,9 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       }}>
         <Grid item>{`New ${addNewItemWindowType} added.`}</Grid>
         <Grid item className={`${styles['continue-btn']}`}>
-          <Button variant="text" onClick={e => { }}
+          <Button variant="text" onClick={e => {
+              handleEdit();
+           }}
             startIcon={<CreateOutlinedIcon fontSize="small" />}
             style={{
               minWidth: 'fit-content',

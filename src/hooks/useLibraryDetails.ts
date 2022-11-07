@@ -21,7 +21,7 @@ const useLibraryDetails = () => {
     if (uniqueId) {
       fetchLibraryDetails(uniqueId)
     }
-  }, [])
+  }, [uniqueId])
 
   /**
    * fetch with two words

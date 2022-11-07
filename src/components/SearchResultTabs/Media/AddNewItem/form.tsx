@@ -104,13 +104,13 @@ allowFullScreen
     return <div dangerouslySetInnerHTML={{ __html: data }} />;
   };
 
-  const handleUrl = (url: string) => {
+  const handleUrl = () => {
     return (
       <iframe
         width="338"
         height="190"
         onError={(e) => console.log(e, "error")}
-        src={url}
+        src={formik.values.url}
         srcDoc={
           '<div className="no-preview-url> <img src={iconUrl} width="338" /></div>'
         }
@@ -125,7 +125,7 @@ allowFullScreen
   const renderEmbedSubmitButton = () => {
     return(
       <>
-      {formik.values.embedCode.length > 10 && (
+      {formik.values?.embedCode?.length > 10 && (
                   <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
                     <Button
                       colors={["#fff", "var(--table-black-text)"]}
@@ -138,6 +138,45 @@ allowFullScreen
                 )}
       </>
     )
+  }
+
+  const validateUrl = () => {
+    const regex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
+    if (regex.test(formik.values.url)) {
+      formik.setFieldValue("valid", true);
+    } else {
+      formik.setFieldValue("valid", false);
+    }
+  }
+
+  const handleDropdown = (e: string | string[]) => {
+    formik.setFieldValue("media_type", e);
+    if (typeof e === 'string' && e.toLowerCase() === 'image') {
+      formik.setFieldValue("url", '');
+      formik.setFieldValue("showUrl", false);
+      formik.setFieldValue("embedCode", '');
+      formik.setFieldValue("showEmbeded", false);
+      formik.setFieldValue("submitEmbed", false);
+      formik.setFieldValue("valid", false);
+    }
+    else if (typeof e === 'string' && e.toLowerCase() === 'video') {
+      formik.setFieldValue("object", undefined);
+      formik.setFieldValue("url", '');
+      formik.setFieldValue("showUrl", false);
+      formik.setFieldValue("embedCode", '');
+      formik.setFieldValue("showEmbeded", false);
+      formik.setFieldValue("submitEmbed", false);
+      formik.setFieldValue("valid", false);
+    }
+    else if (typeof e === 'string' && e.toLowerCase() === '3dmodel') {
+      formik.setFieldValue("object", undefined);
+      formik.setFieldValue("url", '');
+      formik.setFieldValue("showUrl", false);
+      formik.setFieldValue("embedCode", '');
+      formik.setFieldValue("showEmbeded", false);
+      formik.setFieldValue("submitEmbed", false);
+      formik.setFieldValue("valid", false);
+    }
   }
   return (
     <>
@@ -155,7 +194,7 @@ allowFullScreen
               // }))}
 
               handleChange={(e: SelectChangeEvent<string | string[]>) => {
-                formik.setFieldValue("media_type", e.target.value);
+                handleDropdown(e.target.value)
               }}
               handleClear={(e: React.MouseEvent) => {}}
               itemsList={[
@@ -247,12 +286,23 @@ allowFullScreen
                           }}
                           formControlSx={commonFormControlSxStyles}
                         />
-                        {formik.values.url && (
+                         {!formik.values.valid && formik.values.url?.length > 10 && <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
+                            <Button
+                              colors={["#fff", "var(--table-black-text)"]}
+                              variant="outlined"
+                              
+                              label={"VALIDATE"}
+                              onClick={() => {
+                                validateUrl()
+                              }}
+                            />
+                        </Box>}
+                        {formik.values.valid && (
                           <Box
                             component={"div"}
                             className={`${styles["embed-box"]}`}
                           >
-                            {handleUrl(formik.values.url)}
+                            {handleUrl()}
                             <Typography
                               mt={1}
                               className={`${styles["file-upload-url-bottom-text"]}`}
@@ -283,7 +333,7 @@ allowFullScreen
                   </>
                 )}
 
-                {renderEmbedSubmitButton()}
+                {formik.values.submitEmbed ? null : renderEmbedSubmitButton()}
                 <Typography
                   onClick={() => {
                     formik.setFieldValue(
@@ -315,16 +365,11 @@ allowFullScreen
                 </Typography>
               </>
             )}
-            {formik.values?.media_type.toLowerCase() === "3DMODEL" && (
+            {formik.values?.media_type.toLowerCase() === "3dmodel" && (
               <>
                 {formik.values.submitEmbed ? (
                   <Box component={"div"} className={`${styles["embed-box"]}`}>
                     {handleEmbed(formik.values.embedCode)}
-                    <Typography
-                      className={`${styles["file-upload-url-bottom-text"]}`}
-                    >
-                      YouTube video player
-                    </Typography>
                   </Box>
                 ) : (
                   <TextInput
@@ -332,8 +377,8 @@ allowFullScreen
                     label="Embed Code"
                     name="embedCode"
                     multiline
-                    minRows={4}
-                    maxRows={4}
+                    minRows={8}
+                    maxRows={8}
                     value={formik.values.embedCode}
                     onChange={(e) => {
                       formik.setFieldValue("embedCode", e.target.value);
@@ -348,7 +393,7 @@ allowFullScreen
                     formControlSx={commonFormControlSxStyles}
                   />
                 )}
-                {renderEmbedSubmitButton()}
+                {formik.values.submitEmbed ? null : renderEmbedSubmitButton()}
               </>
             )}
           </>

@@ -17,7 +17,7 @@ const useEventDetails = () => {
   const { edit } = useSelector((state:RootState) => state.event)
 
   useEffect(() => {
-    if (uniqueId && !edit) {
+    if (uniqueId) {
       fetchEventDetails(uniqueId);
     }
   }, [edit]);
