@@ -38,6 +38,7 @@ import { isEmpty } from 'lodash'
 import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import MoreOption from '../ListView/MoreOption'
+import useRemarks from "../../../../hooks/useRemarks";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -128,7 +129,7 @@ const PlaceDetailsPage = () => {
     const navigate = useNavigate();
     const [isFilter, setIsFilter] = useState(null)
 
-    const { places, library, events, media, isAssociationsStepOpen, associatedPlaces } = useSelector(
+    const { places, media, isAssociationsStepOpen, associatedPlaces } = useSelector(
         (state: RootState) => state.searchResults
     );
     const { data } = useSelector((state: RootState) => state.login);
@@ -155,14 +156,6 @@ const PlaceDetailsPage = () => {
     const [isSeeMoreHidden, toggleSeeMoreHidden] = useState<boolean>(false)
     const [isCopyDone, setCopyDone] = useState<boolean>(false)
     // const { fetchLibraryItems, hasMoreData, loading } = useLibrary();
-
-    const {
-        anchorEl,
-        open,
-        handleClick,
-        handleClose,
-        handleSettingsClose
-    } = useAnchor()
 
     const tableHeaderJson: ColumnsType<any> = [
         {
@@ -317,8 +310,9 @@ const PlaceDetailsPage = () => {
         },
     ];
 
-    const { fetchMediaItems, hasMoreData, loading } = useMedia();
+    const { loading } = useMedia();
     const { loading: placeLoading, error, data: placeData, setEdit } = usePlaceDetails();
+    const {loading: loadingRemarks, data: remarks, addRemarksMutation, getRemarksMutation } = useRemarks();
     // const { mapEvents } = usePlace();
 
     const dispatch = useDispatch()
@@ -906,6 +900,9 @@ const PlaceDetailsPage = () => {
                             <Box component="div">Remarks</Box>
                         </Box>
                         <CommentsSection
+                            remarks={remarks}
+                            addRemarks={addRemarksMutation}
+                            getRemarks={getRemarksMutation}
                             SelfIcon={() => <RenderInitials firstName={data?.firstName} lastName={data?.lastName} />}
                         />
                     </Box>

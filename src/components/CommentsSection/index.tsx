@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Grid, Box } from "@mui/material";
 import { CommentSectionProps, SingleCommentProps } from '../../types/SearchResultsTabsProps';
 import { commonFormControlSxStyles, textInputSxStyles } from '../../utils/services/helpers';
@@ -8,6 +8,9 @@ import { CustomMoreOptionsComponent } from '../CustomMoreOptionsComponent';
 
 const SingleComment = ({
     SelfIcon,
+    getRemarks,
+    remarks,
+    addRemarks,
     commentObj,
 }: SingleCommentProps) => {
 
@@ -71,6 +74,9 @@ const SingleComment = ({
                             commentObj.nestedComments && commentObj.nestedComments?.map((singleCommentItem, index: number) => (
                                 <div key={index}>
                                     <SingleComment
+                                        remarks={remarks}
+                                        addRemarks={addRemarks}
+                                        getRemarks={getRemarks}
                                         SelfIcon={SelfIcon}
                                         commentObj={singleCommentItem}
                                     />
@@ -85,7 +91,10 @@ const SingleComment = ({
 }
 
 const CommentsSection = ({
-    SelfIcon
+    SelfIcon,
+    remarks,
+    addRemarks,
+    getRemarks
 }: CommentSectionProps) => {
 
     const [inputs, setInputs] = useState('')
@@ -116,6 +125,11 @@ const CommentsSection = ({
         },
     ]
 
+    const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+       e.preventDefault();
+        console.log('e....', e.keyCode)
+    }
+
     return (
         <Box component="div" className={`${styles['comments-container']}`}>
             <Grid container style={{
@@ -135,9 +149,9 @@ const CommentsSection = ({
                         value={inputs}
                         onChange={(e) => {
                             e.preventDefault()
-                            console.log(e.target.value)
                             setInputs(e.target.value)
                         }}
+                        onKeyDown={onKeyDown}
                         sx={{
                             ...textInputSxStyles,
                             '& .MuiFormControl-root.MuiTextField': {
@@ -146,6 +160,7 @@ const CommentsSection = ({
                         }}
                         formControlSx={commonFormControlSxStyles}
                     />
+                   
                 </Grid>
             </Grid>
             <Box component="div" className={`${styles['comments-list-parent-box']}`}>
@@ -153,6 +168,9 @@ const CommentsSection = ({
                     commentsJson.map((singleCommentItem, index: number) => (
                         <div key={index}>
                             <SingleComment
+                                remarks={remarks}
+                                addRemarks={addRemarks}
+                                getRemarks={getRemarks}
                                 SelfIcon={SelfIcon}
                                 commentObj={singleCommentItem}
                             />

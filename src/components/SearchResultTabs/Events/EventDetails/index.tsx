@@ -775,9 +775,9 @@ const EventDetailsPage = () => {
                         <Box component="div" className={`${styles['heading-title']}`}>
                             <Box component="div">Remarks</Box>
                         </Box>
-                        <CommentsSection
+                        {/* <CommentsSection
                             SelfIcon={() => <RenderInitials firstName={data?.firstName} lastName={data?.lastName} />}
-                        />
+                        /> */}
                     </Box>
                 </Box>
             </Grid>
