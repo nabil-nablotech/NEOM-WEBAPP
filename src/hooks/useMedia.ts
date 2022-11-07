@@ -213,11 +213,6 @@ const useMedia = () => {
       createMediaMutation({variables: data})
     }
     if (edit && tabData?.id) {
-      
-      data.object=payload?.object[0].id;
-      data.fileSize = formatBytes(parseFloat(payload?.object[0]?.size));
-      data.storage= payload?.object[0]?.provider;
-      data.dimension= `${payload?.object[0]?.height}x${payload?.object[0]?.width}`;
       updateMediaMutation({
         variables: {
           ...data,

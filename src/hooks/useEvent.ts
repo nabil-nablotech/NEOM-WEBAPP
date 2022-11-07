@@ -265,7 +265,8 @@ const useEvent = () => {
 
   const setEdit = async (payload: any) => {
     if (payload) {
-      const payloadRes = await eventDetails(payload.attributes.uniqueId);
+      const {record, type} = payload
+      const payloadRes = await eventDetails(record.attributes.uniqueId);
       dispatch(setTabEdit(true));
       dispatch(setTabData(payloadRes));
       dispatch(setEventData(payloadRes));

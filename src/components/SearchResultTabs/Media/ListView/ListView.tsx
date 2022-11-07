@@ -11,15 +11,12 @@ import { MediaProps } from "../GridView/GridView";
 import { formatWebDate, formatBytes } from '../../../../utils/services/helpers'
 import { MoreOptionsComponent } from './MoreOption';
 import { Media } from "../../../../types/Media";
-// import {CustomModal} from '../../../CustomModal';
-// import {MediaDetailsPage} from '../DetailsPage';
-// import styles from './index.module.css';
-// import CloseIcon from '@mui/icons-material/CloseOutlined';
 import { MediaDetailsModal } from "../MediaDetails";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { setActiveMediaItem, setActiveMediaItemIndex, setSelectedCardIndex } from '../../../../store/reducers/searchResultsReducer';
+import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -116,12 +113,12 @@ const ListView = (props: MediaProps) => {
       className: "cell-image",
       render: (value: any, index: any) => (
         <>
-          <Box
+          {value?.object?.data?.attributes ? <Box
             className={`media-table-image`}
             component="img"
             alt={""}
-            src={`${baseUrl}${value.object.data.attributes.url}`}
-          ></Box>
+            src={`${baseUrl}${value?.object?.data?.attributes?.url}`}
+          ></Box> : <NoImagePresent message={"No image to preview"} />}
         </>
       ),
     },
@@ -185,8 +182,6 @@ const ListView = (props: MediaProps) => {
 
 
   const [isModalOpen, setModalOpen] = useState(false);
-  const [currentItemIndex, setCurrentItemIndex] = useState<number>(0);
-  const [currentRecord, setCurrentRecord] = useState<any>(0);
   const navigate = useNavigate();
   const dispatch = useDispatch()
 

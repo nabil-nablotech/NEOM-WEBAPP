@@ -178,10 +178,10 @@ const useLibrary = () => {
       "latitude": payload.latitude && parseFloat(payload.latitude),
       "longitude": payload.longitude && parseFloat(payload.longitude),
       "categoryType": payload.categoryType && payload.categoryType,
-      object:payload?.object[0].id,
-      fileSize: formatBytes(parseFloat(payload?.object[0]?.size)),
-      storage: payload?.object[0]?.provider,
-      dimension: `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
+      object:payload?.object && payload?.object[0].id,
+      fileSize: payload?.object && formatBytes(payload?.object[0]?.size),
+      storage: payload?.object && payload?.object[0]?.provider,
+      dimension: payload?.object && `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
       make: "",
       model: "",
       depth: "",
@@ -194,10 +194,6 @@ const useLibrary = () => {
       createLibraryMutation({variables: data})
     }
     if (edit && tabData?.id) {
-      data.object=payload?.object[0].id;
-      data.fileSize = formatBytes(parseFloat(payload?.object[0]?.size));
-      data.storage= payload?.object[0]?.provider;
-      data.dimension= `${payload?.object[0]?.height}x${payload?.object[0]?.width}`;
       updateLibraryMutation({
         variables: {
           ...data,

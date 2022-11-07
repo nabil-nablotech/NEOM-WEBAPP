@@ -125,7 +125,7 @@ allowFullScreen
   const renderEmbedSubmitButton = () => {
     return(
       <>
-      {formik.values.embedCode.length > 10 && (
+      {formik.values?.embedCode?.length > 10 && (
                   <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
                     <Button
                       colors={["#fff", "var(--table-black-text)"]}
