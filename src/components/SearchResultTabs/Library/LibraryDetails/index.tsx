@@ -14,7 +14,7 @@ import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent'
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
 import useLibraryDetails from '../../../../hooks/useLibraryDetails';
-import { baseUrl, isDocumentTypeImage } from '../../../../utils/services/helpers';
+import { baseUrl, detectLibraryRecordApiType, MEDIA_TYPE_IMAGE } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import BlankDocImage from '../../../../assets/images/searchResults/BlankDocument.svg' 
@@ -67,7 +67,7 @@ const LibraryDetailsPage = ({
 
                 <Box component="div" className={`${styles['img-wrapper']}`} >
                     {
-                        isDocumentTypeImage(libraryDetails?.object?.ext) ?
+                        detectLibraryRecordApiType(libraryDetails) === MEDIA_TYPE_IMAGE ?
                             <Box className={`${styles['image']}`} component="img" alt={""} src={`${baseUrl}${libraryDetails?.object?.url}`} />
                             :
                             <>

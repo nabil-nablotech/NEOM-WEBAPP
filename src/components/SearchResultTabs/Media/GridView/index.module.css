@@ -57,6 +57,7 @@
 
 .card-image-wrapper {
     display: flex;
+    aspect-ratio: 3/2;
 }
 
 .card-image {
