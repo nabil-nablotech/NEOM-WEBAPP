@@ -8,7 +8,7 @@ import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
 import { MoreOptionsComponent } from "../ListView/MoreOption";
 // import { usePaginatedArray } from '../../../../hooks/usePaginatedArray';
 /** indicating that we can send html later on wherever we parse */
-import { baseUrl } from '../../../../utils/services/helpers';
+import { baseUrl, detectMediaRecordType, MEDIA_TYPE_3D, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO } from '../../../../utils/services/helpers';
 import RenderFileData from '../../../RenderFileData';
 
 export const Card = ({
@@ -26,7 +26,7 @@ export const Card = ({
                 <Grid item sm={12} className={`${gridStyles['card-image-wrapper']}`}>
 
                     {
-                        itemIndex === 1 ?
+                        detectMediaRecordType(record) === MEDIA_TYPE_VIDEO ?
                             <>
                                 <RenderFileData
                                     fileData={{
@@ -38,31 +38,31 @@ export const Card = ({
                                     fileType="video"
                                 />
                             </> :
-                            itemIndex === 2 ?
+                            detectMediaRecordType(record) === MEDIA_TYPE_IMAGE ?
                                 <>
                                     <RenderFileData
                                         fileData={{
                                             alt: "",
-                                            // src: images[2],
-                                            thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
-                                            className: `${styles['three-d-card-parent']}`
+                                            src: `${baseUrl}${img}`,
+                                            className: `${gridStyles['card-image']}`
                                         }}
-                                        fileType="3d"
+                                        fileType="image"
                                     />
                                 </> :
                                 <RenderFileData
                                     fileData={{
                                         alt: "",
-                                        src: `${baseUrl}${img}`,
-                                        className: `${gridStyles['card-image']}`
+                                        // src: images[2],
+                                        thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
+                                        className: `${styles['three-d-card-parent']}`
                                     }}
-                                    fileType="image"
+                                    fileType="3d"
                                 />
                     }
                 </Grid>
                 <Grid item sm={12} className={`${gridStyles['content']}`}>
                     <Grid item sm={11}>
-                        <div className={`${gridStyles['card-title']}`}>{title}</div>
+                        <div className={`${gridStyles['card-title']}`}>{record.attributes.title}</div>
                     </Grid>
                     <Grid item sm={1}>
                         <Box className={`${gridStyles["more-icon-span"]}`} component={"span"}>
