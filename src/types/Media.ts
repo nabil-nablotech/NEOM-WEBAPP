@@ -7,6 +7,12 @@ export type PlaceUnique = {
   };
 };
 
+type MediaTypeObject = {
+  attributes : {
+    typeCode: string
+  }
+}
+
 export type Media = {
   id: string;
   attributes: {
@@ -38,6 +44,9 @@ export type Media = {
       data: {
       attributes: PlaceUnique;
     }
+    }
+    media_type: {
+      data: MediaTypeObject[]
     }
   }
 };
@@ -80,6 +89,8 @@ export type MediaApi = {
     attributes: PlaceUnique;
   }
   }
+  media_type: typeCodeArrObj[]
+
 };
 
 export type MediaApi2 = {
@@ -117,4 +128,10 @@ export type MediaApi2 = {
     attributes: PlaceUnique;
   }
   }
+  media_type: typeCodeArrObj[]
+
 };
+
+export type typeCodeArrObj = {
+  typeCode: string
+} 

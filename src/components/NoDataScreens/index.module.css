@@ -11,6 +11,12 @@
 }
 .wrapper.no-map-wrapper {
     background-color: var(--no-map-bg);
+    color: var(--no-map-text);
+    height: initial;
+    aspect-ratio: 1/1;
+}
+.wrapper.no-video-wrapper {
+    background-color: var(--blank-doc-bg);
     color: var(--no-map-text)
 }
 
@@ -35,8 +41,8 @@
 }
 
 
-.wrapper.no-map-wrapper .content-image ,
-.wrapper.no-map-wrapper .content-text {
+.wrapper.no-map-wrapper .content-image:not(.wrapper.no-map-wrapper.light-version .content-image) ,
+.wrapper.no-map-wrapper .content-text:not(.wrapper.no-map-wrapper.light-version .content-text) {
     color: var(--no-map-text);
 }
 

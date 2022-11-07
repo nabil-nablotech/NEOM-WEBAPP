@@ -10,9 +10,10 @@ import {
 import * as Yup from "yup";
 import { ColumnType } from "antd/lib/table";
 import { Event, EventApi } from "../../types/Event";
+import { Media, MediaApi, MediaApi2 } from "../../types/Media";
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://0281-117-214-56-161.ngrok.io`;
+// export const baseUrl = `https://858f-117-251-214-117.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -380,6 +381,7 @@ export const NO_MEDIA = "No media items to display";
 export const NO_TABLE_ROWS = "No items to display";
 export const NO_LOCATION = "No location available";
 export const NO_DESCRIPTION = "No description available";
+export const NO_IMAGE = "No image available";
 
 export const checkIsNew = (updatedDate: string) => {
   const expDate = dayjs(updatedDate).add(30, "d").toDate();
@@ -451,5 +453,25 @@ export const detectLowerCaseStringInArray = (
     (item) => item.toLowerCase() === sourceString.toLowerCase()
   );
 };
-    
-export const isDocumentTypeImage = (value: string) => ['.jpg', '.png', '.jpeg', '.webp'].includes(value)
+
+export const detectMediaRecordApiType = (detailObj : MediaApi) => {
+  return detailObj.media_type[0].typeCode === "VIDEO" ? MEDIA_TYPE_VIDEO :
+  detailObj.media_type[0].typeCode === "IMAGE" ? MEDIA_TYPE_IMAGE : MEDIA_TYPE_3D
+}
+export const detectLibraryRecordApiType = (detailObj : MediaApi2) => {
+  return detailObj.media_type[0].typeCode === "VIDEO" ? MEDIA_TYPE_VIDEO :
+  detailObj.media_type[0].typeCode === "IMAGE" ? MEDIA_TYPE_IMAGE : MEDIA_TYPE_3D
+}
+
+export const MEDIA_TYPE_IMAGE = "image"
+export const MEDIA_TYPE_VIDEO = "video"
+export const MEDIA_TYPE_3D = "3d"
+
+export const detectMediaRecordType = (record: Media) => {
+  return record.attributes.media_type.data[0].attributes.typeCode === "VIDEO" ? MEDIA_TYPE_VIDEO :
+  record.attributes.media_type.data[0].attributes.typeCode === "IMAGE" ? MEDIA_TYPE_IMAGE : MEDIA_TYPE_3D
+}
+
+export const isImagePathInvalid = (value: string) => {
+  return value.toLowerCase().indexOf('undefined') !== -1 || value.toLowerCase().indexOf('null') !== -1
+}

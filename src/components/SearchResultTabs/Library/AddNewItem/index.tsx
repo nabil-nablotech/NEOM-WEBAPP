@@ -129,6 +129,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
     if (activeStep + 1 === steps.length && data) {
+      // console.log('data.....', data);
       if (create && !edit) {
         create({
           ...data,
