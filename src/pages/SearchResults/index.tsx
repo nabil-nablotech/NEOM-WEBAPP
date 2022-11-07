@@ -109,7 +109,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   const handleEdit = () => {
     if (uniqueId) {
       let record = {}
-      switch (addNewItemWindowType) {
+      switch (tabName) {
         case 'Media':
           setEditMedia({attributes: {
             uniqueId
@@ -118,17 +118,17 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         case 'Library':
           setEditLibrary({record: {attributes: {
             uniqueId
-          }}, type: addNewItemWindowType})
+          }}, type: tabName})
           break;
         case 'Events':
           setEditEvents({record: {attributes: {
             uniqueId
-          }}, type: addNewItemWindowType})
+          }}, type: tabName})
           break;
         case 'Places':
           setEditPlaces({record: {attributes: {
             uniqueId
-          }}, type: addNewItemWindowType})
+          }}, type: tabName})
           break;
       }
       dispatch(toggleShowAddSuccess(false));

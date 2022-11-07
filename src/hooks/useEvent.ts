@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { addEvent, refineEvents, updateEvent } from "../query/events";
