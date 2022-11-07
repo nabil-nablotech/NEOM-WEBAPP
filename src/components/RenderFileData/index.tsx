@@ -56,7 +56,7 @@ const RenderFileData = ({
                             }}/> :
                             !fileData.isOpened ? <>
                                 <Box
-                                    className={fileData.className}
+                                    className={`${fileData.className} ${fileData.thumbnailClassname}`}
                                     component="img"
                                     alt={fileData.alt ? fileData.alt : ''}
                                     src={fileData.thumbNail}
