@@ -6,3 +6,8 @@ export type CustomModalTypes = {
     children: ReactNode
     titleContent?: ReactNode
 }
+export type ConfirmationModalTypes = {
+    type: "confirm-edit" | "confirm-logout"
+    open: boolean
+    handleClose: (e: React.MouseEvent) => void
+}

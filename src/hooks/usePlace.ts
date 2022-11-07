@@ -11,7 +11,7 @@ import {
   setPlaceMetaData,
   setSearchText,
   toggleShowAddSuccess,
-  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess
+  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, toggleEditConfirmationWindowOpen, setEditPayload, toggleConfirmOpenEdit
 } from "../store/reducers/searchResultsReducer";
 import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 import { Place } from "../types/Place";
@@ -24,7 +24,7 @@ import {graphQlHeaders} from '../utils/services/interceptor';
 const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [mapPlaces, setMapPlaces] = useState([]);
-  const { searchText, places: placeData } = useSelector(
+  const { searchText, places: placeData, addNewItemWindowType, confirmOpenEdit, editPayload } = useSelector(
     (state: RootState) => state.searchResults
   );
   const { selectedValue } = useSelector(
@@ -215,14 +215,39 @@ const usePlace = () => {
     }
   }
 
-  const setEdit = async (payload: any) => {
-    const {type, record} = payload;
-    if (record) {
-      const payloadRes = await placeDetails(record.attributes.uniqueId);
-      dispatch(setTabData(payloadRes));
-      dispatch(setTabEdit(true));
-      dispatch(toggleNewItemWindow(true))
-      dispatch(setAddNewItemWindowType(type))
+  useEffect(() => {
+
+    if (confirmOpenEdit && editPayload) {
+
+      openEditFlow(editPayload)
+      dispatch(toggleConfirmOpenEdit(false));
+      dispatch(setEditPayload(null));
+
+    }
+  }, [confirmOpenEdit])
+  
+  const openEditFlow = async (payload: any) => {
+    if (payload) {
+      const { type, record } = payload;
+      if (record) {
+        const payloadRes = await placeDetails(record.attributes.uniqueId);
+        dispatch(setTabData(payloadRes));
+        dispatch(setTabEdit(true));
+        dispatch(toggleNewItemWindow(true))
+        dispatch(setAddNewItemWindowType(type))
+      }
+    }
+  }
+
+  const setEdit = (payload: any) => {
+    if (addNewItemWindowType) {
+      /** Detect if user comes via forced edit */
+        dispatch(toggleEditConfirmationWindowOpen(true));
+        dispatch(setEditPayload(payload));
+
+    } else {
+      /** Detect if user comes via normal edit */
+      openEditFlow(payload)
     }
   };
 

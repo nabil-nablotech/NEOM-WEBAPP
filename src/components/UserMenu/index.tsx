@@ -13,7 +13,7 @@ import { getRole } from "../../utils/storage/storage";
 import MenuList from "../MenuList";
 import { Box, LinearProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleEditConfirmationWindowOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
 import CustomDrawer from "../CustomDrawer";
 import AddNewItem from "../../pages/AddNewItem";
 import AddNewPlace from "../SearchResultTabs/Places/AddNewItem";
@@ -27,6 +27,7 @@ import AddItemCollapsedWindow from "../AddItemCollapsedWindow";
 import { setTabEdit } from "../../store/reducers/tabEditReducer";
 import useLibrary from "../../hooks/useLibrary";
 import useMedia from "../../hooks/useMedia";
+import { ConfirmationModal } from "../ConfirmationModal";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -39,7 +40,7 @@ function UserMenuComponent() {
   const { clientLogout } = useLogout();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [anchorElSettings, setAnchorElSettings] = React.useState<null | HTMLElement>(null);
-  const { newItemWindowOpen, addNewItemWindowType, addItemWindowMinimized } = useSelector((state: RootState) => state.searchResults);
+  const { newItemWindowOpen, addNewItemWindowType, addItemWindowMinimized, isEditConfirmationWindowOpen } = useSelector((state: RootState) => state.searchResults);
   const { createPlace } = usePlace();
   const { createEvent, setSearchValue } = useEvent();
   const { createLibrary } = useLibrary();
@@ -202,6 +203,14 @@ function UserMenuComponent() {
           addNewItemWindowType &&
           addItemWindowMinimized &&
           <AddItemCollapsedWindow />
+        }
+        {
+          isEditConfirmationWindowOpen &&
+          <ConfirmationModal
+            type="confirm-edit"
+            open={isEditConfirmationWindowOpen}
+            handleClose={() => dispatch(toggleEditConfirmationWindowOpen(false))}
+          />
         }
       </Box>
     </>
