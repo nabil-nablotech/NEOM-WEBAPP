@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { toggleConfirmOpenEdit } from '../../store/reducers/searchResultsReducer';
 import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { tabNameProps } from '../../types/SearchResultsTabsProps';
 
 
 export const ConfirmationModal = ({
@@ -17,6 +19,7 @@ export const ConfirmationModal = ({
 }: ConfirmationModalTypes) => {
     const { addNewItemWindowType } = useSelector((state: RootState) => state.searchResults);
     const dispatch = useDispatch()
+    let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
     const modalTypeEdit = type === "confirm-edit"
     const modalTypeLogout = type === "confirm-logout"
@@ -40,7 +43,7 @@ export const ConfirmationModal = ({
                     alignItems: 'flex-end',
                 }}>
                     <Grid item className={`${modalStyles['title']}`}>
-                        {`${modalTypeEdit ? 'Edit' : 'Delete'} ${addNewItemWindowType ? addNewItemWindowType : ''}`}
+                        {`${modalTypeEdit ? 'Edit' : 'Delete'} ${tabName ? tabName : ''}`}
                     </Grid>
                     <Grid item sm={1}>
                         <CloseIcon fontSize="large"

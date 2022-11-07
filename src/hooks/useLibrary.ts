@@ -206,7 +206,7 @@ const useLibrary = () => {
   }
 
   useEffect(() => {
-    if (confirmOpenEdit && editPayload) {
+    if (confirmOpenEdit && editPayload && (tabName === LIBRARY_TAB_NAME)) {
 
       openEditFlow(editPayload)
       dispatch(toggleConfirmOpenEdit(false));
