@@ -18,6 +18,7 @@ import { antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWeb
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
+import { Event } from "../../../../types/Event";
 import styled from "styled-components";
 import { format } from "date-fns";
 import useMedia from "../../../../hooks/useMedia";
@@ -243,7 +244,7 @@ const PlaceDetailsPage = () => {
         },
     ];
 
-    const tableHeaderJson_media: ColumnsType<any> = [
+    const tableHeaderJson_events: ColumnsType<any> = [
         {
             title: "",
             key: "visit_unique_id",
@@ -309,7 +310,7 @@ const PlaceDetailsPage = () => {
             key: "action",
             fixed: "right",
             className: "more-menu-ant-cell events-table-more-menu",
-            render: (value: any, record: Media) => (
+            render: (value: any, record: Event) => (
                 // <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
                 <MoreOption type="Events" setEdit={setEdit} record={record} />
             ),
@@ -872,7 +873,7 @@ const PlaceDetailsPage = () => {
                                     <StyledTableWrapper
                                         rowKey={"id"}
                                         size="small"
-                                        columns={tableHeaderJson_media}
+                                        columns={tableHeaderJson_events}
                                         // dataSource={events.slice(0,1)}
                                         dataSource={visit_associates}
                                         pagination={false}

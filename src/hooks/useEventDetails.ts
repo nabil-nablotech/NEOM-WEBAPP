@@ -59,6 +59,12 @@ const useEventDetails = () => {
             dispatch(setDefaultMediaAssociation({events: res.media_associate?.visit_unique_ids || [], places: res.media_associate?.place_unique_ids || [] }));
           }
         }
+        if (type === 'Media' && record.media_unique_id) {
+          res = await mediaDetails(record.media_unique_id.uniqueId);
+          if (res?.media_associate) {
+            dispatch(setDefaultMediaAssociation({events: res.media_associate?.visit_unique_ids || [], places: res.media_associate?.place_unique_ids || [] }));
+          }
+        }
         if (type === 'Events' && record.uniqueId) {
           res = record;
         }

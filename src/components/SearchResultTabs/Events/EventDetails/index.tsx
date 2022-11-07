@@ -690,11 +690,6 @@ const EventDetailsPage = () => {
                                     {
                                         mediaGalleryLocal && mediaGalleryLocal.map((itemObj, inx) => (
                                             <Grid item lg={3} md={4} sm={4} key={inx} className={`${styles['media-grid-item']}`}
-                                                onClick={e => {
-                                                    dispatch(setActiveMediaItem(itemObj))
-                                                    dispatch(setActiveMediaItemIndex(inx))
-                                                    navigate(`/search-results/Media/${itemObj.media_unique_id.uniqueId}`, { replace: true, state: { from: 'events' } })
-                                                }}
                                             >
                                                 <RenderFileData
                                                     fileData={{
@@ -723,8 +718,8 @@ const EventDetailsPage = () => {
                                                             </Box>}
                                                         </Grid>
                                                         <Grid item>
-                                                            <CustomMoreOptionsComponent
-                                                                menuActions={actionsArray}
+                                                            <MoreOptionsComponent
+                                                                type="Media" setEdit={setEdit} record={itemObj}
                                                             />
                                                         </Grid>
                                                     </Grid>
@@ -764,7 +759,6 @@ const EventDetailsPage = () => {
                                     }}
                                     onClick={e => {
                                         e.preventDefault()
-
                                         if (mediaGalleryLocal && mediaGallery && (mediaGalleryLocal.length === mediaGallery.length)) {
                                             setMediaGridActiveItems(8)
                                         } else {

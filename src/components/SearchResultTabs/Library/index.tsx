@@ -108,7 +108,7 @@ const LibraryTab = () => {
       key: "attributes",
       dataIndex: "attributes",
       width: viewWidths[0],
-      render: (value, index) => formatBytes(value.imageMetadata.fileSize), 
+      render: (value, index) => formatBytes(value.object?.data?.attributes?.size || 0), 
     },
     {
       title: "UPDATED",
