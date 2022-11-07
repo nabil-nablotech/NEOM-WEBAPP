@@ -30,7 +30,8 @@ export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payloa
       >
         <MenuItem
           key={2}
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             setEdit(record);
             handleClose();
           }}
