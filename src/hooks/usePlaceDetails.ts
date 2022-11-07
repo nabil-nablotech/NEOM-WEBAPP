@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useNavigation, useParams } from "react-router-dom";
-import { mediaDetails, placeDetails } from "../api/details";
+import { mediaDetails, placeDetails, eventDetails, libraryDetails } from "../api/details";
 import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
+import { setEventEdit, setPlaces, setEventData } from '../store/reducers/eventReducer';
 import { PLACES_TAB_NAME } from "../utils/services/helpers";
 import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation } from "../store/reducers/searchResultsReducer";
 import { RootState } from "../store";
@@ -17,7 +18,7 @@ const usePlaceDetails = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const { edit } = useSelector((state:RootState) => state.tabEdit)
+  const { edit } = useSelector((state: RootState) => state.tabEdit)
 
   useEffect(() => {
     if (uniqueId) {
@@ -32,21 +33,23 @@ const usePlaceDetails = () => {
     retry: false
   });
 
-  const setEdit = async (payload: {record: any, type: tabNameProps}) => {
+  const setEdit = async (payload: { record: any, type: tabNameProps }) => {
     if (payload) {
-      const {record, type} = payload;
-      let res: any | MediaApi={};
+      const { record, type } = payload;
+      let res: any | MediaApi = {};
       if (type === 'Places') {
         res = await placeDetails(record.uniqueId);
       }
       if (type === 'Library' && record.media_unique_id) {
         res = await mediaDetails(record.media_unique_id.uniqueId);
         if (res?.media_associate) {
-          dispatch(setDefaultMediaAssociation({events: res.media_associate?.visit_unique_ids || [], places: res.media_associate?.place_unique_ids || [] }));
+          dispatch(setDefaultMediaAssociation({ events: res.media_associate?.visit_unique_ids || [], places: res.media_associate?.place_unique_ids || [] }));
         }
       }
       if (type === 'Events' && record.visit_unique_id) {
-        res = await mediaDetails(record.visit_unique_id.uniqueId);
+        res = await eventDetails(record.visit_unique_id.uniqueId);
+        dispatch(setEventData(res));
+        dispatch(setEventEdit(true));
       }
       dispatch(setTabData(res));
       dispatch(setTabEdit(true));
