@@ -118,6 +118,9 @@ export type SearchResultsState2 = {
   isEditConfirmationWindowOpen: boolean
   confirmOpenEdit: boolean,
   editPayload: any
+  isDeleteConfirmationWindowOpen: boolean
+  confirmDelete : boolean
+  itemAboutToDelete: tabNameProps | null
 };
 
 export type addItemProgressPayload = addItemProgressStateType | addPlaceProgressStateType | 

@@ -40,6 +40,9 @@ const initialState: SearchResultsState2 = {
   isAssociationsIconsDisabled: false,
   isEditConfirmationWindowOpen: false,
   confirmOpenEdit : false,
+  isDeleteConfirmationWindowOpen: false,
+  itemAboutToDelete: null,
+  confirmDelete : false,
   editPayload: null
 };
 
@@ -229,6 +232,19 @@ export const searchResultsSlice = createSlice({
     setEditPayload: (state, action: PayloadAction<any>) => {
       state.editPayload = action.payload;
     },
+    toggleDeleteConfirmationWindowOpen: (state, action: PayloadAction<boolean>) => {
+      state.isDeleteConfirmationWindowOpen = action.payload;
+    },
+    setItemAboutToDelete: (state, action: PayloadAction<tabNameProps | null>) => {
+      state.itemAboutToDelete = action.payload;
+    },
+    toggleConfirmDelete: (state, action: PayloadAction<boolean>) => {
+      state.confirmDelete = action.payload;
+
+      if(action.payload && state.addItemWindowMinimized) {
+        state.addItemWindowMinimized = false
+      }
+    },
   },
 });
 
@@ -269,7 +285,10 @@ export const {
   toggleAssociationsIconDisabled,
   toggleEditConfirmationWindowOpen,
   toggleConfirmOpenEdit,
-  setEditPayload
+  setEditPayload,
+  toggleDeleteConfirmationWindowOpen,
+  setItemAboutToDelete,
+  toggleConfirmDelete
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

@@ -6,6 +6,9 @@ import { Event } from '../../../../types/Event';
 import { getRole } from "../../../../utils/storage/storage";
 import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { Media } from '../../../../types/Media';
+import { useDispatch } from 'react-redux';
+import { setItemAboutToDelete, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
+import { PLACES_TAB_NAME } from '../../../../utils/services/helpers';
 
 const superEditor = getRole() === 'SuperEditor';
 const editor = getRole() === 'Editor';
@@ -20,7 +23,7 @@ const MoreOptionsComponent = ({
     setEdit: (payload: {record: PlaceApi | Place | Media | Event, type: tabNameProps}) => void
 }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
+    const dispatch = useDispatch();
     const open = Boolean(anchorEl);
     const handleClick = (e: any) => {
         e.stopPropagation();
@@ -61,7 +64,13 @@ const MoreOptionsComponent = ({
                 >
                     Edit
                 </MenuItem>
-                <MenuItem key={2}>
+                <MenuItem key={2}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        dispatch(toggleDeleteConfirmationWindowOpen(true))
+                        dispatch(setItemAboutToDelete(PLACES_TAB_NAME))
+                    }}
+                >
                    Delete
                 </MenuItem>
             </Menu>
