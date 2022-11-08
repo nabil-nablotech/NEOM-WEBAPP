@@ -25,6 +25,7 @@ import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
 import NoImagePresent from '../../../NoDataScreens/NoImagePresent';
+import parse from 'html-react-parser';
 
 const MediaDetailsPage = ({
     currentItemIndex,
@@ -119,7 +120,6 @@ const MediaDetailsPage = ({
         },
     ]
 
-
     return <>
         <Box component="div" className={`${styles['details-page-wrapper']}`}>
             <Box component="div" className={`${styles['img-wrapper']}`} >
@@ -165,13 +165,12 @@ const MediaDetailsPage = ({
                         <RenderFileData
                             fileData={{
                                 src:
-                                    typeof mediaDetails.objectURL === 'string' ? // means its an iframe
-                                        mediaDetails.objectURL : (
-                                            typeof mediaDetails.object.url === 'string' ? //means its an uploaded video
-                                                `${baseUrl}${mediaDetails.object.url}` :
-                                                ''
-                                        )
+                                    typeof mediaDetails.objectURL === 'string' ?
+                                        mediaDetails.objectURL : ""
                                 ,
+                                iframeVideoLink: mediaDetails.referenceURL ? mediaDetails.referenceURL : "",  // means its an iframe
+                                staticVideoLink: typeof mediaDetails.object?.url === 'string' ? //means its an uploaded video
+                                    `${baseUrl}${mediaDetails.object.url}` : "",
                                 className: `${styles["single-image"]}`,
                                 thumbNail:
                                 // TO-DO : api based thumnail
@@ -187,8 +186,9 @@ const MediaDetailsPage = ({
                     {
                         mediaType === MEDIA_TYPE_3D &&
                         <Box component="div" className={`${styles['threeD-model-wrapper']}`}>
-                            <ModelViewer
-                            />
+                            {/* <ModelViewer
+                            /> */}
+                            {mediaDetails.objectURL ? parse(mediaDetails.objectURL) : ''}
                         </Box>
                     }
                 </Box>
@@ -243,7 +243,7 @@ const MediaDetailsPage = ({
                                     <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                         <p>Details</p>
                                         <div>Author: {Author}</div>
-                                        <div>Category Type: {categoryType.join(', ')}</div>
+                                        <div>Category Type: {categoryType?.join(', ')}</div>
                                         <div>Bearing: {bearing}</div>
                                         <div>Source URL: {referenceURL}</div>
                                         <div>Citation: {citation}</div>
