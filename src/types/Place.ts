@@ -46,8 +46,8 @@ export type PlaceApiResponse = {
   updatedAt: string;
   keywords: string[] | null;
   placeNumber: string | null;
-  latitude: Number;
-  longitude: Number;
+  latitude: number;
+  longitude: number;
   uniqueId: string;
   period: string[];
   researchValue: string[];

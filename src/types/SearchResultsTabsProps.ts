@@ -159,8 +159,8 @@ export type addEventProgressStateType = {
     siteDescription: string
     fieldNarrative: string
     artifacts: string
-    latitude: Number | number | null,
-    longitude: Number | number | null,
+    latitude: number | null,
+    longitude: number | null,
     assessmentType: string
     stateOfConservation: string
     siteType: string | never[]
