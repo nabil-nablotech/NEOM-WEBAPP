@@ -15,6 +15,12 @@ import { useToggledView } from './../../../hooks/useToggledView';
 import useEvent from '../../../hooks/useEvent';
 import { Meta } from '../../../types/Place';
 import MapView from '../GoogleMap/MapView';
+import { ExportRequestDataType } from '../../../types/ExportRequestDataType';
+import { exportContentType } from '../../../utils/export-import/export-content-type';
+import qs from 'qs';
+import client from '../../../utils/services/axiosClient';
+import { baseUrl } from '../../../utils/services/helpers';
+import { exportCsvImagesZip } from '../../../utils/export-import/export-csv-images-zip';
 
 const PlacesTab = () => {
   const { selectedCardIndex, events, totalCounts, eventMetaData } = useSelector(
@@ -22,7 +28,7 @@ const PlacesTab = () => {
   );
   const [img, setimg] = useState(MapImg1);
   const [isFilter, setIsFilter] = useState(null);
-  const { fetchEvents, hasMoreData, loading, mapEvents, setEdit } = useEvent();
+  const { fetchEvents, hasMoreData, loading, mapEvents, setEdit,searchData } = useEvent();
 
     useEffect(() => {
         setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1)
@@ -36,25 +42,117 @@ const PlacesTab = () => {
       fetchEvents();
     }
 
+     /* Event handlers */
+  const exportEvent = async () => {
+    let filter: any;
+    if (searchData?.search) {
+      filter = {
+        $or: [
+          {
+            siteDescription: {
+              $containsi: searchData.search,
+            },
+          },
+          {
+            recordingTeam: {
+              $contains: searchData.search,
+            },
+          },
+          {
+            fieldNarrative: {
+              $contains: searchData.search,
+            },
+          }
+        ],
+      };
+    }
+    try {
+      const requestData: ExportRequestDataType = {
+        collectionTypePlural: "visits",
+      };
+      if (searchData?.search) {
+        requestData.filter = qs.stringify(filter);
+      }
+      await exportContentType(requestData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const exportEventZip = async () => {
+    let filter: any;
+    if (searchData?.search) {
+        filter = {
+            $or: [
+              {
+                siteDescription: {
+                  $containsi: searchData.search,
+                },
+              },
+              {
+                recordingTeam: {
+                  $contains: searchData.search,
+                },
+              },
+              {
+                fieldNarrative: {
+                  $contains: searchData.search,
+                },
+              }
+            ],
+          };
+    }
+    try {
+      const response = await client.get(`${baseUrl}/api/custom/visits`, {
+        params: { filter: qs.stringify(filter) },
+      });
+      const files: { fileName: string; fileUrl: string }[] = [];
+      await exportCsvImagesZip(files, response?.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
     return (
         <Box component="div" className={`${styles['main-tab-content']}`}>
             <Box component="div" className={`${styles['utility-bar']}`}>
                 <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.events} Total Events</Box>
-                <Box component="div">
+                <Box component="div" style={{display:"flex"}}>
                 <Button
-                    colors={["transparent", "var(--table-black-text)", "var(--table-black-text)"]}
-                    className={`${styles["export-btn"]}`}
-                    label="Export"
-                    style={{
-                        border: '1px solid var(--light-grey-border)',
-                        borderRadius: '40px',
-                        padding: '0.2em 15px',
-                        lineHeight: '2',
-                        height: '100%',
-                        textAlign: 'center'
-                    }}
-                    // onClick={handleCancel}
-                />
+            colors={[
+              "transparent",
+              "var(--table-black-text)",
+              "var(--table-black-text)",
+            ]}
+            className={`${styles["export-btn"]}`}
+            label="Export data & assets"
+            style={{
+              border: "1px solid var(--light-grey-border)",
+              borderRadius: "40px",
+              padding: "0.2em 15px",
+              lineHeight: "2",
+              height: "100%",
+              textAlign: "center",
+            }}
+            onClick={exportEventZip}
+          />
+          <Button
+            colors={[
+              "transparent",
+              "var(--table-black-text)",
+              "var(--table-black-text)",
+            ]}
+            className={`${styles["export-btn"]}`}
+            label="Export"
+            style={{
+              border: "1px solid var(--light-grey-border)",
+              borderRadius: "40px",
+              padding: "0.2em 15px",
+              lineHeight: "2",
+              height: "100%",
+              textAlign: "center",
+            }}
+            onClick={exportEvent}
+          />
                 </Box>
                 <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={DetailsView}
                     onClick={e => toggleOpenStates([true, false])}
