@@ -1,9 +1,9 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { DashboardResponse } from "./dashboard";
 import { Place, Meta, PlaceApi, MediaAssociateObj } from "./Place";
 import { Event, EventApi } from "./Event";
 import { Media } from "./Media";
-import { RemarksPayload, Remark, ChildRemark, RemarkDetails } from "./Remarks";
+import { RemarksPayload, Remark, ChildRemark, RemarkDetails, RemarksEditPayload } from "./Remarks";
 
 export type SearchResultTabsProps = {
   tabIndex?: number;
@@ -210,6 +210,7 @@ export type CommentSectionProps = {
   type: "Place" | "Visit";
   SelfIcon: () => JSX.Element;
   addRemarks: (payload: RemarksPayload) => void;
+  updateRemarks: (payload: RemarksEditPayload) => void;
   remarks?: Remark[]
 };
 
@@ -223,7 +224,12 @@ export type commentType = {
 };
 export type SingleCommentProps = {
   SelfIcon: () => JSX.Element;
-  addRemarks: (payload: RemarksPayload) => void;
+  openReply?: (id: number) => void;
+  setChildInput?: (e: string) => void;
+  addRemarks: (id: number) => void;
+  handleAction: (type: "edit" | "delete" | "support", remark: any, childType?: "child") => void;
+  childInputs?: string;
+  showInput?: number | null;
   commentObj?: commentType;
   remark: Remark | ChildRemark | RemarkDetails | any;
   type?: "child";

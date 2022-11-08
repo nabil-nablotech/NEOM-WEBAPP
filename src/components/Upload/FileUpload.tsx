@@ -34,7 +34,6 @@ const FileUpload = ({uploadImage, defaultImages}: {uploadImage: (options: any) =
   const handleChange = (info: any) => {
     const nextState: any = {};
     if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
     }
     if (info.file.status === 'done') {
       message.success(`${info.file.name} file uploaded successfully`);

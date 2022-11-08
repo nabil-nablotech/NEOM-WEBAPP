@@ -1,9 +1,7 @@
 import { useEffect } from "react";
 import { useMutation } from "react-query";
-import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { addRemarks, getRemarks } from "../api/remarks";
-import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation } from "../store/reducers/searchResultsReducer";
+import { addRemarks, getRemarks, editRemarks } from "../api/remarks";
 
 const useRemarks = () => {
   const { uniqueId } = useParams<{ uniqueId: string }>();
@@ -26,20 +24,30 @@ const useRemarks = () => {
     }
   });
   /**
+   * add remarks api
+   */
+  const { error: updateErr, data: updateData, mutate: updateRemarksMutation } = useMutation(editRemarks, {
+    retry: false,
+    onSuccess: () => {
+      if (uniqueId) {
+        getRemarksMutation(uniqueId);
+      }
+    }
+  });
+  /**
    * fetch remarks api
    */
   const { isLoading, error, data, mutate: getRemarksMutation } = useMutation(getRemarks, {
     retry: false
   });
 
-  console.log(data, 'data inside hooks')
-
   return {
     loading: isLoading,
     error,
     data,
     addRemarksMutation,
-    getRemarksMutation
+    getRemarksMutation,
+    updateRemarksMutation
   };
 };
 

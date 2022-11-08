@@ -121,7 +121,7 @@ const StepContent = ({
               handleClear={() => {}}
               itemsList={places || []}
               handleSelectChange={(e, value, r, d) =>
-                {console.log('value...', value)
+                {
                   formik.setFieldValue("place", value)}
               }
               handleChange={handleChange}
