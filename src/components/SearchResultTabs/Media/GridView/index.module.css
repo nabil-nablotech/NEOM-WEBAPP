@@ -58,6 +58,7 @@
 .card-image-wrapper {
     display: flex;
     aspect-ratio: 3/2;
+    flex-direction: column;
 }
 
 .card-image {
@@ -99,6 +100,7 @@
 div > :has(.video-card-parent),
 div > :has(.three-d-card-parent) {
     width: 100%;
+    height: 100%;
 }
 
 @media (min-width: 575px) and (max-width: 1025px) {
