@@ -149,7 +149,8 @@
 }
 
 .map-wrapper > div {
-    height: initial !important;
+    height: unset !important;
+    aspect-ratio: 1/1;
 }
 
 @media (min-width: 575px) and (max-width: 1025px) {
