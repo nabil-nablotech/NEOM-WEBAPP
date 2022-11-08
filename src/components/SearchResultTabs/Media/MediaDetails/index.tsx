@@ -86,7 +86,11 @@ const TextualContent = ({
                     <>
                         {
                             visitObj &&
-                            <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic}</div>
+                            <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
+                                mediaDetails.media_associate.visit_unique_ids[0].visitNumber ?
+                                    `Visit ${mediaDetails.media_associate.visit_unique_ids[0].visitNumber}` :
+                                    ''
+                            }</div>
                         }
                     </>
                 ))
