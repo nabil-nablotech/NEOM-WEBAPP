@@ -185,6 +185,7 @@ const useEvent = () => {
       artifacts: copiedValue && copiedValue?.artifacts && copiedValue?.artifacts,
       assessmentType: copiedValue && copiedValue?.assessmentType && copiedValue?.assessmentType,
       keywords: copiedValue && copiedValue?.keyWords && copiedValue?.keyWords,
+      siteType: copiedValue && copiedValue?.siteType && copiedValue?.siteType,
       startDate: visitStartDate && visitStartDate,
       endDate: visitEndDate && visitEndDate,
       search_one: searchWordArray[0],
