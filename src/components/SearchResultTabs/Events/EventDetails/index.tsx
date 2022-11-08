@@ -162,7 +162,7 @@ const EventDetailsPage = () => {
 
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
     
-    const {loading: loadingRemarks, data: remarks, addRemarksMutation, getRemarksMutation } = useRemarks();
+    const {loading: loadingRemarks, data: remarks, addRemarksMutation, getRemarksMutation, updateRemarksMutation } = useRemarks();
     const dispatch = useDispatch()
 
     const [mediaGridActiveItems, setMediaGridActiveItems] = useState<number>(0)
@@ -331,6 +331,16 @@ const EventDetailsPage = () => {
     }
     // const { placeNameEnglish, placeNameArabic, placeNumber} = visit_associate?.place_unique_id;
 
+    const handleSearch = (searchData: any) => {
+        // navigate(`/search-results/Places?{"search":"","refinedSearch":{"artifacts":["Observed"]}}`)
+        navigate({
+            pathname: `/search-results/Events`,
+            search: decodeURIComponent(JSON.stringify({
+                refinedSearch: searchData
+            }))
+        });
+    }
+
     return (
         <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -451,6 +461,7 @@ const EventDetailsPage = () => {
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
                                                             key={index}
+                                                            onClick={() => handleSearch({siteType: [item]})}
                                                         >
                                                             {item}
                                                         </Box>
@@ -480,6 +491,7 @@ const EventDetailsPage = () => {
                                                             key={index}
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
+                                                            onClick={() => handleSearch({period: [item]})}
                                                         >
                                                             {item}
                                                         </Box>
@@ -783,6 +795,7 @@ const EventDetailsPage = () => {
                             type={"Visit"}
                             remarks={remarks}
                             addRemarks={addRemarksMutation}
+                            updateRemarks={updateRemarksMutation}
                             SelfIcon={() => <RenderInitials firstName={data?.firstName} lastName={data?.lastName} />}
                         />
                     </Box>

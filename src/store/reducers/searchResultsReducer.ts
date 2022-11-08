@@ -91,6 +91,14 @@ export const searchResultsSlice = createSlice({
 
       if(action.payload) {
         state.addNewItemWindowType = null
+        state.activePlaceItem = null
+        state.activePlaceItemIndex = 0
+        state.activeEventItem = null
+        state.activeEventItemIndex = 0
+        state.activeMediaItem = null
+        state.activeMediaItemIndex = 0
+        state.activeLibraryItem = null
+        state.activeLibraryItemIndex = 0
       }
     },
     toggleShowEditSuccess: (state, action: PayloadAction<boolean>) => {
@@ -98,6 +106,14 @@ export const searchResultsSlice = createSlice({
 
       if(action.payload) {
         state.addNewItemWindowType = null
+        state.activePlaceItem = null
+        state.activePlaceItemIndex = 0
+        state.activeEventItem = null
+        state.activeEventItemIndex = 0
+        state.activeMediaItem = null
+        state.activeMediaItemIndex = 0
+        state.activeLibraryItem = null
+        state.activeLibraryItemIndex = 0
       }
     },
     setActiveMediaItem: (state, action: PayloadAction<Object | any>) => {

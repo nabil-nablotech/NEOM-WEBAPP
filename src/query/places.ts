@@ -68,6 +68,7 @@ query refinedSearch(
   $recommendation: JSON
   $risk: JSON
   $period: JSON
+  $siteType: JSON
   $latitude: Float
   $longitude: Float
   $artifacts: JSON
@@ -105,6 +106,7 @@ query refinedSearch(
         { latitude: { gte: $latitude } }
         { longitude: { lte: $longitude } }
         { keywords: { containsi: $keywords } }
+        { siteType: { containsi: $siteType } }
       ]
     }
     sort: "updatedAt:desc"

@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import styled from "styled-components";
 import { StyledAntTable } from "../../components/StyledAntTable";
-import { MediaAssociates2, Place, PlaceApi } from "../../types/Place";
+import { MediaAssociateObj, MediaAssociates2, Place, PlaceApi } from "../../types/Place";
 import {
   InventoryAssociationType,
   InventoryAssociationType_Event,
@@ -13,7 +13,7 @@ import { Event, EventApi } from "../../types/Event";
 import { Media, MediaApi, MediaApi2 } from "../../types/Media";
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://858f-117-251-214-117.ngrok.io`;
+// export const baseUrl = `https://fe4b-117-251-210-158.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -327,7 +327,7 @@ export const shallRenderMedia = (
 ) => {
   if (!mediaArray) return false;
 
-  if (mediaNo <= (mediaArray.length - 1) ) {
+  if (mediaNo <= (mediaArray.length) ) {
     return true;
   } else return false;
 };
@@ -456,7 +456,9 @@ export const detectLowerCaseStringInArray = (
 
 export const detectMediaRecordApiType = (detailObj : MediaApi) => {
   return detailObj.media_type[0].typeCode === "VIDEO" ? MEDIA_TYPE_VIDEO :
-  detailObj.media_type[0].typeCode === "IMAGE" ? MEDIA_TYPE_IMAGE : MEDIA_TYPE_3D
+    detailObj.media_type[0].typeCode === "IMAGE" ? MEDIA_TYPE_IMAGE :
+      detailObj.media_type[0].typeCode === "3DMODEL" ? MEDIA_TYPE_3D :
+  MEDIA_TYPE_IMAGE
 }
 export const detectLibraryRecordApiType = (detailObj : MediaApi2) => {
   return detailObj.media_type[0].typeCode === "VIDEO" ? MEDIA_TYPE_VIDEO :
@@ -474,4 +476,27 @@ export const detectMediaRecordType = (record: Media) => {
 
 export const isImagePathInvalid = (value: string) => {
   return value.toLowerCase().indexOf('undefined') !== -1 || value.toLowerCase().indexOf('null') !== -1
+}
+
+export const detectMediaTypeFromMediaAssociate = (obj: MediaAssociateObj) => {
+
+  if(obj.media_unique_id.media_type[0].typeCode === "IMAGE") {
+    return MEDIA_TYPE_IMAGE
+  }else if(obj.media_unique_id.media_type[0].typeCode === "VIDEO") {
+    return MEDIA_TYPE_VIDEO
+  } else if(obj.media_unique_id.media_type[0].typeCode === "3DMODEL") {
+    return MEDIA_TYPE_3D
+  } else return MEDIA_TYPE_IMAGE
+
+}
+export const detectMediaTypeFromMediaList = (obj: Media) => {
+  // attributes.media_type.data[0].attributes.typeCode
+  if(obj.attributes.media_type.data[0].attributes.typeCode === "IMAGE") {
+    return MEDIA_TYPE_IMAGE
+  }else if(obj.attributes.media_type.data[0].attributes.typeCode === "VIDEO") {
+    return MEDIA_TYPE_VIDEO
+  } else if(obj.attributes.media_type.data[0].attributes.typeCode === "3DMODEL") {
+    return MEDIA_TYPE_3D
+  } else return MEDIA_TYPE_IMAGE
+
 }

@@ -35,6 +35,10 @@ const MoreOptionsComponent = ({
             <div
                 className=""
                 onClick={handleClick}
+                style={{
+                    display: 'flex',
+                    justifyContent: 'end'
+                }}
             >
                 <MoreHorizIcon className="more-menu-div" />
             </div>

@@ -2,8 +2,13 @@ import { User } from "./User";
 
 export type RemarksPayload = {
   id: string;
-  type: "Place" | "Visit";
+  remark_header_id?: number;
+  type?: "Place" | "Visit";
   description: string;
+};
+export type RemarksEditPayload = {
+  id: string;
+ data: { description?: string; delete: boolean}
 };
 
 export type Remark = {

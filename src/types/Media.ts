@@ -40,6 +40,7 @@ export type Media = {
         };
       };
     };
+    objectURL: string | null
     media_associate: {
       data: {
       attributes: PlaceUnique;
@@ -90,7 +91,7 @@ export type MediaApi = {
   }
   }
   media_type: typeCodeArrObj[]
-
+  mediaUIPath: string | null
 };
 
 export type MediaApi2 = {

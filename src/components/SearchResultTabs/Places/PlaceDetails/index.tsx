@@ -14,7 +14,7 @@ import { StyledAntTable } from "../../../StyledAntTable";
 import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
-import { antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, checkIsNew, isRecordAttached, isPlaceDetailAttached } from "../../../../utils/services/helpers";
+import { antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, checkIsNew, isRecordAttached, isPlaceDetailAttached, detectMediaTypeFromMediaAssociate } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
@@ -310,27 +310,30 @@ const PlaceDetailsPage = () => {
 
     const { loading } = useMedia();
     const { loading: placeLoading, error, data: placeData, setEdit } = usePlaceDetails();
-    const {loading: loadingRemarks, data: remarks, addRemarksMutation, getRemarksMutation } = useRemarks();
-    console.log('data', remarks);
-    // const { mapEvents } = usePlace();
+    const {loading: loadingRemarks, data: remarks, addRemarksMutation, updateRemarksMutation } = useRemarks();
 
     const dispatch = useDispatch()
 
-    const handleClickMediaItem = (e: React.MouseEvent, itemIndex: number) => {
+    const handleClickMediaItem = (e: React.MouseEvent, itemIndex: number, uniqueId: string, ) => {
         /** itemIndex used to track which item being clicked out of 5;
          * 1st , 2nd etc.
          */
         e.preventDefault()
         if (media.length >= itemIndex) {
-            navigate(`/search-results/Media/${media[itemIndex - 1].attributes.uniqueId}`, { replace: true })
+            navigate(`/search-results/Media/${uniqueId}`, { replace: true })
             dispatch(setActiveMediaItem(media[itemIndex - 1]))
             dispatch(setActiveMediaItemIndex(itemIndex - 1))
         }
     }
 
+
     useEffect(() => {
         if (placeData && (placeData?.siteDescription?.length < 500)) {
             toggleSeeMoreHidden(true)
+        }
+
+        if(placeData) {
+            dispatch(setActivePlaceItem(placeData))
         }
     }, [placeData])
 
@@ -346,6 +349,15 @@ const PlaceDetailsPage = () => {
         return null
     }
 
+    const handleSearch = (searchData: any) => {
+        // navigate(`/search-results/Places?{"search":"","refinedSearch":{"artifacts":["Observed"]}}`)
+        navigate({
+            pathname: `/search-results/Places`,
+            search: decodeURIComponent(JSON.stringify({
+                refinedSearch: searchData
+            }))
+          });
+    }
 
     const {
         placeNameEnglish, placeNameArabic, placeNumber,
@@ -356,6 +368,7 @@ const PlaceDetailsPage = () => {
 
     const { latitude, longitude } = placeData;
 
+    // console.log('hex: ', shallRenderMedia(4, media_associates))
     return (
         <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -403,7 +416,8 @@ const PlaceDetailsPage = () => {
                                 <Box component="div" style={{
                                     position: 'absolute',
                                     right: 0,
-                                    bottom: 0
+                                    bottom: 0,
+                                    zIndex: 10
                                 }}>
                                     {
                                         media_associates &&
@@ -430,7 +444,7 @@ const PlaceDetailsPage = () => {
                                 >
                                     <Grid item sm={6} className={`${styles["grid-item"]}`}
                                         onClick={e => {
-                                            handleClickMediaItem(e, 1)
+                                            handleClickMediaItem(e, 1, media_associates[0]?.media_unique_id.uniqueId)
                                         }}
                                     >
                                         {/* {media_associates[0] && <RenderFileData */}
@@ -440,7 +454,7 @@ const PlaceDetailsPage = () => {
                                                 src: `${baseUrl}${media_associates[0]?.media_unique_id?.object?.url}`,
                                                 className: `${styles["single-image"]} ${styles["left-image"]}`
                                             }}
-                                            fileType="image"
+                                            fileType={detectMediaTypeFromMediaAssociate(media_associates[0])}
                                         />}
                                     </Grid>
                                     <Grid item sm={6} className={`${styles['image-grid-gap']} ${styles["image-side-grid"]}`}
@@ -451,16 +465,16 @@ const PlaceDetailsPage = () => {
                                         >
                                             <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
                                                 onClick={e => {
-                                                    handleClickMediaItem(e, 2)
+                                                    handleClickMediaItem(e, 2,  media_associates[1]?.media_unique_id.uniqueId)
                                                 }}
                                             >
                                                 {shallRenderMedia(2, media_associates) && <RenderFileData
                                                     fileData={{
                                                         alt: "",
-                                                        src: `${baseUrl}${media_associates[1].media_unique_id.object.url}`,
+                                                        src: `${baseUrl}${media_associates[1].media_unique_id?.object?.url}`,
                                                         className: `${styles["single-image"]} ${styles["right-image"]}`
                                                     }}
-                                                    fileType="image"
+                                                    fileType={detectMediaTypeFromMediaAssociate(media_associates[1])}
                                                 />}
                                                 {/* YOUTUBE VIDEO LOAD REFERENCE: DONT DELETE YET */}
                                                 {/* <RenderFileData
@@ -475,16 +489,16 @@ const PlaceDetailsPage = () => {
                                             </Grid>
                                             <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
                                                 onClick={e => {
-                                                    handleClickMediaItem(e, 3)
+                                                    handleClickMediaItem(e, 3,  media_associates[2]?.media_unique_id.uniqueId)
                                                 }}
                                             >
                                                 {shallRenderMedia(3, media_associates) && <RenderFileData
                                                     fileData={{
                                                         alt: "",
-                                                        src: `${baseUrl}${media_associates[2].media_unique_id.object.url}`,
+                                                        src: `${baseUrl}${media_associates[2].media_unique_id?.object?.url}`,
                                                         className: `${styles["single-image"]} ${styles["right-image"]}`
                                                     }}
-                                                    fileType="image"
+                                                    fileType={detectMediaTypeFromMediaAssociate(media_associates[2])}
                                                 />}
                                                 {/* 3D model LOAD REFERENCE: DONT DELETE YET */}
                                                 {/* <RenderFileData
@@ -503,16 +517,18 @@ const PlaceDetailsPage = () => {
                                         >
                                             <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
                                                 onClick={e => {
-                                                    handleClickMediaItem(e, 4)
+                                                    handleClickMediaItem(e, 4,  media_associates[3]?.media_unique_id.uniqueId)
                                                 }}
                                             >
                                                 {shallRenderMedia(4, media_associates) && <RenderFileData
                                                     fileData={{
                                                         alt: "",
-                                                        src: `${baseUrl}${media_associates[3].media_unique_id.object.url}`,
-                                                        className: `${styles["single-image"]} ${styles["right-image"]}`
+                                                        src: `${baseUrl}${media_associates[3].media_unique_id?.object?.url}`,
+                                                        className: `${styles["single-image"]} ${styles["right-image"]}`,
+                                                        objectURL: media_associates[3].media_unique_id.objectURL || ''
+
                                                     }}
-                                                    fileType="image"
+                                                    fileType={detectMediaTypeFromMediaAssociate(media_associates[3])}
                                                 />}
                                                 {/* <RenderFileData
                                             fileData={{
@@ -525,16 +541,17 @@ const PlaceDetailsPage = () => {
                                             </Grid>
                                             <Grid item sm={6} className={`${styles["side-grid-image"]} ${styles["grid-item"]}`}
                                                 onClick={e => {
-                                                    handleClickMediaItem(e, 5)
+                                                    handleClickMediaItem(e, 5,  media_associates[4]?.media_unique_id.uniqueId)
                                                 }}
                                             >
                                                 {shallRenderMedia(5, media_associates) && <RenderFileData
                                                     fileData={{
                                                         alt: "",
-                                                        src: `${baseUrl}${media_associates[4].media_unique_id.object.url}`,
-                                                        className: `${styles["single-image"]} ${styles["right-image"]}`
+                                                        src: `${baseUrl}${media_associates[4].media_unique_id?.object?.url}`,
+                                                        className: `${styles["single-image"]} ${styles["right-image"]}`,
+                                                        objectURL: media_associates[4].media_unique_id.objectURL || ''
                                                     }}
-                                                    fileType="image"
+                                                    fileType={detectMediaTypeFromMediaAssociate(media_associates[4])}
                                                 />}
                                             </Grid>
                                         </Grid>
@@ -637,6 +654,7 @@ const PlaceDetailsPage = () => {
                                                             key={index}
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
+                                                            onClick={() => handleSearch({siteType: [item]})}
                                                         >
                                                             {item}
                                                         </Box>
@@ -666,6 +684,7 @@ const PlaceDetailsPage = () => {
                                                             key={index}
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
+                                                            onClick={() => handleSearch({period: [item]})}
                                                         >
                                                             {item}
                                                         </Box>
@@ -683,7 +702,8 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                         {
                                             !isEmptyValue(stateOfConservation) ? stateOfConservation.map((item: string, index: number) =>
-                                                <Grid item key={index}>
+                                                <Grid item key={index}
+                                                onClick={() => handleSearch({stateOfConservation: [item]})}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -700,7 +720,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                         {
                                             !isEmptyValue(risk) ? risk.map((item: string, index: number) =>
-                                                <Grid item key={index}>
+                                                <Grid item key={index} onClick={() => handleSearch({risk: [item]})}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -716,7 +736,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                         {
                                             !isEmptyValue(tourismValue) ? tourismValue.map((item: string, index: number) =>
-                                                <Grid item key={index}>
+                                                <Grid item key={index} onClick={() => handleSearch({tourismValue: [item]})}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -733,7 +753,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                         {
                                             !isEmptyValue(researchValue) ? researchValue.map((item: string, index: number) =>
-                                                <Grid item key={index}>
+                                                <Grid item key={index} onClick={() => handleSearch({researchValue: [item]})}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -757,7 +777,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                         {
                                             !isEmptyValue(recommendation) ? recommendation.map((item: string, index: number) =>
-                                                <Grid item key={index}>
+                                                <Grid item key={index} onClick={() => handleSearch({tourismValue: [item]})}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -908,6 +928,7 @@ const PlaceDetailsPage = () => {
                             type={"Place"}
                             remarks={remarks}
                             addRemarks={addRemarksMutation}
+                            updateRemarks={updateRemarksMutation}
                             SelfIcon={() => <RenderInitials firstName={data?.firstName} lastName={data?.lastName} />}
                         />
                     </Box>
