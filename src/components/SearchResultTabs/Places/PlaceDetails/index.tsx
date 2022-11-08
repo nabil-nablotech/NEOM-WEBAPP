@@ -349,6 +349,15 @@ const PlaceDetailsPage = () => {
         return null
     }
 
+    const handleSearch = (searchData: any) => {
+        // navigate(`/search-results/Places?{"search":"","refinedSearch":{"artifacts":["Observed"]}}`)
+        navigate({
+            pathname: `/search-results/Places`,
+            search: decodeURIComponent(JSON.stringify({
+                refinedSearch: searchData
+            }))
+          });
+    }
 
     const {
         placeNameEnglish, placeNameArabic, placeNumber,
@@ -645,6 +654,7 @@ const PlaceDetailsPage = () => {
                                                             key={index}
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
+                                                            onClick={() => handleSearch({siteType: [item]})}
                                                         >
                                                             {item}
                                                         </Box>

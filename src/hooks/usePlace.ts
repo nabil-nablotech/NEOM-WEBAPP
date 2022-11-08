@@ -159,6 +159,7 @@ const usePlace = () => {
       artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts,
       actionType: copiedValue&&copiedValue?.actionType && copiedValue?.actionType,
       keywords: copiedValue&&copiedValue?.keyWords && copiedValue?.keyWords,
+      siteType: copiedValue&&copiedValue?.siteType && copiedValue?.siteType,
       search_one: searchWordArray[0],
       search_two: searchWordArray[1],
       search_three: searchWordArray[2],
