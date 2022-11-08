@@ -500,3 +500,9 @@ export const detectMediaTypeFromMediaList = (obj: Media) => {
   } else return MEDIA_TYPE_IMAGE
 
 }
+
+export const toFixedFromString = (value: string | number, decimals: number) => {
+  if(typeof value === 'string')  return parseFloat(value).toFixed(decimals)
+  if(typeof value === 'number')  return value.toFixed(decimals)
+  return ''
+}

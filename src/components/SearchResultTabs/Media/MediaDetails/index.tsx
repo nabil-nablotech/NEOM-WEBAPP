@@ -20,7 +20,7 @@ import ModelViewer from '../../../Model';
 import { useEffect } from 'react';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
-import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE } from '../../../../utils/services/helpers';
+import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
@@ -317,13 +317,13 @@ const MediaDetailsPage = ({
                                         <Grid item lg={5} md={5} sm={5}>
                                             <Grid container className={`${styles['map-loctn-line']}`}>
                                                 <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                                <Grid item>{`${latitude}`}</Grid>
+                                                <Grid item>{`${toFixedFromString(latitude, 6)}`}</Grid>
                                             </Grid>
                                         </Grid>
                                         <Grid item lg={5} md={5} sm={6}>
                                             <Grid container className={`${styles['map-loctn-line']}`}>
                                                 <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                                <Grid item>{`${longitude}`}</Grid>
+                                                <Grid item>{`${toFixedFromString(longitude, 6)}`}</Grid>
                                             </Grid>
                                         </Grid>
                                     </Grid> </>
@@ -385,13 +385,13 @@ const MediaDetailsPage = ({
                                             <Grid item lg={5} md={5} sm={5}>
                                                 <Grid container className={`${styles['map-loctn-line']}`}>
                                                     <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                                    <Grid item>{`${latitude}`}</Grid>
+                                                    <Grid item>{`${toFixedFromString(latitude, 6)}`}</Grid>
                                                 </Grid>
                                             </Grid>
                                             <Grid item lg={5} md={5} sm={6}>
                                                 <Grid container className={`${styles['map-loctn-line']}`}>
                                                     <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                                    <Grid item>{`${longitude}`}</Grid>
+                                                    <Grid item>{`${toFixedFromString(longitude, 6)}`}</Grid>
                                                 </Grid>
                                             </Grid>
                                         </Grid> </>
