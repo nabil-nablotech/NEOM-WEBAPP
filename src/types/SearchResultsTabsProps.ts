@@ -73,6 +73,7 @@ export type InventoryAssociationType_Event = {
   placeNameEnglish: string
   placeNameArabic: string
   placeNumber: string | null
+  fieldNarrative?: string
 }
 
 export type SearchResultsState2 = {

@@ -75,9 +75,15 @@ const TextualContent = ({
         <Box component="div" className={`${styles[`bottom-grid`]}`} >
             <p>Associations</p>
             {
-                (places && places.length > 0) &&
-                places.map((placeObj: Place) => (
-                    <div>{placeObj.attributes.placeNameEnglish} {placeObj.attributes.placeNameArabic}</div>
+                (mediaDetails.media_associate.place_unique_ids && mediaDetails.media_associate.place_unique_ids.length > 0) &&
+                mediaDetails.media_associate.place_unique_ids.map((placeObj: InventoryAssociationType) => (
+                    <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
+                ))
+            }
+            {
+                (mediaDetails.media_associate.visit_unique_ids && mediaDetails.media_associate.visit_unique_ids.length > 0) &&
+                mediaDetails.media_associate.visit_unique_ids.map((visitObj: InventoryAssociationType_Event) => (
+                    <div>{visitObj.fieldNarrative}</div>
                 ))
             }
         </Box>
