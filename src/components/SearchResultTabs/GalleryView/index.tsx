@@ -80,8 +80,18 @@ const GalleryView = () => {
                     placeData && placeData.media_associates.map((itemObj, inx) => (
                         <Grid item md={3} lg={4} key={inx} className={`${styles['media-grid-item']}`}
                             onClick = {e => {
-                                // dispatch(setActiveMediaItem(media[inx]))
-                                // dispatch(setActiveMediaItemIndex(inx))
+                                let respMediaItemObj = null
+                                let respMediaItemIndex = 0
+                                
+                                media.forEach((item, inx_)=> {
+
+                                    if(item.attributes.uniqueId === itemObj.media_unique_id.uniqueId) {
+                                        respMediaItemObj = item
+                                        respMediaItemIndex = inx_
+                                    }
+                                })
+                                dispatch(setActiveMediaItem(respMediaItemObj))
+                                dispatch(setActiveMediaItemIndex(respMediaItemIndex))
                                 navigate(`/search-results/Media/${itemObj.media_unique_id.uniqueId}`, { replace: true })
                             }}
                         >

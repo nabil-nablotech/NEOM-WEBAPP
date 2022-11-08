@@ -196,6 +196,8 @@ export type FileDataType = {
   thumbnailClassname?: string;
   isOpened?: boolean; // to directly render video or embedded code, instead of displaying play icon
   objectURL?: string
+  iframeVideoLink?: string
+  staticVideoLink?: string
 };
 
 export type RenderFileDataProps = {

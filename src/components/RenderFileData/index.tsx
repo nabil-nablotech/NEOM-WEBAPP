@@ -16,7 +16,7 @@ const RenderFileData = ({
     fileData
 }: RenderFileDataProps) => {
     const [openVideoModal, toggleVideoModal] = useState<boolean>(false)
-
+    
     return (
         <>
             {
@@ -51,7 +51,7 @@ const RenderFileData = ({
                         style={{
                             position: 'relative'
                         }}>
-                        {!fileData.src ?
+                        {(!fileData.src && !fileData.iframeVideoLink && !fileData.staticVideoLink) ?
                             <NoVideoPresent message="Video not found" style={{
                                 height: '400px'
                             }} /> :
@@ -74,15 +74,56 @@ const RenderFileData = ({
                                     }}
                                 />
                             </> :
-                                <Box component="div" className={`${styles['video-player-box']}`}>
-                                    <ReactPlayer
-                                        width="100%" height="auto"
-                                        playing={fileData.isOpened} url={fileData.src}
-                                        style={{
-                                            aspectRatio: '3/1.65'
-                                        }}
-                                    />
-                                </Box>
+                                <>
+                                    {
+                                        fileData.iframeVideoLink ?
+                                            <>
+                                                {
+                                                    fileData.iframeVideoLink.indexOf('https://www.youtube.com/watch') !== -1 ?
+                                                        <>
+                                                            <ReactPlayer
+                                                                width="100%" height="auto"
+                                                                playing={fileData.isOpened} url={fileData.iframeVideoLink}
+                                                                style={{
+                                                                    aspectRatio: '3/1.65'
+                                                                }}
+                                                            />
+                                                        </> :
+                                                        <>
+                                                            <iframe title="video-player-iframe" style={{
+                                                                width: '100%'
+                                                            }}
+
+                                                                src={fileData.iframeVideoLink.replace('/watch', '/embed')}
+                                                            >
+
+                                                            </iframe>
+                                                        </>
+                                                }
+                                            </> :
+                                            fileData.staticVideoLink ?
+                                                <>
+                                                    <video width="100%" height="auto" controls autoPlay={true}>
+                                                        <source
+                                                            src={fileData.staticVideoLink}
+                                                            type="video/mp4"
+                                                        />
+                                                    </video>
+                                                </> :
+                                                <>
+                                                    <Box component="div" className={`${styles['video-player-box']}`}>
+                                                        <ReactPlayer
+                                                            width="100%" height="auto"
+                                                            playing={fileData.isOpened} url={fileData.src}
+                                                            style={{
+                                                                aspectRatio: '3/1.65'
+                                                            }}
+                                                        />
+                                                    </Box>
+                                                </>
+                                    }
+                                </>
+
                         }
                     </Box>
                 </>
