@@ -83,7 +83,12 @@ const TextualContent = ({
             {
                 (mediaDetails.media_associate.visit_unique_ids && mediaDetails.media_associate.visit_unique_ids.length > 0) &&
                 mediaDetails.media_associate.visit_unique_ids.map((visitObj: InventoryAssociationType_Event) => (
-                    <div>{visitObj.fieldNarrative}</div>
+                    <>
+                        {
+                            visitObj &&
+                            <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic}</div>
+                        }
+                    </>
                 ))
             }
         </Box>

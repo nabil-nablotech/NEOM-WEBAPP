@@ -74,6 +74,11 @@ export type InventoryAssociationType_Event = {
   placeNameArabic: string
   placeNumber: string | null
   fieldNarrative?: string
+  visit_associate?: {
+    place_unique_id: {
+      placeNameArabic: string
+    }
+  }
 }
 
 export type SearchResultsState2 = {
