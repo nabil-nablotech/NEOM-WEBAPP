@@ -59,6 +59,9 @@ const SingleComment = ({
       return getId() == remark?.remark_details?.users_permissions_user?.id;
     }
   };
+  if (type !== "child" && remark && !remark?.remark_details?.id) {
+    return null
+  }
   return (
     <>
       <Box component="div">
@@ -152,7 +155,7 @@ const SingleComment = ({
                     }
                     e.preventDefault();
                   }}
-                  // onKeyDown={(e) => e.preventDefault()}
+                  onKeyDown={(e) => {e.code === "Enter" && e.preventDefault()}}
                   sx={{
                     ...textInputSxStyles,
                     "& .MuiFormControl-root.MuiTextField": {
@@ -230,7 +233,7 @@ const CommentsSection = ({
       
       updateRemarks({
         id: (actionData?.childType === "child" ? actionData.data.id : actionData.data.remark_details.id),
-        data: {description: actionData?.childType === "child" ? childInputs : inputs}
+        data: {description: actionData?.childType === "child" ? childInputs : inputs, delete: false}
       })
     } else if (remark_id) {
       addRemarks({
@@ -256,12 +259,10 @@ const CommentsSection = ({
         }
         break;
       case "delete":
-        if (childType) {
-          openReply(remark.id)
-          setChildInput(remark.description)
-        }else {
-          setInputs(remark.remark_details.description)
-        }
+        updateRemarks({
+          id: (childType === "child" ? remark.id : remark.remark_details.id),
+          data: {delete: true}
+        })
         break;
     
       default:
@@ -274,7 +275,7 @@ const CommentsSection = ({
       
       updateRemarks({
         id: (actionData?.childType === "child" ? actionData.data.id : actionData.data.remark_details.id),
-        data: {description: actionData?.childType === "child" ? childInputs : inputs}
+        data: {description: actionData?.childType === "child" ? childInputs : inputs, delete: false}
       })
     } else  {
       addRemarks({

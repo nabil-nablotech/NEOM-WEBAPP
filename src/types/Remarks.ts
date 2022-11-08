@@ -8,7 +8,7 @@ export type RemarksPayload = {
 };
 export type RemarksEditPayload = {
   id: string;
- data: { description: string;}
+ data: { description?: string; delete: boolean}
 };
 
 export type Remark = {
