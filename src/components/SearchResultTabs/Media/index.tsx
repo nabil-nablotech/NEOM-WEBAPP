@@ -41,49 +41,7 @@ const MediaTab = () => {
     }, [selectedCardIndex])
 
     const { openStates, toggleOpenStates } = useToggledView({ count: 2 })
-
-    /* Event handlers */
-  // const exportMedia = async () => {
-  //   let filter: any;
-  //   if (searchData?.search) {
-  //     filter = {
-  //       $or: [
-  //         {
-  //           title: {
-  //             $containsi: searchData.search,
-  //           },
-  //         },
-  //         {
-  //           description: {
-  //             $contains: searchData.search,
-  //           },
-  //         },
-  //         {
-  //           fileName: {
-  //             $contains: searchData.search,
-  //           },
-  //         },
-  //         {
-  //           citation: {
-  //             $contains: searchData.search,
-  //           },
-  //         },
-  //         ,
-  //       ],
-  //     };
-  //   }
-  //   try {
-  //     const requestData: ExportRequestDataType = {
-  //       collectionTypePlural: "medias",
-  //     };
-  //     if (searchData?.search) {
-  //       requestData.filter = qs.stringify(filter);
-  //     }
-  //     await exportContentType(requestData);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+    
   const exportMedia = async () => {
         let filter: any;
     if (searchData?.search) {
@@ -116,48 +74,6 @@ const MediaTab = () => {
     setFilter(filter);
     setOpen(true);
   };
-  // const exportMediaZip = async () => {
-  //   let filter: any;
-  //   if (searchData?.search) {
-  //     filter = {
-  //       $or: [
-  //         {
-  //           title: {
-  //             $containsi: searchData.search,
-  //           },
-  //         },
-  //         {
-  //           description: {
-  //             $contains: searchData.search,
-  //           },
-  //         },
-  //         {
-  //           fileName: {
-  //             $contains: searchData.search,
-  //           },
-  //         },
-  //         {
-  //           citation: {
-  //             $contains: searchData.search,
-  //           },
-  //         },
-  //         ,
-  //       ],
-  //     };
-  //   }
-  //   try {
-  //     const response = await client.get(`${baseUrl}/api/custom/medias`, {
-  //       params: { filter: qs.stringify(filter) },
-  //     });
-  //     const files = response?.data?.map((item: any) => ({
-  //       fileName: item?.fileName,
-  //       fileUrl: `${baseUrl}${item?.object?.url}`,
-  //     }));
-  //     await exportCsvImagesZip(files, response?.data);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
 
     return (
         <Box component="div" className={`${styles['main-tab-content']}`}>
@@ -199,7 +115,6 @@ const MediaTab = () => {
             }}
             onClick={exportMedia}
           />
-          {/* <ExportModal /> */}
         </Box>
                 {/* <Box component="div" className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={DetailsView}
                     onClick={e => toggleOpenStates([false, true, false])}

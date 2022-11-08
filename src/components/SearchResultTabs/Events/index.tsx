@@ -21,6 +21,7 @@ import qs from 'qs';
 import client from '../../../utils/services/axiosClient';
 import { baseUrl } from '../../../utils/services/helpers';
 import { exportCsvImagesZip } from '../../../utils/export-import/export-csv-images-zip';
+import ExportModal from '../../ExportModal';
 
 const PlacesTab = () => {
   const { selectedCardIndex, events, totalCounts, eventMetaData } = useSelector(
@@ -28,7 +29,9 @@ const PlacesTab = () => {
   );
   const [img, setimg] = useState(MapImg1);
   const [isFilter, setIsFilter] = useState(null);
-  const { fetchEvents, hasMoreData, loading, mapEvents, setEdit,searchData } = useEvent();
+  const { fetchEvents, hasMoreData, loading, mapEvents, setEdit, searchData } = useEvent();
+  const [open, setOpen] = React.useState(false);
+  const [filter, setFilter] = React.useState(null);
 
     useEffect(() => {
         setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1)
@@ -66,51 +69,53 @@ const PlacesTab = () => {
         ],
       };
     }
-    try {
-      const requestData: ExportRequestDataType = {
-        collectionTypePlural: "visits",
-      };
-      if (searchData?.search) {
-        requestData.filter = qs.stringify(filter);
-      }
-      await exportContentType(requestData);
-    } catch (err) {
-      console.log(err);
-    }
+    // try {
+    //   const requestData: ExportRequestDataType = {
+    //     collectionTypePlural: "visits",
+    //   };
+    //   if (searchData?.search) {
+    //     requestData.filter = qs.stringify(filter);
+    //   }
+    //   await exportContentType(requestData);
+    // } catch (err) {
+    //   console.log(err);
+    // }
+    setFilter(filter);
+    setOpen(true);
   };
-  const exportEventZip = async () => {
-    let filter: any;
-    if (searchData?.search) {
-        filter = {
-            $or: [
-              {
-                siteDescription: {
-                  $containsi: searchData.search,
-                },
-              },
-              {
-                recordingTeam: {
-                  $contains: searchData.search,
-                },
-              },
-              {
-                fieldNarrative: {
-                  $contains: searchData.search,
-                },
-              }
-            ],
-          };
-    }
-    try {
-      const response = await client.get(`${baseUrl}/api/custom/visits`, {
-        params: { filter: qs.stringify(filter) },
-      });
-      const files: { fileName: string; fileUrl: string }[] = [];
-      await exportCsvImagesZip(files, response?.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+//   const exportEventZip = async () => {
+//     let filter: any;
+//     if (searchData?.search) {
+//         filter = {
+//             $or: [
+//               {
+//                 siteDescription: {
+//                   $containsi: searchData.search,
+//                 },
+//               },
+//               {
+//                 recordingTeam: {
+//                   $contains: searchData.search,
+//                 },
+//               },
+//               {
+//                 fieldNarrative: {
+//                   $contains: searchData.search,
+//                 },
+//               }
+//             ],
+//           };
+//     }
+//     try {
+//       const response = await client.get(`${baseUrl}/api/custom/visits`, {
+//         params: { filter: qs.stringify(filter) },
+//       });
+//       const files: { fileName: string; fileUrl: string }[] = [];
+//       await exportCsvImagesZip(files, response?.data);
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   };
 
     return (
         <Box component="div" className={`${styles['main-tab-content']}`}>
@@ -124,7 +129,7 @@ const PlacesTab = () => {
               "var(--table-black-text)",
             ]}
             className={`${styles["export-btn"]}`}
-            label="Export data & assets"
+            label="Select"
             style={{
               border: "1px solid var(--light-grey-border)",
               borderRadius: "40px",
@@ -133,7 +138,6 @@ const PlacesTab = () => {
               height: "100%",
               textAlign: "center",
             }}
-            onClick={exportEventZip}
           />
           <Button
             colors={[
@@ -187,6 +191,7 @@ const PlacesTab = () => {
                 </Grid>
                 
             </Box>
+            <ExportModal open={open} setOpen={setOpen} count={events.length} path={'visits'} filter={filter}/>
         </Box>
     );
 }

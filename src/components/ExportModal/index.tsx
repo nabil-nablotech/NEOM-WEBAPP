@@ -36,7 +36,7 @@ export default function ExportModal({open, setOpen, count, path, filter}:any) {
   const exportData = async () => {
     try {
       const requestData: ExportRequestDataType = {
-        collectionTypePlural: "medias",
+        collectionTypePlural: path,
       };
       if (filter) {
         requestData.filter = qs.stringify(filter);
