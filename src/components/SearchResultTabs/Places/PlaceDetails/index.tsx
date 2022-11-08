@@ -14,7 +14,7 @@ import { StyledAntTable } from "../../../StyledAntTable";
 import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
-import { antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, checkIsNew, isRecordAttached, isPlaceDetailAttached, detectMediaTypeFromMediaAssociate } from "../../../../utils/services/helpers";
+import { antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate, isEmptyValue, NO_DESCRIPTION, NO_MEDIA, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, shallRenderMedia, checkIsNew, isRecordAttached, isPlaceDetailAttached, detectMediaTypeFromMediaAssociate, toFixedFromString } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { Media } from "../../../../types/Media";
@@ -824,8 +824,8 @@ const PlaceDetailsPage = () => {
                                                 id: 0,
                                                 name: `${placeNameEnglish}`,
                                                 position: {
-                                                    lat: latitude || 24.11,
-                                                    lng: longitude || 34.98
+                                                    lat: toFixedFromString(latitude, 6) || 24.11,
+                                                    lng: toFixedFromString(longitude, 6) || 34.98
                                                 }
                                             }]} />
                                             <Grid container className={`${styles['map-loctn-details']}`} >

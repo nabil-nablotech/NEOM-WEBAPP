@@ -27,8 +27,8 @@ export type Event = {
     createdAt: string;
     keywords: string[] | null;
     placeNumber: string | null;
-    latitude: Number;
-    longitude: Number;
+    latitude: number;
+    longitude: number;
     media_associates: MediaAssociates;
     visit_associate: VisitAssociate,
     uniqueId: string

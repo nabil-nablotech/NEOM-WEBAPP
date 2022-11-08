@@ -27,8 +27,8 @@ export type Media = {
     updatedAt: Date;
     keywords: string[] | null;
     citation: string;
-    latitude: Number;
-    longitude: Number;
+    latitude: number;
+    longitude: number;
     imageMetadata: {
       fileSize: Number;
     };
@@ -67,8 +67,8 @@ export type MediaApi = {
   updatedAt: Date;
   keywords: string[] | null;
   citation: string;
-  latitude: Number;
-  longitude: Number;
+  latitude: number;
+  longitude: number;
   imageMetadata: {
     fileSize: Number;
   };
@@ -108,8 +108,8 @@ export type MediaApi2 = {
   updatedAt: Date;
   keywords: string[] | null;
   citation: string;
-  latitude: Number;
-  longitude: Number;
+  latitude: number;
+  longitude: number;
   imageMetadata: {
     fileSize: Number;
   };
