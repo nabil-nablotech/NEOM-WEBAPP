@@ -28,8 +28,8 @@ const AddedPlaces = ({
             <Box component="div" className={`${styles["title"]}`}>Places</Box>
             <Box component="div" className={`${styles["list"]}`}>
                 {
-                    list?.map((place: InventoryAssociationType) => (
-                        <Box component="div">
+                    list?.map((place: InventoryAssociationType, indx: number) => (
+                        <Box component="div" key={indx}>
                             <PlaceInventoryItem
                                 item={{
                                     id: Number(place.id),
