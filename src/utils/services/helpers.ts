@@ -456,7 +456,9 @@ export const detectLowerCaseStringInArray = (
 
 export const detectMediaRecordApiType = (detailObj : MediaApi) => {
   return detailObj.media_type[0].typeCode === "VIDEO" ? MEDIA_TYPE_VIDEO :
-  detailObj.media_type[0].typeCode === "IMAGE" ? MEDIA_TYPE_IMAGE : MEDIA_TYPE_3D
+    detailObj.media_type[0].typeCode === "IMAGE" ? MEDIA_TYPE_IMAGE :
+      detailObj.media_type[0].typeCode === "3DMODEL" ? MEDIA_TYPE_3D :
+  MEDIA_TYPE_IMAGE
 }
 export const detectLibraryRecordApiType = (detailObj : MediaApi2) => {
   return detailObj.media_type[0].typeCode === "VIDEO" ? MEDIA_TYPE_VIDEO :
@@ -485,5 +487,5 @@ export const detectMediaTypeFromMediaAssociate = (obj: MediaAssociateObj) => {
   } else if(obj.media_unique_id.media_type[0].typeCode === "3DMODEL") {
     return MEDIA_TYPE_3D
   } else return MEDIA_TYPE_IMAGE
-  
+
 }

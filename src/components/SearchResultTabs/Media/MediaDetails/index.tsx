@@ -62,6 +62,8 @@ const MediaDetailsPage = ({
                 setMediaType(MEDIA_TYPE_VIDEO)
             } else if (detectMediaRecordApiType(mediaDetails) === MEDIA_TYPE_IMAGE) {
                 setMediaType(MEDIA_TYPE_IMAGE)
+            } else if(detectMediaRecordApiType(mediaDetails) === MEDIA_TYPE_3D) {
+                setMediaType(MEDIA_TYPE_3D)
             }
         }
         
@@ -119,7 +121,7 @@ const MediaDetailsPage = ({
             },
         },
     ]
-
+    
     return <>
         <Box component="div" className={`${styles['details-page-wrapper']}`}>
             <Box component="div" className={`${styles['img-wrapper']}`} >
@@ -336,7 +338,6 @@ const MediaDetailsPage = ({
                                 <div className={`${styles[`video-info-grid`]}`}>
                                     <Box component="div">URL:</Box>
                                     <Box component={"a"} href="#" className={`${styles['anchor']}`}>
-                                        {}
                                     </Box>
                                 </div>
                                 <div className={`${styles[`video-info-grid`]}`}>
@@ -382,7 +383,7 @@ const MediaDetailsPage = ({
                                 <div className={`${styles[`three-d-modelinfo-grid`]}`}>
                                     <Box component="div">URL:</Box>
                                     <Box component={"a"} href="#" className={`${styles['anchor']}`}>
-                                        {objectURL}
+                                        {mediaDetails.mediaUIPath ? mediaDetails.mediaUIPath : ''}
                                     </Box>
                                 </div>
                                 <div className={`${styles[`three-d-modelinfo-grid`]}`}>

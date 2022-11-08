@@ -90,7 +90,7 @@ export type MediaApi = {
   }
   }
   media_type: typeCodeArrObj[]
-
+  mediaUIPath: string | null
 };
 
 export type MediaApi2 = {

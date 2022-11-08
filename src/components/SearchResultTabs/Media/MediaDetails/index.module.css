@@ -75,6 +75,16 @@
     margin-bottom: 1em;
 }
 
+.three-d-modelinfo-grid {
+    display: flex;
+    gap: 5px;
+}
+
+.threeD-model-wrapper > div > iframe {
+    width: 100%;
+    aspect-ratio: 3/1.5;
+}
+
 .video-title ,
 .three-d-model-title {
     font-size: 25px;
