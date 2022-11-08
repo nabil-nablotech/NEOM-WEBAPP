@@ -7,7 +7,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { CustomModal } from '../../../CustomModal';
-import { MediaDetailsPageProps, tabNameProps } from '../../../../types/SearchResultsTabsProps';
+import { InventoryAssociationType, InventoryAssociationType_Event, MediaDetailsPageProps, tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
@@ -20,7 +20,7 @@ import ModelViewer from '../../../Model';
 import { useEffect } from 'react';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
-import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE } from '../../../../utils/services/helpers';
+import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
@@ -75,9 +75,24 @@ const TextualContent = ({
         <Box component="div" className={`${styles[`bottom-grid`]}`} >
             <p>Associations</p>
             {
-                (places && places.length > 0) &&
-                places.map((placeObj: Place) => (
-                    <div>{placeObj.attributes.placeNameEnglish} {placeObj.attributes.placeNameArabic}</div>
+                (mediaDetails.media_associate.place_unique_ids && mediaDetails.media_associate.place_unique_ids.length > 0) &&
+                mediaDetails.media_associate.place_unique_ids.map((placeObj: InventoryAssociationType) => (
+                    <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
+                ))
+            }
+            {
+                (mediaDetails.media_associate.visit_unique_ids && mediaDetails.media_associate.visit_unique_ids.length > 0) &&
+                mediaDetails.media_associate.visit_unique_ids.map((visitObj: InventoryAssociationType_Event) => (
+                    <>
+                        {
+                            visitObj &&
+                            <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
+                                mediaDetails.media_associate.visit_unique_ids[0].visitNumber ?
+                                    `Visit ${mediaDetails.media_associate.visit_unique_ids[0].visitNumber}` :
+                                    ''
+                            }</div>
+                        }
+                    </>
                 ))
             }
         </Box>
@@ -317,13 +332,13 @@ const MediaDetailsPage = ({
                                         <Grid item lg={5} md={5} sm={5}>
                                             <Grid container className={`${styles['map-loctn-line']}`}>
                                                 <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                                <Grid item>{`${latitude}`}</Grid>
+                                                <Grid item>{`${toFixedFromString(latitude, 6)}`}</Grid>
                                             </Grid>
                                         </Grid>
                                         <Grid item lg={5} md={5} sm={6}>
                                             <Grid container className={`${styles['map-loctn-line']}`}>
                                                 <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                                <Grid item>{`${longitude}`}</Grid>
+                                                <Grid item>{`${toFixedFromString(longitude, 6)}`}</Grid>
                                             </Grid>
                                         </Grid>
                                     </Grid> </>
@@ -385,13 +400,13 @@ const MediaDetailsPage = ({
                                             <Grid item lg={5} md={5} sm={5}>
                                                 <Grid container className={`${styles['map-loctn-line']}`}>
                                                     <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                                    <Grid item>{`${latitude}`}</Grid>
+                                                    <Grid item>{`${toFixedFromString(latitude, 6)}`}</Grid>
                                                 </Grid>
                                             </Grid>
                                             <Grid item lg={5} md={5} sm={6}>
                                                 <Grid container className={`${styles['map-loctn-line']}`}>
                                                     <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                                    <Grid item>{`${longitude}`}</Grid>
+                                                    <Grid item>{`${toFixedFromString(longitude, 6)}`}</Grid>
                                                 </Grid>
                                             </Grid>
                                         </Grid> </>
