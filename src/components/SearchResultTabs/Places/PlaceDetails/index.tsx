@@ -684,6 +684,7 @@ const PlaceDetailsPage = () => {
                                                             key={index}
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
+                                                            onClick={() => handleSearch({period: [item]})}
                                                         >
                                                             {item}
                                                         </Box>
@@ -701,7 +702,8 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                         {
                                             !isEmptyValue(stateOfConservation) ? stateOfConservation.map((item: string, index: number) =>
-                                                <Grid item key={index}>
+                                                <Grid item key={index}
+                                                onClick={() => handleSearch({stateOfConservation: [item]})}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -718,7 +720,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                         {
                                             !isEmptyValue(risk) ? risk.map((item: string, index: number) =>
-                                                <Grid item key={index}>
+                                                <Grid item key={index} onClick={() => handleSearch({risk: [item]})}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -734,7 +736,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                         {
                                             !isEmptyValue(tourismValue) ? tourismValue.map((item: string, index: number) =>
-                                                <Grid item key={index}>
+                                                <Grid item key={index} onClick={() => handleSearch({tourismValue: [item]})}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -751,7 +753,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                         {
                                             !isEmptyValue(researchValue) ? researchValue.map((item: string, index: number) =>
-                                                <Grid item key={index}>
+                                                <Grid item key={index} onClick={() => handleSearch({researchValue: [item]})}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
@@ -775,7 +777,7 @@ const PlaceDetailsPage = () => {
                                         </Grid>
                                         {
                                             !isEmptyValue(recommendation) ? recommendation.map((item: string, index: number) =>
-                                                <Grid item key={index}>
+                                                <Grid item key={index} onClick={() => handleSearch({tourismValue: [item]})}>
                                                     {item}
                                                 </Grid>) :
                                                 <Grid item>
