@@ -7,7 +7,8 @@ import ReactPlayer from "react-player";
 import NoVideoPresent from "../NoDataScreens/NoVideoPresent";
 import NoImagePresent from "../NoDataScreens/NoImagePresent";
 import { isImagePathInvalid, NO_IMAGE } from "../../utils/services/helpers";
-// import ThreeDIcon from '../../assets/images/icon-3d-model.svg';
+import ThreeDIcon from '../../assets/images/icon-3d-model.svg';
+import parse from 'html-react-parser';
 
 /** component created to erender normal image -video - blob based on props */
 const RenderFileData = ({
@@ -22,10 +23,10 @@ const RenderFileData = ({
                 fileType === 'image' &&
                 <>
                     {
-                        fileData.src  
-                        &&
+                        fileData.src
+                            &&
                             !isImagePathInvalid(fileData.src)
-                             ?
+                            ?
                             <Box
                                 className={fileData.className}
                                 component="img"
@@ -41,19 +42,19 @@ const RenderFileData = ({
                                 }}
                             />
                     }
-                    </>
+                </>
             }
             {
                 fileType === 'video' &&
                 <>
                     <Box component="div"
-                    style={{
-                        position: 'relative'
-                    }}>
+                        style={{
+                            position: 'relative'
+                        }}>
                         {!fileData.src ?
                             <NoVideoPresent message="Video not found" style={{
                                 height: '400px'
-                            }}/> :
+                            }} /> :
                             !fileData.isOpened ? <>
                                 <Box
                                     className={`${fileData.className} ${fileData.thumbnailClassname}`}
@@ -93,12 +94,12 @@ const RenderFileData = ({
                         position: 'relative'
                     }}>
                         <Box
-                            className={fileData.className}
-                            component="img"
-                            alt={fileData.alt ? fileData.alt : ''}
-                            src={fileData.thumbNail}
-                        />
-                        {/* <Box
+                            className={`${fileData.className} ${styles['three-d-model-box']}`}
+                            component="div"
+                        >
+                            {fileData.objectURL ? parse(fileData.objectURL) : ''}
+                        </Box>
+                        <Box
                             component="img"
                             src={ThreeDIcon}
                             sx={{
@@ -106,10 +107,10 @@ const RenderFileData = ({
                                 height: 1 / 4,
                             }}
                             className={`${styles['video-play-icon']}`}
-                            onClick={e => {
-                                e.preventDefault()
-                            }}
-                        /> */}
+                        // onClick={e => {
+                        //     e.preventDefault()
+                        // }}
+                        />
                     </Box>
                 </>
             }
