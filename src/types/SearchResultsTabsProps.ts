@@ -92,7 +92,8 @@ export type SearchResultsState2 = {
   newItemWindowOpen: boolean;
   showAddSuccess: boolean;
   showEditSuccess: boolean;
-  activePlaceItem: Place | null;
+  // activePlaceItem: Place | null;
+  activePlaceItem: PlaceApi | null;
   activePlaceItemIndex: number;
   activeEventItem: EventApi | null;
   activeEventItemIndex: number;
@@ -194,6 +195,7 @@ export type FileDataType = {
   thumbNail?: string;
   thumbnailClassname?: string;
   isOpened?: boolean; // to directly render video or embedded code, instead of displaying play icon
+  objectURL?: string
 };
 
 export type RenderFileDataProps = {
