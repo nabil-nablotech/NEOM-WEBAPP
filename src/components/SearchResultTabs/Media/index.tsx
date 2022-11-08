@@ -23,6 +23,7 @@ import { exportContentType } from '../../../utils/export-import/export-content-t
 import client from '../../../utils/services/axiosClient';
 import { baseUrl } from '../../../utils/services/helpers';
 import { exportCsvImagesZip } from '../../../utils/export-import/export-csv-images-zip';
+import ExportModal from '../../ExportModal';
 
 const MediaTab = () => {
     const { selectedCardIndex, media, mediaMetaData, totalCounts } = useSelector(
@@ -31,18 +32,60 @@ const MediaTab = () => {
     const [img, setimg] = useState(MapImg1);
 
     const { fetchMediaItems, hasMoreData, loading, setEdit,searchData } = useMedia();
+    const [open, setOpen] = React.useState(false);
+    const [filter, setFilter] = React.useState(null);
 
     const meta: Meta | null = mediaMetaData;
     useEffect(() => {
-
         setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1)
     }, [selectedCardIndex])
 
     const { openStates, toggleOpenStates } = useToggledView({ count: 2 })
 
     /* Event handlers */
+  // const exportMedia = async () => {
+  //   let filter: any;
+  //   if (searchData?.search) {
+  //     filter = {
+  //       $or: [
+  //         {
+  //           title: {
+  //             $containsi: searchData.search,
+  //           },
+  //         },
+  //         {
+  //           description: {
+  //             $contains: searchData.search,
+  //           },
+  //         },
+  //         {
+  //           fileName: {
+  //             $contains: searchData.search,
+  //           },
+  //         },
+  //         {
+  //           citation: {
+  //             $contains: searchData.search,
+  //           },
+  //         },
+  //         ,
+  //       ],
+  //     };
+  //   }
+  //   try {
+  //     const requestData: ExportRequestDataType = {
+  //       collectionTypePlural: "medias",
+  //     };
+  //     if (searchData?.search) {
+  //       requestData.filter = qs.stringify(filter);
+  //     }
+  //     await exportContentType(requestData);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
   const exportMedia = async () => {
-    let filter: any;
+        let filter: any;
     if (searchData?.search) {
       filter = {
         $or: [
@@ -70,60 +113,51 @@ const MediaTab = () => {
         ],
       };
     }
-    try {
-      const requestData: ExportRequestDataType = {
-        collectionTypePlural: "medias",
-      };
-      if (searchData?.search) {
-        requestData.filter = qs.stringify(filter);
-      }
-      await exportContentType(requestData);
-    } catch (err) {
-      console.log(err);
-    }
+    setFilter(filter);
+    setOpen(true);
   };
-  const exportMediaZip = async () => {
-    let filter: any;
-    if (searchData?.search) {
-      filter = {
-        $or: [
-          {
-            title: {
-              $containsi: searchData.search,
-            },
-          },
-          {
-            description: {
-              $contains: searchData.search,
-            },
-          },
-          {
-            fileName: {
-              $contains: searchData.search,
-            },
-          },
-          {
-            citation: {
-              $contains: searchData.search,
-            },
-          },
-          ,
-        ],
-      };
-    }
-    try {
-      const response = await client.get(`${baseUrl}/api/custom/medias`, {
-        params: { filter: qs.stringify(filter) },
-      });
-      const files = response?.data?.map((item: any) => ({
-        fileName: item?.fileName,
-        fileUrl: `${baseUrl}${item?.object?.url}`,
-      }));
-      await exportCsvImagesZip(files, response?.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const exportMediaZip = async () => {
+  //   let filter: any;
+  //   if (searchData?.search) {
+  //     filter = {
+  //       $or: [
+  //         {
+  //           title: {
+  //             $containsi: searchData.search,
+  //           },
+  //         },
+  //         {
+  //           description: {
+  //             $contains: searchData.search,
+  //           },
+  //         },
+  //         {
+  //           fileName: {
+  //             $contains: searchData.search,
+  //           },
+  //         },
+  //         {
+  //           citation: {
+  //             $contains: searchData.search,
+  //           },
+  //         },
+  //         ,
+  //       ],
+  //     };
+  //   }
+  //   try {
+  //     const response = await client.get(`${baseUrl}/api/custom/medias`, {
+  //       params: { filter: qs.stringify(filter) },
+  //     });
+  //     const files = response?.data?.map((item: any) => ({
+  //       fileName: item?.fileName,
+  //       fileUrl: `${baseUrl}${item?.object?.url}`,
+  //     }));
+  //     await exportCsvImagesZip(files, response?.data);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
     return (
         <Box component="div" className={`${styles['main-tab-content']}`}>
@@ -137,7 +171,7 @@ const MediaTab = () => {
               "var(--table-black-text)",
             ]}
             className={`${styles["export-btn"]}`}
-            label="Export data & assets"
+            label="Select"
             style={{
               border: "1px solid var(--light-grey-border)",
               borderRadius: "40px",
@@ -146,7 +180,6 @@ const MediaTab = () => {
               height: "100%",
               textAlign: "center",
             }}
-            onClick={exportMediaZip}
           />
           <Button
             colors={[
@@ -166,6 +199,7 @@ const MediaTab = () => {
             }}
             onClick={exportMedia}
           />
+          {/* <ExportModal /> */}
         </Box>
                 {/* <Box component="div" className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={DetailsView}
                     onClick={e => toggleOpenStates([false, true, false])}
@@ -209,6 +243,7 @@ const MediaTab = () => {
                     }
                 </Grid>
             </Box>
+            <ExportModal open={open} setOpen={setOpen} count={media.length} path={'medias'} filter={filter}/>
         </Box>
     );
 }
