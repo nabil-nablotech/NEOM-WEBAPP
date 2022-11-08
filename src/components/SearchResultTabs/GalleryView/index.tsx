@@ -9,7 +9,9 @@ import YellowStar from '../../../assets/images/searchResults/YellowStar.svg'
 import { CustomMoreOptionsComponent } from "../../CustomMoreOptionsComponent";
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from "react";
-import { baseUrl } from "../../../utils/services/helpers";
+import { baseUrl, detectMediaTypeFromMediaAssociate } from "../../../utils/services/helpers";
+import usePlaceDetails from "../../../hooks/usePlaceDetails";
+import Loader from "../../Common/Loader";
 
 const GalleryView = () => {
     const dispatch = useDispatch()
@@ -17,6 +19,7 @@ const GalleryView = () => {
     const { media, places, activePlaceItem, activeMediaItem } = useSelector(
         (state: RootState) => state.searchResults
     );
+    const { loading: placeLoading, data: placeData } = usePlaceDetails();
     
     const actionsArray = [
         {
@@ -37,14 +40,15 @@ const GalleryView = () => {
         }
     ]
 
-    useEffect(() => {
+    
+    if (placeLoading) {
+        return <Loader />
+    }
+    
+    if (!placeData) {
+        return <></>
+    }
 
-        if(activeMediaItem) {
-            navigate(`/search-results/Media/${activeMediaItem.attributes.uniqueId}`, { replace: true })
-        }
-
-    }, [activeMediaItem])
-// console.log('hex: ', places)
     return (
         <Box component="div" className={`${styles["gallery-container"]}`} style={{
         }}>
@@ -67,28 +71,28 @@ const GalleryView = () => {
             </Box>
             <Grid container className={`${styles['title-section']}`}>
                 <Grid item >
-                    {`${activePlaceItem?.attributes.placeNameEnglish.substr(0, 20)}${activePlaceItem?.attributes.placeNameArabic.substr(0, 20)}`}
+                    {`${placeData?.placeNameEnglish.substr(0, 20)}${placeData?.placeNameArabic.substr(0, 20)}`}
                 </Grid>
-                <Grid item >{`${places.length} Items`}</Grid>
+                {placeData && <Grid item >{`${placeData?.media_associates.length} Items`}</Grid>}
             </Grid>
             <Grid container className={`${styles['media-grid']}`}>
                 {
-                    places && places.map((itemObj, inx) => (
+                    placeData && placeData.media_associates.map((itemObj, inx) => (
                         <Grid item md={3} lg={4} key={inx} className={`${styles['media-grid-item']}`}
                             onClick = {e => {
-                                dispatch(setActiveMediaItem(media[inx]))
-                                dispatch(setActiveMediaItemIndex(inx))
+                                // dispatch(setActiveMediaItem(media[inx]))
+                                // dispatch(setActiveMediaItemIndex(inx))
+                                navigate(`/search-results/Media/${itemObj.media_unique_id.uniqueId}`, { replace: true })
                             }}
                         >
                             {/* to-do: api based flag to show featured */}
-                            {
+                            {/* {
                                 inx === 1 ?
                                     <>
                                         <RenderFileData
                                             fileData={{
                                                 src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
                                                 className: `${styles["single-image"]} ${styles["right-image"]}`,
-                                                // thumbnail URL for youtube
                                                 thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg"
                                             }}
                                             fileType="video"
@@ -99,23 +103,23 @@ const GalleryView = () => {
                                             <RenderFileData
                                                 fileData={{
                                                     alt: "",
-                                                    // src: images[2],
                                                     thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
                                                     className: `${styles["single-image"]} ${styles["right-image"]}`
                                                 }}
                                                 fileType="3d"
                                             />
-                                        </> :
+                                        </> : */}
                                         <RenderFileData
                                             fileData={{
                                                 alt: "",
-                                                src: `${baseUrl}${itemObj?.attributes.media_associates.data[0]?.attributes.media_unique_id.data?.attributes.object.data?.attributes.url}`,
+                                                src: `${baseUrl}${itemObj?.media_unique_id.object?.url}`,
                                                 // src: itemObj.media_unique_id.object.attributes.url,
-                                                className: styles['image']
+                                                className: styles['image'],
+                                                objectURL: itemObj.media_unique_id.objectURL || ''
+
                                             }}
-                                            fileType="image"
+                                            fileType={detectMediaTypeFromMediaAssociate(itemObj)}
                                         />
-                            }
                             <Grid container className={`${styles['media-grid-item-options-row']}`}>
                                 <Grid item>
                                     {/* to-do: api based flag to show featured */}

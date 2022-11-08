@@ -12,3 +12,13 @@
     height: auto;
     margin-bottom: 1em;
 }
+
+.three-d-model-box > *,
+.three-d-model-box iframe {
+    height: 100%;
+}
+
+.three-d-model-box iframe {
+    aspect-ratio: 1/1;
+    width: 100%;
+}
