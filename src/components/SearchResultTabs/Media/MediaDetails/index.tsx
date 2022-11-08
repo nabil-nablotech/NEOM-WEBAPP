@@ -7,7 +7,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { CustomModal } from '../../../CustomModal';
-import { MediaDetailsPageProps, tabNameProps } from '../../../../types/SearchResultsTabsProps';
+import { InventoryAssociationType, InventoryAssociationType_Event, MediaDetailsPageProps, tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
