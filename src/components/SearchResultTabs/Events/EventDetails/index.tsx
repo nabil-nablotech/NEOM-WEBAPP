@@ -331,6 +331,16 @@ const EventDetailsPage = () => {
     }
     // const { placeNameEnglish, placeNameArabic, placeNumber} = visit_associate?.place_unique_id;
 
+    const handleSearch = (searchData: any) => {
+        // navigate(`/search-results/Places?{"search":"","refinedSearch":{"artifacts":["Observed"]}}`)
+        navigate({
+            pathname: `/search-results/Events`,
+            search: decodeURIComponent(JSON.stringify({
+                refinedSearch: searchData
+            }))
+        });
+    }
+
     return (
         <Box component="div" className={`${styles['details-container']}`}>
             <Grid className={`${styles['image-grid-gap']}`} container style={{
@@ -451,6 +461,7 @@ const EventDetailsPage = () => {
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
                                                             key={index}
+                                                            onClick={() => handleSearch({siteType: [item]})}
                                                         >
                                                             {item}
                                                         </Box>
@@ -480,6 +491,7 @@ const EventDetailsPage = () => {
                                                             key={index}
                                                             component="div"
                                                             className={`${styles['text-anchor']}`}
+                                                            onClick={() => handleSearch({period: [item]})}
                                                         >
                                                             {item}
                                                         </Box>
