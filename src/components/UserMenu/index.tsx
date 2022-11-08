@@ -13,7 +13,7 @@ import { getRole } from "../../utils/storage/storage";
 import MenuList from "../MenuList";
 import { Box, LinearProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleEditConfirmationWindowOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, setItemAboutToDelete, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleDeleteConfirmationWindowOpen, toggleEditConfirmationWindowOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
 import CustomDrawer from "../CustomDrawer";
 import AddNewItem from "../../pages/AddNewItem";
 import AddNewPlace from "../SearchResultTabs/Places/AddNewItem";
@@ -40,7 +40,9 @@ function UserMenuComponent() {
   const { clientLogout } = useLogout();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [anchorElSettings, setAnchorElSettings] = React.useState<null | HTMLElement>(null);
-  const { newItemWindowOpen, addNewItemWindowType, addItemWindowMinimized, isEditConfirmationWindowOpen } = useSelector((state: RootState) => state.searchResults);
+  const { newItemWindowOpen, addNewItemWindowType, addItemWindowMinimized, isEditConfirmationWindowOpen,
+    isDeleteConfirmationWindowOpen
+   } = useSelector((state: RootState) => state.searchResults);
   const { createPlace } = usePlace();
   const { createEvent, setSearchValue } = useEvent();
   const { createLibrary } = useLibrary();
@@ -205,11 +207,29 @@ function UserMenuComponent() {
           <AddItemCollapsedWindow />
         }
         {
-          isEditConfirmationWindowOpen &&
+          (
+            isEditConfirmationWindowOpen ||
+            isDeleteConfirmationWindowOpen
+          ) &&
           <ConfirmationModal
-            type="confirm-edit"
-            open={isEditConfirmationWindowOpen}
-            handleClose={() => dispatch(toggleEditConfirmationWindowOpen(false))}
+            type={
+              isEditConfirmationWindowOpen ? 
+              "confirm-edit" :
+              "confirm-delete" 
+            }
+            open={
+              isEditConfirmationWindowOpen ||
+              isDeleteConfirmationWindowOpen
+            }
+            handleClose={() => {
+              if(isEditConfirmationWindowOpen) {
+                dispatch(toggleEditConfirmationWindowOpen(false))
+              }
+              if(isDeleteConfirmationWindowOpen) {
+                dispatch(toggleDeleteConfirmationWindowOpen(false))
+                dispatch(setItemAboutToDelete(null))
+              }
+            }}
           />
         }
       </Box>
