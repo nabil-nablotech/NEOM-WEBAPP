@@ -141,6 +141,7 @@ query RefineSearchEvent(
   $recommendation: JSON
   $risk: JSON
   $period: JSON
+  $siteType: JSON
   $assessmentType: JSON
   $latitude: Float
   $longitude: Float
@@ -176,6 +177,7 @@ query RefineSearchEvent(
         { recommendation: { containsi: $recommendation } }
         { risk: { containsi: $risk } }
         { artifacts: { containsi: $artifacts } }
+        { siteType: { containsi: $siteType } }
         { assessmentType: { containsi: $assessmentType } }
         { latitude: { gte: $latitude } }
         { longitude: { lte: $longitude } }
