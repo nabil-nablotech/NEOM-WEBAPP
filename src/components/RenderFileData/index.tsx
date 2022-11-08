@@ -64,8 +64,8 @@ const RenderFileData = ({
                                 />
                                 <PlayCircleFilledWhiteIcon
                                     sx={{
-                                        width: 1 / 4,
-                                        height: 1 / 4,
+                                        width: '40%',
+                                        height: '40%',
                                     }}
                                     fontSize="large" className={`${styles['video-play-icon']}`}
                                     onClick={e => {

@@ -297,54 +297,11 @@ const MediaDetailsPage = ({
                             justifyContent: 'space-between'
                         }}>
                             <Grid item sm={6} lg={7}>
-                                {/* <Box component="div" className={`${styles[`bottom-grid`]}`} >
-                                        <p>ID: {id}</p>
-                                        <br />
-                                        <div>{description}</div>
-                                    </Box>
-                                    <Box component="div" className={`${styles[`bottom-grid`]}`} >
-                                        <p>Details</p>
-                                        <div>Author: {Author}</div>
-                                        <div>Category Type: {categoryType?.join(', ')}</div>
-                                        <div>Bearing: {bearing}</div>
-                                        <div>Source URL: {referenceURL}</div>
-                                        <div>Citation: {citation}</div>
-                                        <div>Item URL: {locationRef}</div>
-                                    </Box>
-                                    {
-                                        mediaDetails.object && <Box component="div" className={`${styles[`bottom-grid`]}`} >
-                                            <p>Metadata</p>
-                                            <div>File Name: {mediaDetails.object.name}</div>
-                                            <div>
-                                                <span>Created: <span>{`${dayjs(mediaDetails.object.createdAt).format("MM/DD/YYYY")}`}</span></span>
-                                            </div>
-                                            <div>
-                                                <span>Modified: <span>{`${dayjs(mediaDetails.object.updatedAt).format("MM/DD/YYYY")}`}</span></span>
-                                            </div>
-                                            <div>Size: {mediaDetails.object.size}MB</div>
-
-                                            <div>Storage: -</div>
-                                            <div>Depth: -</div>
-                                            <div>Dimensions: {mediaDetails.object.width}x{mediaDetails.object.height}</div>
-                                            <div>Make: -</div>
-                                            <div>Model: -</div>
-                                            <div>Extensions: {mediaDetails.object.ext && mediaDetails.object.ext.replace('.', '')}</div>
-                                        </Box>
-                                    }
-                                    <Box component="div" className={`${styles[`bottom-grid`]}`} >
-                                        <p>Associations</p>
-                                        {
-                                            (places && places.length > 0) &&
-                                            places.map((placeObj: Place) => (
-                                                <div>{placeObj.attributes.placeNameEnglish} {placeObj.attributes.placeNameArabic}</div>
-                                            ))
-                                        }
-                                    </Box> */}
                                 <TextualContent
                                     mediaDetails={mediaDetails}
                                 />
                             </Grid>
-                            <Grid item sm={6} lg={5}>
+                            <Grid item sm={6} lg={5} className={`${styles[`map-wrapper`]}`}>
                                 {(latitude && longitude) ? <>
                                     <MapView filterId={setIsFilter} key={4} marker={[{
                                         id: 0,
@@ -404,11 +361,51 @@ const MediaDetailsPage = ({
                         <Box component="div" className={`${styles[`video-desc`]}`}>
                             {description}
                         </Box>
-                        <Box component="div">
-                            <TextualContent
-                                mediaDetails={mediaDetails}
-                            />
-                        </Box>
+                            <Grid container style={{
+                                justifyContent: 'space-between'
+                            }}>
+                                <Grid item sm={6} lg={7}>
+                                    <TextualContent
+                                        mediaDetails={mediaDetails}
+                                    />
+                                </Grid>
+                                <Grid item sm={6} lg={5} className={`${styles[`map-wrapper`]}`}>
+                                    {(latitude && longitude) ? <>
+                                        <MapView filterId={setIsFilter} key={4} marker={[{
+                                            id: 0,
+                                            name: `${mediaDetails?.media_associate?.data?.attributes?.place_unique_ids.data !== null ?
+                                                mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
+                                                : ''}`,
+                                            position: {
+                                                lat: latitude || 24.11,
+                                                lng: longitude || 34.98
+                                            }
+                                        }]} />
+                                        <Grid container className={`${styles['map-loctn-details']}`} >
+                                            <Grid item lg={5} md={5} sm={5}>
+                                                <Grid container className={`${styles['map-loctn-line']}`}>
+                                                    <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
+                                                    <Grid item>{`${latitude}`}</Grid>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid item lg={5} md={5} sm={6}>
+                                                <Grid container className={`${styles['map-loctn-line']}`}>
+                                                    <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
+                                                    <Grid item>{`${longitude}`}</Grid>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid> </>
+                                        :
+                                        <NoMapPresent
+                                            className="light-version"
+                                            message={NO_LOCATION}
+                                            style={{
+                                                backgroundColor: 'var(--blank-doc-bg)',
+                                                color: 'var(--no-map-bg)'
+                                            }}
+                                        />}
+                                </Grid>
+                            </Grid>
                     </Box>
                 }
                 {

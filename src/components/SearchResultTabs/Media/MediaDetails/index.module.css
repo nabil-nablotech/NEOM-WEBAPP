@@ -144,6 +144,14 @@
     margin-block: 0.5em;
 }
 
+.map-wrapper {
+    aspect-ratio: 1/1;
+}
+
+.map-wrapper > div {
+    height: initial !important;
+}
+
 @media (min-width: 575px) and (max-width: 1025px) {
     .bottom-desc-main-grid ,
     .bottom-desc-main-grid div{
