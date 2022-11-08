@@ -40,6 +40,9 @@ const initialState: SearchResultsState2 = {
   isAssociationsIconsDisabled: false,
   isEditConfirmationWindowOpen: false,
   confirmOpenEdit : false,
+  isDeleteConfirmationWindowOpen: false,
+  itemAboutToDelete: null,
+  confirmDelete : false,
   editPayload: null
 };
 
@@ -91,6 +94,14 @@ export const searchResultsSlice = createSlice({
 
       if(action.payload) {
         state.addNewItemWindowType = null
+        state.activePlaceItem = null
+        state.activePlaceItemIndex = 0
+        state.activeEventItem = null
+        state.activeEventItemIndex = 0
+        state.activeMediaItem = null
+        state.activeMediaItemIndex = 0
+        state.activeLibraryItem = null
+        state.activeLibraryItemIndex = 0
       }
     },
     toggleShowEditSuccess: (state, action: PayloadAction<boolean>) => {
@@ -98,6 +109,14 @@ export const searchResultsSlice = createSlice({
 
       if(action.payload) {
         state.addNewItemWindowType = null
+        state.activePlaceItem = null
+        state.activePlaceItemIndex = 0
+        state.activeEventItem = null
+        state.activeEventItemIndex = 0
+        state.activeMediaItem = null
+        state.activeMediaItemIndex = 0
+        state.activeLibraryItem = null
+        state.activeLibraryItemIndex = 0
       }
     },
     setActiveMediaItem: (state, action: PayloadAction<Object | any>) => {
@@ -213,6 +232,19 @@ export const searchResultsSlice = createSlice({
     setEditPayload: (state, action: PayloadAction<any>) => {
       state.editPayload = action.payload;
     },
+    toggleDeleteConfirmationWindowOpen: (state, action: PayloadAction<boolean>) => {
+      state.isDeleteConfirmationWindowOpen = action.payload;
+    },
+    setItemAboutToDelete: (state, action: PayloadAction<tabNameProps | null>) => {
+      state.itemAboutToDelete = action.payload;
+    },
+    toggleConfirmDelete: (state, action: PayloadAction<boolean>) => {
+      state.confirmDelete = action.payload;
+
+      if(action.payload && state.addItemWindowMinimized) {
+        state.addItemWindowMinimized = false
+      }
+    },
   },
 });
 
@@ -253,7 +285,10 @@ export const {
   toggleAssociationsIconDisabled,
   toggleEditConfirmationWindowOpen,
   toggleConfirmOpenEdit,
-  setEditPayload
+  setEditPayload,
+  toggleDeleteConfirmationWindowOpen,
+  setItemAboutToDelete,
+  toggleConfirmDelete
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

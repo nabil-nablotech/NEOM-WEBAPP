@@ -1,9 +1,9 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { DashboardResponse } from "./dashboard";
 import { Place, Meta, PlaceApi, MediaAssociateObj } from "./Place";
 import { Event, EventApi } from "./Event";
 import { Media } from "./Media";
-import { RemarksPayload, Remark, ChildRemark, RemarkDetails } from "./Remarks";
+import { RemarksPayload, Remark, ChildRemark, RemarkDetails, RemarksEditPayload } from "./Remarks";
 
 export type SearchResultTabsProps = {
   tabIndex?: number;
@@ -73,6 +73,12 @@ export type InventoryAssociationType_Event = {
   placeNameEnglish: string
   placeNameArabic: string
   placeNumber: string | null
+  fieldNarrative?: string
+  visit_associate?: {
+    place_unique_id: {
+      placeNameArabic: string
+    }
+  }
 }
 
 export type SearchResultsState2 = {
@@ -92,7 +98,8 @@ export type SearchResultsState2 = {
   newItemWindowOpen: boolean;
   showAddSuccess: boolean;
   showEditSuccess: boolean;
-  activePlaceItem: Place | null;
+  // activePlaceItem: Place | null;
+  activePlaceItem: PlaceApi | null;
   activePlaceItemIndex: number;
   activeEventItem: EventApi | null;
   activeEventItemIndex: number;
@@ -111,6 +118,9 @@ export type SearchResultsState2 = {
   isEditConfirmationWindowOpen: boolean
   confirmOpenEdit: boolean,
   editPayload: any
+  isDeleteConfirmationWindowOpen: boolean
+  confirmDelete : boolean
+  itemAboutToDelete: tabNameProps | null
 };
 
 export type addItemProgressPayload = addItemProgressStateType | addPlaceProgressStateType | 
@@ -158,8 +168,8 @@ export type addEventProgressStateType = {
     siteDescription: string
     fieldNarrative: string
     artifacts: string
-    latitude: Number | number | null,
-    longitude: Number | number | null,
+    latitude: number | null,
+    longitude: number | null,
     assessmentType: string
     stateOfConservation: string
     siteType: string | never[]
@@ -194,6 +204,9 @@ export type FileDataType = {
   thumbNail?: string;
   thumbnailClassname?: string;
   isOpened?: boolean; // to directly render video or embedded code, instead of displaying play icon
+  objectURL?: string
+  iframeVideoLink?: string
+  staticVideoLink?: string
 };
 
 export type RenderFileDataProps = {
@@ -206,6 +219,7 @@ export type CommentSectionProps = {
   type: "Place" | "Visit";
   SelfIcon: () => JSX.Element;
   addRemarks: (payload: RemarksPayload) => void;
+  updateRemarks: (payload: RemarksEditPayload) => void;
   remarks?: Remark[]
 };
 
@@ -219,7 +233,12 @@ export type commentType = {
 };
 export type SingleCommentProps = {
   SelfIcon: () => JSX.Element;
-  addRemarks: (payload: RemarksPayload) => void;
+  openReply?: (id: number) => void;
+  setChildInput?: (e: string) => void;
+  addRemarks: (id: number) => void;
+  handleAction: (type: "edit" | "delete" | "support", remark: any, childType?: "child") => void;
+  childInputs?: string;
+  showInput?: number | null;
   commentObj?: commentType;
   remark: Remark | ChildRemark | RemarkDetails | any;
   type?: "child";

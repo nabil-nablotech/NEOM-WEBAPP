@@ -27,8 +27,8 @@ export type Media = {
     updatedAt: Date;
     keywords: string[] | null;
     citation: string;
-    latitude: Number;
-    longitude: Number;
+    latitude: number;
+    longitude: number;
     imageMetadata: {
       fileSize: Number;
     };
@@ -40,6 +40,7 @@ export type Media = {
         };
       };
     };
+    objectURL: string | null
     media_associate: {
       data: {
       attributes: PlaceUnique;
@@ -66,8 +67,8 @@ export type MediaApi = {
   updatedAt: Date;
   keywords: string[] | null;
   citation: string;
-  latitude: Number;
-  longitude: Number;
+  latitude: number;
+  longitude: number;
   imageMetadata: {
     fileSize: Number;
   };
@@ -90,7 +91,7 @@ export type MediaApi = {
   }
   }
   media_type: typeCodeArrObj[]
-
+  mediaUIPath: string | null
 };
 
 export type MediaApi2 = {
@@ -107,8 +108,8 @@ export type MediaApi2 = {
   updatedAt: Date;
   keywords: string[] | null;
   citation: string;
-  latitude: Number;
-  longitude: Number;
+  latitude: number;
+  longitude: number;
   imageMetadata: {
     fileSize: Number;
   };

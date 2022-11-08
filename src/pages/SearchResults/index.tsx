@@ -143,7 +143,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         gap: '10px',
         alignItems: 'center'
       }}>
-        <Grid item>{`New ${addNewItemWindowType} added.`}</Grid>
+        <Grid item>{`New ${tabName} added.`}</Grid>
         <Grid item className={`${styles['continue-btn']}`}>
           <Button variant="text" onClick={e => {
               handleEdit();

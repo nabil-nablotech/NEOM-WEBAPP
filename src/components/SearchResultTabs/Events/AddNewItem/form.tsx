@@ -1,49 +1,18 @@
 import {
   Box,
   Button as DefaultButton,
-  Step,
-  StepLabel,
-  Stepper,
-  Typography,
-  Chip,
-  StepButton,
-  Grid,
+  Typography
 } from "@mui/material";
-import React, { ChangeEventHandler, useState } from "react";
-import { useParams } from "react-router-dom";
 import {
-  AddNewItemProps,
   StepContentTypes,
 } from "../../../../types/CustomDrawerTypes";
-import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
-import {
-  addItemDefaultSteps,
-  handleEnter,
-} from "../../../../utils/services/helpers";
 import styles from "../../Places/AddNewItem/addNewItem.module.css";
 import TextInput from "../../../../components/TextInput";
-import Button from "../../../../components/Button";
 import DropdownComponent from "../../../Dropdown/index";
 import AutoCompleteSingleSelect from "../../../AutoComplete/singleSelect";
 import AutoComplete from "../../../AutoComplete";
-import CloseIcon from "@mui/icons-material/Close";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import {
-  setAddNewItemWindowType,
-  storeAddItemProgressState,
-  toggleAddItemWindowMinimized,
-  toggleNewItemWindow,
-  toggleShowAddSuccess,
-  toggleShowEditSuccess,
-} from "../../../../store/reducers/searchResultsReducer";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../store";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { useFormik } from "formik";
 import ReactDatePicker from "react-datepicker";
-import { Place } from "../../../../types/Place";
-import { setEventEdit } from "../../../../store/reducers/eventReducer";
 import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
 
 const commonSelectSxStyles = {
@@ -121,7 +90,7 @@ const StepContent = ({
               handleClear={() => {}}
               itemsList={places || []}
               handleSelectChange={(e, value, r, d) =>
-                {console.log('value...', value)
+                {
                   formik.setFieldValue("place", value)}
               }
               handleChange={handleChange}

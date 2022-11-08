@@ -46,8 +46,8 @@ export type PlaceApiResponse = {
   updatedAt: string;
   keywords: string[] | null;
   placeNumber: string | null;
-  latitude: Number;
-  longitude: Number;
+  latitude: number;
+  longitude: number;
   uniqueId: string;
   period: string[];
   researchValue: string[];
@@ -60,6 +60,12 @@ export type PlaceApiResponse = {
   placeUIPath: string
 }
 
+export type mediaAssociates_objectData = {
+    attributes: {
+      url: string;
+    };
+}
+
 export type MediaAssociates = {
   data: {
     attributes: {
@@ -67,12 +73,21 @@ export type MediaAssociates = {
         data: {
           attributes: {
             object: {
-              data: {
-                attributes: {
-                  url: string;
-                };
-              };
+              data: mediaAssociates_objectData | null;
             };
+          };
+        };
+      };
+    };
+  }[];
+};
+export type MediaAssociates_GalleryView = {
+  data: {
+    attributes: {
+      media_unique_id: {
+        data: {
+          attributes: {
+            media_type: MediaTypeObject_GalleryView
           };
         };
       };
@@ -120,6 +135,16 @@ export type MediaAssociates2_MediaObject = {
   width: number
 }
 
+export type MediaTypeObject = {
+    typeCode: "VIDEO" | "IMAGE" | "3DMODEL"
+}
+export type MediaTypeObject_GalleryView = {
+  attributes : {
+    typeCode: "VIDEO" | "IMAGE" | "3DMODEL"
+  }
+}
+export type MediaType = Array<MediaTypeObject>
+
 export type MediaAssociateObj = {
   createdAt: string
   id: number
@@ -145,6 +170,7 @@ export type MediaAssociateObj = {
     title: string
     uniqueId: string
     updatedAt: string
+    media_type: MediaType
   }
 }
 

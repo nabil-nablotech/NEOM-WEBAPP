@@ -28,8 +28,8 @@ const AddedEvents = ({
             <Box component="div" className={`${styles["title"]}`}>Events</Box>
             <Box component="div" className={`${styles["list"]}`}>
                 {
-                    list?.map((event: InventoryAssociationType_Event) => (
-                        <Box component="div">
+                    list?.map((event: InventoryAssociationType_Event, indx: number) => (
+                        <Box component="div" key={indx}>
                             <EventInventoryItem
                                 item={{
                                     id: event.id,

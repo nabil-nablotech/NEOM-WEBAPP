@@ -173,6 +173,7 @@ export const refineMedia = gql`
           imageMetadata {
             fileSize
           }
+          objectURL
           object {
             data {
               id

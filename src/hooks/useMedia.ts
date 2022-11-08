@@ -78,7 +78,6 @@ const useMedia = () => {
       } else if (refineMediaData?.medias.data.length > 0) {
         dispatch(setMedia([...mediaItem, ...refineMediaData?.medias?.data]));
       } else if (refineMediaData?.medias?.meta.pagination.total === 0) {
-        console.log('media inside else')
         dispatch(setMedia([]));
       }
       // update the meta data
@@ -187,7 +186,6 @@ const useMedia = () => {
   }
 
   const createMedia = async (payload: any | undefined) => {
-    console.log('inside craete media', payload)
     const uniqueId = generateUniqueId();
     const keywords = payload.keywords;
     const data = {

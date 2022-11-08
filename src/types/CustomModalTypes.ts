@@ -7,7 +7,7 @@ export type CustomModalTypes = {
     titleContent?: ReactNode
 }
 export type ConfirmationModalTypes = {
-    type: "confirm-edit" | "confirm-logout"
+    type: "confirm-edit" | "confirm-delete" | "confirm-logout"
     open: boolean
     handleClose: (e: React.MouseEvent) => void
 }
