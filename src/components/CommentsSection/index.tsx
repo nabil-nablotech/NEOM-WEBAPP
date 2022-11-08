@@ -54,9 +54,9 @@ const SingleComment = ({
 
   const checkMine = () => {
     if (type === "child") {
-      return getId() == remark?.users_permissions_user.id;
+      return getId() == remark?.users_permissions_user?.id;
     } else {
-      return getId() == remark?.remark_details?.users_permissions_user.id;
+      return getId() == remark?.remark_details?.users_permissions_user?.id;
     }
   };
   return (
