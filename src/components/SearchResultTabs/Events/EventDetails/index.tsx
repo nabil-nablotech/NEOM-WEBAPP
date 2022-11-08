@@ -162,7 +162,7 @@ const EventDetailsPage = () => {
 
     const { fetchMediaItems, hasMoreData, loading } = useMedia();
     
-    const {loading: loadingRemarks, data: remarks, addRemarksMutation, getRemarksMutation } = useRemarks();
+    const {loading: loadingRemarks, data: remarks, addRemarksMutation, getRemarksMutation, updateRemarksMutation } = useRemarks();
     const dispatch = useDispatch()
 
     const [mediaGridActiveItems, setMediaGridActiveItems] = useState<number>(0)
@@ -783,6 +783,7 @@ const EventDetailsPage = () => {
                             type={"Visit"}
                             remarks={remarks}
                             addRemarks={addRemarksMutation}
+                            updateRemarks={updateRemarksMutation}
                             SelfIcon={() => <RenderInitials firstName={data?.firstName} lastName={data?.lastName} />}
                         />
                     </Box>

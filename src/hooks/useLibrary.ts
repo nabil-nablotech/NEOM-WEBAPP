@@ -219,7 +219,6 @@ const useLibrary = () => {
     if (payload) {
 
       const { record } = payload;
-      console.log('records inside library', record)
       const payloadRes = await mediaDetails(record.attributes.uniqueId);
       dispatch(setTabData(payloadRes));
       dispatch(setTabEdit(true));

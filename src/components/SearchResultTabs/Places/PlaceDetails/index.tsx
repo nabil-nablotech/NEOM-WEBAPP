@@ -310,9 +310,7 @@ const PlaceDetailsPage = () => {
 
     const { loading } = useMedia();
     const { loading: placeLoading, error, data: placeData, setEdit } = usePlaceDetails();
-    const {loading: loadingRemarks, data: remarks, addRemarksMutation, getRemarksMutation } = useRemarks();
-    console.log('data', remarks);
-    // const { mapEvents } = usePlace();
+    const {loading: loadingRemarks, data: remarks, addRemarksMutation, updateRemarksMutation } = useRemarks();
 
     const dispatch = useDispatch()
 
@@ -908,6 +906,7 @@ const PlaceDetailsPage = () => {
                             type={"Place"}
                             remarks={remarks}
                             addRemarks={addRemarksMutation}
+                            updateRemarks={updateRemarksMutation}
                             SelfIcon={() => <RenderInitials firstName={data?.firstName} lastName={data?.lastName} />}
                         />
                     </Box>
