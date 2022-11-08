@@ -489,3 +489,14 @@ export const detectMediaTypeFromMediaAssociate = (obj: MediaAssociateObj) => {
   } else return MEDIA_TYPE_IMAGE
 
 }
+export const detectMediaTypeFromMediaList = (obj: Media) => {
+  // attributes.media_type.data[0].attributes.typeCode
+  if(obj.attributes.media_type.data[0].attributes.typeCode === "IMAGE") {
+    return MEDIA_TYPE_IMAGE
+  }else if(obj.attributes.media_type.data[0].attributes.typeCode === "VIDEO") {
+    return MEDIA_TYPE_VIDEO
+  } else if(obj.attributes.media_type.data[0].attributes.typeCode === "3DMODEL") {
+    return MEDIA_TYPE_3D
+  } else return MEDIA_TYPE_IMAGE
+
+}

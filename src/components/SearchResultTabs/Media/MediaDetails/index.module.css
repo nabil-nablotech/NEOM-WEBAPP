@@ -140,6 +140,10 @@
     gap: 0.5em;
 }
 
+.id-row {
+    margin-block: 0.5em;
+}
+
 @media (min-width: 575px) and (max-width: 1025px) {
     .bottom-desc-main-grid ,
     .bottom-desc-main-grid div{

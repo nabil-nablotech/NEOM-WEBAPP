@@ -26,6 +26,63 @@ import { Place } from '../../../../types/Place';
 import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
 import NoImagePresent from '../../../NoDataScreens/NoImagePresent';
 import parse from 'html-react-parser';
+import { MediaApi } from '../../../../types/Media';
+import MapView from '../../GoogleMap/MapView';
+
+
+const TextualContent = ({
+    mediaDetails
+}: { mediaDetails: MediaApi }) => {
+    const locationRef = window.location.href
+    const { places } = useSelector(
+        (state: RootState) => state.searchResults
+    );
+    const {
+        referenceURL, citation,
+        categoryType, Author, bearing
+    } = mediaDetails
+
+    return <>
+        <Box component="div" className={`${styles[`bottom-grid`]}`} >
+            <p>Details</p>
+            <div>Author: {Author}</div>
+            <div>Category Type: {categoryType?.join(', ')}</div>
+            <div>Bearing: {bearing}</div>
+            <div>Source URL: {referenceURL}</div>
+            <div>Citation: {citation}</div>
+            <div>Item URL: {locationRef}</div>
+        </Box>
+        {
+            mediaDetails.object && <Box component="div" className={`${styles[`bottom-grid`]}`} >
+                <p>Metadata</p>
+                <div>File Name: {mediaDetails.object.name}</div>
+                <div>
+                    <span>Created: <span>{`${dayjs(mediaDetails.object.createdAt).format("MM/DD/YYYY")}`}</span></span>
+                </div>
+                <div>
+                    <span>Modified: <span>{`${dayjs(mediaDetails.object.updatedAt).format("MM/DD/YYYY")}`}</span></span>
+                </div>
+                <div>Size: {mediaDetails.object.size}MB</div>
+
+                <div>Storage: -</div>
+                <div>Depth: -</div>
+                <div>Dimensions: {mediaDetails.object.width}x{mediaDetails.object.height}</div>
+                <div>Make: -</div>
+                <div>Model: -</div>
+                <div>Extensions: {mediaDetails.object.ext && mediaDetails.object.ext.replace('.', '')}</div>
+            </Box>
+        }
+        <Box component="div" className={`${styles[`bottom-grid`]}`} >
+            <p>Associations</p>
+            {
+                (places && places.length > 0) &&
+                places.map((placeObj: Place) => (
+                    <div>{placeObj.attributes.placeNameEnglish} {placeObj.attributes.placeNameArabic}</div>
+                ))
+            }
+        </Box>
+    </>
+}
 
 const MediaDetailsPage = ({
     currentItemIndex,
@@ -39,13 +96,13 @@ const MediaDetailsPage = ({
     const { media, activeMediaItemIndex, places } = useSelector(
         (state: RootState) => state.searchResults
     );
+    const [isFilter, setIsFilter] = useState(null)
 
-    
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const {data:mediaDetails, setEdit} = useMediaDetails();
-    
+    const { data: mediaDetails, setEdit } = useMediaDetails();
+
     let [mediaType, setMediaType] = useState<"image" | "video" | "3d">("image")
 
     useEffect(() => {
@@ -54,7 +111,7 @@ const MediaDetailsPage = ({
         // setMediaType("video")
         // setMediaType("3d")
 
-        
+
         if (mediaDetails) {
             if (
                 detectMediaRecordApiType(mediaDetails) === MEDIA_TYPE_VIDEO
@@ -62,24 +119,23 @@ const MediaDetailsPage = ({
                 setMediaType(MEDIA_TYPE_VIDEO)
             } else if (detectMediaRecordApiType(mediaDetails) === MEDIA_TYPE_IMAGE) {
                 setMediaType(MEDIA_TYPE_IMAGE)
-            } else if(detectMediaRecordApiType(mediaDetails) === MEDIA_TYPE_3D) {
+            } else if (detectMediaRecordApiType(mediaDetails) === MEDIA_TYPE_3D) {
                 setMediaType(MEDIA_TYPE_3D)
             }
         }
-        
+
 
     }, [mediaDetails])
 
-    if(!mediaDetails) {
+    if (!mediaDetails) {
         return <>Cant display Media Details</>
     }
 
     const {
         description, title, id, objectURL, featuredImage, referenceURL, citation,
-        categoryType, Author, bearing, latitude, longitude 
+        categoryType, Author, bearing, latitude, longitude
     } = mediaDetails
 
-    const locationRef = window.location.href
 
     const handleNextOrPrevious = (e: handleAction['e'], action: handleAction['action']) => {
         e.preventDefault()
@@ -98,7 +154,7 @@ const MediaDetailsPage = ({
         if (action === 'previous') {
             if (newIndex - 1 >= 0) {
                 newIndex = newIndex - 1
-                
+
                 dispatch(setActiveMediaItem(media[newIndex]))
                 dispatch(setActiveMediaItemIndex(newIndex))
                 navigate(`/search-results/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
@@ -111,7 +167,7 @@ const MediaDetailsPage = ({
         {
             label: "Edit",
             action: () => {
-                setEdit({record: mediaDetails, type: "Media"});
+                setEdit({ record: mediaDetails, type: "Media" });
                 // handleClose()
             },
         },
@@ -121,7 +177,7 @@ const MediaDetailsPage = ({
             },
         },
     ]
-    
+    // console.log('hex: ', mediaDetails)
     return <>
         <Box component="div" className={`${styles['details-page-wrapper']}`}>
             <Box component="div" className={`${styles['img-wrapper']}`} >
@@ -144,9 +200,9 @@ const MediaDetailsPage = ({
                             {
                                 mediaDetails?.object?.url ?
                                     <Box className={`${styles['image']}`} component="img" alt={""} src={`${baseUrl}${mediaDetails?.object?.url}`}
-                                    style={{
-                                        objectFit: (mediaDetails && (mediaDetails?.object.width / mediaDetails?.object.height > 1.5)) ? 'cover' : 'contain'
-                                    }}
+                                        style={{
+                                            objectFit: (mediaDetails && (mediaDetails?.object.width / mediaDetails?.object.height > 1.5)) ? 'cover' : 'contain'
+                                        }}
                                     /> :
                                     <NoImagePresent
                                         className="light-version"
@@ -175,7 +231,7 @@ const MediaDetailsPage = ({
                                     `${baseUrl}${mediaDetails.object.url}` : "",
                                 className: `${styles["single-image"]}`,
                                 thumbNail:
-                                // TO-DO : api based thumnail
+                                    // TO-DO : api based thumnail
                                     // mediaDetails.object.url ?
                                     // `${baseUrl}${mediaDetails.object.url}` :
                                     "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg"
@@ -231,13 +287,17 @@ const MediaDetailsPage = ({
                                     </Grid>
                                 </Grid>
                             </Grid>
-
+                            <Box component="div" className={`${styles[`bottom-grid`]} ${styles[`id-row`]}`} >
+                                <p>ID: {id}</p>
+                                <br />
+                                <div>{description}</div>
+                            </Box>
                         </Grid>
                         <Grid container style={{
                             justifyContent: 'space-between'
                         }}>
                             <Grid item sm={6} lg={7}>
-                                    <Box component="div" className={`${styles[`bottom-grid`]}`} >
+                                {/* <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                         <p>ID: {id}</p>
                                         <br />
                                         <div>{description}</div>
@@ -279,34 +339,46 @@ const MediaDetailsPage = ({
                                                 <div>{placeObj.attributes.placeNameEnglish} {placeObj.attributes.placeNameArabic}</div>
                                             ))
                                         }
-                                    </Box>
+                                    </Box> */}
+                                <TextualContent
+                                    mediaDetails={mediaDetails}
+                                />
                             </Grid>
                             <Grid item sm={6} lg={5}>
-                                    {(latitude && longitude) ? <>
-                                        <Box className={`${styles['map-image']}`} component="img" alt={""} src={mediaDetails.thumbnailUrl} />
-                                        <Grid container className={`${styles['map-loctn-details']}`} >
-                                            <Grid item lg={5} md={5} sm={5}>
-                                                <Grid container className={`${styles['map-loctn-line']}`}>
-                                                    <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                                    <Grid item>{`${latitude}`}</Grid>
-                                                </Grid>
+                                {(latitude && longitude) ? <>
+                                    <MapView filterId={setIsFilter} key={4} marker={[{
+                                        id: 0,
+                                        name: `${mediaDetails?.media_associate?.data?.attributes?.place_unique_ids.data !== null ?
+                                            mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
+                                        : ''}`,
+                                        position: {
+                                            lat: latitude || 24.11,
+                                            lng: longitude || 34.98
+                                        }
+                                    }]} />
+                                    <Grid container className={`${styles['map-loctn-details']}`} >
+                                        <Grid item lg={5} md={5} sm={5}>
+                                            <Grid container className={`${styles['map-loctn-line']}`}>
+                                                <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
+                                                <Grid item>{`${latitude}`}</Grid>
                                             </Grid>
-                                            <Grid item lg={5} md={5} sm={6}>
-                                                <Grid container className={`${styles['map-loctn-line']}`}>
-                                                    <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                                    <Grid item>{`${longitude}`}</Grid>
-                                                </Grid>
+                                        </Grid>
+                                        <Grid item lg={5} md={5} sm={6}>
+                                            <Grid container className={`${styles['map-loctn-line']}`}>
+                                                <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
+                                                <Grid item>{`${longitude}`}</Grid>
                                             </Grid>
-                                        </Grid> </>
-                                        :
-                                        <NoMapPresent
-                                            className="light-version"
-                                            message={NO_LOCATION}
-                                            style={{
-                                                backgroundColor: 'var(--blank-doc-bg)',
-                                                color: 'var(--no-map-bg)'
-                                            }}
-                                        />}
+                                        </Grid>
+                                    </Grid> </>
+                                    :
+                                    <NoMapPresent
+                                        className="light-version"
+                                        message={NO_LOCATION}
+                                        style={{
+                                            backgroundColor: 'var(--blank-doc-bg)',
+                                            color: 'var(--no-map-bg)'
+                                        }}
+                                    />}
                             </Grid>
                         </Grid>
                     </Grid>
@@ -333,26 +405,9 @@ const MediaDetailsPage = ({
                             {description}
                         </Box>
                         <Box component="div">
-                            <Box component="div" className={`${styles[`bottom-grid`]}`} >
-                                <p>Details</p>
-                                <div className={`${styles[`video-info-grid`]}`}>
-                                    <Box component="div">URL:</Box>
-                                    <Box component={"a"} href="#" className={`${styles['anchor']}`}>
-                                    </Box>
-                                </div>
-                                <div className={`${styles[`video-info-grid`]}`}>
-                                    <Box component="div">Citation:</Box>
-                                    <Box component="div">
-                                        {citation}
-                                    </Box>
-                                </div>
-                            </Box>
-                            <Box component="div" className={`${styles[`bottom-grid`]}`} >
-                                <p>Associations</p>
-                                <div>Al-Muwaylih بئر فُحَيْماَن</div>
-                                <div>Al-Muwaylih بئر فُحَيْماَن Visit 2</div>
-                                <div>Aynuna لوكِي كٌومي</div>
-                            </Box>
+                            <TextualContent
+                                mediaDetails={mediaDetails}
+                            />
                         </Box>
                     </Box>
                 }
@@ -378,30 +433,13 @@ const MediaDetailsPage = ({
                             {description}
                         </Box>
                         <Box component="div">
-                            <Box component="div" className={`${styles[`bottom-grid`]}`} >
-                                <p>Details</p>
-                                <div className={`${styles[`three-d-modelinfo-grid`]}`}>
-                                    <Box component="div">URL:</Box>
-                                    <Box component={"a"} href="#" className={`${styles['anchor']}`}>
-                                        {mediaDetails.mediaUIPath ? mediaDetails.mediaUIPath : ''}
-                                    </Box>
-                                </div>
-                                <div className={`${styles[`three-d-modelinfo-grid`]}`}>
-                                    <Box component="div">Citation:</Box>
-                                    <Box component="div">
-                                        {citation}
-                                    </Box>
-                                </div>
-                            </Box>
-                            <Box component="div" className={`${styles[`bottom-grid`]}`} >
-                                <p>Associations</p>
-                                <div>Al-Muwaylih بئر فُحَيْماَن</div>
-                                <div>Al-Muwaylih بئر فُحَيْماَن Visit 2</div>
-                                <div>Aynuna لوكِي كٌومي</div>
-                            </Box>
+                            <TextualContent
+                                mediaDetails={mediaDetails}
+                            />
                         </Box>
                     </Box>
                 }
+
             </Box>
         </Box>
     </>
@@ -422,10 +460,10 @@ export const MediaDetailsModal = () => {
     const dispatch = useDispatch();
 
     // const TotalMediaCount= (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates: 0
-    const TotalMediaCount= (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates
-    : media ? media.length : 0
-        
-    
+    const TotalMediaCount = (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates
+        : media ? media.length : 0
+
+
 
     const handleClose = () => {
         setModalOpen(false)

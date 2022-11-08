@@ -40,6 +40,7 @@ export type Media = {
         };
       };
     };
+    objectURL: string | null
     media_associate: {
       data: {
       attributes: PlaceUnique;
