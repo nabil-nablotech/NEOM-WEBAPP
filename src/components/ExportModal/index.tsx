@@ -51,6 +51,7 @@ export default function ExportModal({open, setOpen, count, path, filter}:any) {
         const response = await client.get(`${baseUrl}/api/custom/${path}`, {
           params: { filter: qs.stringify(filter) },
         });
+        // const files: { fileName: string; fileUrl: string }[] = [];
         const files = response?.data?.map((item: any) => ({
           fileName: item?.fileName,
           fileUrl: `${baseUrl}${item?.object?.url}`,
