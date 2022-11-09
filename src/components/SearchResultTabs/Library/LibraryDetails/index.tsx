@@ -68,14 +68,27 @@ const LibraryDetailsPage = ({
                         detectLibraryRecordApiType(libraryDetails) === MEDIA_TYPE_IMAGE ?
                             <Box className={`${styles['image']}`} component="img" alt={""} src={`${baseUrl}${libraryDetails?.object?.url}`} />
                             :
-                            <>
-                                <Box
-                                    component = "img"
-                                    src={BlankDocImage}
-                                    alt={""}
-                                    className={`${styles['blank-doc-image']}`}
-                                />
-                            </>
+                            (
+                                libraryDetails.object.url &&
+                                (libraryDetails.object.url.indexOf('.pdf') !== -1)
+                            ) ?
+                                <>
+                                    <embed
+                                        type="application/pdf"
+                                        src={`${baseUrl}${libraryDetails.object.url}`}
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                    />
+                                </> :
+                                <>
+                                    <Box
+                                        component="img"
+                                        src={BlankDocImage}
+                                        alt={""}
+                                        className={`${styles['blank-doc-image']}`}
+                                    />
+                                </>
                     }
                 </Box>
 
