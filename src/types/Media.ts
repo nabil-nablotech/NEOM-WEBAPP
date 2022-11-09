@@ -55,6 +55,7 @@ export type MediaApi = {
   categoryType: string[] | []
   Author: string
   id: string;
+  createdAt: string
   thumbnailUrl?: string;
   title: string;
   description: string;
@@ -99,6 +100,7 @@ export type MediaApi2 = {
   thumbnailUrl?: string;
   title: string;
   description: string;
+  createdAt: string
   referenceURL: string;
   objectURL: string;
   fileName: string;

@@ -58,10 +58,10 @@ const TextualContent = ({
                 <p>Metadata</p>
                 <div>File Name: {RenderValueWithDefault(mediaDetails?.object?.name)}</div>
                 <div>
-                    <span>Created: <span>{RenderValueWithDefault(`${dayjs(mediaDetails?.object?.createdAt).format("MM/DD/YYYY")}`)}</span></span>
+                    <span>Created: <span>{RenderValueWithDefault(`${dayjs(mediaDetails?.createdAt).format("MM/DD/YYYY")}`)}</span></span>
                 </div>
                 <div>
-                    <span>Modified: <span>{RenderValueWithDefault(`${dayjs(mediaDetails?.object?.updatedAt).format("MM/DD/YYYY")}`)}</span></span>
+                    <span>Modified: <span>{RenderValueWithDefault(`${dayjs(mediaDetails?.updatedAt).format("MM/DD/YYYY")}`)}</span></span>
                 </div>
                 <div>Size: {RenderValueWithDefault(mediaDetails?.object?.size)} {mediaDetails?.object?.size ? 'MB' : ''}</div>
 
@@ -80,22 +80,22 @@ const TextualContent = ({
         <Box component="div">
             <p>Associations</p>
             <p>Places</p>
-            {
-                (mediaDetails.media_associate?.place_unique_ids && (mediaDetails.media_associate?.place_unique_ids?.length > 0)) ?
-                <Box component="div" className={`${styles[`bottom-grid`]}`}>
-                    {
-                        mediaDetails.media_associate?.place_unique_ids?.map((placeObj: InventoryAssociationType) => (
-                            <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
-                        ))
-                    }
-                </Box> :
-                RenderValueWithDefault('')
-            }
-                <p>Events</p>
-            {
-                (mediaDetails.media_associate?.visit_unique_ids && mediaDetails.media_associate?.visit_unique_ids.length > 0) ?
-                    <Box component="div" className={`${styles[`bottom-grid`]}`}>
-                        {
+            <Box component="div" className={`${styles[`bottom-grid`]}`}>
+                {
+                    (mediaDetails.media_associate?.place_unique_ids && (mediaDetails.media_associate?.place_unique_ids?.length > 0)) ?
+                        (
+                            mediaDetails.media_associate?.place_unique_ids?.map((placeObj: InventoryAssociationType) => (
+                                <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
+                            ))
+                        ) :
+                        RenderValueWithDefault('')
+                }
+            </Box>
+            <p>Events</p>
+            <Box component="div" className={`${styles[`bottom-grid`]}`}>
+                {
+                    (mediaDetails.media_associate?.visit_unique_ids && mediaDetails.media_associate?.visit_unique_ids.length > 0) ?
+                        (
                             mediaDetails.media_associate?.visit_unique_ids?.map((visitObj: InventoryAssociationType_Event) => (
                                 <>
                                     {
@@ -108,10 +108,10 @@ const TextualContent = ({
                                     }
                                 </>
                             ))
-                        }
-                    </Box> :
-                    RenderValueWithDefault('')
-            }
+                        ) :
+                        RenderValueWithDefault('')
+                }
+            </Box>
         </Box>
     </>
 }
