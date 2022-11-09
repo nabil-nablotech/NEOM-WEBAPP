@@ -15,12 +15,6 @@ import { useToggledView } from './../../../hooks/useToggledView';
 import useEvent from '../../../hooks/useEvent';
 import { Meta } from '../../../types/Place';
 import MapView from '../GoogleMap/MapView';
-import { ExportRequestDataType } from '../../../types/ExportRequestDataType';
-import { exportContentType } from '../../../utils/export-import/export-content-type';
-import qs from 'qs';
-import client from '../../../utils/services/axiosClient';
-import { baseUrl } from '../../../utils/services/helpers';
-import { exportCsvImagesZip } from '../../../utils/export-import/export-csv-images-zip';
 import ExportModal from '../../ExportModal';
 
 const PlacesTab = () => {
@@ -69,53 +63,9 @@ const PlacesTab = () => {
         ],
       };
     }
-    // try {
-    //   const requestData: ExportRequestDataType = {
-    //     collectionTypePlural: "visits",
-    //   };
-    //   if (searchData?.search) {
-    //     requestData.filter = qs.stringify(filter);
-    //   }
-    //   await exportContentType(requestData);
-    // } catch (err) {
-    //   console.log(err);
-    // }
     setFilter(filter);
     setOpen(true);
   };
-//   const exportEventZip = async () => {
-//     let filter: any;
-//     if (searchData?.search) {
-//         filter = {
-//             $or: [
-//               {
-//                 siteDescription: {
-//                   $containsi: searchData.search,
-//                 },
-//               },
-//               {
-//                 recordingTeam: {
-//                   $contains: searchData.search,
-//                 },
-//               },
-//               {
-//                 fieldNarrative: {
-//                   $contains: searchData.search,
-//                 },
-//               }
-//             ],
-//           };
-//     }
-//     try {
-//       const response = await client.get(`${baseUrl}/api/custom/visits`, {
-//         params: { filter: qs.stringify(filter) },
-//       });
-//       const files: { fileName: string; fileUrl: string }[] = [];
-//       await exportCsvImagesZip(files, response?.data);
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   };
 
     return (
         <Box component="div" className={`${styles['main-tab-content']}`}>
