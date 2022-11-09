@@ -626,7 +626,7 @@ const PlaceDetailsPage = () => {
                                                 <Box component="div"
                                                     className={`${styles['site-desc-condensed']} ${isSeeMoreHidden ? styles['see-more-active'] : ''}`}
                                                 >
-                                                    {siteDescription.substring(0, !isSeeMoreHidden ? 500 : siteDescription.length - 1)}
+                                                    {siteDescription.substring(0, !isSeeMoreHidden ? 500 : siteDescription.length)}
                                                 </Box>
                                                 {
                                                     !isSeeMoreHidden && <Box component="div" className={`${styles['see-more-box']}`} onClick={e => {
