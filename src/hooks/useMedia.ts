@@ -2,12 +2,11 @@ import { useQuery, useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
-import { refineMedia, addMedia, updateMedia } from "../query/media";
+import { refineMedia, updateMedia } from "../query/media";
 import { addLibrary } from "../query/library";
 import { RootState } from '../store';
 import {
   setMedia, setMediaMetaData,
-  toggleShowAddSuccess,
   toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, resetMediaAssociation, setDefaultMediaAssociation, storeAddItemProgressState, toggleEditConfirmationWindowOpen, toggleConfirmOpenEdit, setEditPayload} from '../store/reducers/searchResultsReducer';
 import { createMediaAssociate, updateMediaAssociate } from '../query/mediaAssociate';
 import { tabNameProps } from '../types/SearchResultsTabsProps';
@@ -43,10 +42,10 @@ const useMedia = () => {
     await dispatch(setMediaMetaData(null));
   };
 
-  const [createMediaMutation, { loading: addLoading, error: addErr, data: addData }] = useMutation(addLibrary, graphQlHeaders());
-  const [updateMediaMutation, { loading: updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateMedia, graphQlHeaders());
-  const [createMediaAssociateMutation, { loading: mediaAssociateload, error: mediaAssociateErr, data: mediaAssociate }] = useMutation(createMediaAssociate, graphQlHeaders());
-  const [updateMediaAssociateMutation, { loading: updateMediaAssociateload, error: updateMediaAssociateErr, data: updateMediaAssociateData }] = useMutation(updateMediaAssociate, graphQlHeaders());
+  const [createMediaMutation, { error: addErr, data: addData }] = useMutation(addLibrary, graphQlHeaders());
+  const [updateMediaMutation, { data: updateData, reset }] = useMutation(updateMedia, graphQlHeaders());
+  const [createMediaAssociateMutation, { data: mediaAssociate }] = useMutation(createMediaAssociate, graphQlHeaders());
+  const [updateMediaAssociateMutation, { data: updateMediaAssociateData }] = useMutation(updateMediaAssociate, graphQlHeaders());
 
   const createAssociation = async (mediaId: number) => {
     if (associatedPlaces.length > 0 || associatedEvents.length > 0) {
@@ -165,11 +164,6 @@ const useMedia = () => {
     } else {
       refineSearchMedia(obj)
     }
-    // if(Object.keys(copiedValue).length !== 0){
-    // refineSearchMedia(obj)
-    // }else{
-    //   refetchMediaItems({ search_one: searchWordArray[0] || '', search_two: searchWordArray[1] || '', search_three: searchWordArray[2] || '', limit: limit, skip: skip });
-    // }
   };
 
   const mediaType = (typeCode: string) => {
@@ -207,6 +201,7 @@ const useMedia = () => {
       model: "",
       depth: "",
       modified: new Date(),
+      videoType: payload.embedCode.length > 0 ? 'embededCode' : payload?.url.length > 0 ? 'url' : 'video',
     }
     if (!edit) {
       data.uniqueId = uniqueId;

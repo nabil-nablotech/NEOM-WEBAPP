@@ -163,6 +163,7 @@ export const refineMedia = gql`
           latitude
           longitude
           featuredImage
+          videoType
           media_type {
             data {
               attributes {
@@ -203,74 +204,77 @@ export const refineMedia = gql`
 `;
 
 export const addMedia = gql`
-  mutation createMedia(
-    $uniqueId: String
-    $title: String
-    $bearing: String
-    $Author: String
-    $object: ID
-    $description: String
-    $categoryType: JSON
-    $featuredImage: Boolean
-    $objectURL: String
-    $referenceURL: String
-    $citation: String
-    $keywords: JSON
-    $mediaUIPath: String
-    $media_type: [ID]
-    $fileName: String
-    $longitude: Float
-    $latitude: Float
-    $fileSize: String
-    $storage: String
-    $make: String
-    $model: String
-    $depth: String
-    $dimension: String
-    $created: Date
-    $modified: DateTime
-    $asset_config_id: [ID]
-  ) {
-    createMedia(
-      data: {
-        uniqueId: $uniqueId
-        title: $title
-        bearing: $bearing
-        object: $object
-        Author: $Author
-        description: $description
-        categoryType: $categoryType
+mutation createMedia(
+  $uniqueId: String
+  $title: String
+  $bearing: String
+  $Author: String
+  $object: ID
+  $description: String
+  $categoryType: JSON
+  $featuredImage: Boolean
+  $objectURL: String
+  $referenceURL: String
+  $citation: String
+  $keywords: JSON
+  $mediaUIPath: String
+  # $media_type: [ID]
+  $fileName: String
+  $longitude: Float
+  $latitude: Float
+  $fileSize: String
+  $storage: String
+  $make: String
+  $model: String
+  $depth: String
+  $dimension: String
+  $created: Date
+  $modified: DateTime
+  $asset_config_id: [ID]
+$videoType: ENUM_MEDIA_VIDEOTYPE
+) {
+  createMedia(
+    data: {
+      uniqueId: $uniqueId
+      title: $title
+      bearing: $bearing
+      object: $object
+      Author: $Author
+      description: $description
+      categoryType: $categoryType
+      fileName: $fileName
+      longitude: $longitude
+      latitude: $latitude
+      featuredImage: $featuredImage
+      objectURL: $objectURL
+      referenceURL: $referenceURL
+      citation: $citation
+      keywords: $keywords
+      videoType: $videoType
+      
+      mediaUIPath: $mediaUIPath
+      deleted: false
+      imageMetadata: {
         fileName: $fileName
         longitude: $longitude
         latitude: $latitude
-        featuredImage: $featuredImage
-        objectURL: $objectURL
-        referenceURL: $referenceURL
-        citation: $citation
-        keywords: $keywords
-        mediaUIPath: $mediaUIPath
-        deleted: false
-        imageMetadata: {
-          fileName: $fileName
-          longitude: $longitude
-          latitude: $latitude
-          fileSize: $fileSize
-          storage: $storage
-          make: $make
-          model: $model
-          depth: $depth
-          dimension: $dimension
-          created: $created
-          modified: $modified
-        }
-        media_type: $asset_config_id
+        fileSize: $fileSize
+        storage: $storage
+        make: $make
+        model: $model
+        depth: $depth
+        dimension: $dimension
+        created: $created
+        modified: $modified
       }
-    ) {
-      data {
-        id
-      }
+      media_type: $asset_config_id
+    }
+  ) {
+    data {
+      id
     }
   }
+}
 `;
 
 export const updateMedia = gql`
@@ -298,6 +302,7 @@ export const updateMedia = gql`
     $created: Date
     $modified: DateTime
     $asset_config_id: [ID]
+    $videoType: ENUM_MEDIA_VIDEOTYPE
     $object: ID
     $deleted: Boolean
   ) {
@@ -317,6 +322,7 @@ export const updateMedia = gql`
         media_type: $asset_config_id
         featuredImage: $featuredImage
         objectURL: $objectURL
+        videoType: $videoType
         referenceURL: $refrenceURL
         citation: $citation
         object: $object
