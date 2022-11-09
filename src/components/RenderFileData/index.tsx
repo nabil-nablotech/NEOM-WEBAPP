@@ -104,7 +104,7 @@ const RenderFileData = ({
                                             </> :
                                             fileData.staticVideoLink ?
                                                 <>
-                                                    <video width="100%" height="auto" controls autoPlay={true}>
+                                                    <video width="100%" height="auto" controls autoPlay={false}>
                                                         <source
                                                             src={fileData.staticVideoLink}
                                                             type="video/mp4"
