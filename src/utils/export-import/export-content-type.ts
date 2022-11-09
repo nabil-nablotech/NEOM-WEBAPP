@@ -12,7 +12,7 @@ export const exportContentType = async (requestData: ExportRequestDataType) => {
     );
     if (response?.data?.length > 0) {
       const fields = Object.keys(response?.data[0]);
-      const opts = { fields };
+      const opts = { fields,withBom:true,delimiter:"," };
       const parser = new Parser(opts);
       const csv = parser.parse(response?.data);
       var a = window.document.createElement("a");

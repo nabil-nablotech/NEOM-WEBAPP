@@ -13,23 +13,123 @@ import usePlace from "../../../hooks/usePlace";
 import { Meta } from "../../../types/Place";
 import MapView from "../GoogleMap/MapView";
 import { useState } from "react";
+import client from "../../../utils/services/axiosClient";
+import { exportCsvImagesZip } from "../../../utils/export-import/export-csv-images-zip";
+import { baseUrl } from "../../../utils/services/helpers";
+import qs from "qs";
+import { ExportRequestDataType } from "../../../types/ExportRequestDataType";
+import { exportContentType } from "../../../utils/export-import/export-content-type";
 
 const PlacesTab = () => {
   const { selectedCardIndex, places, placeMetaData, totalCounts } = useSelector(
     (state: RootState) => state.searchResults
   );
 
-  const { fetchPlaces, hasMoreData, loading, mapPlaces, setEdit } = usePlace();
+  const { fetchPlaces, hasMoreData, loading, mapPlaces, setEdit,searchData } = usePlace();
   const [isFilter, setIsFilter] = useState(null);
   const { openStates, toggleOpenStates } = useToggledView({ count: 2 });
 
   const meta: Meta | null = placeMetaData;
 
+   /* Event handlers */
+   const exportPlace = async () => {
+    let filter: any;
+    if (searchData?.search) {
+      filter = {
+        $or: [
+          {
+            title: {
+              $containsi: searchData.search,
+            },
+          },
+          {
+            description: {
+              $contains: searchData.search,
+            },
+          },
+          {
+            fileName: {
+              $contains: searchData.search,
+            },
+          },
+          {
+            citation: {
+              $contains: searchData.search,
+            },
+          },
+          ,
+        ],
+      };
+    }
+    try {
+      const requestData: ExportRequestDataType = {
+        collectionTypePlural: "places",
+      };
+      if (searchData?.search) {
+        requestData.filter = qs.stringify(filter);
+      }
+      await exportContentType(requestData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const exportPlaceZip = async () => {
+    let filter: any;
+    if (searchData?.search) {
+      filter = {
+        $or: [
+          {
+            placeNumber: {
+              $containsi: searchData.search,
+            },
+          },
+          {
+            placeNameEnglish: {
+              $contains: searchData.search,
+            },
+          },
+          {
+            placeNameArabic: {
+              $contains: searchData.search,
+            },
+          }
+        ],
+      };
+    }
+    try {
+      const response = await client.get(`${baseUrl}/api/custom/places`, {
+        params: { filter: qs.stringify(filter) },
+      });
+      const files:{ fileName: string; fileUrl: string }[] = [];
+      await exportCsvImagesZip(files, response?.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
         <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.places} Total Places</Box>
-        <Box component="div">
+        <Box component="div" style={{ display: "flex" }}>
+          <Button
+            colors={[
+              "transparent",
+              "var(--table-black-text)",
+              "var(--table-black-text)",
+            ]}
+            className={`${styles["export-btn"]}`}
+            label="Export data & assets"
+            style={{
+              border: "1px solid var(--light-grey-border)",
+              borderRadius: "40px",
+              padding: "0.2em 15px",
+              lineHeight: "2",
+              height: "100%",
+              textAlign: "center",
+            }}
+            onClick={exportPlaceZip}
+          />
           <Button
             colors={[
               "transparent",
@@ -46,7 +146,7 @@ const PlacesTab = () => {
               height: "100%",
               textAlign: "center",
             }}
-            // onClick={handleCancel}
+            onClick={exportPlace}
           />
         </Box>
         <Box
