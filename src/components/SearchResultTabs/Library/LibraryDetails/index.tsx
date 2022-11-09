@@ -2,7 +2,7 @@
 import { Box, Grid, Button } from '@mui/material';
 import styles from './index.module.css';
 import { CustomModal } from '../../../CustomModal';
-import { LibraryDetailsPageProps, tabNameProps } from '../../../../types/SearchResultsTabsProps';
+import { InventoryAssociationType, InventoryAssociationType_Event, LibraryDetailsPageProps, tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
@@ -57,7 +57,6 @@ const LibraryDetailsPage = ({
             },
         },
     ]
-
 
 
     return <>
@@ -136,9 +135,24 @@ const LibraryDetailsPage = ({
                             <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                 <p>Associations</p>
                                 {
-                                    (places && places.length > 0) &&
-                                    places.map((placeObj: Place) => (
-                                        <div>{placeObj.attributes.placeNameEnglish} {placeObj.attributes.placeNameArabic}</div>
+                                    (libraryDetails.media_associate.place_unique_ids && libraryDetails.media_associate.place_unique_ids.length > 0) &&
+                                    libraryDetails.media_associate.place_unique_ids.map((placeObj: InventoryAssociationType) => (
+                                        <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
+                                    ))
+                                }
+                                {
+                                    (libraryDetails.media_associate.visit_unique_ids && libraryDetails.media_associate.visit_unique_ids.length > 0) &&
+                                    libraryDetails.media_associate.visit_unique_ids.map((visitObj: InventoryAssociationType_Event) => (
+                                        <>
+                                            {
+                                                visitObj &&
+                                                <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
+                                                    libraryDetails.media_associate.visit_unique_ids[0].visitNumber ?
+                                                        `Visit ${libraryDetails.media_associate.visit_unique_ids[0].visitNumber}` :
+                                                        ''
+                                                }</div>
+                                            }
+                                        </>
                                     ))
                                 }
                             </Box>

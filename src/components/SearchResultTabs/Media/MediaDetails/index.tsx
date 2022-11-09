@@ -7,7 +7,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { CustomModal } from '../../../CustomModal';
-import { MediaDetailsPageProps, tabNameProps } from '../../../../types/SearchResultsTabsProps';
+import { InventoryAssociationType, InventoryAssociationType_Event, MediaDetailsPageProps, tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
@@ -75,9 +75,24 @@ const TextualContent = ({
         <Box component="div" className={`${styles[`bottom-grid`]}`} >
             <p>Associations</p>
             {
-                (places && places.length > 0) &&
-                places.map((placeObj: Place) => (
-                    <div>{placeObj.attributes.placeNameEnglish} {placeObj.attributes.placeNameArabic}</div>
+                (mediaDetails.media_associate.place_unique_ids && mediaDetails.media_associate.place_unique_ids.length > 0) &&
+                mediaDetails.media_associate.place_unique_ids.map((placeObj: InventoryAssociationType) => (
+                    <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
+                ))
+            }
+            {
+                (mediaDetails.media_associate.visit_unique_ids && mediaDetails.media_associate.visit_unique_ids.length > 0) &&
+                mediaDetails.media_associate.visit_unique_ids.map((visitObj: InventoryAssociationType_Event) => (
+                    <>
+                        {
+                            visitObj &&
+                            <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
+                                mediaDetails.media_associate.visit_unique_ids[0].visitNumber ?
+                                    `Visit ${mediaDetails.media_associate.visit_unique_ids[0].visitNumber}` :
+                                    ''
+                            }</div>
+                        }
+                    </>
                 ))
             }
         </Box>

@@ -73,6 +73,12 @@ export type InventoryAssociationType_Event = {
   placeNameEnglish: string
   placeNameArabic: string
   placeNumber: string | null
+  fieldNarrative?: string
+  visit_associate?: {
+    place_unique_id: {
+      placeNameArabic: string
+    }
+  }
 }
 
 export type SearchResultsState2 = {
@@ -112,6 +118,9 @@ export type SearchResultsState2 = {
   isEditConfirmationWindowOpen: boolean
   confirmOpenEdit: boolean,
   editPayload: any
+  isDeleteConfirmationWindowOpen: boolean
+  confirmDelete : boolean
+  itemAboutToDelete: tabNameProps | null
 };
 
 export type addItemProgressPayload = addItemProgressStateType | addPlaceProgressStateType | 
