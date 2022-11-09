@@ -66,11 +66,13 @@ const LibraryDetailsPage = ({
                 <Box component="div" className={`${styles['img-wrapper']}`} >
                     {
                         detectLibraryRecordApiType(libraryDetails) === MEDIA_TYPE_IMAGE ?
-                            <Box className={`${styles['image']}`} component="img" alt={""} src={`${baseUrl}${libraryDetails?.object?.url}`} />
+                            <>
+                                {libraryDetails.object && <Box className={`${styles['image']}`} component="img" alt={""} src={`${baseUrl}${libraryDetails?.object?.url}`} />}
+                            </>
                             :
                             (
-                                libraryDetails.object.url &&
-                                (libraryDetails.object.url.indexOf('.pdf') !== -1)
+                                libraryDetails?.object?.url &&
+                                (libraryDetails?.object?.url.indexOf('.pdf') !== -1)
                             ) ?
                                 <>
                                     <embed
@@ -223,6 +225,7 @@ export const LibraryDetailsModal = () => {
         navigate(`/search-results/Library`, { replace: true, state: null })
     }
 
+    // console.log('hex: ', libraryDetails)
 
     return <>
         <CustomModal

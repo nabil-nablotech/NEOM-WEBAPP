@@ -202,7 +202,6 @@ const MediaDetailsPage = ({
             },
         },
     ]
-    // console.log('hex: ', mediaDetails)
     return <>
         <Box component="div" className={`${styles['details-page-wrapper']}`}>
             <Box component="div" className={`${styles['img-wrapper']}`} >
