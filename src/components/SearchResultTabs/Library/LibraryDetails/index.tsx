@@ -23,6 +23,9 @@ import { Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { Button as AntdButton } from 'antd';
 import RenderValueWithDefault from '../../../NoDataScreens/DefaultText';
+// import { Document, Page } from 'react-pdf/dist/esm/entry.webpack5';
+import { Document, Page } from 'react-pdf';
+import DocViewer from "react-doc-viewer";
 
 const LibraryDetailsPage = ({
     currentItemIndex,
@@ -96,6 +99,12 @@ const LibraryDetailsPage = ({
                                             width: '100%'
                                         }}
                                     />
+                                    <Document file={`${baseUrl}${libraryDetails.object.url}`} onLoadSuccess={() => {}}>
+                                        <Page pageNumber={1} />
+                                    </Document>
+                                    {/* <DocViewer documents={[
+                                        { uri: `${baseUrl}${libraryDetails.object.url}` }
+                                    ]} /> */}
                                     {/* <Upload {...props} >
                                         <AntdButton icon={<UploadOutlined />}>
                                             Select file...
