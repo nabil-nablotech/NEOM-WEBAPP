@@ -11,11 +11,6 @@ import { baseUrl, detectMediaTypeFromMediaList } from '../../../../utils/service
 import RenderFileData from '../../../RenderFileData';
 
 export const Card = ({
-    itemIndex,
-    img,
-    title,
-    subTitle,
-    dateString,
     setEdit,
     record
 }: GridViewCard_Media) => {
@@ -27,14 +22,17 @@ export const Card = ({
                     <RenderFileData
                         fileData={{
                             alt: "",
-                            src: `${baseUrl}${record?.attributes?.object?.data?.attributes?.url}`,
+                            src: record?.attributes?.object?.data?.attributes?.url ? `${baseUrl}${record?.attributes?.object?.data?.attributes?.url}` : undefined,
                             className: detectMediaTypeFromMediaList(record) === "video" ?
                                 `${styles['video-card-parent']}` : detectMediaTypeFromMediaList(record) === "image" ?
                                     `${gridStyles['card-image']}` : `${styles['three-d-card-parent']}`,
-                            objectURL: record?.attributes.objectURL || ''
-
+                            objectURL: record?.attributes.objectURL || '',
+                            videoType: record?.attributes.videoType,
+                            iframeVideoLink: (record?.attributes.videoType === "url") ? record?.attributes.referanceUrl : undefined,
+                            staticVideoLink:  (detectMediaTypeFromMediaList(record) === "video" && record?.attributes.videoType === "video") ? `${baseUrl}${record?.attributes.object?.data?.attributes?.url}` : undefined
                         }}
                         fileType={detectMediaTypeFromMediaList(record)}
+
                     />
                 </Grid>
                 <Grid item sm={12} className={`${gridStyles['content']}`}>

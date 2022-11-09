@@ -40,6 +40,7 @@ export type Media = {
         };
       };
     };
+    videoType: "video" | "url" | "embededCode";
     objectURL: string | null
     media_associate: {
       data: {
@@ -59,6 +60,7 @@ export type MediaApi = {
   title: string;
   description: string;
   referenceURL: string;
+  videoType: "video" | "url" | "embededCode"
   objectURL: string;
   fileName: string;
   bearing: string;
