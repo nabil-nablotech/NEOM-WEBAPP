@@ -168,28 +168,28 @@ const LibraryDetailsPage = ({
                             <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                 <p>Associations</p>
                                 {
-                                    (libraryDetails.media_associate.place_unique_ids && (libraryDetails.media_associate.place_unique_ids?.length > 0)) &&
+                                    (libraryDetails.media_associate?.place_unique_ids && (libraryDetails.media_associate?.place_unique_ids?.length > 0)) &&
                                     <Box component="div" className={`${styles[`bottom-grid`]}`}>
                                         <p>Places</p>
                                         {
-                                            libraryDetails.media_associate.place_unique_ids?.map((placeObj: InventoryAssociationType) => (
+                                            libraryDetails.media_associate?.place_unique_ids?.map((placeObj: InventoryAssociationType) => (
                                                 <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
                                             ))
                                         }
                                     </Box>
                                 }
                                 {
-                                    (libraryDetails.media_associate.visit_unique_ids && (libraryDetails.media_associate.visit_unique_ids?.length > 0)) &&
+                                    (libraryDetails.media_associate?.visit_unique_ids && (libraryDetails.media_associate?.visit_unique_ids?.length > 0)) &&
                                     <Box component="div" className={`${styles[`bottom-grid`]}`}>
                                         <p>Events</p>
                                         {
-                                            libraryDetails.media_associate.visit_unique_ids?.map((visitObj: InventoryAssociationType_Event) => (
+                                            libraryDetails.media_associate?.visit_unique_ids?.map((visitObj: InventoryAssociationType_Event) => (
                                                 <>
                                                     {
                                                         visitObj &&
                                                         <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
-                                                            libraryDetails.media_associate.visit_unique_ids[0]?.visitNumber ?
-                                                                `Visit ${libraryDetails.media_associate.visit_unique_ids[0]?.visitNumber}` :
+                                                            libraryDetails.media_associate?.visit_unique_ids[0]?.visitNumber ?
+                                                                `Visit ${libraryDetails.media_associate?.visit_unique_ids[0]?.visitNumber}` :
                                                                 ''
                                                         }</div>
                                                     }

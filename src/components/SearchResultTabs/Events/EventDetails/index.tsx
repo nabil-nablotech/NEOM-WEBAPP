@@ -394,12 +394,12 @@ const EventDetailsPage = () => {
                                     </Grid>}
                                 </Grid>}
                                 <Box component="div" className={`${styles['visited-by-main-box']}`}>
-                                    <Box component="span">Visited on {visitDate} by </Box>
+                                    {visitDate && <Box component="span">Visited on {visitDate} by </Box>}
                                     <Box component="span">{recordingTeam}</Box>
                                 </Box>
-                                <Box component="div" className={`${styles['visit-count']}`}>
+                               {visitNumber && <Box component="div" className={`${styles['visit-count']}`}>
                                     VISIT {visitNumber}
-                                </Box>
+                                </Box>}
                             </Grid>
                             <Grid item sm={1} className={`${styles['title-section-grids']}`}>
                                 <Box component="div" className={`${styles['more-icon-box']}`}
@@ -710,7 +710,7 @@ const EventDetailsPage = () => {
                                                     fileData={{
                                                         alt: "",
                                                         // src: itemObj.attributes.media_associates.data[0].attributes.media_unique_id.data.attributes.object.data.attributes.url,
-                                                        src: `${baseUrl}${itemObj.media_unique_id.object.url}`,
+                                                        src: `${baseUrl}${itemObj.media_unique_id?.object?.url}`,
                                                         className: styles['media-image']
                                                     }}
                                                     fileType="image"

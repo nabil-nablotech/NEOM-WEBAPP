@@ -121,6 +121,7 @@ export type SearchResultsState2 = {
   isDeleteConfirmationWindowOpen: boolean
   confirmDelete : boolean
   itemAboutToDelete: tabNameProps | null
+  shallUpdateKeywords: boolean
 };
 
 export type addItemProgressPayload = addItemProgressStateType | addPlaceProgressStateType | 

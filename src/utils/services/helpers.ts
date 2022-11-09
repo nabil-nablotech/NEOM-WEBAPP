@@ -13,7 +13,7 @@ import { Event, EventApi } from "../../types/Event";
 import { Media, MediaApi, MediaApi2 } from "../../types/Media";
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://fe4b-117-251-210-158.ngrok.io`;
+// export const baseUrl = `https://b6e9-117-251-210-158.in.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -449,6 +449,9 @@ export const detectLowerCaseStringInArray = (
   sourceString: string,
   destArr: string[]
 ) => {
+
+  if(destArr.length === 0) return false 
+
   return destArr.some(
     (item) => item.toLowerCase() === sourceString.toLowerCase()
   );
