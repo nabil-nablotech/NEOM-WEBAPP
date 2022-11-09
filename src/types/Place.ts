@@ -146,6 +146,8 @@ export type MediaTypeObject_GalleryView = {
 export type MediaType = Array<MediaTypeObject>
 
 export type MediaAssociateObj = {
+  object: any;
+  videoType: "video" | "url" | "embededCode" | undefined;
   createdAt: string
   id: number
   media_unique_id: {
@@ -162,15 +164,19 @@ export type MediaAssociateObj = {
     keywords: string | null
     latitude: string | null
     longitude: string | null
+    videoType: "embededCode" | "url" | "video"
     mediaUIPath: string | null
     object: MediaAssociates2_MediaObject
     objectURL: string | null
     photographedBy: string | null
-    referenceURL: string | null
+    referenceURL?: string
     title: string
     uniqueId: string
     updatedAt: string
-    media_type: MediaType
+    media_type: {
+      typeCode?: "VIDEO" | "IMAGE" | "3DMODEL"
+      categoryCode?: string
+    }[]
   }
 }
 

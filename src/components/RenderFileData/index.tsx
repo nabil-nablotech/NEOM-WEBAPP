@@ -13,10 +13,10 @@ import parse from 'html-react-parser';
 /** component created to erender normal image -video - blob based on props */
 const RenderFileData = ({
     fileType,
-    fileData
+    fileData,
 }: RenderFileDataProps) => {
     const [openVideoModal, toggleVideoModal] = useState<boolean>(false)
-    
+
     return (
         <>
             {
@@ -47,33 +47,34 @@ const RenderFileData = ({
             {
                 fileType === 'video' &&
                 <>
+                {}
                     <Box component="div"
                         style={{
                             position: 'relative'
                         }}>
-                        {(!fileData.src && !fileData.iframeVideoLink && !fileData.staticVideoLink) ?
+                        {(!fileData.src && !fileData.iframeVideoLink && !fileData.staticVideoLink && !fileData.objectURL) ?
                             <NoVideoPresent message="Video not found" style={{
                                 height: '400px'
                             }} /> :
-                            !fileData.isOpened ? <>
-                                <Box
-                                    className={`${fileData.className} ${fileData.thumbnailClassname}`}
-                                    component="img"
-                                    alt={fileData.alt ? fileData.alt : ''}
-                                    src={fileData.thumbNail}
-                                />
-                                <PlayCircleFilledWhiteIcon
-                                    sx={{
-                                        width: '40%',
-                                        height: '40%',
-                                    }}
-                                    fontSize="large" className={`${styles['video-play-icon']}`}
-                                    onClick={e => {
-                                        e.preventDefault()
-                                        toggleVideoModal(true)
-                                    }}
-                                />
-                            </> :
+                            // !fileData.isOpened ? <>
+                            //     <Box
+                            //         className={`${fileData.className} ${fileData.thumbnailClassname}`}
+                            //         component="img"
+                            //         alt={fileData.alt ? fileData.alt : ''}
+                            //         src={fileData.thumbNail}
+                            //     />
+                            //     <PlayCircleFilledWhiteIcon
+                            //         sx={{
+                            //             width: '40%',
+                            //             height: '40%',
+                            //         }}
+                            //         fontSize="large" className={`${styles['video-play-icon']}`}
+                            //         onClick={e => {
+                            //             e.preventDefault()
+                            //             toggleVideoModal(true)
+                            //         }}
+                            //     />
+                            // </> :
                                 <>
                                     {
                                         fileData.iframeVideoLink ?
@@ -111,6 +112,9 @@ const RenderFileData = ({
                                                     </video>
                                                 </> :
                                                 <>
+                                                {fileData.objectURL ? 
+                                                    <div dangerouslySetInnerHTML={{ __html: fileData.objectURL }} />
+                                                :
                                                     <Box component="div" className={`${styles['video-player-box']}`}>
                                                         <ReactPlayer
                                                             width="100%" height="auto"
@@ -119,7 +123,7 @@ const RenderFileData = ({
                                                                 aspectRatio: '3/1.65'
                                                             }}
                                                         />
-                                                    </Box>
+                                                    </Box>}
                                                 </>
                                     }
                                 </>

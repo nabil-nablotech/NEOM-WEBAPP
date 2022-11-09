@@ -264,9 +264,9 @@ const PlaceDetailsPage = () => {
         },
         {
             title: "Type",
-            key: "attributes",
-            dataIndex: "attributes",
-            render: (value, index) => value?.siteType?.map((x: string) => `${x};`)
+            key: "visit_unique_id",
+            dataIndex: "visit_unique_id",
+            render: (value, index) => value?.asset_config_id.typeCode,
         },
         {
             title: "Date of Event",
@@ -450,9 +450,13 @@ const PlaceDetailsPage = () => {
                                             fileData={{
                                                 alt: "",
                                                 src: `${baseUrl}${media_associates[0]?.media_unique_id?.object?.url}`,
-                                                className: `${styles["single-image"]} ${styles["left-image"]}`
+                                                className: `${styles["single-image"]} ${styles["left-image"]}`,
+                                                videoType: media_associates[0].media_unique_id.videoType,
+                                                iframeVideoLink: (media_associates[0].media_unique_id.videoType === "url") ? media_associates[0].media_unique_id.referenceURL : undefined,
+                                                staticVideoLink:  (detectMediaTypeFromMediaAssociate(media_associates[0]) === "video" && media_associates[0].media_unique_id.videoType === "video") ? `${baseUrl}${media_associates[0].media_unique_id.object?.url}` : undefined
                                             }}
                                             fileType={detectMediaTypeFromMediaAssociate(media_associates[0])}
+                                            
                                         />}
                                     </Grid>
                                     <Grid item sm={6} className={`${styles['image-grid-gap']} ${styles["image-side-grid"]}`}
@@ -470,7 +474,10 @@ const PlaceDetailsPage = () => {
                                                     fileData={{
                                                         alt: "",
                                                         src: `${baseUrl}${media_associates[1].media_unique_id?.object?.url}`,
-                                                        className: `${styles["single-image"]} ${styles["right-image"]}`
+                                                        className: `${styles["single-image"]} ${styles["right-image"]}`,
+                                                        videoType: media_associates[1].media_unique_id.videoType,
+                                                        iframeVideoLink: (media_associates[1].media_unique_id.videoType === "url") ? media_associates[1].media_unique_id.referenceURL : undefined,
+                                                        staticVideoLink:  (detectMediaTypeFromMediaAssociate(media_associates[0]) === "video" && media_associates[1].media_unique_id.videoType === "video") ? `${baseUrl}${media_associates[1].media_unique_id.object?.url}` : undefined
                                                     }}
                                                     fileType={detectMediaTypeFromMediaAssociate(media_associates[1])}
                                                 />}
@@ -494,7 +501,10 @@ const PlaceDetailsPage = () => {
                                                     fileData={{
                                                         alt: "",
                                                         src: `${baseUrl}${media_associates[2].media_unique_id?.object?.url}`,
-                                                        className: `${styles["single-image"]} ${styles["right-image"]}`
+                                                        className: `${styles["single-image"]} ${styles["right-image"]}`,
+                                                        videoType: media_associates[2].media_unique_id.videoType,
+                                                        iframeVideoLink: (media_associates[2].media_unique_id.videoType === "url") ? media_associates[2].media_unique_id.referenceURL : undefined,
+                                                        staticVideoLink:  (detectMediaTypeFromMediaAssociate(media_associates[2]) === "video" && media_associates[2].media_unique_id.videoType === "video") ? `${baseUrl}${media_associates[2].media_unique_id.object?.url}` : undefined
                                                     }}
                                                     fileType={detectMediaTypeFromMediaAssociate(media_associates[2])}
                                                 />}
@@ -523,8 +533,11 @@ const PlaceDetailsPage = () => {
                                                         alt: "",
                                                         src: `${baseUrl}${media_associates[3].media_unique_id?.object?.url}`,
                                                         className: `${styles["single-image"]} ${styles["right-image"]}`,
-                                                        objectURL: media_associates[3].media_unique_id.objectURL || ''
+                                                        objectURL: media_associates[3].media_unique_id.objectURL || '',
 
+                                                        videoType: media_associates[3].media_unique_id.videoType,
+                                                        iframeVideoLink: (media_associates[3].media_unique_id.videoType === "url") ? media_associates[3].media_unique_id.referenceURL : undefined,
+                                                        staticVideoLink:  (detectMediaTypeFromMediaAssociate(media_associates[3]) === "video" && media_associates[3].media_unique_id.videoType === "video") ? `${baseUrl}${media_associates[3].media_unique_id.object?.url}` : undefined
                                                     }}
                                                     fileType={detectMediaTypeFromMediaAssociate(media_associates[3])}
                                                 />}
@@ -547,7 +560,10 @@ const PlaceDetailsPage = () => {
                                                         alt: "",
                                                         src: `${baseUrl}${media_associates[4].media_unique_id?.object?.url}`,
                                                         className: `${styles["single-image"]} ${styles["right-image"]}`,
-                                                        objectURL: media_associates[4].media_unique_id.objectURL || ''
+                                                        objectURL: media_associates[4].media_unique_id.objectURL || '',
+                                                        videoType: media_associates[4].media_unique_id.videoType,
+                                                        iframeVideoLink: (media_associates[4].media_unique_id.videoType === "url") ? media_associates[4].media_unique_id.referenceURL : undefined,
+                                                        staticVideoLink:  (detectMediaTypeFromMediaAssociate(media_associates[4]) === "video" && media_associates[4].media_unique_id.videoType === "video") ? `${baseUrl}${media_associates[4].media_unique_id.object?.url}` : undefined
                                                     }}
                                                     fileType={detectMediaTypeFromMediaAssociate(media_associates[4])}
                                                 />}
