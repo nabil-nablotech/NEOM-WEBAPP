@@ -19,7 +19,7 @@ export type Media = {
     thumbnailUrl?: string;
     title: string;
     description: string;
-    referanceUrl: string;
+    referenceURL: string;
     fileName: string;
     bearing: string;
     actionType: string;
@@ -40,6 +40,7 @@ export type Media = {
         };
       };
     };
+    videoType: "video" | "url" | "embededCode";
     objectURL: string | null
     media_associate: {
       data: {
@@ -60,6 +61,7 @@ export type MediaApi = {
   title: string;
   description: string;
   referenceURL: string;
+  videoType: "video" | "url" | "embededCode"
   objectURL: string;
   fileName: string;
   bearing: string;

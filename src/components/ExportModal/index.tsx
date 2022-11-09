@@ -51,11 +51,16 @@ export default function ExportModal({open, setOpen, count, path, filter}:any) {
         const response = await client.get(`${baseUrl}/api/custom/${path}`, {
           params: { filter: qs.stringify(filter) },
         });
+        if(path === 'visits' || path === 'places'){
+          const files: { fileName: string; fileUrl: string }[] = [];
+        await exportCsvImagesZip(files, response?.data);
+        }else{
         const files = response?.data?.map((item: any) => ({
           fileName: item?.fileName,
           fileUrl: `${baseUrl}${item?.object?.url}`,
         }));
         await exportCsvImagesZip(files, response?.data);
+      }
       } catch (err) {
         console.log(err);
       }
