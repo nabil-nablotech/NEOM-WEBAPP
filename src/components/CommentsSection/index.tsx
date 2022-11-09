@@ -30,13 +30,7 @@ const SingleComment = ({
   setChildInput,
   type,
 }: SingleCommentProps) => {
-  let actionsArray = [
-    {
-      label: "Support",
-      action: () => {},
-      show: true,
-    },
-  ];
+
   const editAction = [
     {
       label: "Edit",
@@ -137,9 +131,9 @@ const SingleComment = ({
                   Reply
                 </Grid>
               )}
-              <Grid item>
-                <CustomMoreOptionsComponent menuActions={checkMine() ? [...actionsArray, ...editAction] : actionsArray} />
-              </Grid>
+              {checkMine() ? <Grid item>
+                <CustomMoreOptionsComponent menuActions={editAction} />
+              </Grid> : null}
             </Grid>
 
             {remark.id === showInput ? (
@@ -234,7 +228,8 @@ const CommentsSection = ({
       updateRemarks({
         id: (actionData?.childType === "child" ? actionData.data.id : actionData.data.remark_details.id),
         data: {description: actionData?.childType === "child" ? childInputs : inputs, delete: false}
-      })
+      });
+      setActionData(null);
     } else if (remark_id) {
       addRemarks({
         id,
@@ -276,7 +271,9 @@ const CommentsSection = ({
       updateRemarks({
         id: (actionData?.childType === "child" ? actionData.data.id : actionData.data.remark_details.id),
         data: {description: actionData?.childType === "child" ? childInputs : inputs, delete: false}
-      })
+      });
+      
+      setActionData(null);
     } else  {
       addRemarks({
         id,
