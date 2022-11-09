@@ -262,7 +262,8 @@ const usePlace = () => {
     fetchPlaces: fetchData,
     clearSearch: clearTextSearch,
     createPlace: createPlace,
-    setEdit
+    setEdit,
+    searchData : getQueryObj(search)
   };
 };
 

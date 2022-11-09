@@ -34,6 +34,7 @@ import AddedEvents from "../../../AssociationsList/AddedEvents";
 import axios from 'axios';
 import { getToken } from "../../../../utils/storage/storage";
 import StepContent from './form';
+import { updateKeywords } from "../../../../api/keywords";
 
 const textInputSxStyles = {
   "& .MuiInputBase-input.MuiOutlinedInput-input": {
@@ -135,6 +136,9 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
           ...data,
         });
         handleReset()
+        updateKeywords({
+          keywords: data.keywords
+        }, 'library')
         dispatch(toggleShowAddSuccess(true));
         dispatch(toggleNewItemWindow(false))
       }
@@ -144,6 +148,9 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
         ...data,
       });
       handleReset();
+      updateKeywords({
+        keywords: data.keywords
+      }, 'library')
       dispatch(toggleShowEditSuccess(true));
       dispatch(toggleNewItemWindow(false));
     }

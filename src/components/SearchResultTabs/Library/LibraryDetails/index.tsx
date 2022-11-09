@@ -22,6 +22,7 @@ import type { UploadProps } from 'antd';
 import { Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { Button as AntdButton } from 'antd';
+import RenderValueWithDefault from '../../../NoDataScreens/DefaultText';
 
 const LibraryDetailsPage = ({
     currentItemIndex,
@@ -146,58 +147,60 @@ const LibraryDetailsPage = ({
                             </Box>
                             <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                 <p>Details</p>
-                                <div>Source URL: {referenceURL}</div>
-                                <div>Citation: {citation}</div>
-                                <div>Item URL: {locationRef}</div>
+                                <div>Source URL: {RenderValueWithDefault(referenceURL)}</div>
+                                <div>Citation: {RenderValueWithDefault(citation)}</div>
+                                <div>Item URL: {RenderValueWithDefault(locationRef)}</div>
                             </Box>
 
                             {
-                                libraryDetails.object && <Box component="div" className={`${styles[`bottom-grid`]}`} >
+                                (libraryDetails.object) && <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                     <p>Metadata</p>
-                                    <div>File Name: {libraryDetails.object.name}</div>
-                                    <div>Size: {libraryDetails.object.size}MB</div>
+                                    <div>File Name: {RenderValueWithDefault(libraryDetails?.object?.name)}</div>
+                                    <div>Size: {RenderValueWithDefault(libraryDetails?.object?.size)} {libraryDetails?.object?.size ? 'MB' : ''}</div>
                                     <div>
-                                        <span>Created: <span>{`${dayjs(libraryDetails.object.createdAt).format("MM/DD/YYYY")}`}</span></span>
+                                        <span>Created: <span>{RenderValueWithDefault(`${dayjs(libraryDetails?.createdAt).format("MM/DD/YYYY")}`)}</span></span>
                                     </div>
                                     <div>
-                                        <span>Modified: <span>{`${dayjs(libraryDetails.object.updatedAt).format("MM/DD/YYYY")}`}</span></span>
+                                        <span>Modified: <span>{RenderValueWithDefault(`${dayjs(libraryDetails?.updatedAt).format("MM/DD/YYYY")}`)}</span></span>
                                     </div>
-                                    <div>Extensions: {libraryDetails.object.ext && libraryDetails.object.ext.replace('.', '')}</div>
+                                    <div>Extensions: {RenderValueWithDefault(libraryDetails?.object?.ext && libraryDetails?.object?.ext?.replace('.', ''))}</div>
                                 </Box>
                             }
                             <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                 <p>Associations</p>
-                                {
-                                    (libraryDetails.media_associate.place_unique_ids && (libraryDetails.media_associate.place_unique_ids?.length > 0)) &&
-                                    <Box component="div" className={`${styles[`bottom-grid`]}`}>
-                                        <p>Places</p>
-                                        {
-                                            libraryDetails.media_associate.place_unique_ids?.map((placeObj: InventoryAssociationType) => (
-                                                <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
-                                            ))
-                                        }
-                                    </Box>
-                                }
-                                {
-                                    (libraryDetails.media_associate.visit_unique_ids && (libraryDetails.media_associate.visit_unique_ids?.length > 0)) &&
-                                    <Box component="div" className={`${styles[`bottom-grid`]}`}>
-                                        <p>Events</p>
-                                        {
-                                            libraryDetails.media_associate.visit_unique_ids?.map((visitObj: InventoryAssociationType_Event) => (
-                                                <>
-                                                    {
-                                                        visitObj &&
-                                                        <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
-                                                            libraryDetails.media_associate.visit_unique_ids[0]?.visitNumber ?
-                                                                `Visit ${libraryDetails.media_associate.visit_unique_ids[0]?.visitNumber}` :
-                                                                ''
-                                                        }</div>
-                                                    }
-                                                </>
-                                            ))
-                                        }
-                                    </Box>
-                                }
+                                <p>Places</p>
+                                <Box component="div" className={`${styles[`bottom-grid`]}`}>
+                                    {
+                                        (libraryDetails.media_associate?.place_unique_ids && (libraryDetails.media_associate?.place_unique_ids?.length > 0)) ?
+                                            (
+                                                libraryDetails.media_associate?.place_unique_ids?.map((placeObj: InventoryAssociationType) => (
+                                                    <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
+                                                ))
+                                            ) :
+                                            RenderValueWithDefault('')
+                                    }
+                                </Box>
+                                <p>Events</p>
+                                <Box component="div" className={`${styles[`bottom-grid`]}`}>
+                                    {
+                                        (libraryDetails.media_associate?.visit_unique_ids && (libraryDetails.media_associate?.visit_unique_ids?.length > 0)) ?
+                                            (
+                                                libraryDetails.media_associate?.visit_unique_ids?.map((visitObj: InventoryAssociationType_Event) => (
+                                                    <>
+                                                        {
+                                                            visitObj &&
+                                                            <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
+                                                                libraryDetails.media_associate?.visit_unique_ids[0]?.visitNumber ?
+                                                                    `Visit ${libraryDetails.media_associate?.visit_unique_ids[0]?.visitNumber}` :
+                                                                    ''
+                                                            }</div>
+                                                        }
+                                                    </>
+                                                ))
+                                            ) :
+                                            RenderValueWithDefault('')
+                                    }
+                                </Box>
                             </Box>
                         </Grid>
 
