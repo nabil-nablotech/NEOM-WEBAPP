@@ -18,6 +18,10 @@ import { baseUrl, detectLibraryRecordApiType, MEDIA_TYPE_IMAGE } from '../../../
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import BlankDocImage from '../../../../assets/images/searchResults/BlankDocument.svg' 
+import type { UploadProps } from 'antd';
+import { Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Button as AntdButton } from 'antd';
 
 const LibraryDetailsPage = ({
     currentItemIndex,
@@ -58,6 +62,15 @@ const LibraryDetailsPage = ({
         },
     ]
 
+    const props: UploadProps = {
+        name: 'file',
+        multiple: false,
+        maxCount: 1,
+        // customRequest: uploadImage,
+        // onChange: handleChange,
+        // defaultFileList: defaultImages
+    };
+
 
     return <>
         <Box component="div" className={`${styles['details-page-wrapper']}`}>
@@ -82,6 +95,11 @@ const LibraryDetailsPage = ({
                                             width: '100%'
                                         }}
                                     />
+                                    {/* <Upload {...props} >
+                                        <AntdButton icon={<UploadOutlined />}>
+                                            Select file...
+                                        </AntdButton >
+                                    </Upload> */}
                                 </> :
                                 <>
                                     <Box
@@ -150,28 +168,28 @@ const LibraryDetailsPage = ({
                             <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                 <p>Associations</p>
                                 {
-                                    (libraryDetails.media_associate.place_unique_ids && libraryDetails.media_associate.place_unique_ids.length > 0) &&
+                                    (libraryDetails.media_associate.place_unique_ids && (libraryDetails.media_associate.place_unique_ids?.length > 0)) &&
                                     <Box component="div" className={`${styles[`bottom-grid`]}`}>
                                         <p>Places</p>
                                         {
-                                            libraryDetails.media_associate.place_unique_ids.map((placeObj: InventoryAssociationType) => (
+                                            libraryDetails.media_associate.place_unique_ids?.map((placeObj: InventoryAssociationType) => (
                                                 <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
                                             ))
                                         }
                                     </Box>
                                 }
                                 {
-                                    (libraryDetails.media_associate.visit_unique_ids && libraryDetails.media_associate.visit_unique_ids.length > 0) &&
+                                    (libraryDetails.media_associate.visit_unique_ids && (libraryDetails.media_associate.visit_unique_ids?.length > 0)) &&
                                     <Box component="div" className={`${styles[`bottom-grid`]}`}>
                                         <p>Events</p>
                                         {
-                                            libraryDetails.media_associate.visit_unique_ids.map((visitObj: InventoryAssociationType_Event) => (
+                                            libraryDetails.media_associate.visit_unique_ids?.map((visitObj: InventoryAssociationType_Event) => (
                                                 <>
                                                     {
                                                         visitObj &&
                                                         <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
-                                                            libraryDetails.media_associate.visit_unique_ids[0].visitNumber ?
-                                                                `Visit ${libraryDetails.media_associate.visit_unique_ids[0].visitNumber}` :
+                                                            libraryDetails.media_associate.visit_unique_ids[0]?.visitNumber ?
+                                                                `Visit ${libraryDetails.media_associate.visit_unique_ids[0]?.visitNumber}` :
                                                                 ''
                                                         }</div>
                                                     }

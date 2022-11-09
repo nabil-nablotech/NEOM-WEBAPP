@@ -75,22 +75,22 @@ const TextualContent = ({
         <Box component="div" className={`${styles[`bottom-grid`]}`} >
             <p>Associations</p>
             {
-                (mediaDetails.media_associate.place_unique_ids && mediaDetails.media_associate.place_unique_ids.length > 0) &&
+                (mediaDetails.media_associate?.place_unique_ids && (mediaDetails.media_associate.place_unique_ids?.length > 0)) &&
                 <Box component="div" className={`${styles[`bottom-grid`]}`}>
                     <p>Places</p>
                     {
-                        mediaDetails.media_associate.place_unique_ids.map((placeObj: InventoryAssociationType) => (
+                        mediaDetails.media_associate.place_unique_ids?.map((placeObj: InventoryAssociationType) => (
                             <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
                         ))
                     }
                 </Box>
             }
             {
-                (mediaDetails.media_associate.visit_unique_ids && mediaDetails.media_associate.visit_unique_ids.length > 0) &&
+                (mediaDetails.media_associate?.visit_unique_ids && mediaDetails.media_associate.visit_unique_ids.length > 0) &&
                 <Box component="div" className={`${styles[`bottom-grid`]}`}>
                     <p>Events</p>
                         {
-                            mediaDetails.media_associate.visit_unique_ids.map((visitObj: InventoryAssociationType_Event) => (
+                            mediaDetails.media_associate?.visit_unique_ids?.map((visitObj: InventoryAssociationType_Event) => (
                                 <>
                                     {
                                         visitObj &&
