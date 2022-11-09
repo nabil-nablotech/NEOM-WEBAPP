@@ -42,10 +42,15 @@ const MediaTab = () => {
 
     const { openStates, toggleOpenStates } = useToggledView({ count: 2 })
     
+    /* event handlers */
   const exportMedia = async () => {
-        let filter: any;
+        let filter: any={ media_type :{
+            categoryCode: {
+              $containsi: "MEDIA"
+          }
+        }};
     if (searchData?.search) {
-      filter = {
+      filter = {...filter,
         $or: [
           {
             title: {
@@ -54,17 +59,17 @@ const MediaTab = () => {
           },
           {
             description: {
-              $contains: searchData.search,
+              $containsi: searchData.search,
             },
           },
           {
             fileName: {
-              $contains: searchData.search,
+              $containsi: searchData.search,
             },
           },
           {
             citation: {
-              $contains: searchData.search,
+              $containsi: searchData.search,
             },
           },
           ,
@@ -158,7 +163,7 @@ const MediaTab = () => {
                     }
                 </Grid>
             </Box>
-            <ExportModal open={open} setOpen={setOpen} count={media.length} path={'medias'} filter={filter}/>
+            <ExportModal open={open} setOpen={setOpen} count={meta?.pagination?.total} path={'medias'} filter={filter}/>
         </Box>
     );
 }

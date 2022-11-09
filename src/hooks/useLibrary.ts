@@ -248,7 +248,8 @@ const useLibrary = () => {
     hasMoreData,
     fetchLibraryItems: fetchData,
     createLibrary,
-    setEdit
+    setEdit,
+    searchData:getQueryObj(search)
   };
 };
 

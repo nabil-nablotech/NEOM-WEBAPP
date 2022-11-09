@@ -40,17 +40,17 @@ const PlacesTab = () => {
           },
           {
             description: {
-              $contains: searchData.search,
+              $containsi: searchData.search,
             },
           },
           {
             fileName: {
-              $contains: searchData.search,
+              $containsi: searchData.search,
             },
           },
           {
             citation: {
-              $contains: searchData.search,
+              $containsi: searchData.search,
             },
           },
           ,
@@ -148,7 +148,7 @@ const PlacesTab = () => {
           )}
         </Grid>
       </Box>
-      <ExportModal open={open} setOpen={setOpen} count={places.length} path={'places'} filter={filter}/>
+      <ExportModal open={open} setOpen={setOpen} count={meta?.pagination?.total} path={'places'} filter={filter}/>
     </Box>
   );
 };
