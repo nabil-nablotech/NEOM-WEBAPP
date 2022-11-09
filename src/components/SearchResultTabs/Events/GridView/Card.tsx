@@ -5,7 +5,7 @@ import { Grid } from "@mui/material";
 import { GridViewCard_Events, InventoryAssociationType_Event } from '../../../../types/SearchResultsTabsProps'
 import gridStyles from './index.module.css'
 import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
-import { baseUrl, isEventRecordAttached } from "../../../../utils/services/helpers";
+import { baseUrl, detectMediaTypeFromMediaAssociateGraphQlRes, isEventRecordAttached } from "../../../../utils/services/helpers";
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
 import MoreOptionsComponent from "../ListView/MoreOption";
 import DetachedIcon from "../../../Icons/DetachedIcon";
@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { RootState } from "../../../../store";
 import { modifyAssociatedEvents } from "../../../../store/reducers/searchResultsReducer";
+import RenderFileData from "../../../RenderFileData";
 
 export const Card = ({
   img,
@@ -48,7 +49,22 @@ export const Card = ({
               component="img"
               alt={""}
               src={`${baseUrl}${img}`}
-            /> : <NoImagePresent message={"No media item is available"} />}
+            /> : <RenderFileData
+            fileData={{
+                alt: "",
+                src: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}` : undefined,
+                className: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "VIDEO" ?
+                    `${gridStyles['video-card-parent']}` : record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ?
+                        `${gridStyles['card-image']}` : `${gridStyles['three-d-card-parent']}`,
+                objectURL: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.objectURL || '',
+                videoType: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.videoType,
+                iframeVideoLink: (record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.videoType === "url") ? record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.referenceURL : undefined,
+                staticVideoLink:  (record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.videoType === "video") ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}` : undefined
+            }}
+            fileType={detectMediaTypeFromMediaAssociateGraphQlRes(record)}
+
+        /> } 
+            {/* <NoImagePresent message={"No media item is available"} />} */}
           </Grid>
           <Grid
             item
