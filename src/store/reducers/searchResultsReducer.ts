@@ -153,6 +153,7 @@ export const searchResultsSlice = createSlice({
       state.addNewItemWindowType = action.payload;
       if(!action.payload) {
         state.isAssociationsStepOpen = false
+        state.isAssociationsIconsDisabled = false
       }
     },
     toggleAssociationsStepOpen: (state, action: PayloadAction<boolean>) => {

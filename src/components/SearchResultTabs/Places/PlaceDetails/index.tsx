@@ -404,7 +404,7 @@ const PlaceDetailsPage = () => {
                 <Box component="div" className={`${styles['content-section']}`}>
                     {
                         // If you dont 1 image also, show placeholder section
-                        !media_associates || (media_associates && media_associates.length < 0) ?
+                        !media_associates || (media_associates && media_associates.length < 1) ?
                             <Box component="div" className={`${styles['no-images-section']}`}>
                                 <NoImagePresent
                                     message={NO_MEDIA}
