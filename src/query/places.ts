@@ -146,6 +146,7 @@ query refinedSearch(
                 data {
                   id
                   attributes {
+                    videoType
                     media_type {
                       data {
                         attributes {
