@@ -5,15 +5,14 @@ import { Grid } from "@mui/material";
 import parse from "html-react-parser";
 import { GridViewCard_Places, InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
-import {baseUrl, detectMediaTypeFromMediaAssociate, detectMediaTypeFromMediaAssociateGraphQlRes, isRecordAttached} from "../../../../utils/services/helpers";
-import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
+import {baseUrl, detectMediaTypeFromMediaAssociateGraphQlRes, isRecordAttached} from "../../../../utils/services/helpers";
 import MoreOptionsComponent from "../ListView/MoreOption";
 import { useSelector } from "react-redux";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import { modifyAssociatedPlaces } from "../../../../store/reducers/searchResultsReducer";
 import { RootState } from "../../../../store";
 import { useDispatch } from "react-redux";
-import RenderFileData from "../../../RenderFileData";
+import RenderFileData from "../../../RenderFileDataForGrid";
 
 export const Card = ({
   img,
