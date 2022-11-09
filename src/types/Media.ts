@@ -134,5 +134,9 @@ export type MediaApi2 = {
 };
 
 export type typeCodeArrObj = {
+  categoryCode: string
+  createdAt: string
+  id: number
   typeCode: string
+  updatedAt: string
 } 

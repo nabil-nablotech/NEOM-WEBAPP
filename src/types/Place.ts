@@ -217,4 +217,4 @@ export type FieldOptions = {
 };
 
 // export type dbIdTypes = 8 | 1 | 2 | 5 
-export type dbIdTypes = 'place' | 'visit' | 'library' | 'media' 
+export type dbIdTypes = 'place' | 'event' | 'library' | 'media' 

@@ -28,6 +28,7 @@ import NoImagePresent from '../../../NoDataScreens/NoImagePresent';
 import parse from 'html-react-parser';
 import { MediaApi } from '../../../../types/Media';
 import MapView from '../../GoogleMap/MapView';
+import RenderValueWithDefault from '../../../NoDataScreens/DefaultText';
 
 
 const TextualContent = ({
@@ -45,50 +46,55 @@ const TextualContent = ({
     return <>
         <Box component="div" className={`${styles[`bottom-grid`]}`} >
             <p>Details</p>
-            <div>Author: {Author}</div>
-            <div>Category Type: {categoryType?.join(', ')}</div>
-            <div>Bearing: {bearing}</div>
-            <div>Source URL: {referenceURL}</div>
-            <div>Citation: {citation}</div>
-            <div>Item URL: {locationRef}</div>
+            <div>Author: {RenderValueWithDefault(Author)}</div>
+            <div>Category Type: {RenderValueWithDefault(categoryType)}</div>
+            <div>Bearing: {RenderValueWithDefault(bearing)}</div>
+            <div>Source URL: {RenderValueWithDefault(referenceURL)}</div>
+            <div>Citation: {RenderValueWithDefault(citation)}</div>
+            <div>Item URL: {RenderValueWithDefault(locationRef)}</div>
         </Box>
         {
-            mediaDetails.object && <Box component="div" className={`${styles[`bottom-grid`]}`} >
+            (mediaDetails.object || mediaDetails.media_type) && <Box component="div" className={`${styles[`bottom-grid`]}`} >
                 <p>Metadata</p>
-                <div>File Name: {mediaDetails.object.name}</div>
+                <div>File Name: {RenderValueWithDefault(mediaDetails?.object?.name)}</div>
                 <div>
-                    <span>Created: <span>{`${dayjs(mediaDetails.object.createdAt).format("MM/DD/YYYY")}`}</span></span>
+                    <span>Created: <span>{RenderValueWithDefault(`${dayjs(mediaDetails?.object?.createdAt).format("MM/DD/YYYY")}`)}</span></span>
                 </div>
                 <div>
-                    <span>Modified: <span>{`${dayjs(mediaDetails.object.updatedAt).format("MM/DD/YYYY")}`}</span></span>
+                    <span>Modified: <span>{RenderValueWithDefault(`${dayjs(mediaDetails?.object?.updatedAt).format("MM/DD/YYYY")}`)}</span></span>
                 </div>
-                <div>Size: {mediaDetails.object.size}MB</div>
+                <div>Size: {RenderValueWithDefault(mediaDetails?.object?.size)} {mediaDetails?.object?.size ? 'MB' : ''}</div>
 
-                <div>Storage: -</div>
-                <div>Depth: -</div>
-                <div>Dimensions: {mediaDetails.object.width}x{mediaDetails.object.height}</div>
-                <div>Make: -</div>
-                <div>Model: -</div>
-                <div>Extensions: {mediaDetails.object.ext && mediaDetails.object.ext.replace('.', '')}</div>
+                <div>Storage: {RenderValueWithDefault('')}</div>
+                <div>Depth: {RenderValueWithDefault('')}</div>
+                <div>Dimensions: {
+                    mediaDetails?.object?.width && mediaDetails?.object?.height ?
+                        `${mediaDetails?.object?.width} x ${mediaDetails?.object?.height}` :
+                        RenderValueWithDefault('')
+                }</div>
+                <div>Make: {RenderValueWithDefault('')}</div>
+                <div>Model: {RenderValueWithDefault('')}</div>
+                <div>Extensions: {RenderValueWithDefault(mediaDetails?.object?.ext && mediaDetails?.object?.ext?.replace('.', ''))}</div>
             </Box>
         }
-        <Box component="div" className={`${styles[`bottom-grid`]}`} >
+        <Box component="div">
             <p>Associations</p>
+            <p>Places</p>
             {
-                (mediaDetails.media_associate?.place_unique_ids && (mediaDetails.media_associate?.place_unique_ids?.length > 0)) &&
+                (mediaDetails.media_associate?.place_unique_ids && (mediaDetails.media_associate?.place_unique_ids?.length > 0)) ?
                 <Box component="div" className={`${styles[`bottom-grid`]}`}>
-                    <p>Places</p>
                     {
                         mediaDetails.media_associate?.place_unique_ids?.map((placeObj: InventoryAssociationType) => (
                             <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
                         ))
                     }
-                </Box>
+                </Box> :
+                RenderValueWithDefault('')
             }
+                <p>Events</p>
             {
-                (mediaDetails.media_associate?.visit_unique_ids && mediaDetails.media_associate?.visit_unique_ids.length > 0) &&
-                <Box component="div" className={`${styles[`bottom-grid`]}`}>
-                    <p>Events</p>
+                (mediaDetails.media_associate?.visit_unique_ids && mediaDetails.media_associate?.visit_unique_ids.length > 0) ?
+                    <Box component="div" className={`${styles[`bottom-grid`]}`}>
                         {
                             mediaDetails.media_associate?.visit_unique_ids?.map((visitObj: InventoryAssociationType_Event) => (
                                 <>
@@ -103,7 +109,8 @@ const TextualContent = ({
                                 </>
                             ))
                         }
-                    </Box>
+                    </Box> :
+                    RenderValueWithDefault('')
             }
         </Box>
     </>

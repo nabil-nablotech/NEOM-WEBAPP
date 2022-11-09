@@ -137,7 +137,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
         handleReset();
         updateKeywords({
           keywords: data.keywords
-        }, 'visit')
+        }, 'event')
         dispatch(toggleShowAddSuccess(true));
         dispatch(toggleNewItemWindow(false))
       }
@@ -150,7 +150,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
       handleReset();
       updateKeywords({
         keywords: data.keywords
-      }, 'visit')
+      }, 'event')
       dispatch(toggleShowEditSuccess(true));
       dispatch(toggleNewItemWindow(false));
     }
