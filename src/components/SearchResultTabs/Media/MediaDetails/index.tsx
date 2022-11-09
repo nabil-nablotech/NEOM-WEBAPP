@@ -76,24 +76,34 @@ const TextualContent = ({
             <p>Associations</p>
             {
                 (mediaDetails.media_associate.place_unique_ids && mediaDetails.media_associate.place_unique_ids.length > 0) &&
-                mediaDetails.media_associate.place_unique_ids.map((placeObj: InventoryAssociationType) => (
-                    <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
-                ))
+                <Box component="div" className={`${styles[`bottom-grid`]}`}>
+                    <p>Places</p>
+                    {
+                        mediaDetails.media_associate.place_unique_ids.map((placeObj: InventoryAssociationType) => (
+                            <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
+                        ))
+                    }
+                </Box>
             }
             {
                 (mediaDetails.media_associate.visit_unique_ids && mediaDetails.media_associate.visit_unique_ids.length > 0) &&
-                mediaDetails.media_associate.visit_unique_ids.map((visitObj: InventoryAssociationType_Event) => (
-                    <>
+                <Box component="div" className={`${styles[`bottom-grid`]}`}>
+                    <p>Events</p>
                         {
-                            visitObj &&
-                            <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
-                                mediaDetails.media_associate.visit_unique_ids[0].visitNumber ?
-                                    `Visit ${mediaDetails.media_associate.visit_unique_ids[0].visitNumber}` :
-                                    ''
-                            }</div>
+                            mediaDetails.media_associate.visit_unique_ids.map((visitObj: InventoryAssociationType_Event) => (
+                                <>
+                                    {
+                                        visitObj &&
+                                        <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
+                                            mediaDetails.media_associate.visit_unique_ids[0].visitNumber ?
+                                                `Visit ${mediaDetails.media_associate.visit_unique_ids[0].visitNumber}` :
+                                                ''
+                                        }</div>
+                                    }
+                                </>
+                            ))
                         }
-                    </>
-                ))
+                    </Box>
             }
         </Box>
     </>
@@ -192,7 +202,6 @@ const MediaDetailsPage = ({
             },
         },
     ]
-    // console.log('hex: ', mediaDetails)
     return <>
         <Box component="div" className={`${styles['details-page-wrapper']}`}>
             <Box component="div" className={`${styles['img-wrapper']}`} >

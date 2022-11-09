@@ -66,16 +66,31 @@ const LibraryDetailsPage = ({
                 <Box component="div" className={`${styles['img-wrapper']}`} >
                     {
                         detectLibraryRecordApiType(libraryDetails) === MEDIA_TYPE_IMAGE ?
-                            <Box className={`${styles['image']}`} component="img" alt={""} src={`${baseUrl}${libraryDetails?.object?.url}`} />
-                            :
                             <>
-                                <Box
-                                    component = "img"
-                                    src={BlankDocImage}
-                                    alt={""}
-                                    className={`${styles['blank-doc-image']}`}
-                                />
+                                {libraryDetails.object && <Box className={`${styles['image']}`} component="img" alt={""} src={`${baseUrl}${libraryDetails?.object?.url}`} />}
                             </>
+                            :
+                            (
+                                libraryDetails?.object?.url &&
+                                (libraryDetails?.object?.url.indexOf('.pdf') !== -1)
+                            ) ?
+                                <>
+                                    <embed
+                                        type="application/pdf"
+                                        src={`${baseUrl}${libraryDetails.object.url}`}
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                    />
+                                </> :
+                                <>
+                                    <Box
+                                        component="img"
+                                        src={BlankDocImage}
+                                        alt={""}
+                                        className={`${styles['blank-doc-image']}`}
+                                    />
+                                </>
                     }
                 </Box>
 
@@ -136,24 +151,34 @@ const LibraryDetailsPage = ({
                                 <p>Associations</p>
                                 {
                                     (libraryDetails.media_associate.place_unique_ids && libraryDetails.media_associate.place_unique_ids.length > 0) &&
-                                    libraryDetails.media_associate.place_unique_ids.map((placeObj: InventoryAssociationType) => (
-                                        <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
-                                    ))
+                                    <Box component="div" className={`${styles[`bottom-grid`]}`}>
+                                        <p>Places</p>
+                                        {
+                                            libraryDetails.media_associate.place_unique_ids.map((placeObj: InventoryAssociationType) => (
+                                                <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
+                                            ))
+                                        }
+                                    </Box>
                                 }
                                 {
                                     (libraryDetails.media_associate.visit_unique_ids && libraryDetails.media_associate.visit_unique_ids.length > 0) &&
-                                    libraryDetails.media_associate.visit_unique_ids.map((visitObj: InventoryAssociationType_Event) => (
-                                        <>
-                                            {
-                                                visitObj &&
-                                                <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
-                                                    libraryDetails.media_associate.visit_unique_ids[0].visitNumber ?
-                                                        `Visit ${libraryDetails.media_associate.visit_unique_ids[0].visitNumber}` :
-                                                        ''
-                                                }</div>
-                                            }
-                                        </>
-                                    ))
+                                    <Box component="div" className={`${styles[`bottom-grid`]}`}>
+                                        <p>Events</p>
+                                        {
+                                            libraryDetails.media_associate.visit_unique_ids.map((visitObj: InventoryAssociationType_Event) => (
+                                                <>
+                                                    {
+                                                        visitObj &&
+                                                        <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
+                                                            libraryDetails.media_associate.visit_unique_ids[0].visitNumber ?
+                                                                `Visit ${libraryDetails.media_associate.visit_unique_ids[0].visitNumber}` :
+                                                                ''
+                                                        }</div>
+                                                    }
+                                                </>
+                                            ))
+                                        }
+                                    </Box>
                                 }
                             </Box>
                         </Grid>
@@ -200,6 +225,7 @@ export const LibraryDetailsModal = () => {
         navigate(`/search-results/Library`, { replace: true, state: null })
     }
 
+    // console.log('hex: ', libraryDetails)
 
     return <>
         <CustomModal
