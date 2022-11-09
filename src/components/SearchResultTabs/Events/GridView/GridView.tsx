@@ -13,17 +13,17 @@ import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
-import {Card} from './Card';
+import { Card } from './Card';
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
 
 export type EventsProps = {
-  data: Event[];
-  handleNext: () => void;
-  hasMoreData: boolean;
-  loading: boolean;
-  setEdit:(payload: {record: Event | Media | MediaAssociateObj, type: tabNameProps}) => void
+    data: Event[];
+    handleNext: () => void;
+    hasMoreData: boolean;
+    loading: boolean;
+    setEdit: (payload: { record: Event | Media | MediaAssociateObj, type: tabNameProps }) => void
 }
 
 const GridView = (props: EventsProps) => {
@@ -31,12 +31,12 @@ const GridView = (props: EventsProps) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const {data, handleNext, hasMoreData, loading, setEdit} = props;
+    const { data, handleNext, hasMoreData, loading, setEdit } = props;
 
     if (!data) {
-        return <h1>Loading...</h1>   
+        return <h1>Loading...</h1>
     }
-    
+
     const checkIsNew = (updatedDate: string) => {
         const expDate = dayjs(updatedDate).add(30, "d").toDate();
         return dayjs().isBefore(expDate);
@@ -44,7 +44,7 @@ const GridView = (props: EventsProps) => {
 
     const handleClick = (item: Event, index: number) => {
         dispatch(setSelectedCardIndex(index))
-        navigate(`/search-results/Events/${item.attributes.uniqueId}`, {replace: true})
+        navigate(`/search-results/Events/${item.attributes.uniqueId}`, { replace: true })
     }
 
     return (
@@ -55,8 +55,8 @@ const GridView = (props: EventsProps) => {
                 next={() => handleNext()}
 
                 hasMore={hasMoreData}
-                
-                loader={loading ? <h4>Loading...</h4>: null}
+
+                loader={loading ? <h4>Loading...</h4> : null}
                 endMessage={
                     <p style={{ textAlign: 'center' }}>
                         <b>END OF RESULTS</b>
@@ -68,16 +68,16 @@ const GridView = (props: EventsProps) => {
 
                 <Grid container id={'events-scrollable-div'} spacing={1} className={`${gridStyles['left-grid-container']}`}>
                     {
-                        data?.map((item: Event, index: number) => 
+                        data?.map((item: Event, index: number) =>
                             <Grid item key={index} sm={12} className={`${gridStyles['']}`} onClick={() => handleClick(item, index)}>
                                 <Card
                                     key={index}
                                     img={item?.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url || ''}
-                                    title={item.attributes.visit_associate.data?.attributes?.place_unique_id ? `${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data.attributes.placeNameEnglish}${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data.attributes.placeNameArabic} - ${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data.attributes.placeNumber}` : ''}
-                                    subTitle={item.attributes?.siteDescription || ''}
+                                    title={item?.attributes?.visit_associate.data?.attributes?.place_unique_id ? `${item?.attributes?.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameEnglish}${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic} - ${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber}` : ''}
+                                    subTitle={item?.attributes?.siteDescription || ''}
                                     dateString={`${format(
-                                      new Date(item?.attributes?.visitDate),
-                                      "MM/dd/yyyy"
+                                        new Date(item?.attributes?.visitDate),
+                                        "MM/dd/yyyy"
                                     )}`}
                                     isNew={checkIsNew(item.attributes.createdAt)}
                                     handleClick={handleClick}
@@ -86,7 +86,7 @@ const GridView = (props: EventsProps) => {
                                     setEdit={setEdit}
                                 />
                             </Grid>
-                       )
+                        )
                     }
                 </Grid>
             </InfiniteScroll>

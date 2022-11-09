@@ -13,12 +13,7 @@ import usePlace from "../../../hooks/usePlace";
 import { Meta } from "../../../types/Place";
 import MapView from "../GoogleMap/MapView";
 import { useState } from "react";
-import client from "../../../utils/services/axiosClient";
-import { exportCsvImagesZip } from "../../../utils/export-import/export-csv-images-zip";
-import { baseUrl } from "../../../utils/services/helpers";
-import qs from "qs";
-import { ExportRequestDataType } from "../../../types/ExportRequestDataType";
-import { exportContentType } from "../../../utils/export-import/export-content-type";
+import ExportModal from '../../ExportModal';
 
 const PlacesTab = () => {
   const { selectedCardIndex, places, placeMetaData, totalCounts } = useSelector(
@@ -28,7 +23,8 @@ const PlacesTab = () => {
   const { fetchPlaces, hasMoreData, loading, mapPlaces, setEdit,searchData } = usePlace();
   const [isFilter, setIsFilter] = useState(null);
   const { openStates, toggleOpenStates } = useToggledView({ count: 2 });
-
+  const [open, setOpen] = useState(false);
+  const [filter, setFilter] = useState(null);
   const meta: Meta | null = placeMetaData;
 
    /* Event handlers */
@@ -61,50 +57,8 @@ const PlacesTab = () => {
         ],
       };
     }
-    try {
-      const requestData: ExportRequestDataType = {
-        collectionTypePlural: "places",
-      };
-      if (searchData?.search) {
-        requestData.filter = qs.stringify(filter);
-      }
-      await exportContentType(requestData);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const exportPlaceZip = async () => {
-    let filter: any;
-    if (searchData?.search) {
-      filter = {
-        $or: [
-          {
-            placeNumber: {
-              $containsi: searchData.search,
-            },
-          },
-          {
-            placeNameEnglish: {
-              $contains: searchData.search,
-            },
-          },
-          {
-            placeNameArabic: {
-              $contains: searchData.search,
-            },
-          }
-        ],
-      };
-    }
-    try {
-      const response = await client.get(`${baseUrl}/api/custom/places`, {
-        params: { filter: qs.stringify(filter) },
-      });
-      const files:{ fileName: string; fileUrl: string }[] = [];
-      await exportCsvImagesZip(files, response?.data);
-    } catch (err) {
-      console.log(err);
-    }
+    setFilter(filter);
+    setOpen(true);
   };
 
   return (
@@ -119,7 +73,7 @@ const PlacesTab = () => {
               "var(--table-black-text)",
             ]}
             className={`${styles["export-btn"]}`}
-            label="Export data & assets"
+            label="Select"
             style={{
               border: "1px solid var(--light-grey-border)",
               borderRadius: "40px",
@@ -128,7 +82,6 @@ const PlacesTab = () => {
               height: "100%",
               textAlign: "center",
             }}
-            onClick={exportPlaceZip}
           />
           <Button
             colors={[
@@ -195,6 +148,7 @@ const PlacesTab = () => {
           )}
         </Grid>
       </Box>
+      <ExportModal open={open} setOpen={setOpen} count={places.length} path={'places'} filter={filter}/>
     </Box>
   );
 };
