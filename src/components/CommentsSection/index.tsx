@@ -234,7 +234,8 @@ const CommentsSection = ({
       updateRemarks({
         id: (actionData?.childType === "child" ? actionData.data.id : actionData.data.remark_details.id),
         data: {description: actionData?.childType === "child" ? childInputs : inputs, delete: false}
-      })
+      });
+      setActionData(null);
     } else if (remark_id) {
       addRemarks({
         id,
@@ -276,7 +277,9 @@ const CommentsSection = ({
       updateRemarks({
         id: (actionData?.childType === "child" ? actionData.data.id : actionData.data.remark_details.id),
         data: {description: actionData?.childType === "child" ? childInputs : inputs, delete: false}
-      })
+      });
+      
+      setActionData(null);
     } else  {
       addRemarks({
         id,

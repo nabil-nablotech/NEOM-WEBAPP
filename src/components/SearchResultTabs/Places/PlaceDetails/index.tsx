@@ -26,9 +26,7 @@ import CommentsSection from "../../../CommentsSection";
 import RenderInitials from "../../../RenderInitials";
 import { useDispatch } from "react-redux";
 import { modifyAssociatedPlaces, setActiveEventItem, setActiveEventItemIndex, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../../store/reducers/searchResultsReducer";
-import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
-import usePlace from "../../../../hooks/usePlace";
 import usePlaceDetails from "../../../../hooks/usePlaceDetails";
 import Loader from "../../../Common/Loader";
 import MapView from "../../GoogleMap/MapView";
@@ -824,8 +822,8 @@ const PlaceDetailsPage = () => {
                                                 id: 0,
                                                 name: `${placeNameEnglish}`,
                                                 position: {
-                                                    lat: toFixedFromString(latitude, 6) || 24.11,
-                                                    lng: toFixedFromString(longitude, 6) || 34.98
+                                                    lat: latitude,
+                                                    lng: longitude
                                                 }
                                             }]} />
                                             <Grid container className={`${styles['map-loctn-details']}`} >
