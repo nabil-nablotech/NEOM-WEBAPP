@@ -547,7 +547,7 @@ allowFullScreen
             <StepperKeywordsComponent
               onKeyDown={(keywordString) => {
                 formik.setFieldValue("keywords", [
-                  ...new Set([...formik.values.keywords, keywordString]),
+                  ...new Set([keywordString, ...formik.values.keywords ]),
                 ]);
               }}
               onDelete={(value) => {

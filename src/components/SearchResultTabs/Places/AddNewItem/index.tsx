@@ -43,6 +43,7 @@ import usePlace from "../../../../hooks/usePlace";
 import AutoComplete from "../../../AutoComplete";
 import CloseIcon from "@mui/icons-material/Close";
 import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
+import { updateKeywords } from "../../../../api/keywords";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -349,7 +350,7 @@ const StepContent = ({
             <StepperKeywordsComponent
               onKeyDown={(keywordString) => {
                 formik.setFieldValue("keywords", [
-                  ...new Set([...formik.values.keywords, keywordString]),
+                  ...new Set([keywordString, ...formik.values.keywords ]),
                 ]);
               }}
 
@@ -412,6 +413,9 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
             ...data,
           });
           handleReset()
+          updateKeywords({
+            keywords: data.keywords
+          }, 'place')
           dispatch(toggleShowAddSuccess(true));
           dispatch(toggleNewItemWindow(false))
         }
@@ -421,9 +425,16 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
             create({
               ...data,
             });
+
+          if (data && data.keywords && data.keywords.length > 0) {
+
             handleReset();
+            updateKeywords({
+              keywords: data.keywords
+            }, 'place')
             dispatch(toggleShowEditSuccess(true));
             dispatch(toggleNewItemWindow(false));
+          }
           }
 
         setSkipped(newSkipped);

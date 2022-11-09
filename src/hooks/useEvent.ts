@@ -344,7 +344,8 @@ const useEvent = () => {
     setSearchValue,
     setEdit,
     setEditEvent,
-    deleteEvent
+    deleteEvent,
+    searchData:getQueryObj(search)
   };
 };
 

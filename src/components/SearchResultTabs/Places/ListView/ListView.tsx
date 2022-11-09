@@ -1,8 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-import { Box, Menu, MenuItem } from "@mui/material";
+import { Box } from "@mui/material";
 import { ColumnsType } from "antd/lib/table";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { User } from "../../../../types/User";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
 import { antTablePaginationCss, DETACH_ICON_CLASSNAME, isRecordAttached, shouldAddAtttachColumnHeader } from '../../../../utils/services/helpers';
@@ -116,8 +114,6 @@ const StyledTableWrapper = styled(StyledAntTable)`
   }
   ${antTablePaginationCss}
 `;
-
-function displayMultiple(value: any, index: number, key: string) { return value[key].data.map((x: FieldOption) => `${x.attributes.translation.data.attributes.locale[0].value}; `) }
 
 const ListView = (props: PlacesProps) => {
 

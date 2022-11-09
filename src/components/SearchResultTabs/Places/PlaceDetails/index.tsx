@@ -26,9 +26,7 @@ import CommentsSection from "../../../CommentsSection";
 import RenderInitials from "../../../RenderInitials";
 import { useDispatch } from "react-redux";
 import { modifyAssociatedPlaces, setActiveEventItem, setActiveEventItemIndex, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, toggleGalleryView } from "../../../../store/reducers/searchResultsReducer";
-import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
-import usePlace from "../../../../hooks/usePlace";
 import usePlaceDetails from "../../../../hooks/usePlaceDetails";
 import Loader from "../../../Common/Loader";
 import MapView from "../../GoogleMap/MapView";
@@ -406,7 +404,7 @@ const PlaceDetailsPage = () => {
                 <Box component="div" className={`${styles['content-section']}`}>
                     {
                         // If you dont 1 image also, show placeholder section
-                        !media_associates || (media_associates && media_associates.length < 0) ?
+                        !media_associates || (media_associates && media_associates.length < 1) ?
                             <Box component="div" className={`${styles['no-images-section']}`}>
                                 <NoImagePresent
                                     message={NO_MEDIA}
@@ -628,7 +626,7 @@ const PlaceDetailsPage = () => {
                                                 <Box component="div"
                                                     className={`${styles['site-desc-condensed']} ${isSeeMoreHidden ? styles['see-more-active'] : ''}`}
                                                 >
-                                                    {siteDescription.substring(0, !isSeeMoreHidden ? 500 : siteDescription.length - 1)}
+                                                    {siteDescription.substring(0, !isSeeMoreHidden ? 500 : siteDescription.length)}
                                                 </Box>
                                                 {
                                                     !isSeeMoreHidden && <Box component="div" className={`${styles['see-more-box']}`} onClick={e => {
@@ -824,8 +822,8 @@ const PlaceDetailsPage = () => {
                                                 id: 0,
                                                 name: `${placeNameEnglish}`,
                                                 position: {
-                                                    lat: toFixedFromString(latitude, 6) || 24.11,
-                                                    lng: toFixedFromString(longitude, 6) || 34.98
+                                                    lat: latitude,
+                                                    lng: longitude
                                                 }
                                             }]} />
                                             <Grid container className={`${styles['map-loctn-details']}`} >

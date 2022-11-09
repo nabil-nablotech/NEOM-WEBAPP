@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { mediaDetails } from "../api/details";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { MediaApi } from "../types/Media";
@@ -12,7 +12,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store";
 
 const useMediaDetails = () => {
-  const { search } = useLocation();
   const { uniqueId } = useParams<{ uniqueId: string }>()
   const { addNewItemWindowType, confirmOpenEdit, editPayload} = useSelector((state: RootState) => state.searchResults);
 
@@ -44,7 +43,7 @@ const useMediaDetails = () => {
 
   const openEditFlow = async (payload: any) => {
     if (payload) {
-      const { record, type } = payload;
+      const { record } = payload;
       let res: any | MediaApi = {};
 
       res = await mediaDetails(record.uniqueId);

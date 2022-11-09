@@ -215,3 +215,6 @@ export type FieldOption = {
 export type FieldOptions = {
   data: FieldOption[] | [];
 };
+
+// export type dbIdTypes = 8 | 1 | 2 | 5 
+export type dbIdTypes = 'place' | 'event' | 'library' | 'media' 
