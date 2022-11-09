@@ -7,7 +7,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import RenderFileData from "../../../RenderFileData";
-import { Place } from "../../../../types/Place";
+import { MediaAssociateObj, Place } from "../../../../types/Place";
 import { useAnchor } from "../../../../hooks/useAnchor";
 import { StyledAntTable } from "../../../StyledAntTable";
 import { ColumnsType } from "antd/lib/table";
@@ -17,11 +17,12 @@ import MoreOptionsComponent from "../ListView/MoreOption";
 import { getRole } from '../../../../utils/storage/storage';
 import {
     antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate,
-    isEmptyValue, NO_DESCRIPTION, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, isEventDetailAttached
+    isEmptyValue, NO_DESCRIPTION, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, isEventDetailAttached,
+    detectMediaTypeFromMediaAssociate
 } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
-import { Media } from "../../../../types/Media";
+import { Media, MediaApi } from "../../../../types/Media";
 import styled from "styled-components";
 import useMedia from "../../../../hooks/useMedia";
 import CommentsSection from "../../../CommentsSection";
@@ -329,10 +330,8 @@ const EventDetailsPage = () => {
             dispatch(setActiveMediaItemIndex(itemIndex - 1))
         }
     }
-    // const { placeNameEnglish, placeNameArabic, placeNumber} = visit_associate?.place_unique_id;
 
     const handleSearch = (searchData: any) => {
-        // navigate(`/search-results/Places?{"search":"","refinedSearch":{"artifacts":["Observed"]}}`)
         navigate({
             pathname: `/search-results/Events`,
             search: decodeURIComponent(JSON.stringify({
@@ -703,17 +702,22 @@ const EventDetailsPage = () => {
                             {!isEmpty(mediaGalleryLocal) ?
                                 <Grid container className={`${styles['media-grid']}`}>
                                     {
-                                        mediaGalleryLocal && mediaGalleryLocal.map((itemObj, inx) => (
+                                        mediaGalleryLocal && mediaGalleryLocal.map((itemObj: MediaAssociateObj, inx: number) => (
                                             <Grid item lg={3} md={4} sm={4} key={inx} className={`${styles['media-grid-item']}`}
                                             >
                                                 <RenderFileData
                                                     fileData={{
                                                         alt: "",
                                                         // src: itemObj.attributes.media_associates.data[0].attributes.media_unique_id.data.attributes.object.data.attributes.url,
-                                                        src: `${baseUrl}${itemObj.media_unique_id?.object?.url}`,
-                                                        className: styles['media-image']
+                                                        src: itemObj.media_unique_id?.object?.url ? `${baseUrl}${itemObj.media_unique_id.object.url}` : undefined,
+                                                        className: styles['media-image'],
+                                                        objectURL: itemObj.media_unique_id.objectURL ? itemObj.media_unique_id.objectURL : undefined,
+                                                        videoType: itemObj.media_unique_id.videoType,
+                                                        iframeVideoLink: (itemObj.media_unique_id.videoType === "url") ? itemObj.media_unique_id.referenceURL : undefined,
+                                                        staticVideoLink: (itemObj.media_unique_id?.media_type[0]?.typeCode?.toLowerCase() === "video" && itemObj.media_unique_id.videoType === "video") ? `${baseUrl}${itemObj.media_unique_id.object?.url}` : undefined
                                                     }}
-                                                    fileType="image"
+                                                    fileType={detectMediaTypeFromMediaAssociate(itemObj)}
+                                                    
                                                 />
                                                 <Box component="div">
                                                     <Grid container className={`${styles['media-grid-item-options-row']}`}>

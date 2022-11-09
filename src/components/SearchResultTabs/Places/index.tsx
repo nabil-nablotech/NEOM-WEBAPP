@@ -13,23 +13,76 @@ import usePlace from "../../../hooks/usePlace";
 import { Meta } from "../../../types/Place";
 import MapView from "../GoogleMap/MapView";
 import { useState } from "react";
+import ExportModal from '../../ExportModal';
 
 const PlacesTab = () => {
   const { selectedCardIndex, places, placeMetaData, totalCounts } = useSelector(
     (state: RootState) => state.searchResults
   );
 
-  const { fetchPlaces, hasMoreData, loading, mapPlaces, setEdit } = usePlace();
+  const { fetchPlaces, hasMoreData, loading, mapPlaces, setEdit,searchData } = usePlace();
   const [isFilter, setIsFilter] = useState(null);
   const { openStates, toggleOpenStates } = useToggledView({ count: 2 });
-
+  const [open, setOpen] = useState(false);
+  const [filter, setFilter] = useState(null);
   const meta: Meta | null = placeMetaData;
+
+   /* Event handlers */
+   const exportPlace = async () => {
+    let filter: any;
+    if (searchData?.search) {
+      filter = {
+        $or: [
+          {
+            title: {
+              $containsi: searchData.search,
+            },
+          },
+          {
+            description: {
+              $contains: searchData.search,
+            },
+          },
+          {
+            fileName: {
+              $contains: searchData.search,
+            },
+          },
+          {
+            citation: {
+              $contains: searchData.search,
+            },
+          },
+          ,
+        ],
+      };
+    }
+    setFilter(filter);
+    setOpen(true);
+  };
 
   return (
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
         <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.places} Total Places</Box>
-        <Box component="div">
+        <Box component="div" style={{ display: "flex" }}>
+          <Button
+            colors={[
+              "transparent",
+              "var(--table-black-text)",
+              "var(--table-black-text)",
+            ]}
+            className={`${styles["export-btn"]}`}
+            label="Select"
+            style={{
+              border: "1px solid var(--light-grey-border)",
+              borderRadius: "40px",
+              padding: "0.2em 15px",
+              lineHeight: "2",
+              height: "100%",
+              textAlign: "center",
+            }}
+          />
           <Button
             colors={[
               "transparent",
@@ -46,7 +99,7 @@ const PlacesTab = () => {
               height: "100%",
               textAlign: "center",
             }}
-            // onClick={handleCancel}
+            onClick={exportPlace}
           />
         </Box>
         <Box
@@ -95,6 +148,7 @@ const PlacesTab = () => {
           )}
         </Grid>
       </Box>
+      <ExportModal open={open} setOpen={setOpen} count={places.length} path={'places'} filter={filter}/>
     </Box>
   );
 };

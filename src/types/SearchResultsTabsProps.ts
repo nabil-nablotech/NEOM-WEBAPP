@@ -208,6 +208,7 @@ export type FileDataType = {
   objectURL?: string
   iframeVideoLink?: string
   staticVideoLink?: string
+  videoType?: "video" | "url" | "embededCode";
 };
 
 export type RenderFileDataProps = {
