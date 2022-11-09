@@ -124,7 +124,7 @@ export const StepperKeywordsComponent = ({
     const [preloadedKeywordsList, setPreloadedKeywordsList] = useState<string[] | []>([])
     const [selectAll, setSelectAll] = useState<boolean>(false)
 
-    const apiKeyword: dbIdTypes = addNewItemWindowType === 'Places' ? 'place' : addNewItemWindowType === 'Events' ? 'event' :
+    const apiKeyword: dbIdTypes = addNewItemWindowType === 'Places' ? 'place' : addNewItemWindowType === 'Events' ? 'visit' :
         addNewItemWindowType === 'Library' ? 'library' : 'media'
 
     const [loading, setLoading] = useState<boolean>(false)
