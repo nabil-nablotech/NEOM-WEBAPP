@@ -92,8 +92,10 @@
 }
 
 .bottom-grid p {
-    opacity: 0.5;
     margin-bottom: 0.4em;
+}
+.bottom-grid p:nth-child(1) {
+    opacity: 0.5;
 }
 
 .bottom-grid > div {
