@@ -8,7 +8,7 @@ export const exportCsvImagesZip = async (
 ) => {
   if (data?.length > 0) {
     const fields = Object.keys(data[0]);
-    const opts = { fields };
+    const opts = { fields,withBom:true };
     const parser = new Parser(opts);
     const csv = parser.parse(data);
 

@@ -38,6 +38,7 @@ import { useFormik } from "formik";
 import StepContent from './form';
 import axios from 'axios';
 import { getToken } from "../../../../utils/storage/storage";
+import { updateKeywords } from "../../../../api/keywords";
 
 export const stepperIconSx = {
   color: "#fff",
@@ -159,6 +160,9 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
           ...data,
         });
         handleReset();
+        updateKeywords({
+          keywords: data.keywords
+        }, 'media')
         dispatch(toggleShowAddSuccess(true));
         dispatch(toggleNewItemWindow(false))
       }
@@ -168,6 +172,9 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
         ...data,
       });
       handleReset();
+      updateKeywords({
+        keywords: data.keywords
+      }, 'media')
       dispatch(toggleShowEditSuccess(true));
       dispatch(toggleNewItemWindow(false));
     }

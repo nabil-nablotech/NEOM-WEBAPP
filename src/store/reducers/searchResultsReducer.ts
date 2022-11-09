@@ -43,7 +43,8 @@ const initialState: SearchResultsState2 = {
   isDeleteConfirmationWindowOpen: false,
   itemAboutToDelete: null,
   confirmDelete : false,
-  editPayload: null
+  editPayload: null,
+  shallUpdateKeywords: false
 };
 
 export const searchResultsSlice = createSlice({
@@ -93,19 +94,8 @@ export const searchResultsSlice = createSlice({
       state.showAddSuccess = action.payload;
 
       if(action.payload) {
-        state.addNewItemWindowType = null
-        state.activePlaceItem = null
-        state.activePlaceItemIndex = 0
-        state.activeEventItem = null
-        state.activeEventItemIndex = 0
-        state.activeMediaItem = null
-        state.activeMediaItemIndex = 0
-        state.activeLibraryItem = null
-        state.activeLibraryItemIndex = 0
+        state.shallUpdateKeywords = true
       }
-    },
-    toggleShowEditSuccess: (state, action: PayloadAction<boolean>) => {
-      state.showEditSuccess = action.payload;
 
       if(action.payload) {
         state.addNewItemWindowType = null
@@ -117,6 +107,29 @@ export const searchResultsSlice = createSlice({
         state.activeMediaItemIndex = 0
         state.activeLibraryItem = null
         state.activeLibraryItemIndex = 0
+        state.associatedPlaces=[]
+        state.associatedEvents=[]
+      }
+    },
+    toggleShowEditSuccess: (state, action: PayloadAction<boolean>) => {
+      state.showEditSuccess = action.payload;
+
+      if(action.payload) {
+        state.shallUpdateKeywords = true
+      }
+
+      if(action.payload) {
+        state.addNewItemWindowType = null
+        state.activePlaceItem = null
+        state.activePlaceItemIndex = 0
+        state.activeEventItem = null
+        state.activeEventItemIndex = 0
+        state.activeMediaItem = null
+        state.activeMediaItemIndex = 0
+        state.activeLibraryItem = null
+        state.activeLibraryItemIndex = 0
+        state.associatedPlaces=[]
+        state.associatedEvents=[]
       }
     },
     setActiveMediaItem: (state, action: PayloadAction<Object | any>) => {
@@ -153,6 +166,7 @@ export const searchResultsSlice = createSlice({
       state.addNewItemWindowType = action.payload;
       if(!action.payload) {
         state.isAssociationsStepOpen = false
+        state.isAssociationsIconsDisabled = false
       }
     },
     toggleAssociationsStepOpen: (state, action: PayloadAction<boolean>) => {
@@ -245,6 +259,9 @@ export const searchResultsSlice = createSlice({
         state.addItemWindowMinimized = false
       }
     },
+    toggleShallUpdateKeywords: (state, action: PayloadAction<boolean>) => {
+      state.shallUpdateKeywords = action.payload;
+    },
   },
 });
 
@@ -288,7 +305,8 @@ export const {
   setEditPayload,
   toggleDeleteConfirmationWindowOpen,
   setItemAboutToDelete,
-  toggleConfirmDelete
+  toggleConfirmDelete,
+  toggleShallUpdateKeywords
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

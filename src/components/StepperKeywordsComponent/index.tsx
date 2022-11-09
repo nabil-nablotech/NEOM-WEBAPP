@@ -1,19 +1,16 @@
 import { ChangeEvent, useState, useEffect, SyntheticEvent } from "react";
-import { useQuery } from "@apollo/client";
 import { Box, Chip, Autocomplete } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import styles from "./index.module.css";
-import { placesAddKeyWords } from "../../query/places";
-import { eventsAddKeyWords } from "../../query/events";
-import { mediaAddKeyWords } from "../../query/media";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
 import { detectLowerCaseStringInArray, handleEnter } from "../../utils/services/helpers";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { graphQlHeaders } from "../../utils/services/interceptor";
 import Loader from "../Common/Loader";
+import { getKeywords } from "../../api/keywords";
+import { dbIdTypes } from "../../types/Place";
 
 
 const textInputSxStyles = {
@@ -42,22 +39,6 @@ const commonFormControlSxStyles = {
     },
 };
 
-
-interface IData {
-    name: [];
-}
-
-type keyWord = {
-    keywords: string[] | []
-    __typename: string
-    id: number
-}
-
-type parent = {
-    attributes: keyWord
-    __typename: string
-    id: number
-}
 
 type PropsPassed = {
     onKeyDown: (str: string) => void
@@ -143,13 +124,23 @@ export const StepperKeywordsComponent = ({
     const [preloadedKeywordsList, setPreloadedKeywordsList] = useState<string[] | []>([])
     const [selectAll, setSelectAll] = useState<boolean>(false)
 
-    const apiKeyword = addNewItemWindowType === 'Places' ? 'places' : addNewItemWindowType === 'Events' ? 'visits' : 'medias'
+    const apiKeyword: dbIdTypes = addNewItemWindowType === 'Places' ? 'place' : addNewItemWindowType === 'Events' ? 'event' :
+        addNewItemWindowType === 'Library' ? 'library' : 'media'
 
-    let querySelected = addNewItemWindowType === 'Places' ? placesAddKeyWords : addNewItemWindowType === 'Events' ? eventsAddKeyWords : mediaAddKeyWords;
+    const [loading, setLoading] = useState<boolean>(false)
 
-    const { loading, data: keyWordsData, refetch: keyWordsPlaces } = useQuery(querySelected, graphQlHeaders());
+    const getCall = async () => {
+        try {
+            setLoading(true)
+            const res = await getKeywords(apiKeyword)
+            setLoading(false)
+            return res
+        } catch (e) {
+            return null
+        }
+    }
 
-    const onTextChanged = (e: ChangeEvent<HTMLInputElement>) => {
+    const onTextChanged = async (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
 
         setSearch(state => ({
@@ -157,63 +148,38 @@ export const StepperKeywordsComponent = ({
             text: e.target.value || ''
         }))
 
-        let suggestions: any = [];
+        let newList: string[] | [] = []
+
         if (value.length > 0) {
-            keyWordsPlaces({ text: value });
 
-            for (let i = 0; i < keyWordsData[apiKeyword]?.data?.length; i++) {
-                if (
-                    keyWordsData[apiKeyword]?.data[i]?.attributes?.keywords !== null
-                ) {
+            const refList = [...preloadedKeywordsList]
 
-                    const foundWordArray: string[] = keyWordsData[apiKeyword]?.data[i].attributes["keywords"].filter((element: string) => element.toLowerCase().includes(value.toLowerCase()))
+            newList = refList && refList.map((item: string) => item.toLowerCase()).filter((item: string) => item.indexOf(value.toLowerCase()) !== -1)
 
-                    suggestions.push({
-                        name: foundWordArray
-                    });
-
-
-                } else {
-
-                }
-            }
+            setShowList(newList)
 
         } else {
-            suggestions = []
+            newList = []
+            setShowList([])
         }
-
-        setSearch(state => ({ ...state, suggestions: suggestions }));
     };
 
     const [showList, setShowList] = useState<Array<string> | []>([])
 
     const loadKeywordsList = async () => {
-        const data = await keyWordsPlaces({ text: '' });
 
-        const list: string[] = []
+        const res = await getCall()
 
-        data.data[apiKeyword].data.forEach((item: parent) => {
-
-
-            const dataKeywordsArray = item.attributes.keywords //array
-
-            if (dataKeywordsArray?.length > 0) {
-                dataKeywordsArray.forEach((word: string) => {
-
-                    if (!detectLowerCaseStringInArray(word, list)) {
-                        list.push(word)
-                    }
-                })
-            }
-        })
-
-        setCurrentlyShownList(createSelectedFirstList(list))
-        setPreloadedKeywordsList(list)
+        if (res) {
+            setCurrentlyShownList(createSelectedFirstList([...res]))
+            setPreloadedKeywordsList([...res])
+        }
     }
 
     useEffect(() => {
         loadKeywordsList()
     }, [])
+
 
     const createSelectedFirstList = (list: string[] | []) => {
         let newArr: string[] | [] = []
@@ -260,49 +226,17 @@ export const StepperKeywordsComponent = ({
             })
         }
         setCurrentlyShownList(createSelectedFirstList(newList))
+        console.log('Hex actu: ', newList)
 
-    }, [currentKeywordArray, currentlyShownList.length > 0])
 
-
-    useEffect(() => {
-        /** set dropdown list based on inputs */
-        let currentList: string[] = []
-
-        if (search.suggestions.length > 0) {
-
-            search.suggestions.forEach((suggestion: { name: Array<string> | [] }) => {
-
-                if (suggestion?.name && suggestion?.name?.length > 0) {
-                    for (let val of suggestion.name) {
-
-                        if (
-                            !detectLowerCaseStringInArray(val, currentList) &&
-
-                            /** push into array only if not already selected */
-                            (
-                                currentKeywordArray.length === 0 ||
-                                (
-                                    (currentKeywordArray.length > 0) &&
-                                    !detectLowerCaseStringInArray(val, currentKeywordArray)
-                                )
-                            )
-                        ) {
-                            currentList.push(val)
-                        }
-                    }
-                }
-            })
-        }
-
-        setShowList(currentList)
-
-    }, [search, currentlyShownList])
+    }, [currentKeywordArray, currentlyShownList.length])
 
     const suggestionSelected = (value: any) => {
 
         if (value && (value !== '')) {
 
             if (!detectLowerCaseStringInArray(value, currentKeywordArray)) {
+
                 setSearch({
                     text: "",
                     suggestions: []
@@ -347,7 +281,7 @@ export const StepperKeywordsComponent = ({
                     id="free-solo-demo"
                     freeSolo
                     inputValue={search.text}
-                    options={search.text ? showList.map((option) => option) : []}
+                    options={showList ? showList.map((option) => option) : []}
                     renderInput={(params) => {
                         const newObj = { ...params }
 

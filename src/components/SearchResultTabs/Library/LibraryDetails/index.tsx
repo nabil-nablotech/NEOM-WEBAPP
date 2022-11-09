@@ -18,6 +18,11 @@ import { baseUrl, detectLibraryRecordApiType, MEDIA_TYPE_IMAGE } from '../../../
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import BlankDocImage from '../../../../assets/images/searchResults/BlankDocument.svg' 
+import type { UploadProps } from 'antd';
+import { Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Button as AntdButton } from 'antd';
+import RenderValueWithDefault from '../../../NoDataScreens/DefaultText';
 
 const LibraryDetailsPage = ({
     currentItemIndex,
@@ -58,6 +63,15 @@ const LibraryDetailsPage = ({
         },
     ]
 
+    const props: UploadProps = {
+        name: 'file',
+        multiple: false,
+        maxCount: 1,
+        // customRequest: uploadImage,
+        // onChange: handleChange,
+        // defaultFileList: defaultImages
+    };
+
 
     return <>
         <Box component="div" className={`${styles['details-page-wrapper']}`}>
@@ -66,16 +80,36 @@ const LibraryDetailsPage = ({
                 <Box component="div" className={`${styles['img-wrapper']}`} >
                     {
                         detectLibraryRecordApiType(libraryDetails) === MEDIA_TYPE_IMAGE ?
-                            <Box className={`${styles['image']}`} component="img" alt={""} src={`${baseUrl}${libraryDetails?.object?.url}`} />
-                            :
                             <>
-                                <Box
-                                    component = "img"
-                                    src={BlankDocImage}
-                                    alt={""}
-                                    className={`${styles['blank-doc-image']}`}
-                                />
+                                {libraryDetails.object && <Box className={`${styles['image']}`} component="img" alt={""} src={`${baseUrl}${libraryDetails?.object?.url}`} />}
                             </>
+                            :
+                            (
+                                libraryDetails?.object?.url &&
+                                (libraryDetails?.object?.url.indexOf('.pdf') !== -1)
+                            ) ?
+                                <>
+                                    <embed
+                                        type="application/pdf"
+                                        src={`${baseUrl}${libraryDetails.object.url}`}
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                    />
+                                    {/* <Upload {...props} >
+                                        <AntdButton icon={<UploadOutlined />}>
+                                            Select file...
+                                        </AntdButton >
+                                    </Upload> */}
+                                </> :
+                                <>
+                                    <Box
+                                        component="img"
+                                        src={BlankDocImage}
+                                        alt={""}
+                                        className={`${styles['blank-doc-image']}`}
+                                    />
+                                </>
                     }
                 </Box>
 
@@ -113,48 +147,60 @@ const LibraryDetailsPage = ({
                             </Box>
                             <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                 <p>Details</p>
-                                <div>Source URL: {referenceURL}</div>
-                                <div>Citation: {citation}</div>
-                                <div>Item URL: {locationRef}</div>
+                                <div>Source URL: {RenderValueWithDefault(referenceURL)}</div>
+                                <div>Citation: {RenderValueWithDefault(citation)}</div>
+                                <div>Item URL: {RenderValueWithDefault(locationRef)}</div>
                             </Box>
 
                             {
-                                libraryDetails.object && <Box component="div" className={`${styles[`bottom-grid`]}`} >
+                                (libraryDetails.object) && <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                     <p>Metadata</p>
-                                    <div>File Name: {libraryDetails.object.name}</div>
-                                    <div>Size: {libraryDetails.object.size}MB</div>
+                                    <div>File Name: {RenderValueWithDefault(libraryDetails?.object?.name)}</div>
+                                    <div>Size: {RenderValueWithDefault(libraryDetails?.object?.size)} {libraryDetails?.object?.size ? 'MB' : ''}</div>
                                     <div>
-                                        <span>Created: <span>{`${dayjs(libraryDetails.object.createdAt).format("MM/DD/YYYY")}`}</span></span>
+                                        <span>Created: <span>{RenderValueWithDefault(`${dayjs(libraryDetails?.createdAt).format("MM/DD/YYYY")}`)}</span></span>
                                     </div>
                                     <div>
-                                        <span>Modified: <span>{`${dayjs(libraryDetails.object.updatedAt).format("MM/DD/YYYY")}`}</span></span>
+                                        <span>Modified: <span>{RenderValueWithDefault(`${dayjs(libraryDetails?.updatedAt).format("MM/DD/YYYY")}`)}</span></span>
                                     </div>
-                                    <div>Extensions: {libraryDetails.object.ext && libraryDetails.object.ext.replace('.', '')}</div>
+                                    <div>Extensions: {RenderValueWithDefault(libraryDetails?.object?.ext && libraryDetails?.object?.ext?.replace('.', ''))}</div>
                                 </Box>
                             }
                             <Box component="div" className={`${styles[`bottom-grid`]}`} >
                                 <p>Associations</p>
-                                {
-                                    (libraryDetails.media_associate.place_unique_ids && libraryDetails.media_associate.place_unique_ids.length > 0) &&
-                                    libraryDetails.media_associate.place_unique_ids.map((placeObj: InventoryAssociationType) => (
-                                        <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
-                                    ))
-                                }
-                                {
-                                    (libraryDetails.media_associate.visit_unique_ids && libraryDetails.media_associate.visit_unique_ids.length > 0) &&
-                                    libraryDetails.media_associate.visit_unique_ids.map((visitObj: InventoryAssociationType_Event) => (
-                                        <>
-                                            {
-                                                visitObj &&
-                                                <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
-                                                    libraryDetails.media_associate.visit_unique_ids[0].visitNumber ?
-                                                        `Visit ${libraryDetails.media_associate.visit_unique_ids[0].visitNumber}` :
-                                                        ''
-                                                }</div>
-                                            }
-                                        </>
-                                    ))
-                                }
+                                <p>Places</p>
+                                <Box component="div" className={`${styles[`bottom-grid`]}`}>
+                                    {
+                                        (libraryDetails.media_associate?.place_unique_ids && (libraryDetails.media_associate?.place_unique_ids?.length > 0)) ?
+                                            (
+                                                libraryDetails.media_associate?.place_unique_ids?.map((placeObj: InventoryAssociationType) => (
+                                                    <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
+                                                ))
+                                            ) :
+                                            RenderValueWithDefault('')
+                                    }
+                                </Box>
+                                <p>Events</p>
+                                <Box component="div" className={`${styles[`bottom-grid`]}`}>
+                                    {
+                                        (libraryDetails.media_associate?.visit_unique_ids && (libraryDetails.media_associate?.visit_unique_ids?.length > 0)) ?
+                                            (
+                                                libraryDetails.media_associate?.visit_unique_ids?.map((visitObj: InventoryAssociationType_Event) => (
+                                                    <>
+                                                        {
+                                                            visitObj &&
+                                                            <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
+                                                                libraryDetails.media_associate?.visit_unique_ids[0]?.visitNumber ?
+                                                                    `Visit ${libraryDetails.media_associate?.visit_unique_ids[0]?.visitNumber}` :
+                                                                    ''
+                                                            }</div>
+                                                        }
+                                                    </>
+                                                ))
+                                            ) :
+                                            RenderValueWithDefault('')
+                                    }
+                                </Box>
                             </Box>
                         </Grid>
 
@@ -200,6 +246,7 @@ export const LibraryDetailsModal = () => {
         navigate(`/search-results/Library`, { replace: true, state: null })
     }
 
+    // console.log('hex: ', libraryDetails)
 
     return <>
         <CustomModal

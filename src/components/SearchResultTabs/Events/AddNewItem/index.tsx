@@ -44,6 +44,7 @@ import { useFormik } from "formik";
 import ReactDatePicker from "react-datepicker";
 import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
 import StepContent from './form';
+import { updateKeywords } from "../../../../api/keywords";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -134,6 +135,9 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
           ...data,
         });
         handleReset();
+        updateKeywords({
+          keywords: data.keywords
+        }, 'event')
         dispatch(toggleShowAddSuccess(true));
         dispatch(toggleNewItemWindow(false))
       }
@@ -144,6 +148,9 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
         ...data,
       });
       handleReset();
+      updateKeywords({
+        keywords: data.keywords
+      }, 'event')
       dispatch(toggleShowEditSuccess(true));
       dispatch(toggleNewItemWindow(false));
     }

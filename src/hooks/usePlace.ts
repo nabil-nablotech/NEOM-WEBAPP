@@ -196,8 +196,8 @@ const usePlace = () => {
       "researchValue": [payload.researchValue],
       "tourismValue": [payload.tourismValue],
       "recommendation": [payload.recommendation],
-      "latitude": payload.latitude,
-      "longitude": payload.longitude,
+      "latitude": payload.latitude && parseFloat(payload.latitude),
+      "longitude": payload.longitude && parseFloat(payload.longitude),
       // "assessmentType": ["Field-based"],
       artifacts: [payload.artifacts]
     }
@@ -262,7 +262,8 @@ const usePlace = () => {
     fetchPlaces: fetchData,
     clearSearch: clearTextSearch,
     createPlace: createPlace,
-    setEdit
+    setEdit,
+    searchData : getQueryObj(search)
   };
 };
 

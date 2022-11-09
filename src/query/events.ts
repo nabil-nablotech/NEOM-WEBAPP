@@ -221,6 +221,7 @@ query RefineSearchEvent(
               media_unique_id {
                 data {
                   attributes {
+                    videoType
                     object {
                       data {
                         attributes {
