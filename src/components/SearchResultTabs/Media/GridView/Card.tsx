@@ -28,7 +28,7 @@ export const Card = ({
                                     `${gridStyles['card-image']}` : `${styles['three-d-card-parent']}`,
                             objectURL: record?.attributes.objectURL || '',
                             videoType: record?.attributes.videoType,
-                            iframeVideoLink: (record?.attributes.videoType === "url") ? record?.attributes.referanceUrl : undefined,
+                            iframeVideoLink: (record?.attributes.videoType === "url") ? record?.attributes.referenceURL : undefined,
                             staticVideoLink:  (detectMediaTypeFromMediaList(record) === "video" && record?.attributes.videoType === "video") ? `${baseUrl}${record?.attributes.object?.data?.attributes?.url}` : undefined
                         }}
                         fileType={detectMediaTypeFromMediaList(record)}

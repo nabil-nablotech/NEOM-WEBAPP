@@ -19,7 +19,7 @@ export type Media = {
     thumbnailUrl?: string;
     title: string;
     description: string;
-    referanceUrl: string;
+    referenceURL: string;
     fileName: string;
     bearing: string;
     actionType: string;

@@ -201,7 +201,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       object: edit && tabData?.object ? [tabData?.object] : undefined,
       title: edit ? tabData?.title : '',
       description: edit ? tabData?.description : "",
-      referenceUrl: edit ? tabData?.referenceUrl : "",
+      referenceUrl: edit ? tabData?.referenceURL : "",
       citation: edit ? tabData?.citation : "",
       keywords: [],
     },

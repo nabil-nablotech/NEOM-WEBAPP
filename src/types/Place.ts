@@ -146,6 +146,8 @@ export type MediaTypeObject_GalleryView = {
 export type MediaType = Array<MediaTypeObject>
 
 export type MediaAssociateObj = {
+  object: any;
+  videoType: "video" | "url" | "embededCode" | undefined;
   createdAt: string
   id: number
   media_unique_id: {
