@@ -56,3 +56,9 @@ export type Roles = {
 
 export type EditUserPayload = {user: UserPayload | {}, id: number}
 export type SetPasswordPayload = {password: string, id: number}
+
+
+export type DeleteUserReduxPayload = {
+  flag: boolean
+  mailId?: string
+}
