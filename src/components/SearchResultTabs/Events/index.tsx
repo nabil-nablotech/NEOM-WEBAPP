@@ -122,7 +122,7 @@ const PlacesTab = () => {
                 />
             </Box>
             <Box component={'section'} className={`${styles['result-section']}`}>
-                <Grid container spacing={1}>
+                <Grid container spacing={1} className={`${styles['result-section--grid']}`}>
                     {openStates[0] && <><Grid item xl={6} lg={6} md={5} sm={5}>
                         <GridView key={10} loading={loading} data={isFilter===null?events:events.filter((item)=>{return item.id===isFilter})} handleNext={handleNext} setEdit={setEdit} hasMoreData={hasMoreData}  />
                     </Grid>

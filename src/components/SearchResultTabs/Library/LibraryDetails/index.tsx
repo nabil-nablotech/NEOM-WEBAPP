@@ -8,13 +8,13 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setActiveLibraryItem, setActiveLibraryItemIndex } from '../../../../store/reducers/searchResultsReducer';
+import { setActiveLibraryItem, setActiveLibraryItemIndex, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
 import useLibraryDetails from '../../../../hooks/useLibraryDetails';
-import { baseUrl, detectLibraryRecordApiType, MEDIA_TYPE_IMAGE } from '../../../../utils/services/helpers';
+import { baseUrl, detectLibraryRecordApiType, LIBRARY_TAB_NAME, MEDIA_TYPE_IMAGE } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import BlankDocImage from '../../../../assets/images/searchResults/BlankDocument.svg' 
@@ -26,6 +26,8 @@ import RenderValueWithDefault from '../../../NoDataScreens/DefaultText';
 // import { Document, Page } from 'react-pdf/dist/esm/entry.webpack5';
 // import { Document, Page } from 'react-pdf';
 // import DocViewer from "react-doc-viewer";
+// import { Viewer, Worker } from '@react-pdf-viewer/core';
+// import '@react-pdf-viewer/core/lib/styles/index.css';
 
 const LibraryDetailsPage = ({
     currentItemIndex,
@@ -62,6 +64,8 @@ const LibraryDetailsPage = ({
         {
             label: "Delete",
             action: () => {
+                // dispatch(toggleDeleteConfirmationWindowOpen(true))
+                // dispatch(setDeleteItemType(LIBRARY_TAB_NAME))
             },
         },
     ]
@@ -99,9 +103,19 @@ const LibraryDetailsPage = ({
                                             width: '100%'
                                         }}
                                     />
+                                    {/* <div
+                                        style={{
+                                            height: '750px',
+                                        }}
+                                    >
+                                        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
+                                            <div style={{ height: "720px" }}>
+                                                <Viewer fileUrl={`${baseUrl}${libraryDetails.object.url}`} />
+                                            </div>
+                                        </Worker>
+
+                                    </div> */}
                                     {/* <Document file={`${baseUrl}${libraryDetails.object.url}`} onLoadSuccess={() => {}}>
-                                        <Page pageNumber={1} />
-                                    </Document> */}
                                     {/* <DocViewer documents={[
                                         { uri: `${baseUrl}${libraryDetails.object.url}` }
                                     ]} /> */}

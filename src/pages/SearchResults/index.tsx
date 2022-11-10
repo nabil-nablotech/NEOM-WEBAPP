@@ -16,11 +16,13 @@ import useLibrary from "../../hooks/useLibrary";
 import useMedia from "../../hooks/useMedia";
 import {
   setActiveTab,
+  setDeleteItemType,
+  toggleDeleteItemSuccess,
   toggleShowAddSuccess,
   toggleShowEditSuccess
 } from "../../store/reducers/searchResultsReducer";
 import PositionedSnackbar from "../../components/Snackbar";
-import { PLACES_TAB_NAME } from "../../utils/services/helpers";
+import { getSingleInventoryNameFromTabName, PLACES_TAB_NAME } from "../../utils/services/helpers";
 import useRefinedSearch from "../../hooks/useRefinedSearchOptions";
 import {setSearchText, } from '../../store/reducers/searchResultsReducer';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
@@ -31,7 +33,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   useRefinedSearch();
   const navigate = useNavigate();
   // const { searchText, activeTab, newItemWindowOpen, showAddSuccess } =
-  const { searchText, showAddSuccess,addNewItemWindowType, showEditSuccess} =
+  const { searchText, showAddSuccess,deleteItemType, showEditSuccess, deleteItemSuccess} =
     useSelector((state: RootState) => state.searchResults);
   const { fetchEvents, clearSearch: clearEventSearch, setEdit: setEditEvents } = useEvent();
   const { fetchLibraryItems, setEdit: setEditLibrary } = useLibrary();
@@ -206,6 +208,16 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         open={showEditSuccess}
         handleClose={() => {
           dispatch(toggleShowEditSuccess(false))
+        }}
+        duration={5000}
+      />
+      <PositionedSnackbar
+        message={`${getSingleInventoryNameFromTabName(deleteItemType ?? 'Places')} deleted`}
+        severity={"success"}
+        open={deleteItemSuccess}
+        handleClose={() => {
+          dispatch(setDeleteItemType(null))
+          dispatch(toggleDeleteItemSuccess(false))
         }}
         duration={5000}
       />

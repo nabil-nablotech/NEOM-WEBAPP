@@ -10,19 +10,54 @@ import { toggleConfirmOpenEdit } from '../../store/reducers/searchResultsReducer
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { tabNameProps } from '../../types/SearchResultsTabsProps';
-import { getSingleInventoryNameFromTabName, PLACES_TAB_NAME } from '../../utils/services/helpers';
+import { EVENTS_TAB_NAME, getSingleInventoryNameFromTabName, MEDIA_TAB_NAME, PLACES_TAB_NAME } from '../../utils/services/helpers';
 import { useState, useEffect } from 'react';
+import parse from 'html-react-parser';
 
-const DeleteInventoryForm = () => {
-    const { itemAboutToDelete } = useSelector((state: RootState) => state.searchResults);
+const addSx = {
+    '& .MuiButtonBase-root.MuiCheckbox-root': {
+        padding: '5px',
+        paddingTop: 0,
+        color: 'var(--orange-shade)'
+    },
+    '& .MuiFormControlLabel-root': {
+        alignItems: 'start',
+        marginRight: 0,
+        marginBottom: '10px'
+    }
+}
+const DeleteInventoryForm = ({
+    checkEnabled
+}: { checkEnabled: (val: boolean) => void }) => {
+    const { deleteItemType } = useSelector((state: RootState) => state.searchResults);
 
-    const [checkList, setCheckList] = useState<Array<boolean>>([])
+    const assignDefaultState = () => {
+        if (deleteItemType === PLACES_TAB_NAME) {
+            return [false, false, false, false, false]
+        } else if (deleteItemType === EVENTS_TAB_NAME) {
+            return [false, false, false, false]
+        } else return [false, false, false, false, false]
+
+    }
+    const [checkList, setCheckList] = useState<Array<boolean>>(assignDefaultState())
+
 
     useEffect(() => {
-        if (itemAboutToDelete === PLACES_TAB_NAME) {
-            setCheckList(checkList.fill(false, 0, 4))
+        if (deleteItemType !== MEDIA_TAB_NAME) {
+            confirmAllChecked(checkList)
+        } else {
+            checkEnabled(true)
         }
-    }, [itemAboutToDelete])
+    }, [])
+
+    useEffect(() => {
+
+        if (deleteItemType !== MEDIA_TAB_NAME) {
+            confirmAllChecked(checkList)
+        } else {
+            checkEnabled(true)
+        }
+    }, [checkList])
 
     const handleChecked = (e: React.ChangeEvent<HTMLInputElement>, itemNo: number) => {
         setCheckList(state => {
@@ -31,51 +66,66 @@ const DeleteInventoryForm = () => {
             return newCheckList
         })
     }
+    const confirmAllChecked = (checkList_: Array<boolean> | []) => {
+        if (checkList_ && (checkList_.length > 0)) {
+            checkEnabled(checkList_.every(item => item === true))
+        }
 
-    if (itemAboutToDelete === PLACES_TAB_NAME) {
+    }
+
+    if (deleteItemType === PLACES_TAB_NAME || deleteItemType === EVENTS_TAB_NAME) {
 
         return <>
             <FormGroup sx={{
-                '& .MuiFormControlLabel-root': {
-                    marginRight: 0
-                }
+                ...addSx
             }}>
-                <FormControlLabel control={
-                    <Checkbox style={{ color: "var(--orange-shade)" }} checked={checkList[0]} onChange={e => {
+                <FormControlLabel className={`${modalStyles['form-control-label']}`} control={
+                    <Checkbox className={`${modalStyles['checkbox']}`} checked={checkList[0]} onChange={e => {
                         handleChecked(e, 1)
                     }} />
                 }
-                    label={`All the ${getSingleInventoryNameFromTabName(itemAboutToDelete)} information will be deleted`}
+                    label={`All the ${getSingleInventoryNameFromTabName(deleteItemType).toLowerCase()} information will be deleted`}
                 />
-                <FormControlLabel control={
-                    <Checkbox style={{ color: "var(--orange-shade)" }} checked={checkList[1]} onChange={e => {
+                <FormControlLabel className={`${modalStyles['form-control-label']}`} control={
+                    <Checkbox className={`${modalStyles['checkbox']}`} checked={checkList[1]} onChange={e => {
                         handleChecked(e, 2)
                     }} />
                 }
                     label="All media items linked to this place will be deleted"
                 />
-                <FormControlLabel control={
-                    <Checkbox style={{ color: "var(--orange-shade)" }} checked={checkList[2]} onChange={e => {
+                <FormControlLabel className={`${modalStyles['form-control-label']}`} control={
+                    <Checkbox className={`${modalStyles['checkbox']}`} checked={checkList[2]} onChange={e => {
                         handleChecked(e, 3)
                     }} />
                 }
                     label="All library items linked to this place will be deleted"
                 />
-                <FormControlLabel control={
-                    <Checkbox style={{ color: "var(--orange-shade)" }} checked={checkList[3]} onChange={e => {
+                <FormControlLabel className={`${modalStyles['form-control-label']}`} control={
+                    <Checkbox className={`${modalStyles['checkbox']}`} checked={checkList[3]} onChange={e => {
                         handleChecked(e, 4)
                     }} />
                 }
                     label="All remarks will be deleted"
                 />
-                <FormControlLabel control={
-                    <Checkbox style={{ color: "var(--orange-shade)" }} checked={checkList[4]} onChange={e => {
-                        handleChecked(e, 5)
-                    }} />
+                {
+                    deleteItemType !== EVENTS_TAB_NAME &&
+                    <FormControlLabel className={`${modalStyles['form-control-label']}`} control={
+                        <Checkbox className={`${modalStyles['checkbox']}`} checked={checkList[4]} onChange={e => {
+                            handleChecked(e, 5)
+                        }} />
+                    }
+                        label="All the events linked to this place and their information, library items, media items and remarks will also be deleted"
+                    />
                 }
-                    label="All the events linked to this place and their information, library items, media items and remarks will also be deleted"
-                />
             </FormGroup>
+        </>
+    }
+
+    if (deleteItemType === MEDIA_TAB_NAME) {
+        return <>
+            <Box component="div" className={`${modalStyles[`sentence-Delete`]}`}>
+                Are you sure you want to delete this item? This action cannot be undone.
+            </Box>
         </>
     }
 
@@ -86,14 +136,19 @@ export const ConfirmationModal = ({
     type,
     open,
     handleClose,
+    handleDelete
 }: ConfirmationModalTypes) => {
-    const { addNewItemWindowType, addItemWindowMinimized } = useSelector((state: RootState) => state.searchResults);
     const dispatch = useDispatch()
     let { tabName } = useParams<{ tabName?: tabNameProps }>();
+    const { isDeleteUserWindowOpen } = useSelector((state: RootState) => state.searchResults);
+
+
+    const [enabledFlag, setEnabledFlag] = useState<boolean>(false)
 
     const modalTypeEdit = type === "confirm-edit"
-    const modalTypeDelete = type === "confirm-delete"
+    const modalTypeDelete = type === "confirm-delete-inventory"
     const modalTypeLogout = type === "confirm-logout"
+    const modalTypeDeleteUser = type === "confirm-delete-user"
 
     return <>
         <Dialog
@@ -114,27 +169,32 @@ export const ConfirmationModal = ({
                     alignItems: 'flex-end',
                 }}>
                     <Grid item className={`${modalStyles['title']}`}>
-                        {`${modalTypeEdit ? 'Edit' : modalTypeDelete ? 'Delete' : 'Logout'} ${tabName ? tabName : ''}`}
+                        {`${modalTypeEdit ? 'Edit' : (modalTypeDelete || modalTypeDeleteUser) ? 'Delete' :  'Logout'}` +
+                        ` ${modalTypeDeleteUser ? 'User' : tabName ? getSingleInventoryNameFromTabName(tabName) : ''}`}
                     </Grid>
                     <Grid item sm={1}>
                         <CloseIcon fontSize="large"
                             style={{
+                                cursor: 'pointer'
                             }}
+                            onClick={handleClose}
                         />
                     </Grid>
                 </Grid>
-                <Box component="div" className={`${modalStyles['sentence']}`}>
+                <Box component="div" className={`${modalStyles[`sentence-${modalTypeEdit ? 'Edit' : (modalTypeDelete || modalTypeDeleteUser) ? 'Delete' : 'Logout'}`]}`}>
                     {
                         modalTypeEdit ?
                             `You already have new item being added . Are you sure you still want to edit this item ?` :
                             modalTypeDelete ?
                                 `Are you sure you want to delete this item? This action cannot be undone.` :
+                                modalTypeDeleteUser ?
+                                    parse(`<span style="font-weight: bold;">${isDeleteUserWindowOpen.mailId}</span> will be deleted and will no longer have access to the platform`) : 
                                 `Are you sure you want to logout? This action cannot be undone.`
                     }
                 </Box>
                 {
                     modalTypeDelete &&
-                    <DeleteInventoryForm />
+                    <DeleteInventoryForm checkEnabled={(val) => setEnabledFlag(val)} />
                 }
                 <Box
                     component="div"
@@ -158,13 +218,21 @@ export const ConfirmationModal = ({
                     />
                     <Button
                         colors={["var(--orange-shade)", "#fff", "none"]}
-                        label={modalTypeEdit ? 'Edit' : modalTypeDelete ? 'Delete' : 'Logout'}
+                        label={modalTypeEdit ? 'Edit' : (modalTypeDelete || modalTypeDeleteUser) ? 'Delete' : 'Logout'}
+                        disabled={modalTypeDelete ? !enabledFlag : false}
                         type="button"
                         onClick={e => {
                             if (modalTypeEdit) {
                                 dispatch(toggleConfirmOpenEdit(true))
+                                handleClose(e)
                             }
-                            handleClose(e)
+                            if ((modalTypeDelete || modalTypeDeleteUser) && handleDelete) {
+                                handleDelete()
+
+                                if(modalTypeDeleteUser) {
+                                    handleClose(e)
+                                }
+                            }
 
                         }}
                     />

@@ -4,6 +4,7 @@ import { Place, Meta, PlaceApi, MediaAssociateObj } from "./Place";
 import { Event, EventApi } from "./Event";
 import { Media } from "./Media";
 import { RemarksPayload, Remark, ChildRemark, RemarkDetails, RemarksEditPayload } from "./Remarks";
+import { DeleteUserReduxPayload } from "./User";
 
 export type SearchResultTabsProps = {
   tabIndex?: number;
@@ -122,6 +123,11 @@ export type SearchResultsState2 = {
   confirmDelete : boolean
   itemAboutToDelete: tabNameProps | null
   shallUpdateKeywords: boolean
+  deleteItemType: null | tabNameProps
+  deleteItemSuccess: boolean,
+  isDeleteUserWindowOpen: DeleteUserReduxPayload
+  deleteUserSuccess: boolean,
+
 };
 
 export type addItemProgressPayload = addItemProgressStateType | addPlaceProgressStateType | 

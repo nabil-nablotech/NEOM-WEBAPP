@@ -13,7 +13,7 @@ import { getRole } from "../../utils/storage/storage";
 import MenuList from "../MenuList";
 import { Box, LinearProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setAddNewItemWindowType, setItemAboutToDelete, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleDeleteConfirmationWindowOpen, toggleEditConfirmationWindowOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, setDeleteItemType, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleDeleteConfirmationWindowOpen, toggleDeleteItemSuccess, toggleEditConfirmationWindowOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
 import CustomDrawer from "../CustomDrawer";
 import AddNewItem from "../../pages/AddNewItem";
 import AddNewPlace from "../SearchResultTabs/Places/AddNewItem";
@@ -215,7 +215,7 @@ function UserMenuComponent() {
             type={
               isEditConfirmationWindowOpen ? 
               "confirm-edit" :
-              "confirm-delete" 
+              "confirm-delete-inventory" 
             }
             open={
               isEditConfirmationWindowOpen ||
@@ -227,9 +227,15 @@ function UserMenuComponent() {
               }
               if(isDeleteConfirmationWindowOpen) {
                 dispatch(toggleDeleteConfirmationWindowOpen(false))
-                dispatch(setItemAboutToDelete(null))
               }
             }}
+            handleDelete={
+              () => {
+                dispatch(toggleDeleteConfirmationWindowOpen(false))
+                dispatch(toggleDeleteItemSuccess(true))
+
+              }
+            }
           />
         }
       </Box>

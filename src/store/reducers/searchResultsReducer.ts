@@ -4,6 +4,7 @@ import { DashboardResponse } from "../../types/dashboard";
 import { Place, Meta } from "../../types/Place";
 import { Event } from "../../types/Event";
 import { Media } from "../../types/Media";
+import { DeleteUserReduxPayload } from "../../types/User";
 
 const initialState: SearchResultsState2 = {
   selectedCardIndex: 0,
@@ -44,7 +45,15 @@ const initialState: SearchResultsState2 = {
   itemAboutToDelete: null,
   confirmDelete : false,
   editPayload: null,
-  shallUpdateKeywords: false
+  shallUpdateKeywords: false,
+  deleteItemType: null,
+  deleteItemSuccess: false,
+  isDeleteUserWindowOpen: {
+    flag: false,
+    mailId: ''
+  },
+  deleteUserSuccess: false
+
 };
 
 export const searchResultsSlice = createSlice({
@@ -248,9 +257,6 @@ export const searchResultsSlice = createSlice({
     toggleDeleteConfirmationWindowOpen: (state, action: PayloadAction<boolean>) => {
       state.isDeleteConfirmationWindowOpen = action.payload;
     },
-    setItemAboutToDelete: (state, action: PayloadAction<tabNameProps | null>) => {
-      state.itemAboutToDelete = action.payload;
-    },
     toggleConfirmDelete: (state, action: PayloadAction<boolean>) => {
       state.confirmDelete = action.payload;
 
@@ -260,6 +266,18 @@ export const searchResultsSlice = createSlice({
     },
     toggleShallUpdateKeywords: (state, action: PayloadAction<boolean>) => {
       state.shallUpdateKeywords = action.payload;
+    },
+    toggleDeleteItemSuccess: (state, action: PayloadAction<boolean>) => {
+      state.deleteItemSuccess = action.payload;
+    },
+    setDeleteItemType: (state, action: PayloadAction<tabNameProps | null>) => {
+      state.deleteItemType = action.payload;
+    },
+    toggleDeleteUserWindowOpen: (state, action: PayloadAction<DeleteUserReduxPayload>) => {
+      state.isDeleteUserWindowOpen = action.payload;
+    },
+    toggleDeleteUserSuccess: (state, action: PayloadAction<boolean>) => {
+      state.deleteUserSuccess = action.payload;
     },
   },
 });
@@ -303,9 +321,12 @@ export const {
   toggleConfirmOpenEdit,
   setEditPayload,
   toggleDeleteConfirmationWindowOpen,
-  setItemAboutToDelete,
   toggleConfirmDelete,
-  toggleShallUpdateKeywords
+  toggleShallUpdateKeywords,
+  toggleDeleteItemSuccess,
+  setDeleteItemType,
+  toggleDeleteUserWindowOpen,
+  toggleDeleteUserSuccess
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;
