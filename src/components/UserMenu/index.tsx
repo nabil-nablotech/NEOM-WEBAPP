@@ -227,7 +227,6 @@ function UserMenuComponent() {
               }
               if(isDeleteConfirmationWindowOpen) {
                 dispatch(toggleDeleteConfirmationWindowOpen(false))
-                dispatch(setDeleteItemType(null))
               }
             }}
             handleDelete={
