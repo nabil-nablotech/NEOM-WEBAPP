@@ -65,7 +65,7 @@ const Header = (props: IHeader) => {
         </Box>}
       <ConfirmationModal
         type={"confirm-delete-user"}
-        open={isDeleteUserWindowOpen.flag}
+        open={isDeleteUserWindowOpen?.flag}
         handleClose={() => {
             dispatch(toggleDeleteUserWindowOpen({
               flag: false

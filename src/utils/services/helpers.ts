@@ -493,7 +493,6 @@ export const detectMediaTypeFromMediaAssociate = (obj: MediaAssociateObj) => {
 
 }
 export const detectMediaTypeFromMediaAssociateGraphQlRes = (obj: any) => {
-  console.log('obj inside helper', obj)
   if(obj.media_unique_id?.data?.attributes?.media_type?.data[0].attributes.typeCode === "IMAGE") {
     return MEDIA_TYPE_IMAGE
   }else if(obj?.media_unique_id?.data?.attributes?.media_type?.data[0].attributes.typeCode === "VIDEO") {

@@ -188,7 +188,7 @@ export const ConfirmationModal = ({
                             modalTypeDelete ?
                                 `Are you sure you want to delete this item? This action cannot be undone.` :
                                 modalTypeDeleteUser ?
-                                    parse(`<span style="font-weight: bold;">${isDeleteUserWindowOpen.mailId}</span> will be deleted and will no longer have access to the platform`) : 
+                                    parse(`<span style="font-weight: bold;">${isDeleteUserWindowOpen?.mailId}</span> will be deleted and will no longer have access to the platform`) : 
                                 `Are you sure you want to logout? This action cannot be undone.`
                     }
                 </Box>

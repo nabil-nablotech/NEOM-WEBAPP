@@ -71,7 +71,6 @@ const useMedia = () => {
 
   useEffect(() => {
     if (updateMediaAssociateData || (updateData && mediaAssociate)) {
-      console.log('updateMediaAssociateData', updateMediaAssociateData)
       // dispatch(toggleShowEditSuccess(true))
     }
   }, [updateMediaAssociateData, mediaAssociate])
@@ -79,9 +78,9 @@ const useMedia = () => {
   useEffect(() => {
     if (refineMediaData?.medias) {
       // update the data for the pagination
-      if (refineMediaData?.medias.meta.pagination.page === 1 && refineMediaData?.medias.data.length > 0) {
+      if (refineMediaData?.medias.meta.pagination.page === 1 && refineMediaData?.medias?.data.length > 0) {
         dispatch(setMedia([...refineMediaData?.medias?.data]));
-      } else if (refineMediaData?.medias.data.length > 0) {
+      } else if (refineMediaData?.medias?.data?.length > 0) {
         dispatch(setMedia([...mediaItem, ...refineMediaData?.medias?.data]));
       } else if (refineMediaData?.medias?.meta.pagination.total === 0) {
         dispatch(setMedia([]));
@@ -206,7 +205,7 @@ const useMedia = () => {
       model: "",
       depth: "",
       modified: new Date(),
-      videoType: payload.embedCode.length > 0 ? 'embededCode' : payload?.url.length > 0 ? 'url' : 'video',
+      videoType: payload?.embedCode?.length > 0 ? 'embededCode' : payload?.url?.length > 0 ? 'url' : 'video',
     }
     if (!edit) {
       data.uniqueId = uniqueId;

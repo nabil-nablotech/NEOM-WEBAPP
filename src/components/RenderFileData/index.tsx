@@ -114,7 +114,6 @@ const RenderFileData = ({
                                                 <>
                                                 {fileData.objectURL ? 
                                                 <>
-                                                {console.log('objectURL', fileData.objectURL)}
                                                     <div dangerouslySetInnerHTML={{ __html: fileData.objectURL }} />
                                                     </>
                                                 :

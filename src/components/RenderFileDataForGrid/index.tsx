@@ -15,7 +15,6 @@ const RenderFileDataForGrid = ({
     fileType,
     fileData,
 }: RenderFileDataProps) => {
-    console.log('fileType', fileType)
 
     return (
         <>
