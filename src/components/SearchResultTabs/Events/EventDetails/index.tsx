@@ -258,7 +258,7 @@ const EventDetailsPage = () => {
             className: "citation-column cell-citation",
             dataIndex: "media_unique_id", // temporary
             render: (value: any, index) => {
-                return value.citation ? value.citation : 'static citation';
+                return value.citation ? value.citation : '';
             },
         },
         {

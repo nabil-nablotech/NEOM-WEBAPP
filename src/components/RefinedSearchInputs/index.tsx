@@ -34,7 +34,6 @@ const BaseInputs = ({
   textInputSxStyles
 }: BaseInputProps) => {
   const [locationModalOpen, toggleLocationModal] = useState<boolean>(false);
-  const [currentKeyword, setCurrentKeyword] = useState<string>('')
   
   return (
     <>

@@ -11,11 +11,11 @@ import ThreeDIcon from '../../assets/images/icon-3d-model.svg';
 import parse from 'html-react-parser';
 
 /** component created to erender normal image -video - blob based on props */
-const RenderFileData = ({
+const RenderFileDataForGrid = ({
     fileType,
     fileData,
 }: RenderFileDataProps) => {
-    const [openVideoModal, toggleVideoModal] = useState<boolean>(false)
+    console.log('fileType', fileType)
 
     return (
         <>
@@ -163,4 +163,4 @@ const RenderFileData = ({
     );
 }
 
-export default RenderFileData;
+export default RenderFileDataForGrid;

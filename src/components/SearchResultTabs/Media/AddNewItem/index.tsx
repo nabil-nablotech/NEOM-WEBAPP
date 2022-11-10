@@ -175,7 +175,6 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
       updateKeywords({
         keywords: data.keywords
       }, 'media')
-      dispatch(toggleShowEditSuccess(true));
       dispatch(toggleNewItemWindow(false));
     }
 
@@ -274,6 +273,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
         config
       );
       formik.values.object = res.data;
+      formik.setFieldValue("title", res.data[0].name.split('.')[0]);
       onSuccess("Ok");
     } catch (err) {
       console.log("Eroor: ", err);

@@ -70,6 +70,13 @@ const useMedia = () => {
   const { loading: refineLoading, error: refineErrorData, data: refineMediaData, refetch: refineSearchMedia, } = useQuery(refineMedia);
 
   useEffect(() => {
+    if (updateMediaAssociateData || (updateData && mediaAssociate)) {
+      console.log('updateMediaAssociateData', updateMediaAssociateData)
+      // dispatch(toggleShowEditSuccess(true))
+    }
+  }, [updateMediaAssociateData, mediaAssociate])
+
+  useEffect(() => {
     if (refineMediaData?.medias) {
       // update the data for the pagination
       if (refineMediaData?.medias.meta.pagination.page === 1 && refineMediaData?.medias.data.length > 0) {
@@ -104,8 +111,6 @@ const useMedia = () => {
       } else {
         createAssociation(Number(updateData?.updateMedia.data.id));
       }
-
-      dispatch(toggleShowEditSuccess(true));
 
       dispatch(storeAddItemProgressState(null));
       /** re-direct */

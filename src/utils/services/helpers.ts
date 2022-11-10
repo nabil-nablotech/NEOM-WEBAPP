@@ -493,12 +493,12 @@ export const detectMediaTypeFromMediaAssociate = (obj: MediaAssociateObj) => {
 
 }
 export const detectMediaTypeFromMediaAssociateGraphQlRes = (obj: any) => {
-
-  if(obj.media_unique_id?.data?.attributes?.media_type.data[0].attributes.typeCode === "IMAGE") {
+  console.log('obj inside helper', obj)
+  if(obj.media_unique_id?.data?.attributes?.media_type?.data[0].attributes.typeCode === "IMAGE") {
     return MEDIA_TYPE_IMAGE
-  }else if(obj?.media_unique_id?.data?.attributes?.media_type.data[0].attributes.typeCode === "VIDEO") {
+  }else if(obj?.media_unique_id?.data?.attributes?.media_type?.data[0].attributes.typeCode === "VIDEO") {
     return MEDIA_TYPE_VIDEO
-  } else if(obj?.media_unique_id?.data?.attributes?.media_type.data[0].attributes.typeCode === "3DMODEL") {
+  } else if(obj?.media_unique_id?.data?.attributes?.media_type?.data[0].attributes.typeCode === "3DMODEL") {
     return MEDIA_TYPE_3D
   } else return MEDIA_TYPE_IMAGE
 

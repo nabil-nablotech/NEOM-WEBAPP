@@ -276,9 +276,9 @@ const StepContent = ({
               label="Longitude"
               name="longitude"
               type="number"
-              value={formik.values.Longitude}
+              value={formik.values.longitude}
               onChange={(e) => {
-                formik.setFieldValue("Longitude", e.target.value);
+                formik.setFieldValue("longitude", e.target.value);
               }}
               sx={{
                 ...textInputSxStyles,

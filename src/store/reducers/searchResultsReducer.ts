@@ -115,8 +115,8 @@ export const searchResultsSlice = createSlice({
         state.activeMediaItemIndex = 0
         state.activeLibraryItem = null
         state.activeLibraryItemIndex = 0
-        state.associatedPlaces=[]
-        state.associatedEvents=[]
+        // state.associatedPlaces=[]
+        // state.associatedEvents=[]
       }
     },
     toggleShowEditSuccess: (state, action: PayloadAction<boolean>) => {
@@ -191,7 +191,6 @@ export const searchResultsSlice = createSlice({
       ) {
         state.associatedPlaces = state.associatedPlaces.filter(item => item.id !== action.payload.removeId)
       }
-
       // add flow
       if (
         action.payload.newItem &&

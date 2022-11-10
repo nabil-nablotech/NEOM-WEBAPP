@@ -151,7 +151,6 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
       updateKeywords({
         keywords: data.keywords
       }, 'event')
-      dispatch(toggleShowEditSuccess(true));
       dispatch(toggleNewItemWindow(false));
     }
 
