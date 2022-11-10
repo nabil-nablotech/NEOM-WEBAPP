@@ -233,8 +233,8 @@ export type FieldOptions = {
 export type dbIdTypes = 'place' | 'event' | 'library' | 'media' 
 
 export type deleteRecordPayload = {
-  visit_associates_id: Array<number>
-  media_associates_id: Array<number>
-  remark_headers_id: Array<number>
-  visit: Array<number>
+  visit_associates_id: Array<number> | [] 
+  media_associates_id: Array<number> | []
+  remark_headers_id: Array<number> | []
+  visit: Array<number> | []
 }

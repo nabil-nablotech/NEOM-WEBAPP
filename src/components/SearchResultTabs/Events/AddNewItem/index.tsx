@@ -152,6 +152,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
         keywords: data.keywords
       }, 'event')
       dispatch(toggleNewItemWindow(false));
+      dispatch(toggleShowEditSuccess(true))
     }
 
     setSkipped(newSkipped);

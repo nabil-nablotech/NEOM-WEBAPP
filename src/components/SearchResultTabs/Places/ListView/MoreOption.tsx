@@ -9,6 +9,7 @@ import { Media } from '../../../../types/Media';
 import { useDispatch } from 'react-redux';
 import { setDeleteItemType, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
 import { PLACES_TAB_NAME } from '../../../../utils/services/helpers';
+import { deleteRecord } from '../../../../api/delete';
 
 const superEditor = getRole() === 'SuperEditor';
 const editor = getRole() === 'Editor';
@@ -69,6 +70,13 @@ const MoreOptionsComponent = ({
                         e.stopPropagation();
                         dispatch(toggleDeleteConfirmationWindowOpen(true))
                         dispatch(setDeleteItemType(PLACES_TAB_NAME))
+                        console.log('hex: ', record)
+                        // deleteRecord({
+                        //     visit_associates_id: , 
+                        //     media_associates_id: ,
+                        //     remark_headers_id: ,
+                        //     visit: 
+                        //   }, 'place', record.id)
                     }}
                 >
                    Delete

@@ -132,7 +132,6 @@ const useEvent = () => {
   useEffect(() => {
     if (updateData) {
       if (edit) {
-        
       }
     }
   }, [updateData])
