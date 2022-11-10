@@ -36,23 +36,23 @@ export const Navigation = () => {
     },
     {
       path: "/search-results",
-      element: <PublicRoute component={SearchResults} />,
+      element: <PrivateRoute component={SearchResults} />,
       children: [
         {
           path: "",
-          element: <PublicRoute component={SearchResults} />,
+          element: <PrivateRoute component={SearchResults} />,
         },
         {
           path: ":tabName",
-          element: <PublicRoute component={SearchResults} />,
+          element: <PrivateRoute component={SearchResults} />,
           children: [
             {
               path: "?search=",
-              element: <PublicRoute component={SearchResults} />,
+              element: <PrivateRoute component={SearchResults} />,
             },
             {
               path: ":uniqueId",
-              element: <PublicRoute component={SearchResults} />,
+              element: <PrivateRoute component={SearchResults} />,
             }
           ]
         },
