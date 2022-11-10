@@ -19,7 +19,8 @@ const useMedia = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
 
   const {searchText, media: mediaItem, associatedPlaces, associatedEvents,
-    addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized } = useSelector((state: RootState) => state.searchResults);
+    addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized,
+    showEditSuccess } = useSelector((state: RootState) => state.searchResults);
   const {search} = useLocation();
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
@@ -71,7 +72,9 @@ const useMedia = () => {
 
   useEffect(() => {
     if (updateMediaAssociateData || (updateData && mediaAssociate)) {
-      // dispatch(toggleShowEditSuccess(true))
+      if(!showEditSuccess) {
+        dispatch(toggleShowEditSuccess(true))
+      }
     }
   }, [updateMediaAssociateData, mediaAssociate])
 
