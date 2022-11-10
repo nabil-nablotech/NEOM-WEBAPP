@@ -107,7 +107,6 @@ export const searchResultsSlice = createSlice({
       }
 
       if(action.payload) {
-        state.addNewItemWindowType = null
         state.activePlaceItem = null
         state.activePlaceItemIndex = 0
         state.activeEventItem = null
@@ -128,7 +127,6 @@ export const searchResultsSlice = createSlice({
       }
 
       if(action.payload) {
-        state.addNewItemWindowType = null
         state.activePlaceItem = null
         state.activePlaceItemIndex = 0
         state.activeEventItem = null
