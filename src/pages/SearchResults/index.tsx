@@ -16,6 +16,7 @@ import useLibrary from "../../hooks/useLibrary";
 import useMedia from "../../hooks/useMedia";
 import {
   setActiveTab,
+  setAddNewItemWindowType,
   setDeleteItemType,
   toggleDeleteItemSuccess,
   toggleShowAddSuccess,
@@ -33,7 +34,8 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   useRefinedSearch();
   const navigate = useNavigate();
   // const { searchText, activeTab, newItemWindowOpen, showAddSuccess } =
-  const { searchText, showAddSuccess,deleteItemType, showEditSuccess, deleteItemSuccess} =
+  const { searchText, showAddSuccess,deleteItemType, showEditSuccess, deleteItemSuccess,
+    addNewItemWindowType} =
     useSelector((state: RootState) => state.searchResults);
   const { fetchEvents, clearSearch: clearEventSearch, setEdit: setEditEvents } = useEvent();
   const { fetchLibraryItems, setEdit: setEditLibrary } = useLibrary();
@@ -171,7 +173,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
 
   const successMessage = () => {
     let screen = 'Place';
-    switch (tabName) {
+    switch (addNewItemWindowType) {
       case 'Events':
         screen = 'Event'
         break;
@@ -208,6 +210,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         open={showEditSuccess}
         handleClose={() => {
           dispatch(toggleShowEditSuccess(false))
+          dispatch(setAddNewItemWindowType(null))
         }}
         duration={5000}
       />
