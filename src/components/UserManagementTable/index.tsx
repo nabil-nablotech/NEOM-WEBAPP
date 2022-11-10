@@ -22,6 +22,8 @@ import {
 import ModalComponent from "../Modal";
 import { AddUserState } from "../../types/ModalComponent";
 import { LinkGenerate } from "../../types/UserManagement";
+import { toggleDeleteUserWindowOpen } from "../../store/reducers/searchResultsReducer";
+import { useDispatch } from "react-redux";
 
 const StyledTable = styled(Table)`
   th,
@@ -292,6 +294,7 @@ export const UserManagementTable = (props: IUser) => {
     generateLink,
   } = props;
   const [dataList, setDataList] = useState<User[] | []>([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setDataList(data);
@@ -446,6 +449,15 @@ export const UserManagementTable = (props: IUser) => {
           </MenuItem>
           <MenuItem key={2} onClick={() => showModal(record)}>
             Edit
+          </MenuItem>
+          <MenuItem key={3} onClick={(e) => {
+            e.stopPropagation();
+            dispatch(toggleDeleteUserWindowOpen({
+              flag: true,
+              mailId: 'sample'
+            }))
+          }}>
+            Delete
           </MenuItem>
         </Menu>
       </>

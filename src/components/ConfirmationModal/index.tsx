@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom';
 import { tabNameProps } from '../../types/SearchResultsTabsProps';
 import { EVENTS_TAB_NAME, getSingleInventoryNameFromTabName, MEDIA_TAB_NAME, PLACES_TAB_NAME } from '../../utils/services/helpers';
 import { useState, useEffect } from 'react';
+import parse from 'html-react-parser';
 
 const addSx = {
     '& .MuiButtonBase-root.MuiCheckbox-root': {
@@ -139,13 +140,15 @@ export const ConfirmationModal = ({
 }: ConfirmationModalTypes) => {
     const dispatch = useDispatch()
     let { tabName } = useParams<{ tabName?: tabNameProps }>();
+    const { isDeleteUserWindowOpen } = useSelector((state: RootState) => state.searchResults);
 
 
     const [enabledFlag, setEnabledFlag] = useState<boolean>(false)
 
     const modalTypeEdit = type === "confirm-edit"
-    const modalTypeDelete = type === "confirm-delete"
+    const modalTypeDelete = type === "confirm-delete-inventory"
     const modalTypeLogout = type === "confirm-logout"
+    const modalTypeDeleteUser = type === "confirm-delete-user"
 
     return <>
         <Dialog
@@ -166,7 +169,8 @@ export const ConfirmationModal = ({
                     alignItems: 'flex-end',
                 }}>
                     <Grid item className={`${modalStyles['title']}`}>
-                        {`${modalTypeEdit ? 'Edit' : modalTypeDelete ? 'Delete' : 'Logout'} ${tabName ? getSingleInventoryNameFromTabName(tabName) : ''}`}
+                        {`${modalTypeEdit ? 'Edit' : (modalTypeDelete || modalTypeDeleteUser) ? 'Delete' :  'Logout'}` +
+                        ` ${modalTypeDeleteUser ? 'User' : tabName ? getSingleInventoryNameFromTabName(tabName) : ''}`}
                     </Grid>
                     <Grid item sm={1}>
                         <CloseIcon fontSize="large"
@@ -177,12 +181,14 @@ export const ConfirmationModal = ({
                         />
                     </Grid>
                 </Grid>
-                <Box component="div" className={`${modalStyles[`sentence-${modalTypeEdit ? 'Edit' : modalTypeDelete ? 'Delete' : 'Logout'}`]}`}>
+                <Box component="div" className={`${modalStyles[`sentence-${modalTypeEdit ? 'Edit' : (modalTypeDelete || modalTypeDeleteUser) ? 'Delete' : 'Logout'}`]}`}>
                     {
                         modalTypeEdit ?
                             `You already have new item being added . Are you sure you still want to edit this item ?` :
                             modalTypeDelete ?
                                 `Are you sure you want to delete this item? This action cannot be undone.` :
+                                modalTypeDeleteUser ?
+                                    parse(`<span style="font-weight: bold;">${isDeleteUserWindowOpen.mailId}</span> will be deleted and will no longer have access to the platform`) : 
                                 `Are you sure you want to logout? This action cannot be undone.`
                     }
                 </Box>
@@ -212,7 +218,7 @@ export const ConfirmationModal = ({
                     />
                     <Button
                         colors={["var(--orange-shade)", "#fff", "none"]}
-                        label={modalTypeEdit ? 'Edit' : modalTypeDelete ? 'Delete' : 'Logout'}
+                        label={modalTypeEdit ? 'Edit' : (modalTypeDelete || modalTypeDeleteUser) ? 'Delete' : 'Logout'}
                         disabled={modalTypeDelete ? !enabledFlag : false}
                         type="button"
                         onClick={e => {
@@ -220,8 +226,12 @@ export const ConfirmationModal = ({
                                 dispatch(toggleConfirmOpenEdit(true))
                                 handleClose(e)
                             }
-                            if (modalTypeDelete && handleDelete) {
+                            if ((modalTypeDelete || modalTypeDeleteUser) && handleDelete) {
                                 handleDelete()
+
+                                if(modalTypeDeleteUser) {
+                                    handleClose(e)
+                                }
                             }
 
                         }}

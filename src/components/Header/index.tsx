@@ -5,6 +5,12 @@ import Logo from "../../pages/UserManagement/img/Logo.svg";
 import UserMenuComponent from "./../UserMenu/index";
 import { useNavigate } from "react-router-dom";
 import CustomSearchField from "../SearchField";
+import { ConfirmationModal } from "../ConfirmationModal";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { toggleDeleteUserSuccess, toggleDeleteUserWindowOpen } from "../../store/reducers/searchResultsReducer";
+import { useDispatch } from "react-redux";
+import PositionedSnackbar from "../Snackbar";
 
 interface IHeader {
   showSearch?: boolean
@@ -25,6 +31,8 @@ const Header = (props: IHeader) => {
     handleLogo
   } = props
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const { isDeleteUserWindowOpen, deleteUserSuccess } = useSelector((state: RootState) => state.searchResults);
 
   return (
     <>
@@ -55,6 +63,33 @@ const Header = (props: IHeader) => {
             <UserMenuComponent />
           </Box>
         </Box>}
+      <ConfirmationModal
+        type={"confirm-delete-user"}
+        open={isDeleteUserWindowOpen.flag}
+        handleClose={() => {
+            dispatch(toggleDeleteUserWindowOpen({
+              flag: false
+            }))
+        }}
+        handleDelete={
+          () => {
+            dispatch(toggleDeleteUserSuccess(true))
+          }
+        }
+      />
+      <PositionedSnackbar
+        message={`User deleted`}
+        severity={"success"}
+        open={deleteUserSuccess}
+        handleClose={() => {
+          dispatch(toggleDeleteUserSuccess(false))
+          dispatch(toggleDeleteUserWindowOpen({
+            flag: false,
+            mailId: ''
+          }))
+        }}
+        duration={5000}
+      />
     </>
   );
 };

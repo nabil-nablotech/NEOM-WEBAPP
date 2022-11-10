@@ -8,13 +8,13 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setActiveLibraryItem, setActiveLibraryItemIndex } from '../../../../store/reducers/searchResultsReducer';
+import { setActiveLibraryItem, setActiveLibraryItemIndex, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
 import useLibraryDetails from '../../../../hooks/useLibraryDetails';
-import { baseUrl, detectLibraryRecordApiType, MEDIA_TYPE_IMAGE } from '../../../../utils/services/helpers';
+import { baseUrl, detectLibraryRecordApiType, LIBRARY_TAB_NAME, MEDIA_TYPE_IMAGE } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import BlankDocImage from '../../../../assets/images/searchResults/BlankDocument.svg' 
@@ -64,6 +64,8 @@ const LibraryDetailsPage = ({
         {
             label: "Delete",
             action: () => {
+                // dispatch(toggleDeleteConfirmationWindowOpen(true))
+                // dispatch(setDeleteItemType(LIBRARY_TAB_NAME))
             },
         },
     ]

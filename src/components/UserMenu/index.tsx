@@ -215,7 +215,7 @@ function UserMenuComponent() {
             type={
               isEditConfirmationWindowOpen ? 
               "confirm-edit" :
-              "confirm-delete" 
+              "confirm-delete-inventory" 
             }
             open={
               isEditConfirmationWindowOpen ||

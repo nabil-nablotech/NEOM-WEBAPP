@@ -18,7 +18,8 @@ import { getRole } from '../../../../utils/storage/storage';
 import {
     antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate,
     isEmptyValue, NO_DESCRIPTION, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, isEventDetailAttached,
-    detectMediaTypeFromMediaAssociate
+    detectMediaTypeFromMediaAssociate,
+    EVENTS_TAB_NAME
 } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
@@ -28,7 +29,7 @@ import useMedia from "../../../../hooks/useMedia";
 import CommentsSection from "../../../CommentsSection";
 import RenderInitials from "../../../RenderInitials";
 import { useDispatch } from "react-redux";
-import { modifyAssociatedEvents, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex } from "../../../../store/reducers/searchResultsReducer";
+import { modifyAssociatedEvents, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, setDeleteItemType, toggleDeleteConfirmationWindowOpen } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
 import YellowStar from '../../../../assets/images/searchResults/YellowStar.svg'
@@ -216,6 +217,8 @@ const EventDetailsPage = () => {
         {
             label: "Delete",
             action: () => {
+                dispatch(toggleDeleteConfirmationWindowOpen(true))
+                dispatch(setDeleteItemType(EVENTS_TAB_NAME))
             },
         },
     ]
