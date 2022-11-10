@@ -62,7 +62,7 @@ export const Card = ({
               <>
               {record.attributes?.media_associates?.data[0]?.attributes
                 ?.media_unique_id?.data?.attributes?.media_type?.data[0]
-                ?.attributes?.categoryCode === "LIBRARY" ? <RenderFileData
+                ?.attributes?.categoryCode === "MEDIA" ? <RenderFileData
                 fileData={{
                   alt: "",
                   src: record.attributes?.media_associates?.data[0]?.attributes
