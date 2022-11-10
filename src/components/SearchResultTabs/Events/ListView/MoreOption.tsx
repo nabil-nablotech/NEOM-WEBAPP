@@ -7,6 +7,9 @@ import { setEventData, setEventEdit } from '../../../../store/reducers/eventRedu
 import { getRole } from "../../../../utils/storage/storage";
 import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { MediaAssociateObj } from '../../../../types/Place';
+import { useDispatch } from 'react-redux';
+import { setDeleteItemType, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
+import { EVENTS_TAB_NAME } from '../../../../utils/services/helpers';
 
 const superEditor = getRole() === 'SuperEditor';
 const editor = getRole() === 'Editor';
@@ -26,6 +29,8 @@ const MoreOptionsComponent = ({
         e.stopPropagation();
         setAnchorEl(e.currentTarget);
     };
+    const dispatch = useDispatch();
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -57,7 +62,13 @@ const MoreOptionsComponent = ({
                 >
                     Edit
                 </MenuItem>
-                <MenuItem key={2}>
+                <MenuItem key={2}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        dispatch(toggleDeleteConfirmationWindowOpen(true))
+                        dispatch(setDeleteItemType(EVENTS_TAB_NAME))
+                    }}
+                >
                     Delete
                 </MenuItem>
             </Menu>

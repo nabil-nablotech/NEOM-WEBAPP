@@ -26,6 +26,8 @@ import RenderValueWithDefault from '../../../NoDataScreens/DefaultText';
 // import { Document, Page } from 'react-pdf/dist/esm/entry.webpack5';
 // import { Document, Page } from 'react-pdf';
 // import DocViewer from "react-doc-viewer";
+// import { Viewer, Worker } from '@react-pdf-viewer/core';
+// import '@react-pdf-viewer/core/lib/styles/index.css';
 
 const LibraryDetailsPage = ({
     currentItemIndex,
@@ -99,9 +101,19 @@ const LibraryDetailsPage = ({
                                             width: '100%'
                                         }}
                                     />
+                                    {/* <div
+                                        style={{
+                                            height: '750px',
+                                        }}
+                                    >
+                                        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
+                                            <div style={{ height: "720px" }}>
+                                                <Viewer fileUrl={`${baseUrl}${libraryDetails.object.url}`} />
+                                            </div>
+                                        </Worker>
+
+                                    </div> */}
                                     {/* <Document file={`${baseUrl}${libraryDetails.object.url}`} onLoadSuccess={() => {}}>
-                                        <Page pageNumber={1} />
-                                    </Document> */}
                                     {/* <DocViewer documents={[
                                         { uri: `${baseUrl}${libraryDetails.object.url}` }
                                     ]} /> */}

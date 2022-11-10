@@ -122,6 +122,8 @@ export type SearchResultsState2 = {
   confirmDelete : boolean
   itemAboutToDelete: tabNameProps | null
   shallUpdateKeywords: boolean
+  deleteItemType: null | tabNameProps
+  deleteItemSuccess: boolean
 };
 
 export type addItemProgressPayload = addItemProgressStateType | addPlaceProgressStateType | 
