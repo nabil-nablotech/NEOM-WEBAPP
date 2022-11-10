@@ -70,6 +70,7 @@ const GridView = (props: EventsProps) => {
                     {
                         data?.map((item: Event, index: number) =>
                             <Grid item className={`${gridStyles['card-grid-item']}`} key={index} sm={12} onClick={() => handleClick(item, index)}>
+                                
                                 <Card
                                     key={index}
                                     img={item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ? item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''}

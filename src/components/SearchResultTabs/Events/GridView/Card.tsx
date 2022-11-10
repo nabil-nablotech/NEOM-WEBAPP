@@ -59,7 +59,10 @@ export const Card = ({
                 src={`${baseUrl}${img}`}
               />
             ) : (
-              <RenderFileData
+              <>
+              {record.attributes?.media_associates?.data[0]?.attributes
+                ?.media_unique_id?.data?.attributes?.media_type?.data[0]
+                ?.attributes?.categoryCode === "LIBRARY" ? <RenderFileData
                 fileData={{
                   alt: "",
                   src: record.attributes?.media_associates?.data[0]?.attributes
@@ -96,9 +99,11 @@ export const Card = ({
                       : undefined,
                 }}
                 fileType={detectMediaTypeFromMediaAssociateGraphQlRes(record.attributes?.media_associates?.data[0]?.attributes || record)}
-              />
+              /> : 
+                <NoImagePresent message={"No media item is available"} />
+              }
+              </>
             )}
-            {/* <NoImagePresent message={"No media item is available"} />} */}
           </Grid>
           <Grid
             item
