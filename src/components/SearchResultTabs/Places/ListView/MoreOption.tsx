@@ -7,7 +7,7 @@ import { getRole } from "../../../../utils/storage/storage";
 import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { Media } from '../../../../types/Media';
 import { useDispatch } from 'react-redux';
-import { setItemAboutToDelete, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
+import { setDeleteItemType, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
 import { PLACES_TAB_NAME } from '../../../../utils/services/helpers';
 
 const superEditor = getRole() === 'SuperEditor';
@@ -68,7 +68,7 @@ const MoreOptionsComponent = ({
                     onClick={(e) => {
                         e.stopPropagation();
                         dispatch(toggleDeleteConfirmationWindowOpen(true))
-                        dispatch(setItemAboutToDelete(PLACES_TAB_NAME))
+                        dispatch(setDeleteItemType(PLACES_TAB_NAME))
                     }}
                 >
                    Delete

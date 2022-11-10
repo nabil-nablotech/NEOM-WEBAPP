@@ -28,24 +28,21 @@ const addSx = {
 const DeleteInventoryForm = ({
     checkEnabled
 }: { checkEnabled: (val: boolean) => void }) => {
-    const { itemAboutToDelete } = useSelector((state: RootState) => state.searchResults);
+    const { deleteItemType } = useSelector((state: RootState) => state.searchResults);
 
-    const [checkList, setCheckList] = useState<Array<boolean>>([])
+    const assignDefaultState = () => {
+        if (deleteItemType === PLACES_TAB_NAME) {
+            return [false, false, false, false, false]
+        } else if (deleteItemType === EVENTS_TAB_NAME) {
+            return [false, false, false, false]
+        } else return [false, false, false, false, false]
 
-    useEffect(() => {
-        if (itemAboutToDelete === PLACES_TAB_NAME) {
-            setCheckList([false, false, false, false, false])
-        }
-        if (itemAboutToDelete === EVENTS_TAB_NAME) {
-            setCheckList([false, false, false, false])
-        }
-        if (itemAboutToDelete === MEDIA_TAB_NAME) {
-            // setCheckList(null)
-        }
-    }, [itemAboutToDelete])
+    }
+    const [checkList, setCheckList] = useState<Array<boolean>>(assignDefaultState())
+
 
     useEffect(() => {
-        if (itemAboutToDelete !== MEDIA_TAB_NAME) {
+        if (deleteItemType !== MEDIA_TAB_NAME) {
             confirmAllChecked(checkList)
         } else {
             checkEnabled(true)
@@ -54,7 +51,7 @@ const DeleteInventoryForm = ({
 
     useEffect(() => {
 
-        if (itemAboutToDelete !== MEDIA_TAB_NAME) {
+        if (deleteItemType !== MEDIA_TAB_NAME) {
             confirmAllChecked(checkList)
         } else {
             checkEnabled(true)
@@ -75,7 +72,7 @@ const DeleteInventoryForm = ({
 
     }
 
-    if (itemAboutToDelete === PLACES_TAB_NAME || itemAboutToDelete === EVENTS_TAB_NAME) {
+    if (deleteItemType === PLACES_TAB_NAME || deleteItemType === EVENTS_TAB_NAME) {
 
         return <>
             <FormGroup sx={{
@@ -86,7 +83,7 @@ const DeleteInventoryForm = ({
                         handleChecked(e, 1)
                     }} />
                 }
-                    label={`All the ${getSingleInventoryNameFromTabName(itemAboutToDelete)} information will be deleted`}
+                    label={`All the ${getSingleInventoryNameFromTabName(deleteItemType).toLowerCase()} information will be deleted`}
                 />
                 <FormControlLabel className={`${modalStyles['form-control-label']}`} control={
                     <Checkbox className={`${modalStyles['checkbox']}`} checked={checkList[1]} onChange={e => {
@@ -110,7 +107,7 @@ const DeleteInventoryForm = ({
                     label="All remarks will be deleted"
                 />
                 {
-                    itemAboutToDelete !== EVENTS_TAB_NAME &&
+                    deleteItemType !== EVENTS_TAB_NAME &&
                     <FormControlLabel className={`${modalStyles['form-control-label']}`} control={
                         <Checkbox className={`${modalStyles['checkbox']}`} checked={checkList[4]} onChange={e => {
                             handleChecked(e, 5)
@@ -123,7 +120,7 @@ const DeleteInventoryForm = ({
         </>
     }
 
-    if (itemAboutToDelete === MEDIA_TAB_NAME) {
+    if (deleteItemType === MEDIA_TAB_NAME) {
         return <>
             <Box component="div" className={`${modalStyles[`sentence-Delete`]}`}>
                 Are you sure you want to delete this item? This action cannot be undone.
@@ -140,7 +137,6 @@ export const ConfirmationModal = ({
     handleClose,
     handleDelete
 }: ConfirmationModalTypes) => {
-    const { addNewItemWindowType, addItemWindowMinimized } = useSelector((state: RootState) => state.searchResults);
     const dispatch = useDispatch()
     let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
@@ -170,7 +166,7 @@ export const ConfirmationModal = ({
                     alignItems: 'flex-end',
                 }}>
                     <Grid item className={`${modalStyles['title']}`}>
-                        {`${modalTypeEdit ? 'Edit' : modalTypeDelete ? 'Delete' : 'Logout'} ${tabName ? tabName : ''}`}
+                        {`${modalTypeEdit ? 'Edit' : modalTypeDelete ? 'Delete' : 'Logout'} ${tabName ? getSingleInventoryNameFromTabName(tabName) : ''}`}
                     </Grid>
                     <Grid item sm={1}>
                         <CloseIcon fontSize="large"
@@ -222,11 +218,11 @@ export const ConfirmationModal = ({
                         onClick={e => {
                             if (modalTypeEdit) {
                                 dispatch(toggleConfirmOpenEdit(true))
+                                handleClose(e)
                             }
-                            if(modalTypeDelete && handleDelete) {
+                            if (modalTypeDelete && handleDelete) {
                                 handleDelete()
                             }
-                            handleClose(e)
 
                         }}
                     />

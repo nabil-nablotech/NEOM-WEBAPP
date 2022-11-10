@@ -8,7 +8,7 @@ import { getRole } from "../../../../utils/storage/storage";
 import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { MediaAssociateObj } from '../../../../types/Place';
 import { useDispatch } from 'react-redux';
-import { setItemAboutToDelete, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
+import { setDeleteItemType, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
 import { EVENTS_TAB_NAME } from '../../../../utils/services/helpers';
 
 const superEditor = getRole() === 'SuperEditor';
@@ -66,7 +66,7 @@ const MoreOptionsComponent = ({
                     onClick={(e) => {
                         e.stopPropagation();
                         dispatch(toggleDeleteConfirmationWindowOpen(true))
-                        dispatch(setItemAboutToDelete(EVENTS_TAB_NAME))
+                        dispatch(setDeleteItemType(EVENTS_TAB_NAME))
                     }}
                 >
                     Delete

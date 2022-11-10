@@ -513,11 +513,10 @@ export const toFixedFromString = (value: string | number, decimals: number) => {
 export const getSingleInventoryNameFromTabName= (value: tabNameProps) => {
 
   let newValue:string = value
-  newValue =  newValue.toLowerCase()
 
   if(newValue.charAt(newValue.length-1).toLowerCase() === 's' ){
-    newValue = newValue.substring(0, newValue.length-2)
+    newValue = newValue.substring(0, newValue.length-1)
   }
 
-  return value
+  return newValue
 }

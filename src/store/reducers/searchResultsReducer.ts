@@ -44,7 +44,9 @@ const initialState: SearchResultsState2 = {
   itemAboutToDelete: null,
   confirmDelete : false,
   editPayload: null,
-  shallUpdateKeywords: false
+  shallUpdateKeywords: false,
+  deleteItemType: null,
+  deleteItemSuccess: false
 };
 
 export const searchResultsSlice = createSlice({
@@ -249,9 +251,6 @@ export const searchResultsSlice = createSlice({
     toggleDeleteConfirmationWindowOpen: (state, action: PayloadAction<boolean>) => {
       state.isDeleteConfirmationWindowOpen = action.payload;
     },
-    setItemAboutToDelete: (state, action: PayloadAction<tabNameProps | null>) => {
-      state.itemAboutToDelete = action.payload;
-    },
     toggleConfirmDelete: (state, action: PayloadAction<boolean>) => {
       state.confirmDelete = action.payload;
 
@@ -261,6 +260,12 @@ export const searchResultsSlice = createSlice({
     },
     toggleShallUpdateKeywords: (state, action: PayloadAction<boolean>) => {
       state.shallUpdateKeywords = action.payload;
+    },
+    toggleDeleteItemSuccess: (state, action: PayloadAction<boolean>) => {
+      state.deleteItemSuccess = action.payload;
+    },
+    setDeleteItemType: (state, action: PayloadAction<tabNameProps | null>) => {
+      state.deleteItemType = action.payload;
     },
   },
 });
@@ -304,9 +309,10 @@ export const {
   toggleConfirmOpenEdit,
   setEditPayload,
   toggleDeleteConfirmationWindowOpen,
-  setItemAboutToDelete,
   toggleConfirmDelete,
-  toggleShallUpdateKeywords
+  toggleShallUpdateKeywords,
+  toggleDeleteItemSuccess,
+  setDeleteItemType
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;
