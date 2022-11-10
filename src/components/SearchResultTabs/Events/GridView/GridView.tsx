@@ -69,7 +69,7 @@ const GridView = (props: EventsProps) => {
                 <Grid container id={'events-scrollable-div'} spacing={1} className={`${gridStyles['left-grid-container']}`}>
                     {
                         data?.map((item: Event, index: number) =>
-                            <Grid item key={index} sm={12} className={`${gridStyles['']}`} onClick={() => handleClick(item, index)}>
+                            <Grid item className={`${gridStyles['card-grid-item']}`} key={index} sm={12} onClick={() => handleClick(item, index)}>
                                 <Card
                                     key={index}
                                     img={item?.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url || ''}
