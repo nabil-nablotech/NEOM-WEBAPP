@@ -37,6 +37,7 @@ export type StepContentTypes = {
     handleChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
     handleBack:  () => void
     uploadImage?:  (options: any) => void
+    handleClear?:  (options: any) => void
     formik?:any
 }
 

@@ -468,7 +468,7 @@ allowFullScreen
               value={formik.values.categoryType}
               multiple={true}
               handleSelectChange={(e, value) =>
-                handleSelectChange(e, value, "categoryType")
+                formik.setFieldValue("categoryType", value)
               }
               handleClear={(e) => {}}
               itemsList={options?.actionType || []}
