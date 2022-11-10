@@ -7,7 +7,7 @@ import { getRole } from "../../../../utils/storage/storage";
 import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { Media } from '../../../../types/Media';
 import { useDispatch } from 'react-redux';
-import { setDeleteItemType, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
+import { setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
 import { PLACES_TAB_NAME } from '../../../../utils/services/helpers';
 import { deleteRecord } from '../../../../api/delete';
 
@@ -70,13 +70,14 @@ const MoreOptionsComponent = ({
                         e.stopPropagation();
                         dispatch(toggleDeleteConfirmationWindowOpen(true))
                         dispatch(setDeleteItemType(PLACES_TAB_NAME))
-                        console.log('hex: ', record)
-                        // deleteRecord({
-                        //     visit_associates_id: , 
-                        //     media_associates_id: ,
-                        //     remark_headers_id: ,
-                        //     visit: 
-                        //   }, 'place', record.id)
+                        dispatch(setDeletePayload({
+                            visit_associates_id: [], 
+                            media_associates_id: record?.attributes?.media_associates?.data.map((item: any) => item?.attributes?.media_unique_id?.data?.id),
+                            remark_headers_id: [],
+                            visit: [],
+                            id: record.id
+                        }))
+                        
                     }}
                 >
                    Delete

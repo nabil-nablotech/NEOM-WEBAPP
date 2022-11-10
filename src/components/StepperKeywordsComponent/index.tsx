@@ -226,7 +226,6 @@ export const StepperKeywordsComponent = ({
             })
         }
         setCurrentlyShownList(createSelectedFirstList(newList))
-        console.log('Hex actu: ', newList)
 
 
     }, [currentKeywordArray, currentlyShownList.length])

@@ -127,8 +127,16 @@ export type SearchResultsState2 = {
   deleteItemSuccess: boolean,
   isDeleteUserWindowOpen: DeleteUserReduxPayload
   deleteUserSuccess: boolean,
-
+  deletePayload: DeletePayloadType
 };
+
+export type DeletePayloadType = {
+  visit_associates_id: Array<number> | [] 
+  media_associates_id: Array<number> | []
+  remark_headers_id: Array<number> | []
+  visit: Array<number> | [],
+  id: number
+} | null
 
 export type addItemProgressPayload = addItemProgressStateType | addPlaceProgressStateType | 
   addEventProgressStateType | addMediaProgressStateType
