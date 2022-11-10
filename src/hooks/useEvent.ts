@@ -73,7 +73,13 @@ const useEvent = () => {
    * fetch places with two words
    */
   const [createEventMuation, { loading, error, data }] = useMutation(addEvent, graphQlHeaders());
-  const [updateEventMuation, { loading: updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateEvent, graphQlHeaders());
+  const [updateEventMuation, { loading: updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateEvent, {context: graphQlHeaders().context, onCompleted: () => {
+    dispatch(setEventEdit(false))
+    dispatch(toggleShowEditSuccess(false));
+    /** re-direct */
+    navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
+
+  }});
   const [createVisitAssociateMuation, { loading: visitAssociateload, error: visitAssociateErr, data: visitAssociate }] = useMutation(createVisitAssociate, graphQlHeaders());
   const { loading: refineLoading, error: refineErrorData, data: refineEventData, refetch: refineSearchEvents } = useQuery(refineEvents, graphQlHeaders());
 
@@ -124,14 +130,8 @@ const useEvent = () => {
 
   useEffect(() => {
     if (updateData) {
-      fetchData(0);
       if (edit) {
-        dispatch(setEventEdit(false))
-        dispatch(toggleShowEditSuccess(false))
-
-        /** re-direct */
-        navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
-
+        
       }
     }
   }, [updateData])

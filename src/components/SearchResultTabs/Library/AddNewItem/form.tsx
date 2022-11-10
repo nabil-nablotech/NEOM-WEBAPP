@@ -76,7 +76,6 @@ const StepContent = ({
   const { associatedPlaces, associatedEvents } = useSelector(
     (state: RootState) => state.searchResults
   );
-  const [currentKeyword, setCurrentKeyword] = useState<string>('')
 
   return (
     <>

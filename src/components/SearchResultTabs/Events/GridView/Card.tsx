@@ -95,7 +95,7 @@ export const Card = ({
                       ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}`
                       : undefined,
                 }}
-                fileType={detectMediaTypeFromMediaAssociateGraphQlRes(record)}
+                fileType={detectMediaTypeFromMediaAssociateGraphQlRes(record.attributes?.media_associates?.data[0]?.attributes || record)}
               />
             )}
             {/* <NoImagePresent message={"No media item is available"} />} */}

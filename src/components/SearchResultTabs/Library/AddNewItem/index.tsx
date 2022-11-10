@@ -139,7 +139,6 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
         updateKeywords({
           keywords: data.keywords
         }, 'library')
-        dispatch(toggleShowAddSuccess(true));
         dispatch(toggleNewItemWindow(false))
       }
     }
@@ -151,7 +150,6 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       updateKeywords({
         keywords: data.keywords
       }, 'library')
-      dispatch(toggleShowEditSuccess(true));
       dispatch(toggleNewItemWindow(false));
     }
 
@@ -266,6 +264,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
         config
       );
       formik.values.object = res.data;
+      formik.setFieldValue("title", res.data[0].name.split('.')[0]);
       onSuccess("Ok");
     } catch (err) {
       console.log("Error: ", err);

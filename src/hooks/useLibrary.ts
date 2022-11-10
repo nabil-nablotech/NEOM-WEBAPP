@@ -47,17 +47,20 @@ const useLibrary = () => {
     dispatch(setTabEdit(false));
   }
 
-  const [createLibraryMutation, { loading: addLoading, error: addErr, data: addData }] = useMutation(addLibrary, graphQlHeaders());
-  const [updateLibraryMutation, { loading:updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateLibrary, graphQlHeaders());
-  const [createMediaAssociateMutation, { loading: mediaAssociateload, error: mediaAssociateErr, data: mediaAssociate }] = useMutation(createMediaAssociate, graphQlHeaders());
-  const [updateMediaAssociateMutation, { loading: updateMediaAssociateload, error: updateMediaAssociateErr, data: updateMediaAssociateData }] = useMutation(updateMediaAssociate, graphQlHeaders());
+  const [createLibraryMutation, { loading: addLoading, error: addErr, data: addData, reset: resetLibrary }] = useMutation(addLibrary, graphQlHeaders());
+  const [updateLibraryMutation, { loading:updateLoading, error: updateErr, data: updateData, reset: resetUpdateLibrary }] = useMutation(updateLibrary, graphQlHeaders());
+  const [createMediaAssociateMutation, { loading: mediaAssociateload, error: mediaAssociateErr, data: mediaAssociate, reset: resetCreateMediaAssociate }] = useMutation(createMediaAssociate, {context: graphQlHeaders().context, onCompleted: () => {
+
+  }});
+  const [updateMediaAssociateMutation, { loading: updateMediaAssociateload, error: updateMediaAssociateErr, data: updateMediaAssociateData, reset: resetUpdateAssociate }] = useMutation(updateMediaAssociate, {context: graphQlHeaders().context, onCompleted: () => {
+    dispatch(toggleShowEditSuccess(true));
+  }});
 
 
   /**
    * fetch places with two words
    */
   const { loading, error, data, refetch:refetchLibraryItems } = useQuery(library);
-  // const { loading:refineLoading, error:refineErrorData, data:refineLibraryData, refetch: refineSearchLibrary } = useQuery(refineLibrary);
 
   useEffect(() => {
     if (data?.medias) {
@@ -84,17 +87,25 @@ const useLibrary = () => {
         "visit_unique_ids": associatedEvents.map(x => x.id),
         "media_unique_id": mediaId
       }});
-    }
+    } 
 
   }
 
   useEffect(() => {
-    if (addData) {
-      createAssociation(addData.createMedia.data.id);
+    if (updateMediaAssociateData) {
+      resetUpdateAssociate();
+      resetUpdateLibrary();
     }
+  }, [updateMediaAssociateData]);
 
-    if(updateData) {
-
+  useEffect(() => {
+    if (addData && (associatedPlaces.length > 0 || associatedEvents.length > 0)) {
+      createAssociation(addData.createMedia.data.id);
+    } else if (addData)  {
+      dispatch(toggleShowAddSuccess(true))
+      navigate(`/search-results/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true});
+      resetLibrary();
+    } else if(updateData) {
       if (updateData?.updateMedia.data.attributes?.media_associate?.data?.id) {
         updateMediaAssociateMutation({
           variables: {
@@ -104,26 +115,28 @@ const useLibrary = () => {
           }
         })
       } else {
-      
         createAssociation(Number(updateData?.updateMedia.data.id));
       }
       resetEdit();
-      // dispatch(setAddNewItemWindowType(null));
       dispatch(storeAddItemProgressState(null));
-      dispatch(toggleShowEditSuccess(true))
 
       /** re-direct */
-      navigate(`/search-results/Library/${updateData?.updateMedia.data.attributes.uniqueId}`, {replace: true})
+      navigate(`/search-results/Library/${updateData?.updateMedia.data.attributes.uniqueId}`, {replace: true});
     }
   }, [addData, updateData])
 
   useEffect(() => {
-    if (mediaAssociate) {
-      dispatch(resetMediaAssociation(null));
-      dispatch(toggleShowAddSuccess(true));
-      // dispatch(setAddNewItemWindowType(null));
+    if (mediaAssociate && addData) {
       dispatch(storeAddItemProgressState(null));
-      navigate(`/search-results/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true})
+      
+      resetLibrary();
+      resetCreateMediaAssociate();
+      dispatch(toggleShowAddSuccess(true));
+      navigate(`/search-results/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true});
+    } else if (mediaAssociate && updateData) {
+      resetCreateMediaAssociate();
+      resetUpdateLibrary();
+      dispatch(toggleShowEditSuccess(true));
     }
   }, [mediaAssociate])
   
@@ -192,7 +205,6 @@ const useLibrary = () => {
       data.uniqueId = uniqueId;
       data.created = formatStrapiDate(new Date());
       data.mediaUIPath = `${webUrl}/search-results/Library/${uniqueId}`;
-      // console.log(data, 'data before library create')
       createLibraryMutation({variables: data})
     }
     if (edit && tabData?.id) {

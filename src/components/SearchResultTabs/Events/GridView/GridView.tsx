@@ -72,7 +72,9 @@ const GridView = (props: EventsProps) => {
                             <Grid item key={index} sm={12} className={`${gridStyles['']}`} onClick={() => handleClick(item, index)}>
                                 <Card
                                     key={index}
-                                    img={item?.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url || ''}
+                                    img={item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ? item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''}
+                  
+                                    // img={item?.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url || ''}
                                     title={item?.attributes?.visit_associate.data?.attributes?.place_unique_id ? `${item?.attributes?.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameEnglish}${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic} - ${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber}` : ''}
                                     subTitle={item?.attributes?.siteDescription || ''}
                                     dateString={`${format(

@@ -130,6 +130,7 @@ const usePlace = () => {
     if (updateData && edit) {
         dispatch(setTabEdit(false));
         dispatch(setTabData({}));
+        console.log('inside place toggle');
         dispatch(toggleShowEditSuccess(true))
         navigate(`/search-results/Places/${updateData.updatePlace.data.attributes.uniqueId}`, {replace: true})
     }

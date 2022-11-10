@@ -222,6 +222,13 @@ query RefineSearchEvent(
                 data {
                   attributes {
                     videoType
+                    media_type {
+                      data {
+                        attributes {
+                          typeCode
+                        }
+                      }
+                    }
                     object {
                       data {
                         attributes {

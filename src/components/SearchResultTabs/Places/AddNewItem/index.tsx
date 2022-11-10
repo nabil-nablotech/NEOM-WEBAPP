@@ -152,7 +152,6 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
             updateKeywords({
               keywords: data.keywords
             }, 'place')
-            dispatch(toggleShowEditSuccess(true));
             dispatch(toggleNewItemWindow(false));
           }
           }
