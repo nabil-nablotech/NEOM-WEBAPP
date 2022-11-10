@@ -35,7 +35,8 @@ const useEvent = () => {
     events: eventsData,
     addNewItemWindowType,
     confirmOpenEdit,
-    editPayload
+    editPayload,
+    addItemWindowMinimized
   } = useSelector((state: RootState) => state.searchResults);
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
@@ -295,7 +296,7 @@ const useEvent = () => {
   }
 
   const setEdit = async (payload: any) => {
-    if (addNewItemWindowType) {
+    if (addNewItemWindowType && addItemWindowMinimized) {
       /** Detect if user comes via forced edit */
       dispatch(toggleEditConfirmationWindowOpen(true));
       dispatch(setEditPayload(payload));

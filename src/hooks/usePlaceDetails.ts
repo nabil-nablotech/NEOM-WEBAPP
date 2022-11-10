@@ -19,7 +19,7 @@ const usePlaceDetails = () => {
 
   const dispatch = useDispatch();
   const { edit } = useSelector((state:RootState) => state.tabEdit)
-  const { addNewItemWindowType, confirmOpenEdit, editPayload } = useSelector(
+  const { addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized } = useSelector(
     (state: RootState) => state.searchResults
   );
 
@@ -86,7 +86,7 @@ const usePlaceDetails = () => {
   }
 
   const setEdit = async (payload: { record: any, type: tabNameProps }) => {
-    if (addNewItemWindowType) {
+    if (addNewItemWindowType && addItemWindowMinimized) {
       /** Detect if user comes via forced edit */
         dispatch(toggleEditConfirmationWindowOpen(true));
         dispatch(setEditPayload(payload));

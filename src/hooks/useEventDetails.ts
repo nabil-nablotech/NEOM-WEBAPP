@@ -15,7 +15,7 @@ const useEventDetails = () => {
   let { uniqueId } = useParams<{ tabName?: tabNameProps; uniqueId: string }>();
   const dispatch = useDispatch();
   const { edit } = useSelector((state:RootState) => state.event)
-  const { addNewItemWindowType, confirmOpenEdit , editPayload } = useSelector(
+  const { addNewItemWindowType, confirmOpenEdit , editPayload, addItemWindowMinimized } = useSelector(
     (state: RootState) => state.searchResults
   );
 
@@ -86,7 +86,7 @@ const useEventDetails = () => {
 
 
   const setEdit = async (payload: {record: any, type: tabNameProps}) => {
-    if (addNewItemWindowType) {
+    if (addNewItemWindowType && addItemWindowMinimized) {
       /** Detect if user comes via forced edit */
         dispatch(toggleEditConfirmationWindowOpen(true));
         dispatch(setEditPayload(payload));

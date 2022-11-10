@@ -24,7 +24,8 @@ import {graphQlHeaders} from '../utils/services/interceptor';
 const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [mapPlaces, setMapPlaces] = useState([]);
-  const { searchText, places: placeData, addNewItemWindowType, confirmOpenEdit, editPayload } = useSelector(
+  const { searchText, places: placeData, addNewItemWindowType, confirmOpenEdit, editPayload,
+    addItemWindowMinimized } = useSelector(
     (state: RootState) => state.searchResults
   );
   const { selectedValue } = useSelector(
@@ -242,7 +243,7 @@ const usePlace = () => {
   }
 
   const setEdit = (payload: any) => {
-    if (addNewItemWindowType) {
+    if (addNewItemWindowType && addItemWindowMinimized) {
       /** Detect if user comes via forced edit */
         dispatch(toggleEditConfirmationWindowOpen(true));
         dispatch(setEditPayload(payload));
