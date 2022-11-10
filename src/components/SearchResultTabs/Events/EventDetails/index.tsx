@@ -29,7 +29,7 @@ import useMedia from "../../../../hooks/useMedia";
 import CommentsSection from "../../../CommentsSection";
 import RenderInitials from "../../../RenderInitials";
 import { useDispatch } from "react-redux";
-import { modifyAssociatedEvents, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, setDeleteItemType, toggleDeleteConfirmationWindowOpen } from "../../../../store/reducers/searchResultsReducer";
+import { modifyAssociatedEvents, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
 import YellowStar from '../../../../assets/images/searchResults/YellowStar.svg'
@@ -219,6 +219,16 @@ const EventDetailsPage = () => {
             action: () => {
                 dispatch(toggleDeleteConfirmationWindowOpen(true))
                 dispatch(setDeleteItemType(EVENTS_TAB_NAME))
+                // console.log('hex: ', eventDetails)
+                dispatch(setDeletePayload({
+                    visit_associates_id: eventDetails?.visit_associate?.id ? [eventDetails?.visit_associate?.id] : [],
+                    media_associates_id: eventDetails.media_associates && eventDetails.media_associates.length > 0 ?
+                        eventDetails?.media_associates?.map((item: any) => item?.id) : [],
+                    remark_headers_id: [],
+                    // visit: [eventDetails?.visit_associate?.id],
+                    visit: [],
+                    id: eventDetails.id
+                }))
             },
         },
     ]
@@ -755,7 +765,8 @@ const EventDetailsPage = () => {
                                 />
                             }
                         </Box>
-                        {!isEmpty(mediaGalleryLocal) && <Grid container sx={{
+                        {!isEmpty(mediaGalleryLocal) && (mediaGalleryLocal &&( mediaGalleryLocal.length > 6)) &&
+                         <Grid container sx={{
                             justifyContent: 'center',
                             '& .MuiGrid-root.MuiGrid-item:has(.Mui-disabled.MuiButtonBase-root.MuiButton-root)': {
                                 cursor: 'not-allowed'

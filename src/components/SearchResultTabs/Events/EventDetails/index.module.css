@@ -142,7 +142,7 @@
 }
 .media-grid {
     gap: 1em;
-    justify-content: space-between;
+    justify-content: left;
 }
 
 .media-image {

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addItemProgressPayload, addItemProgressStateType, InventoryAssociationType, InventoryAssociationType_Event, SearchResultsState2, tabNameProps } from "../../types/SearchResultsTabsProps";
+import { addItemProgressPayload, addItemProgressStateType, DeletePayloadType, InventoryAssociationType, InventoryAssociationType_Event, SearchResultsState2, tabNameProps } from "../../types/SearchResultsTabsProps";
 import { DashboardResponse } from "../../types/dashboard";
 import { Place, Meta } from "../../types/Place";
 import { Event } from "../../types/Event";
@@ -52,8 +52,8 @@ const initialState: SearchResultsState2 = {
     flag: false,
     mailId: ''
   },
-  deleteUserSuccess: false
-
+  deleteUserSuccess: false,
+  deletePayload: null
 };
 
 export const searchResultsSlice = createSlice({
@@ -277,6 +277,9 @@ export const searchResultsSlice = createSlice({
     toggleDeleteUserSuccess: (state, action: PayloadAction<boolean>) => {
       state.deleteUserSuccess = action.payload;
     },
+    setDeletePayload: (state, action: PayloadAction<DeletePayloadType>) => {
+      state.deletePayload = action.payload;
+    },
   },
 });
 
@@ -324,7 +327,8 @@ export const {
   toggleDeleteItemSuccess,
   setDeleteItemType,
   toggleDeleteUserWindowOpen,
-  toggleDeleteUserSuccess
+  toggleDeleteUserSuccess,
+  setDeletePayload
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;
