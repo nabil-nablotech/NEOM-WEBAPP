@@ -230,6 +230,9 @@ function UserMenuComponent() {
                 dispatch(setItemAboutToDelete(null))
               }
             }}
+            handleDelete={
+              ()=>{}
+            }
           />
         }
       </Box>

@@ -138,6 +138,7 @@ export const ConfirmationModal = ({
     type,
     open,
     handleClose,
+    handleDelete
 }: ConfirmationModalTypes) => {
     const { addNewItemWindowType, addItemWindowMinimized } = useSelector((state: RootState) => state.searchResults);
     const dispatch = useDispatch()
@@ -221,6 +222,9 @@ export const ConfirmationModal = ({
                         onClick={e => {
                             if (modalTypeEdit) {
                                 dispatch(toggleConfirmOpenEdit(true))
+                            }
+                            if(modalTypeDelete && handleDelete) {
+                                handleDelete()
                             }
                             handleClose(e)
 
