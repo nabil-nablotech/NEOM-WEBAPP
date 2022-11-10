@@ -13,7 +13,8 @@ import { RootState } from "../store";
 
 const useMediaDetails = () => {
   const { uniqueId } = useParams<{ uniqueId: string }>()
-  const { addNewItemWindowType, confirmOpenEdit, editPayload} = useSelector((state: RootState) => state.searchResults);
+  const { addNewItemWindowType, confirmOpenEdit, editPayload,
+    addItemWindowMinimized } = useSelector((state: RootState) => state.searchResults);
 
   const dispatch = useDispatch();
 
@@ -59,7 +60,7 @@ const useMediaDetails = () => {
 
   
   const setEdit = async (payload: {record: any, type: tabNameProps}) => {
-    if (addNewItemWindowType) {
+    if (addNewItemWindowType && addItemWindowMinimized) {
       /** Detect if user comes via forced edit */
       dispatch(toggleEditConfirmationWindowOpen(true));
       dispatch(setEditPayload(payload));

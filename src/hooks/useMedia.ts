@@ -19,7 +19,7 @@ const useMedia = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
 
   const {searchText, media: mediaItem, associatedPlaces, associatedEvents,
-    addNewItemWindowType, confirmOpenEdit, editPayload } = useSelector((state: RootState) => state.searchResults);
+    addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized } = useSelector((state: RootState) => state.searchResults);
   const {search} = useLocation();
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
@@ -246,7 +246,7 @@ const useMedia = () => {
 
 
   const setEdit = async (payload: any) => {
-    if (addNewItemWindowType) {
+    if (addNewItemWindowType && addItemWindowMinimized) {
       /** Detect if user comes via forced edit */
       dispatch(toggleEditConfirmationWindowOpen(true));
       dispatch(setEditPayload(payload));

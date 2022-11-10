@@ -16,7 +16,7 @@ const useLibrary = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
 
   const {searchText, library: libItem, associatedPlaces, associatedEvents,
-    addNewItemWindowType, confirmOpenEdit, editPayload} = useSelector((state: RootState) => state.searchResults);
+    addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized} = useSelector((state: RootState) => state.searchResults);
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
   );
@@ -242,7 +242,7 @@ const useLibrary = () => {
 
 
   const setEdit = async (payload: any) => {
-    if (addNewItemWindowType) {
+    if (addNewItemWindowType && addItemWindowMinimized) {
       /** Detect if user comes via forced edit */
       dispatch(toggleEditConfirmationWindowOpen(true));
       dispatch(setEditPayload(payload));

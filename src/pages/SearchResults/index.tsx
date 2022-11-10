@@ -18,6 +18,7 @@ import {
   setActiveTab,
   setAddNewItemWindowType,
   setDeleteItemType,
+  toggleAddItemWindowMinimized,
   toggleDeleteItemSuccess,
   toggleShowAddSuccess,
   toggleShowEditSuccess
@@ -201,7 +202,11 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         message={<ContinueEditing />}
         severity={"success"}
         open={showAddSuccess && !showEditSuccess}
-        handleClose={() => dispatch(toggleShowAddSuccess(false))}
+        handleClose={() => {
+          dispatch(toggleShowAddSuccess(false))
+          dispatch(setAddNewItemWindowType(null))
+          dispatch(toggleAddItemWindowMinimized(false))
+        }}
         duration={10000}
       />
       <PositionedSnackbar
@@ -211,6 +216,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         handleClose={() => {
           dispatch(toggleShowEditSuccess(false))
           dispatch(setAddNewItemWindowType(null))
+          dispatch(toggleAddItemWindowMinimized(false))
         }}
         duration={5000}
       />
