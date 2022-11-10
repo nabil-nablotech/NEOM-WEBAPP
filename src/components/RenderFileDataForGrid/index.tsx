@@ -37,7 +37,7 @@ const RenderFileData = ({
                                 className="light-version"
                                 message={NO_IMAGE}
                                 style={{
-                                    backgroundColor: 'var(--blank-doc-bg)',
+                                    // backgroundColor: 'var(--blank-doc-bg)',
                                     color: 'var(--no-map-bg)'
                                 }}
                             />

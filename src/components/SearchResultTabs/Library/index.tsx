@@ -20,6 +20,7 @@ import { Typography } from "@mui/material";
 import { setSelectedCardIndex } from "../../../store/reducers/searchResultsReducer";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import ExportModal from "../../ExportModal";
 
 let viewWidths = ["20vw", "20vw", "20vw", "20vw", "5vw"];
 
@@ -30,7 +31,7 @@ const LibraryTab = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const { fetchLibraryItems, hasMoreData, loading, setEdit } = useLibrary();
+  const { fetchLibraryItems, hasMoreData, loading, setEdit,searchData } = useLibrary();
   const tableHeaderJson: ColumnsType<any> = [
     {
       title: "NAME",
@@ -127,6 +128,8 @@ const LibraryTab = () => {
       ),
     },
   ];
+  const [filter, setFilter] = useState(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     /** Needs to be done , since InfiniteSCroll needs a relation with
@@ -148,14 +151,52 @@ const LibraryTab = () => {
   }
 
   // console.log('hex: cita: ', library.filter(item => item.attributes.citation === 'cita even') )
+ 
 
+  /* Event hanlders */
+  const exportLibrary = async () => {
+    let filter: any={ media_type :{
+        categoryCode: {
+          $containsi: "LIBRARY"
+      }
+    }};
+if (searchData?.search) {
+  filter = {...filter,
+    $or: [
+      {
+        title: {
+          $containsi: searchData.search,
+        },
+      },
+      {
+        description: {
+          $containsi: searchData.search,
+        },
+      },
+      {
+        fileName: {
+          $containsi: searchData.search,
+        },
+      },
+      {
+        citation: {
+          $containsi: searchData.search,
+        },
+      },
+      ,
+    ],
+  };
+}
+setFilter(filter);
+setOpen(true);
+};
   return (
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
         
         <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.library} Total Library Items</Box>
         <Box component="div">
-          <Button
+        <Button
             colors={[
               "transparent",
               "var(--table-black-text)",
@@ -171,10 +212,11 @@ const LibraryTab = () => {
               height: "100%",
               textAlign: "center",
             }}
-            // onClick={handleCancel}
+            onClick={exportLibrary}
           />
         </Box>
       </Box>
+      <ExportModal open={open} setOpen={setOpen} count={meta?.pagination?.total} path={'medias'} filter={filter}/>
       <Box component="div" id={"library-list-parent"}>
         <InfiniteScroll
           dataLength={library.length} //This is important field to render the next data

@@ -1,0 +1,24 @@
+.video-play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    aspect-ratio: 1/1;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
+
+.video-player-box {
+    width: 100%;
+    height: auto;
+    margin-bottom: 1em;
+}
+
+.three-d-model-box > *,
+.three-d-model-box iframe {
+    height: 100%;
+}
+
+.three-d-model-box iframe {
+    aspect-ratio: 1/1;
+    width: 100%;
+}

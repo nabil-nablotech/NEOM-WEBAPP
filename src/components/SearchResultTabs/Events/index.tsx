@@ -52,12 +52,12 @@ const PlacesTab = () => {
           },
           {
             recordingTeam: {
-              $contains: searchData.search,
+              $containsi: searchData.search,
             },
           },
           {
             fieldNarrative: {
-              $contains: searchData.search,
+              $containsi: searchData.search,
             },
           }
         ],
@@ -141,7 +141,7 @@ const PlacesTab = () => {
                 </Grid>
                 
             </Box>
-            <ExportModal open={open} setOpen={setOpen} count={events.length} path={'visits'} filter={filter}/>
+            <ExportModal open={open} setOpen={setOpen} count={meta?.pagination?.total} path={'visits'} filter={filter}/>
         </Box>
     );
 }

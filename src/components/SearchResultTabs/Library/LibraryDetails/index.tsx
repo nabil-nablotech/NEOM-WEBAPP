@@ -103,7 +103,6 @@ const LibraryDetailsPage = ({
                                     />
                                     {/* <div
                                         style={{
-                                            border: '1px solid rgba(0, 0, 0, 0.3)',
                                             height: '750px',
                                         }}
                                     >
@@ -115,8 +114,6 @@ const LibraryDetailsPage = ({
 
                                     </div> */}
                                     {/* <Document file={`${baseUrl}${libraryDetails.object.url}`} onLoadSuccess={() => {}}>
-                                        <Page pageNumber={1} />
-                                    </Document> */}
                                     {/* <DocViewer documents={[
                                         { uri: `${baseUrl}${libraryDetails.object.url}` }
                                     ]} /> */}

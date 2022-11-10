@@ -58,6 +58,7 @@ export type PlaceApiResponse = {
   media_associates: MediaAssociates;
   siteType: string[]
   placeUIPath: string
+  media_type: any[]
 }
 
 export type mediaAssociates_objectData = {
@@ -72,6 +73,10 @@ export type MediaAssociates = {
       media_unique_id: {
         data: {
           attributes: {
+            media_type: any;
+            videoType?: 'url' | 'embededCode' | 'video';
+            objectURL?: string;
+            referenceURL?: string;
             object: {
               data: mediaAssociates_objectData | null;
             };
@@ -88,6 +93,8 @@ export type MediaAssociates_GalleryView = {
         data: {
           attributes: {
             media_type: MediaTypeObject_GalleryView
+            videoType: 'url' | 'embededCode' | 'video'
+            objectURL: string
           };
         };
       };
