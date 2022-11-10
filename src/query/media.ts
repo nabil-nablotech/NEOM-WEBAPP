@@ -135,6 +135,11 @@ export const refineMedia = gql`
           { categoryType: { containsi: $categoryType } }
           { media_type: { categoryCode: { containsi: "MEDIA" } } }
           { keywords: { containsi: $keywords } }
+          {
+            deleted: {
+              eq: false
+            }
+          }
         ]
       }
       sort: "updatedAt:desc"

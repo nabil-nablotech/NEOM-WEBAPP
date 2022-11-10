@@ -147,6 +147,11 @@ query RefinedLibrarySearch(
             }
           }
         }
+        {
+          deleted: {
+            eq: false
+          }
+        }
       ]
     }
     sort: "updatedAt:desc"
