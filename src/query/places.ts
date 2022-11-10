@@ -138,7 +138,11 @@ query refinedSearch(
         stateOfConservation
         recommendation
         risk
-
+remark_headers {
+  data{
+    id
+  }
+}
         media_associates {
           data {
             attributes {
@@ -173,7 +177,6 @@ query refinedSearch(
     }
   }
 }
-
 `;
 export const addPlace = gql`
   mutation CreatePlace(
