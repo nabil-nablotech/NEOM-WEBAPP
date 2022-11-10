@@ -20,7 +20,11 @@
     font-weight: bold;
 }
 
-.sentence {
+.sentence-Edit {
     margin-bottom: 2em;
     line-height: 1.5;
+}
+
+.sentence-Delete {
+    margin-bottom: 1em;
 }
