@@ -13,7 +13,7 @@ import { getRole } from "../../utils/storage/storage";
 import MenuList from "../MenuList";
 import { Box, LinearProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setAddNewItemWindowType, setDeleteItemType, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleDeleteConfirmationWindowOpen, toggleDeleteItemSuccess, toggleEditConfirmationWindowOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, setDeletePayload, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleDeleteConfirmationWindowOpen, toggleDeleteItemSuccess, toggleEditConfirmationWindowOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
 import CustomDrawer from "../CustomDrawer";
 import AddNewItem from "../../pages/AddNewItem";
 import AddNewPlace from "../SearchResultTabs/Places/AddNewItem";
@@ -28,6 +28,7 @@ import { setTabEdit } from "../../store/reducers/tabEditReducer";
 import useLibrary from "../../hooks/useLibrary";
 import useMedia from "../../hooks/useMedia";
 import { ConfirmationModal } from "../ConfirmationModal";
+import { deleteRecord } from "../../api/delete";
 
 /** Component for top-right header icons */
 function UserMenuComponent() {
@@ -41,7 +42,7 @@ function UserMenuComponent() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [anchorElSettings, setAnchorElSettings] = React.useState<null | HTMLElement>(null);
   const { newItemWindowOpen, addNewItemWindowType, addItemWindowMinimized, isEditConfirmationWindowOpen,
-    isDeleteConfirmationWindowOpen
+    isDeleteConfirmationWindowOpen, deletePayload, deleteItemType
    } = useSelector((state: RootState) => state.searchResults);
   const { createPlace } = usePlace();
   const { createEvent, setSearchValue } = useEvent();
@@ -228,12 +229,33 @@ function UserMenuComponent() {
               if(isDeleteConfirmationWindowOpen) {
                 dispatch(toggleDeleteConfirmationWindowOpen(false))
               }
+              dispatch(setDeletePayload(null))
             }}
             handleDelete={
-              () => {
+              async () => {
                 dispatch(toggleDeleteConfirmationWindowOpen(false))
                 dispatch(toggleDeleteItemSuccess(true))
 
+
+                if (deletePayload && deleteItemType) {
+
+                  const type = deleteItemType === 'Places' ? 'place' :
+                    deleteItemType === 'Events' ? 'event' :
+                      deleteItemType === 'Media' ? 'media' : 'library'
+
+                  const res: { success: boolean } = await deleteRecord({
+                    visit_associates_id: deletePayload.visit_associates_id,
+                    media_associates_id: deletePayload.media_associates_id,
+                    remark_headers_id: deletePayload.remark_headers_id,
+                    visit: deletePayload.visit,
+                  }, type, deletePayload.id)
+
+                  if (res.success) {
+                    /**call this on delete api success */
+                    dispatch(setDeletePayload(null))
+                  }
+                  
+                }
               }
             }
           />
