@@ -67,7 +67,6 @@ const MoreOptionsComponent = ({
                 <MenuItem key={2}
                     onClick={(e) => {
                         e.stopPropagation();
-
                         dispatch(toggleDeleteConfirmationWindowOpen({
                             flag: true,
                             isAssociatedToPlacesOrEvents: false,
@@ -78,7 +77,7 @@ const MoreOptionsComponent = ({
 
                         dispatch(setDeletePayload({
                             id: tabName === EVENTS_TAB_NAME ? (
-                                type === "Media" ?  record?.media_unique_id?.id : 
+                                (type === "Media" || type === "Library") ?  record?.media_unique_id?.id : 
                                 typeof record.id === 'string' ? parseInt(record.id) : record.id
                             ) : record.id,
                             
