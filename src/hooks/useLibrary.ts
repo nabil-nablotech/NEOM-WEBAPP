@@ -49,7 +49,11 @@ const useLibrary = () => {
   }
 
   const [createLibraryMutation, { loading: addLoading, error: addErr, data: addData, reset: resetLibrary }] = useMutation(addLibrary, graphQlHeaders());
-  const [updateLibraryMutation, { loading:updateLoading, error: updateErr, data: updateData, reset: resetUpdateLibrary }] = useMutation(updateLibrary, graphQlHeaders());
+  const [updateLibraryMutation, { loading:updateLoading, error: updateErr, data: updateData, reset: resetUpdateLibrary }] = useMutation(updateLibrary, {context: graphQlHeaders(), onCompleted: () => {
+    if (associatedEvents.length == 0 || associatedPlaces.length == 0) {
+      dispatch(toggleShowEditSuccess(true));
+    }
+  }});
   const [createMediaAssociateMutation, { loading: mediaAssociateload, error: mediaAssociateErr, data: mediaAssociate, reset: resetCreateMediaAssociate }] = useMutation(createMediaAssociate, {context: graphQlHeaders().context, onCompleted: () => {
 
   }});
