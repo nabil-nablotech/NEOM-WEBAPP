@@ -576,7 +576,10 @@ export const getSingleInventoryNameFromTabName = (value: tabNameProps) => {
 };
 
 export const isRecordHavingAssociations = (record: Media) => {
-  if (
+
+  if(!record) return false
+  
+  if(
     record?.attributes?.media_associate?.data?.attributes?.place_unique_ids &&
     record?.attributes?.media_associate?.data?.attributes?.place_unique_ids
       ?.data &&

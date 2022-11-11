@@ -2,16 +2,16 @@ import { Box, Grid, Button } from "@mui/material";
 import styles from "./index.module.css";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveMediaItem, setActiveMediaItemIndex, toggleGalleryView } from "../../../store/reducers/searchResultsReducer";
+import { setActiveMediaItem, setActiveMediaItemIndex, setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen, toggleGalleryView } from "../../../store/reducers/searchResultsReducer";
 import { RootState } from "../../../store";
 import RenderFileData from "../../RenderFileData";
 import YellowStar from '../../../assets/images/searchResults/YellowStar.svg'
 import { CustomMoreOptionsComponent } from "../../CustomMoreOptionsComponent";
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from "react";
-import { baseUrl, detectMediaTypeFromMediaAssociate } from "../../../utils/services/helpers";
+import { baseUrl, detectMediaTypeFromMediaAssociate, isRecordHavingAssociations, MEDIA_TAB_NAME } from "../../../utils/services/helpers";
 import usePlaceDetails from "../../../hooks/usePlaceDetails";
 import Loader from "../../Common/Loader";
+import useEventDetails from "../../../hooks/useEventDetails";
 
 const GalleryView = () => {
     const dispatch = useDispatch()
@@ -20,8 +20,9 @@ const GalleryView = () => {
         (state: RootState) => state.searchResults
     );
     const { loading: placeLoading, data: placeData } = usePlaceDetails();
+    const { setEdit } = useEventDetails();
     
-    const actionsArray = [
+    const menuItems = [
         {
             label: 'Feature',
             action: () => { }
@@ -31,13 +32,33 @@ const GalleryView = () => {
             action: () => { }
         },
         {
-            label: 'Edit',
-            action: () => { }
+            label: "Edit",
+            action: (data: any) => {
+                if(data) {
+                    console.log('hex: ', data)
+                    setEdit({record: data, type: "Events"});
+                }
+            },
         },
         {
-            label: 'Delete',
-            action: () => { }
-        }
+            label: "Delete",
+            action: (data: any) => {
+                if (data) {
+                    console.log('hex: ', data)
+                    dispatch(toggleDeleteConfirmationWindowOpen({
+                        flag: true,
+                        isAssociatedToPlacesOrEvents: media ? isRecordHavingAssociations(
+                            media.filter(item => item?.id === data?.media_unique_id?.id?.toString())[0]
+                        ) : false,
+                    }))
+                    dispatch(setDeleteItemType(MEDIA_TAB_NAME))
+                    dispatch(setDeletePayload({
+                        id: data?.media_unique_id?.id
+                    }))
+                }
+
+            },
+        },
     ]
 
     
@@ -148,7 +169,8 @@ const GalleryView = () => {
                                 </Grid>
                                 <Grid item>
                                     <CustomMoreOptionsComponent
-                                        menuActions={actionsArray}
+                                        menuActions={menuItems}
+                                        data={itemObj}
                                     />
                                 </Grid>
                             </Grid>

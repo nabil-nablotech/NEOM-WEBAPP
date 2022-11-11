@@ -12,7 +12,7 @@ import { MediaApi } from "../types/Media";
 import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 
 const useEventDetails = () => {
-  let { uniqueId } = useParams<{ tabName?: tabNameProps; uniqueId: string }>();
+  let { uniqueId, tabName } = useParams<{ tabName?: tabNameProps; uniqueId: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { edit } = useSelector((state:RootState) => state.event)
@@ -63,6 +63,19 @@ const useEventDetails = () => {
     /** navigate to latest list after deleting item */
     if (deleteItemSuccess && (deleteItemType === "Events")) {
       navigate(`/search-results/Events`, { replace: true })
+    }
+
+    /** means if media or libr is deleted from places */
+    if (
+      uniqueId &&
+      tabName &&
+      (tabName === EVENTS_TAB_NAME) &&
+      deleteItemSuccess && (
+        deleteItemType === "Media" ||
+        deleteItemType === "Library"
+      )
+    ) {
+      fetchEventDetails(uniqueId)
     }
   }, [deleteItemSuccess, deleteItemType])
 
