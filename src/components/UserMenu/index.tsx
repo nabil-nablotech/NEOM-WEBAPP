@@ -249,12 +249,13 @@ function UserMenuComponent() {
                     deleteItemType === 'Events' ? 'event' :
                       deleteItemType === 'Media' ? 'media' : 'library'
 
-                  const res: { success: boolean } = await deleteRecord({
-                    visit_associates_id: deletePayload.visit_associates_id,
-                    media_associates_id: deletePayload.media_associates_id,
-                    remark_headers_id: deletePayload.remark_headers_id,
-                    visit: deletePayload.visit,
-                  }, type, deletePayload.id)
+                  // const res: { success: boolean } = await deleteRecord({
+                  //   visit_associates_id: deletePayload.visit_associates_id,
+                  //   media_associates_id: deletePayload.media_associates_id,
+                  //   remark_headers_id: deletePayload.remark_headers_id,
+                  //   visit: deletePayload.visit,
+                  // }, type, deletePayload.id)
+                  const res: { success: boolean } = await deleteRecord(type, deletePayload.id)
 
                   if (res.success) {
                     /**call this on delete api success */
