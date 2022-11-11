@@ -36,7 +36,9 @@ const useEvent = () => {
     addNewItemWindowType,
     confirmOpenEdit,
     editPayload,
-    addItemWindowMinimized
+    addItemWindowMinimized,
+    deleteItemSuccess,
+    deleteItemType
   } = useSelector((state: RootState) => state.searchResults);
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
@@ -280,6 +282,14 @@ const useEvent = () => {
 
     }
   }, [confirmOpenEdit])
+
+  useEffect(() => {
+
+    /** get latest list after deleting item */
+    if (deleteItemSuccess && (deleteItemType === "Events")) {
+      fetchData(0)
+    }
+  }, [deleteItemSuccess, deleteItemType])
 
   const openEditFlow = async (payload: any) => {
     if (payload) {

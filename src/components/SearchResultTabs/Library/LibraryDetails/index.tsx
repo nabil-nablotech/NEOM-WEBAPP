@@ -14,7 +14,7 @@ import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent'
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
 import useLibraryDetails from '../../../../hooks/useLibraryDetails';
-import { baseUrl, detectLibraryRecordApiType, LIBRARY_TAB_NAME, MEDIA_TYPE_IMAGE } from '../../../../utils/services/helpers';
+import { baseUrl, detectLibraryRecordApiType, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, MEDIA_TYPE_IMAGE } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import BlankDocImage from '../../../../assets/images/searchResults/BlankDocument.svg' 
@@ -260,7 +260,7 @@ export const LibraryDetailsModal = () => {
     }
 
     if (!libraryLoading && !libraryDetails) {
-        return <div>Cant fetch media</div>
+        return <div>Cant fetch library item details</div>
     }
 
     if (!libraryDetails) {

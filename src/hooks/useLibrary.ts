@@ -16,7 +16,8 @@ const useLibrary = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
 
   const {searchText, library: libItem, associatedPlaces, associatedEvents,
-    addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized} = useSelector((state: RootState) => state.searchResults);
+    addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized, deleteItemSuccess,
+    deleteItemType } = useSelector((state: RootState) => state.searchResults);
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
   );
@@ -226,6 +227,14 @@ const useLibrary = () => {
 
     }
   }, [confirmOpenEdit])
+
+  useEffect(() => {
+
+    /** get latest list after deleting item */
+    if (deleteItemSuccess && (deleteItemType === "Library")) {
+      fetchData(0)
+    }
+  }, [deleteItemSuccess, deleteItemType])
 
   const openEditFlow = async (payload: any) => {
     if (payload) {

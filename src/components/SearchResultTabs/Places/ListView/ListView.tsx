@@ -205,7 +205,6 @@ const ListView = (props: PlacesProps) => {
       },
   ])
 
-
   const handleAttachClick = (e:any, record: Place) => {
     const data: InventoryAssociationType = {
       id: Number(record.id),

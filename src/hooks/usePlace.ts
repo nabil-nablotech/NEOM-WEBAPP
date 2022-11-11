@@ -25,7 +25,7 @@ const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [mapPlaces, setMapPlaces] = useState([]);
   const { searchText, places: placeData, addNewItemWindowType, confirmOpenEdit, editPayload,
-    addItemWindowMinimized, deleteItemSuccess } = useSelector(
+    addItemWindowMinimized, deleteItemSuccess, deleteItemType } = useSelector(
     (state: RootState) => state.searchResults
   );
   const { selectedValue } = useSelector(
@@ -232,10 +232,10 @@ const usePlace = () => {
   useEffect(() => {
 
     /** get latest list after deleting item */
-    if (deleteItemSuccess) {
+    if (deleteItemSuccess && (deleteItemType === "Places")) {
       fetchData(0)
     }
-  }, [deleteItemSuccess])
+  }, [deleteItemSuccess, deleteItemType])
   
   const openEditFlow = async (payload: any) => {
     if (payload) {
