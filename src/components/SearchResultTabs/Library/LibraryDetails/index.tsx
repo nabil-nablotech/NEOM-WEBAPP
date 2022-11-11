@@ -272,7 +272,6 @@ export const LibraryDetailsModal = () => {
         navigate(`/search-results/Library`, { replace: true, state: null })
     }
 
-    // console.log('hex: ', libraryDetails)
 
     return <>
         <CustomModal

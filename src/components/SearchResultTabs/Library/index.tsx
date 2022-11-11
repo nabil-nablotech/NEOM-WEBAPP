@@ -150,8 +150,6 @@ const LibraryTab = () => {
     return <h1>No data found</h1>
   }
 
-  // console.log('hex: cita: ', library.filter(item => item.attributes.citation === 'cita even') )
- 
 
   /* Event hanlders */
   const exportLibrary = async () => {

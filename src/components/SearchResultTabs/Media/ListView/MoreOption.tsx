@@ -46,7 +46,6 @@ export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payloa
         <MenuItem key={3}
           onClick={(e) => {
             e.stopPropagation();
-            console.log('hex: ', record)
             dispatch(toggleDeleteConfirmationWindowOpen({
               flag: true,
               isAssociatedToPlacesOrEvents: isRecordHavingAssociations(record),

@@ -236,11 +236,7 @@ function UserMenuComponent() {
             }}
             handleDelete={
               async () => {
-                dispatch(toggleDeleteConfirmationWindowOpen({
-                  flag: false,
-                  isAssociatedToPlacesOrEvents: false,
-                }))
-                dispatch(toggleDeleteItemSuccess(true))
+                
 
 
                 if (deletePayload && deleteItemType) {
@@ -260,6 +256,11 @@ function UserMenuComponent() {
                   if (res.success) {
                     /**call this on delete api success */
                     dispatch(setDeletePayload(null))
+                    dispatch(toggleDeleteConfirmationWindowOpen({
+                      flag: false,
+                      isAssociatedToPlacesOrEvents: false,
+                    }))
+                    dispatch(toggleDeleteItemSuccess(true))
                   }
                   
                 }
