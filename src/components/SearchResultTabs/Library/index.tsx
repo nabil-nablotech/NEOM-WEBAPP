@@ -256,6 +256,7 @@ setOpen(true);
           ></StyledAntTable>
         </InfiniteScroll>
       </Box>
+      <ExportModal open={open} setOpen={setOpen} count={meta?.pagination?.total} path={'medias'} filter={filter}/>
     </Box>
   );
 };
