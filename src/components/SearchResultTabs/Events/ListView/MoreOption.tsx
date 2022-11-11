@@ -65,17 +65,15 @@ const MoreOptionsComponent = ({
                 <MenuItem key={2}
                     onClick={(e) => {
                         e.stopPropagation();
-                        dispatch(toggleDeleteConfirmationWindowOpen(true))
+                        dispatch(toggleDeleteConfirmationWindowOpen({
+                            flag: true,
+                            isAssociatedToPlacesOrEvents: false,
+                        }))
                         dispatch(setDeleteItemType(EVENTS_TAB_NAME))
 
-                        // console.log('hex: ', record)
-                        // dispatch(setDeletePayload({
-                        //     visit_associates_id: [eventDetails?.visit_associate?.place_unique_id?.id],
-                        //     media_associates_id: record?.attributes?.media_associates?.data.map((item: any) => item?.attributes?.media_unique_id?.data?.id),
-                        //     remark_headers_id: [],
-                        //     visit: [],
-                        //     id: record.id
-                        // }))
+                        dispatch(setDeletePayload({
+                            id: typeof record.id === 'string' ? parseInt(record.id) : record.id
+                        }))
                     }}
                 >
                     Delete

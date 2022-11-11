@@ -62,3 +62,7 @@ export type DeleteUserReduxPayload = {
   flag: boolean
   mailId?: string
 }
+export type DeleteRecordReduxPayload = {
+  flag: boolean,
+  isAssociatedToPlacesOrEvents?: boolean,
+}

@@ -13,7 +13,7 @@ import { Event, EventApi } from "../../types/Event";
 import { Media, MediaApi, MediaApi2 } from "../../types/Media";
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://b6e9-117-251-210-158.in.ngrok.io`;
+// export const baseUrl = `https://877e-59-94-75-53.in.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -529,4 +529,16 @@ export const getSingleInventoryNameFromTabName= (value: tabNameProps) => {
   }
 
   return newValue
+}
+
+export const isRecordHavingAssociations = (record: Media) => {
+
+  if(
+    record?.attributes?.media_associate?.data?.attributes?.place_unique_ids &&
+    record?.attributes?.media_associate?.data?.attributes?.place_unique_ids?.data &&
+    record?.attributes?.media_associate?.data?.attributes?.place_unique_ids?.data?.length > 0
+
+  ) {
+    return true
+  } else return false
 }

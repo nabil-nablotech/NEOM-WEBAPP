@@ -4,7 +4,7 @@ import { Place, Meta, PlaceApi, MediaAssociateObj } from "./Place";
 import { Event, EventApi } from "./Event";
 import { Media } from "./Media";
 import { RemarksPayload, Remark, ChildRemark, RemarkDetails, RemarksEditPayload } from "./Remarks";
-import { DeleteUserReduxPayload } from "./User";
+import { DeleteRecordReduxPayload, DeleteUserReduxPayload } from "./User";
 
 export type SearchResultTabsProps = {
   tabIndex?: number;
@@ -119,7 +119,7 @@ export type SearchResultsState2 = {
   isEditConfirmationWindowOpen: boolean
   confirmOpenEdit: boolean,
   editPayload: any
-  isDeleteConfirmationWindowOpen: boolean
+  isDeleteConfirmationWindowOpen: DeleteRecordReduxPayload
   confirmDelete : boolean
   itemAboutToDelete: tabNameProps | null
   shallUpdateKeywords: boolean
@@ -131,10 +131,6 @@ export type SearchResultsState2 = {
 };
 
 export type DeletePayloadType = {
-  visit_associates_id: Array<number> | [] 
-  media_associates_id: Array<number> | []
-  remark_headers_id: Array<number> | []
-  visit: Array<number> | [],
   id: number
 } | null
 

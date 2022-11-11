@@ -217,16 +217,13 @@ const EventDetailsPage = () => {
         {
             label: "Delete",
             action: () => {
-                dispatch(toggleDeleteConfirmationWindowOpen(true))
+                dispatch(toggleDeleteConfirmationWindowOpen({
+                    flag: true,
+                    isAssociatedToPlacesOrEvents: false,
+                }))
                 dispatch(setDeleteItemType(EVENTS_TAB_NAME))
                 // console.log('hex: ', eventDetails)
                 dispatch(setDeletePayload({
-                    visit_associates_id: eventDetails?.visit_associate?.id ? [eventDetails?.visit_associate?.id] : [],
-                    media_associates_id: eventDetails.media_associates && eventDetails.media_associates.length > 0 ?
-                        eventDetails?.media_associates?.map((item: any) => item?.id) : [],
-                    remark_headers_id: [],
-                    // visit: [eventDetails?.visit_associate?.id],
-                    visit: [],
                     id: eventDetails.id
                 }))
             },

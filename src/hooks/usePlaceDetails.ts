@@ -19,7 +19,8 @@ const usePlaceDetails = () => {
 
   const dispatch = useDispatch();
   const { edit } = useSelector((state:RootState) => state.tabEdit)
-  const { addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized } = useSelector(
+  const { addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized,
+    deleteItemSuccess, deleteItemType } = useSelector(
     (state: RootState) => state.searchResults
   );
 
@@ -46,6 +47,14 @@ const usePlaceDetails = () => {
 
     }
   }, [confirmOpenEdit])
+
+  useEffect(() => {
+
+    /** navigate to latest list after deleting item */
+    if (deleteItemSuccess && (deleteItemType === "Places")) {
+      navigate(`/search-results/Places`, {replace: true})
+    }
+  }, [deleteItemSuccess, deleteItemType])
   
   const openEditFlow = async (payload: any) => {
     if (payload) {

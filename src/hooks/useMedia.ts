@@ -20,7 +20,7 @@ const useMedia = () => {
 
   const {searchText, media: mediaItem, associatedPlaces, associatedEvents,
     addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized,
-    showEditSuccess } = useSelector((state: RootState) => state.searchResults);
+    showEditSuccess, deleteItemSuccess, deleteItemType } = useSelector((state: RootState) => state.searchResults);
   const {search} = useLocation();
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
@@ -235,6 +235,14 @@ const useMedia = () => {
 
     }
   }, [confirmOpenEdit])
+
+  useEffect(() => {
+
+    /** get latest list after deleting item */
+    if (deleteItemSuccess && (deleteItemType === "Media")) {
+      fetchData(0)
+    }
+  }, [deleteItemSuccess, deleteItemType])
 
   const openEditFlow = async (payload: any) => {
     if (payload) {

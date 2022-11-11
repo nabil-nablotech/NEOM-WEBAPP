@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setActiveMediaItemIndex, setActiveMediaItem, toggleDeleteConfirmationWindowOpen, setDeleteItemType } from '../../../../store/reducers/searchResultsReducer';
+import { setActiveMediaItemIndex, setActiveMediaItem, toggleDeleteConfirmationWindowOpen, setDeleteItemType, setDeletePayload } from '../../../../store/reducers/searchResultsReducer';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import RenderFileData from '../../../RenderFileData';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
@@ -143,8 +143,7 @@ const MediaDetailsPage = ({
         // setMediaType("video")
         // setMediaType("3d")
 
-
-        if (mediaDetails) {
+        if (mediaDetails && (Object.keys(mediaDetails).length !== 0) ) {
             if (
                 detectMediaRecordApiType(mediaDetails) === MEDIA_TYPE_VIDEO
             ) {
@@ -206,8 +205,14 @@ const MediaDetailsPage = ({
         {
             label: "Delete",
             action: () => {
-                dispatch(toggleDeleteConfirmationWindowOpen(true))
+                dispatch(toggleDeleteConfirmationWindowOpen({
+                    flag: true,
+                    isAssociatedToPlacesOrEvents: false,
+                }))
                 dispatch(setDeleteItemType(MEDIA_TAB_NAME))
+                dispatch(setDeletePayload({
+                    id: typeof mediaDetails.id === 'string' ? parseInt(mediaDetails.id) : mediaDetails.id
+                }))
             },
         },
     ]

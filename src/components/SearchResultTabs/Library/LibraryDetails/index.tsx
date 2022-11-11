@@ -8,13 +8,13 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setActiveLibraryItem, setActiveLibraryItemIndex, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
+import { setActiveLibraryItem, setActiveLibraryItemIndex, setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
 import useLibraryDetails from '../../../../hooks/useLibraryDetails';
-import { baseUrl, detectLibraryRecordApiType, LIBRARY_TAB_NAME, MEDIA_TYPE_IMAGE } from '../../../../utils/services/helpers';
+import { baseUrl, detectLibraryRecordApiType, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, MEDIA_TYPE_IMAGE } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import BlankDocImage from '../../../../assets/images/searchResults/BlankDocument.svg' 
@@ -39,7 +39,7 @@ const LibraryDetailsPage = ({
     const { places } = useSelector(
         (state: RootState) => state.searchResults
     );
-
+    const dispatch = useDispatch()
     const { data: libraryDetails, setEdit } = useLibraryDetails();
 
     const locationRef = window.location.href
@@ -64,8 +64,14 @@ const LibraryDetailsPage = ({
         {
             label: "Delete",
             action: () => {
-                // dispatch(toggleDeleteConfirmationWindowOpen(true))
-                // dispatch(setDeleteItemType(LIBRARY_TAB_NAME))
+                dispatch(toggleDeleteConfirmationWindowOpen({
+                    flag: true,
+                    isAssociatedToPlacesOrEvents: false,
+                }))
+                dispatch(setDeleteItemType(LIBRARY_TAB_NAME))
+                dispatch(setDeletePayload({
+                    id: parseInt(libraryDetails.id)
+                }))
             },
         },
     ]
@@ -254,7 +260,7 @@ export const LibraryDetailsModal = () => {
     }
 
     if (!libraryLoading && !libraryDetails) {
-        return <div>Cant fetch media</div>
+        return <div>Cant fetch library item details</div>
     }
 
     if (!libraryDetails) {
@@ -269,7 +275,6 @@ export const LibraryDetailsModal = () => {
         navigate(`/search-results/Library`, { replace: true, state: null })
     }
 
-    // console.log('hex: ', libraryDetails)
 
     return <>
         <CustomModal

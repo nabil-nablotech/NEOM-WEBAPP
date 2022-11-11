@@ -470,7 +470,6 @@ const PlaceDetailsPage = () => {
 
   const { latitude, longitude } = placeData;
 
-  // console.log('hex: ', shallRenderMedia(4, media_associates))
   return (
     <Box component="div" className={`${styles["details-container"]}`}>
       <Grid

@@ -20,6 +20,13 @@
     font-weight: bold;
 }
 
+.sentence-wrapper {
+    margin-block: 2em;
+}
+.sentence {
+    margin-bottom: 1.2em;
+}
+
 .sentence-Edit {
     margin-bottom: 2em;
     line-height: 1.5;
