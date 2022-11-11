@@ -464,6 +464,9 @@ export const detectMediaRecordApiType = (detailObj : MediaApi) => {
   MEDIA_TYPE_IMAGE
 }
 export const detectLibraryRecordApiType = (detailObj : MediaApi2) => {
+
+  if(!detailObj.media_type) return MEDIA_TYPE_IMAGE
+
   return detailObj.media_type[0].typeCode === "VIDEO" ? MEDIA_TYPE_VIDEO :
   detailObj.media_type[0].typeCode === "IMAGE" ? MEDIA_TYPE_IMAGE : MEDIA_TYPE_3D
 }

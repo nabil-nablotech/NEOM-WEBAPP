@@ -127,19 +127,24 @@ const useLibrary = () => {
   }, [addData, updateData])
 
   useEffect(() => {
-    if (mediaAssociate && addData) {
+
+    if (addData) {
       dispatch(storeAddItemProgressState(null));
       
       resetLibrary();
-      resetCreateMediaAssociate();
+      // resetCreateMediaAssociate();
       dispatch(toggleShowAddSuccess(true));
       navigate(`/search-results/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true});
-    } else if (mediaAssociate && updateData) {
-      resetCreateMediaAssociate();
+    } else if (updateData) {
+      // resetCreateMediaAssociate();
       resetUpdateLibrary();
       dispatch(toggleShowEditSuccess(true));
     }
-  }, [mediaAssociate])
+
+    if(mediaAssociate) {
+      resetCreateMediaAssociate()
+    }
+  }, [mediaAssociate, updateData, addData])
   
   const fetchData = (skip: number = libItem.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);

@@ -85,7 +85,6 @@ const LibraryDetailsPage = ({
         // defaultFileList: defaultImages
     };
 
-
     return <>
         <Box component="div" className={`${styles['details-page-wrapper']}`}>
             <Box component="div">

@@ -71,12 +71,13 @@ const useMedia = () => {
   const { loading: refineLoading, error: refineErrorData, data: refineMediaData, refetch: refineSearchMedia, } = useQuery(refineMedia);
 
   useEffect(() => {
+
     if (updateMediaAssociateData || (updateData && mediaAssociate)) {
       if(!showEditSuccess) {
         dispatch(toggleShowEditSuccess(true))
       }
     }
-  }, [updateMediaAssociateData, mediaAssociate])
+  }, [updateMediaAssociateData, mediaAssociate, updateData])
 
   useEffect(() => {
     if (refineMediaData?.medias) {
