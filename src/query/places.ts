@@ -112,6 +112,30 @@ query refinedSearch(
             eq: false
           }
         }
+        {
+          media_associates: {
+            deleted: {
+              eq: false
+            }
+            media_unique_id: {
+              deleted: {
+                eq: false
+              }
+            }
+          }
+        }
+        {
+          visit_associates: {
+            deleted: {
+              eq: false
+            }
+            visit_unique_id: {
+              deleted: {
+                eq: false
+              }
+            }
+          }
+        }
       ]
     }
     sort: "updatedAt:desc"
@@ -143,11 +167,11 @@ query refinedSearch(
         stateOfConservation
         recommendation
         risk
-remark_headers {
-  data{
-    id
-  }
-}
+        remark_headers {
+          data{
+            id
+          }
+        }
         media_associates {
           data {
             attributes {
