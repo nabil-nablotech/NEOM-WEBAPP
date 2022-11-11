@@ -50,7 +50,7 @@ const useLibrary = () => {
 
   const [createLibraryMutation, { loading: addLoading, error: addErr, data: addData, reset: resetLibrary }] = useMutation(addLibrary, graphQlHeaders());
   const [updateLibraryMutation, { loading:updateLoading, error: updateErr, data: updateData, reset: resetUpdateLibrary }] = useMutation(updateLibrary, {context: graphQlHeaders().context, onCompleted: () => {
-    if (associatedEvents.length == 0 || associatedPlaces.length == 0) {
+    if (associatedEvents.length == 0 && associatedPlaces.length == 0) {
       dispatch(toggleShowEditSuccess(true));
     }
   }});

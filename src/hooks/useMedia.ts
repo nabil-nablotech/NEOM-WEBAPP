@@ -45,7 +45,7 @@ const useMedia = () => {
 
   const [createMediaMutation, { error: addErr, data: addData }] = useMutation(addLibrary, graphQlHeaders());
   const [updateMediaMutation, { data: updateData, reset }] = useMutation(updateMedia, {context: graphQlHeaders().context, onCompleted: () => {
-    if (associatedEvents.length == 0 || associatedPlaces.length == 0) {
+    if (associatedEvents.length == 0 && associatedPlaces.length == 0) {
       dispatch(toggleShowEditSuccess(true));
     }
   }});
