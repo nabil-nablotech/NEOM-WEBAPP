@@ -8,9 +8,11 @@ import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { Media } from '../../../../types/Media';
 import { useDispatch } from 'react-redux';
 import { setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
-import { EVENTS_TAB_NAME, LIBRARY_TAB_NAME, PLACES_TAB_NAME } from '../../../../utils/services/helpers';
+import { EVENTS_TAB_NAME, isRecordHavingAssociations, LIBRARY_TAB_NAME, PLACES_TAB_NAME } from '../../../../utils/services/helpers';
 import { deleteRecord } from '../../../../api/delete';
 import { useParams } from 'react-router-dom';
+import { RootState } from '../../../../store';
+import { useSelector } from 'react-redux';
 
 const superEditor = getRole() === 'SuperEditor';
 const editor = getRole() === 'Editor';
@@ -31,6 +33,9 @@ const MoreOptionsComponent = ({
         e.stopPropagation();
         setAnchorEl(e.currentTarget);
     };
+    const { library } = useSelector(
+        (state: RootState) => state.searchResults
+    );
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -72,7 +77,9 @@ const MoreOptionsComponent = ({
                         e.stopPropagation();
                         dispatch(toggleDeleteConfirmationWindowOpen({
                             flag: true,
-                            isAssociatedToPlacesOrEvents: false,
+                            isAssociatedToPlacesOrEvents: type === "Library" ? isRecordHavingAssociations(
+                                library.filter(item => item?.id === record?.media_unique_id?.id?.toString())[0]
+                            ) : false,
                         }))
                         dispatch(setDeleteItemType(
                             type === "Library" ? LIBRARY_TAB_NAME : type === "Events" ? EVENTS_TAB_NAME : PLACES_TAB_NAME

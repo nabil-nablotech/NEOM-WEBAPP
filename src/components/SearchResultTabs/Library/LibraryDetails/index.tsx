@@ -14,7 +14,7 @@ import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent'
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
 import useLibraryDetails from '../../../../hooks/useLibraryDetails';
-import { baseUrl, detectLibraryRecordApiType, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, MEDIA_TYPE_IMAGE } from '../../../../utils/services/helpers';
+import { baseUrl, detectLibraryRecordApiType, isRecordHavingAssociations, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, MEDIA_TYPE_IMAGE } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import BlankDocImage from '../../../../assets/images/searchResults/BlankDocument.svg' 
@@ -36,7 +36,7 @@ const LibraryDetailsPage = ({
     handleClose
 }: LibraryDetailsPageProps) => {
 
-    const { places } = useSelector(
+    const { library } = useSelector(
         (state: RootState) => state.searchResults
     );
     const dispatch = useDispatch()
@@ -65,7 +65,9 @@ const LibraryDetailsPage = ({
             action: () => {
                 dispatch(toggleDeleteConfirmationWindowOpen({
                     flag: true,
-                    isAssociatedToPlacesOrEvents: false,
+                    isAssociatedToPlacesOrEvents: library ? isRecordHavingAssociations(
+                        library.filter(item => item?.id === data?.library_unique_id?.id?.toString())[0]
+                    ) : false,
                 }))
                 dispatch(setDeleteItemType(LIBRARY_TAB_NAME))
                 dispatch(setDeletePayload({

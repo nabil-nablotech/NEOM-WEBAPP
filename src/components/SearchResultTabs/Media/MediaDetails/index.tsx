@@ -20,7 +20,7 @@ import ModelViewer from '../../../Model';
 import { useEffect } from 'react';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
-import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME } from '../../../../utils/services/helpers';
+import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
@@ -207,7 +207,9 @@ const MediaDetailsPage = ({
             action: () => {
                 dispatch(toggleDeleteConfirmationWindowOpen({
                     flag: true,
-                    isAssociatedToPlacesOrEvents: false,
+                    isAssociatedToPlacesOrEvents: media ? isRecordHavingAssociations(
+                        media.filter(item => item?.id === mediaDetails?.media_unique_id?.id?.toString())[0]
+                    ) : false,
                 }))
                 dispatch(setDeleteItemType(MEDIA_TAB_NAME))
                 dispatch(setDeletePayload({

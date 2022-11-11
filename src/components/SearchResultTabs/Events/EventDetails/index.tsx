@@ -222,7 +222,6 @@ const EventDetailsPage = () => {
                     isAssociatedToPlacesOrEvents: false,
                 }))
                 dispatch(setDeleteItemType(EVENTS_TAB_NAME))
-                // console.log('hex: ', eventDetails)
                 dispatch(setDeletePayload({
                     id: eventDetails.id
                 }))

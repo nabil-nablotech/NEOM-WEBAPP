@@ -275,12 +275,13 @@ export type LibraryDetailsPageProps = {
 
 type menuAction = {
   label: string;
-  action: () => void;
+  action: (data?: any) => void;
 };
 
 export type CustomMoreOptionsComponentProps = {
   menuActions: Array<menuAction>;
   moreIconClassName?: string
+  data?: any
 };
 
 export type DetachedIconTypes ={
