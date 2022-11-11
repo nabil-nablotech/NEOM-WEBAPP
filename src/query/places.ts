@@ -107,6 +107,11 @@ query refinedSearch(
         { longitude: { lte: $longitude } }
         { keywords: { containsi: $keywords } }
         { siteType: { containsi: $siteType } }
+        {
+          deleted: {
+            eq: false
+          }
+        }
       ]
     }
     sort: "updatedAt:desc"
@@ -138,11 +143,11 @@ query refinedSearch(
         stateOfConservation
         recommendation
         risk
-remark_headers {
-  data{
-    id
-  }
-}
+        remark_headers {
+          data{
+            id
+          }
+        }
         media_associates {
           data {
             attributes {

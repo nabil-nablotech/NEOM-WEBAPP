@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setActiveMediaItemIndex, setActiveMediaItem, toggleDeleteConfirmationWindowOpen, setDeleteItemType } from '../../../../store/reducers/searchResultsReducer';
+import { setActiveMediaItemIndex, setActiveMediaItem, toggleDeleteConfirmationWindowOpen, setDeleteItemType, setDeletePayload } from '../../../../store/reducers/searchResultsReducer';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import RenderFileData from '../../../RenderFileData';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
@@ -20,7 +20,7 @@ import ModelViewer from '../../../Model';
 import { useEffect } from 'react';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
-import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME } from '../../../../utils/services/helpers';
+import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
@@ -143,8 +143,7 @@ const MediaDetailsPage = ({
         // setMediaType("video")
         // setMediaType("3d")
 
-
-        if (mediaDetails) {
+        if (mediaDetails && (Object.keys(mediaDetails).length !== 0) ) {
             if (
                 detectMediaRecordApiType(mediaDetails) === MEDIA_TYPE_VIDEO
             ) {
@@ -206,8 +205,16 @@ const MediaDetailsPage = ({
         {
             label: "Delete",
             action: () => {
-                dispatch(toggleDeleteConfirmationWindowOpen(true))
+                dispatch(toggleDeleteConfirmationWindowOpen({
+                    flag: true,
+                    isAssociatedToPlacesOrEvents: media ? isRecordHavingAssociations(
+                        media.filter(item => item?.id === mediaDetails?.media_unique_id?.id?.toString())[0]
+                    ) : false,
+                }))
                 dispatch(setDeleteItemType(MEDIA_TAB_NAME))
+                dispatch(setDeletePayload({
+                    id: typeof mediaDetails.id === 'string' ? parseInt(mediaDetails.id) : mediaDetails.id
+                }))
             },
         },
     ]

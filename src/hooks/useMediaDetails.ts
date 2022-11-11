@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { mediaDetails } from "../api/details";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { MediaApi } from "../types/Media";
@@ -14,9 +14,10 @@ import { RootState } from "../store";
 const useMediaDetails = () => {
   const { uniqueId } = useParams<{ uniqueId: string }>()
   const { addNewItemWindowType, confirmOpenEdit, editPayload,
-    addItemWindowMinimized } = useSelector((state: RootState) => state.searchResults);
+    addItemWindowMinimized, deleteItemSuccess, deleteItemType } = useSelector((state: RootState) => state.searchResults);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (uniqueId) {
@@ -41,6 +42,15 @@ const useMediaDetails = () => {
 
     }
   }, [confirmOpenEdit])
+
+  
+  useEffect(() => {
+
+    /** navigate to latest list after deleting item */
+    if (deleteItemSuccess && (deleteItemType === "Media")) {
+      navigate(`/search-results/Media`, {replace: true})
+    }
+  }, [deleteItemSuccess, deleteItemType])
 
   const openEditFlow = async (payload: any) => {
     if (payload) {

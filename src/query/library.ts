@@ -38,6 +38,11 @@ query librarySearchList(
             }
           }
         }
+        {
+          deleted: {
+            eq: false
+          }
+        }
       ]
     }
   ) {
@@ -147,6 +152,11 @@ query RefinedLibrarySearch(
             }
           }
         }
+        {
+          deleted: {
+            eq: false
+          }
+        }
       ]
     }
     sort: "updatedAt:desc"
@@ -199,9 +209,19 @@ query RefinedLibrarySearch(
             attributes {
               place_unique_ids{
                 data {
+                  id
                   attributes {
                     placeNameArabic
                     placeNameEnglish
+                  }
+                }
+              }
+              visit_unique_ids {
+                data {
+                  id
+                  attributes {
+                    visitDate 
+                    visitNumber
                   }
                 }
               }

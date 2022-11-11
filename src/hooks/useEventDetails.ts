@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useMutation } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { eventDetails, mediaDetails } from "../api/details";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
@@ -12,10 +12,12 @@ import { MediaApi } from "../types/Media";
 import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 
 const useEventDetails = () => {
-  let { uniqueId } = useParams<{ tabName?: tabNameProps; uniqueId: string }>();
+  let { uniqueId, tabName } = useParams<{ tabName?: tabNameProps; uniqueId: string }>();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { edit } = useSelector((state:RootState) => state.event)
-  const { addNewItemWindowType, confirmOpenEdit , editPayload, addItemWindowMinimized } = useSelector(
+  const { addNewItemWindowType, confirmOpenEdit , editPayload, addItemWindowMinimized,
+    deleteItemSuccess, deleteItemType } = useSelector(
     (state: RootState) => state.searchResults
   );
 
@@ -55,6 +57,29 @@ const useEventDetails = () => {
 
     }
   }, [confirmOpenEdit])
+
+  useEffect(() => {
+
+    /** navigate to latest list after deleting item */
+    if (deleteItemSuccess && (deleteItemType === "Events")) {
+      navigate(`/search-results/Events`, { replace: true })
+    }
+
+    /** means if media or libr is deleted from places */
+    if (
+      uniqueId &&
+      tabName &&
+      (tabName === EVENTS_TAB_NAME) &&
+      deleteItemSuccess && (
+        deleteItemType === "Media" ||
+        deleteItemType === "Library"
+      )
+    ) {
+      fetchEventDetails(uniqueId)
+    }
+  }, [deleteItemSuccess, deleteItemType])
+
+  
 
   const openEditFlow = async (payload: any) => {
     if (payload) {

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useMutation, useQuery } from "react-query";
 import { useDispatch } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { libraryDetails } from "../api/details";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { MediaApi } from "../types/Media";
@@ -16,8 +16,10 @@ import { RootState } from "../store";
 const useLibraryDetails = () => {
   const { search } = useLocation();
   const { uniqueId } = useParams<{ uniqueId: string }>()
-  const { addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized} = useSelector((state: RootState) => state.searchResults);
+  const { addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized, 
+    deleteItemSuccess, deleteItemType} = useSelector((state: RootState) => state.searchResults);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (uniqueId) {
@@ -28,7 +30,7 @@ const useLibraryDetails = () => {
   /**
    * fetch with two words
    */
-  const { isLoading, error, data, mutate: fetchLibraryDetails } = useMutation('place-details', libraryDetails, {
+  const { isLoading, error, data, mutate: fetchLibraryDetails } = useMutation('library-details', libraryDetails, {
     retry: false
   });
 
@@ -41,6 +43,14 @@ const useLibraryDetails = () => {
 
     }
   }, [confirmOpenEdit])
+
+  useEffect(() => {
+
+    /** navigate to latest list after deleting item */
+    if (deleteItemSuccess && (deleteItemType === "Library")) {
+      navigate(`/search-results/Library`, { replace: true })
+    }
+  }, [deleteItemSuccess, deleteItemType])
 
   const openEditFlow = async (payload: any) => {
     if (payload) {

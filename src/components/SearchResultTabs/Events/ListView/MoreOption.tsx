@@ -9,7 +9,10 @@ import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { MediaAssociateObj } from '../../../../types/Place';
 import { useDispatch } from 'react-redux';
 import { setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
-import { EVENTS_TAB_NAME } from '../../../../utils/services/helpers';
+import { EVENTS_TAB_NAME, isRecordHavingAssociations, LIBRARY_TAB_NAME, MEDIA_TAB_NAME } from '../../../../utils/services/helpers';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../store';
 
 const superEditor = getRole() === 'SuperEditor';
 const editor = getRole() === 'Editor';
@@ -20,7 +23,7 @@ const MoreOptionsComponent = ({
     setEdit
 }: {
     type: tabNameProps;
-    record: Event | Media | MediaAssociateObj;
+    record: any;
     setEdit: (payload: { record: Event | Media | MediaAssociateObj, type: tabNameProps }) => void
 }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -30,7 +33,10 @@ const MoreOptionsComponent = ({
         setAnchorEl(e.currentTarget);
     };
     const dispatch = useDispatch();
-
+    const { tabName } = useParams<{ tabName: tabNameProps }>();
+    const { library, media } = useSelector(
+        (state: RootState) => state.searchResults
+    )
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -65,17 +71,25 @@ const MoreOptionsComponent = ({
                 <MenuItem key={2}
                     onClick={(e) => {
                         e.stopPropagation();
-                        dispatch(toggleDeleteConfirmationWindowOpen(true))
-                        dispatch(setDeleteItemType(EVENTS_TAB_NAME))
+                        dispatch(toggleDeleteConfirmationWindowOpen({
+                            flag: true,
+                            isAssociatedToPlacesOrEvents: type === "Media" ? isRecordHavingAssociations(
+                                media.filter(item => item?.id === record?.media_unique_id?.id?.toString())[0]
+                            ) : type === "Library" ? isRecordHavingAssociations(
+                                library.filter(item => item?.id === record?.media_unique_id?.id?.toString())[0]
+                            ) : false,
+                        }))
+                        dispatch(setDeleteItemType(
+                            type === "Library" ? LIBRARY_TAB_NAME : MEDIA_TAB_NAME 
+                        ))
 
-                        // console.log('hex: ', record)
-                        // dispatch(setDeletePayload({
-                        //     visit_associates_id: [eventDetails?.visit_associate?.place_unique_id?.id],
-                        //     media_associates_id: record?.attributes?.media_associates?.data.map((item: any) => item?.attributes?.media_unique_id?.data?.id),
-                        //     remark_headers_id: [],
-                        //     visit: [],
-                        //     id: record.id
-                        // }))
+                        dispatch(setDeletePayload({
+                            id: tabName === EVENTS_TAB_NAME ? (
+                                (type === "Media" || type === "Library") ?  record?.media_unique_id?.id : 
+                                typeof record.id === 'string' ? parseInt(record.id) : record.id
+                            ) : record.id,
+                            
+                        }))
                     }}
                 >
                     Delete

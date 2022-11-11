@@ -14,12 +14,13 @@ import { Media, MediaApi } from "../types/Media";
 import { Event } from "../types/Event";
 
 const usePlaceDetails = () => {
-  const { uniqueId } = useParams<{ uniqueId: string }>();
+  const { uniqueId , tabName} = useParams<{ uniqueId: string, tabName: tabNameProps }>();
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const { edit } = useSelector((state:RootState) => state.tabEdit)
-  const { addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized } = useSelector(
+  const { addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized,
+    deleteItemSuccess, deleteItemType } = useSelector(
     (state: RootState) => state.searchResults
   );
 
@@ -46,6 +47,30 @@ const usePlaceDetails = () => {
 
     }
   }, [confirmOpenEdit])
+
+  useEffect(() => {
+
+    /** navigate to latest list after deleting item */
+    if (deleteItemSuccess && (deleteItemType === "Places")) {
+      navigate(`/search-results/Places`, {replace: true})
+
+      
+    }
+
+    /** means if event or libr is deleted from places */
+    if (
+      uniqueId &&
+      tabName &&
+      (tabName === PLACES_TAB_NAME )&&
+      deleteItemSuccess && (
+        deleteItemType === "Events" ||
+        deleteItemType === "Library" || 
+        deleteItemType === "Media"
+      )
+    ) {
+      fetchPlaceDetails(uniqueId)
+    }
+  }, [deleteItemSuccess, deleteItemType])
   
   const openEditFlow = async (payload: any) => {
     if (payload) {

@@ -1,7 +1,12 @@
 import dayjs from "dayjs";
 import styled from "styled-components";
 import { StyledAntTable } from "../../components/StyledAntTable";
-import { MediaAssociateObj, MediaAssociates2, Place, PlaceApi } from "../../types/Place";
+import {
+  MediaAssociateObj,
+  MediaAssociates2,
+  Place,
+  PlaceApi,
+} from "../../types/Place";
 import {
   InventoryAssociationType,
   InventoryAssociationType_Event,
@@ -13,7 +18,7 @@ import { Event, EventApi } from "../../types/Event";
 import { Media, MediaApi, MediaApi2 } from "../../types/Media";
 
 export const baseUrl = `http://localhost:9999`;
-// export const baseUrl = `https://b6e9-117-251-210-158.in.ngrok.io`;
+// export const baseUrl = `https://877e-59-94-75-53.in.ngrok.io`;
 export const webUrl = `http://localhost:3000`;
 export const limit = 10;
 
@@ -81,8 +86,26 @@ export function passwordGenerator() {
   return password;
 }
 
-export function copyToClipboard(str: string) {
-  navigator.clipboard.writeText(str);
+const unsecuredCopyToClipboard = (text: string) => {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand("copy");
+  } catch (err) {
+    console.error("Unable to copy to clipboard", err);
+  }
+  document.body.removeChild(textArea);
+};
+
+export async function copyToClipboard(str: string) {
+  if (window.isSecureContext && navigator.clipboard) {
+    await navigator.clipboard.writeText(str);
+  } else {
+    await unsecuredCopyToClipboard(str);
+  }
 }
 
 export const staticValidationScheme = [
@@ -294,14 +317,14 @@ export function formatBytes(bytes: number, decimals = 2) {
 }
 
 function zerofill(i: number) {
-  return (i < 10 ? '0' : '') + i;
+  return (i < 10 ? "0" : "") + i;
 }
 export function formatStrapiDate(date: Date) {
   const newDate = new Date(date);
   if (newDate) {
-    return `${newDate?.getFullYear()}-${
-      zerofill(newDate?.getMonth() + 1)
-    }-${zerofill(newDate?.getDate())}`;
+    return `${newDate?.getFullYear()}-${zerofill(
+      newDate?.getMonth() + 1
+    )}-${zerofill(newDate?.getDate())}`;
   }
   return null;
 }
@@ -327,7 +350,7 @@ export const shallRenderMedia = (
 ) => {
   if (!mediaArray) return false;
 
-  if (mediaNo <= (mediaArray.length) ) {
+  if (mediaNo <= mediaArray.length) {
     return true;
   } else return false;
 };
@@ -449,84 +472,120 @@ export const detectLowerCaseStringInArray = (
   sourceString: string,
   destArr: string[]
 ) => {
-
-  if(destArr.length === 0) return false 
+  if (destArr.length === 0) return false;
 
   return destArr.some(
     (item) => item.toLowerCase() === sourceString.toLowerCase()
   );
 };
 
-export const detectMediaRecordApiType = (detailObj : MediaApi) => {
-  return detailObj.media_type[0].typeCode === "VIDEO" ? MEDIA_TYPE_VIDEO :
-    detailObj.media_type[0].typeCode === "IMAGE" ? MEDIA_TYPE_IMAGE :
-      detailObj.media_type[0].typeCode === "3DMODEL" ? MEDIA_TYPE_3D :
-  MEDIA_TYPE_IMAGE
-}
-export const detectLibraryRecordApiType = (detailObj : MediaApi2) => {
-  return detailObj.media_type[0].typeCode === "VIDEO" ? MEDIA_TYPE_VIDEO :
-  detailObj.media_type[0].typeCode === "IMAGE" ? MEDIA_TYPE_IMAGE : MEDIA_TYPE_3D
-}
+export const detectMediaRecordApiType = (detailObj: MediaApi) => {
+  return detailObj.media_type[0].typeCode === "VIDEO"
+    ? MEDIA_TYPE_VIDEO
+    : detailObj.media_type[0].typeCode === "IMAGE"
+    ? MEDIA_TYPE_IMAGE
+    : detailObj.media_type[0].typeCode === "3DMODEL"
+    ? MEDIA_TYPE_3D
+    : MEDIA_TYPE_IMAGE;
+};
+export const detectLibraryRecordApiType = (detailObj: MediaApi2) => {
+  if (!detailObj.media_type) return MEDIA_TYPE_IMAGE;
 
-export const MEDIA_TYPE_IMAGE = "image"
-export const MEDIA_TYPE_VIDEO = "video"
-export const MEDIA_TYPE_3D = "3d"
+  return detailObj.media_type[0].typeCode === "VIDEO"
+    ? MEDIA_TYPE_VIDEO
+    : detailObj.media_type[0].typeCode === "IMAGE"
+    ? MEDIA_TYPE_IMAGE
+    : MEDIA_TYPE_3D;
+};
+
+export const MEDIA_TYPE_IMAGE = "image";
+export const MEDIA_TYPE_VIDEO = "video";
+export const MEDIA_TYPE_3D = "3d";
 
 export const detectMediaRecordType = (record: Media) => {
-  return record.attributes.media_type.data[0].attributes.typeCode === "VIDEO" ? MEDIA_TYPE_VIDEO :
-  record.attributes.media_type.data[0].attributes.typeCode === "IMAGE" ? MEDIA_TYPE_IMAGE : MEDIA_TYPE_3D
-}
+  return record.attributes.media_type.data[0].attributes.typeCode === "VIDEO"
+    ? MEDIA_TYPE_VIDEO
+    : record.attributes.media_type.data[0].attributes.typeCode === "IMAGE"
+    ? MEDIA_TYPE_IMAGE
+    : MEDIA_TYPE_3D;
+};
 
 export const isImagePathInvalid = (value: string) => {
-  return value.toLowerCase().indexOf('undefined') !== -1 || value.toLowerCase().indexOf('null') !== -1
-}
+  return (
+    value.toLowerCase().indexOf("undefined") !== -1 ||
+    value.toLowerCase().indexOf("null") !== -1
+  );
+};
 
 export const detectMediaTypeFromMediaAssociate = (obj: MediaAssociateObj) => {
-
-  if(obj.media_unique_id.media_type[0].typeCode === "IMAGE") {
-    return MEDIA_TYPE_IMAGE
-  }else if(obj.media_unique_id.media_type[0].typeCode === "VIDEO") {
-    return MEDIA_TYPE_VIDEO
-  } else if(obj.media_unique_id.media_type[0].typeCode === "3DMODEL") {
-    return MEDIA_TYPE_3D
-  } else return MEDIA_TYPE_IMAGE
-
-}
+  if (obj.media_unique_id.media_type[0].typeCode === "IMAGE") {
+    return MEDIA_TYPE_IMAGE;
+  } else if (obj.media_unique_id.media_type[0].typeCode === "VIDEO") {
+    return MEDIA_TYPE_VIDEO;
+  } else if (obj.media_unique_id.media_type[0].typeCode === "3DMODEL") {
+    return MEDIA_TYPE_3D;
+  } else return MEDIA_TYPE_IMAGE;
+};
 export const detectMediaTypeFromMediaAssociateGraphQlRes = (obj: any) => {
-  if(obj.media_unique_id?.data?.attributes?.media_type?.data[0].attributes.typeCode === "IMAGE") {
-    return MEDIA_TYPE_IMAGE
-  }else if(obj?.media_unique_id?.data?.attributes?.media_type?.data[0].attributes.typeCode === "VIDEO") {
-    return MEDIA_TYPE_VIDEO
-  } else if(obj?.media_unique_id?.data?.attributes?.media_type?.data[0].attributes.typeCode === "3DMODEL") {
-    return MEDIA_TYPE_3D
-  } else return MEDIA_TYPE_IMAGE
-
-}
+  if (
+    obj.media_unique_id?.data?.attributes?.media_type?.data[0].attributes
+      .typeCode === "IMAGE"
+  ) {
+    return MEDIA_TYPE_IMAGE;
+  } else if (
+    obj?.media_unique_id?.data?.attributes?.media_type?.data[0].attributes
+      .typeCode === "VIDEO"
+  ) {
+    return MEDIA_TYPE_VIDEO;
+  } else if (
+    obj?.media_unique_id?.data?.attributes?.media_type?.data[0].attributes
+      .typeCode === "3DMODEL"
+  ) {
+    return MEDIA_TYPE_3D;
+  } else return MEDIA_TYPE_IMAGE;
+};
 export const detectMediaTypeFromMediaList = (obj: Media) => {
   // attributes.media_type.data[0].attributes.typeCode
-  if(obj.attributes.media_type.data[0].attributes.typeCode === "IMAGE") {
-    return MEDIA_TYPE_IMAGE
-  }else if(obj.attributes.media_type.data[0].attributes.typeCode === "VIDEO") {
-    return MEDIA_TYPE_VIDEO
-  } else if(obj.attributes.media_type.data[0].attributes.typeCode === "3DMODEL") {
-    return MEDIA_TYPE_3D
-  } else return MEDIA_TYPE_IMAGE
-
-}
+  if (obj.attributes.media_type.data[0].attributes.typeCode === "IMAGE") {
+    return MEDIA_TYPE_IMAGE;
+  } else if (
+    obj.attributes.media_type.data[0].attributes.typeCode === "VIDEO"
+  ) {
+    return MEDIA_TYPE_VIDEO;
+  } else if (
+    obj.attributes.media_type.data[0].attributes.typeCode === "3DMODEL"
+  ) {
+    return MEDIA_TYPE_3D;
+  } else return MEDIA_TYPE_IMAGE;
+};
 
 export const toFixedFromString = (value: string | number, decimals: number) => {
-  if(typeof value === 'string')  return parseFloat(value).toFixed(decimals)
-  if(typeof value === 'number')  return value.toFixed(decimals)
-  return ''
-}
+  if (typeof value === "string") return parseFloat(value).toFixed(decimals);
+  if (typeof value === "number") return value.toFixed(decimals);
+  return "";
+};
 
-export const getSingleInventoryNameFromTabName= (value: tabNameProps) => {
+export const getSingleInventoryNameFromTabName = (value: tabNameProps) => {
+  let newValue: string = value;
 
-  let newValue:string = value
-
-  if(newValue.charAt(newValue.length-1).toLowerCase() === 's' ){
-    newValue = newValue.substring(0, newValue.length-1)
+  if (newValue.charAt(newValue.length - 1).toLowerCase() === "s") {
+    newValue = newValue.substring(0, newValue.length - 1);
   }
 
-  return newValue
-}
+  return newValue;
+};
+
+export const isRecordHavingAssociations = (record: Media) => {
+
+  if(!record) return false
+  
+  if(
+    record?.attributes?.media_associate?.data?.attributes?.place_unique_ids &&
+    record?.attributes?.media_associate?.data?.attributes?.place_unique_ids
+      ?.data &&
+    record?.attributes?.media_associate?.data?.attributes?.place_unique_ids
+      ?.data?.length > 0
+  ) {
+    return true;
+  } else return false;
+};

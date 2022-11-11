@@ -24,6 +24,7 @@ import client from '../../../utils/services/axiosClient';
 import { baseUrl } from '../../../utils/services/helpers';
 import { exportCsvImagesZip } from '../../../utils/export-import/export-csv-images-zip';
 import ExportModal from '../../ExportModal';
+import Loader from '../../Common/Loader';
 
 const MediaTab = () => {
     const { selectedCardIndex, media, mediaMetaData, totalCounts } = useSelector(
@@ -41,6 +42,13 @@ const MediaTab = () => {
     }, [selectedCardIndex])
 
     const { openStates, toggleOpenStates } = useToggledView({ count: 2 })
+
+    if(!media && !loading) {
+      return <>Cant fetch media</>
+    }
+    if(loading) {
+      return <><Loader/></>
+    }
     
     /* event handlers */
   const exportMedia = async () => {

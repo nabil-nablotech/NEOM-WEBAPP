@@ -8,13 +8,13 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setActiveLibraryItem, setActiveLibraryItemIndex, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
+import { setActiveLibraryItem, setActiveLibraryItemIndex, setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
 import useLibraryDetails from '../../../../hooks/useLibraryDetails';
-import { baseUrl, detectLibraryRecordApiType, LIBRARY_TAB_NAME, MEDIA_TYPE_IMAGE } from '../../../../utils/services/helpers';
+import { baseUrl, detectLibraryRecordApiType, isRecordHavingAssociations, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, MEDIA_TYPE_IMAGE } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import BlankDocImage from '../../../../assets/images/searchResults/BlankDocument.svg' 
@@ -36,10 +36,10 @@ const LibraryDetailsPage = ({
     handleClose
 }: LibraryDetailsPageProps) => {
 
-    const { places } = useSelector(
+    const { library } = useSelector(
         (state: RootState) => state.searchResults
     );
-
+    const dispatch = useDispatch()
     const { data: libraryDetails, setEdit } = useLibraryDetails();
 
     const locationRef = window.location.href
@@ -51,8 +51,7 @@ const LibraryDetailsPage = ({
     const { description, title, id, referenceURL, citation,
 
     } = libraryDetails
-
-
+    
     const menuItems = [
         {
             label: "Edit",
@@ -64,8 +63,16 @@ const LibraryDetailsPage = ({
         {
             label: "Delete",
             action: () => {
-                // dispatch(toggleDeleteConfirmationWindowOpen(true))
-                // dispatch(setDeleteItemType(LIBRARY_TAB_NAME))
+                dispatch(toggleDeleteConfirmationWindowOpen({
+                    flag: true,
+                    isAssociatedToPlacesOrEvents: library ? isRecordHavingAssociations(
+                        library.filter(item => item?.id === data?.library_unique_id?.id?.toString())[0]
+                    ) : false,
+                }))
+                dispatch(setDeleteItemType(LIBRARY_TAB_NAME))
+                dispatch(setDeletePayload({
+                    id: parseInt(libraryDetails.id)
+                }))
             },
         },
     ]
@@ -78,7 +85,6 @@ const LibraryDetailsPage = ({
         // onChange: handleChange,
         // defaultFileList: defaultImages
     };
-
 
     return <>
         <Box component="div" className={`${styles['details-page-wrapper']}`}>
@@ -96,12 +102,20 @@ const LibraryDetailsPage = ({
                                 (libraryDetails?.object?.url.indexOf('.pdf') !== -1)
                             ) ?
                                 <>
-                                    <embed
+                                {/* For now, show blank document
+                                    Need to find how to render pdf preview */}
+                                    {/* <embed
                                         type="application/pdf"
                                         src={`${baseUrl}${libraryDetails.object.url}`}
                                         style={{
                                             width: '100%'
                                         }}
+                                    /> */}
+                                     <Box
+                                        component="img"
+                                        src={BlankDocImage}
+                                        alt={""}
+                                        className={`${styles['blank-doc-image']}`}
                                     />
                                     {/* <div
                                         style={{
@@ -254,7 +268,7 @@ export const LibraryDetailsModal = () => {
     }
 
     if (!libraryLoading && !libraryDetails) {
-        return <div>Cant fetch media</div>
+        return <div>Cant fetch library item details</div>
     }
 
     if (!libraryDetails) {
@@ -269,7 +283,6 @@ export const LibraryDetailsModal = () => {
         navigate(`/search-results/Library`, { replace: true, state: null })
     }
 
-    // console.log('hex: ', libraryDetails)
 
     return <>
         <CustomModal

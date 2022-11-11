@@ -20,7 +20,7 @@ const useMedia = () => {
 
   const {searchText, media: mediaItem, associatedPlaces, associatedEvents,
     addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized,
-    showEditSuccess } = useSelector((state: RootState) => state.searchResults);
+    showEditSuccess, deleteItemSuccess, deleteItemType, showAddSuccess } = useSelector((state: RootState) => state.searchResults);
   const {search} = useLocation();
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
@@ -44,7 +44,11 @@ const useMedia = () => {
   };
 
   const [createMediaMutation, { error: addErr, data: addData }] = useMutation(addLibrary, graphQlHeaders());
-  const [updateMediaMutation, { data: updateData, reset }] = useMutation(updateMedia, graphQlHeaders());
+  const [updateMediaMutation, { data: updateData, reset }] = useMutation(updateMedia, {context: graphQlHeaders().context, onCompleted: () => {
+    if (associatedEvents.length == 0 && associatedPlaces.length == 0) {
+      dispatch(toggleShowEditSuccess(true));
+    }
+  }});
   const [createMediaAssociateMutation, { data: mediaAssociate }] = useMutation(createMediaAssociate, graphQlHeaders());
   const [updateMediaAssociateMutation, { data: updateMediaAssociateData }] = useMutation(updateMediaAssociate, graphQlHeaders());
 
@@ -68,15 +72,16 @@ const useMedia = () => {
   /**
    * fetch places with two words
    */
-  const { loading: refineLoading, error: refineErrorData, data: refineMediaData, refetch: refineSearchMedia, } = useQuery(refineMedia);
+  const { loading: refineLoading, error: refineErrorData, data: refineMediaData, refetch: refineSearchMedia, } = useQuery(refineMedia, graphQlHeaders());
 
   useEffect(() => {
+
     if (updateMediaAssociateData || (updateData && mediaAssociate)) {
       if(!showEditSuccess) {
         dispatch(toggleShowEditSuccess(true))
       }
     }
-  }, [updateMediaAssociateData, mediaAssociate])
+  }, [updateMediaAssociateData, mediaAssociate, updateData])
 
   useEffect(() => {
     if (refineMediaData?.medias) {
@@ -235,6 +240,20 @@ const useMedia = () => {
 
     }
   }, [confirmOpenEdit])
+
+  useEffect(() => {
+    /** refresh list */
+    if (showAddSuccess) {
+      fetchData(0)
+    }
+  }, [showAddSuccess])
+
+  useEffect(() => {
+    /** get latest list after deleting item */
+    if (deleteItemSuccess && (deleteItemType === "Media")) {
+      fetchData(0)
+    }
+  }, [deleteItemSuccess, deleteItemType])
 
   const openEditFlow = async (payload: any) => {
     if (payload) {
