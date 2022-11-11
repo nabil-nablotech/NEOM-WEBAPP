@@ -52,7 +52,6 @@ const LibraryDetailsPage = ({
 
     } = libraryDetails
 
-
     const menuItems = [
         {
             label: "Edit",
@@ -85,7 +84,6 @@ const LibraryDetailsPage = ({
         // defaultFileList: defaultImages
     };
 
-
     return <>
         <Box component="div" className={`${styles['details-page-wrapper']}`}>
             <Box component="div">
@@ -102,12 +100,20 @@ const LibraryDetailsPage = ({
                                 (libraryDetails?.object?.url.indexOf('.pdf') !== -1)
                             ) ?
                                 <>
-                                    <embed
+                                {/* For now, show blank document
+                                    Need to find how to render pdf preview */}
+                                    {/* <embed
                                         type="application/pdf"
                                         src={`${baseUrl}${libraryDetails.object.url}`}
                                         style={{
                                             width: '100%'
                                         }}
+                                    /> */}
+                                     <Box
+                                        component="img"
+                                        src={BlankDocImage}
+                                        alt={""}
+                                        className={`${styles['blank-doc-image']}`}
                                     />
                                     {/* <div
                                         style={{

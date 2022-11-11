@@ -127,6 +127,7 @@ const useLibrary = () => {
   }, [addData, updateData])
 
   useEffect(() => {
+
     if (mediaAssociate && addData) {
       dispatch(storeAddItemProgressState(null));
       
@@ -139,7 +140,8 @@ const useLibrary = () => {
       resetUpdateLibrary();
       dispatch(toggleShowEditSuccess(true));
     }
-  }, [mediaAssociate])
+
+  }, [mediaAssociate, updateData, addData])
   
   const fetchData = (skip: number = libItem.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);

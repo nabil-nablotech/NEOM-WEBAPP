@@ -78,9 +78,12 @@ const useEvent = () => {
   const [createEventMuation, { loading, error, data }] = useMutation(addEvent, graphQlHeaders());
   const [updateEventMuation, { loading: updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateEvent, {context: graphQlHeaders().context, onCompleted: () => {
     dispatch(setEventEdit(false))
-    dispatch(toggleShowEditSuccess(false));
+    // dispatch(toggleShowEditSuccess(false));
     /** re-direct */
-    navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
+    if(updateData.updateVisit) {
+
+      navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
+    }
 
   }});
   const [createVisitAssociateMuation, { loading: visitAssociateload, error: visitAssociateErr, data: visitAssociate }] = useMutation(createVisitAssociate, graphQlHeaders());
