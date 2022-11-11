@@ -64,7 +64,8 @@ const usePlaceDetails = () => {
       (tabName === PLACES_TAB_NAME )&&
       deleteItemSuccess && (
         deleteItemType === "Events" ||
-        deleteItemType === "Library"
+        deleteItemType === "Library" || 
+        deleteItemType === "Media"
       )
     ) {
       fetchPlaceDetails(uniqueId)
