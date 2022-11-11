@@ -27,13 +27,12 @@ import ExportModal from '../../ExportModal';
 import Loader from '../../Common/Loader';
 
 const MediaTab = () => {
-    // const { selectedCardIndex, media, mediaMetaData, totalCounts } = useSelector(
-    const { selectedCardIndex, mediaMetaData, totalCounts } = useSelector(
+    const { selectedCardIndex, media, mediaMetaData, totalCounts } = useSelector(
         (state: RootState) => state.searchResults
     );
     const [img, setimg] = useState(MapImg1);
 
-    const { fetchMediaItems, hasMoreData, loading, setEdit,searchData, data: media } = useMedia();
+    const { fetchMediaItems, hasMoreData, loading, setEdit,searchData } = useMedia();
     const [open, setOpen] = React.useState(false);
     const [filter, setFilter] = React.useState(null);
 
@@ -50,7 +49,6 @@ const MediaTab = () => {
     if(loading) {
       return <><Loader/></>
     }
-    console.log('hex:mediaDetails: ',media )
     
     /* event handlers */
   const exportMedia = async () => {
@@ -157,7 +155,7 @@ const MediaTab = () => {
                         <GridView />
                     </Grid>} */}
                     {openStates[0] && <Grid item xl={12}>
-                        <GridView totalData={meta?.pagination?.total} loading={loading} data={media && media.medias.data} fetchData={fetchMediaItems} hasMoreData={hasMoreData} setEdit={setEdit} />
+                        <GridView totalData={meta?.pagination?.total} loading={loading} data={media} fetchData={fetchMediaItems} hasMoreData={hasMoreData} setEdit={setEdit} />
                     </Grid>}
                     {/* To-do: map view */}
                     {/* <Grid item xl={6} lg={6} md={7} sm={7}>
@@ -168,7 +166,7 @@ const MediaTab = () => {
                         <Box component={'div'} style={{
                             width: '100%'
                         }}>
-                            <ListView loading={loading} data={media && media.medias.data} fetchData={fetchMediaItems} hasMoreData={hasMoreData} setEdit={setEdit} />
+                            <ListView loading={loading} data={media} fetchData={fetchMediaItems} hasMoreData={hasMoreData} setEdit={setEdit} />
                         </Box>
                     }
                 </Grid>
