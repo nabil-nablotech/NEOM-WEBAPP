@@ -56,7 +56,6 @@ const useLibraryDetails = () => {
     if (payload) {
 
       const { record, type } = payload;
-      console.log('record', record)
       let res: any | MediaApi = {};
 
       res = await libraryDetails(record.uniqueId);
