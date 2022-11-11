@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Menu, MenuItem } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Media } from "../../../../types/Media";
-import { setDeleteItemType, toggleDeleteConfirmationWindowOpen } from "../../../../store/reducers/searchResultsReducer";
+import { setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from "../../../../store/reducers/searchResultsReducer";
 import { isRecordHavingAssociations, MEDIA_TAB_NAME } from "../../../../utils/services/helpers";
 import { useDispatch } from "react-redux";
 
@@ -51,6 +51,9 @@ export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payloa
               isAssociatedToPlacesOrEvents: isRecordHavingAssociations(record),
             }))
             dispatch(setDeleteItemType(MEDIA_TAB_NAME))
+            dispatch(setDeletePayload({
+              id: typeof record.id === 'string' ? parseInt(record.id) : record.id
+            }))
           }}
         >Delete</MenuItem>
       </Menu>

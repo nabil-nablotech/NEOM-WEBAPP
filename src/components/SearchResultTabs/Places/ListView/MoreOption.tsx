@@ -74,10 +74,6 @@ const MoreOptionsComponent = ({
                         }))
                         dispatch(setDeleteItemType(type === "Library" ? LIBRARY_TAB_NAME : PLACES_TAB_NAME))
                         dispatch(setDeletePayload({
-                            visit_associates_id: [], 
-                            media_associates_id: record?.attributes?.media_associates?.data.map((item: any) => item?.attributes?.media_unique_id?.data?.id),
-                            remark_headers_id: [],
-                            visit: [],
                             id: record.id
                         }))
                         

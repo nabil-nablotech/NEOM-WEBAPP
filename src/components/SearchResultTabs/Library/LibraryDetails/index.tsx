@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setActiveLibraryItem, setActiveLibraryItemIndex, setDeleteItemType, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
+import { setActiveLibraryItem, setActiveLibraryItemIndex, setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
@@ -69,6 +69,9 @@ const LibraryDetailsPage = ({
                     isAssociatedToPlacesOrEvents: false,
                 }))
                 dispatch(setDeleteItemType(LIBRARY_TAB_NAME))
+                dispatch(setDeletePayload({
+                    id: parseInt(libraryDetails.id)
+                }))
             },
         },
     ]

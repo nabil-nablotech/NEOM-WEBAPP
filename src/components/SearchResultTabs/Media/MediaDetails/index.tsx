@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setActiveMediaItemIndex, setActiveMediaItem, toggleDeleteConfirmationWindowOpen, setDeleteItemType } from '../../../../store/reducers/searchResultsReducer';
+import { setActiveMediaItemIndex, setActiveMediaItem, toggleDeleteConfirmationWindowOpen, setDeleteItemType, setDeletePayload } from '../../../../store/reducers/searchResultsReducer';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import RenderFileData from '../../../RenderFileData';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
@@ -211,6 +211,9 @@ const MediaDetailsPage = ({
                     isAssociatedToPlacesOrEvents: false,
                 }))
                 dispatch(setDeleteItemType(MEDIA_TAB_NAME))
+                dispatch(setDeletePayload({
+                    id: typeof mediaDetails.id === 'string' ? parseInt(mediaDetails.id) : mediaDetails.id
+                }))
             },
         },
     ]
