@@ -210,7 +210,7 @@ function UserMenuComponent() {
         {
           (
             isEditConfirmationWindowOpen ||
-            isDeleteConfirmationWindowOpen
+            isDeleteConfirmationWindowOpen.flag
           ) &&
           <ConfirmationModal
             type={
@@ -220,20 +220,26 @@ function UserMenuComponent() {
             }
             open={
               isEditConfirmationWindowOpen ||
-              isDeleteConfirmationWindowOpen
+              isDeleteConfirmationWindowOpen.flag
             }
             handleClose={() => {
               if(isEditConfirmationWindowOpen) {
                 dispatch(toggleEditConfirmationWindowOpen(false))
               }
-              if(isDeleteConfirmationWindowOpen) {
-                dispatch(toggleDeleteConfirmationWindowOpen(false))
+              if(isDeleteConfirmationWindowOpen.flag) {
+                dispatch(toggleDeleteConfirmationWindowOpen({
+                  flag: false,
+                  isAssociatedToPlacesOrEvents: false,
+              }))
               }
               dispatch(setDeletePayload(null))
             }}
             handleDelete={
               async () => {
-                dispatch(toggleDeleteConfirmationWindowOpen(false))
+                dispatch(toggleDeleteConfirmationWindowOpen({
+                  flag: false,
+                  isAssociatedToPlacesOrEvents: false,
+                }))
                 dispatch(toggleDeleteItemSuccess(true))
 
 

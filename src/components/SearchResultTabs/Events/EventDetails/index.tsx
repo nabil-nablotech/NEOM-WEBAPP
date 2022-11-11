@@ -217,7 +217,10 @@ const EventDetailsPage = () => {
         {
             label: "Delete",
             action: () => {
-                dispatch(toggleDeleteConfirmationWindowOpen(true))
+                dispatch(toggleDeleteConfirmationWindowOpen({
+                    flag: true,
+                    isAssociatedToPlacesOrEvents: false,
+                }))
                 dispatch(setDeleteItemType(EVENTS_TAB_NAME))
                 // console.log('hex: ', eventDetails)
                 dispatch(setDeletePayload({

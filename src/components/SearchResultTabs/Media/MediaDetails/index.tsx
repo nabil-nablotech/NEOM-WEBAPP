@@ -206,7 +206,10 @@ const MediaDetailsPage = ({
         {
             label: "Delete",
             action: () => {
-                dispatch(toggleDeleteConfirmationWindowOpen(true))
+                dispatch(toggleDeleteConfirmationWindowOpen({
+                    flag: true,
+                    isAssociatedToPlacesOrEvents: false,
+                }))
                 dispatch(setDeleteItemType(MEDIA_TAB_NAME))
             },
         },

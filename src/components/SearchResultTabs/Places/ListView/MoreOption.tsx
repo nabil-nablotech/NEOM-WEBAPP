@@ -8,7 +8,7 @@ import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { Media } from '../../../../types/Media';
 import { useDispatch } from 'react-redux';
 import { setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
-import { PLACES_TAB_NAME } from '../../../../utils/services/helpers';
+import { LIBRARY_TAB_NAME, PLACES_TAB_NAME } from '../../../../utils/services/helpers';
 import { deleteRecord } from '../../../../api/delete';
 
 const superEditor = getRole() === 'SuperEditor';
@@ -68,8 +68,11 @@ const MoreOptionsComponent = ({
                 <MenuItem key={2}
                     onClick={(e) => {
                         e.stopPropagation();
-                        dispatch(toggleDeleteConfirmationWindowOpen(true))
-                        dispatch(setDeleteItemType(PLACES_TAB_NAME))
+                        dispatch(toggleDeleteConfirmationWindowOpen({
+                            flag: true,
+                            isAssociatedToPlacesOrEvents: false,
+                        }))
+                        dispatch(setDeleteItemType(type === "Library" ? LIBRARY_TAB_NAME : PLACES_TAB_NAME))
                         dispatch(setDeletePayload({
                             visit_associates_id: [], 
                             media_associates_id: record?.attributes?.media_associates?.data.map((item: any) => item?.attributes?.media_unique_id?.data?.id),

@@ -65,7 +65,10 @@ const MoreOptionsComponent = ({
                 <MenuItem key={2}
                     onClick={(e) => {
                         e.stopPropagation();
-                        dispatch(toggleDeleteConfirmationWindowOpen(true))
+                        dispatch(toggleDeleteConfirmationWindowOpen({
+                            flag: true,
+                            isAssociatedToPlacesOrEvents: false,
+                        }))
                         dispatch(setDeleteItemType(EVENTS_TAB_NAME))
 
                         // console.log('hex: ', record)

@@ -10,7 +10,7 @@ import { toggleConfirmOpenEdit } from '../../store/reducers/searchResultsReducer
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { tabNameProps } from '../../types/SearchResultsTabsProps';
-import { EVENTS_TAB_NAME, getSingleInventoryNameFromTabName, MEDIA_TAB_NAME, PLACES_TAB_NAME } from '../../utils/services/helpers';
+import { EVENTS_TAB_NAME, getSingleInventoryNameFromTabName, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME } from '../../utils/services/helpers';
 import { useState, useEffect } from 'react';
 import parse from 'html-react-parser';
 
@@ -43,7 +43,10 @@ const DeleteInventoryForm = ({
 
 
     useEffect(() => {
-        if (deleteItemType !== MEDIA_TAB_NAME) {
+        if (
+            (deleteItemType !== MEDIA_TAB_NAME) &&
+            (deleteItemType !== LIBRARY_TAB_NAME)
+        ) {
             confirmAllChecked(checkList)
         } else {
             checkEnabled(true)
@@ -52,7 +55,10 @@ const DeleteInventoryForm = ({
 
     useEffect(() => {
 
-        if (deleteItemType !== MEDIA_TAB_NAME) {
+        if (
+            (deleteItemType !== MEDIA_TAB_NAME) &&
+            (deleteItemType !== LIBRARY_TAB_NAME)
+        ) {
             confirmAllChecked(checkList)
         } else {
             checkEnabled(true)
@@ -121,14 +127,6 @@ const DeleteInventoryForm = ({
         </>
     }
 
-    if (deleteItemType === MEDIA_TAB_NAME) {
-        return <>
-            <Box component="div" className={`${modalStyles[`sentence-Delete`]}`}>
-                Are you sure you want to delete this item? This action cannot be undone.
-            </Box>
-        </>
-    }
-
     return <></>
 
 }
@@ -140,7 +138,7 @@ export const ConfirmationModal = ({
 }: ConfirmationModalTypes) => {
     const dispatch = useDispatch()
     let { tabName } = useParams<{ tabName?: tabNameProps }>();
-    const { isDeleteUserWindowOpen } = useSelector((state: RootState) => state.searchResults);
+    const { isDeleteUserWindowOpen, deleteItemType, isDeleteConfirmationWindowOpen } = useSelector((state: RootState) => state.searchResults);
 
 
     const [enabledFlag, setEnabledFlag] = useState<boolean>(false)
@@ -169,8 +167,17 @@ export const ConfirmationModal = ({
                     alignItems: 'flex-end',
                 }}>
                     <Grid item className={`${modalStyles['title']}`}>
-                        {`${modalTypeEdit ? 'Edit' : (modalTypeDelete || modalTypeDeleteUser) ? 'Delete' :  'Logout'}` +
-                        ` ${modalTypeDeleteUser ? 'User' : tabName ? getSingleInventoryNameFromTabName(tabName) : ''}`}
+                        {`${
+                            modalTypeEdit ? 'Edit' : (modalTypeDelete || modalTypeDeleteUser) ? 'Delete' : 'Logout'
+                        }${ 
+                            modalTypeDeleteUser ? ' User' : ''
+                        }${
+                            (deleteItemType && !modalTypeDeleteUser) ?
+                            ` ${getSingleInventoryNameFromTabName(deleteItemType)
+                            }${
+                                deleteItemType === "Library" || deleteItemType === "Media" ? " Item" : ""
+                            }` : ''
+                        }`}
                     </Grid>
                     <Grid item sm={1}>
                         <CloseIcon fontSize="large"
@@ -181,21 +188,29 @@ export const ConfirmationModal = ({
                         />
                     </Grid>
                 </Grid>
-                <Box component="div" className={`${modalStyles[`sentence-${modalTypeEdit ? 'Edit' : (modalTypeDelete || modalTypeDeleteUser) ? 'Delete' : 'Logout'}`]}`}>
+                <Box component="div" className={`${modalStyles['sentence-wrapper']}`}>
                     {
-                        modalTypeEdit ?
-                            `You already have new item being added . Are you sure you still want to edit this item ?` :
-                            modalTypeDelete ?
-                                `Are you sure you want to delete this item? This action cannot be undone.` :
-                                modalTypeDeleteUser ?
-                                    parse(`<span style="font-weight: bold;">${isDeleteUserWindowOpen?.mailId}</span> will be deleted and will no longer have access to the platform`) : 
-                                `Are you sure you want to logout? This action cannot be undone.`
+                        isDeleteConfirmationWindowOpen.isAssociatedToPlacesOrEvents &&
+                        <Box component="div" className={`${modalStyles[`sentence`]}`} style={{ color: 'var(--orange-shade)' }}>
+                            This item is associated with multiple places and/or visits.
+                        </Box>
+                    }
+                    <Box component="div" className={`${modalStyles[`sentence-${modalTypeEdit ? 'Edit' : (modalTypeDelete || modalTypeDeleteUser) ? 'Delete' : 'Logout'}`]}`}>
+                        {
+                            modalTypeEdit ?
+                                `You already have new item being added . Are you sure you still want to edit this item ?` :
+                                modalTypeDelete ?
+                                    `Are you sure you want to delete this item? This action cannot be undone.` :
+                                    modalTypeDeleteUser ?
+                                        parse(`<span style="font-weight: bold;">${isDeleteUserWindowOpen?.mailId}</span> will be deleted and will no longer have access to the platform`) :
+                                        ``
+                        }
+                    </Box>
+                    {
+                        modalTypeDelete &&
+                        <DeleteInventoryForm checkEnabled={(val) => setEnabledFlag(val)} />
                     }
                 </Box>
-                {
-                    modalTypeDelete &&
-                    <DeleteInventoryForm checkEnabled={(val) => setEnabledFlag(val)} />
-                }
                 <Box
                     component="div"
                     className={`${modalStyles['btn-row']}`}
