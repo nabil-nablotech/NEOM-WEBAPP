@@ -121,6 +121,7 @@ const LibraryTab = () => {
     {
       title: "",
       key: "action",
+      dataIndex: "id",
       fixed: "right",
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (

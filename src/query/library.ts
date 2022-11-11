@@ -204,9 +204,19 @@ query RefinedLibrarySearch(
             attributes {
               place_unique_ids{
                 data {
+                  id
                   attributes {
                     placeNameArabic
                     placeNameEnglish
+                  }
+                }
+              }
+              visit_unique_ids {
+                data {
+                  id
+                  attributes {
+                    visitDate 
+                    visitNumber
                   }
                 }
               }

@@ -227,6 +227,7 @@ query RefineSearchEvent(
                 data {
                   attributes {
                     videoType
+                    deleted
                     media_type {
                       data {
                         attributes {

@@ -97,106 +97,115 @@ export const media = gql`
 `;
 
 export const refineMedia = gql`
-  query RefinedMediaSearch(
-    $text: JSON
-    $search_one: String
-    $search_two: String
-    $search_three: String
-    $latitude: Float
-    $longitude: Float
-    $featuredImage: Boolean
-    $categoryType: JSON
-    $keywords: JSON
-    $limit: Int
-    $skip: Int
-  ) {
-    medias(
-      pagination: { limit: $limit, start: $skip }
-      filters: {
-        or: [
-          { description: { contains: $search_one } }
-          { title: { contains: $search_one } }
-          { fileName: { contains: $search_one } }
-          { citation: { contains: $search_one } }
-          { description: { contains: $search_two } }
-          { title: { contains: $search_two } }
-          { fileName: { contains: $search_two } }
-          { citation: { contains: $search_two } }
-          { description: { contains: $search_three } }
-          { title: { contains: $search_three } }
-          { fileName: { contains: $search_three } }
-          { citation: { contains: $search_three } }
-          { keywords: { contains: $text } }
-        ]
-        and: [
-          { latitude: { gte: $latitude } }
-          { longitude: { lte: $longitude } }
-          { featuredImage: { eq: $featuredImage } }
-          { categoryType: { containsi: $categoryType } }
-          { media_type: { categoryCode: { containsi: "MEDIA" } } }
-          { keywords: { containsi: $keywords } }
-          {
-            deleted: {
-              eq: false
-            }
+query RefinedMediaSearch(
+  $text: JSON
+  $search_one: String
+  $search_two: String
+  $search_three: String
+  $latitude: Float
+  $longitude: Float
+  $featuredImage: Boolean
+  $categoryType: JSON
+  $keywords: JSON
+  $limit: Int
+  $skip: Int
+) {
+  medias(
+    pagination: { limit: $limit, start: $skip }
+    filters: {
+      or: [
+        { description: { contains: $search_one } }
+        { title: { contains: $search_one } }
+        { fileName: { contains: $search_one } }
+        { citation: { contains: $search_one } }
+        { description: { contains: $search_two } }
+        { title: { contains: $search_two } }
+        { fileName: { contains: $search_two } }
+        { citation: { contains: $search_two } }
+        { description: { contains: $search_three } }
+        { title: { contains: $search_three } }
+        { fileName: { contains: $search_three } }
+        { citation: { contains: $search_three } }
+        { keywords: { contains: $text } }
+      ]
+      and: [
+        { latitude: { gte: $latitude } }
+        { longitude: { lte: $longitude } }
+        { featuredImage: { eq: $featuredImage } }
+        { categoryType: { containsi: $categoryType } }
+        { media_type: { categoryCode: { containsi: "MEDIA" } } }
+        { keywords: { containsi: $keywords } }
+        {
+          deleted: {
+            eq: false
           }
-        ]
-      }
-      sort: "updatedAt:desc"
-    ) {
-      meta {
-        pagination {
-          total
-          pageCount
-          pageSize
-          page
         }
+      ]
+    }
+    sort: "updatedAt:desc"
+  ) {
+    meta {
+      pagination {
+        total
+        pageCount
+        pageSize
+        page
       }
-      data {
-        id
-        attributes {
-          keywords
-          description
-          title
-          fileName
-          citation
-          referenceURL
-          uniqueId
-          updatedAt
-          bearing
-          categoryType
-          latitude
-          longitude
-          featuredImage
-          videoType
-          media_type {
-            data {
-              attributes {
-                typeCode
-              }
+    }
+    data {
+      id
+      attributes {
+        keywords
+        description
+        title
+        fileName
+        citation
+        referenceURL
+        uniqueId
+        updatedAt
+        bearing
+        categoryType
+        latitude
+        longitude
+        featuredImage
+        videoType
+        media_type {
+          data {
+            attributes {
+              typeCode
             }
           }
-          imageMetadata {
-            fileSize
-          }
-          objectURL
-          object {
-            data {
-              id
-              attributes {
-                url
-              }
+        }
+        imageMetadata {
+          fileSize
+        }
+        objectURL
+        object {
+          data {
+            id
+            attributes {
+              url
             }
           }
-          media_associate {
-            data {
-              attributes {
-                place_unique_ids {
-                  data {
-                    attributes {
-                      placeNameArabic
-                      placeNameEnglish
-                    }
+        }
+        media_associate {
+          data {
+            attributes {
+              place_unique_ids {
+                data {
+                  id
+                  attributes {
+                    placeNameArabic
+                    placeNameEnglish
+                  }
+                }
+              }
+              visit_unique_ids {
+                data {
+                  id
+                  attributes {
+                    visitNumber
+                    visitDate
                   }
                 }
               }
@@ -206,6 +215,7 @@ export const refineMedia = gql`
       }
     }
   }
+}
 `;
 
 export const addMedia = gql`
