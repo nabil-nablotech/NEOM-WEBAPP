@@ -68,7 +68,7 @@ const useMedia = () => {
   /**
    * fetch places with two words
    */
-  const { loading: refineLoading, error: refineErrorData, data: refineMediaData, refetch: refineSearchMedia, } = useQuery(refineMedia);
+  const { loading: refineLoading, error: refineErrorData, data: refineMediaData, refetch: refineSearchMedia, } = useQuery(refineMedia, graphQlHeaders());
 
   useEffect(() => {
 
@@ -238,7 +238,6 @@ const useMedia = () => {
   }, [confirmOpenEdit])
 
   useEffect(() => {
-
     /** get latest list after deleting item */
     if (deleteItemSuccess && (deleteItemType === "Media")) {
       fetchData(0)

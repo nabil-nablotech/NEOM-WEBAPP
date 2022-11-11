@@ -38,6 +38,11 @@ query librarySearchList(
             }
           }
         }
+        {
+          deleted: {
+            eq: false
+          }
+        }
       ]
     }
   ) {
