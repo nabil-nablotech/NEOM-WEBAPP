@@ -10,11 +10,10 @@ import Button from "../../components/Button";
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { ExportRequestDataType } from '../../types/ExportRequestDataType';
-import { exportContentType } from '../../utils/export-import/export-content-type';
 import { exportCsvImagesZip } from '../../utils/export-import/export-csv-images-zip';
 import client from '../../utils/services/axiosClient';
 import { baseUrl } from '../../utils/services/helpers';
+import { Parser } from "json2csv";
 
 import qs from 'qs';
 
@@ -35,21 +34,33 @@ export default function ExportModal({open, setOpen, count, path, filter}:any) {
   const handleClose = () => setOpen(false);
   const exportData = async () => {
     try {
-      const requestData: ExportRequestDataType = {
-        collectionTypePlural: path,
-      };
-      if (filter) {
-        requestData.filter = qs.stringify(filter);
+      const response = await client.get(
+        `${baseUrl}/api/custom/${path}`,
+        { params: { filter: qs.stringify(filter), isAssets:isAssets } }
+      );
+      if (response?.data?.length > 0) {
+        const fields = Object.keys(response?.data[0]);
+        const opts = { fields,withBom:true,delimiter:"," };
+        const parser = new Parser(opts);
+        const csv = parser.parse(response?.data);
+        var a = window.document.createElement("a");
+        a.href = window.URL.createObjectURL(
+          new Blob([csv], { type: "text/csv" })
+        );
+        a.download = `export.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
       }
-      await exportContentType(requestData);
     } catch (err) {
       console.log(err);
     }
   }
+
   const exportAssestsDataZip = async () => {
     try {
         const response = await client.get(`${baseUrl}/api/custom/${path}`, {
-          params: { filter: qs.stringify(filter) },
+          params: { filter: qs.stringify(filter), isAssets:isAssets },
         });
         if(path === 'visits' || path === 'places'){
           const files: { fileName: string; fileUrl: string }[] = [];
