@@ -143,8 +143,7 @@ const MediaDetailsPage = ({
         // setMediaType("video")
         // setMediaType("3d")
 
-
-        if (mediaDetails) {
+        if (mediaDetails && (Object.keys(mediaDetails).length !== 0) ) {
             if (
                 detectMediaRecordApiType(mediaDetails) === MEDIA_TYPE_VIDEO
             ) {
