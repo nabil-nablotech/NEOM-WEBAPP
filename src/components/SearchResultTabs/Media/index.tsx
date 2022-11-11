@@ -17,12 +17,6 @@ import { RootState } from '../../../store';
 import { useToggledView } from './../../../hooks/useToggledView';
 import useMedia from '../../../hooks/useMedia';
 import { Meta } from '../../../types/Place';
-import { ExportRequestDataType } from '../../../types/ExportRequestDataType';
-import qs from 'qs';
-import { exportContentType } from '../../../utils/export-import/export-content-type';
-import client from '../../../utils/services/axiosClient';
-import { baseUrl } from '../../../utils/services/helpers';
-import { exportCsvImagesZip } from '../../../utils/export-import/export-csv-images-zip';
 import ExportModal from '../../ExportModal';
 import Loader from '../../Common/Loader';
 
