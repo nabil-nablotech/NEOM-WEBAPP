@@ -9,7 +9,8 @@ import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { MediaAssociateObj } from '../../../../types/Place';
 import { useDispatch } from 'react-redux';
 import { setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
-import { EVENTS_TAB_NAME } from '../../../../utils/services/helpers';
+import { EVENTS_TAB_NAME, LIBRARY_TAB_NAME, MEDIA_TAB_NAME } from '../../../../utils/services/helpers';
+import { useParams } from 'react-router-dom';
 
 const superEditor = getRole() === 'SuperEditor';
 const editor = getRole() === 'Editor';
@@ -20,7 +21,7 @@ const MoreOptionsComponent = ({
     setEdit
 }: {
     type: tabNameProps;
-    record: Event | Media | MediaAssociateObj;
+    record: any;
     setEdit: (payload: { record: Event | Media | MediaAssociateObj, type: tabNameProps }) => void
 }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -30,6 +31,7 @@ const MoreOptionsComponent = ({
         setAnchorEl(e.currentTarget);
     };
     const dispatch = useDispatch();
+    const { tabName } = useParams<{ tabName: tabNameProps }>();
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -65,14 +67,21 @@ const MoreOptionsComponent = ({
                 <MenuItem key={2}
                     onClick={(e) => {
                         e.stopPropagation();
+
                         dispatch(toggleDeleteConfirmationWindowOpen({
                             flag: true,
                             isAssociatedToPlacesOrEvents: false,
                         }))
-                        dispatch(setDeleteItemType(EVENTS_TAB_NAME))
+                        dispatch(setDeleteItemType(
+                            type === "Library" ? LIBRARY_TAB_NAME : MEDIA_TAB_NAME 
+                        ))
 
                         dispatch(setDeletePayload({
-                            id: typeof record.id === 'string' ? parseInt(record.id) : record.id
+                            id: tabName === EVENTS_TAB_NAME ? (
+                                type === "Media" ?  record?.media_unique_id?.id : 
+                                typeof record.id === 'string' ? parseInt(record.id) : record.id
+                            ) : record.id,
+                            
                         }))
                     }}
                 >

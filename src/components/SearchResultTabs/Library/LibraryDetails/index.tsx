@@ -51,7 +51,7 @@ const LibraryDetailsPage = ({
     const { description, title, id, referenceURL, citation,
 
     } = libraryDetails
-
+    
     const menuItems = [
         {
             label: "Edit",

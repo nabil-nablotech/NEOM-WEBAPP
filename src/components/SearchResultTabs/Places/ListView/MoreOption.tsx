@@ -8,8 +8,9 @@ import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { Media } from '../../../../types/Media';
 import { useDispatch } from 'react-redux';
 import { setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
-import { LIBRARY_TAB_NAME, PLACES_TAB_NAME } from '../../../../utils/services/helpers';
+import { EVENTS_TAB_NAME, LIBRARY_TAB_NAME, PLACES_TAB_NAME } from '../../../../utils/services/helpers';
 import { deleteRecord } from '../../../../api/delete';
+import { useParams } from 'react-router-dom';
 
 const superEditor = getRole() === 'SuperEditor';
 const editor = getRole() === 'Editor';
@@ -33,6 +34,7 @@ const MoreOptionsComponent = ({
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const { tabName} = useParams<{ tabName: tabNameProps }>();
 
     return (
         <>
@@ -72,9 +74,15 @@ const MoreOptionsComponent = ({
                             flag: true,
                             isAssociatedToPlacesOrEvents: false,
                         }))
-                        dispatch(setDeleteItemType(type === "Library" ? LIBRARY_TAB_NAME : PLACES_TAB_NAME))
+                        dispatch(setDeleteItemType(
+                            type === "Library" ? LIBRARY_TAB_NAME : type === "Events" ? EVENTS_TAB_NAME : PLACES_TAB_NAME
+                            ))
                         dispatch(setDeletePayload({
-                            id: record.id
+                            id: tabName === PLACES_TAB_NAME ? (
+                                (type === "Events") ? record?.visit_unique_id?.id : 
+                                (type === "Library") ? record?.media_unique_id?.id : record.id
+                            ) : record.id,
+                            
                         }))
                         
                     }}
