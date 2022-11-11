@@ -49,7 +49,7 @@ const useLibrary = () => {
   }
 
   const [createLibraryMutation, { loading: addLoading, error: addErr, data: addData, reset: resetLibrary }] = useMutation(addLibrary, graphQlHeaders());
-  const [updateLibraryMutation, { loading:updateLoading, error: updateErr, data: updateData, reset: resetUpdateLibrary }] = useMutation(updateLibrary, {context: graphQlHeaders(), onCompleted: () => {
+  const [updateLibraryMutation, { loading:updateLoading, error: updateErr, data: updateData, reset: resetUpdateLibrary }] = useMutation(updateLibrary, {context: graphQlHeaders().context, onCompleted: () => {
     if (associatedEvents.length == 0 || associatedPlaces.length == 0) {
       dispatch(toggleShowEditSuccess(true));
     }
@@ -200,7 +200,7 @@ const useLibrary = () => {
       object:payload?.object && payload?.object[0].id,
       fileSize: payload?.object && formatBytes(payload?.object[0]?.size),
       storage: payload?.object && payload?.object[0]?.provider,
-      dimension: payload?.object && `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
+      dimension: payload?.object && payload?.object[0]?.height && `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
       make: "",
       model: "",
       depth: "",

@@ -30,7 +30,7 @@ const useLibraryDetails = () => {
   /**
    * fetch with two words
    */
-  const { isLoading, error, data, mutate: fetchLibraryDetails } = useMutation('place-details', libraryDetails, {
+  const { isLoading, error, data, mutate: fetchLibraryDetails } = useMutation('library-details', libraryDetails, {
     retry: false
   });
 
@@ -56,6 +56,7 @@ const useLibraryDetails = () => {
     if (payload) {
 
       const { record, type } = payload;
+      console.log('record', record)
       let res: any | MediaApi = {};
 
       res = await libraryDetails(record.uniqueId);

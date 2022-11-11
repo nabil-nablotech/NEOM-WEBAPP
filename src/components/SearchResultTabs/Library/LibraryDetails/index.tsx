@@ -52,7 +52,6 @@ const LibraryDetailsPage = ({
 
     } = libraryDetails
 
-
     const menuItems = [
         {
             label: "Edit",
