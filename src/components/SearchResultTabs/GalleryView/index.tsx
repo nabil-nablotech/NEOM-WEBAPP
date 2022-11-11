@@ -8,7 +8,7 @@ import RenderFileData from "../../RenderFileData";
 import YellowStar from '../../../assets/images/searchResults/YellowStar.svg'
 import { CustomMoreOptionsComponent } from "../../CustomMoreOptionsComponent";
 import { useNavigate } from 'react-router-dom';
-import { baseUrl, detectMediaTypeFromMediaAssociate, MEDIA_TAB_NAME } from "../../../utils/services/helpers";
+import { baseUrl, detectMediaTypeFromMediaAssociate, isRecordHavingAssociations, MEDIA_TAB_NAME } from "../../../utils/services/helpers";
 import usePlaceDetails from "../../../hooks/usePlaceDetails";
 import Loader from "../../Common/Loader";
 import useEventDetails from "../../../hooks/useEventDetails";
@@ -47,7 +47,9 @@ const GalleryView = () => {
                     console.log('hex: ', data)
                     dispatch(toggleDeleteConfirmationWindowOpen({
                         flag: true,
-                        isAssociatedToPlacesOrEvents: false,
+                        isAssociatedToPlacesOrEvents: media ? isRecordHavingAssociations(
+                            media.filter(item => item?.id === data?.media_unique_id?.id?.toString())[0]
+                        ) : false,
                     }))
                     dispatch(setDeleteItemType(MEDIA_TAB_NAME))
                     dispatch(setDeletePayload({
