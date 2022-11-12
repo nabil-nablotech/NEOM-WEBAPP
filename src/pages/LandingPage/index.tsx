@@ -20,6 +20,8 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { setSearchText, setSearchApply } from "../../store/reducers/searchResultsReducer";
 import LandingPageImage from '../../assets/images/LandingPage.webp';
+import MediaIcon from '../../assets/icons/media.png';
+import EventIcon from '../../assets/icons/events.png';
 
 const landingPageData = {
   overlapGroup4:
@@ -138,10 +140,8 @@ function LandingPage() {
               </Frame2608168>
               <Frame2608169 onClick={(e) => handleClick(e, "Events")}>
                 <OverlapGroup5>
-                  <Vector
-                    src="https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d1b90bcf8144ac5b76937/img/vector@1x.png"
-                    alt="Vector"
-                  />
+                <Vector1 src={EventIcon} alt="Vector" />
+                 
                 </OverlapGroup5>
                 <OverlapGroup1>
                   <Text2>
@@ -160,7 +160,10 @@ function LandingPage() {
               </Frame2608169>
               <Frame2608170 onClick={(e) => handleClick(e, "Library")}>
                 <OverlapGroup5>
-                  <Vector1 src={vector2} alt="Vector" />
+                <Vector
+                    src="https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d1b90bcf8144ac5b76937/img/vector@1x.png"
+                    alt="Vector"
+                  />
                 </OverlapGroup5>
                 <OverlapGroup2>
                   <Number>
@@ -179,7 +182,7 @@ function LandingPage() {
               </Frame2608170>
               <Frame2608171 onClick={(e) => handleClick(e, "Media")}>
                 <OverlapGroup5>
-                  <Vector2 src={vector3} alt="Vector" />
+                  <Vector2 src={MediaIcon} alt="Media" />
                 </OverlapGroup5>
                 <OverlapGroup3>
                   <Text3>
@@ -368,7 +371,7 @@ const Frame2608170 = styled.div`
 `;
 
 const Vector1 = styled.img`
-  width: 26px;
+  width: 28px;
   height: 33px;
   align-self: center;
   margin-bottom: 21px;

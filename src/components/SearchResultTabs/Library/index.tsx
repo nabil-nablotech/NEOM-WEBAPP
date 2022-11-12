@@ -108,14 +108,14 @@ const LibraryTab = () => {
       title: "SIZE",
       key: "attributes",
       dataIndex: "attributes",
-      width: viewWidths[0],
+      width: viewWidths[10],
       render: (value, index) => formatBytes(value.object?.data?.attributes?.size || 0), 
     },
     {
       title: "UPDATED",
       key: "attributes",
       dataIndex: "attributes",
-      width: viewWidths[0],
+      width: viewWidths[10],
       render: (value, index) => formatWebDate(value.updatedAt), 
     },
     {
@@ -239,7 +239,7 @@ setOpen(true);
             pagination={false}
             loading={loading ? loading : false}
             bordered
-            scroll={{ y: 500, scrollToFirstRowOnChange: true }}
+            scroll={{ x: 'max-content',  y: 500, scrollToFirstRowOnChange: true }}
             style={{
               background: "transparent",
             }}
