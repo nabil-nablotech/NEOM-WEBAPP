@@ -13,7 +13,7 @@ import useLibrary from "../../../hooks/useLibrary";
 import { Meta } from "../../../types/Place";
 import { RootState } from "../../../store";
 import { useSelector } from "react-redux";
-import {formatWebDate, formatBytes, antTablePaginationCss} from '../../../utils/services/helpers';
+import {formatWebDate, formatBytes, antTablePaginationCss, checkSearchParameter} from '../../../utils/services/helpers';
 import MoreOptionsComponent from '../Places/ListView/MoreOption';
 import { Media } from "../../../types/Media";
 import {HtmlTooltip} from '../../../components/Tooltip';
@@ -110,8 +110,9 @@ const StyledTableWrapper = styled(StyledAntTable)`
 `;
 
 const LibraryTab = () => {
-  const { selectedCardIndex, library, places, totalCounts, libararyMetaData } =
+  const { selectedCardIndex, library, searchText, totalCounts, libararyMetaData } =
     useSelector((state: RootState) => state.searchResults);
+    const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -274,11 +275,11 @@ if (searchData?.search) {
 setFilter(filter);
 setOpen(true);
 };
+const showResults = checkSearchParameter(searchText, selectedValue);
   return (
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
-        
-        <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.library} Total Library Items</Box>
+        <Box component="div"> { showResults ? `${meta?.pagination?.total} Results | ` : null}{totalCounts?.library} Total Library Items</Box>
         <Box component="div">
         <Button
             colors={[

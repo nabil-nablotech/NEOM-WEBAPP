@@ -16,6 +16,7 @@ import * as Yup from "yup";
 import { ColumnType } from "antd/lib/table";
 import { Event, EventApi } from "../../types/Event";
 import { Media, MediaApi, MediaApi2 } from "../../types/Media";
+import { Options } from "../../types/RefinedSeachTypes";
 
 export const baseUrl = `http://localhost:9999`;
 // export const baseUrl = `https://877e-59-94-75-53.in.ngrok.io`;
@@ -589,3 +590,18 @@ export const isRecordHavingAssociations = (record: Media) => {
     return true;
   } else return false;
 };
+
+export const checkSearchParameter = (searchText: string, selectedValues: Options) => {
+  const copiedValue = JSON.parse(JSON.stringify(selectedValues));
+    copiedValue && Object.keys(copiedValue)?.map(x => {
+      if (copiedValue[x].length === 0 || copiedValue[x] === false) {
+        delete copiedValue[x];
+      }
+      return x;
+    });
+  if (Object.keys(copiedValue).length === 0 && searchText.length === 0) {
+    return false;
+  } else { 
+    return true
+  }
+}

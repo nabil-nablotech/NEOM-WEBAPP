@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box';
 import styles from '../index.module.css'
-// import placesStyles from './index.module.css'
 import Button from "../../../components/Button";
 import ListViewIcon from '../../../assets/images/searchResults/ListView.svg'
-// import DetailsView from '../../../assets/images/searchResults/DetailsView.svg'
 import GridViewIcon from '../../../assets/images/searchResults/GridView.svg'
 
 import GridView from './GridView/GridView';
@@ -17,13 +15,15 @@ import { RootState } from '../../../store';
 import { useToggledView } from './../../../hooks/useToggledView';
 import useMedia from '../../../hooks/useMedia';
 import { Meta } from '../../../types/Place';
+import {checkSearchParameter} from '../../../utils/services/helpers';
 import ExportModal from '../../ExportModal';
 import Loader from '../../Common/Loader';
 
 const MediaTab = () => {
-    const { selectedCardIndex, media, mediaMetaData, totalCounts } = useSelector(
+    const { selectedCardIndex, media, mediaMetaData, totalCounts, searchText } = useSelector(
         (state: RootState) => state.searchResults
     );
+    const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
     const [img, setimg] = useState(MapImg1);
 
     const { fetchMediaItems, hasMoreData, loading, setEdit,searchData } = useMedia();
@@ -82,10 +82,11 @@ const MediaTab = () => {
     setOpen(true);
   };
 
+  const showResults = checkSearchParameter(searchText, selectedValue);
     return (
         <Box component="div" className={`${styles['main-tab-content']}`}>
             <Box component="div" className={`${styles['utility-bar']}`}>
-                <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.media} Total Media Items</Box>
+                <Box component="div">{ showResults ? `${meta?.pagination?.total} Results | ` : null}{totalCounts?.media} Total Media Items</Box>
                 <Box component="div" style={{ display: "flex" }}>
           <Button
             colors={[

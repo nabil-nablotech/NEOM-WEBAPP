@@ -16,11 +16,13 @@ import useEvent from '../../../hooks/useEvent';
 import { Meta } from '../../../types/Place';
 import MapView from '../GoogleMap/MapView';
 import ExportModal from '../../ExportModal';
+import {checkSearchParameter} from '../../../utils/services/helpers';
 
 const PlacesTab = () => {
-  const { selectedCardIndex, events, totalCounts, eventMetaData } = useSelector(
+  const { selectedCardIndex, events, totalCounts, eventMetaData, searchText } = useSelector(
     (state: RootState) => state.searchResults
   );
+  const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
   const [img, setimg] = useState(MapImg1);
   const [isFilter, setIsFilter] = useState(null);
   const { fetchEvents, hasMoreData, loading, mapEvents, setEdit, searchData } = useEvent();
@@ -67,10 +69,11 @@ const PlacesTab = () => {
     setOpen(true);
   };
 
+  const showResults = checkSearchParameter(searchText, selectedValue);
     return (
         <Box component="div" className={`${styles['main-tab-content']}`}>
             <Box component="div" className={`${styles['utility-bar']}`}>
-                <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.events} Total Events</Box>
+                <Box component="div">{showResults ? `${meta?.pagination?.total} Results | ` : null}{totalCounts?.events} Total Events</Box>
                 <Box component="div" style={{display:"flex"}}>
                 <Button
             colors={[
