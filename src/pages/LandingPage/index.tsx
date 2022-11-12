@@ -94,6 +94,10 @@ function LandingPage() {
     }
   };
 
+  const handleClearSearchText = async () => {
+    await dispatch(setSearchText(""));
+  }
+
   if (!data) return null;
   return (
     <div className="container-center-horizontal">
@@ -106,6 +110,7 @@ function LandingPage() {
             <CustomSearchField
               handleChange={handleChange}
               onKeyDown={onKeyDown}
+              handleClearSearchText={handleClearSearchText}
               className={`${styles["custom-search-field"]} ${styles["landing-page-search-field"]}`}
             />
             <Inventory>
