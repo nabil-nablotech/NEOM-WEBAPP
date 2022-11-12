@@ -31,6 +31,13 @@ const StyledTableWrapper = styled(StyledAntTable)`
     min-width: 50px;
   }
 
+  td
+{
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
   th.ant-table-cell {
     white-space: break-spaces;
   }
@@ -52,7 +59,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
   }
 
   .cell-period {
-    min-width: 20ch !important;
+    min-width: 15ch !important;
     text-overflow: ellipsis;
   }
 

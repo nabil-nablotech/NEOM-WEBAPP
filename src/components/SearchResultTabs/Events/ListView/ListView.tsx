@@ -19,7 +19,13 @@ import { RootState } from '../../../../store';
 import { useSelector } from 'react-redux';
 
 const StyledTableWrapper = styled(StyledAntTable)`
-    
+td
+{
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
     .ant-table-container {
     }
     .ant-table {
