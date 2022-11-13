@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Box from '@mui/material/Box';
 import styles from '../index.module.css'
 import Button from "../../../components/Button";
@@ -17,6 +17,8 @@ import useMedia from '../../../hooks/useMedia';
 import { Meta } from '../../../types/Place';
 import {checkSearchParameter} from '../../../utils/services/helpers';
 import ExportModal from '../../ExportModal';
+import { importContentType } from '../../../utils/export-import/import-content-type';
+import { importCsvImagesZip } from '../../../utils/export-import/import-csv-images-zip';
 import Loader from '../../Common/Loader';
 
 const MediaTab = () => {
@@ -25,6 +27,8 @@ const MediaTab = () => {
     );
     const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
     const [img, setimg] = useState(MapImg1);
+    const importFileInputRef:any = useRef(null); 
+    const importZipFileInputRef:any = useRef(null); 
 
     const { fetchMediaItems, hasMoreData, loading, setEdit,searchData } = useMedia();
     const [open, setOpen] = React.useState(false);
@@ -82,12 +86,77 @@ const MediaTab = () => {
     setOpen(true);
   };
 
+  const chooseImportFile = () => {
+    importFileInputRef?.current?.click();
+  };
+
+  const chooseZipFile = () => {
+    importZipFileInputRef?.current?.click();
+  };
+
+  const importMedia = (event: any) => {
+    if (event?.target?.files?.length > 0) {
+      const file = event?.target?.files[0];
+      const fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
+      if (fileExtension === "json" || fileExtension === "csv") {
+        importContentType(file, "api::media.media");
+      }
+    }
+  };
+
+  const importZipMedia = (event: any) => {
+    if (event?.target?.files?.length > 0) {
+      const file = event?.target?.files[0];
+      const fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
+      importCsvImagesZip(file, "api::media.media");
+
+    }
+  };
+
   const showResults = checkSearchParameter(searchText, selectedValue);
     return (
         <Box component="div" className={`${styles['main-tab-content']}`}>
             <Box component="div" className={`${styles['utility-bar']}`}>
                 <Box component="div">{ showResults ? `${meta?.pagination?.total} Results | ` : null}{totalCounts?.media} Total Media Items</Box>
                 <Box component="div" style={{ display: "flex" }}>
+                <Button
+            colors={[
+              "transparent",
+              "var(--table-black-text)",
+              "var(--table-black-text)",
+            ]}
+            className={`${styles["export-btn"]}`}
+            label="Import zip"
+            style={{
+              border: "1px solid var(--light-grey-border)",
+              borderRadius: "40px",
+              padding: "0.2em 15px",
+              lineHeight: "2",
+              height: "100%",
+              textAlign: "center",
+            }}
+            onClick={chooseZipFile}
+          />
+          <input type="file" hidden ref={importZipFileInputRef} onChange={importZipMedia}/>
+          <Button
+            colors={[
+              "transparent",
+              "var(--table-black-text)",
+              "var(--table-black-text)",
+            ]}
+            className={`${styles["export-btn"]}`}
+            label="Import data only"
+            style={{
+              border: "1px solid var(--light-grey-border)",
+              borderRadius: "40px",
+              padding: "0.2em 15px",
+              lineHeight: "2",
+              height: "100%",
+              textAlign: "center",
+            }}
+            onClick={chooseImportFile}
+          />
+          <input type="file" hidden ref={importFileInputRef} onChange={importMedia}/>
           <Button
             colors={[
               "transparent",
