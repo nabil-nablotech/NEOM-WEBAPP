@@ -148,7 +148,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         gap: '10px',
         alignItems: 'center'
       }}>
-        <Grid item>{`New ${tabName} added.`}</Grid>
+        <Grid item>{`New ${getSingleInventoryNameFromTabName(tabName ? tabName : 'Places').toLowerCase()} added.`}</Grid>
         <Grid item className={`${styles['continue-btn']}`}>
           <Button variant="text" onClick={e => {
               handleEdit();

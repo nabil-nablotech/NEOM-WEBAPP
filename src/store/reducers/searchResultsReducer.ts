@@ -4,7 +4,7 @@ import { DashboardResponse } from "../../types/dashboard";
 import { Place, Meta } from "../../types/Place";
 import { Event } from "../../types/Event";
 import { Media } from "../../types/Media";
-import { DeleteUserReduxPayload } from "../../types/User";
+import { DeleteRecordReduxPayload, DeleteUserReduxPayload } from "../../types/User";
 
 const initialState: SearchResultsState2 = {
   selectedCardIndex: 0,
@@ -41,7 +41,10 @@ const initialState: SearchResultsState2 = {
   isAssociationsIconsDisabled: false,
   isEditConfirmationWindowOpen: false,
   confirmOpenEdit : false,
-  isDeleteConfirmationWindowOpen: false,
+  isDeleteConfirmationWindowOpen: {
+    flag: false,
+    isAssociatedToPlacesOrEvents: false,
+  },
   itemAboutToDelete: null,
   confirmDelete : false,
   editPayload: null,
@@ -50,7 +53,7 @@ const initialState: SearchResultsState2 = {
   deleteItemSuccess: false,
   isDeleteUserWindowOpen: {
     flag: false,
-    mailId: ''
+    mailId: '',
   },
   deleteUserSuccess: false,
   deletePayload: null
@@ -252,7 +255,7 @@ export const searchResultsSlice = createSlice({
     setEditPayload: (state, action: PayloadAction<any>) => {
       state.editPayload = action.payload;
     },
-    toggleDeleteConfirmationWindowOpen: (state, action: PayloadAction<boolean>) => {
+    toggleDeleteConfirmationWindowOpen: (state, action: PayloadAction<DeleteRecordReduxPayload>) => {
       state.isDeleteConfirmationWindowOpen = action.payload;
     },
     toggleConfirmDelete: (state, action: PayloadAction<boolean>) => {

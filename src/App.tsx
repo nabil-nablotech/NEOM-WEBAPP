@@ -17,8 +17,7 @@ import { baseUrl } from "./utils/services/helpers";
 
 // apollo client
 const client = new ApolloClient({
-  // uri: `${baseUrl}/graphql`,
-  uri: `http://localhost:9999/graphql`,
+  uri: `${process.env.REACT_APP_STRAPI_GRAPHQL}`,
   cache: new InMemoryCache(),
 });
 

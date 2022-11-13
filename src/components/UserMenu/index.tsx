@@ -210,7 +210,7 @@ function UserMenuComponent() {
         {
           (
             isEditConfirmationWindowOpen ||
-            isDeleteConfirmationWindowOpen
+            isDeleteConfirmationWindowOpen.flag
           ) &&
           <ConfirmationModal
             type={
@@ -220,21 +220,23 @@ function UserMenuComponent() {
             }
             open={
               isEditConfirmationWindowOpen ||
-              isDeleteConfirmationWindowOpen
+              isDeleteConfirmationWindowOpen.flag
             }
             handleClose={() => {
               if(isEditConfirmationWindowOpen) {
                 dispatch(toggleEditConfirmationWindowOpen(false))
               }
-              if(isDeleteConfirmationWindowOpen) {
-                dispatch(toggleDeleteConfirmationWindowOpen(false))
+              if(isDeleteConfirmationWindowOpen.flag) {
+                dispatch(toggleDeleteConfirmationWindowOpen({
+                  flag: false,
+                  isAssociatedToPlacesOrEvents: false,
+              }))
               }
               dispatch(setDeletePayload(null))
             }}
             handleDelete={
               async () => {
-                dispatch(toggleDeleteConfirmationWindowOpen(false))
-                dispatch(toggleDeleteItemSuccess(true))
+                
 
 
                 if (deletePayload && deleteItemType) {
@@ -243,16 +245,22 @@ function UserMenuComponent() {
                     deleteItemType === 'Events' ? 'event' :
                       deleteItemType === 'Media' ? 'media' : 'library'
 
-                  const res: { success: boolean } = await deleteRecord({
-                    visit_associates_id: deletePayload.visit_associates_id,
-                    media_associates_id: deletePayload.media_associates_id,
-                    remark_headers_id: deletePayload.remark_headers_id,
-                    visit: deletePayload.visit,
-                  }, type, deletePayload.id)
+                  // const res: { success: boolean } = await deleteRecord({
+                  //   visit_associates_id: deletePayload.visit_associates_id,
+                  //   media_associates_id: deletePayload.media_associates_id,
+                  //   remark_headers_id: deletePayload.remark_headers_id,
+                  //   visit: deletePayload.visit,
+                  // }, type, deletePayload.id)
+                  const res: { success: boolean } = await deleteRecord(type, deletePayload.id)
 
                   if (res.success) {
                     /**call this on delete api success */
                     dispatch(setDeletePayload(null))
+                    dispatch(toggleDeleteConfirmationWindowOpen({
+                      flag: false,
+                      isAssociatedToPlacesOrEvents: false,
+                    }))
+                    dispatch(toggleDeleteItemSuccess(true))
                   }
                   
                 }

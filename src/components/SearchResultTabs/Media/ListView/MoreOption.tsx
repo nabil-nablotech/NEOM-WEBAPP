@@ -2,15 +2,19 @@ import { useState } from "react";
 import { Menu, MenuItem } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Media } from "../../../../types/Media";
-import { setDeleteItemType, toggleDeleteConfirmationWindowOpen } from "../../../../store/reducers/searchResultsReducer";
-import { MEDIA_TAB_NAME } from "../../../../utils/services/helpers";
+import { setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from "../../../../store/reducers/searchResultsReducer";
+import { isRecordHavingAssociations, MEDIA_TAB_NAME } from "../../../../utils/services/helpers";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store";
 
-export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payload: Media) => void; id: string; record: Media }) => {
+export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payload: Media) => void; id: string; record: any }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
-
+  const { media } = useSelector(
+    (state: RootState) => state.searchResults
+)
   const handleClick = (e: any) => {
     e.stopPropagation();
     setAnchorEl(e.currentTarget);
@@ -46,8 +50,16 @@ export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payloa
         <MenuItem key={3}
           onClick={(e) => {
             e.stopPropagation();
-            dispatch(toggleDeleteConfirmationWindowOpen(true))
+            dispatch(toggleDeleteConfirmationWindowOpen({
+              flag: true,
+              isAssociatedToPlacesOrEvents: media ? isRecordHavingAssociations(
+                media.filter(item => item?.id === record?.media_unique_id?.id?.toString())[0]
+              ) : false,
+            }))
             dispatch(setDeleteItemType(MEDIA_TAB_NAME))
+            dispatch(setDeletePayload({
+              id: typeof record.id === 'string' ? parseInt(record.id) : record.id
+            }))
           }}
         >Delete</MenuItem>
       </Menu>

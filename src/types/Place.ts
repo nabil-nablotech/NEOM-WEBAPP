@@ -59,6 +59,7 @@ export type PlaceApiResponse = {
   siteType: string[]
   placeUIPath: string
   media_type: any[]
+  id: number
 }
 
 export type mediaAssociates_objectData = {

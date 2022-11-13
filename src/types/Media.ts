@@ -86,6 +86,9 @@ export type MediaApi = {
     width: number
     height: number
   };
+  media_unique_id: {
+    id: number
+  };
   media_associate: {
     visit_unique_ids: InventoryAssociationType_Event[],
     place_unique_ids: InventoryAssociationType[],

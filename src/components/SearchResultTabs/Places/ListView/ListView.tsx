@@ -31,25 +31,41 @@ const StyledTableWrapper = styled(StyledAntTable)`
     min-width: 50px;
   }
 
+  td
+{
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
   th.ant-table-cell {
     white-space: break-spaces;
   }
   .cell-number {
-    min-width: 8ch !important;
+    min-width: 10ch !important;
+    text-overflow: ellipsis;
   }
   .cell-tourism {
-    min-width: 10ch !important;
+    min-width: 18ch !important;
+    text-overflow: ellipsis;
+  }
+  .cell-research {
+    min-width: 18ch !important;
+    text-overflow: ellipsis;
   }
   .cell-recommend {
-    min-width: 20ch !important;
+    min-width: 18ch !important;
+    text-overflow: ellipsis;
   }
 
   .cell-period {
-    min-width: 20ch !important;
+    min-width: 15ch !important;
+    text-overflow: ellipsis;
   }
 
   .cell-conserve {
-    min-width: 15ch !important;
+    min-width: 25ch !important;
+    text-overflow: ellipsis;
   }
   .ant-table-cell.more-menu-ant-cell {
     vertical-align: middle;
@@ -95,21 +111,26 @@ const StyledTableWrapper = styled(StyledAntTable)`
     td.ant-table-cell {
     }
     .cell-research {
-      min-width: 16ch !important;
+      min-width: 18ch !important;
+      text-overflow: ellipsis;
     }
     .cell-tourism {
-      min-width: 14ch !important;
+      min-width: 18ch !important;
+      text-overflow: ellipsis;
     }
     .cell-recommend {
-      min-width: 20ch !important;
+      min-width: 18ch !important;
+      text-overflow: ellipsis;
     }
 
     .cell-conserve {
-      min-width: 15ch !important;
+      min-width: 25ch !important;
+      text-overflow: ellipsis;
     }
 
     .cell-name {
-      min-width: 25ch !important;
+      min-width: 10ch !important;
+      text-overflow: ellipsis;
     }
   }
   ${antTablePaginationCss}
@@ -204,7 +225,6 @@ const ListView = (props: PlacesProps) => {
           ),
       },
   ])
-
 
   const handleAttachClick = (e:any, record: Place) => {
     const data: InventoryAssociationType = {
@@ -309,7 +329,6 @@ const ListView = (props: PlacesProps) => {
                 className={`${commonStyles['infinite-scroll-cls']}`}
             >
                 <StyledTableWrapper
-                    // className={`${styles["table-container"]}`}
                     rowKey={"id"}
                     size="small"
                     columns={tableHeaderJson}
@@ -317,7 +336,7 @@ const ListView = (props: PlacesProps) => {
                     pagination={false}
                     loading={loading}
                     bordered
-                    scroll={{ x: true, y: 300 }}
+                    scroll={{ x: 'max-content' , y: 150 }}
                     style={{
                         background: "transparent",
                     }}

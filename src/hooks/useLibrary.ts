@@ -16,7 +16,8 @@ const useLibrary = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
 
   const {searchText, library: libItem, associatedPlaces, associatedEvents,
-    addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized} = useSelector((state: RootState) => state.searchResults);
+    addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized, deleteItemSuccess,
+    deleteItemType } = useSelector((state: RootState) => state.searchResults);
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
   );
@@ -48,7 +49,11 @@ const useLibrary = () => {
   }
 
   const [createLibraryMutation, { loading: addLoading, error: addErr, data: addData, reset: resetLibrary }] = useMutation(addLibrary, graphQlHeaders());
-  const [updateLibraryMutation, { loading:updateLoading, error: updateErr, data: updateData, reset: resetUpdateLibrary }] = useMutation(updateLibrary, graphQlHeaders());
+  const [updateLibraryMutation, { loading:updateLoading, error: updateErr, data: updateData, reset: resetUpdateLibrary }] = useMutation(updateLibrary, {context: graphQlHeaders().context, onCompleted: () => {
+    if (associatedEvents.length == 0 && associatedPlaces.length == 0) {
+      dispatch(toggleShowEditSuccess(true));
+    }
+  }});
   const [createMediaAssociateMutation, { loading: mediaAssociateload, error: mediaAssociateErr, data: mediaAssociate, reset: resetCreateMediaAssociate }] = useMutation(createMediaAssociate, {context: graphQlHeaders().context, onCompleted: () => {
 
   }});
@@ -126,6 +131,7 @@ const useLibrary = () => {
   }, [addData, updateData])
 
   useEffect(() => {
+
     if (mediaAssociate && addData) {
       dispatch(storeAddItemProgressState(null));
       
@@ -138,7 +144,8 @@ const useLibrary = () => {
       resetUpdateLibrary();
       dispatch(toggleShowEditSuccess(true));
     }
-  }, [mediaAssociate])
+
+  }, [mediaAssociate, updateData, addData])
   
   const fetchData = (skip: number = libItem.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);
@@ -195,7 +202,7 @@ const useLibrary = () => {
       object:payload?.object && payload?.object[0].id,
       fileSize: payload?.object && formatBytes(payload?.object[0]?.size),
       storage: payload?.object && payload?.object[0]?.provider,
-      dimension: payload?.object && `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
+      dimension: payload?.object && payload?.object[0]?.height && `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
       make: "",
       model: "",
       depth: "",
@@ -226,6 +233,14 @@ const useLibrary = () => {
 
     }
   }, [confirmOpenEdit])
+
+  useEffect(() => {
+
+    /** get latest list after deleting item */
+    if (deleteItemSuccess && (deleteItemType === "Library")) {
+      fetchData(0)
+    }
+  }, [deleteItemSuccess, deleteItemType])
 
   const openEditFlow = async (payload: any) => {
     if (payload) {

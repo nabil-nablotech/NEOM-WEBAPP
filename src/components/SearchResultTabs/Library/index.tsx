@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import styles from "../index.module.css";
 import Button from "../../../components/Button";
 import type { ColumnsType } from "antd/es/table";
+import styled from "styled-components";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import LinkIcon from "@mui/icons-material/Link";
 import { StyledAntTable } from "../../StyledAntTable";
@@ -12,7 +13,7 @@ import useLibrary from "../../../hooks/useLibrary";
 import { Meta } from "../../../types/Place";
 import { RootState } from "../../../store";
 import { useSelector } from "react-redux";
-import {formatWebDate, formatBytes} from '../../../utils/services/helpers';
+import {formatWebDate, formatBytes, antTablePaginationCss, checkSearchParameter} from '../../../utils/services/helpers';
 import MoreOptionsComponent from '../Places/ListView/MoreOption';
 import { Media } from "../../../types/Media";
 import {HtmlTooltip} from '../../../components/Tooltip';
@@ -24,9 +25,94 @@ import ExportModal from "../../ExportModal";
 
 let viewWidths = ["20vw", "20vw", "20vw", "20vw", "5vw"];
 
+const StyledTableWrapper = styled(StyledAntTable)`
+  .ant-table-container {
+  }
+  .ant-table {
+    margin-block: 2em;
+  }
+
+  .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell),
+  .ant-table-tbody
+    > tr
+    > td:not(.ant-table-tbody > tr > td.more-menu-ant-cell) {
+    min-width: 50px;
+  }
+
+  th.ant-table-cell {
+    white-space: break-spaces;
+  }
+  .ant-table-cell.more-menu-ant-cell {
+    vertical-align: middle;
+    min-width: 20px;
+    width: 20px;
+  }
+  .more-menu-div {
+    vertical-align: middle;
+  }
+  .ant-table-thead > tr > th.ant-table-cell-fix-right,
+  .ant-table-cell-fix-right {
+    background: var(--off-white-background-color);
+  }
+
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-header
+    > table
+    > thead
+    > tr
+    > th.more-menu-ant-cell.ant-table-cell-fix-right {
+    border-left: 1px solid #f0f0f0;
+  }
+
+  .ant-table-cell.cell-image {
+    width: 15vw;
+  }
+  .media-table-image {
+    object-fit: cover;
+    width: 100%;
+    aspect-ratio: 3/2;
+  }
+  .ant-table-cell {
+    vertical-align: middle;
+  }
+
+  @media (min-width: 575px) and (max-width: 1025px) {
+    .ant-table-thead
+      > tr
+      > th:not(.ant-table-thead > tr > th.more-menu-ant-cell),
+    .ant-table-tbody
+      > tr
+      > td:not(.ant-table-tbody > tr > td.more-menu-ant-cell) {
+      min-width: 90px;
+    }
+
+    .ant-table-thead > tr > th.more-menu-ant-cell.ant-table-cell-fix-right,
+    .ant-table-tbody > tr > td.more-menu-ant-cell.ant-table-cell-fix-right {
+      right: -5vw !important;
+    }
+
+    th.ant-table-cell,
+    th.ant-table-cell * {
+    }
+    td.ant-table-cell {
+    }
+
+    .cell-image {
+      min-width: 20ch !important;
+    }
+
+    .cell-description {
+      min-width: 20ch !important;
+    }
+  }
+  ${antTablePaginationCss}
+`;
+
 const LibraryTab = () => {
-  const { selectedCardIndex, library, places, totalCounts, libararyMetaData } =
+  const { selectedCardIndex, library, searchText, totalCounts, libararyMetaData } =
     useSelector((state: RootState) => state.searchResults);
+    const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -108,19 +194,20 @@ const LibraryTab = () => {
       title: "SIZE",
       key: "attributes",
       dataIndex: "attributes",
-      width: viewWidths[0],
+      width: viewWidths[10],
       render: (value, index) => formatBytes(value.object?.data?.attributes?.size || 0), 
     },
     {
       title: "UPDATED",
       key: "attributes",
       dataIndex: "attributes",
-      width: viewWidths[0],
+      width: viewWidths[10],
       render: (value, index) => formatWebDate(value.updatedAt), 
     },
     {
       title: "",
       key: "action",
+      dataIndex: "id",
       fixed: "right",
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (
@@ -150,8 +237,6 @@ const LibraryTab = () => {
     return <h1>No data found</h1>
   }
 
-  // console.log('hex: cita: ', library.filter(item => item.attributes.citation === 'cita even') )
- 
 
   /* Event hanlders */
   const exportLibrary = async () => {
@@ -190,11 +275,11 @@ if (searchData?.search) {
 setFilter(filter);
 setOpen(true);
 };
+const showResults = checkSearchParameter(searchText, selectedValue);
   return (
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
-        
-        <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.library} Total Library Items</Box>
+        <Box component="div"> { showResults ? `${meta?.pagination?.total} Results | ` : null}{totalCounts?.library} Total Library Items</Box>
         <Box component="div">
         <Button
             colors={[
@@ -231,7 +316,7 @@ setOpen(true);
           scrollableTarget={"library-list-div"}
           className={`${commonStyles["infinite-scroll-cls"]}`}
         >
-          <StyledAntTable
+          <StyledTableWrapper
             className={`${styles["table-container"]}`}
             rowKey={"id"}
             size="small"
@@ -240,7 +325,7 @@ setOpen(true);
             pagination={false}
             loading={loading ? loading : false}
             bordered
-            scroll={{ y: 500, scrollToFirstRowOnChange: true }}
+            scroll={{ x: 'max-content',  y: 500, scrollToFirstRowOnChange: true }}
             style={{
               background: "transparent",
             }}
@@ -253,9 +338,10 @@ setOpen(true);
                 },
               };
             }}
-          ></StyledAntTable>
+          ></StyledTableWrapper>
         </InfiniteScroll>
       </Box>
+      <ExportModal open={open} setOpen={setOpen} count={meta?.pagination?.total} path={'medias'} filter={filter}/>
     </Box>
   );
 };

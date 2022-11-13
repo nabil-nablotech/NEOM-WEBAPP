@@ -8,8 +8,11 @@ import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { Media } from '../../../../types/Media';
 import { useDispatch } from 'react-redux';
 import { setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
-import { PLACES_TAB_NAME } from '../../../../utils/services/helpers';
+import { EVENTS_TAB_NAME, isRecordHavingAssociations, LIBRARY_TAB_NAME, PLACES_TAB_NAME } from '../../../../utils/services/helpers';
 import { deleteRecord } from '../../../../api/delete';
+import { useParams } from 'react-router-dom';
+import { RootState } from '../../../../store';
+import { useSelector } from 'react-redux';
 
 const superEditor = getRole() === 'SuperEditor';
 const editor = getRole() === 'Editor';
@@ -30,9 +33,13 @@ const MoreOptionsComponent = ({
         e.stopPropagation();
         setAnchorEl(e.currentTarget);
     };
+    const { library } = useSelector(
+        (state: RootState) => state.searchResults
+    );
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const { tabName} = useParams<{ tabName: tabNameProps }>();
 
     return (
         <>
@@ -68,14 +75,21 @@ const MoreOptionsComponent = ({
                 <MenuItem key={2}
                     onClick={(e) => {
                         e.stopPropagation();
-                        dispatch(toggleDeleteConfirmationWindowOpen(true))
-                        dispatch(setDeleteItemType(PLACES_TAB_NAME))
+                        dispatch(toggleDeleteConfirmationWindowOpen({
+                            flag: true,
+                            isAssociatedToPlacesOrEvents: type === "Library" ? isRecordHavingAssociations(
+                                library.filter(item => item?.id === record?.media_unique_id?.id?.toString())[0]
+                            ) : false,
+                        }))
+                        dispatch(setDeleteItemType(
+                            type === "Library" ? LIBRARY_TAB_NAME : type === "Events" ? EVENTS_TAB_NAME : PLACES_TAB_NAME
+                            ))
                         dispatch(setDeletePayload({
-                            visit_associates_id: [], 
-                            media_associates_id: record?.attributes?.media_associates?.data.map((item: any) => item?.attributes?.media_unique_id?.data?.id),
-                            remark_headers_id: [],
-                            visit: [],
-                            id: record.id
+                            id: tabName === PLACES_TAB_NAME ? (
+                                (type === "Events") ? record?.visit_unique_id?.id : 
+                                (type === "Library") ? record?.media_unique_id?.id : record.id
+                            ) : record.id,
+                            
                         }))
                         
                     }}

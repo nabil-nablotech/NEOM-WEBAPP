@@ -5,7 +5,8 @@ import { CustomMoreOptionsComponentProps } from "../../types/SearchResultsTabsPr
 
 export const CustomMoreOptionsComponent = ({
     menuActions,
-    moreIconClassName
+    moreIconClassName,
+    data
 }: CustomMoreOptionsComponentProps) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
@@ -42,7 +43,7 @@ export const CustomMoreOptionsComponent = ({
                     menuActions.map((item, inx) => (
                         <MenuItem key={inx} onClick={e => {
                             e.stopPropagation();
-                            item.action();
+                            item.action(data);
                             handleClose();
                         }}>{item.label}</MenuItem>
                     ))

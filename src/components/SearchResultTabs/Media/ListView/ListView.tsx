@@ -221,7 +221,7 @@ const ListView = (props: MediaProps) => {
           pagination={false}
           loading={loading ? loading : false}
           bordered
-          scroll={{ y: 500, scrollToFirstRowOnChange: true }}
+          scroll={{ x: 'max-content', y: 500, scrollToFirstRowOnChange: true }}
           style={{
             background: "transparent",
           }}

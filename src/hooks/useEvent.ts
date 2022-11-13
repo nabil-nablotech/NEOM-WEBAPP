@@ -36,7 +36,9 @@ const useEvent = () => {
     addNewItemWindowType,
     confirmOpenEdit,
     editPayload,
-    addItemWindowMinimized
+    addItemWindowMinimized,
+    deleteItemSuccess,
+    deleteItemType
   } = useSelector((state: RootState) => state.searchResults);
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
@@ -76,9 +78,12 @@ const useEvent = () => {
   const [createEventMuation, { loading, error, data }] = useMutation(addEvent, graphQlHeaders());
   const [updateEventMuation, { loading: updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateEvent, {context: graphQlHeaders().context, onCompleted: () => {
     dispatch(setEventEdit(false))
-    dispatch(toggleShowEditSuccess(false));
+    // dispatch(toggleShowEditSuccess(false));
     /** re-direct */
-    navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
+    if(updateData.updateVisit) {
+
+      navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
+    }
 
   }});
   const [createVisitAssociateMuation, { loading: visitAssociateload, error: visitAssociateErr, data: visitAssociate }] = useMutation(createVisitAssociate, graphQlHeaders());
@@ -280,6 +285,14 @@ const useEvent = () => {
 
     }
   }, [confirmOpenEdit])
+
+  useEffect(() => {
+
+    /** get latest list after deleting item */
+    if (deleteItemSuccess && (deleteItemType === "Events")) {
+      fetchData(0)
+    }
+  }, [deleteItemSuccess, deleteItemType])
 
   const openEditFlow = async (payload: any) => {
     if (payload) {

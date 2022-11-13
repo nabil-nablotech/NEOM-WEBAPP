@@ -184,6 +184,11 @@ query RefineSearchEvent(
         { visitDate: { gte: $startDate }}
         { visitDate: { lte: $endDate }}
         { keywords: { containsi: $keywords } }
+        {
+          deleted: {
+            eq: false
+          }
+        }
       ]
     }
     sort: "updatedAt:desc"
@@ -222,10 +227,12 @@ query RefineSearchEvent(
                 data {
                   attributes {
                     videoType
+                    deleted
                     media_type {
                       data {
                         attributes {
                           typeCode
+                          categoryCode
                         }
                       }
                     }

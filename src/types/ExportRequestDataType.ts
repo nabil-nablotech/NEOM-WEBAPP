@@ -1,4 +1,4 @@
 export type ExportRequestDataType = {
     collectionTypePlural: string;
-    filter?: any;
+    filter?: string;
 } 

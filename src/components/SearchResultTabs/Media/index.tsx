@@ -1,10 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Box from '@mui/material/Box';
 import styles from '../index.module.css'
-// import placesStyles from './index.module.css'
 import Button from "../../../components/Button";
 import ListViewIcon from '../../../assets/images/searchResults/ListView.svg'
-// import DetailsView from '../../../assets/images/searchResults/DetailsView.svg'
 import GridViewIcon from '../../../assets/images/searchResults/GridView.svg'
 
 import GridView from './GridView/GridView';
@@ -17,20 +15,17 @@ import { RootState } from '../../../store';
 import { useToggledView } from './../../../hooks/useToggledView';
 import useMedia from '../../../hooks/useMedia';
 import { Meta } from '../../../types/Place';
-import { ExportRequestDataType } from '../../../types/ExportRequestDataType';
-import qs from 'qs';
-import { exportContentType } from '../../../utils/export-import/export-content-type';
-import client from '../../../utils/services/axiosClient';
-import { baseUrl } from '../../../utils/services/helpers';
-import { exportCsvImagesZip } from '../../../utils/export-import/export-csv-images-zip';
+import {checkSearchParameter} from '../../../utils/services/helpers';
 import ExportModal from '../../ExportModal';
 import { importContentType } from '../../../utils/export-import/import-content-type';
 import { importCsvImagesZip } from '../../../utils/export-import/import-csv-images-zip';
+import Loader from '../../Common/Loader';
 
 const MediaTab = () => {
-    const { selectedCardIndex, media, mediaMetaData, totalCounts } = useSelector(
+    const { selectedCardIndex, media, mediaMetaData, totalCounts, searchText } = useSelector(
         (state: RootState) => state.searchResults
     );
+    const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
     const [img, setimg] = useState(MapImg1);
     const importFileInputRef:any = useRef(null); 
     const importZipFileInputRef:any = useRef(null); 
@@ -45,6 +40,13 @@ const MediaTab = () => {
     }, [selectedCardIndex])
 
     const { openStates, toggleOpenStates } = useToggledView({ count: 2 })
+
+    if(!media && !loading) {
+      return <>Cant fetch media</>
+    }
+    if(loading) {
+      return <><Loader/></>
+    }
     
     /* event handlers */
   const exportMedia = async () => {
@@ -111,10 +113,11 @@ const MediaTab = () => {
     }
   };
 
+  const showResults = checkSearchParameter(searchText, selectedValue);
     return (
         <Box component="div" className={`${styles['main-tab-content']}`}>
             <Box component="div" className={`${styles['utility-bar']}`}>
-                <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.media} Total Media Items</Box>
+                <Box component="div">{ showResults ? `${meta?.pagination?.total} Results | ` : null}{totalCounts?.media} Total Media Items</Box>
                 <Box component="div" style={{ display: "flex" }}>
                 <Button
             colors={[

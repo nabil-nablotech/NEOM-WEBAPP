@@ -19,7 +19,13 @@ import { RootState } from '../../../../store';
 import { useSelector } from 'react-redux';
 
 const StyledTableWrapper = styled(StyledAntTable)`
-    
+td
+{
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
     .ant-table-container {
     }
     .ant-table {
@@ -35,17 +41,19 @@ const StyledTableWrapper = styled(StyledAntTable)`
         white-space: break-spaces;
     }
     .cell-number {
-        min-width: 8ch !important;
-    }
-    .cell-tourism {
         min-width: 10ch !important;
     }
-    .cell-recommend {
-        min-width: 20ch !important;
+    .cell-tourism {
+        min-width: 18ch !important;
     }
-    
+    .cell-recommend {
+        min-width: 18ch !important;
+    }
+    .cell-research{
+        min-width: 18ch !important;
+    }
     .cell-conserve {
-        min-width: 15ch !important;
+        min-width: 25ch !important;
     }
     .ant-table-cell.more-menu-ant-cell {
         vertical-align:middle;
@@ -82,21 +90,21 @@ const StyledTableWrapper = styled(StyledAntTable)`
         td.ant-table-cell {
         }
         .cell-research{
-            min-width: 16ch !important;
+            min-width: 18ch !important;
         }
         .cell-tourism {
-            min-width: 14ch !important;
+            min-width: 18ch !important;
         }
         .cell-recommend {
-            min-width: 20ch !important;
+            min-width: 18ch !important;
         }
         
         .cell-conserve {
-            min-width: 15ch !important;
+            min-width: 24ch !important;
         }
 
         .cell-name {
-            min-width: 25ch !important;
+            min-width: 10ch !important;
         }
         
     }
@@ -326,7 +334,8 @@ const ListView = (props: EventsProps) => {
                     pagination={false}
                     loading={loading ? loading : false}
                     bordered
-                    scroll={{ y: 500, scrollToFirstRowOnChange: true }}
+                    // scroll={{ y: 500, scrollToFirstRowOnChange: true }}
+                    scroll={{ x: 'max-content' , y: 150, scrollToFirstRowOnChange: true }}
                     style={{
                         background: "transparent",
                     }}

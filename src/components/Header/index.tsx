@@ -50,7 +50,7 @@ const Header = (props: IHeader) => {
         <Box component="div" className={`${styles["header-container"]}`}>
           <Box component="div" className={`${styles["header-lhs-content"]}`}>
             <Box component="div" className={`${styles["logo"]}`}>
-              <Box component="img" alt="NEOM logo" src={Logo} onClick={handleLogo} />
+              <Box component="img" alt="NEOM logo" src={Logo} onClick={() => navigate('/')} />
             </Box>
             {
               showSearch &&
