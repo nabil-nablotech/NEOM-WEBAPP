@@ -11,10 +11,18 @@ export const exportContentType = async (requestData: ExportRequestDataType) => {
       { params: { filter: filter } }
     );
     if (response?.data?.length > 0) {
-      const fields = Object.keys(response?.data[0]);
-      const opts = { fields,withBom:true,delimiter:"," };
+      const fields = Object.keys(response?.data[0])?.filter((item)=>!(item==="createdBy" || item==="updatedBy"));
+      const opts = { fields};
       const parser = new Parser(opts);
-      const csv = parser.parse(response?.data);
+      const csv = parser.parse(response?.data?.map((item:any)=>{
+        if(item?.updatedBy){
+          delete item["updatedBy"];
+        }
+        if(item?.createdBy){
+          delete item["createdBy"];  
+        }
+      return item;
+    }));
       var a = window.document.createElement("a");
       a.href = window.URL.createObjectURL(
         new Blob([csv], { type: "text/csv" })

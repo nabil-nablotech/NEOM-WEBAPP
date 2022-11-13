@@ -12,23 +12,29 @@ import { useToggledView } from "./../../../hooks/useToggledView";
 import usePlace from "../../../hooks/usePlace";
 import { Meta } from "../../../types/Place";
 import MapView from "../GoogleMap/MapView";
-import { useState } from "react";
-import ExportModal from '../../ExportModal';
+import { useRef, useState } from "react";
+import ExportModal from "../../ExportModal";
+import { importContentType } from "../../../utils/export-import/import-content-type";
+import { importCsvImagesZip } from "../../../utils/export-import/import-csv-images-zip";
 
 const PlacesTab = () => {
   const { selectedCardIndex, places, placeMetaData, totalCounts } = useSelector(
     (state: RootState) => state.searchResults
   );
 
-  const { fetchPlaces, hasMoreData, loading, mapPlaces, setEdit,searchData } = usePlace();
+  const importFileInputRef: any = useRef(null);
+  const importZipFileInputRef: any = useRef(null);
+
+  const { fetchPlaces, hasMoreData, loading, mapPlaces, setEdit, searchData } =
+    usePlace();
   const [isFilter, setIsFilter] = useState(null);
   const { openStates, toggleOpenStates } = useToggledView({ count: 2 });
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState(null);
   const meta: Meta | null = placeMetaData;
 
-   /* Event handlers */
-   const exportPlace = async () => {
+  /* Event handlers */
+  const exportPlace = async () => {
     let filter: any;
     if (searchData?.search) {
       filter = {
@@ -61,11 +67,133 @@ const PlacesTab = () => {
     setOpen(true);
   };
 
+  const chooseImportFile = () => {
+    importFileInputRef?.current?.click();
+  };
+
+  const chooseZipFile = () => {
+    importZipFileInputRef?.current?.click();
+  };
+
+  const importPlace = (event: any) => {
+    if (event?.target?.files?.length > 0) {
+      const file = event?.target?.files[0];
+      const fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
+      if (fileExtension === "json" || fileExtension === "csv" || fileExtension === "xlsx") {
+        importContentType(
+          file,
+          "api::place.place",
+          [
+            "siteType",
+            "researchValue",
+            "artifacts",
+            "tourismValue",
+            "stateOfConservation",
+            "recommendation",
+            "risk",
+            "period",
+            "keywords",
+          ],
+          [
+            "id",
+            "asset_config_id",
+            "visit_associates",
+            "remark_headers",
+            "media_associates",
+            "createdAt",
+            "updatedAt",
+          ]
+        );
+      }
+    }
+  };
+
+  const importZipPlace = (event: any) => {
+    if (event?.target?.files?.length > 0) {
+      const file = event?.target?.files[0];
+      const fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
+      importCsvImagesZip(
+        file,
+        "api::place.place",
+        [
+          "siteType",
+          "researchValue",
+          "artifacts",
+          "tourismValue",
+          "stateOfConservation",
+          "recommendation",
+          "risk",
+          "period",
+          "keywords",
+        ],
+        [
+          "id",
+          "asset_config_id",
+          "visit_associates",
+          "remark_headers",
+          "media_associates",
+          "createdAt",
+          "updatedAt",
+        ]
+      );
+    }
+  };
+
   return (
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
-        <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.places} Total Places</Box>
+        <Box component="div">
+          {meta?.pagination?.total} Results | {totalCounts?.places} Total Places
+        </Box>
         <Box component="div" style={{ display: "flex" }}>
+          <Button
+            colors={[
+              "transparent",
+              "var(--table-black-text)",
+              "var(--table-black-text)",
+            ]}
+            className={`${styles["export-btn"]}`}
+            label="Import zip"
+            style={{
+              border: "1px solid var(--light-grey-border)",
+              borderRadius: "40px",
+              padding: "0.2em 15px",
+              lineHeight: "2",
+              height: "100%",
+              textAlign: "center",
+            }}
+            onClick={chooseZipFile}
+          />
+          <input
+            type="file"
+            hidden
+            ref={importZipFileInputRef}
+            onChange={importZipPlace}
+          />
+          <Button
+            colors={[
+              "transparent",
+              "var(--table-black-text)",
+              "var(--table-black-text)",
+            ]}
+            className={`${styles["export-btn"]}`}
+            label="Import data only"
+            style={{
+              border: "1px solid var(--light-grey-border)",
+              borderRadius: "40px",
+              padding: "0.2em 15px",
+              lineHeight: "2",
+              height: "100%",
+              textAlign: "center",
+            }}
+            onClick={chooseImportFile}
+          />
+          <input
+            type="file"
+            hidden
+            ref={importFileInputRef}
+            onChange={importPlace}
+          />
           <Button
             colors={[
               "transparent",
@@ -128,11 +256,36 @@ const PlacesTab = () => {
           {openStates[0] && (
             <>
               <Grid item xl={6} lg={6} md={5} sm={5}>
-                <GridView setEdit={setEdit} key={1} totalData={meta?.pagination?.total} loading={loading} data={isFilter===null?places:places.filter((item)=>{return item.id===isFilter})} fetchData={fetchPlaces} hasMoreData={hasMoreData} />
+                <GridView
+                  setEdit={setEdit}
+                  key={1}
+                  totalData={meta?.pagination?.total}
+                  loading={loading}
+                  data={
+                    isFilter === null
+                      ? places
+                      : places.filter((item) => {
+                          return item.id === isFilter;
+                        })
+                  }
+                  fetchData={fetchPlaces}
+                  hasMoreData={hasMoreData}
+                />
               </Grid>
               {/* To-do: map view */}
-              <Grid item xl={6} lg={6} md={7} sm={7} className={`${styles["map-section"]}`}>
-                {mapPlaces !== null ? <MapView key={2} filterId={setIsFilter} marker={mapPlaces} />:<></>}
+              <Grid
+                item
+                xl={6}
+                lg={6}
+                md={7}
+                sm={7}
+                className={`${styles["map-section"]}`}
+              >
+                {mapPlaces !== null ? (
+                  <MapView key={2} filterId={setIsFilter} marker={mapPlaces} />
+                ) : (
+                  <></>
+                )}
               </Grid>
             </>
           )}
@@ -143,12 +296,31 @@ const PlacesTab = () => {
                 width: "100%",
               }}
             >
-              <ListView setEdit={setEdit} key={3} loading={loading} data={isFilter===null?places:places.filter((item)=>{return item.id===isFilter})} fetchData={fetchPlaces} hasMoreData={hasMoreData} />
+              <ListView
+                setEdit={setEdit}
+                key={3}
+                loading={loading}
+                data={
+                  isFilter === null
+                    ? places
+                    : places.filter((item) => {
+                        return item.id === isFilter;
+                      })
+                }
+                fetchData={fetchPlaces}
+                hasMoreData={hasMoreData}
+              />
             </Box>
           )}
         </Grid>
       </Box>
-      <ExportModal open={open} setOpen={setOpen} count={meta?.pagination?.total} path={'places'} filter={filter}/>
+      <ExportModal
+        open={open}
+        setOpen={setOpen}
+        count={meta?.pagination?.total}
+        path={"places"}
+        filter={filter}
+      />
     </Box>
   );
 };
