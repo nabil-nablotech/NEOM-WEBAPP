@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useSelector } from "react-redux";
+import { Grid, Box } from "@mui/material";
 import {
   RobotoMediumMerino20px,
   RobotoLightMerino50px,
@@ -23,6 +24,7 @@ import { setSearchText, setSearchApply } from "../../store/reducers/searchResult
 import LandingPageImage from '../../assets/images/LandingPage.webp';
 import MediaIcon from '../../assets/icons/media.png';
 import EventIcon from '../../assets/icons/events.png';
+import LibraryIcon from '../../assets/icons/library.png';
 
 const landingPageData = {
   overlapGroup4:
@@ -162,8 +164,8 @@ function LandingPage() {
               <Frame2608170 onClick={(e) => handleClick(e, "Library")}>
                 <OverlapGroup5>
                 <Vector
-                    src="https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d1b90bcf8144ac5b76937/img/vector@1x.png"
-                    alt="Vector"
+                    src={LibraryIcon}
+                    alt="Library"
                   />
                 </OverlapGroup5>
                 <OverlapGroup2>
@@ -201,6 +203,73 @@ function LandingPage() {
                 </OverlapGroup3>
               </Frame2608171>
             </Inventory>
+            {/* <Grid item md={12} display="flex" justifyContent={'space-evenly'}>
+              <Grid item xs={6} sm={6} md={4} display="flex">
+                  <IconLocationPin
+                    src={iconLocation_Pin}
+                    alt="icon-location_pin"
+                  />
+                  <Grid item xs={12} display="flex" flexDirection={"column"}>
+                   <span>
+                      <span className="roboto-light-no-line-height-merino-50px">
+                        {totalCounts?.places}
+                      </span>
+                    </span>
+                    <span className="roboto-medium-no-line-height-merino-20px">
+                      {spanText3}
+                    </span>
+                  </Grid>
+              </Grid>
+              <Grid item xs={6} sm={6} md={4} display="flex">
+                  <IconLocationPin
+                    src={EventIcon}
+                    alt="icon-location_pin"
+                  />
+                  <Grid item xs={12} display="flex" flexDirection={"column"}>
+                   <span>
+                      <span className="roboto-light-no-line-height-merino-50px">
+                        {totalCounts?.places}
+                      </span>
+                    </span>
+                    <span className="roboto-medium-no-line-height-merino-20px">
+                      {spanText3}
+                    </span>
+                  </Grid>
+              </Grid>
+              <Grid item xs={6} sm={6} md={4} display="flex">
+                  <IconLocationPin
+                    src={LibraryIcon}
+                    alt="icon-location_pin"
+                  />
+                  <Grid item xs={12} display="flex" flexDirection={"column"}>
+                   <span>
+                      <span className="roboto-light-no-line-height-merino-50px">
+                        {totalCounts?.places}
+                      </span>
+                    </span>
+                    <span className="roboto-medium-no-line-height-merino-20px">
+                      {spanText3}
+                    </span>
+                  </Grid>
+              </Grid>
+              <Grid item xs={6} sm={6} md={4} display="flex">
+                  <IconLocationPin
+                    src={MediaIcon}
+                    alt="icon-location_pin"
+                  />
+                  <Grid item xs={12} display="flex" flexDirection={"column"}>
+                   <span>
+                      <span className="roboto-light-no-line-height-merino-50px">
+                        {totalCounts?.places}
+                      </span>
+                    </span>
+                    <span className="roboto-medium-no-line-height-merino-20px">
+                      {spanText3}
+                    </span>
+                  </Grid>
+              </Grid>
+
+            </Grid> */}
           </Frame2608172>
         </OverlapGroup4>
         {/* <UserMenuComponent /> */}
@@ -266,6 +335,7 @@ const Inventory = styled.div`
   gap: 50px;
   border: 1px none;
   color: #ffff;
+  max-width: 50vw;
   @media (min-width: 575px) and (max-width: 1025px) {
     min-width: 500px;
     max-width: 70vw;
@@ -334,7 +404,7 @@ const Frame2608169 = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  min-width: 177px;
+  min-width: 176px;
   border: 1px none;
   cursor: pointer;
 `;
@@ -419,7 +489,7 @@ const Frame2608171 = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  min-width: 179px;
+  min-width: 176px;
   border: 1px none;
   cursor: pointer;
 `;
@@ -441,7 +511,7 @@ const OverlapGroup3 = styled.div`
 const Text3 = styled.div`
   ${RalignText}
   ${RobotoLightMerino50px}
-            position: absolute;
+  position: absolute;
   width: 110px;
   height: 60px;
   top: 0;

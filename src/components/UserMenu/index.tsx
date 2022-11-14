@@ -237,21 +237,12 @@ function UserMenuComponent() {
             }}
             handleDelete={
               async () => {
-                
-
-
                 if (deletePayload && deleteItemType) {
 
                   const type = deleteItemType === 'Places' ? 'place' :
                     deleteItemType === 'Events' ? 'event' :
                       deleteItemType === 'Media' ? 'media' : 'library'
 
-                  // const res: { success: boolean } = await deleteRecord({
-                  //   visit_associates_id: deletePayload.visit_associates_id,
-                  //   media_associates_id: deletePayload.media_associates_id,
-                  //   remark_headers_id: deletePayload.remark_headers_id,
-                  //   visit: deletePayload.visit,
-                  // }, type, deletePayload.id)
                   const res: { success: boolean } = await deleteRecord(type, deletePayload.id)
 
                   if (res.success) {
@@ -289,7 +280,7 @@ const InitialsWrapper = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     ${RobotoMediumMerino20px};
-    font-size: 20px;
+    font-size: 15px;
   }
 `;
 
