@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import styles from "../index.module.css";
+import libStyles from "./index.module.css";
 import Button from "../../../components/Button";
 import type { ColumnsType } from "antd/es/table";
 import styled from "styled-components";
@@ -22,6 +23,7 @@ import { setSelectedCardIndex } from "../../../store/reducers/searchResultsReduc
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ExportModal from "../../ExportModal";
+import { useMediaQuery } from 'react-responsive'
 
 let viewWidths = ["20vw", "20vw", "20vw", "20vw", "5vw"];
 
@@ -47,6 +49,10 @@ const StyledTableWrapper = styled(StyledAntTable)`
     min-width: 20px;
     width: 20px;
   }
+  .more-menu-ant-cell,
+  .more-menu-ant-cell > div {
+    width: 20px;
+  }
   .more-menu-div {
     vertical-align: middle;
   }
@@ -65,9 +71,13 @@ const StyledTableWrapper = styled(StyledAntTable)`
     border-left: 1px solid #f0f0f0;
   }
 
-  .ant-table-cell.cell-image {
-    width: 15vw;
+
+  .ant-table-tbody > tr > td {
+    word-wrap: unset;
+    word-break: unset;
+    white-space: break-spaces;
   }
+
   .media-table-image {
     object-fit: cover;
     width: 100%;
@@ -75,6 +85,9 @@ const StyledTableWrapper = styled(StyledAntTable)`
   }
   .ant-table-cell {
     vertical-align: middle;
+  }
+  .ant-table-tbody > tr > td.more-menu-ant-cell {
+    min-width: unset;
   }
 
   @media (min-width: 575px) and (max-width: 1025px) {
@@ -89,7 +102,11 @@ const StyledTableWrapper = styled(StyledAntTable)`
 
     .ant-table-thead > tr > th.more-menu-ant-cell.ant-table-cell-fix-right,
     .ant-table-tbody > tr > td.more-menu-ant-cell.ant-table-cell-fix-right {
-      right: -5vw !important;
+      right: -2vw !important;
+    } 
+
+    .ant-table-tbody > tr > td.more-menu-ant-cell {
+      min-width: unset;
     }
 
     th.ant-table-cell,
@@ -113,6 +130,7 @@ const LibraryTab = () => {
   const { searchApply, library, searchText, totalCounts, libararyMetaData } =
     useSelector((state: RootState) => state.searchResults);
     const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
+    const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -123,9 +141,8 @@ const LibraryTab = () => {
       title: "NAME",
       key: "attributes",
       dataIndex: "attributes",
-      width: viewWidths[0],
-      sorter: (a, b) => a?.title?.localeCompare(b?.title),
-      sortDirections: ["ascend"],
+      width: 200,
+      sorter: (a, b) => a?.attributes?.title?.localeCompare(b?.attributes?.title),
       defaultSortOrder: "ascend",
       className: "name-column",
       render: (value: any, record: any) => (
@@ -143,6 +160,7 @@ const LibraryTab = () => {
     {
       title: "DESCRIPTION",
       key: "attributes",
+      width: 300,
       className: "description-column",
       //   dataIndex: "description",
       dataIndex: "attributes", // temporary
@@ -154,6 +172,7 @@ const LibraryTab = () => {
     {
       title: "CITATION",
       className: "citation-column",
+      width: 300,
       //   dataIndex: "citation",
       dataIndex: "attributes", // temporary
       render: (value: any, index) => {
@@ -165,6 +184,7 @@ const LibraryTab = () => {
     {
       title: "URL",
       key: "attributes",
+      width: 300,
       //   dataIndex: "url",
       dataIndex: "attributes", // temporary
       render: (value, index) => (
@@ -194,20 +214,14 @@ const LibraryTab = () => {
       title: "SIZE",
       key: "attributes",
       dataIndex: "attributes",
-      width: viewWidths[10],
+      width: 50,
       render: (value, index) => formatBytes(value.object?.data?.attributes?.size || 0), 
-    },
-    {
-      title: "UPDATED",
-      key: "attributes",
-      dataIndex: "attributes",
-      width: viewWidths[10],
-      render: (value, index) => formatWebDate(value.updatedAt), 
     },
     {
       title: "",
       key: "action",
       dataIndex: "id",
+      width: isTablet ? 40 : 20,
       fixed: "right",
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (
@@ -280,8 +294,26 @@ const showResults = checkSearchParameter(searchText, selectedValue) && searchApp
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
         <Box component="div"> { showResults ? `${meta?.pagination?.total} Results | ` : null}{totalCounts?.library} Total Library Items</Box>
-        <Box component="div">
-        <Button
+        <Box component="div" className={`${libStyles["btns-flex"]}`}>
+          <Button
+            colors={[
+              "transparent",
+              "var(--table-black-text)",
+              "var(--table-black-text)",
+            ]}
+            className={`${styles["export-btn"]}`}
+            label="Select"
+            style={{
+              border: "1px solid var(--light-grey-border)",
+              borderRadius: "40px",
+              padding: "0.2em 15px",
+              lineHeight: "2",
+              height: "100%",
+              textAlign: "center",
+            }}
+            onClick={() => { }}
+          />
+          <Button
             colors={[
               "transparent",
               "var(--table-black-text)",
@@ -325,7 +357,7 @@ const showResults = checkSearchParameter(searchText, selectedValue) && searchApp
             pagination={false}
             loading={loading ? loading : false}
             bordered
-            scroll={{ x: 'max-content',  y: 500, scrollToFirstRowOnChange: true }}
+            scroll={{ y: 500, scrollToFirstRowOnChange: true }}
             style={{
               background: "transparent",
             }}
