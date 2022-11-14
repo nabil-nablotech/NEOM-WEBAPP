@@ -36,7 +36,7 @@ interface TextInputProps {
   showLabel?: boolean;
   InputProps?: any;
   sx?: any;
-  ref?: React.RefObject<HTMLDivElement>;
+  ref?: React.RefObject<HTMLDivElement> | (((instance: HTMLDivElement | null) => void) & React.RefObject<HTMLDivElement>) | undefined | null;
   required?: boolean,
   autoComplete?: string,
   formControlSx?: SxProps
@@ -44,9 +44,10 @@ interface TextInputProps {
   multiline?: boolean
   minRows?: number
   maxRows?: number
+  endAdornment?: React.ReactNode
 };
 
-const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
+const NeomTextInput = styled(TextField)<TextInputProps>(({ theme }) => ({
   // color: theme.palette.getContrastText(grey[500]),
   fontSize: 12,
   // lineHeight: 20,
@@ -98,6 +99,7 @@ export default function NTextFields(props: TextInputProps) {
     formControlSx,
     FormHelperTextProps,
     multiline = false,
+    endAdornment,
     ...rest
   } = props;
 
@@ -138,6 +140,7 @@ export default function NTextFields(props: TextInputProps) {
           required={required}
           name={name}
           autoComplete={autoComplete}
+          endAdornment={endAdornment}
           {...rest}
         >
           {value}
