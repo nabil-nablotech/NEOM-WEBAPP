@@ -22,7 +22,7 @@ import { importCsvImagesZip } from '../../../utils/export-import/import-csv-imag
 import Loader from '../../Common/Loader';
 
 const MediaTab = () => {
-    const { selectedCardIndex, media, mediaMetaData, totalCounts, searchText } = useSelector(
+    const { selectedCardIndex, media, mediaMetaData, totalCounts, searchText, searchApply } = useSelector(
         (state: RootState) => state.searchResults
     );
     const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
@@ -113,7 +113,7 @@ const MediaTab = () => {
     }
   };
 
-  const showResults = checkSearchParameter(searchText, selectedValue);
+  const showResults = checkSearchParameter(searchText, selectedValue) && searchApply;
     return (
         <Box component="div" className={`${styles['main-tab-content']}`}>
             <Box component="div" className={`${styles['utility-bar']}`}>

@@ -19,7 +19,7 @@ import { importCsvImagesZip } from "../../../utils/export-import/import-csv-imag
 import {checkSearchParameter} from '../../../utils/services/helpers';
 
 const PlacesTab = () => {
-  const { searchText, places, placeMetaData, totalCounts } = useSelector(
+  const { searchText, places, placeMetaData, totalCounts, searchApply } = useSelector(
     (state: RootState) => state.searchResults
   );
   const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
@@ -141,7 +141,7 @@ const PlacesTab = () => {
     }
   };
 
-  const showResults = checkSearchParameter(searchText, selectedValue);
+  const showResults = checkSearchParameter(searchText, selectedValue) && searchApply;
   return (
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
