@@ -40,8 +40,13 @@ const StyledTableWrapper = styled(StyledAntTable)`
   }
   .ant-table-cell.more-menu-ant-cell {
     vertical-align: middle;
-    min-width: 20px;
-    width: 20px;
+  }
+  .more-menu-ant-cell,
+  .more-menu-ant-cell > div,
+  .ant-table-tbody > tr > td.more-menu-ant-cell {
+    width: 20px !important;
+    min-width: 20px !important;
+    max-width: 20px !important;
   }
   .more-menu-div {
     vertical-align: middle;
@@ -71,6 +76,15 @@ const StyledTableWrapper = styled(StyledAntTable)`
   }
   .ant-table-cell {
     vertical-align: middle;
+  }
+  .cell-description {
+    max-width: 30ch !important;
+  }
+  .cell-title {
+    max-width: 20ch !important;
+  }
+  .ant-table-tbody > tr > td.more-menu-ant-cell {
+    min-width: unset;
   }
 
   @media (min-width: 575px) and (max-width: 1025px) {
@@ -127,36 +141,25 @@ const ListView = (props: MediaProps) => {
     },
 
     {
+      title: "TITLE",
+      key: "attributes",
+      dataIndex: "attributes",
+      className: "cell-title",
+      render: (value: any, index: any) => value?.fileName?.substring(0, 20),
+    },
+    {
       title: "IMAGE DESCRIPTION",
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-description",
-      render: (value: any, index: any) => value.description?.substring(0, 8),
+      render: (value: any, index: any) => value.description?.substring(0, 30),
     },
     {
-      title: "SITE",
+      title: "TYPE",
       key: "attributes",
       dataIndex: "attributes",
-      className: "cell-site",
-      sorter: (a: { title: string }, b: { title: any }) => {
-        return a.title?.localeCompare(b.title);
-      },
-      sortDirections: ["ascend"],
-      defaultSortOrder: "ascend",
-      // render: (value: string, index: any) => value.substring(0, 8),
-      render: (value: any, index: any) => value.title?.substring(0, 8), // need to remove once ste is confrmed
-    },
-    {
-      title: "SIZE",
-      key: "attributes",
-      dataIndex: "attributes",
-      render: (value, index) => formatBytes(value?.imageMetadata?.fileSize),
-    },
-    {
-      title: "UPDATED",
-      key: "attributes",
-      dataIndex: "attributes",
-      render: (value, index) => formatWebDate(value.updatedAt),
+      width: 200,
+      render: (value, index) => value.categoryType ? value.categoryType.join(', ') : '',
     },
     {
       title: "BEARING",
@@ -170,12 +173,18 @@ const ListView = (props: MediaProps) => {
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-bearing",
-      render: (value: any, index: any) => value.featuredImg ? 'Yes' : 'No',
+      sorter: (a: Media, b: Media ) => {
+        return a?.attributes?.featuredImage.toString().localeCompare(b?.attributes?.featuredImage.toString())
+    },
+      render: (value: any, index: any) =>{
+        return  value.featuredImage ? 'Yes' : 'No'
+      },
     },
     {
       title: "",
       key: "action",
       fixed: "right",
+      width: 20,
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (
         <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />

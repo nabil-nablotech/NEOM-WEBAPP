@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import styles from "../index.module.css";
+import libStyles from "./index.module.css";
 import Button from "../../../components/Button";
 import type { ColumnsType } from "antd/es/table";
 import styled from "styled-components";
@@ -44,7 +45,11 @@ const StyledTableWrapper = styled(StyledAntTable)`
   }
   .ant-table-cell.more-menu-ant-cell {
     vertical-align: middle;
-    min-width: 20px;
+    // min-width: 20px;
+    // width: 20px;
+  }
+  .more-menu-ant-cell,
+  .more-menu-ant-cell > div {
     width: 20px;
   }
   .more-menu-div {
@@ -75,6 +80,9 @@ const StyledTableWrapper = styled(StyledAntTable)`
   }
   .ant-table-cell {
     vertical-align: middle;
+  }
+  .ant-table-tbody > tr > td.more-menu-ant-cell {
+    min-width: unset;
   }
 
   @media (min-width: 575px) and (max-width: 1025px) {
@@ -279,8 +287,26 @@ const showResults = checkSearchParameter(searchText, selectedValue) && searchApp
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
         <Box component="div"> { showResults ? `${meta?.pagination?.total} Results | ` : null}{totalCounts?.library} Total Library Items</Box>
-        <Box component="div">
-        <Button
+        <Box component="div" className={`${libStyles["btns-flex"]}`}>
+          <Button
+            colors={[
+              "transparent",
+              "var(--table-black-text)",
+              "var(--table-black-text)",
+            ]}
+            className={`${styles["export-btn"]}`}
+            label="Select"
+            style={{
+              border: "1px solid var(--light-grey-border)",
+              borderRadius: "40px",
+              padding: "0.2em 15px",
+              lineHeight: "2",
+              height: "100%",
+              textAlign: "center",
+            }}
+            onClick={() => { }}
+          />
+          <Button
             colors={[
               "transparent",
               "var(--table-black-text)",
