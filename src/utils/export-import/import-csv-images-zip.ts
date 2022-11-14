@@ -3,7 +3,8 @@ import client from "../services/axiosClient";
 import { baseUrl } from "../services/helpers";
 import { onImportReaderLoad } from "./on-import-reader-load";
 
-export const importCsvImagesZip = (file: any, slug: string) => {
+export const importCsvImagesZip = (file: any, slug: string, jsonTypes: string[] = [],
+  toBeRemovedColumns: string[] = []) => {
   JSZip.loadAsync(file)
     .then(function (zip) {
       zip.forEach(function (relativePath, zipEntry) {
@@ -15,7 +16,7 @@ export const importCsvImagesZip = (file: any, slug: string) => {
             .then((data) => {
               var reader = new FileReader();
               reader.onload = (loadEvent) => {
-                onImportReaderLoad(loadEvent, "csv", slug);
+                onImportReaderLoad(loadEvent, "csv", slug, jsonTypes, toBeRemovedColumns);
               };
               reader.readAsText(data);
             })
