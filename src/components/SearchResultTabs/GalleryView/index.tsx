@@ -16,26 +16,23 @@ import useEventDetails from "../../../hooks/useEventDetails";
 const GalleryView = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { media, places, activePlaceItem, activeMediaItem } = useSelector(
+    const { media } = useSelector(
         (state: RootState) => state.searchResults
     );
     const { loading: placeLoading, data: placeData } = usePlaceDetails();
-    const { setEdit } = useEventDetails();
+    const { setEdit,  } = useEventDetails();
     
     const menuItems = [
         {
             label: 'Feature',
-            action: () => { }
-        },
-        {
-            label: 'Share',
-            action: () => { }
+            action: (data: any) => { 
+                console.log('data on feature', data);
+            }
         },
         {
             label: "Edit",
             action: (data: any) => {
                 if(data) {
-                    console.log('hex: ', data)
                     setEdit({record: data, type: "Events"});
                 }
             },
@@ -44,7 +41,6 @@ const GalleryView = () => {
             label: "Delete",
             action: (data: any) => {
                 if (data) {
-                    console.log('hex: ', data)
                     dispatch(toggleDeleteConfirmationWindowOpen({
                         flag: true,
                         isAssociatedToPlacesOrEvents: media ? isRecordHavingAssociations(

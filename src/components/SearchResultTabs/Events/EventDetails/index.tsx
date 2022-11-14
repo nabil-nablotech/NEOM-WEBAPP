@@ -308,26 +308,6 @@ const EventDetailsPage = () => {
         },
     ];
 
-
-    const actionsArray = [
-        {
-            label: 'Feature',
-            action: () => { }
-        },
-        {
-            label: 'Share',
-            action: () => { }
-        },
-        {
-            label: 'Edit',
-            action: () => { }
-        },
-        {
-            label: 'Delete',
-            action: () => { }
-        }
-    ]
-
     const handleClickMediaItem = (e: React.MouseEvent, itemIndex: number) => {
         /** itemIndex used to track which item being clicked out of 5;
          * 1st , 2nd etc.
