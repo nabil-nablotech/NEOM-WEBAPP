@@ -130,7 +130,7 @@ function LandingPage() {
                   <Text1>
                     <span>
                       <span className="roboto-light-merino-50px">
-                        {totalCounts?.places}
+                        {totalCounts?.places.toLocaleString()}
                       </span>
                     </span>
                   </Text1>
@@ -150,7 +150,7 @@ function LandingPage() {
                   <Text2>
                     <span>
                       <span className="roboto-light-merino-50px">
-                        {totalCounts?.events}
+                        {totalCounts?.events.toLocaleString()}
                       </span>
                     </span>
                   </Text2>
@@ -172,7 +172,7 @@ function LandingPage() {
                   <Number>
                     <span>
                       <span className="roboto-light-merino-50px">
-                        {totalCounts?.library}
+                        {totalCounts?.library.toLocaleString()}
                       </span>
                     </span>
                   </Number>
@@ -191,7 +191,7 @@ function LandingPage() {
                   <Text3>
                     <span>
                       <span className="roboto-light-merino-50px">
-                        {totalCounts?.media}
+                        {totalCounts?.media.toLocaleString()}
                       </span>
                     </span>
                   </Text3>
