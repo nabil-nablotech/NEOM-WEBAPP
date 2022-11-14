@@ -52,6 +52,7 @@ function UserMenuComponent() {
   const open = Boolean(anchorEl);
   const admin = getRole() === 'Admin';
   const editor = getRole() === 'Editor';
+  const superEditor = getRole() === 'SuperEditor';
   const openSettings = Boolean(anchorElSettings);
   const dispatch = useDispatch()
 
@@ -140,7 +141,7 @@ function UserMenuComponent() {
         marginLeft: 'auto',
         marginRight: '1em'
       }}>
-        <Box component={"div"}>
+        {superEditor && <Box component={"div"}>
           <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }} onClick={
             e => handlePlus()
           } />
@@ -156,8 +157,8 @@ function UserMenuComponent() {
               }} />
             </Box>
           }
-        </Box>
-        {true && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
+        </Box>}
+        {admin && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
         <InitialsWrapper
           id="long-button"
           //@ts-ignore

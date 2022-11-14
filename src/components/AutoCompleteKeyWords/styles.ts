@@ -8,13 +8,8 @@ export const baseButtonMixin = css`
 
 export const ValueWrapper = styled.input`
   width: 100%;
-  padding-left: 8px;
-  padding-right: 32px;
-  height: 38px;
   box-sizing: border-box;
   border-radius: 1px;
-  border: 1px solid #E8E9E9;
-  line-height: 32px;
 `;
 
 export const AutoCompleteIcon = styled.span`

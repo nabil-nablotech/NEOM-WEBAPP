@@ -88,7 +88,7 @@ let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
           left: 0
         }}
       />
-      <div >
+      <div>
         <Input
           className={`${styles["dropdown"]} ${styles["extra-width"]}`}
           id="input"
@@ -99,6 +99,7 @@ let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
           placeholder="Keywords"
         />
         {
+          selectedValueCopy && 
             <Box component="div" style={{
                 display: 'flex',
                 gap: '5px',
