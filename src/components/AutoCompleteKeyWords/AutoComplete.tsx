@@ -12,6 +12,7 @@ import styles from "./index.module.css";
 import { useParams } from "react-router-dom";
 import { tabNameProps } from "../../types/SearchResultsTabsProps";
 import { graphQlHeaders } from "../../utils/services/interceptor";
+import TextInput from "../../components/TextInput";
 
 import {
   AutoCompleteContainer,
@@ -75,6 +76,41 @@ let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
         dispatch(setSelectedValue(selectedValueCopy));
   }
 
+  const textInputSxStyles = {
+    "& .MuiInputBase-input.MuiOutlinedInput-input": {
+      border: "none",
+    },
+    "& .MuiFormLabel-root.MuiInputLabel-root ": {},
+    "& .MuiInputBase-input.MuiOutlinedInput-input ": {
+      lineHeight: "1.2",
+      border: "1.4px solid #fff",
+      padding: "0.5em 1em",
+      height: "1.3em",
+    },
+    "& .MuiOutlinedInput-notchedOutline span": {
+      opacity: 1,
+    },
+    "& .MuiOutlinedInput-notchedOutline legend": {
+      color: "transparent",
+    },
+  };
+
+  const locationInputSx = {
+    ...textInputSxStyles,
+    "& .MuiInputBase-input.MuiOutlinedInput-input ": {
+      paddingInline: "8px",
+    },
+  }
+
+  const commonFormControlSxStyles = {
+    width: "100%",
+    flexGrow: 0,
+    "& .MuiInputBase-root": {
+      backgroundColor: "#fff",
+      border: "1px solid var(--lightest-border)",
+    },
+  };
+
   return (
     <>
       <div
@@ -89,14 +125,19 @@ let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
         }}
       />
       <div>
-        <Input
-          className={`${styles["dropdown"]} ${styles["extra-width"]}`}
+        <TextInput
           id="input"
+          type={"text"}
           autoComplete="off"
+          className={`${styles["input"]}`}
+          label="Keywords"
+          name="keywords"
           value={search.text}
           onChange={onTextChanged}
-          type={"text"}
-          placeholder="Keywords"
+          sx={{
+            ...locationInputSx
+          }}
+          formControlSx={commonFormControlSxStyles}
         />
         {
           selectedValueCopy && 
