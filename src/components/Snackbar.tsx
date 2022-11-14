@@ -63,7 +63,7 @@ export default function PositionedSnackbar(props: SnackbarProps) {
           onClose={handleClose}
           severity={severity ? severity : "success"}
           style={{
-            backgroundColor: severity === "success" ? 'var(--snackbar-green)' : 'initial'
+            backgroundColor: severity === "success" ? 'var(--snackbar-green)' : ''
           }}
         >
           {message}

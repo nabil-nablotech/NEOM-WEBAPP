@@ -18,6 +18,7 @@ import {
   setActiveTab,
   setAddNewItemWindowType,
   setDeleteItemType,
+  setSearchApply,
   toggleAddItemWindowMinimized,
   toggleDeleteItemSuccess,
   toggleShowAddSuccess,
@@ -75,6 +76,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
     if (e.code === "Enter" && searchText.trim().length >= 3) {
       handleSubmit();
       e.preventDefault();
+      dispatch(setSearchApply(true));
       navigate({
         pathname: `/search-results/${tabName}`,
         search: decodeURIComponent(JSON.stringify({
@@ -87,6 +89,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   /**on click on cross icon on global search text input */
   const handleClearSearchText = async () => {
     await dispatch(setSearchText(""));
+    await dispatch(setSearchApply(false));
     switch (tabName) {
       case "Places":
         clearPlaceSearch();

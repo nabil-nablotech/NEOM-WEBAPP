@@ -110,7 +110,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
 `;
 
 const LibraryTab = () => {
-  const { selectedCardIndex, library, searchText, totalCounts, libararyMetaData } =
+  const { searchApply, library, searchText, totalCounts, libararyMetaData } =
     useSelector((state: RootState) => state.searchResults);
     const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
 
@@ -275,7 +275,7 @@ if (searchData?.search) {
 setFilter(filter);
 setOpen(true);
 };
-const showResults = checkSearchParameter(searchText, selectedValue);
+const showResults = checkSearchParameter(searchText, selectedValue) && searchApply;
   return (
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
