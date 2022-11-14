@@ -122,24 +122,34 @@ const ListView = (props: EventsProps) => {
       const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([
         {
             title: "NAME",
-            key: `attributes`,
+            key: `attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish`,
             dataIndex: "attributes",
             className: 'cell-name',
-            // sorter: (a: { attributes: {visit_associate: VisitAssociate} }, b: { attributes: {visit_associate: VisitAssociate} }) => {
-            //     return a.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish.localeCompare(b.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish);
-            // },
-            // sortDirections: ["ascend"],
-            // defaultSortOrder: "ascend",
+              sorter: {
+                  compare: (a: Event, b: Event) => {
+                      return a.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish.localeCompare(b.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish);
+                  },
+                  multiple: 2,
+              },
             render: (value: any, index: number) => {
               return `${value.visit_associate?.data?.attributes?.place_unique_id.data?.attributes.placeNameEnglish}${value.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic || ''}`          
-            }
+            },
+            filterMultiple: true
         },
         {
             title: "NUMBER",
-            key: `attributes`,
+            key: `attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNumber`,
             dataIndex: "attributes",
             className: 'cell-number',
-            render: (value: any, index: number) => value.visit_associate.data?.attributes.place_unique_id.data?.attributes.placeNumber || ''
+            sorter: {
+                compare: (a: Event, b: Event) => {
+                    console.log('hex: ', a, b)
+                    return a?.attributes?.visit_associate?.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber.localeCompare(b?.attributes?.visit_associate?.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber);
+                },
+                multiple: 1,
+            },
+            render: (value: any, index: number) => value.visit_associate.data?.attributes.place_unique_id.data?.attributes.placeNumber || '',
+            filterMultiple: true
         },
         {
             title: "TYPE",

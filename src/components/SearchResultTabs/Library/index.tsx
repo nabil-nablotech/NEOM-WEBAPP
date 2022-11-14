@@ -124,8 +124,7 @@ const LibraryTab = () => {
       key: "attributes",
       dataIndex: "attributes",
       width: viewWidths[0],
-      sorter: (a, b) => a?.title?.localeCompare(b?.title),
-      sortDirections: ["ascend"],
+      sorter: (a, b) => a?.attributes?.title?.localeCompare(b?.attributes?.title),
       defaultSortOrder: "ascend",
       className: "name-column",
       render: (value: any, record: any) => (
