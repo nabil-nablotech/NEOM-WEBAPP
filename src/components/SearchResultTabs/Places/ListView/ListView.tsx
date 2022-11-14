@@ -13,9 +13,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import { useDispatch } from "react-redux";
-import { modifyAssociatedPlaces } from "../../../../store/reducers/searchResultsReducer";
+import { modifyAssociatedPlaces, setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 import MoreOptionsComponent from './MoreOption';
 import { InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
+import { useNavigate } from "react-router-dom";
  
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -139,6 +140,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
 const ListView = (props: PlacesProps) => {
 
   const dispatch = useDispatch()
+  const navigate = useNavigate();
 
   const { isAssociationsStepOpen, associatedPlaces } = useSelector(
     (state: RootState) => state.searchResults
@@ -348,6 +350,9 @@ const ListView = (props: PlacesProps) => {
 
                           if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
                             handleAttachClick(event, record)
+                          } else {
+                            dispatch(setSelectedCardIndex(rowIndex || record.id))
+                            navigate(`/search-results/Places/${record.attributes.uniqueId}`, { replace: true })
                           }
                         }, // click row
                       };

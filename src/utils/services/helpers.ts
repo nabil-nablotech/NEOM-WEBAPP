@@ -511,7 +511,9 @@ export const detectMediaRecordType = (record: Media) => {
     : MEDIA_TYPE_3D;
 };
 
-export const isImagePathInvalid = (value: string) => {
+export const isImagePathInvalid = (value: string | undefined) => {
+
+  if(!value) return true
   return (
     value.toLowerCase().indexOf("undefined") !== -1 ||
     value.toLowerCase().indexOf("null") !== -1
