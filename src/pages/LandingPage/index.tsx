@@ -4,6 +4,7 @@ import {
   RobotoMediumMerino20px,
   RobotoLightMerino50px,
   ValignTextMiddle,
+  RalignText,
 } from "./styledMixins";
 import "./style.css";
 import "../../globals.css";
@@ -152,7 +153,7 @@ function LandingPage() {
                     </span>
                   </Text2>
                   <Places>
-                    <span className="roboto-medium-merino-20px">
+                    <span className="roboto-medium-merino-20px" style={{paddingLeft: 5}}>
                       {spanText5}
                     </span>
                   </Places>
@@ -304,18 +305,20 @@ const OverlapGroup = styled.div`
 `;
 
 const Text1 = styled.h1`
-  ${ValignTextMiddle}
+  ${RalignText}
   ${RobotoLightMerino50px}
-            position: absolute;
+  position: absolute;
   width: 108px;
   height: 60px;
   top: 0;
   left: 0;
   letter-spacing: 0.5px;
   line-height: 24px;
+  align-item: flex-start;
 `;
 
 const Places = styled.div`
+  ${RalignText}
   ${RobotoMediumMerino20px}
   position: absolute;
   width: 91px;
@@ -324,6 +327,7 @@ const Places = styled.div`
   letter-spacing: 0.5px;
   line-height: 24px;
   white-space: nowrap;
+  align-item: flex-start;
 `;
 
 const Frame2608169 = styled.div`
@@ -350,7 +354,7 @@ const OverlapGroup1 = styled.div`
 `;
 
 const Text2 = styled.div`
-  ${ValignTextMiddle}
+  ${RalignText}
   ${RobotoLightMerino50px}
             position: absolute;
   width: 110px;
@@ -359,6 +363,7 @@ const Text2 = styled.div`
   left: 0;
   letter-spacing: 0.5px;
   line-height: 24px;
+  padding: 0 5px;
 `;
 
 const Frame2608170 = styled.div`
@@ -385,7 +390,7 @@ const OverlapGroup2 = styled.div`
 `;
 
 const Number = styled.div`
-  ${ValignTextMiddle}
+  ${RalignText}
   ${RobotoLightMerino50px}
             position: absolute;
   width: 101px;
@@ -394,9 +399,11 @@ const Number = styled.div`
   left: 0;
   letter-spacing: 0.5px;
   line-height: 24px;
+  padding: 0 5px;
 `;
 
 const LibraryItems = styled.div`
+  ${RalignText}
   ${RobotoMediumMerino20px}
   position: absolute;
   width: 150px;
@@ -405,6 +412,7 @@ const LibraryItems = styled.div`
   letter-spacing: 0.5px;
   line-height: 24px;
   white-space: nowrap;
+  padding: 0 5px;
 `;
 
 const Frame2608171 = styled.div`
@@ -431,7 +439,7 @@ const OverlapGroup3 = styled.div`
 `;
 
 const Text3 = styled.div`
-  ${ValignTextMiddle}
+  ${RalignText}
   ${RobotoLightMerino50px}
             position: absolute;
   width: 110px;
@@ -440,9 +448,11 @@ const Text3 = styled.div`
   left: 0;
   letter-spacing: 0.5px;
   line-height: 24px;
+  padding: 0 5px;
 `;
 
 const MediaItems = styled.div`
+${RalignText}
   ${RobotoMediumMerino20px}
   position: absolute;
   width: 129px;
@@ -451,6 +461,7 @@ const MediaItems = styled.div`
   letter-spacing: 0.5px;
   line-height: 24px;
   white-space: nowrap;
+  padding: 0 5px;
 `;
 
 export default LandingPage;
