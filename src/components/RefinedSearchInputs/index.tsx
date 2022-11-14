@@ -5,6 +5,8 @@ import {
   FormControlLabel,
   FormGroup,
   Grid,
+  InputAdornment,
+  IconButton
 } from "@mui/material";
 import DropdownComponent from "./../Dropdown/index";
 import AutoComplete from "./../AutoComplete";
@@ -19,7 +21,8 @@ import {
   MEDIA_TAB_NAME,
   tabNameBasedOnIndex,
 } from "../../utils/services/helpers";
-
+import { format } from "date-fns";
+import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import AutoCompleteKeyWordsComponent from "../AutoCompleteKeyWords"
 const BaseInputs = ({
   activeTab,
@@ -34,7 +37,13 @@ const BaseInputs = ({
   textInputSxStyles
 }: BaseInputProps) => {
   const [locationModalOpen, toggleLocationModal] = useState<boolean>(false);
-  
+  const [dateModalOpen, toggleDateModal] = useState<boolean>(false);
+  const locationInputSx = {
+    ...textInputSxStyles,
+    "& .MuiInputBase-input.MuiOutlinedInput-input ": {
+      paddingInline: "8px",
+    },
+  }
   return (
     <>
       <Grid item sm={2} className={`${styles["input-field"]}`}>
@@ -127,6 +136,77 @@ const BaseInputs = ({
           formControlSx={commonFormControlSxStyles}
         />
       </Grid>
+      
+      <Grid item sm={2} className={`${styles["location-grid-item"]}`}>
+        <Box component="div" className={`${styles["location-popup-relative-wrapper"]}`}>
+          <Box component="div"
+            onClick={(e) => {
+              e.preventDefault();
+              toggleLocationModal(!locationModalOpen);
+            }}
+          >
+            <TextInput
+              className={`${styles["location"]}`}
+              label="Location"
+              name="location"
+              value={`${selectedValue.latitude}${
+                  selectedValue.latitude ? "," : ""
+              }${selectedValue.longitude}`}
+              onChange={(e) => {}}
+              sx={{
+                ...locationInputSx
+              }}
+              formControlSx={commonFormControlSxStyles}
+            />
+          </Box>
+          {locationModalOpen && (
+            <>
+              <Grid
+                container
+                className={`${styles["location-popup-container"]}`}
+              >
+                {/* <HighlightOffIcon
+                  className={`${styles["location-popup-close"]}`}
+                  style={{}}
+                  // onClick={(e) => {
+                  //   e.preventDefault();
+                  //   toggleLocationModal(false);
+                  // }}
+                /> */}
+                <Grid item sm={6}>
+                  <TextInput
+                    className={`${styles["latitude"]}`}
+                    label="Latitude"
+                    name="latitude"
+                    type="number"
+                    value={selectedValue.latitude}
+                    onChange={handleChange}
+                    sx={{
+                      ...locationInputSx
+                    }}
+                    formControlSx={commonFormControlSxStyles}
+                  />
+                </Grid>
+                <Grid item sm={6}>
+                  <TextInput
+                    className={`${styles["longitude"]}`}
+                    label="Longitude"
+                    name="longitude"
+                    type="number"
+                    value={selectedValue.longitude}
+                    onChange={handleChange}
+                    sx={{
+                      ...locationInputSx
+                    }}
+                    formControlSx={commonFormControlSxStyles}
+                  />
+                </Grid>
+                <Grid item></Grid>
+              </Grid>
+            </>
+          )}
+        </Box>
+      </Grid>
       {activeTab === EVENTS_TAB_NAME && (
         <Grid item sm={2} className={`${styles["input-field"]}`}>
           <AutoComplete
@@ -146,76 +226,6 @@ const BaseInputs = ({
           />
         </Grid>
       )}
-      <Grid item sm={4} className={`${styles["location-grid-item"]}`}>
-        <Box component="div">
-          <Box component="div"
-            onClick={(e) => {
-              e.preventDefault();
-              toggleLocationModal(!locationModalOpen);
-            }}
-          >
-            <TextInput
-              className={`${styles["location"]}`}
-              label="Location"
-              name="location"
-              value={`${selectedValue.latitude}${
-                  selectedValue.latitude ? "," : ""
-              }${selectedValue.longitude}`}
-              onChange={(e) => {}}
-              sx={{
-                ...textInputSxStyles,
-              }}
-              formControlSx={commonFormControlSxStyles}
-            />
-          </Box>
-          {locationModalOpen && (
-            <>
-              <Grid
-                container
-                className={`${styles["location-popup-container"]}`}
-              >
-                {/* <HighlightOffIcon
-                  className={`${styles["location-popup-close"]}`}
-                  style={{}}
-                  // onClick={(e) => {
-                  //   e.preventDefault();
-                  //   toggleLocationModal(false);
-                  // }}
-                /> */}
-                <Grid item sm={6}>
-                  <TextInput
-                    className={`${styles["latitude"]}`}
-                    label="Latitude"
-                    name="latitude"
-                    type="number"
-                    value={selectedValue.latitude}
-                    onChange={handleChange}
-                    sx={{
-                      ...textInputSxStyles,
-                    }}
-                    formControlSx={commonFormControlSxStyles}
-                  />
-                </Grid>
-                <Grid item sm={6}>
-                  <TextInput
-                    className={`${styles["longitude"]}`}
-                    label="Longitude"
-                    name="longitude"
-                    type="number"
-                    value={selectedValue.longitude}
-                    onChange={handleChange}
-                    sx={{
-                      ...textInputSxStyles,
-                    }}
-                    formControlSx={commonFormControlSxStyles}
-                  />
-                </Grid>
-                <Grid item></Grid>
-              </Grid>
-            </>
-          )}
-        </Box>
-      </Grid>
       <Grid item sm={2} className={`${styles["input-field"]}`}>
         <AutoComplete
           className={`${styles["dropdown"]} ${styles["extra-width"]}`}
@@ -234,27 +244,87 @@ const BaseInputs = ({
       <Grid item sm={2} className={`${styles["input-field"]}`}>
         <AutoCompleteKeyWordsComponent />
       </Grid>
-      {activeTab === EVENTS_TAB_NAME && (
-        <Grid item sm={2} className={`${styles["date-grid-item"]}`}>
-          <DatePicker
-            placeholderText="From Date"
-            className={`${styles["date"]}`}
-            selected={selectedValue.startDate && new Date(selectedValue.startDate)}
-            onChange={(date: Date) => handleDate(date, "startDate")}
-          />
+      {activeTab === EVENTS_TAB_NAME && 
+        <Grid item sm={4} className={`${styles["input-field"]} ${styles["date-input-field"]}`}>
+          <Box component="div"
+            onClick={(e) => {
+              e.preventDefault();
+              toggleDateModal(!dateModalOpen);
+            }}
+          >
+            <TextInput
+              className={`${styles["date-input-box"]}`}
+              label="Date Range"
+              name="date range"
+              value={selectedValue.startDate && selectedValue.endDate ? `${
+                selectedValue.startDate ? format(
+                  new Date(selectedValue.startDate),
+                  "MM/dd/yyyy"
+                ) : ''
+              } ${selectedValue.endDate ? `- ${format(
+                  new Date(selectedValue.endDate),
+                  "MM/dd/yyyy"
+                )}` : ''}` : ''}
+              onChange={(e) => { }}
+              sx={{
+                ...locationInputSx,
+                "& .MuiInputBase-input.MuiOutlinedInput-input": {
+                  fontSize: '0.9em'
+                }
+              }}
+              formControlSx={{
+                ...commonFormControlSxStyles,
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end" sx={{
+                    marginLeft: '-8px'
+                  }}>
+                    <IconButton
+                      aria-label="CalendarTodayIcon"
+                      edge="end"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleDateModal(!dateModalOpen);
+                      }}
+                    >
+                      <CalendarTodayOutlinedIcon fontSize="small" sx={{
+                        color: '#000'
+                      }} />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+            />
+          </Box>
+          {dateModalOpen && (
+            <>
+              <Grid
+                container
+                className={`${styles["date-popup-container"]}`}
+              >
+                <Grid item sm={6} className={`${styles["date-popup-grid-item"]}`}>
+                  <DatePicker
+                    placeholderText="From Date"
+                    className={`${styles["date"]} ${styles["date-subinput"]}`}
+                    selected={selectedValue.startDate && new Date(selectedValue.startDate)}
+                    onChange={(date: Date) => handleDate(date, "startDate")}
+                  />
+                </Grid>
+                <Grid item sm={6} className={`${styles["date-popup-grid-item"]}`}>
+                  <DatePicker
+                    placeholderText="To Date"
+                    className={`${styles["date"]} ${styles["date-subinput"]}`}
+                    selected={selectedValue.endDate && new Date(selectedValue.endDate)}
+                    minDate={selectedValue.startDate && new Date(selectedValue.startDate)}
+                    onChange={(date: Date) => handleDate(date, "endDate")}
+                  />
+                </Grid>
+              </Grid>
+            </>
+          )}
         </Grid>
-      )}
-      {activeTab === EVENTS_TAB_NAME && (
-        <Grid item sm={2} className={`${styles["date-grid-item"]}`}>
-          <DatePicker
-            placeholderText="To Date"
-            className={`${styles["date"]}`}
-            selected={selectedValue.endDate && new Date(selectedValue.endDate)}
-            minDate={selectedValue.startDate && new Date(selectedValue.startDate)}
-            onChange={(date: Date) => handleDate(date, "endDate")}
-          />
-        </Grid>
-      )}
+      }
     </>
   );
 };
@@ -270,10 +340,17 @@ const MediaInputs = ({
   textInputSxStyles
 }: MediaInputProps) => {
   const [locationModalOpen, toggleLocationModal] = useState<boolean>(false);
+
+  const locationInputSx = {
+    ...textInputSxStyles,
+    "& .MuiInputBase-input.MuiOutlinedInput-input ": {
+      paddingInline: "8px",
+    },
+  }
   
   return (
     <>
-      <Grid item sm={4} className={`${styles["location-grid-item"]}`}>
+      <Grid item sm={2} className={`${styles["location-grid-item"]}`}>
         <Box component="div">
           <Box component="div"
             onClick={(e) => {
@@ -289,7 +366,7 @@ const MediaInputs = ({
                 }${selectedValue.longitude}`}
               onChange={(e) => { }}
               sx={{
-                ...textInputSxStyles,
+                ...locationInputSx
               }}
               formControlSx={commonFormControlSxStyles}
             />
@@ -317,7 +394,7 @@ const MediaInputs = ({
                     value={selectedValue.latitude}
                     onChange={handleChange}
                     sx={{
-                      ...textInputSxStyles,
+                      ...locationInputSx,
                     }}
                     formControlSx={commonFormControlSxStyles}
                   />
@@ -331,7 +408,7 @@ const MediaInputs = ({
                     value={selectedValue.longitude}
                     onChange={handleChange}
                     sx={{
-                      ...textInputSxStyles,
+                      ...locationInputSx,
                     }}
                     formControlSx={commonFormControlSxStyles}
                   />
@@ -421,7 +498,7 @@ const RefinedSearchInputs = ({
       lineHeight: "1.2",
       border: "1.4px solid #fff",
       padding: "0.5em 1em",
-      height: "1.4em",
+      height: "1.3em",
     },
     "& .MuiOutlinedInput-notchedOutline span": {
       opacity: 1,

@@ -43,6 +43,19 @@ const AutoCompleteComponent = ({
                     option && <Chip size = "small" variant="outlined" label={option} {...getTagProps({ index })} />
                   ))
                 }
+                renderOption={(props, option) => {
+                  return <Box component={"li"}
+                    {...props}
+                    sx={{
+                      textAlign: 'left',
+                      paddingInline: '0.5em',
+                      paddingBottom: '0.5em',
+                      lineHeight: '1.2',
+                      '$ :hover': {
+                        backgroundColor: 'red'
+                      }
+                    }}>{option}</Box>
+                }}
                 renderInput={(params) => (
                   <TextField
                     {...params}

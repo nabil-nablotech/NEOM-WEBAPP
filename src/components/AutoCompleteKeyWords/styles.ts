@@ -8,13 +8,8 @@ export const baseButtonMixin = css`
 
 export const ValueWrapper = styled.input`
   width: 100%;
-  padding-left: 8px;
-  padding-right: 32px;
-  height: 38px;
   box-sizing: border-box;
   border-radius: 1px;
-  border: 1px solid #E8E9E9;
-  line-height: 32px;
 `;
 
 export const AutoCompleteIcon = styled.span`
@@ -44,9 +39,9 @@ export const AutoCompleteContainer = styled.ul`
   list-style-type: none;
   min-width: 190px;
   position: absolute;
-  top: 92%;
+  top: 74%;
   border: 1px solid #b6c1ce;
-  border-radius: 2px;
+  border-radius: 3px;
   margin: 0;
   box-sizing: border-box;
   max-height: 280px;
@@ -55,7 +50,7 @@ export const AutoCompleteContainer = styled.ul`
 `;
 
 export const AutoCompleteItem = styled.li`
-  padding: 0 24px;
+  padding: 0 14px;
   width: 100%;
   box-sizing: border-box;
   &:hover {
