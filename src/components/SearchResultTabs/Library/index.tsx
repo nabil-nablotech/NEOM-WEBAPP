@@ -23,6 +23,7 @@ import { setSelectedCardIndex } from "../../../store/reducers/searchResultsReduc
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ExportModal from "../../ExportModal";
+import { useMediaQuery } from 'react-responsive'
 
 let viewWidths = ["20vw", "20vw", "20vw", "20vw", "5vw"];
 
@@ -45,8 +46,8 @@ const StyledTableWrapper = styled(StyledAntTable)`
   }
   .ant-table-cell.more-menu-ant-cell {
     vertical-align: middle;
-    // min-width: 20px;
-    // width: 20px;
+    min-width: 20px;
+    width: 20px;
   }
   .more-menu-ant-cell,
   .more-menu-ant-cell > div {
@@ -70,9 +71,13 @@ const StyledTableWrapper = styled(StyledAntTable)`
     border-left: 1px solid #f0f0f0;
   }
 
-  .ant-table-cell.cell-image {
-    width: 15vw;
+
+  .ant-table-tbody > tr > td {
+    word-wrap: unset;
+    word-break: unset;
+    white-space: break-spaces;
   }
+
   .media-table-image {
     object-fit: cover;
     width: 100%;
@@ -97,7 +102,11 @@ const StyledTableWrapper = styled(StyledAntTable)`
 
     .ant-table-thead > tr > th.more-menu-ant-cell.ant-table-cell-fix-right,
     .ant-table-tbody > tr > td.more-menu-ant-cell.ant-table-cell-fix-right {
-      right: -5vw !important;
+      right: -2vw !important;
+    } 
+
+    .ant-table-tbody > tr > td.more-menu-ant-cell {
+      min-width: unset;
     }
 
     th.ant-table-cell,
@@ -121,6 +130,7 @@ const LibraryTab = () => {
   const { searchApply, library, searchText, totalCounts, libararyMetaData } =
     useSelector((state: RootState) => state.searchResults);
     const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
+    const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -131,7 +141,7 @@ const LibraryTab = () => {
       title: "NAME",
       key: "attributes",
       dataIndex: "attributes",
-      width: viewWidths[0],
+      width: 200,
       sorter: (a, b) => a?.attributes?.title?.localeCompare(b?.attributes?.title),
       defaultSortOrder: "ascend",
       className: "name-column",
@@ -150,6 +160,7 @@ const LibraryTab = () => {
     {
       title: "DESCRIPTION",
       key: "attributes",
+      width: 300,
       className: "description-column",
       //   dataIndex: "description",
       dataIndex: "attributes", // temporary
@@ -161,6 +172,7 @@ const LibraryTab = () => {
     {
       title: "CITATION",
       className: "citation-column",
+      width: 300,
       //   dataIndex: "citation",
       dataIndex: "attributes", // temporary
       render: (value: any, index) => {
@@ -172,6 +184,7 @@ const LibraryTab = () => {
     {
       title: "URL",
       key: "attributes",
+      width: 300,
       //   dataIndex: "url",
       dataIndex: "attributes", // temporary
       render: (value, index) => (
@@ -201,20 +214,14 @@ const LibraryTab = () => {
       title: "SIZE",
       key: "attributes",
       dataIndex: "attributes",
-      width: viewWidths[10],
+      width: 50,
       render: (value, index) => formatBytes(value.object?.data?.attributes?.size || 0), 
-    },
-    {
-      title: "UPDATED",
-      key: "attributes",
-      dataIndex: "attributes",
-      width: viewWidths[10],
-      render: (value, index) => formatWebDate(value.updatedAt), 
     },
     {
       title: "",
       key: "action",
       dataIndex: "id",
+      width: isTablet ? 40 : 20,
       fixed: "right",
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (
@@ -350,7 +357,7 @@ const showResults = checkSearchParameter(searchText, selectedValue) && searchApp
             pagination={false}
             loading={loading ? loading : false}
             bordered
-            scroll={{ x: 'max-content',  y: 500, scrollToFirstRowOnChange: true }}
+            scroll={{ y: 500, scrollToFirstRowOnChange: true }}
             style={{
               background: "transparent",
             }}

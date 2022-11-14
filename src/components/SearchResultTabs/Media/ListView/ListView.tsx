@@ -17,6 +17,7 @@ import { Media } from "../../../../types/Media";
 // import CloseIcon from '@mui/icons-material/CloseOutlined';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useMediaQuery } from 'react-responsive'
 
 import { setActiveMediaItem, setActiveMediaItemIndex, setSelectedCardIndex } from '../../../../store/reducers/searchResultsReducer';
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
@@ -77,12 +78,6 @@ const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-cell {
     vertical-align: middle;
   }
-  .cell-description {
-    max-width: 30ch !important;
-  }
-  .cell-title {
-    max-width: 20ch !important;
-  }
   .ant-table-tbody > tr > td.more-menu-ant-cell {
     min-width: unset;
   }
@@ -108,6 +103,20 @@ const StyledTableWrapper = styled(StyledAntTable)`
     td.ant-table-cell {
     }
 
+    .ant-table td {
+      font-size: 12px;
+      white-space: break-spaces;
+    }
+    .ant-table th {
+      font-size: 13px;
+    }
+
+    .ant-table-tbody > tr > td {
+      word-wrap: unset;
+      word-break: unset;
+      white-space: break-spaces;
+    }
+
     .cell-image {
       min-width: 20ch !important;
     }
@@ -115,12 +124,17 @@ const StyledTableWrapper = styled(StyledAntTable)`
     .cell-description {
       min-width: 20ch !important;
     }
+
+    .cell-bearing {
+      min-width: 18ch !important;
+    }
   }
   ${antTablePaginationCss}
 `;
 
 const ListView = (props: MediaProps) => {
   const { data, hasMoreData, fetchData, loading, setEdit } = props;
+  const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
 
   const tableHeaderJson: ColumnsType<any> = [
     {
@@ -128,6 +142,7 @@ const ListView = (props: MediaProps) => {
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-image",
+      width: 150,
       render: (value: any, index: any) => (
         <>
           {value?.object?.data?.attributes ? <Box
@@ -145,20 +160,22 @@ const ListView = (props: MediaProps) => {
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-title",
+      width: 170,
       render: (value: any, index: any) => value?.fileName?.substring(0, 20),
     },
     {
-      title: "IMAGE DESCRIPTION",
+      title: "DESCRIPTION",
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-description",
+      width: 200,
       render: (value: any, index: any) => value.description?.substring(0, 30),
     },
     {
       title: "TYPE",
       key: "attributes",
       dataIndex: "attributes",
-      width: 200,
+      width: 100,
       render: (value, index) => value.categoryType ? value.categoryType.join(', ') : '',
     },
     {
@@ -166,6 +183,7 @@ const ListView = (props: MediaProps) => {
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-bearing",
+      width: isTablet? 80 : 60,
       render: (value: any, index: any) => value?.bearing?.substring(0, 2),
     },
     {
@@ -173,6 +191,7 @@ const ListView = (props: MediaProps) => {
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-bearing",
+      width: isTablet? 80 : 60,
       sorter: (a: Media, b: Media ) => {
         return a?.attributes?.featuredImage.toString().localeCompare(b?.attributes?.featuredImage.toString())
     },
@@ -230,7 +249,7 @@ const ListView = (props: MediaProps) => {
           pagination={false}
           loading={loading ? loading : false}
           bordered
-          scroll={{ x: 'max-content', y: 500, scrollToFirstRowOnChange: true }}
+          scroll={{ y: 500, scrollToFirstRowOnChange: true }}
           style={{
             background: "transparent",
           }}
