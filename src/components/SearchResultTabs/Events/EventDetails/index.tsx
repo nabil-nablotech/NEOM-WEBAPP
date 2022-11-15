@@ -14,13 +14,13 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import MoreOptionsComponent from "../ListView/MoreOption";
-import { getRole } from '../../../../utils/storage/storage';
 import {
     antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate,
     isEmptyValue, NO_DESCRIPTION, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, isEventDetailAttached,
     detectMediaTypeFromMediaAssociate,
     EVENTS_TAB_NAME,
-    itemAddEditAccess
+    itemAddEditAccess,
+    itemDeleteAccess
 } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
@@ -129,9 +129,6 @@ const StyledTableWrapper = styled(StyledAntTable)`
     ${antTablePaginationCss}
 `
 
-const superEditor = getRole() === 'SuperEditor';
-const editor = getRole() === 'Editor';
-
 const EventDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
     const navigate = useNavigate();
@@ -141,7 +138,7 @@ const EventDetailsPage = () => {
     );
     const { data } = useSelector((state: RootState) => state.login);
 
-    const { loading: eventLoading, data: eventDetails, setEdit } = useEventDetails();
+    const { loading: eventLoading, data: eventDetails, setEdit, setFeaturedMedia } = useEventDetails();
 
     let selectedPlaceObjIndex: number = 0
     let selectedPlaceObj: Place = places[0]
@@ -156,16 +153,10 @@ const EventDetailsPage = () => {
     const [isCopyDone, setCopyDone] = useState<boolean>(false)
 
     const {
-        anchorEl,
-        open,
-        handleClick,
-        handleClose,
-        handleSettingsClose
-    } = useAnchor()
 
-    const { fetchMediaItems, hasMoreData, loading } = useMedia();
+    } = useAnchor()
     
-    const {loading: loadingRemarks, data: remarks, addRemarksMutation, getRemarksMutation, updateRemarksMutation } = useRemarks();
+    const {loading: loadingRemarks, data: remarks, addRemarksMutation, updateRemarksMutation } = useRemarks();
     const dispatch = useDispatch()
 
     const [mediaGridActiveItems, setMediaGridActiveItems] = useState<number>(0)
@@ -214,7 +205,11 @@ const EventDetailsPage = () => {
                 setEdit({record: eventDetails, type: "Events"});
             },
         },
-        {
+        
+    ]
+
+    if (itemDeleteAccess) {
+        menuItems.push({
             label: "Delete",
             action: () => {
                 dispatch(toggleDeleteConfirmationWindowOpen({
@@ -226,9 +221,8 @@ const EventDetailsPage = () => {
                     id: eventDetails.id
                 }))
             },
-        },
-    ]
-
+        })
+    }
     const tableHeaderJson: ColumnsType<any> = [
         {
             title: "NAME",
@@ -734,7 +728,7 @@ const EventDetailsPage = () => {
                                                         </Grid>
                                                         <Grid item>
                                                             <MoreOptionsComponent
-                                                                type="Media" setEdit={setEdit} record={itemObj}
+                                                                type="Media" setEdit={setEdit} record={itemObj} setFeaturedMedia={setFeaturedMedia}
                                                             />
                                                         </Grid>
                                                     </Grid>

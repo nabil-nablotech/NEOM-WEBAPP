@@ -16,11 +16,13 @@ import { RootState } from '../../../../store';
 const MoreOptionsComponent = ({
     type,
     record,
-    setEdit
+    setEdit,
+    setFeaturedMedia
 }: {
     type: tabNameProps;
     record: any;
     setEdit: (payload: { record: Event | Media | MediaAssociateObj, type: tabNameProps }) => void
+    setFeaturedMedia?: (payload: any) => void
 }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
@@ -54,6 +56,16 @@ const MoreOptionsComponent = ({
                     "aria-labelledby": "basic-button",
                 }}
             >
+                {type === "Media" && setFeaturedMedia && <MenuItem
+                    key={1}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setFeaturedMedia(record);
+                        handleClose();
+                    }}
+                >
+                    Featured
+                </MenuItem>}
                 <MenuItem
                     key={1}
                     onClick={(e) => {
