@@ -440,7 +440,6 @@ export const NO_IMAGE = "No image available";
 
 export const checkIsNew = (updatedDate: string) => {
   const expDate = dayjs(updatedDate).add(30, "d").toDate();
-  console.log(updatedDate, dayjs().isBefore(expDate))
   return dayjs().isBefore(expDate);
 };
 
