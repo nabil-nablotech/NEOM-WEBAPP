@@ -150,7 +150,6 @@ const ListView = (props: EventsProps) => {
             className: 'cell-number',
             sorter: {
                 compare: (a: Event, b: Event) => {
-                    console.log('hex: ', a, b)
                     return a?.attributes?.visit_associate?.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber.localeCompare(b?.attributes?.visit_associate?.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber);
                 },
                 multiple: 1,

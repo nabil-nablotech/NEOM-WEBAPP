@@ -43,7 +43,9 @@ const useEventDetails = () => {
   });
 
   const [updateMediaMutation, { data: updateData, reset }] = apolloMutation(updateMedia, {context: graphQlHeaders().context, onCompleted: (data) => {
-    console.log('success on featured image', data);
+    if (uniqueId) {
+      fetchEventDetails(uniqueId);
+    }
   }});
 
   useEffect(() => {

@@ -326,14 +326,15 @@ const PlaceDetailsPage = () => {
     },
     {
       title: "",
-      key: "new",
-      dataIndex: "new",
+      key: "visit_unique_id",
+      dataIndex: "visit_unique_id",
       className: "cell-new",
       // render: (value: any, index: any) => "New",
       render: (value: any, index: any) => (
-        <div className={`${gridStyles["card-new-flag"]}`}>
-          {checkIsNew(value?.createdAt) ? "NEW!" : ""}
-        </div>
+        <>
+        {checkIsNew(value?.visitDate) ? <div className={`${gridStyles["card-new-flag"]}`}>
+          NEW!
+        </div> : null}</>
       ),
     },
     {
