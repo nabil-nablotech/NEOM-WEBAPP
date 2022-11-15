@@ -19,13 +19,19 @@ import { RootState } from '../../../../store';
 import { useSelector } from 'react-redux';
 
 const StyledTableWrapper = styled(StyledAntTable)`
-td
-{
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+    td
+    {
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    td.cell-name {
+        max-width: 250px;
+    }
+    td.cell-conserve {
+        max-width: 80px;
+    }
     .ant-table-container {
     }
     .ant-table {
@@ -53,7 +59,7 @@ td
         min-width: 18ch !important;
     }
     .cell-conserve {
-        min-width: 25ch !important;
+        min-width: 20ch !important;
     }
     .ant-table-cell.more-menu-ant-cell {
         vertical-align:middle;
@@ -131,6 +137,7 @@ const ListView = (props: EventsProps) => {
                   },
                   multiple: 2,
               },
+              width: 110,
             render: (value: any, index: number) => {
               return `${value.visit_associate?.data?.attributes?.place_unique_id.data?.attributes.placeNameEnglish}${value.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic || ''}`          
             },
@@ -151,10 +158,19 @@ const ListView = (props: EventsProps) => {
             filterMultiple: true
         },
         {
-            title: "TYPE",
+            title: "EVENT NUMBER",
             key: `attributes`,
             dataIndex: "attributes",
-            render: (value: any, index: number) => value.visit_associate.data?.attributes.place_unique_id.data?.attributes.siteType.map((x: string) => `${x};`) || ''
+            width: 80,
+            render: (value: any, index: number) => {
+                return `Event ${value.visitNumber}`
+            }
+        },
+        {
+            title: "SITE TYPE",
+            key: `attributes`,
+            dataIndex: "attributes",
+            render: (value: any, index: number) => value.visit_associate.data?.attributes.place_unique_id.data?.attributes.siteType.join('; ') || ''
         },
         {
             title: "RESEARCH VALUE",
@@ -162,7 +178,7 @@ const ListView = (props: EventsProps) => {
             dataIndex: "attributes",
             className: 'cell-research',
             render: (value: any, index: number) => {
-                return value?.researchValue.length > 0 ? value?.researchValue?.map((x: string) => `${x};`) : '';
+                return value?.researchValue.length > 0 ? value?.researchValue.join('; ') : ''
             },
         },
         {
@@ -170,7 +186,7 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-tourism',
-            render: (value: any, index: number) => value?.tourismValue.length > 0 ? value?.tourismValue?.map((x: string) => `${x};`) : ''
+            render: (value: any, index: number) => value?.tourismValue.length > 0 ? value?.tourismValue.join('; ') : ''
             // render: (value: any, index: number) => "Temp"
         },
         {
@@ -178,14 +194,14 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-conserve',
-            render: (value: any, index: number) => value?.stateOfConservation.length > 0 ? value?.stateOfConservation?.map((x: string) => `${x};`) : ''
+            render: (value: any, index: number) => value?.stateOfConservation.length > 0 ? value?.stateOfConservation.join('; ') : ''
         },
         {
             title: "RECOMMENDATION",
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-recommend',
-            render: (value: any, index: number) => value?.recommendation.length > 0 ? value?.recommendation?.map((x: string) => `${x || ''};`) : ''
+            render: (value: any, index: number) => value?.recommendation.length > 0 ? value?.recommendation.join('; ') : ''
             // render: (value: any, index: number) => "temp"
         },
         {
@@ -193,13 +209,13 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-period',
-            render: (value: any, index: number) => value?.period.length > 0 ? value?.period?.map((x: string) => `${x};`) : ''
+            render: (value: any, index: number) => value?.period.length > 0 ? value?.period.join('; ') : ''
         },
         {
             title: "RISK",
             key: `attributes`,
             dataIndex: "attributes",
-            render: (value: any, index: number) => value?.risk?.length > 0 ? value?.risk?.map((x: string) => `${x};`) : ''
+            render: (value: any, index: number) => value?.risk?.length > 0 ? value?.risk.join('; ') : ''
         },
         {
             title: "",
