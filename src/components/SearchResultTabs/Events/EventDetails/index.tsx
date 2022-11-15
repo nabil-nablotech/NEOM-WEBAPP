@@ -19,7 +19,8 @@ import {
     antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate,
     isEmptyValue, NO_DESCRIPTION, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, isEventDetailAttached,
     detectMediaTypeFromMediaAssociate,
-    EVENTS_TAB_NAME
+    EVENTS_TAB_NAME,
+    itemAddEditAccess
 } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
@@ -303,7 +304,7 @@ const EventDetailsPage = () => {
             fixed: "right",
             className: "more-menu-ant-cell",
             render: (value: any, record: Media) => (
-                <MoreOptionsComponent type="Library" setEdit={setEdit} record={record} />
+                <>{itemAddEditAccess && <MoreOptionsComponent type="Library" setEdit={setEdit} record={record} />}</>
             ),
         },
     ];
@@ -411,9 +412,10 @@ const EventDetailsPage = () => {
                                                 }))
                                             }}
                                         /> :
-                                        <CustomMoreOptionsComponent
+                                        <>
+                                        {itemAddEditAccess && <CustomMoreOptionsComponent
                                             menuActions={menuItems}
-                                        />}
+                                        />}</>}
                                 </Box>
                             </Grid>
                         </Grid>
@@ -712,7 +714,7 @@ const EventDetailsPage = () => {
                                                     <Grid container className={`${styles['media-grid-item-options-row']}`}>
                                                         <Grid item>
                                                             {/* To-do: modify featured image flag */}
-                                                            {inx === 0 && <Box component="div">
+                                                            {itemObj.media_unique_id.featuredImage && <Box component="div">
                                                                 <Grid container className={`${styles['star-icon-grid']}`}>
                                                                     <Grid item>
                                                                         <Box

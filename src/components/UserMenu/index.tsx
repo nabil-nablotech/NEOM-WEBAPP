@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { RobotoMediumMerino20px } from "../styledMixins";
 import WhiteCircle from "../../assets/images/WhiteCircle.svg";
 import useLogout from "../../hooks/useLogout";
-import { EVENTS_TAB_NAME, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME, stringAvatar } from "../../utils/services/helpers";
+import { EVENTS_TAB_NAME, itemAddEditAccess, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME, stringAvatar } from "../../utils/services/helpers";
 import { RootState } from "../../store";
 import { getRole } from "../../utils/storage/storage";
 
@@ -51,8 +51,6 @@ function UserMenuComponent() {
 
   const open = Boolean(anchorEl);
   const admin = getRole() === 'Admin';
-  const editor = getRole() === 'Editor';
-  const superEditor = getRole() === 'SuperEditor';
   const openSettings = Boolean(anchorElSettings);
   const dispatch = useDispatch()
 
@@ -141,7 +139,7 @@ function UserMenuComponent() {
         marginLeft: 'auto',
         marginRight: '1em'
       }}>
-        {superEditor && <Box component={"div"}>
+        {itemAddEditAccess && <Box component={"div"}>
           <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }} onClick={
             e => handlePlus()
           } />

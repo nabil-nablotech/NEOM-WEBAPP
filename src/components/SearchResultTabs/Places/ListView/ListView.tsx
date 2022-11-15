@@ -338,7 +338,7 @@ const ListView = (props: PlacesProps) => {
                     pagination={false}
                     loading={loading}
                     bordered
-                    scroll={{ x: 'max-content' , y: 150 }}
+                    scroll={{ x: 'max-content' , y: 500 }}
                     style={{
                         background: "transparent",
                     }}

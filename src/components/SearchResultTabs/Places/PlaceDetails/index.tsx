@@ -28,10 +28,9 @@ import {
   NO_TEXT,
   shallRenderMedia,
   checkIsNew,
-  isRecordAttached,
   isPlaceDetailAttached,
   detectMediaTypeFromMediaAssociate,
-  toFixedFromString,
+  itemAddEditAccess,
 } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
@@ -266,7 +265,7 @@ const PlaceDetailsPage = () => {
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (
         // <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
-        <MoreOption type="Library" setEdit={setEdit} record={record} />
+        <>{itemAddEditAccess ? <MoreOption type="Library" setEdit={setEdit} record={record} /> : null}</>
       ),
     },
   ];
@@ -378,8 +377,7 @@ const PlaceDetailsPage = () => {
       fixed: "right",
       className: "more-menu-ant-cell events-table-more-menu",
       render: (value: any, record: Event) => (
-        // <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
-        <MoreOption type="Events" setEdit={setEdit} record={record} />
+        <>{itemAddEditAccess ? <MoreOption type="Events" setEdit={setEdit} record={record}  /> : null}</>
       ),
     },
   ];
@@ -885,11 +883,11 @@ const PlaceDetailsPage = () => {
                     />
                   ) : (
                     // <></>:
-                    <MoreOption
+                    <>{itemAddEditAccess ? <MoreOption
                       type="Places"
                       setEdit={setEdit}
                       record={placeData}
-                    />
+                    />: null}</>
                   )}
                 </Box>
               </Grid>

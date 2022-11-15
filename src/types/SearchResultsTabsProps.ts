@@ -273,7 +273,7 @@ export type LibraryDetailsPageProps = {
   handleClose: () => any
 };
 
-type menuAction = {
+export type menuAction = {
   label: string;
   action: (data?: any) => void;
 };
