@@ -20,20 +20,20 @@ const GalleryView = () => {
         (state: RootState) => state.searchResults
     );
     const { loading: placeLoading, data: placeData } = usePlaceDetails();
-    const { setEdit,  } = useEventDetails();
+    const { setEdit, setFeaturedMedia } = useEventDetails();
     
     const menuItems = [
         {
             label: 'Feature',
             action: (data: any) => { 
-                console.log('data on feature', data);
+                setFeaturedMedia(data);
             }
         },
         {
             label: "Edit",
             action: (data: any) => {
                 if(data) {
-                    setEdit({record: data, type: "Events"});
+                    setEdit({record: data, type: "Media"});
                 }
             },
         },
@@ -150,7 +150,7 @@ const GalleryView = () => {
                             <Grid container className={`${styles['media-grid-item-options-row']}`}>
                                 <Grid item>
                                     {/* to-do: api based flag to show featured */}
-                                    {inx === 0 && <Box component="div">
+                                    {itemObj?.media_unique_id.featuredImage && <Box component="div">
                                         <Grid container className={`${styles['star-icon-box']}`}>
                                             <Grid item>
                                                 <Box
