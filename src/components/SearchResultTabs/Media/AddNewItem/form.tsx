@@ -7,7 +7,7 @@ import TextInput from "../../../../components/TextInput";
 import DropdownComponent from "../../../Dropdown/index";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
-import { baseUrl } from "./../../../../utils/services/helpers";
+import { baseUrl, validateNumber } from "./../../../../utils/services/helpers";
 import CustomUpload from "../../../Upload/ImageUpload";
 import { SelectChangeEvent } from "@mui/material/Select";
 import AutoComplete from "../../../AutoComplete";
@@ -479,9 +479,12 @@ allowFullScreen
               className={`${styles["english-name"]}`}
               label="Longitude"
               name="longitude"
+              type="number"
               value={formik.values.longitude}
               onChange={(e) => {
-                formik.setFieldValue("longitude", e.target.value);
+                if (validateNumber(e.target.value)) {
+                  formik.setFieldValue("longitude", e.target.value);
+                }
               }}
               sx={{
                 ...textInputSxStyles,
@@ -492,9 +495,12 @@ allowFullScreen
               className={`${styles["english-name"]}`}
               label="Latitude"
               name="latitude"
+              type="number"
               value={formik.values.latitude}
               onChange={(e) => {
-                formik.setFieldValue("latitude", e.target.value);
+                if (validateNumber(e.target.value)) {
+                  formik.setFieldValue("latitude", e.target.value);
+                }
               }}
               sx={{
                 ...textInputSxStyles,

@@ -14,6 +14,7 @@ import AutoComplete from "../../../AutoComplete";
 import { SelectChangeEvent } from "@mui/material/Select";
 import ReactDatePicker from "react-datepicker";
 import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
+import { validateNumber } from "../../../../utils/services/helpers";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -261,7 +262,9 @@ const StepContent = ({
               type="number"
               value={formik.values.latitude}
               onChange={(e) => {
-                formik.setFieldValue("latitude", e.target.value);
+                if (validateNumber(e.target.value)) {
+                  formik.setFieldValue("latitude", e.target.value);
+                }
               }}
               sx={{
                 ...textInputSxStyles,
@@ -278,7 +281,9 @@ const StepContent = ({
               type="number"
               value={formik.values.longitude}
               onChange={(e) => {
-                formik.setFieldValue("longitude", e.target.value);
+                if (validateNumber(e.target.value)) {
+                  formik.setFieldValue("longitude", e.target.value);
+                }
               }}
               sx={{
                 ...textInputSxStyles,

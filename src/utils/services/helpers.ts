@@ -59,6 +59,11 @@ export const validateEmail = (s: string) => {
   );
   return email_regex.test(s);
 };
+export const validateNumber = (s: string) => {
+  console.log('inside the validate number', s);
+  const regex = new RegExp(/^(\d+(\.\d+)?)$/);
+  return regex.test(s);
+}
 
 /**
  * Password must contain min 8 letter with at least a symbol, upper and lower case letters and a number
