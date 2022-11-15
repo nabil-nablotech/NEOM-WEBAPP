@@ -19,7 +19,7 @@ import {
   EVENTS_TAB_NAME,
   MEDIA_TAB_NAME,
   tabNameBasedOnIndex,
-  validateNumber
+  validateNumberField
 } from "../../utils/services/helpers";
 import { format } from "date-fns";
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
@@ -182,8 +182,15 @@ const BaseInputs = ({
                     name="latitude"
                     type="number"
                     value={selectedValue.latitude}
+                    onKeyDown={e => {
+                      validateNumberField(e)
+                    }}
+                    InputProps={{
+                      inputMode: 'numeric', pattern: /^(\d+(\.\d+)?)$/ 
+                    }}
                     onChange={(e) => {
-                      if (validateNumber(e.target.value)) handleChange(e)}}
+                      handleChange(e)
+                    }}
                     sx={{
                       ...locationInputSx
                     }}
@@ -197,8 +204,15 @@ const BaseInputs = ({
                     name="longitude"
                     type="number"
                     value={selectedValue.longitude}
+                    onKeyDown={e => {
+                      validateNumberField(e)
+                    }}
+                    InputProps={{
+                      inputMode: 'numeric', pattern: /^(\d+(\.\d+)?)$/ 
+                    }}
                     onChange={(e) => {
-                      if (validateNumber(e.target.value)) handleChange(e)}}
+                      handleChange(e)
+                    }}
                     sx={{
                       ...locationInputSx
                     }}
@@ -401,8 +415,15 @@ const MediaInputs = ({
                     name="latitude"
                     type="number"
                     value={selectedValue.latitude}
+                    onKeyDown={e => {
+                      validateNumberField(e)
+                    }}
+                    InputProps={{
+                      inputMode: 'numeric', pattern: /^(\d+(\.\d+)?)$/ 
+                    }}
                     onChange={(e) => {
-                      if (validateNumber(e.target.value)) handleChange(e)}}
+                      handleChange(e)
+                    }}
                     sx={{
                       ...locationInputSx,
                     }}
@@ -416,8 +437,15 @@ const MediaInputs = ({
                     name="longitude"
                     type="number"
                     value={selectedValue.longitude}
+                    onKeyDown={e => {
+                      validateNumberField(e)
+                    }}
+                    InputProps={{
+                      inputMode: 'numeric', pattern: /^(\d+(\.\d+)?)$/ 
+                    }}
                     onChange={(e) => {
-                      if (validateNumber(e.target.value)) handleChange(e)}}
+                      handleChange(e)
+                    }}
                     sx={{
                       ...locationInputSx,
                     }}

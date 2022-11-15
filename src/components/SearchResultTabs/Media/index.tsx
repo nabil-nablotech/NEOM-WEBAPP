@@ -63,7 +63,6 @@ const MediaTab = () => {
       return <><Loader/></>
     }
 
-   
     /* event handlers */
   const exportMedia = async () => {
         let filter: any={ media_type :{

@@ -65,9 +65,30 @@ export const validateEmail = (s: string) => {
   return email_regex.test(s);
 };
 export const validateNumber = (s: string) => {
-  console.log('inside the validate number', s);
   const regex = new RegExp(/^(\d+(\.\d+)?)$/);
   return regex.test(s);
+}
+
+export const invalidChars = [
+  "-",
+  "+",
+  "e",
+];
+
+export const validateNumberField = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  /** ignore typing in of these characters in number type input */
+  const invalidChars = [
+    "-",
+    "+",
+    "e",
+  ];
+
+  if (
+    invalidChars.some(item => e.key === item)
+  ) {
+    e.preventDefault()
+  } 
+
 }
 
 /**
