@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import Box from '@mui/material/Box';
 import styles from '../index.module.css'
 import Button from "../../../components/Button";
@@ -15,14 +15,17 @@ import { RootState } from '../../../store';
 import { useToggledView } from './../../../hooks/useToggledView';
 import useMedia from '../../../hooks/useMedia';
 import { Meta } from '../../../types/Place';
-import {checkSearchParameter} from '../../../utils/services/helpers';
+import {checkSearchParameter, MEDIA_TAB_NAME} from '../../../utils/services/helpers';
 import ExportModal from '../../ExportModal';
 import { importContentType } from '../../../utils/export-import/import-content-type';
 import { importCsvImagesZip } from '../../../utils/export-import/import-csv-images-zip';
 import Loader from '../../Common/Loader';
+import { useDispatch } from 'react-redux';
+import { setToggledStates } from '../../../store/reducers/searchResultsReducer';
 
 const MediaTab = () => {
-    const { selectedCardIndex, media, mediaMetaData, totalCounts, searchText, searchApply } = useSelector(
+    const { selectedCardIndex, media, mediaMetaData, totalCounts, searchText, searchApply,
+      toggledStates } = useSelector(
         (state: RootState) => state.searchResults
     );
     const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
@@ -39,7 +42,19 @@ const MediaTab = () => {
         setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1)
     }, [selectedCardIndex])
 
-    const { openStates, toggleOpenStates } = useToggledView({ count: 2 })
+  const { openStates, toggleOpenStates } = useToggledView({ count: 2 })
+
+  const dispatch = useDispatch()
+
+  /** Check if history list/grid view flag is present
+  * if yes - set it
+  */
+  useEffect(() => {
+    if (toggledStates.states && (toggledStates.tabName === MEDIA_TAB_NAME)) {
+      toggleOpenStates(toggledStates.states)
+    }
+
+  }, [])
 
     if(!media && !loading) {
       return <>Cant fetch media</>
@@ -47,7 +62,8 @@ const MediaTab = () => {
     if(loading) {
       return <><Loader/></>
     }
-    
+
+   
     /* event handlers */
   const exportMedia = async () => {
         let filter: any={ media_type :{
@@ -200,14 +216,26 @@ const MediaTab = () => {
                     }}
                 /> */}
                 <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={GridViewIcon}
-                    onClick={e => toggleOpenStates([true, false])}
+                    onClick={e => {
+                      toggleOpenStates([true, false])
+                      dispatch(setToggledStates({
+                        states: [true, false],
+                        tabName: MEDIA_TAB_NAME
+                      }))
+                    }}
                     style={{
                         opacity: openStates[0] ? '1' : '0.5'
                     }}
 
                 />
                 <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={ListViewIcon}
-                    onClick={e => toggleOpenStates([false, true])}
+                    onClick={e => {
+                      toggleOpenStates([false, true])
+                      dispatch(setToggledStates({
+                        states: [false, true],
+                        tabName: MEDIA_TAB_NAME
+                      }))
+                    }}
                     style={{
                         opacity: openStates[1] ? '1' : '0.5'
                     }}

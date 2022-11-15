@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addItemProgressPayload, addItemProgressStateType, DeletePayloadType, InventoryAssociationType, InventoryAssociationType_Event, SearchResultsState2, tabNameProps } from "../../types/SearchResultsTabsProps";
+import { addItemProgressPayload, addItemProgressStateType, DeletePayloadType, InventoryAssociationType, InventoryAssociationType_Event, SearchResultsState2, tabNameProps, ToggledStateTypes } from "../../types/SearchResultsTabsProps";
 import { DashboardResponse } from "../../types/dashboard";
 import { Place, Meta } from "../../types/Place";
 import { Event } from "../../types/Event";
@@ -20,6 +20,10 @@ const initialState: SearchResultsState2 = {
   libararyMetaData: null,
   mediaMetaData: null,
   activeTab: '',
+  toggledStates:{
+    states: null,
+    tabName: 'Places'
+  },
   newItemWindowOpen: false,
   showAddSuccess: false,
   showEditSuccess: false,
@@ -56,7 +60,7 @@ const initialState: SearchResultsState2 = {
     mailId: '',
   },
   deleteUserSuccess: false,
-  deletePayload: null
+  deletePayload: null,
 };
 
 export const searchResultsSlice = createSlice({
@@ -98,6 +102,9 @@ export const searchResultsSlice = createSlice({
     },
     setActiveTab: (state, action: PayloadAction<tabNameProps>) => {
       state.activeTab = action.payload;
+    },
+    setToggledStates: (state, action: PayloadAction<ToggledStateTypes>) => {
+      state.toggledStates = action.payload;
     },
     toggleNewItemWindow: (state, action: PayloadAction<boolean>) => {
       state.newItemWindowOpen = action.payload;
@@ -299,6 +306,7 @@ export const {
   setLibraryMetaData,
   setMediaMetaData,
   setActiveTab,
+  setToggledStates,
   toggleNewItemWindow,
   toggleShowAddSuccess,
   toggleShowEditSuccess,

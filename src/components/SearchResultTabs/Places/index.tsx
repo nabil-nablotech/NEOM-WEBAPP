@@ -12,14 +12,16 @@ import { useToggledView } from "./../../../hooks/useToggledView";
 import usePlace from "../../../hooks/usePlace";
 import { Meta } from "../../../types/Place";
 import MapView from "../GoogleMap/MapView";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ExportModal from "../../ExportModal";
 import { importContentType } from "../../../utils/export-import/import-content-type";
 import { importCsvImagesZip } from "../../../utils/export-import/import-csv-images-zip";
-import {checkSearchParameter} from '../../../utils/services/helpers';
+import {checkSearchParameter, PLACES_TAB_NAME} from '../../../utils/services/helpers';
+import { useDispatch } from "react-redux";
+import { setToggledStates } from "../../../store/reducers/searchResultsReducer";
 
 const PlacesTab = () => {
-  const { searchText, places, placeMetaData, totalCounts, searchApply } = useSelector(
+  const { searchText, places, placeMetaData, totalCounts, searchApply, toggledStates } = useSelector(
     (state: RootState) => state.searchResults
   );
   const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
@@ -29,11 +31,23 @@ const PlacesTab = () => {
 
   const { fetchPlaces, hasMoreData, loading, mapPlaces, setEdit, searchData } =
     usePlace();
+
   const [isFilter, setIsFilter] = useState(null);
   const { openStates, toggleOpenStates } = useToggledView({ count: 2 });
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState(null);
   const meta: Meta | null = placeMetaData;
+  const dispatch = useDispatch()
+
+  /** Check if history list/grid view flag is present ,
+  * if yes - set it
+  */
+  useEffect(() => {
+    if (toggledStates.states && (toggledStates.tabName === PLACES_TAB_NAME)) {
+      toggleOpenStates(toggledStates.states)
+    }
+
+  }, [])
 
   /* Event handlers */
   const exportPlace = async () => {
@@ -236,7 +250,13 @@ const PlacesTab = () => {
           component="img"
           alt={""}
           src={DetailsView}
-          onClick={(e) => toggleOpenStates([true, false])}
+          onClick={(e) => {
+            toggleOpenStates([true, false])
+            dispatch(setToggledStates({
+              states: [true, false],
+              tabName: PLACES_TAB_NAME
+            }))
+          }}
           style={{
             opacity: openStates[0] ? "1" : "0.5",
           }}
@@ -246,7 +266,13 @@ const PlacesTab = () => {
           component="img"
           alt={""}
           src={ListViewIcon}
-          onClick={(e) => toggleOpenStates([false, true])}
+          onClick={(e) => {
+            toggleOpenStates([false, true])
+            dispatch(setToggledStates({
+              states: [false, true],
+              tabName: PLACES_TAB_NAME
+            }))
+          }}
           style={{
             opacity: openStates[1] ? "1" : "0.5",
           }}

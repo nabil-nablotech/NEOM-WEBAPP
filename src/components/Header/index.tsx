@@ -43,7 +43,7 @@ const Header = (props: IHeader) => {
             top: '3%',
             right: '0'
           }}>
-            <UserMenuComponent />
+            <UserMenuComponent screen={screen} />
           </Box>
         </>
         :
