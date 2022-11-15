@@ -8,7 +8,6 @@ import {
   InputAdornment,
   IconButton
 } from "@mui/material";
-import DropdownComponent from "./../Dropdown/index";
 import AutoComplete from "./../AutoComplete";
 import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
@@ -20,6 +19,7 @@ import {
   EVENTS_TAB_NAME,
   MEDIA_TAB_NAME,
   tabNameBasedOnIndex,
+  validateNumber
 } from "../../utils/services/helpers";
 import { format } from "date-fns";
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
@@ -182,7 +182,8 @@ const BaseInputs = ({
                     name="latitude"
                     type="number"
                     value={selectedValue.latitude}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      if (validateNumber(e.target.value)) handleChange(e)}}
                     sx={{
                       ...locationInputSx
                     }}
@@ -196,7 +197,8 @@ const BaseInputs = ({
                     name="longitude"
                     type="number"
                     value={selectedValue.longitude}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      if (validateNumber(e.target.value)) handleChange(e)}}
                     sx={{
                       ...locationInputSx
                     }}
@@ -399,7 +401,8 @@ const MediaInputs = ({
                     name="latitude"
                     type="number"
                     value={selectedValue.latitude}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      if (validateNumber(e.target.value)) handleChange(e)}}
                     sx={{
                       ...locationInputSx,
                     }}
@@ -413,7 +416,8 @@ const MediaInputs = ({
                     name="longitude"
                     type="number"
                     value={selectedValue.longitude}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      if (validateNumber(e.target.value)) handleChange(e)}}
                     sx={{
                       ...locationInputSx,
                     }}

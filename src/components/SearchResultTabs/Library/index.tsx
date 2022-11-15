@@ -14,20 +14,31 @@ import useLibrary from "../../../hooks/useLibrary";
 import { Meta } from "../../../types/Place";
 import { RootState } from "../../../store";
 import { useSelector } from "react-redux";
-import {formatWebDate, formatBytes, antTablePaginationCss, checkSearchParameter} from '../../../utils/services/helpers';
-import MoreOptionsComponent from '../Places/ListView/MoreOption';
+import {
+  formatWebDate,
+  formatBytes,
+  antTablePaginationCss,
+  checkSearchParameter,
+} from "../../../utils/services/helpers";
+import MoreOptionsComponent from "../Places/ListView/MoreOption";
 import { Media } from "../../../types/Media";
-import {HtmlTooltip} from '../../../components/Tooltip';
+import { HtmlTooltip } from "../../../components/Tooltip";
 import { Typography } from "@mui/material";
 import { setSelectedCardIndex } from "../../../store/reducers/searchResultsReducer";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ExportModal from "../../ExportModal";
-import { useMediaQuery } from 'react-responsive'
+import { useMediaQuery } from "react-responsive";
 
 let viewWidths = ["20vw", "20vw", "20vw", "20vw", "5vw"];
 
 const StyledTableWrapper = styled(StyledAntTable)`
+  td {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .ant-table-container {
   }
   .ant-table {
@@ -71,7 +82,6 @@ const StyledTableWrapper = styled(StyledAntTable)`
     border-left: 1px solid #f0f0f0;
   }
 
-
   .ant-table-tbody > tr > td {
     word-wrap: unset;
     word-break: unset;
@@ -103,7 +113,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
     .ant-table-thead > tr > th.more-menu-ant-cell.ant-table-cell-fix-right,
     .ant-table-tbody > tr > td.more-menu-ant-cell.ant-table-cell-fix-right {
       right: -2vw !important;
-    } 
+    }
 
     .ant-table-tbody > tr > td.more-menu-ant-cell {
       min-width: unset;
@@ -111,8 +121,6 @@ const StyledTableWrapper = styled(StyledAntTable)`
 
     th.ant-table-cell,
     th.ant-table-cell * {
-    }
-    td.ant-table-cell {
     }
 
     .cell-image {
@@ -129,24 +137,31 @@ const StyledTableWrapper = styled(StyledAntTable)`
 const LibraryTab = () => {
   const { searchApply, library, searchText, totalCounts, libararyMetaData } =
     useSelector((state: RootState) => state.searchResults);
-    const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
-    const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
+  const { selectedValue } = useSelector(
+    (state: RootState) => state.refinedSearch
+  );
+  const isTablet = useMediaQuery({
+    query: "(min-width: 575px) and (max-width: 1025px)",
+  });
 
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const { fetchLibraryItems, hasMoreData, loading, setEdit,searchData } = useLibrary();
+  const { fetchLibraryItems, hasMoreData, loading, setEdit, searchData } =
+    useLibrary();
   const tableHeaderJson: ColumnsType<any> = [
     {
       title: "NAME",
       key: "attributes",
       dataIndex: "attributes",
       width: 200,
-      sorter: (a, b) => a?.attributes?.title?.localeCompare(b?.attributes?.title),
+      sorter: (a, b) =>
+        a?.attributes?.title?.localeCompare(b?.attributes?.title),
       defaultSortOrder: "ascend",
       className: "name-column",
       render: (value: any, record: any) => (
-        <Box component="div"
+        <Box
+          component="div"
           sx={{
             display: "flex",
             gap: "1em",
@@ -196,15 +211,19 @@ const LibraryTab = () => {
           }}
         >
           <HtmlTooltip
-        title={
-          <div className={`${styles["reference-url"]}`}>
-            <div className={`${styles["link"]}`}>
-              <LinkIcon sx={{color: 'white'}} />
-            </div>
-            <a href={value.referenceURL} target="_blank"><Typography style={{fontSize: 12, margin: 1}} color="white">{value.referenceURL}</Typography></a>
-          </div>
-        }
-      >
+            title={
+              <div className={`${styles["reference-url"]}`}>
+                <div className={`${styles["link"]}`}>
+                  <LinkIcon sx={{ color: "white" }} />
+                </div>
+                <a href={value.referenceURL} target="_blank">
+                  <Typography style={{ fontSize: 12, margin: 1 }} color="white">
+                    {value.referenceURL}
+                  </Typography>
+                </a>
+              </div>
+            }
+          >
             <Typography color="inherit">{value.referenceURL}</Typography>
           </HtmlTooltip>
         </Box>
@@ -214,8 +233,9 @@ const LibraryTab = () => {
       title: "SIZE",
       key: "attributes",
       dataIndex: "attributes",
-      width: 50,
-      render: (value, index) => formatBytes(value.object?.data?.attributes?.size || 0), 
+      width: 100,
+      render: (value, index) =>
+        formatBytes(value.object?.data?.attributes?.size || 0),
     },
     {
       title: "",
@@ -225,7 +245,11 @@ const LibraryTab = () => {
       fixed: "right",
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (
-        <MoreOptionsComponent type="Library" setEdit={setEdit} record={record} />
+        <MoreOptionsComponent
+          type="Library"
+          setEdit={setEdit}
+          record={record}
+        />
       ),
     },
   ];
@@ -248,52 +272,59 @@ const LibraryTab = () => {
   };
 
   if (!library) {
-    return <h1>No data found</h1>
+    return <h1>No data found</h1>;
   }
-
 
   /* Event hanlders */
   const exportLibrary = async () => {
-    let filter: any={ media_type :{
+    let filter: any = {
+      media_type: {
         categoryCode: {
-          $containsi: "LIBRARY"
-      }
-    }};
-if (searchData?.search) {
-  filter = {...filter,
-    $or: [
-      {
-        title: {
-          $containsi: searchData.search,
+          $containsi: "LIBRARY",
         },
       },
-      {
-        description: {
-          $containsi: searchData.search,
-        },
-      },
-      {
-        fileName: {
-          $containsi: searchData.search,
-        },
-      },
-      {
-        citation: {
-          $containsi: searchData.search,
-        },
-      },
-      ,
-    ],
+    };
+    if (searchData?.search) {
+      filter = {
+        ...filter,
+        $or: [
+          {
+            title: {
+              $containsi: searchData.search,
+            },
+          },
+          {
+            description: {
+              $containsi: searchData.search,
+            },
+          },
+          {
+            fileName: {
+              $containsi: searchData.search,
+            },
+          },
+          {
+            citation: {
+              $containsi: searchData.search,
+            },
+          },
+          ,
+        ],
+      };
+    }
+    setFilter(filter);
+    setOpen(true);
   };
-}
-setFilter(filter);
-setOpen(true);
-};
-const showResults = checkSearchParameter(searchText, selectedValue) && searchApply;
+  const showResults =
+    checkSearchParameter(searchText, selectedValue) && searchApply;
   return (
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
-        <Box component="div"> { showResults ? `${meta?.pagination?.total} Results | ` : null}{totalCounts?.library} Total Library Items</Box>
+        <Box component="div">
+          {" "}
+          {showResults ? `${meta?.pagination?.total} Results | ` : null}
+          {totalCounts?.library} Total Library Items
+        </Box>
         <Box component="div" className={`${libStyles["btns-flex"]}`}>
           <Button
             colors={[
@@ -311,7 +342,7 @@ const showResults = checkSearchParameter(searchText, selectedValue) && searchApp
               height: "100%",
               textAlign: "center",
             }}
-            onClick={() => { }}
+            onClick={() => {}}
           />
           <Button
             colors={[
@@ -333,13 +364,19 @@ const showResults = checkSearchParameter(searchText, selectedValue) && searchApp
           />
         </Box>
       </Box>
-      <ExportModal open={open} setOpen={setOpen} count={meta?.pagination?.total} path={'medias'} filter={filter}/>
+      <ExportModal
+        open={open}
+        setOpen={setOpen}
+        count={meta?.pagination?.total}
+        path={"medias"}
+        filter={filter}
+      />
       <Box component="div" id={"library-list-parent"}>
         <InfiniteScroll
           dataLength={library.length} //This is important field to render the next data
           next={() => handleNext()}
           hasMore={hasMoreData}
-          loader={loading ? <h4>Loading...</h4>: null}
+          loader={loading ? <h4>Loading...</h4> : null}
           endMessage={
             <p style={{ textAlign: "center" }}>
               <b>END OF RESULTS</b>
@@ -357,23 +394,35 @@ const showResults = checkSearchParameter(searchText, selectedValue) && searchApp
             pagination={false}
             loading={loading ? loading : false}
             bordered
-            scroll={{ y: 500, scrollToFirstRowOnChange: true }}
+            scroll={{
+              x: "max-content",
+              y: 500,
+              scrollToFirstRowOnChange: true,
+            }}
             style={{
               background: "transparent",
             }}
             onRow={(record: any, rowIndex) => {
               return {
                 onClick: (event: React.MouseEvent<HTMLElement>) => {
-
-                  dispatch(setSelectedCardIndex(rowIndex || record.id))
-                  navigate(`/search-results/Library/${record.attributes.uniqueId}`, { replace: true })
+                  dispatch(setSelectedCardIndex(rowIndex || record.id));
+                  navigate(
+                    `/search-results/Library/${record.attributes.uniqueId}`,
+                    { replace: true }
+                  );
                 },
               };
             }}
           ></StyledTableWrapper>
         </InfiniteScroll>
       </Box>
-      <ExportModal open={open} setOpen={setOpen} count={meta?.pagination?.total} path={'medias'} filter={filter}/>
+      <ExportModal
+        open={open}
+        setOpen={setOpen}
+        count={meta?.pagination?.total}
+        path={"medias"}
+        filter={filter}
+      />
     </Box>
   );
 };

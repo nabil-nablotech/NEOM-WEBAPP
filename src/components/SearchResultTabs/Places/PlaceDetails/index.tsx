@@ -464,6 +464,7 @@ const PlaceDetailsPage = () => {
     recommendation,
     placeUIPath,
     media_associates,
+    mediaItems,
     libraryItems,
     visit_associates,
   } = placeData;
@@ -516,7 +517,7 @@ const PlaceDetailsPage = () => {
         <Box component="div" className={`${styles["content-section"]}`}>
           {
             // If you dont 1 image also, show placeholder section
-            !media_associates ||
+            !mediaItems ||
             (media_associates && media_associates.length < 1) ? (
               <Box component="div" className={`${styles["no-images-section"]}`}>
                 <NoImagePresent message={NO_MEDIA} />
@@ -532,7 +533,7 @@ const PlaceDetailsPage = () => {
                     zIndex: 10,
                   }}
                 >
-                  {media_associates && media_associates.length > 5 && (
+                  {mediaItems && mediaItems.length > 5 && (
                     <Button
                       variant="contained"
                       type="button"
@@ -565,35 +566,35 @@ const PlaceDetailsPage = () => {
                       handleClickMediaItem(
                         e,
                         1,
-                        media_associates[0]?.media_unique_id.uniqueId
+                        mediaItems[0]?.media_unique_id.uniqueId
                       );
                     }}
                   >
                     {/* {media_associates[0] && <RenderFileData */}
-                    {shallRenderMedia(1, media_associates) && (
+                    {shallRenderMedia(1, mediaItems) && (
                       <RenderFileData
                         fileData={{
                           alt: "",
-                          src: `${baseUrl}${media_associates[0]?.media_unique_id?.object?.url}`,
+                          src: `${baseUrl}${mediaItems[0]?.media_unique_id?.object?.url}`,
                           className: `${styles["single-image"]} ${styles["left-image"]}`,
                           videoType:
-                            media_associates[0].media_unique_id.videoType,
+                          mediaItems[0].media_unique_id.videoType,
                           iframeVideoLink:
-                            media_associates[0].media_unique_id.videoType ===
+                          mediaItems[0].media_unique_id.videoType ===
                             "url"
-                              ? media_associates[0].media_unique_id.referenceURL
+                              ? mediaItems[0].media_unique_id.referenceURL
                               : undefined,
                           staticVideoLink:
                             detectMediaTypeFromMediaAssociate(
-                              media_associates[0]
+                              mediaItems[0]
                             ) === "video" &&
-                            media_associates[0].media_unique_id.videoType ===
+                            mediaItems[0].media_unique_id.videoType ===
                               "video"
-                              ? `${baseUrl}${media_associates[0].media_unique_id.object?.url}`
+                              ? `${baseUrl}${mediaItems[0].media_unique_id.object?.url}`
                               : undefined,
                         }}
                         fileType={detectMediaTypeFromMediaAssociate(
-                          media_associates[0]
+                          mediaItems[0]
                         )}
                       />
                     )}
@@ -616,35 +617,35 @@ const PlaceDetailsPage = () => {
                           handleClickMediaItem(
                             e,
                             2,
-                            media_associates[1]?.media_unique_id.uniqueId
+                            mediaItems[1]?.media_unique_id.uniqueId
                           );
                         }}
                       >
-                        {shallRenderMedia(2, media_associates) && (
+                        {shallRenderMedia(2, mediaItems) && (
                           <RenderFileData
                             fileData={{
                               alt: "",
-                              src: `${baseUrl}${media_associates[1].media_unique_id?.object?.url}`,
+                              src: `${baseUrl}${mediaItems[1].media_unique_id?.object?.url}`,
                               className: `${styles["single-image"]} ${styles["right-image"]}`,
                               videoType:
-                                media_associates[1].media_unique_id.videoType,
+                              mediaItems[1].media_unique_id.videoType,
                               iframeVideoLink:
-                                media_associates[1].media_unique_id
+                              mediaItems[1].media_unique_id
                                   .videoType === "url"
-                                  ? media_associates[1].media_unique_id
+                                  ? mediaItems[1].media_unique_id
                                       .referenceURL
                                   : undefined,
                               staticVideoLink:
                                 detectMediaTypeFromMediaAssociate(
-                                  media_associates[0]
+                                  mediaItems[0]
                                 ) === "video" &&
-                                media_associates[1].media_unique_id
+                                mediaItems[1].media_unique_id
                                   .videoType === "video"
-                                  ? `${baseUrl}${media_associates[1].media_unique_id.object?.url}`
+                                  ? `${baseUrl}${mediaItems[1].media_unique_id.object?.url}`
                                   : undefined,
                             }}
                             fileType={detectMediaTypeFromMediaAssociate(
-                              media_associates[1]
+                              mediaItems[1]
                             )}
                           />
                         )}
@@ -667,35 +668,35 @@ const PlaceDetailsPage = () => {
                           handleClickMediaItem(
                             e,
                             3,
-                            media_associates[2]?.media_unique_id.uniqueId
+                            mediaItems[2]?.media_unique_id.uniqueId
                           );
                         }}
                       >
-                        {shallRenderMedia(3, media_associates) && (
+                        {shallRenderMedia(3, mediaItems) && (
                           <RenderFileData
                             fileData={{
                               alt: "",
-                              src: `${baseUrl}${media_associates[2].media_unique_id?.object?.url}`,
+                              src: `${baseUrl}${mediaItems[2].media_unique_id?.object?.url}`,
                               className: `${styles["single-image"]} ${styles["right-image"]}`,
                               videoType:
-                                media_associates[2].media_unique_id.videoType,
+                              mediaItems[2].media_unique_id.videoType,
                               iframeVideoLink:
-                                media_associates[2].media_unique_id
+                              mediaItems[2].media_unique_id
                                   .videoType === "url"
-                                  ? media_associates[2].media_unique_id
+                                  ? mediaItems[2].media_unique_id
                                       .referenceURL
                                   : undefined,
                               staticVideoLink:
                                 detectMediaTypeFromMediaAssociate(
-                                  media_associates[2]
+                                  mediaItems[2]
                                 ) === "video" &&
-                                media_associates[2].media_unique_id
+                                mediaItems[2].media_unique_id
                                   .videoType === "video"
-                                  ? `${baseUrl}${media_associates[2].media_unique_id.object?.url}`
+                                  ? `${baseUrl}${mediaItems[2].media_unique_id.object?.url}`
                                   : undefined,
                             }}
                             fileType={detectMediaTypeFromMediaAssociate(
-                              media_associates[2]
+                              mediaItems[2]
                             )}
                           />
                         )}
@@ -724,39 +725,39 @@ const PlaceDetailsPage = () => {
                           handleClickMediaItem(
                             e,
                             4,
-                            media_associates[3]?.media_unique_id.uniqueId
+                            mediaItems[3]?.media_unique_id.uniqueId
                           );
                         }}
                       >
-                        {shallRenderMedia(4, media_associates) && (
+                        {shallRenderMedia(4, mediaItems) && (
                           <RenderFileData
                             fileData={{
                               alt: "",
-                              src: `${baseUrl}${media_associates[3].media_unique_id?.object?.url}`,
+                              src: `${baseUrl}${mediaItems[3].media_unique_id?.object?.url}`,
                               className: `${styles["single-image"]} ${styles["right-image"]}`,
                               objectURL:
-                                media_associates[3].media_unique_id.objectURL ||
+                              mediaItems[3].media_unique_id.objectURL ||
                                 "",
 
                               videoType:
-                                media_associates[3].media_unique_id.videoType,
+                              mediaItems[3].media_unique_id.videoType,
                               iframeVideoLink:
-                                media_associates[3].media_unique_id
+                              mediaItems[3].media_unique_id
                                   .videoType === "url"
-                                  ? media_associates[3].media_unique_id
+                                  ? mediaItems[3].media_unique_id
                                       .referenceURL
                                   : undefined,
                               staticVideoLink:
                                 detectMediaTypeFromMediaAssociate(
-                                  media_associates[3]
+                                  mediaItems[3]
                                 ) === "video" &&
-                                media_associates[3].media_unique_id
+                                mediaItems[3].media_unique_id
                                   .videoType === "video"
-                                  ? `${baseUrl}${media_associates[3].media_unique_id.object?.url}`
+                                  ? `${baseUrl}${mediaItems[3].media_unique_id.object?.url}`
                                   : undefined,
                             }}
                             fileType={detectMediaTypeFromMediaAssociate(
-                              media_associates[3]
+                              mediaItems[3]
                             )}
                           />
                         )}
@@ -777,38 +778,38 @@ const PlaceDetailsPage = () => {
                           handleClickMediaItem(
                             e,
                             5,
-                            media_associates[4]?.media_unique_id.uniqueId
+                            mediaItems[4]?.media_unique_id.uniqueId
                           );
                         }}
                       >
-                        {shallRenderMedia(5, media_associates) && (
+                        {shallRenderMedia(5, mediaItems) && (
                           <RenderFileData
                             fileData={{
                               alt: "",
-                              src: `${baseUrl}${media_associates[4].media_unique_id?.object?.url}`,
+                              src: `${baseUrl}${mediaItems[4].media_unique_id?.object?.url}`,
                               className: `${styles["single-image"]} ${styles["right-image"]}`,
                               objectURL:
-                                media_associates[4].media_unique_id.objectURL ||
+                              mediaItems[4].media_unique_id.objectURL ||
                                 "",
                               videoType:
-                                media_associates[4].media_unique_id.videoType,
+                              mediaItems[4].media_unique_id.videoType,
                               iframeVideoLink:
-                                media_associates[4].media_unique_id
+                              mediaItems[4].media_unique_id
                                   .videoType === "url"
-                                  ? media_associates[4].media_unique_id
+                                  ? mediaItems[4].media_unique_id
                                       .referenceURL
                                   : undefined,
                               staticVideoLink:
                                 detectMediaTypeFromMediaAssociate(
-                                  media_associates[4]
+                                  mediaItems[4]
                                 ) === "video" &&
-                                media_associates[4].media_unique_id
+                                mediaItems[4].media_unique_id
                                   .videoType === "video"
-                                  ? `${baseUrl}${media_associates[4].media_unique_id.object?.url}`
+                                  ? `${baseUrl}${mediaItems[4].media_unique_id.object?.url}`
                                   : undefined,
                             }}
                             fileType={detectMediaTypeFromMediaAssociate(
-                              media_associates[4]
+                              mediaItems[4]
                             )}
                           />
                         )}
