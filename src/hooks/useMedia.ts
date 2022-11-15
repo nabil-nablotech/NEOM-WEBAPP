@@ -99,7 +99,7 @@ const useMedia = () => {
       setHasMoreData(refineMediaData?.medias?.meta.pagination.pageCount !==
         refineMediaData?.medias.meta.pagination.page);
     }
-  }, [refineMediaData?.medias]);
+  }, [refineMediaData?.medias, JSON.stringify(refineMediaData)]);
 
   useEffect(() => {
     if (addData) {
