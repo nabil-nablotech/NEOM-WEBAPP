@@ -9,7 +9,7 @@ import useLogout from "../../hooks/useLogout";
 import { EVENTS_TAB_NAME, itemAddEditAccess, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME, stringAvatar } from "../../utils/services/helpers";
 import { RootState } from "../../store";
 import { getRole } from "../../utils/storage/storage";
-
+import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import MenuList from "../MenuList";
 import { Box, LinearProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
@@ -31,7 +31,9 @@ import { ConfirmationModal } from "../ConfirmationModal";
 import { deleteRecord } from "../../api/delete";
 
 /** Component for top-right header icons */
-function UserMenuComponent() {
+function UserMenuComponent({
+  screen
+}: {screen?: string}) {
   const iconUserWhite = WhiteCircle;
   const icon =
     "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/icon@1x.png";
@@ -157,6 +159,17 @@ function UserMenuComponent() {
           }
         </Box>}
         {admin && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
+        {
+          screen && (screen === 'landing') && <>
+            <DownloadOutlinedIcon sx={{
+              color: '#fff',
+              zIndex: 2,
+              width: '35px',
+              height: '35px',
+              cursor: 'pointer'
+            }}/>
+          </>
+        }
         <InitialsWrapper
           id="long-button"
           //@ts-ignore

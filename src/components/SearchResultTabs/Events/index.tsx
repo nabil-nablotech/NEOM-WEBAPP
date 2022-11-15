@@ -18,10 +18,13 @@ import MapView from '../GoogleMap/MapView';
 import ExportModal from '../../ExportModal';
 import { importContentType } from '../../../utils/export-import/import-content-type';
 import { importCsvImagesZip } from '../../../utils/export-import/import-csv-images-zip';
-import {checkSearchParameter} from '../../../utils/services/helpers';
+import {checkSearchParameter, EVENTS_TAB_NAME} from '../../../utils/services/helpers';
+import { setToggledStates } from '../../../store/reducers/searchResultsReducer';
+import { useDispatch } from 'react-redux';
 
 const PlacesTab = () => {
-  const { selectedCardIndex, events, totalCounts, eventMetaData, searchText, searchApply } = useSelector(
+  const { selectedCardIndex, events, totalCounts, eventMetaData, searchText, searchApply,
+    toggledStates } = useSelector(
     (state: RootState) => state.searchResults
   );
   const importFileInputRef: any = useRef(null);
@@ -33,19 +36,31 @@ const PlacesTab = () => {
   const [open, setOpen] = React.useState(false);
   const [filter, setFilter] = React.useState(null);
 
-    useEffect(() => {
-        setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1)
-    }, [selectedCardIndex])
-    
-    const {openStates, toggleOpenStates} = useToggledView({count: 2})
+  useEffect(() => {
+    setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1)
+  }, [selectedCardIndex])
 
-    const meta: Meta | null = eventMetaData;
+  const { openStates, toggleOpenStates } = useToggledView({ count: 2 })
 
-    const handleNext = () => {
-      fetchEvents();
+  const meta: Meta | null = eventMetaData;
+
+  const handleNext = () => {
+    fetchEvents();
+  }
+
+  const dispatch = useDispatch()
+
+  /** Check if history list/grid view flag is present
+   * if yes - set it
+   */
+  useEffect(() => {
+    if (toggledStates.states && (toggledStates.tabName === EVENTS_TAB_NAME)) {
+      toggleOpenStates(toggledStates.states)
     }
 
-     /* Event handlers */
+  }, [toggledStates])
+
+  /* Event handlers */
   const exportEvent = async () => {
     let filter: any;
     if (searchData?.search) {
@@ -254,13 +269,25 @@ const PlacesTab = () => {
           />
                 </Box>
                 <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={DetailsView}
-                    onClick={e => toggleOpenStates([true, false])}
+                    onClick={e => {
+                      toggleOpenStates([true, false])
+                      dispatch(setToggledStates({
+                        states: [true, false],
+                        tabName: EVENTS_TAB_NAME
+                      }))
+                    }}
                     style={{
                         opacity: openStates[0] ? '1' : '0.5'
                     }}
                 />
                 <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={ListViewIcon}
-                    onClick={e => toggleOpenStates([false, true])}
+                    onClick={e => {
+                      toggleOpenStates([false, true])
+                      dispatch(setToggledStates({
+                        states: [false, true],
+                        tabName: EVENTS_TAB_NAME
+                      }))
+                    }}
                     style={{
                         opacity: openStates[1] ? '1' : '0.5'
                     }}

@@ -203,7 +203,6 @@ const EventDetailsPage = () => {
         )
 
     const { latitude, longitude } = eventDetails
-
     if (visit_associate?.place_unique_id) {
 
     }
@@ -624,14 +623,17 @@ const EventDetailsPage = () => {
                                 {
                                     (latitude && longitude) ?
                                         <>
-                                            <MapView key={4} filterId={setIsFilter} marker={[{
-                                                id: 0,
-                                                name: "P event name",
+                                            <MapView key={1} filterId={setIsFilter} marker={[{
+                                                id: "1",
+                                                name: eventDetails?.visit_associate?.place_unique_id?.placeNameEnglish,
                                                 position: {
-                                                    lat: latitude || 24.11,
-                                                    lng: longitude || 34.98
-                                                }
-                                            }]} />
+                                                    lat: latitude ? latitude : 24.11,
+                                                    lng: longitude ? longitude : 34.98
+                                                },
+                                                
+                                            }]}
+                                            zoom= {10}
+                                            />
                                             <Grid container className={`${styles['map-loctn-details']}`} >
                                                 <Grid item lg={5} md={5} sm={5}>
                                                     <Grid container className={`${styles['map-loctn-line']}`}>

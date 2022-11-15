@@ -103,7 +103,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
 
     .ant-table-thead > tr > th.more-menu-ant-cell.ant-table-cell-fix-right,
     .ant-table-tbody > tr > td.more-menu-ant-cell.ant-table-cell-fix-right {
-      right: -5vw !important;
+      right: 0vw !important;
     }
 
     th.ant-table-cell,
@@ -149,23 +149,32 @@ const ListView = (props: PlacesProps) => {
     const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([
       {
           title: "NAME",
-          key: `attributes`,
+          key: `attributes.placeNameEnglish`,
           dataIndex: "attributes",
           className: 'cell-name',
-          sorter: (a: { attributes: {placeNameEnglish: string;} }, b: { attributes: {placeNameEnglish: string;} }) => {
-              return a.attributes.placeNameEnglish.localeCompare(b.attributes.placeNameEnglish)
+          sorter: {
+            compare: (a: { attributes: {placeNameEnglish: string;} }, b: { attributes: {placeNameEnglish: string;} }) => {
+                return a.attributes.placeNameEnglish.localeCompare(b.attributes.placeNameEnglish)
+            },
+            multiple: 2
           },
-          sortDirections: ["ascend"],
-          defaultSortOrder: "ascend",
+          filterMultiple: true,
           render: (value: any, index: number) => {
             return `${value.placeNameEnglish}${value.placeNameArabic}`            
           }
       },
       {
           title: "NUMBER",
-          key: `attributes`,
+          key: `attributes.placeNumber`,
           dataIndex: "attributes",
           className: 'cell-number',
+          sorter: {
+            compare: (a: { attributes: {placeNumber: string;} }, b: { attributes: {placeNumber: string;} }) => {
+                return a.attributes.placeNumber.localeCompare(b.attributes.placeNumber)
+            },
+            multiple: 1
+          },
+          filterMultiple: true,
           render: (value: any, index: number) => value.placeNumber
       },
       {

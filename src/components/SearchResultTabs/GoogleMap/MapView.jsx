@@ -6,6 +6,7 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 import MapStyles from "./MapStyles";
+import Loader from "../../Common/Loader";
 
 const containerStyle = {
   width: "100%",
@@ -14,7 +15,7 @@ const containerStyle = {
 var URL = "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png";
 
 
-const MapView = ({marker, filterId}) => {
+const MapView = ({ marker, filterId, zoom = 25 }) => {
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -28,10 +29,14 @@ const MapView = ({marker, filterId}) => {
   useEffect(() => {
     if(map) {
       const bounds = new window.google.maps.LatLngBounds();
-      marker.map((markers) =>{
+      marker.forEach((markers) => {
         bounds.extend(markers.position);
       })
+
       map.fitBounds(bounds);
+      if (marker.length === 1) {
+        map.setZoom(zoom)
+      }
     }
   }, [map, marker])
 
@@ -54,10 +59,11 @@ const MapView = ({marker, filterId}) => {
     filterId(null);
     setActiveMarker(null)
   };
+
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      zoom={25}      
+      zoom={zoom}      
       options={{ styles: MapStyles.dark }}
       onLoad={onLoad}
       onUnmount={onUnmount}
@@ -81,7 +87,7 @@ const MapView = ({marker, filterId}) => {
       ))}
     </GoogleMap>
   ) : (
-    <></>
+    <><Loader /></>
   );
 };
 
