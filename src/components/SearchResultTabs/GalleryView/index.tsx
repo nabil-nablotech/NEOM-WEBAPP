@@ -90,11 +90,11 @@ const GalleryView = () => {
                 <Grid item >
                     {`${placeData?.placeNameEnglish.substr(0, 20)}${placeData?.placeNameArabic.substr(0, 20)}`}
                 </Grid>
-                {placeData && <Grid item >{`${placeData?.media_associates.length} Items`}</Grid>}
+                {placeData && <Grid item >{`${placeData?.mediaItems.length} Items`}</Grid>}
             </Grid>
             <Grid container className={`${styles['media-grid']}`}>
                 {
-                    placeData && placeData.media_associates.map((itemObj, inx) => (
+                    placeData && placeData.mediaItems.map((itemObj, inx) => (
                         <Grid item md={3} lg={4} key={inx} className={`${styles['media-grid-item']}`}
                             onClick = {e => {
                                 let respMediaItemObj = null
@@ -136,7 +136,7 @@ const GalleryView = () => {
                                                 fileType="3d"
                                             />
                                         </> : */}
-                                        <RenderFileData
+                                        {!itemObj?.media_unique_id.deleted && <RenderFileData
                                             fileData={{
                                                 alt: "",
                                                 src: `${baseUrl}${itemObj?.media_unique_id.object?.url}`,
@@ -146,7 +146,7 @@ const GalleryView = () => {
 
                                             }}
                                             fileType={detectMediaTypeFromMediaAssociate(itemObj)}
-                                        />
+                                        />}
                             <Grid container className={`${styles['media-grid-item-options-row']}`}>
                                 <Grid item>
                                     {/* to-do: api based flag to show featured */}

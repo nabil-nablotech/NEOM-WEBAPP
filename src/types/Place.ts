@@ -1,6 +1,6 @@
 import { dropDownItem } from "./DropdownComponent";
 import { VisitAssociate } from "./Event";
-import { Media } from "./Media";
+import { Media, MediaApi } from "./Media";
 
 export type PlaceApi = {
   id: string;
@@ -26,6 +26,7 @@ export type PlaceApi = {
   media_associates: MediaAssociates2;
   visit_associates: VisitAssociate[]
   libraryItems: Media[]
+  mediaItems: MediaAssociateObj[]
 };
 export interface Place extends dropDownItem {
   id: string;
@@ -60,6 +61,7 @@ export type PlaceApiResponse = {
   placeUIPath: string
   media_type: any[]
   id: number
+
 }
 
 export type mediaAssociates_objectData = {
