@@ -185,6 +185,7 @@ const EventDetailsPage = () => {
         visitUIPath, visitDate, recordingTeam,
         visitNumber,
         libraryItems, mediaGallery, visit_associate,
+        id
     } = eventDetails
 
     const mediaGalleryLocal = mediaGallery && mediaGridActiveItems + mediaCount <= mediaGallery?.length ? mediaGallery?.slice(0, mediaGridActiveItems + mediaCount) :
@@ -358,12 +359,13 @@ const EventDetailsPage = () => {
                             <Grid item sm={11} className={`${styles['title-section-left-item']}`}>
                                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
-                                {visit_associate?.place_unique_id?.placeNameEnglish && <Grid container>
+                                <Grid container>
+                                {visit_associate?.place_unique_id?.placeNameEnglish && 
                                     <Grid item>
                                         <Box component="div" className={`${styles['item-name']}`}>
                                             {visit_associate?.place_unique_id?.placeNameEnglish}
                                         </Box>
-                                    </Grid>
+                                    </Grid>}
                                     {visit_associate?.place_unique_id?.placeNameArabic && <Grid item>
                                         <Box component="div" className={`${styles['item-name-arabic']}`}>
                                             {visit_associate?.place_unique_id?.placeNameArabic}
@@ -374,13 +376,16 @@ const EventDetailsPage = () => {
                                             {`- ${visit_associate?.place_unique_id?.placeNumber}`}
                                         </Box>
                                     </Grid>}
-                                </Grid>}
+                                </Grid>
                                 <Box component="div" className={`${styles['visited-by-main-box']}`}>
                                     {visitDate && <Box component="span">Visited on {visitDate} by </Box>}
                                     <Box component="span">{recordingTeam}</Box>
                                 </Box>
                                {visitNumber && <Box component="div" className={`${styles['visit-count']}`}>
                                     VISIT {visitNumber}
+                                </Box>}
+                               {id && <Box component="div" className={`${styles['visit-count']}`}>
+                                    ID {id}
                                 </Box>}
                             </Grid>
                             <Grid item sm={1} className={`${styles['title-section-grids']}`}>
