@@ -308,16 +308,16 @@ const EventDetailsPage = () => {
         },
     ];
 
-    const handleClickMediaItem = (e: React.MouseEvent, itemIndex: number) => {
+    const handleClickMediaItem = (e: React.MouseEvent, uniqueId: string) => {
         /** itemIndex used to track which item being clicked out of 5;
          * 1st , 2nd etc.
          */
         e.preventDefault()
-        if (media.length >= itemIndex) {
-            navigate(`/search-results/Media/${media[itemIndex - 1].attributes.uniqueId}`, { replace: true })
-            dispatch(setActiveMediaItem(media[itemIndex - 1]))
-            dispatch(setActiveMediaItemIndex(itemIndex - 1))
-        }
+        navigate(`/search-results/Media/${uniqueId}`, { replace: true })
+        // if (media.length >= itemIndex) {
+        //     dispatch(setActiveMediaItem(media[itemIndex - 1]))
+        //     dispatch(setActiveMediaItemIndex(itemIndex - 1))
+        // }
     }
 
     const handleSearch = (searchData: any) => {
@@ -697,6 +697,9 @@ const EventDetailsPage = () => {
                                     {
                                         mediaGalleryLocal && mediaGalleryLocal.map((itemObj: MediaAssociateObj, inx: number) => (
                                             <Grid item lg={3} md={4} sm={4} key={inx} className={`${styles['media-grid-item']}`}
+                                            onClick={(e) => {
+                                                handleClickMediaItem(e, itemObj.media_unique_id.uniqueId);
+                                            }}
                                             >
                                                 <RenderFileData
                                                     fileData={{
