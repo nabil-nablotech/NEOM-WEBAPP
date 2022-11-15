@@ -82,7 +82,7 @@ const GridView = (props: EventsProps) => {
                                         new Date(item?.attributes?.visitDate),
                                         "MM/dd/yyyy"
                                     )}`}
-                                    isNew={checkIsNew(item.attributes.createdAt)}
+                                    isNew={checkIsNew(item.attributes.visitDate)}
                                     handleClick={handleClick}
                                     record={item}
                                     id={item.id}
