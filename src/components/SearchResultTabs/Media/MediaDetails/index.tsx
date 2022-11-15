@@ -20,7 +20,7 @@ import ModelViewer from '../../../Model';
 import { useEffect } from 'react';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
-import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations } from '../../../../utils/services/helpers';
+import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
@@ -201,8 +201,10 @@ const MediaDetailsPage = ({
                 setEdit({ record: mediaDetails, type: "Media" });
                 // handleClose()
             },
-        },
-        {
+        }
+    ]
+    if (itemDeleteAccess) {
+        menuItems.push({
             label: "Delete",
             action: () => {
                 dispatch(toggleDeleteConfirmationWindowOpen({
@@ -216,8 +218,9 @@ const MediaDetailsPage = ({
                     id: typeof mediaDetails.id === 'string' ? parseInt(mediaDetails.id) : mediaDetails.id
                 }))
             },
-        },
-    ]
+        })
+    }
+
     return <>
         <Box component="div" className={`${styles['details-page-wrapper']}`}>
             <Box component="div" className={`${styles['img-wrapper']}`} >
@@ -320,10 +323,10 @@ const MediaDetailsPage = ({
                                     <Grid item sm={1} className={`${styles['more-icon-grid-item']}`} style={{
                                         marginLeft: 'auto'
                                     }}>
-                                        <CustomMoreOptionsComponent
+                                        {itemAddEditAccess && <CustomMoreOptionsComponent
                                             moreIconClassName={`${styles['more-icon']}`}
                                             menuActions={menuItems}
-                                        />
+                                        />}
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -392,10 +395,11 @@ const MediaDetailsPage = ({
                             <Grid item sm={1} className={`${styles['more-icon-grid-item']}`} style={{
                                 marginLeft: 'auto'
                             }}>
-                                <CustomMoreOptionsComponent
-                                    moreIconClassName={`${styles['more-icon']}`}
-                                    menuActions={menuItems}
-                                />
+                                
+                                {itemAddEditAccess && <CustomMoreOptionsComponent
+                                            moreIconClassName={`${styles['more-icon']}`}
+                                            menuActions={menuItems}
+                                        />}
                             </Grid>
                         </Grid>
                         <Box component="div" className={`${styles[`video-desc`]}`}>
@@ -460,10 +464,10 @@ const MediaDetailsPage = ({
                             <Grid item sm={1} className={`${styles['more-icon-grid-item']}`} style={{
                                 marginLeft: 'auto'
                             }}>
-                                <CustomMoreOptionsComponent
-                                    moreIconClassName={`${styles['more-icon']}`}
-                                    menuActions={menuItems}
-                                />
+                                {itemAddEditAccess && <CustomMoreOptionsComponent
+                                            moreIconClassName={`${styles['more-icon']}`}
+                                            menuActions={menuItems}
+                                        />}
                             </Grid>
                         </Grid>
                         <Box component="div" className={`${styles[`three-d-modeldesc`]}`}>

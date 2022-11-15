@@ -19,7 +19,8 @@ import {
     antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate,
     isEmptyValue, NO_DESCRIPTION, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, isEventDetailAttached,
     detectMediaTypeFromMediaAssociate,
-    EVENTS_TAB_NAME
+    EVENTS_TAB_NAME,
+    itemAddEditAccess
 } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
@@ -302,21 +303,21 @@ const EventDetailsPage = () => {
             fixed: "right",
             className: "more-menu-ant-cell",
             render: (value: any, record: Media) => (
-                <MoreOptionsComponent type="Library" setEdit={setEdit} record={record} />
+                <>{itemAddEditAccess && <MoreOptionsComponent type="Library" setEdit={setEdit} record={record} />}</>
             ),
         },
     ];
 
-    const handleClickMediaItem = (e: React.MouseEvent, itemIndex: number) => {
+    const handleClickMediaItem = (e: React.MouseEvent, uniqueId: string) => {
         /** itemIndex used to track which item being clicked out of 5;
          * 1st , 2nd etc.
          */
         e.preventDefault()
-        if (media.length >= itemIndex) {
-            navigate(`/search-results/Media/${media[itemIndex - 1].attributes.uniqueId}`, { replace: true })
-            dispatch(setActiveMediaItem(media[itemIndex - 1]))
-            dispatch(setActiveMediaItemIndex(itemIndex - 1))
-        }
+        navigate(`/search-results/Media/${uniqueId}`, { replace: true })
+        // if (media.length >= itemIndex) {
+        //     dispatch(setActiveMediaItem(media[itemIndex - 1]))
+        //     dispatch(setActiveMediaItemIndex(itemIndex - 1))
+        // }
     }
 
     const handleSearch = (searchData: any) => {
@@ -410,9 +411,10 @@ const EventDetailsPage = () => {
                                                 }))
                                             }}
                                         /> :
-                                        <CustomMoreOptionsComponent
+                                        <>
+                                        {itemAddEditAccess && <CustomMoreOptionsComponent
                                             menuActions={menuItems}
-                                        />}
+                                        />}</>}
                                 </Box>
                             </Grid>
                         </Grid>
@@ -695,6 +697,9 @@ const EventDetailsPage = () => {
                                     {
                                         mediaGalleryLocal && mediaGalleryLocal.map((itemObj: MediaAssociateObj, inx: number) => (
                                             <Grid item lg={3} md={4} sm={4} key={inx} className={`${styles['media-grid-item']}`}
+                                            onClick={(e) => {
+                                                handleClickMediaItem(e, itemObj.media_unique_id.uniqueId);
+                                            }}
                                             >
                                                 <RenderFileData
                                                     fileData={{
@@ -714,7 +719,7 @@ const EventDetailsPage = () => {
                                                     <Grid container className={`${styles['media-grid-item-options-row']}`}>
                                                         <Grid item>
                                                             {/* To-do: modify featured image flag */}
-                                                            {inx === 0 && <Box component="div">
+                                                            {itemObj.media_unique_id.featuredImage && <Box component="div">
                                                                 <Grid container className={`${styles['star-icon-grid']}`}>
                                                                     <Grid item>
                                                                         <Box
