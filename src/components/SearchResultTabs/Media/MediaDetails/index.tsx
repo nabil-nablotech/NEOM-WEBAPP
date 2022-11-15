@@ -349,13 +349,15 @@ const MediaDetailsPage = ({
                                     <MapView filterId={setIsFilter} key={4} marker={[{
                                         id: 0,
                                         name: `${mediaDetails?.media_associate?.data?.attributes?.place_unique_ids.data !== null ?
-                                            mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
-                                        : ''}`,
-                                        position: {
-                                            lat: latitude || 24.11,
-                                            lng: longitude || 34.98
-                                        }
-                                    }]} />
+                                                mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
+                                            : ''}`,
+                                            position: {
+                                                lat: latitude || 24.11,
+                                                lng: longitude || 34.98
+                                            }
+                                        }]}
+                                        zoom={10}
+                                    />
                                     <Grid container className={`${styles['map-loctn-details']}`} >
                                         <Grid item lg={5} md={5} sm={5}>
                                             <Grid container className={`${styles['map-loctn-line']}`}>
@@ -418,13 +420,15 @@ const MediaDetailsPage = ({
                                         <MapView filterId={setIsFilter} key={4} marker={[{
                                             id: 0,
                                             name: `${mediaDetails?.media_associate?.data?.attributes?.place_unique_ids.data !== null ?
-                                                mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
-                                                : ''}`,
-                                            position: {
-                                                lat: latitude || 24.11,
-                                                lng: longitude || 34.98
-                                            }
-                                        }]} />
+                                                    mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
+                                                    : ''}`,
+                                                position: {
+                                                    lat: latitude || 24.11,
+                                                    lng: longitude || 34.98
+                                                }
+                                            }]}
+                                            zoom={10}
+                                        />
                                         <Grid container className={`${styles['map-loctn-details']}`} >
                                             <Grid item lg={5} md={5} sm={5}>
                                                 <Grid container className={`${styles['map-loctn-line']}`}>
