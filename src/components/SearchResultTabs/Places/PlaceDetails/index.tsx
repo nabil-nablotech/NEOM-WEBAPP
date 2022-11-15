@@ -1200,6 +1200,7 @@ const PlaceDetailsPage = () => {
                           },
                         },
                       ]}
+                      zoom={10}
                     />
                     <Grid
                       container

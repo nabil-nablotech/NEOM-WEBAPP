@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   GoogleMap,
   useJsApiLoader,
@@ -16,18 +16,17 @@ var URL = "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png";
 
 
 const MapView = ({ marker, filterId, zoom = 25 }) => {
-
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: "AIzaSyDk4YMVQbv85GukMcQqveKZnwp9AXqQ8Og",
   });
   // eslint-disable-next-line
   const [map, setMap] = useState(null);
-
+  const mapRef = useRef(null)
   const [activeMarker, setActiveMarker] = useState(null);
 
   useEffect(() => {
-    if(map) {
+    if(map && marker) {
       const bounds = new window.google.maps.LatLngBounds();
       marker.forEach((markers) => {
         bounds.extend(markers.position);
@@ -40,13 +39,21 @@ const MapView = ({ marker, filterId, zoom = 25 }) => {
     }
   }, [map, marker])
 
+  // useEffect(() => {
+  //   if(map) {
+  //     setTimeout(() => {
+  //       mapRef && mapRef.current.focus()
+  //     }, 200);
+  //   }
+  // }, [map])
+
   const onUnmount = useCallback(function callback(map) {
     setMap(null);
   }, []);
 
   const onLoad = useCallback(function callback(map){
     setMap(map)
-  })
+  }, [])
 
   const handleActiveMarker = (marker) => {
     filterId(marker)
@@ -60,14 +67,19 @@ const MapView = ({ marker, filterId, zoom = 25 }) => {
     setActiveMarker(null)
   };
 
+  if(!isLoaded) {
+    return <><Loader /></>
+  }
+
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      zoom={zoom}      
+      zoom={marker && marker.length > 2 ? 25 : 10}      
       options={{ styles: MapStyles.dark }}
       onLoad={onLoad}
       onUnmount={onUnmount}
       onClick={() => handleCloseMarker()}
+      ref={mapRef}
     >
       {marker?.map(({id, name, position}, index) => (
         <Marker
@@ -91,4 +103,4 @@ const MapView = ({ marker, filterId, zoom = 25 }) => {
   );
 };
 
-export default MapView;
+export default React.memo(MapView);
