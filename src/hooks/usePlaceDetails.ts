@@ -130,7 +130,7 @@ const usePlaceDetails = () => {
   };
 
   const setFeaturedMedia = async (payload: any) => {
-    const featuredMedia: MediaAssociateObj[] = data?.mediaItems.filter(x => x.media_unique_id.featuredImage);
+    const featuredMedia: any = data?.mediaItems.filter(x => x.media_unique_id.featuredImage);
     if (featuredMedia?.length > 0) {
       await updateMediaMutation({
         variables: {
