@@ -30,7 +30,7 @@ import useMedia from "../../../../hooks/useMedia";
 import CommentsSection from "../../../CommentsSection";
 import RenderInitials from "../../../RenderInitials";
 import { useDispatch } from "react-redux";
-import { modifyAssociatedEvents, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from "../../../../store/reducers/searchResultsReducer";
+import { modifyAssociatedEvents, setActiveLibraryItem, setActiveLibraryItemIndex, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
 import YellowStar from '../../../../assets/images/searchResults/YellowStar.svg'
@@ -132,7 +132,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
 
 const EventDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
-    const navigate = useNavigate();
+    const { goBack, navigateTo } = useHistory()
     const [isFilter, setIsFilter] = useState(null);
     const { places, isAssociationsStepOpen, associatedEvents, media } = useSelector(
         (state: RootState) => state.searchResults
@@ -159,7 +159,6 @@ const EventDetailsPage = () => {
     
     const {loading: loadingRemarks, data: remarks, addRemarksMutation, updateRemarksMutation } = useRemarks();
     const dispatch = useDispatch()
-    const { goBack } = useHistory()
 
     const [mediaGridActiveItems, setMediaGridActiveItems] = useState<number>(0)
 
@@ -310,7 +309,8 @@ const EventDetailsPage = () => {
          * 1st , 2nd etc.
          */
         e.preventDefault()
-        navigate(`/search-results/Media/${uniqueId}`, { replace: true })
+        // navigate(`/search-results/Media/${uniqueId}`, { replace: true })
+        navigateTo(`/search-results/Media/${uniqueId}`)
         // if (media.length >= itemIndex) {
         //     dispatch(setActiveMediaItem(media[itemIndex - 1]))
         //     dispatch(setActiveMediaItemIndex(itemIndex - 1))
@@ -318,7 +318,13 @@ const EventDetailsPage = () => {
     }
 
     const handleSearch = (searchData: any) => {
-        navigate({
+        // navigate({
+        //     pathname: `/search-results/Events`,
+        //     search: decodeURIComponent(JSON.stringify({
+        //         refinedSearch: searchData
+        //     }))
+        // });
+        navigateTo({
             pathname: `/search-results/Events`,
             search: decodeURIComponent(JSON.stringify({
                 refinedSearch: searchData
@@ -679,6 +685,18 @@ const EventDetailsPage = () => {
                                         scroll={{ x: true, y: 300 }}
                                         style={{
                                             background: "transparent",
+                                        }}
+                                        onRow={(record: any, rowIndex: number | undefined) => {
+                                            return {
+                                                onClick: (library) => {
+                                                    if (typeof rowIndex === "number") {
+                                                        dispatch(setActiveLibraryItem(record));
+                                                        dispatch(setActiveLibraryItemIndex(rowIndex));
+                                                        console.log('hex: ', record)
+                                                        navigateTo(`/search-results/Library/${record.media_unique_id.uniqueId}`)
+                                                    }
+                                                },
+                                            };
                                         }}
                                     ></StyledTableWrapper> :
                                     <NoTextPresent

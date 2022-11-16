@@ -15,8 +15,8 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 import { Card } from './Card';
 import dayjs from "dayjs";
-import { useNavigate } from "react-router-dom";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
+import { useHistory } from "../../../../hooks/useHistory";
 
 export type EventsProps = {
     data: Event[];
@@ -29,7 +29,7 @@ export type EventsProps = {
 const GridView = (props: EventsProps) => {
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const { navigateTo } = useHistory();
 
     const { data, handleNext, hasMoreData, loading, setEdit } = props;
 
@@ -44,7 +44,8 @@ const GridView = (props: EventsProps) => {
 
     const handleClick = (item: Event, index: number) => {
         dispatch(setSelectedCardIndex(index))
-        navigate(`/search-results/Events/${item.attributes.uniqueId}`, { replace: true })
+        // navigate(`/search-results/Events/${item.attributes.uniqueId}`, { replace: true })
+        navigateTo(`/search-results/Events/${item.attributes.uniqueId}`)
     }
 
     return (

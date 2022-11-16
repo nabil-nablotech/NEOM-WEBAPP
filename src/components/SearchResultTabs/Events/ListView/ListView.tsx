@@ -17,6 +17,7 @@ import { InventoryAssociationType_Event } from '../../../../types/SearchResultsT
 import DetachedIcon from '../../../Icons/DetachedIcon';
 import { RootState } from '../../../../store';
 import { useSelector } from 'react-redux';
+import { useHistory } from '../../../../hooks/useHistory';
 
 const StyledTableWrapper = styled(StyledAntTable)`
     td
@@ -119,7 +120,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
 
 const ListView = (props: EventsProps) => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const { navigateTo } = useHistory();
 
     const { isAssociationsStepOpen, associatedEvents, events } = useSelector(
         (state: RootState) => state.searchResults
@@ -348,7 +349,8 @@ const ListView = (props: EventsProps) => {
                                 handleAttachClick(event, record)
                             } else {
                                 dispatch(setSelectedCardIndex(rowIndex || record.id))
-                                navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
+                                // navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
+                                navigateTo(`/search-results/Events/${record.attributes.uniqueId}`)
                             }
                           }, // click row
                         };
