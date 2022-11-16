@@ -4,6 +4,7 @@ import TextField, {TextFieldProps} from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { styled, SxProps } from '@mui/material/styles';
 import { FormHelperTextProps } from "@mui/material";
+import FomrError from "./FormError";
 
 interface TextInputProps {
   error?: boolean;
@@ -45,6 +46,7 @@ interface TextInputProps {
   minRows?: number
   maxRows?: number
   endAdornment?: React.ReactNode
+  errorField?: string
 };
 
 const NeomTextInput = styled(TextField)<TextInputProps>(({ theme }) => ({
@@ -100,6 +102,7 @@ export default function NTextFields(props: TextInputProps) {
     FormHelperTextProps,
     multiline = false,
     endAdornment,
+    errorField,
     ...rest
   } = props;
 
@@ -145,6 +148,15 @@ export default function NTextFields(props: TextInputProps) {
         >
           {value}
           </NeomTextInput>
+        {
+          errorField &&
+          <FomrError
+            style={{
+              marginTop: '3px'
+            }}
+            msg={errorField}
+          />
+        }
       </Box>
     </Grid>
   );

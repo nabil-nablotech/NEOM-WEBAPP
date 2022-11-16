@@ -286,6 +286,23 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
     }
   };
 
+  const validation = (values: any, formikObject: any) => {
+    let currentError = "";
+
+    if (!values.placeNumber) {
+      currentError = "Place Number is required";
+    }
+
+    if (!currentError) {
+      handleNext(null, values);
+    } else {
+      if (activeStep === 0) {
+        formikObject.setErrors({ placeNumber: "Place Number is required" })
+      }
+    }
+
+  }
+
   const formik = useFormik({
     initialValues: {
       placeNumber: edit ? tabData.placeNumber : "",
@@ -315,26 +332,14 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
       keywords: edit && tabData?.keywords ? tabData?.keywords : [],
     },
     validate: (values) => {
-      // if (!values.placeNumber) {
-      //     setFormError('Place Number is required')
-      // } else {
-      //     setFormError('')
-      // }
-    },
-    onSubmit: (values) => {
-      let currentError = "";
-
       if (!values.placeNumber) {
-        currentError = "Place Number is required";
-      }
-
-      if (!currentError) {
-        handleNext(null, values);
+          // setFormError('Place Number is required')
       } else {
-        if (activeStep === 0) {
-          setFormError(currentError);
-        }
+          // setFormError('')
       }
+    },
+    onSubmit: (values, { setErrors }) => {
+      validation(values, {setErrors })
     },
   });
 
@@ -388,6 +393,7 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
               {edit ? "Edit" : "Add"} Place
             </Typography>
             <Stepper
+              nonLinear
               activeStep={activeStep}
               alternativeLabel
               className={`${styles["stepper"]}`}
@@ -398,8 +404,23 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
                   optional?: React.ReactNode;
                 } = {};
                 return (
-                  <Step key={label} {...stepProps}>
-                    <StepButton color="inherit" onClick={handleStep(index)}>
+                  <Step key={label} {...stepProps}
+                    sx={{
+                      cursor: (activeStep !== index) &&
+                        !(formik.values.placeNumber.length > 0) ? 'not-allowed' : 'inherit',
+                    }}
+                  >
+                    <StepButton color="inherit"
+                      onClick={e => {
+
+                        if (index > activeStep) {
+                          validation(formik.values, { setErrors: formik.setErrors })
+                        } else {
+                          handleBack()
+                        }
+                        
+                      }}
+                      >
                       <StepLabel
                         {...labelProps}
                         className={`${styles["step-label"]}`}
@@ -433,11 +454,6 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
               </React.Fragment>
             </>
           </Box>
-          {formError && (
-            <Box component="div" className={`${styles["form-error"]}`}>
-              {formError}
-            </Box>
-          )}
           <Box
             component="div"
             className={`${styles["btn-row"]}`}
@@ -461,7 +477,7 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
                 <Button
                   label={activeStep === steps.length - 1 ? "Add" : "Next"}
                   type="submit"
-                  disabled={!(formik.values.placeNumber.length > 0)}
+                  // disabled={!(formik.values.placeNumber.length > 0)}
                 />
               )}
               {edit && activeStep !== steps.length - 1 && (

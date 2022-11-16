@@ -102,8 +102,14 @@ const StepContent = ({
               }}
               sx={{
                 ...textInputSxStyles,
+                borderColor: formik.errors.placeNumber ? 'red' : 'inherit'
               }}
               formControlSx={commonFormControlSxStyles}
+              errorField={
+                formik.errors.placeNumber ?
+                  `${formik.errors.placeNumber}`
+                  : ''
+              }
             />
             <TextInput
               className={`${styles["english-name"]}`}
