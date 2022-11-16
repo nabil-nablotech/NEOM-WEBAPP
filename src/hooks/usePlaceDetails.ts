@@ -14,6 +14,7 @@ import { PlaceApi, Place, MediaAssociateObj } from "../types/Place";
 import { Media, MediaApi } from "../types/Media";
 import { graphQlHeaders } from "../utils/services/interceptor";
 import { updateMedia } from "../query/media";
+import { AnyARecord } from "dns";
 
 const usePlaceDetails = () => {
   const { uniqueId , tabName} = useParams<{ uniqueId: string, tabName: tabNameProps }>();
@@ -130,7 +131,7 @@ const usePlaceDetails = () => {
   };
 
   const setFeaturedMedia = async (payload: any) => {
-    const featuredMedia: MediaAssociateObj[] = data?.mediaItems.filter(x => x.media_unique_id.featuredImage);
+    const featuredMedia: any = data?.mediaItems.filter(x => x.media_unique_id.featuredImage);
     if (featuredMedia?.length > 0) {
       await updateMediaMutation({
         variables: {
