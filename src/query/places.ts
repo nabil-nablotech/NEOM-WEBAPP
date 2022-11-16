@@ -114,7 +114,7 @@ query refinedSearch(
         }
       ]
     }
-    sort: "updatedAt:desc"
+    sort: "createdAt:desc"
   ) {
     meta {
       pagination {

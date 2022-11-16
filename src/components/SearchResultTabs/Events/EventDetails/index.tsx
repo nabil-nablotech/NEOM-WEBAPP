@@ -182,6 +182,7 @@ const EventDetailsPage = () => {
 
     const {
         siteDescription, siteType, period, fieldNarrative, stateOfConservation,
+        assessmentType,
         risk, tourismValue, researchValue, recommendation,
         visitUIPath, visitDate, recordingTeam,
         visitNumber,
@@ -509,6 +510,23 @@ const EventDetailsPage = () => {
                                                 <Grid item>
                                                     {fieldNarrative}
                                                 </Grid> :
+                                                <Grid item>
+                                                    <NoTextPresent
+                                                        message={NO_TEXT}
+                                                    />
+                                                </Grid>
+
+                                        }
+                                    </Grid>
+                                    <Grid container className={`${styles['table-row']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
+                                            Assesment Type
+                                        </Grid>
+                                        {
+                                            !isEmptyValue(assessmentType) ? assessmentType.map((item: string, index: number) =>
+                                                <Grid item key={index}>
+                                                    {item}
+                                                </Grid>) :
                                                 <Grid item>
                                                     <NoTextPresent
                                                         message={NO_TEXT}
