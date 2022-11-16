@@ -268,7 +268,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
   const handleChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    if (setSearchValue) {
+    if (setSearchValue && e.target.value.length >= 3) {
       setSearchValue(e.target.value);
     }
   };
@@ -419,7 +419,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
                 <Button
                   label={"Update"}
                   type="submit"
-                  // disabled={!(formik.values.visitNumber.length > 0 && formik.values.place)}
+                  disabled={(formik.values.visitNumber.length === 0) && !(formik.values.place?.id)}
                   // onClick={handleNext}
                 />
               )}

@@ -506,7 +506,7 @@ const PlaceDetailsPage = () => {
               dispatch(setActivePlaceItemIndex(0));
               dispatch(setActiveMediaItem(null));
               dispatch(setActiveMediaItemIndex(0));
-
+              // navigate(-1);
               navigate(`/search-results/${tabName}`, { replace: true });
             }}
           >
@@ -828,14 +828,15 @@ const PlaceDetailsPage = () => {
               >
                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
-                {placeNameEnglish && (
                   <Grid container>
+                {placeNameEnglish && (
                     <Grid item>
                       <Box component="div" className={`${styles["item-name"]}`}>
                         {placeNameEnglish}
                       </Box>
                     </Grid>
-                    {placeNameArabic && (
+                )}
+                {placeNameArabic && (
                       <Grid item>
                         <Box
                           component="div"
@@ -846,9 +847,11 @@ const PlaceDetailsPage = () => {
                       </Grid>
                     )}
                   </Grid>
-                )}
                 <Box component="div" className={`${styles["item-number"]}`}>
                   {placeNumber}
+                </Box>
+                <Box component="div" className={`${styles["item-number"]}`}>
+                  ID {placeData.id}
                 </Box>
               </Grid>
               <Grid item sm={1}>

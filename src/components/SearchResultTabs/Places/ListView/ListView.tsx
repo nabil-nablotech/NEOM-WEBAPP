@@ -160,7 +160,7 @@ const ListView = (props: PlacesProps) => {
           },
           filterMultiple: true,
           render: (value: any, index: number) => {
-            return `${value.placeNameEnglish}${value.placeNameArabic}`            
+            return `${value.placeNameEnglish} ${value.placeNameArabic}`            
           }
       },
       {

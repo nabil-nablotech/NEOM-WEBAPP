@@ -139,7 +139,7 @@ const ListView = (props: EventsProps) => {
               },
               width: 110,
             render: (value: any, index: number) => {
-              return `${value.visit_associate?.data?.attributes?.place_unique_id.data?.attributes.placeNameEnglish}${value.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic || ''}`          
+              return `${value.visit_associate?.data?.attributes?.place_unique_id.data?.attributes.placeNameEnglish} ${value.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic || ''}`          
             },
             filterMultiple: true
         },

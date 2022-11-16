@@ -87,7 +87,6 @@ const StepContent = ({
               label="Search Place*"
               placeholder="Search Place*"
               value={formik.values.place || ''}
-              // defaultValue={formik.}
               handleClear={() => {}}
               itemsList={places || []}
               handleSelectChange={(e, value, r, d) =>
