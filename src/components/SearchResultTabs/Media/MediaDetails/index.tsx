@@ -20,7 +20,7 @@ import ModelViewer from '../../../Model';
 import { useEffect } from 'react';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
-import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess } from '../../../../utils/services/helpers';
+import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, copyToClipboard } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
@@ -30,6 +30,7 @@ import { MediaApi } from '../../../../types/Media';
 import MapView from '../../GoogleMap/MapView';
 import RenderValueWithDefault from '../../../NoDataScreens/DefaultText';
 import { useHistory } from '../../../../hooks/useHistory';
+import PositionedSnackbar from '../../../Snackbar';
 
 
 const TextualContent = ({
@@ -43,6 +44,7 @@ const TextualContent = ({
         referenceURL, citation,
         categoryType, Author, bearing
     } = mediaDetails
+    const [isCopyDone, setCopyDone] = useState<boolean>(false);
 
     return <>
         <Box component="div" className={`${styles[`bottom-grid`]}`} >
@@ -52,7 +54,36 @@ const TextualContent = ({
             <div>Bearing: {RenderValueWithDefault(bearing)}</div>
             <div>Source URL: {RenderValueWithDefault(referenceURL)}</div>
             <div>Citation: {RenderValueWithDefault(citation)}</div>
-            <div>Item URL: {RenderValueWithDefault(locationRef)}</div>
+            <Grid container style={{
+                gap: '10px'
+            }}>
+                <Grid item sm={2} style={{
+                    maxWidth: 'fit-content'
+                }}>
+                    Item URL:
+                </Grid>
+                <Grid item sm={10}>
+                    <Box
+                        component="div"
+                        style={{
+                            cursor: "pointer",
+                        }}
+                        onClick={(e) => {
+                            setCopyDone(true);
+                            copyToClipboard(locationRef ?? "");
+                        }}
+                    >
+                        {RenderValueWithDefault(locationRef)}
+
+                    </Box>
+                </Grid>
+            </Grid>
+            <PositionedSnackbar
+                message={"Copied to clipboard"}
+                severity={"success"}
+                open={isCopyDone}
+                handleClose={() => setCopyDone(false)}
+            />
         </Box>
         {
             (mediaDetails.object || mediaDetails.media_type) && <Box component="div" className={`${styles[`bottom-grid`]}`} >

@@ -78,7 +78,7 @@ const GridView = (props: PlacesProps) => {
                   img={item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ? item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''}
                   title={`${item.attributes?.placeNameEnglish} ${item.attributes?.placeNameArabic} - ${item.attributes?.placeNumber}`}
                   subTitle={item.attributes?.siteDescription}
-                  dateString={`Last login on ${formatDateTime(item.attributes.updatedAt)}`}
+                  dateString={`Last updated on ${formatDateTime(item.attributes.updatedAt)}`}
                   period={item?.attributes?.period}
                   setEdit={setEdit}
                   record={item}

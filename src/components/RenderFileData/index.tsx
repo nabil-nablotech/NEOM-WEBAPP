@@ -118,9 +118,24 @@ const RenderFileData = ({
                                                     </>
                                                 :
                                                     <Box component="div" className={`${styles['video-player-box']}`}>
+                                                        {
+                                                            !fileData.isOpened &&
+                                                            <PlayCircleFilledWhiteIcon
+                                                                sx={{
+                                                                    width: '40%',
+                                                                    height: '40%',
+                                                                }}
+                                                                fontSize="large" className={`${styles['video-play-icon']}`}
+                                                                onClick={e => {
+                                                                    e.preventDefault()
+                                                                    // toggleVideoModal(true)
+                                                                }}
+                                                            />
+                                                        }
                                                         <ReactPlayer
                                                             width="100%" height="auto"
-                                                            playing={fileData.isOpened} url={fileData.src}
+                                                            playing={fileData.isOpened}
+                                                            url={fileData.src}
                                                             style={{
                                                                 aspectRatio: '3/1.65'
                                                             }}

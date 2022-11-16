@@ -30,7 +30,6 @@ export type GridViewCard_Media = {
   img?: string;
   title: string;
   subTitle: string;
-  dateString: string;
   period?: string[] | null;
   onClick?: ((e: React.MouseEvent<Element, React.MouseEvent>) => void) &
     React.MouseEvent<Element, React.MouseEvent>;
