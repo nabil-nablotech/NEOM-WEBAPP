@@ -135,7 +135,8 @@ export function Login() {
       password: state.password,
     });
     if (data) {
-      navigate("/");
+      // navigate("/");
+      window.location.reload();
     } else {
       setSnackbarErrorMessage(true);
     }
