@@ -67,7 +67,7 @@ export const validateEmail = (s: string) => {
   return email_regex.test(s);
 };
 export const validateNumber = (s: string) => {
-  const regex = new RegExp(/^(\d+(\.\d+)?)$/);
+  const regex = new RegExp(/^[0-9]*\.?[0-9]*$/);
   return regex.test(s);
 }
 

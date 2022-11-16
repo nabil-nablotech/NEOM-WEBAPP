@@ -19,10 +19,12 @@ import {
   EVENTS_TAB_NAME,
   MEDIA_TAB_NAME,
   tabNameBasedOnIndex,
-  validateNumberField
+  validateNumberField,
+  validateNumber
 } from "../../utils/services/helpers";
 import { format } from "date-fns";
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
+import ClearIcon from '@mui/icons-material/Clear';
 import AutoCompleteKeyWordsComponent from "../AutoCompleteKeyWords"
 // import { DateRangePicker } from "../DateRangePicker";
 
@@ -180,7 +182,6 @@ const BaseInputs = ({
                     className={`${styles["latitude"]}`}
                     label="Latitude"
                     name="latitude"
-                    type="number"
                     value={selectedValue.latitude}
                     onKeyDown={e => {
                       validateNumberField(e)
@@ -189,7 +190,9 @@ const BaseInputs = ({
                       inputMode: 'numeric', pattern: /^(\d+(\.\d+)?)$/ 
                     }}
                     onChange={(e) => {
-                      handleChange(e)
+                      if (validateNumber(e.target.value)) {
+                        handleChange(e)
+                      }
                     }}
                     sx={{
                       ...locationInputSx
@@ -202,7 +205,6 @@ const BaseInputs = ({
                     className={`${styles["longitude"]}`}
                     label="Longitude"
                     name="longitude"
-                    type="number"
                     value={selectedValue.longitude}
                     onKeyDown={e => {
                       validateNumberField(e)
@@ -211,7 +213,9 @@ const BaseInputs = ({
                       inputMode: 'numeric', pattern: /^(\d+(\.\d+)?)$/ 
                     }}
                     onChange={(e) => {
-                      handleChange(e)
+                      if (validateNumber(e.target.value)) {
+                        handleChange(e)
+                      }
                     }}
                     sx={{
                       ...locationInputSx
@@ -298,7 +302,17 @@ const BaseInputs = ({
                   <InputAdornment position="end" sx={{
                     marginLeft: '-8px'
                   }}>
-                    <IconButton
+                    {(selectedValue.startDate || selectedValue.endDate) ? <IconButton
+                      aria-label="CalendarTodayIcon"
+                      edge="end"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleDate(null, "clearDate");
+                        // toggleDateModal(!dateModalOpen);
+                      }}
+                    >
+                      <ClearIcon fontSize="small" />
+                    </IconButton> : <IconButton
                       aria-label="CalendarTodayIcon"
                       edge="end"
                       onClick={(e) => {
@@ -309,7 +323,7 @@ const BaseInputs = ({
                       <CalendarTodayOutlinedIcon fontSize="small" sx={{
                         color: '#000'
                       }} />
-                    </IconButton>
+                    </IconButton>}
                   </InputAdornment>
                 )
               }}
@@ -413,7 +427,6 @@ const MediaInputs = ({
                     className={`${styles["latitude"]}`}
                     label="Latitude"
                     name="latitude"
-                    type="number"
                     value={selectedValue.latitude}
                     onKeyDown={e => {
                       validateNumberField(e)
@@ -422,7 +435,9 @@ const MediaInputs = ({
                       inputMode: 'numeric', pattern: /^(\d+(\.\d+)?)$/ 
                     }}
                     onChange={(e) => {
-                      handleChange(e)
+                      if (validateNumber(e.target.value)) {
+                        handleChange(e)
+                      }
                     }}
                     sx={{
                       ...locationInputSx,
@@ -435,7 +450,6 @@ const MediaInputs = ({
                     className={`${styles["longitude"]}`}
                     label="Longitude"
                     name="longitude"
-                    type="number"
                     value={selectedValue.longitude}
                     onKeyDown={e => {
                       validateNumberField(e)
@@ -444,7 +458,9 @@ const MediaInputs = ({
                       inputMode: 'numeric', pattern: /^(\d+(\.\d+)?)$/ 
                     }}
                     onChange={(e) => {
-                      handleChange(e)
+                      if (validateNumber(e.target.value)) {
+                        handleChange(e)
+                      }
                     }}
                     sx={{
                       ...locationInputSx,

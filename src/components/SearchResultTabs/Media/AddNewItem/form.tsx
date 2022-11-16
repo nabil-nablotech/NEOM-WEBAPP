@@ -479,7 +479,6 @@ allowFullScreen
               className={`${styles["english-name"]}`}
               label="Longitude"
               name="longitude"
-              type="number"
               value={formik.values.longitude}
               onChange={(e) => {
                 if (validateNumber(e.target.value)) {
@@ -495,7 +494,6 @@ allowFullScreen
               className={`${styles["english-name"]}`}
               label="Latitude"
               name="latitude"
-              type="number"
               value={formik.values.latitude}
               onChange={(e) => {
                 if (validateNumber(e.target.value)) {
