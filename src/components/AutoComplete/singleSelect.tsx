@@ -5,9 +5,10 @@ import FormControl from "@mui/material/FormControl";
 import { InputAdornment } from "@mui/material";
 import { AutoCompleteSingleSelectProps } from '../../types/DropdownComponent';
 import SearchIcon from '@mui/icons-material/Search';
+import FomrError from '../FormError';
 
-export default function FreeSolo({ className, formControlSx, itemsList, value, placeholder, label, defaultValue, selectStylesSx, handleSelectChange, handleChange, renderOption}: AutoCompleteSingleSelectProps) {
-
+export default function FreeSolo({ className, formControlSx, itemsList, value, placeholder, label, defaultValue, selectStylesSx, handleSelectChange, handleChange, renderOption,
+  errorField }: AutoCompleteSingleSelectProps & {errorField?: string}) {
   return (
     <div className={className}>
       <FormControl sx={{ width: '100%', ...formControlSx }}>
@@ -47,12 +48,26 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
           />
         )}
         sx={{
-          ...selectStylesSx
+          ...selectStylesSx,
+          '& .MuiFormControl-root' : {
+            border: errorField ? '1px solid var(--orange-shade)' : 'inherit',
+            borderRadius: errorField ? '4px' : 'inherit',
+            
+          },
         }}
         getOptionLabel={(option: any) => option?.label || ''}
         renderOption={renderOption}
       />
       </FormControl>
+      {
+        errorField &&
+        <FomrError
+          style={{
+            marginTop: '3px'
+          }}
+          msg={errorField}
+        />
+      }
     </div>
   );
 }

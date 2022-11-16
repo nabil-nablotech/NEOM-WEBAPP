@@ -4,6 +4,7 @@ import TextField, {TextFieldProps} from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { styled, SxProps } from '@mui/material/styles';
 import { FormHelperTextProps } from "@mui/material";
+import FomrError from "./FormError";
 
 interface TextInputProps {
   error?: boolean;
@@ -45,6 +46,8 @@ interface TextInputProps {
   minRows?: number
   maxRows?: number
   endAdornment?: React.ReactNode
+  errorField?: string
+  lang?: string
 };
 
 const NeomTextInput = styled(TextField)<TextInputProps>(({ theme }) => ({
@@ -100,6 +103,8 @@ export default function NTextFields(props: TextInputProps) {
     FormHelperTextProps,
     multiline = false,
     endAdornment,
+    errorField,
+    lang = 'en',
     ...rest
   } = props;
 
@@ -119,6 +124,7 @@ export default function NTextFields(props: TextInputProps) {
           fullWidth={fullWidth}
           label={showLabel ? label : ''}
           value={value}
+          lang={lang}
           onChange={onChange}
           onBlur={onBlur}
           onFocus={onFocus}
@@ -131,7 +137,16 @@ export default function NTextFields(props: TextInputProps) {
           multiline={multiline}
           sx={{
             ...sx,
-            ...formControlSx
+            ...formControlSx,
+            '& .MuiInputBase-root.MuiOutlinedInput-root input' : {
+              border: errorField ? '1px solid var(--orange-shade)' : 'inherit',
+              borderRadius: errorField ? '4px' : 'inherit',
+              
+            },
+            '& .MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-multiline' : errorField ? {
+              border: '1px solid var(--orange-shade)' ,
+              borderRadius: '4px' ,
+            } : {},
           }}
           InputProps={{
             ...InputProps
@@ -145,6 +160,15 @@ export default function NTextFields(props: TextInputProps) {
         >
           {value}
           </NeomTextInput>
+        {
+          errorField &&
+          <FomrError
+            style={{
+              marginTop: '3px'
+            }}
+            msg={errorField}
+          />
+        }
       </Box>
     </Grid>
   );

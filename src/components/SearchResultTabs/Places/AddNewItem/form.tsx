@@ -102,10 +102,17 @@ const StepContent = ({
               }}
               sx={{
                 ...textInputSxStyles,
+                borderColor: formik.errors.placeNumber ? 'red' : 'inherit'
               }}
               formControlSx={commonFormControlSxStyles}
+              errorField={
+                formik.errors.placeNumber ?
+                  `${formik.errors.placeNumber}`
+                  : ''
+              }
             />
             <TextInput
+              lang="en"
               className={`${styles["english-name"]}`}
               label="Name in English"
               name="english-name"
@@ -121,6 +128,7 @@ const StepContent = ({
             <TextInput
               className={`${styles["arabic-name"]}`}
               label="Name in Arabic"
+              lang="ar"
               name="arabic-name"
               value={formik.values.placeNameArabic}
               onChange={(e) => {

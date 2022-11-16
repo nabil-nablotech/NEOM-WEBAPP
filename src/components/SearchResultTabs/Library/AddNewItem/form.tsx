@@ -97,12 +97,17 @@ const StepContent = ({
               }}
               sx={{
                 ...textInputSxStyles,
-                marginBottom: "4em",
+                marginBottom: "3em",
                 "& .MuiInputBase-inputMultiline": {
                   paddingInline: "0 !important",
                 },
               }}
               formControlSx={commonFormControlSxStyles}
+              errorField={
+                formik.errors.title ?
+                  `${formik.errors.title}`
+                  : ''
+              }
             />
             <TextInput
               required
@@ -118,12 +123,17 @@ const StepContent = ({
               }}
               sx={{
                 ...textInputSxStyles,
-                marginBottom: "4em",
+                marginBottom: "4.5em",
                 "& .MuiInputBase-inputMultiline": {
                   paddingInline: "0 !important",
                 },
               }}
               formControlSx={commonFormControlSxStyles}
+              errorField={
+                formik.errors.description ?
+                  `${formik.errors.description}`
+                  : ''
+              }
             />
             <TextInput
               className={`${styles["referenceUrl"]}`}
