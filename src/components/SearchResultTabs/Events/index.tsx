@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import Box from '@mui/material/Box';
 import styles from '../index.module.css'
 import Button from "../../../components/Button";
-import DetailsView from '../../../assets/images/searchResults/DetailsView.svg'
-import ListViewIcon from '../../../assets/images/searchResults/ListView.svg'
+import DetailsView from '../../../assets/images/searchResults/DetailsView.svg';
+import ListViewIcon from '../../../assets/images/searchResults/ListView.svg';
 import GridView from './GridView/GridView';
 import ListView from './ListView/ListView';
 import { Grid } from '@mui/material';
-import MapImg1 from '../../../assets/images/searchResults/mapImage1.webp'
-import MapImg2 from '../../../assets/images/searchResults/mapImage2.jpg'
+import MapImg1 from '../../../assets/images/searchResults/mapImage1.webp';
+import MapImg2 from '../../../assets/images/searchResults/mapImage2.jpg';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import { useToggledView } from './../../../hooks/useToggledView';
@@ -18,34 +18,37 @@ import MapView from '../GoogleMap/MapView';
 import ExportModal from '../../ExportModal';
 import { importContentType } from '../../../utils/export-import/import-content-type';
 import { importCsvImagesZip } from '../../../utils/export-import/import-csv-images-zip';
-import {checkSearchParameter} from '../../../utils/services/helpers';
+import { checkSearchParameter } from '../../../utils/services/helpers';
+import { Relation } from "../../../types/RelationType";
 
 const PlacesTab = () => {
-  const { selectedCardIndex, events, totalCounts, eventMetaData, searchText } = useSelector(
-    (state: RootState) => state.searchResults
-  );
+  const { selectedCardIndex, events, totalCounts, eventMetaData, searchText } =
+    useSelector((state: RootState) => state.searchResults);
   const importFileInputRef: any = useRef(null);
   const importZipFileInputRef: any = useRef(null);
-  const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
+  const { selectedValue} = useSelector(
+    (state: RootState) => state.refinedSearch
+  );
   const [img, setimg] = useState(MapImg1);
   const [isFilter, setIsFilter] = useState(null);
-  const { fetchEvents, hasMoreData, loading, mapEvents, setEdit, searchData } = useEvent();
+  const { fetchEvents, hasMoreData, loading, mapEvents, setEdit, searchData } =
+    useEvent();
   const [open, setOpen] = React.useState(false);
   const [filter, setFilter] = React.useState(null);
 
-    useEffect(() => {
-        setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1)
-    }, [selectedCardIndex])
-    
-    const {openStates, toggleOpenStates} = useToggledView({count: 2})
+  useEffect(() => {
+    setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1);
+  }, [selectedCardIndex]);
 
-    const meta: Meta | null = eventMetaData;
+  const { openStates, toggleOpenStates } = useToggledView({ count: 2 });
 
-    const handleNext = () => {
-      fetchEvents();
-    }
+  const meta: Meta | null = eventMetaData;
 
-     /* Event handlers */
+  const handleNext = () => {
+    fetchEvents();
+  };
+
+  /* Event handlers */
   const exportEvent = async () => {
     let filter: any;
     if (searchData?.search) {
@@ -65,7 +68,7 @@ const PlacesTab = () => {
             fieldNarrative: {
               $containsi: searchData.search,
             },
-          }
+          },
         ],
       };
     }
@@ -85,7 +88,23 @@ const PlacesTab = () => {
     if (event?.target?.files?.length > 0) {
       const file = event?.target?.files[0];
       const fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
-      if (fileExtension === "json" || fileExtension === "csv" || fileExtension === "xlsx") {
+      if (
+        fileExtension === "json" ||
+        fileExtension === "csv" ||
+        fileExtension === "xlsx"
+      ) {
+        const relations: Relation[] = [
+          {
+            bindingContentType: "visit-associates",
+            keyContentType:"visits",
+            parentContentType:"places",
+            key: "visit_unique_id",
+            keyColumn: "uniqueId",
+            parent: "place_unique_id",
+            parentColumn: "Parent ID",
+            extra: { deleted: false },
+          },
+        ];
         importContentType(
           file,
           "api::visit.visit",
@@ -109,7 +128,8 @@ const PlacesTab = () => {
             "media_associates",
             "createdAt",
             "updatedAt",
-          ]
+          ],
+          relations
         );
       }
     }
@@ -147,12 +167,15 @@ const PlacesTab = () => {
   };
 
   const showResults = checkSearchParameter(searchText, selectedValue);
-    return (
-        <Box component="div" className={`${styles['main-tab-content']}`}>
-            <Box component="div" className={`${styles['utility-bar']}`}>
-                <Box component="div">{showResults ? `${meta?.pagination?.total} Results | ` : null}{totalCounts?.events} Total Events</Box>
-                <Box component="div" style={{display:"flex"}}>
-                <Button
+  return (
+    <Box component="div" className={`${styles["main-tab-content"]}`}>
+      <Box component="div" className={`${styles["utility-bar"]}`}>
+        <Box component="div">
+          {showResults ? `${meta?.pagination?.total} Results | ` : null}
+          {totalCounts?.events} Total Events
+        </Box>
+        <Box component="div" style={{ display: "flex" }}>
+          <Button
             colors={[
               "transparent",
               "var(--table-black-text)",
@@ -217,7 +240,7 @@ const PlacesTab = () => {
               textAlign: "center",
             }}
           />
-                <Button
+          <Button
             colors={[
               "transparent",
               "var(--table-black-text)",
@@ -252,43 +275,103 @@ const PlacesTab = () => {
             }}
             onClick={exportEvent}
           />
-                </Box>
-                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={DetailsView}
-                    onClick={e => toggleOpenStates([true, false])}
-                    style={{
-                        opacity: openStates[0] ? '1' : '0.5'
-                    }}
-                />
-                <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={ListViewIcon}
-                    onClick={e => toggleOpenStates([false, true])}
-                    style={{
-                        opacity: openStates[1] ? '1' : '0.5'
-                    }}
-                />
-            </Box>
-            <Box component={'section'} className={`${styles['result-section']}`}>
-                <Grid container spacing={1} className={`${styles['result-section--grid']}`}>
-                    {openStates[0] && <><Grid item xl={6} lg={6} md={5} sm={5}>
-                        <GridView key={10} loading={loading} data={isFilter===null?events:events.filter((item)=>{return item.id===isFilter})} handleNext={handleNext} setEdit={setEdit} hasMoreData={hasMoreData}  />
-                    </Grid>
-                    {/* To-do: map view */}
-                    <Grid item xl={6} lg={6} md={7} sm={7} className={`${styles["map-section"]}`}>                     
-                        {mapEvents !== null ? <MapView key={11} filterId={setIsFilter} marker={mapEvents}/>:<></>}
-                    </Grid></>}
-                    {
-                        openStates[1] &&
-                        <Box component={'div'} style={{
-                            width: '100%'
-                        }}>
-                            <ListView setEdit={setEdit} key={12} loading={loading} data={isFilter===null?events:events.filter((item)=>{return item.id===isFilter})} handleNext={handleNext} hasMoreData={hasMoreData} />
-                        </Box>
-                    }
-                </Grid>
-                
-            </Box>
-            <ExportModal open={open} setOpen={setOpen} count={meta?.pagination?.total} path={'visits'} filter={filter}/>
         </Box>
-    );
-}
- 
+        <Box
+          className={`${styles["view-toggler-icon"]}`}
+          component="img"
+          alt={""}
+          src={DetailsView}
+          onClick={(e) => toggleOpenStates([true, false])}
+          style={{
+            opacity: openStates[0] ? "1" : "0.5",
+          }}
+        />
+        <Box
+          className={`${styles["view-toggler-icon"]}`}
+          component="img"
+          alt={""}
+          src={ListViewIcon}
+          onClick={(e) => toggleOpenStates([false, true])}
+          style={{
+            opacity: openStates[1] ? "1" : "0.5",
+          }}
+        />
+      </Box>
+      <Box component={"section"} className={`${styles["result-section"]}`}>
+        <Grid
+          container
+          spacing={1}
+          className={`${styles["result-section--grid"]}`}
+        >
+          {openStates[0] && (
+            <>
+              <Grid item xl={6} lg={6} md={5} sm={5}>
+                <GridView
+                  key={10}
+                  loading={loading}
+                  data={
+                    isFilter === null
+                      ? events
+                      : events.filter((item) => {
+                          return item.id === isFilter;
+                        })
+                  }
+                  handleNext={handleNext}
+                  setEdit={setEdit}
+                  hasMoreData={hasMoreData}
+                />
+              </Grid>
+              {/* To-do: map view */}
+              <Grid
+                item
+                xl={6}
+                lg={6}
+                md={7}
+                sm={7}
+                className={`${styles["map-section"]}`}
+              >
+                {mapEvents !== null ? (
+                  <MapView key={11} filterId={setIsFilter} marker={mapEvents} />
+                ) : (
+                  <></>
+                )}
+              </Grid>
+            </>
+          )}
+          {openStates[1] && (
+            <Box
+              component={"div"}
+              style={{
+                width: "100%",
+              }}
+            >
+              <ListView
+                setEdit={setEdit}
+                key={12}
+                loading={loading}
+                data={
+                  isFilter === null
+                    ? events
+                    : events.filter((item) => {
+                        return item.id === isFilter;
+                      })
+                }
+                handleNext={handleNext}
+                hasMoreData={hasMoreData}
+              />
+            </Box>
+          )}
+        </Grid>
+      </Box>
+      <ExportModal
+        open={open}
+        setOpen={setOpen}
+        count={meta?.pagination?.total}
+        path={"visits"}
+        filter={filter}
+      />
+    </Box>
+  );
+};
+
 export default PlacesTab;
