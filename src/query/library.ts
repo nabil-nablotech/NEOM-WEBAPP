@@ -45,6 +45,7 @@ query librarySearchList(
         }
       ]
     }
+    sort: "createdAt:desc"
   ) {
     meta {
       pagination {
@@ -159,7 +160,7 @@ query RefinedLibrarySearch(
         }
       ]
     }
-    sort: "updatedAt:desc"
+    sort: "createdAt:desc"
   ) {
     meta {
       pagination {

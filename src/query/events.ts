@@ -191,7 +191,7 @@ query RefineSearchEvent(
         }
       ]
     }
-    sort: "updatedAt:desc"
+    sort: "createdAt:desc"
   ) {
     meta {
       pagination {
