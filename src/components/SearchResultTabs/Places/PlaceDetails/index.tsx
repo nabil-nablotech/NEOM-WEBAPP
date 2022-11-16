@@ -46,6 +46,8 @@ import {
   modifyAssociatedPlaces,
   setActiveEventItem,
   setActiveEventItemIndex,
+  setActiveLibraryItem,
+  setActiveLibraryItemIndex,
   setActiveMediaItem,
   setActiveMediaItemIndex,
   setActivePlaceItem,
@@ -63,6 +65,7 @@ import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import MoreOption from "../ListView/MoreOption";
 import useRemarks from "../../../../hooks/useRemarks";
+import { useHistory } from "../../../../hooks/useHistory";
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -382,6 +385,7 @@ const PlaceDetailsPage = () => {
       ),
     },
   ];
+  const { setHistory } = useHistory()
 
   const { loading } = useMedia();
   const {
@@ -1261,6 +1265,17 @@ const PlaceDetailsPage = () => {
                   style={{
                     background: "transparent",
                   }}
+                  onRow={(record: any, rowIndex: number | undefined) => {
+                    return {
+                      onClick: (library) => {
+                        if (typeof rowIndex === "number") {
+                          dispatch(setActiveLibraryItem(record));
+                          dispatch(setActiveLibraryItemIndex(rowIndex));
+                          setHistory(`/search-results/Library/${record.media_unique_id.uniqueId}`)
+                        }
+                      },
+                    };
+                  }}
                 ></StyledTableWrapper>
               ) : (
                 <NoTextPresent message={NO_TABLE_ROWS} />
@@ -1299,10 +1314,11 @@ const PlaceDetailsPage = () => {
                         if (typeof rowIndex === "number") {
                           dispatch(setActiveEventItem(record));
                           dispatch(setActiveEventItemIndex(rowIndex));
-                          navigate(
-                            `/search-results/Events/${record.visit_unique_id.uniqueId}`,
-                            { replace: true }
-                          );
+                          // navigate(
+                          //   `/search-results/Events/${record.visit_unique_id.uniqueId}`,
+                          //   { replace: true }
+                          // );
+                          setHistory(`/search-results/Events/${record.visit_unique_id.uniqueId}`)
                         }
                       },
                     };

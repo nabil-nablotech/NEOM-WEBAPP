@@ -43,6 +43,7 @@ import { isEmpty } from 'lodash'
 import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import useRemarks from "../../../../hooks/useRemarks";
+import { useHistory } from "../../../../hooks/useHistory";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -158,6 +159,7 @@ const EventDetailsPage = () => {
     
     const {loading: loadingRemarks, data: remarks, addRemarksMutation, updateRemarksMutation } = useRemarks();
     const dispatch = useDispatch()
+    const { goBack } = useHistory()
 
     const [mediaGridActiveItems, setMediaGridActiveItems] = useState<number>(0)
 
@@ -347,7 +349,8 @@ const EventDetailsPage = () => {
                             dispatch(setActiveMediaItem(null))
                             dispatch(setActiveMediaItemIndex(0))
 
-                            navigate(`/search-results/${tabName}`, { replace: true })
+                            // navigate(`/search-results/${tabName}`, { replace: true })
+                            goBack()
                         }}
                     >
                         Back

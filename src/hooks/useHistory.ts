@@ -1,36 +1,45 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { useLocation, useNavigate } from "react-router-dom"
+import { RootState } from "../store"
+import { setHistoryRedux } from "../store/reducers/searchResultsReducer"
 
 export const useHistory = () => {
 
     const [historyStack, setHistoryStack] = useState<Array<string> | []>([])
+    const { history } = useSelector((state: RootState) => state.searchResults);
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const { pathname } = useLocation()
 
-    const pushToStack = (stack: string) => {
-        setHistoryStack(state => [...state, stack])
+    const setHistory = (stack: string) => {
 
+        /** set current path as history */
+        dispatch(setHistoryRedux([...history, pathname]))
+
+        /** navigate to expected path */
+        navigate(stack, { replace: true })
     }
 
-    const popFromStack = () => {
-        setHistoryStack(state => {
-            let newState = [...state]
+    const goBack = () => {
 
-            if(newState.length > 0) {
-                const lastEntry: string | undefined = newState.shift()
-                
-                if(lastEntry) { 
-                    navigate(lastEntry, { replace: true })
-                }
+        let newState = [...history]
+
+        if (newState.length > 0) {
+            const lastEntry: string | undefined = newState.pop()
+
+            if (lastEntry) {
+                navigate(lastEntry, { replace: true })
             }
+        }
+        dispatch(setHistoryRedux(newState))
 
-            return newState
-        })
     }
 
     return {
         stack: historyStack,
-        pushToStack: pushToStack,
-        popFromStack: popFromStack,
+        setHistory: setHistory,
+        goBack: goBack,
     }
 }

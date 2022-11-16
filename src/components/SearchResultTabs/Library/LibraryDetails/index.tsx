@@ -42,6 +42,7 @@ import { Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { Button as AntdButton } from "antd";
 import RenderValueWithDefault from "../../../NoDataScreens/DefaultText";
+import { useHistory } from "../../../../hooks/useHistory";
 // import { Document, Page } from 'react-pdf/dist/esm/entry.webpack5';
 // import { Document, Page } from 'react-pdf';
 // import DocViewer from "react-doc-viewer";
@@ -357,6 +358,7 @@ export const LibraryDetailsModal = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { goBack } = useHistory()
 
   const { loading: libraryLoading, data: libraryDetails } = useMediaDetails();
 
@@ -376,7 +378,9 @@ export const LibraryDetailsModal = () => {
     setModalOpen(false);
     dispatch(setActiveLibraryItem(null));
     dispatch(setActiveLibraryItemIndex(0));
-    navigate(`/search-results/Library`, { replace: true, state: null });
+    // navigate(`/search-results/Library`, { replace: true, state: null });
+    goBack()
+
   };
 
   return (
