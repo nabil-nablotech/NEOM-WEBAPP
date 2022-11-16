@@ -230,6 +230,8 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
           }
           formikObject.setErrors(obj)
         }
+      } else {
+        handleNext(null, values);
       }
     }
 
