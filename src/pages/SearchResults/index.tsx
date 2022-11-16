@@ -198,7 +198,10 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         handleClearSearchText={handleClearSearchText}
         showSearch={true}
       />
-      <Box component="div">
+      <Box component="div" style={{
+        position: 'relative',
+        height: '100%'
+      }}>
         <SearchResultTabs handleSubmit={handleSubmit} tabIndex={tabIndex} />
       </Box>
       <PositionedSnackbar

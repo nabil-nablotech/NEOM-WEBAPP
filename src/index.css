@@ -33,7 +33,7 @@ html {
   overscroll-behavior: none !important;
 }
 #root {
-  height: 100%;
+  height: calc(100vh + 12vw); /** header height */
   overscroll-behavior: none !important;
 }
 #notistack-snackbar {

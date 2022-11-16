@@ -2,9 +2,12 @@
     background-color: var(--off-white-background-color);
     padding-top: 4.5em;
     font-family: 'Roboto-Regular';
+    position: relative;
+    height: 100%;
 }
 .tab-pannel-wrapper {
     padding-block: 10px !important;
+    height: 100%;
 }
 .tab-panel-component {
     position: relative;
