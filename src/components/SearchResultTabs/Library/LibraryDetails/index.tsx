@@ -148,7 +148,7 @@ const LibraryDetailsPage = ({
                                       
                                     /> */}
                                     <Box
-                  className={`${styles["image-bg"]}`}
+                  className={`${styles["blank-doc-image"]}`}
                   component="div"
                   display="grid"
                 >
@@ -158,7 +158,7 @@ const LibraryDetailsPage = ({
                   alt={""}
                   className={`${styles["image"]}`}
                 />
-                <a href={`${baseUrl}${libraryDetails.object.url}`} target="_blank" 
+                <a className={`${styles['anchor']}`} href={`${baseUrl}${libraryDetails.object.url}`} target="_blank" 
                     rel="noreferrer">{libraryDetails.object.name}</a>
                     </Box>
                 {/* <div
