@@ -13,13 +13,22 @@ export const useHistory = () => {
     const dispatch = useDispatch()
     const { pathname } = useLocation()
 
-    const setHistory = (stack: string) => {
+    const navigateTo = (stack: string | { search: string, pathname: string }) => {
 
         /** set current path as history */
         dispatch(setHistoryRedux([...history, pathname]))
 
         /** navigate to expected path */
-        navigate(stack, { replace: true })
+        if (typeof stack === 'string') {
+            navigate(stack, { replace: true })
+        }
+        if (
+            (typeof stack === 'object') &&
+            stack.search &&
+            stack.pathname
+        ) {
+            navigate(stack);
+        }
     }
 
     const goBack = () => {
@@ -39,7 +48,7 @@ export const useHistory = () => {
 
     return {
         stack: historyStack,
-        setHistory: setHistory,
+        navigateTo: navigateTo,
         goBack: goBack,
     }
 }

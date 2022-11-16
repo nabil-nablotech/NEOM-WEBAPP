@@ -385,7 +385,7 @@ const PlaceDetailsPage = () => {
       ),
     },
   ];
-  const { setHistory } = useHistory()
+  const { navigateTo, goBack } = useHistory()
 
   const { loading } = useMedia();
   const {
@@ -413,7 +413,9 @@ const PlaceDetailsPage = () => {
      */
     e.preventDefault();
     if (media.length >= itemIndex) {
-      navigate(`/search-results/Media/${uniqueId}`, { replace: true });
+      // navigate(`/search-results/Media/${uniqueId}`, { replace: true });
+      navigateTo(`/search-results/Media/${uniqueId}`)
+
       dispatch(setActiveMediaItem(media[itemIndex - 1]));
       dispatch(setActiveMediaItemIndex(itemIndex - 1));
     }
@@ -442,15 +444,15 @@ const PlaceDetailsPage = () => {
   }
 
   const handleSearch = (searchData: any) => {
-    // navigate(`/search-results/Places?{"search":"","refinedSearch":{"artifacts":["Observed"]}}`)
-    navigate({
+    navigateTo({
       pathname: `/search-results/Places`,
       search: decodeURIComponent(
         JSON.stringify({
           refinedSearch: searchData,
         })
-      ),
+      )
     });
+    
   };
 
   const {
@@ -511,7 +513,8 @@ const PlaceDetailsPage = () => {
               dispatch(setActiveMediaItem(null));
               dispatch(setActiveMediaItemIndex(0));
               // navigate(-1);
-              navigate(`/search-results/${tabName}`, { replace: true });
+              // navigate(`/search-results/${tabName}`, { replace: true });
+              goBack()
             }}
           >
             Back to search results
@@ -1271,7 +1274,7 @@ const PlaceDetailsPage = () => {
                         if (typeof rowIndex === "number") {
                           dispatch(setActiveLibraryItem(record));
                           dispatch(setActiveLibraryItemIndex(rowIndex));
-                          setHistory(`/search-results/Library/${record.media_unique_id.uniqueId}`)
+                          navigateTo(`/search-results/Library/${record.media_unique_id.uniqueId}`)
                         }
                       },
                     };
@@ -1318,7 +1321,7 @@ const PlaceDetailsPage = () => {
                           //   `/search-results/Events/${record.visit_unique_id.uniqueId}`,
                           //   { replace: true }
                           // );
-                          setHistory(`/search-results/Events/${record.visit_unique_id.uniqueId}`)
+                          navigateTo(`/search-results/Events/${record.visit_unique_id.uniqueId}`)
                         }
                       },
                     };
