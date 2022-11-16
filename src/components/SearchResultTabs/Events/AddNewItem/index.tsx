@@ -19,6 +19,7 @@ import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import {
   addItemDefaultSteps,
   handleEnter,
+  isEmptyValue,
 } from "../../../../utils/services/helpers";
 import styles from "../../Places/AddNewItem/addNewItem.module.css";
 import TextInput from "../../../../components/TextInput";
@@ -200,6 +201,43 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
     }
   };
 
+  const validation = (values: any, formikObject: any) => {
+    let currentError: [] | string[] = [];
+
+    if (!values.place || isEmptyValue(values.place)) {
+      currentError[0] = "Place is required";
+    }
+
+    if (!values.visitNumber) {
+      currentError[1] = "Event Number is required";
+    }
+
+    if (currentError.length === 0) {
+      handleNext(null, values);
+    } else {
+      if (activeStep === 0) {
+        if(currentError.length > 0) {
+
+          let obj = {}
+
+          if(currentError[0]) {
+            obj = { place: currentError[0]  }
+          }
+          if(currentError[1]) {
+            obj = {
+              ...obj, 
+              visitNumber: currentError[1] 
+            }
+          }
+          formikObject.setErrors(obj)
+        }
+      } else {
+        handleNext(null, values);
+      }
+    }
+
+  }
+
 
   const formik = useFormik({
     initialValues: {
@@ -230,10 +268,8 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
       //   setFormError('')
       // }
     },
-    onSubmit: (values) => {
-      if (!formError) {
-        handleNext(null, values);
-      }
+    onSubmit: (values, { setErrors }) => {
+      validation(values, {setErrors })
     },
   });
 
@@ -268,7 +304,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
   const handleChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    if (setSearchValue) {
+    if (setSearchValue && e.target.value.length >= 3) {
       setSearchValue(e.target.value);
     }
   };
@@ -309,6 +345,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
               {edit ? "Edit" : "Add"} Event
             </Typography>
             <Stepper
+              nonLinear
               activeStep={activeStep}
               alternativeLabel
               className={`${styles["stepper"]}`}
@@ -327,8 +364,22 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
                 //     stepProps.completed = false;
                 // }
                 return (
-                  <Step key={label} {...stepProps}>
-                    <StepButton color="inherit" onClick={handleStep(index)}>
+                  <Step key={label} {...stepProps}
+                    sx={{
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <StepButton color="inherit"
+                      onClick={e => {
+
+                        if (index > activeStep) {
+                          validation(formik.values, { setErrors: formik.setErrors })
+                        } else {
+                          handleBack()
+                        }
+
+                      }}
+                    >
                       <StepLabel
                         {...labelProps}
                         className={`${styles["step-label"]}`}
@@ -399,12 +450,6 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
                 <Button
                   label={activeStep === steps.length - 1 ? "Add" : "Next"}
                   type="submit"
-                  disabled={
-                    !(
-                      formik.values.visitNumber.length > 0 &&
-                      formik.values.place
-                    )
-                  }
                   // onClick={handleNext}
                 />
               )}
@@ -419,7 +464,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
                 <Button
                   label={"Update"}
                   type="submit"
-                  // disabled={!(formik.values.visitNumber.length > 0 && formik.values.place)}
+                  disabled={(formik.values.visitNumber.length === 0) && !(formik.values.place?.id)}
                   // onClick={handleNext}
                 />
               )}

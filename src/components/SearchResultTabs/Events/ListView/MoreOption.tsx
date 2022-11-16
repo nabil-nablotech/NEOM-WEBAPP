@@ -3,28 +3,26 @@ import { Menu, MenuItem } from '@mui/material';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Event } from '../../../../types/Event';
 import { Media } from '../../../../types/Media';
-import { setEventData, setEventEdit } from '../../../../store/reducers/eventReducer';
-import { getRole } from "../../../../utils/storage/storage";
 import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { MediaAssociateObj } from '../../../../types/Place';
 import { useDispatch } from 'react-redux';
 import { setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
-import { EVENTS_TAB_NAME, isRecordHavingAssociations, LIBRARY_TAB_NAME, MEDIA_TAB_NAME } from '../../../../utils/services/helpers';
+import { EVENTS_TAB_NAME, isRecordHavingAssociations, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, itemAddEditAccess, itemDeleteAccess } from '../../../../utils/services/helpers';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 
-const superEditor = getRole() === 'SuperEditor';
-const editor = getRole() === 'Editor';
 
 const MoreOptionsComponent = ({
     type,
     record,
-    setEdit
+    setEdit,
+    setFeaturedMedia
 }: {
     type: tabNameProps;
     record: any;
     setEdit: (payload: { record: Event | Media | MediaAssociateObj, type: tabNameProps }) => void
+    setFeaturedMedia?: (payload: any) => void
 }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
@@ -49,7 +47,7 @@ const MoreOptionsComponent = ({
             >
                 <MoreHorizIcon className="more-menu-div" />
             </div>
-            <Menu
+            {itemAddEditAccess && <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
                 open={open}
@@ -58,6 +56,16 @@ const MoreOptionsComponent = ({
                     "aria-labelledby": "basic-button",
                 }}
             >
+                {type === "Media" && setFeaturedMedia && <MenuItem
+                    key={1}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setFeaturedMedia(record);
+                        handleClose();
+                    }}
+                >
+                    Featured
+                </MenuItem>}
                 <MenuItem
                     key={1}
                     onClick={(e) => {
@@ -68,7 +76,7 @@ const MoreOptionsComponent = ({
                 >
                     Edit
                 </MenuItem>
-                <MenuItem key={2}
+                {itemDeleteAccess && <MenuItem key={2}
                     onClick={(e) => {
                         e.stopPropagation();
                         dispatch(toggleDeleteConfirmationWindowOpen({
@@ -93,8 +101,8 @@ const MoreOptionsComponent = ({
                     }}
                 >
                     Delete
-                </MenuItem>
-            </Menu>
+                </MenuItem>}
+            </Menu>}
         </>
     );
 };

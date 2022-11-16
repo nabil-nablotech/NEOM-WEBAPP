@@ -8,11 +8,12 @@ import {
   commonFormControlSxStyles,
   formatWebDate,
   textInputSxStyles,
+  remarksDeleteAccess
 } from "../../utils/services/helpers";
 import TextInput from "../../components/TextInput";
 import styles from "./index.module.css";
 import { CustomMoreOptionsComponent } from "../CustomMoreOptionsComponent";
-import { Remark, ChildRemark, RemarkDetails } from "../../types/Remarks";
+import { Remark } from "../../types/Remarks";
 import SendIcon from "@mui/icons-material/Send";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
@@ -45,6 +46,15 @@ const SingleComment = ({
       },
     },
   ];
+
+  const deleteAction = [
+    {
+      label: "Delete",
+      action: () => {
+        handleAction('delete', remark, type);
+      },
+    }
+  ]
 
   const checkMine = () => {
     if (type === "child") {
@@ -133,7 +143,7 @@ const SingleComment = ({
               )}
               {checkMine() ? <Grid item>
                 <CustomMoreOptionsComponent menuActions={editAction} />
-              </Grid> : null}
+              </Grid> : <>{remarksDeleteAccess ? <CustomMoreOptionsComponent menuActions={deleteAction} />: null}</>}
             </Grid>
 
             {remark.id === showInput ? (

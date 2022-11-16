@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import styles from "../index.module.css";
+import libStyles from "./index.module.css";
 import Button from "../../../components/Button";
 import type { ColumnsType } from "antd/es/table";
+import styled from "styled-components";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import LinkIcon from "@mui/icons-material/Link";
 import { StyledAntTable } from "../../StyledAntTable";
@@ -12,38 +14,155 @@ import useLibrary from "../../../hooks/useLibrary";
 import { Meta } from "../../../types/Place";
 import { RootState } from "../../../store";
 import { useSelector } from "react-redux";
-import {formatWebDate, formatBytes} from '../../../utils/services/helpers';
-import MoreOptionsComponent from '../Places/ListView/MoreOption';
+import {
+  formatWebDate,
+  formatBytes,
+  antTablePaginationCss,
+  checkSearchParameter,
+} from "../../../utils/services/helpers";
+import MoreOptionsComponent from "../Places/ListView/MoreOption";
 import { Media } from "../../../types/Media";
-import {HtmlTooltip} from '../../../components/Tooltip';
+import { HtmlTooltip } from "../../../components/Tooltip";
 import { Typography } from "@mui/material";
 import { setSelectedCardIndex } from "../../../store/reducers/searchResultsReducer";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ExportModal from "../../ExportModal";
+import { useMediaQuery } from "react-responsive";
+import { useHistory } from "../../../hooks/useHistory";
 
 let viewWidths = ["20vw", "20vw", "20vw", "20vw", "5vw"];
 
+const StyledTableWrapper = styled(StyledAntTable)`
+  td {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ant-table-container {
+  }
+  .ant-table {
+    margin-block: 2em;
+  }
+
+  .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell),
+  .ant-table-tbody
+    > tr
+    > td:not(.ant-table-tbody > tr > td.more-menu-ant-cell) {
+    min-width: 50px;
+  }
+
+  th.ant-table-cell {
+    white-space: break-spaces;
+  }
+  .ant-table-cell.more-menu-ant-cell {
+    vertical-align: middle;
+    min-width: 20px;
+    width: 20px;
+  }
+  .more-menu-ant-cell,
+  .more-menu-ant-cell > div {
+    width: 20px;
+  }
+  .more-menu-div {
+    vertical-align: middle;
+  }
+  .ant-table-thead > tr > th.ant-table-cell-fix-right,
+  .ant-table-cell-fix-right {
+    background: var(--off-white-background-color);
+  }
+
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-header
+    > table
+    > thead
+    > tr
+    > th.more-menu-ant-cell.ant-table-cell-fix-right {
+    border-left: 1px solid #f0f0f0;
+  }
+
+  .ant-table-tbody > tr > td {
+    word-wrap: unset;
+    word-break: unset;
+    white-space: break-spaces;
+  }
+
+  .media-table-image {
+    object-fit: cover;
+    width: 100%;
+    aspect-ratio: 3/2;
+  }
+  .ant-table-cell {
+    vertical-align: middle;
+  }
+  .ant-table-tbody > tr > td.more-menu-ant-cell {
+    min-width: unset;
+  }
+
+  @media (min-width: 575px) and (max-width: 1025px) {
+    .ant-table-thead
+      > tr
+      > th:not(.ant-table-thead > tr > th.more-menu-ant-cell),
+    .ant-table-tbody
+      > tr
+      > td:not(.ant-table-tbody > tr > td.more-menu-ant-cell) {
+      min-width: 90px;
+    }
+
+    .ant-table-thead > tr > th.more-menu-ant-cell.ant-table-cell-fix-right,
+    .ant-table-tbody > tr > td.more-menu-ant-cell.ant-table-cell-fix-right {
+      right: -2vw !important;
+    }
+
+    .ant-table-tbody > tr > td.more-menu-ant-cell {
+      min-width: unset;
+    }
+
+    th.ant-table-cell,
+    th.ant-table-cell * {
+    }
+
+    .cell-image {
+      min-width: 20ch !important;
+    }
+
+    .cell-description {
+      min-width: 20ch !important;
+    }
+  }
+  ${antTablePaginationCss}
+`;
+
 const LibraryTab = () => {
-  const { selectedCardIndex, library, places, totalCounts, libararyMetaData } =
+  const { searchApply, library, searchText, totalCounts, libararyMetaData } =
     useSelector((state: RootState) => state.searchResults);
+  const { selectedValue } = useSelector(
+    (state: RootState) => state.refinedSearch
+  );
+  const isTablet = useMediaQuery({
+    query: "(min-width: 575px) and (max-width: 1025px)",
+  });
 
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const { navigateTo } = useHistory();
 
-  const { fetchLibraryItems, hasMoreData, loading, setEdit,searchData } = useLibrary();
+  const { fetchLibraryItems, hasMoreData, loading, setEdit, searchData } =
+    useLibrary();
   const tableHeaderJson: ColumnsType<any> = [
     {
       title: "NAME",
       key: "attributes",
       dataIndex: "attributes",
-      width: viewWidths[0],
-      sorter: (a, b) => a?.title?.localeCompare(b?.title),
-      sortDirections: ["ascend"],
+      width: 200,
+      sorter: (a, b) =>
+        a?.attributes?.title?.localeCompare(b?.attributes?.title),
       defaultSortOrder: "ascend",
       className: "name-column",
       render: (value: any, record: any) => (
-        <Box component="div"
+        <Box
+          component="div"
           sx={{
             display: "flex",
             gap: "1em",
@@ -57,6 +176,7 @@ const LibraryTab = () => {
     {
       title: "DESCRIPTION",
       key: "attributes",
+      width: 300,
       className: "description-column",
       //   dataIndex: "description",
       dataIndex: "attributes", // temporary
@@ -68,6 +188,7 @@ const LibraryTab = () => {
     {
       title: "CITATION",
       className: "citation-column",
+      width: 300,
       //   dataIndex: "citation",
       dataIndex: "attributes", // temporary
       render: (value: any, index) => {
@@ -79,6 +200,7 @@ const LibraryTab = () => {
     {
       title: "URL",
       key: "attributes",
+      width: 300,
       //   dataIndex: "url",
       dataIndex: "attributes", // temporary
       render: (value, index) => (
@@ -90,15 +212,19 @@ const LibraryTab = () => {
           }}
         >
           <HtmlTooltip
-        title={
-          <div className={`${styles["reference-url"]}`}>
-            <div className={`${styles["link"]}`}>
-              <LinkIcon sx={{color: 'white'}} />
-            </div>
-            <a href={value.referenceURL} target="_blank"><Typography style={{fontSize: 12, margin: 1}} color="white">{value.referenceURL}</Typography></a>
-          </div>
-        }
-      >
+            title={
+              <div className={`${styles["reference-url"]}`}>
+                <div className={`${styles["link"]}`}>
+                  <LinkIcon sx={{ color: "white" }} />
+                </div>
+                <a href={value.referenceURL} target="_blank">
+                  <Typography style={{ fontSize: 12, margin: 1 }} color="white">
+                    {value.referenceURL}
+                  </Typography>
+                </a>
+              </div>
+            }
+          >
             <Typography color="inherit">{value.referenceURL}</Typography>
           </HtmlTooltip>
         </Box>
@@ -108,24 +234,23 @@ const LibraryTab = () => {
       title: "SIZE",
       key: "attributes",
       dataIndex: "attributes",
-      width: viewWidths[0],
-      render: (value, index) => formatBytes(value.object?.data?.attributes?.size || 0), 
-    },
-    {
-      title: "UPDATED",
-      key: "attributes",
-      dataIndex: "attributes",
-      width: viewWidths[0],
-      render: (value, index) => formatWebDate(value.updatedAt), 
+      width: 100,
+      render: (value, index) =>
+        formatBytes(value.object?.data?.attributes?.size || 0),
     },
     {
       title: "",
       key: "action",
       dataIndex: "id",
+      width: isTablet ? 40 : 20,
       fixed: "right",
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (
-        <MoreOptionsComponent type="Library" setEdit={setEdit} record={record} />
+        <MoreOptionsComponent
+          type="Library"
+          setEdit={setEdit}
+          record={record}
+        />
       ),
     },
   ];
@@ -148,54 +273,79 @@ const LibraryTab = () => {
   };
 
   if (!library) {
-    return <h1>No data found</h1>
+    return <h1>No data found</h1>;
   }
-
 
   /* Event hanlders */
   const exportLibrary = async () => {
-    let filter: any={ media_type :{
+    let filter: any = {
+      media_type: {
         categoryCode: {
-          $containsi: "LIBRARY"
-      }
-    }};
-if (searchData?.search) {
-  filter = {...filter,
-    $or: [
-      {
-        title: {
-          $containsi: searchData.search,
+          $containsi: "LIBRARY",
         },
       },
-      {
-        description: {
-          $containsi: searchData.search,
-        },
-      },
-      {
-        fileName: {
-          $containsi: searchData.search,
-        },
-      },
-      {
-        citation: {
-          $containsi: searchData.search,
-        },
-      },
-      ,
-    ],
+    };
+    if (searchData?.search) {
+      filter = {
+        ...filter,
+        $or: [
+          {
+            title: {
+              $containsi: searchData.search,
+            },
+          },
+          {
+            description: {
+              $containsi: searchData.search,
+            },
+          },
+          {
+            fileName: {
+              $containsi: searchData.search,
+            },
+          },
+          {
+            citation: {
+              $containsi: searchData.search,
+            },
+          },
+          ,
+        ],
+      };
+    }
+    setFilter(filter);
+    setOpen(true);
   };
-}
-setFilter(filter);
-setOpen(true);
-};
+  const showResults =
+    checkSearchParameter(searchText, selectedValue) && searchApply;
   return (
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
-        
-        <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.library} Total Library Items</Box>
         <Box component="div">
-        <Button
+          {" "}
+          {showResults ? `${meta?.pagination?.total} Results | ` : null}
+          {totalCounts?.library} Total Library Items
+        </Box>
+        <Box component="div" className={`${libStyles["btns-flex"]}`}>
+          <Button
+            colors={[
+              "transparent",
+              "var(--table-black-text)",
+              "var(--table-black-text)",
+            ]}
+            className={`${styles["export-btn"]}`}
+            label="Select"
+            style={{
+              border: "1px solid var(--light-grey-border)",
+              borderRadius: "40px",
+              padding: "0.2em 15px",
+              lineHeight: "2",
+              height: "100%",
+              textAlign: "center",
+            }}
+            onClick={() => {}}
+          />
+          <Button
             colors={[
               "transparent",
               "var(--table-black-text)",
@@ -215,13 +365,19 @@ setOpen(true);
           />
         </Box>
       </Box>
-      <ExportModal open={open} setOpen={setOpen} count={meta?.pagination?.total} path={'medias'} filter={filter}/>
+      <ExportModal
+        open={open}
+        setOpen={setOpen}
+        count={meta?.pagination?.total}
+        path={"medias"}
+        filter={filter}
+      />
       <Box component="div" id={"library-list-parent"}>
         <InfiniteScroll
           dataLength={library.length} //This is important field to render the next data
           next={() => handleNext()}
           hasMore={hasMoreData}
-          loader={loading ? <h4>Loading...</h4>: null}
+          loader={loading ? <h4>Loading...</h4> : null}
           endMessage={
             <p style={{ textAlign: "center" }}>
               <b>END OF RESULTS</b>
@@ -230,7 +386,7 @@ setOpen(true);
           scrollableTarget={"library-list-div"}
           className={`${commonStyles["infinite-scroll-cls"]}`}
         >
-          <StyledAntTable
+          <StyledTableWrapper
             className={`${styles["table-container"]}`}
             rowKey={"id"}
             size="small"
@@ -239,23 +395,38 @@ setOpen(true);
             pagination={false}
             loading={loading ? loading : false}
             bordered
-            scroll={{ y: 500, scrollToFirstRowOnChange: true }}
+            scroll={{
+              x: "max-content",
+              y: 500,
+              scrollToFirstRowOnChange: true,
+            }}
             style={{
               background: "transparent",
             }}
             onRow={(record: any, rowIndex) => {
               return {
                 onClick: (event: React.MouseEvent<HTMLElement>) => {
-
-                  dispatch(setSelectedCardIndex(rowIndex || record.id))
-                  navigate(`/search-results/Library/${record.attributes.uniqueId}`, { replace: true })
+                  dispatch(setSelectedCardIndex(rowIndex || record.id));
+                  // navigate(
+                  //   `/search-results/Library/${record.attributes.uniqueId}`,
+                  //   { replace: true }
+                  // );
+                  navigateTo(
+                    `/search-results/Library/${record.attributes.uniqueId}`
+                  );
                 },
               };
             }}
-          ></StyledAntTable>
+          ></StyledTableWrapper>
         </InfiniteScroll>
       </Box>
-      <ExportModal open={open} setOpen={setOpen} count={meta?.pagination?.total} path={'medias'} filter={filter}/>
+      <ExportModal
+        open={open}
+        setOpen={setOpen}
+        count={meta?.pagination?.total}
+        path={"medias"}
+        filter={filter}
+      />
     </Box>
   );
 };

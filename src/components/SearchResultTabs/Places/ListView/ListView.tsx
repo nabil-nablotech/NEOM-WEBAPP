@@ -13,9 +13,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import { useDispatch } from "react-redux";
-import { modifyAssociatedPlaces } from "../../../../store/reducers/searchResultsReducer";
+import { modifyAssociatedPlaces, setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 import MoreOptionsComponent from './MoreOption';
 import { InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
+import { useNavigate } from "react-router-dom";
+import { useHistory } from "../../../../hooks/useHistory";
  
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -31,25 +33,41 @@ const StyledTableWrapper = styled(StyledAntTable)`
     min-width: 50px;
   }
 
+  td
+{
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
   th.ant-table-cell {
     white-space: break-spaces;
   }
   .cell-number {
-    min-width: 8ch !important;
+    min-width: 10ch !important;
+    text-overflow: ellipsis;
   }
   .cell-tourism {
-    min-width: 10ch !important;
+    min-width: 18ch !important;
+    text-overflow: ellipsis;
+  }
+  .cell-research {
+    min-width: 18ch !important;
+    text-overflow: ellipsis;
   }
   .cell-recommend {
-    min-width: 20ch !important;
+    min-width: 18ch !important;
+    text-overflow: ellipsis;
   }
 
   .cell-period {
-    min-width: 20ch !important;
+    min-width: 15ch !important;
+    text-overflow: ellipsis;
   }
 
   .cell-conserve {
-    min-width: 15ch !important;
+    min-width: 25ch !important;
+    text-overflow: ellipsis;
   }
   .ant-table-cell.more-menu-ant-cell {
     vertical-align: middle;
@@ -86,7 +104,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
 
     .ant-table-thead > tr > th.more-menu-ant-cell.ant-table-cell-fix-right,
     .ant-table-tbody > tr > td.more-menu-ant-cell.ant-table-cell-fix-right {
-      right: -5vw !important;
+      right: 0vw !important;
     }
 
     th.ant-table-cell,
@@ -95,21 +113,26 @@ const StyledTableWrapper = styled(StyledAntTable)`
     td.ant-table-cell {
     }
     .cell-research {
-      min-width: 16ch !important;
+      min-width: 18ch !important;
+      text-overflow: ellipsis;
     }
     .cell-tourism {
-      min-width: 14ch !important;
+      min-width: 18ch !important;
+      text-overflow: ellipsis;
     }
     .cell-recommend {
-      min-width: 20ch !important;
+      min-width: 18ch !important;
+      text-overflow: ellipsis;
     }
 
     .cell-conserve {
-      min-width: 15ch !important;
+      min-width: 25ch !important;
+      text-overflow: ellipsis;
     }
 
     .cell-name {
-      min-width: 25ch !important;
+      min-width: 10ch !important;
+      text-overflow: ellipsis;
     }
   }
   ${antTablePaginationCss}
@@ -118,6 +141,8 @@ const StyledTableWrapper = styled(StyledAntTable)`
 const ListView = (props: PlacesProps) => {
 
   const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const { navigateTo } = useHistory();
 
   const { isAssociationsStepOpen, associatedPlaces } = useSelector(
     (state: RootState) => state.searchResults
@@ -126,23 +151,32 @@ const ListView = (props: PlacesProps) => {
     const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([
       {
           title: "NAME",
-          key: `attributes`,
+          key: `attributes.placeNameEnglish`,
           dataIndex: "attributes",
           className: 'cell-name',
-          sorter: (a: { attributes: {placeNameEnglish: string;} }, b: { attributes: {placeNameEnglish: string;} }) => {
-              return a.attributes.placeNameEnglish.localeCompare(b.attributes.placeNameEnglish)
+          sorter: {
+            compare: (a: { attributes: {placeNameEnglish: string;} }, b: { attributes: {placeNameEnglish: string;} }) => {
+                return a.attributes.placeNameEnglish.localeCompare(b.attributes.placeNameEnglish)
+            },
+            multiple: 2
           },
-          sortDirections: ["ascend"],
-          defaultSortOrder: "ascend",
+          filterMultiple: true,
           render: (value: any, index: number) => {
-            return `${value.placeNameEnglish}${value.placeNameArabic}`            
+            return `${value.placeNameEnglish} ${value.placeNameArabic}`            
           }
       },
       {
           title: "NUMBER",
-          key: `attributes`,
+          key: `attributes.placeNumber`,
           dataIndex: "attributes",
           className: 'cell-number',
+          sorter: {
+            compare: (a: { attributes: {placeNumber: string;} }, b: { attributes: {placeNumber: string;} }) => {
+                return a.attributes.placeNumber.localeCompare(b.attributes.placeNumber)
+            },
+            multiple: 1
+          },
+          filterMultiple: true,
           render: (value: any, index: number) => value.placeNumber
       },
       {
@@ -308,7 +342,6 @@ const ListView = (props: PlacesProps) => {
                 className={`${commonStyles['infinite-scroll-cls']}`}
             >
                 <StyledTableWrapper
-                    // className={`${styles["table-container"]}`}
                     rowKey={"id"}
                     size="small"
                     columns={tableHeaderJson}
@@ -316,7 +349,7 @@ const ListView = (props: PlacesProps) => {
                     pagination={false}
                     loading={loading}
                     bordered
-                    scroll={{ x: true, y: 300 }}
+                    scroll={{ x: 'max-content' , y: 500 }}
                     style={{
                         background: "transparent",
                     }}
@@ -328,6 +361,10 @@ const ListView = (props: PlacesProps) => {
 
                           if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
                             handleAttachClick(event, record)
+                          } else {
+                            dispatch(setSelectedCardIndex(rowIndex || record.id))
+                            // navigate(`/search-results/Places/${record.attributes.uniqueId}`, { replace: true })
+                            navigateTo(`/search-results/Places/${record.attributes.uniqueId}`)
                           }
                         }, // click row
                       };

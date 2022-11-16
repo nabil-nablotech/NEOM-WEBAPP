@@ -14,12 +14,13 @@ import { ColumnsType } from "antd/lib/table";
 // import { usePaginatedArray } from "../../../hooks/usePaginatedArray";
 // import useLibrary from "../../../hooks/useLibrary";
 import MoreOptionsComponent from "../ListView/MoreOption";
-import { getRole } from '../../../../utils/storage/storage';
 import {
     antTablePaginationCss, baseUrl, copyToClipboard, formatBytes, formatWebDate,
     isEmptyValue, NO_DESCRIPTION, NO_LOCATION, NO_TABLE_ROWS, NO_TEXT, isEventDetailAttached,
     detectMediaTypeFromMediaAssociate,
-    EVENTS_TAB_NAME
+    EVENTS_TAB_NAME,
+    itemAddEditAccess,
+    itemDeleteAccess
 } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
@@ -29,7 +30,7 @@ import useMedia from "../../../../hooks/useMedia";
 import CommentsSection from "../../../CommentsSection";
 import RenderInitials from "../../../RenderInitials";
 import { useDispatch } from "react-redux";
-import { modifyAssociatedEvents, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from "../../../../store/reducers/searchResultsReducer";
+import { modifyAssociatedEvents, setActiveLibraryItem, setActiveLibraryItemIndex, setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
 import YellowStar from '../../../../assets/images/searchResults/YellowStar.svg'
@@ -42,6 +43,7 @@ import { isEmpty } from 'lodash'
 import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import useRemarks from "../../../../hooks/useRemarks";
+import { useHistory } from "../../../../hooks/useHistory";
 
 const StyledTableWrapper = styled(StyledAntTable)`
     
@@ -128,19 +130,16 @@ const StyledTableWrapper = styled(StyledAntTable)`
     ${antTablePaginationCss}
 `
 
-const superEditor = getRole() === 'SuperEditor';
-const editor = getRole() === 'Editor';
-
 const EventDetailsPage = () => {
     let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
-    const navigate = useNavigate();
+    const { goBack, navigateTo } = useHistory()
     const [isFilter, setIsFilter] = useState(null);
     const { places, isAssociationsStepOpen, associatedEvents, media } = useSelector(
         (state: RootState) => state.searchResults
     );
     const { data } = useSelector((state: RootState) => state.login);
 
-    const { loading: eventLoading, data: eventDetails, setEdit } = useEventDetails();
+    const { loading: eventLoading, data: eventDetails, setEdit, setFeaturedMedia } = useEventDetails();
 
     let selectedPlaceObjIndex: number = 0
     let selectedPlaceObj: Place = places[0]
@@ -155,16 +154,10 @@ const EventDetailsPage = () => {
     const [isCopyDone, setCopyDone] = useState<boolean>(false)
 
     const {
-        anchorEl,
-        open,
-        handleClick,
-        handleClose,
-        handleSettingsClose
-    } = useAnchor()
 
-    const { fetchMediaItems, hasMoreData, loading } = useMedia();
+    } = useAnchor()
     
-    const {loading: loadingRemarks, data: remarks, addRemarksMutation, getRemarksMutation, updateRemarksMutation } = useRemarks();
+    const {loading: loadingRemarks, data: remarks, addRemarksMutation, updateRemarksMutation } = useRemarks();
     const dispatch = useDispatch()
 
     const [mediaGridActiveItems, setMediaGridActiveItems] = useState<number>(0)
@@ -189,10 +182,12 @@ const EventDetailsPage = () => {
 
     const {
         siteDescription, siteType, period, fieldNarrative, stateOfConservation,
+        assessmentType,
         risk, tourismValue, researchValue, recommendation,
         visitUIPath, visitDate, recordingTeam,
         visitNumber,
         libraryItems, mediaGallery, visit_associate,
+        id
     } = eventDetails
 
     const mediaGalleryLocal = mediaGallery && mediaGridActiveItems + mediaCount <= mediaGallery?.length ? mediaGallery?.slice(0, mediaGridActiveItems + mediaCount) :
@@ -202,7 +197,6 @@ const EventDetailsPage = () => {
         )
 
     const { latitude, longitude } = eventDetails
-
     if (visit_associate?.place_unique_id) {
 
     }
@@ -214,7 +208,11 @@ const EventDetailsPage = () => {
                 setEdit({record: eventDetails, type: "Events"});
             },
         },
-        {
+        
+    ]
+
+    if (itemDeleteAccess) {
+        menuItems.push({
             label: "Delete",
             action: () => {
                 dispatch(toggleDeleteConfirmationWindowOpen({
@@ -226,9 +224,8 @@ const EventDetailsPage = () => {
                     id: eventDetails.id
                 }))
             },
-        },
-    ]
-
+        })
+    }
     const tableHeaderJson: ColumnsType<any> = [
         {
             title: "NAME",
@@ -303,45 +300,32 @@ const EventDetailsPage = () => {
             fixed: "right",
             className: "more-menu-ant-cell",
             render: (value: any, record: Media) => (
-                <MoreOptionsComponent type="Library" setEdit={setEdit} record={record} />
+                <>{itemAddEditAccess && <MoreOptionsComponent type="Library" setEdit={setEdit} record={record} />}</>
             ),
         },
     ];
 
-
-    const actionsArray = [
-        {
-            label: 'Feature',
-            action: () => { }
-        },
-        {
-            label: 'Share',
-            action: () => { }
-        },
-        {
-            label: 'Edit',
-            action: () => { }
-        },
-        {
-            label: 'Delete',
-            action: () => { }
-        }
-    ]
-
-    const handleClickMediaItem = (e: React.MouseEvent, itemIndex: number) => {
+    const handleClickMediaItem = (e: React.MouseEvent, uniqueId: string) => {
         /** itemIndex used to track which item being clicked out of 5;
          * 1st , 2nd etc.
          */
         e.preventDefault()
-        if (media.length >= itemIndex) {
-            navigate(`/search-results/Media/${media[itemIndex - 1].attributes.uniqueId}`, { replace: true })
-            dispatch(setActiveMediaItem(media[itemIndex - 1]))
-            dispatch(setActiveMediaItemIndex(itemIndex - 1))
-        }
+        // navigate(`/search-results/Media/${uniqueId}`, { replace: true })
+        navigateTo(`/search-results/Media/${uniqueId}`)
+        // if (media.length >= itemIndex) {
+        //     dispatch(setActiveMediaItem(media[itemIndex - 1]))
+        //     dispatch(setActiveMediaItemIndex(itemIndex - 1))
+        // }
     }
 
     const handleSearch = (searchData: any) => {
-        navigate({
+        // navigate({
+        //     pathname: `/search-results/Events`,
+        //     search: decodeURIComponent(JSON.stringify({
+        //         refinedSearch: searchData
+        //     }))
+        // });
+        navigateTo({
             pathname: `/search-results/Events`,
             search: decodeURIComponent(JSON.stringify({
                 refinedSearch: searchData
@@ -372,7 +356,8 @@ const EventDetailsPage = () => {
                             dispatch(setActiveMediaItem(null))
                             dispatch(setActiveMediaItemIndex(0))
 
-                            navigate(`/search-results/${tabName}`, { replace: true })
+                            // navigate(`/search-results/${tabName}`, { replace: true })
+                            goBack()
                         }}
                     >
                         Back
@@ -384,12 +369,13 @@ const EventDetailsPage = () => {
                             <Grid item sm={11} className={`${styles['title-section-left-item']}`}>
                                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
-                                {visit_associate?.place_unique_id?.placeNameEnglish && <Grid container>
+                                <Grid container>
+                                {visit_associate?.place_unique_id?.placeNameEnglish && 
                                     <Grid item>
                                         <Box component="div" className={`${styles['item-name']}`}>
                                             {visit_associate?.place_unique_id?.placeNameEnglish}
                                         </Box>
-                                    </Grid>
+                                    </Grid>}
                                     {visit_associate?.place_unique_id?.placeNameArabic && <Grid item>
                                         <Box component="div" className={`${styles['item-name-arabic']}`}>
                                             {visit_associate?.place_unique_id?.placeNameArabic}
@@ -400,13 +386,16 @@ const EventDetailsPage = () => {
                                             {`- ${visit_associate?.place_unique_id?.placeNumber}`}
                                         </Box>
                                     </Grid>}
-                                </Grid>}
+                                </Grid>
                                 <Box component="div" className={`${styles['visited-by-main-box']}`}>
                                     {visitDate && <Box component="span">Visited on {visitDate} by </Box>}
                                     <Box component="span">{recordingTeam}</Box>
                                 </Box>
                                {visitNumber && <Box component="div" className={`${styles['visit-count']}`}>
                                     VISIT {visitNumber}
+                                </Box>}
+                               {id && <Box component="div" className={`${styles['visit-count']}`}>
+                                    ID {id}
                                 </Box>}
                             </Grid>
                             <Grid item sm={1} className={`${styles['title-section-grids']}`}>
@@ -431,9 +420,10 @@ const EventDetailsPage = () => {
                                                 }))
                                             }}
                                         /> :
-                                        <CustomMoreOptionsComponent
+                                        <>
+                                        {itemAddEditAccess && <CustomMoreOptionsComponent
                                             menuActions={menuItems}
-                                        />}
+                                        />}</>}
                                 </Box>
                             </Grid>
                         </Grid>
@@ -520,6 +510,23 @@ const EventDetailsPage = () => {
                                                 <Grid item>
                                                     {fieldNarrative}
                                                 </Grid> :
+                                                <Grid item>
+                                                    <NoTextPresent
+                                                        message={NO_TEXT}
+                                                    />
+                                                </Grid>
+
+                                        }
+                                    </Grid>
+                                    <Grid container className={`${styles['table-row']}`}>
+                                        <Grid item sm={3} md={4} className={`${styles['table-parameter']}`}>
+                                            Assesment Type
+                                        </Grid>
+                                        {
+                                            !isEmptyValue(assessmentType) ? assessmentType.map((item: string, index: number) =>
+                                                <Grid item key={index}>
+                                                    {item}
+                                                </Grid>) :
                                                 <Grid item>
                                                     <NoTextPresent
                                                         message={NO_TEXT}
@@ -642,14 +649,17 @@ const EventDetailsPage = () => {
                                 {
                                     (latitude && longitude) ?
                                         <>
-                                            <MapView key={4} filterId={setIsFilter} marker={[{
-                                                id: 0,
-                                                name: "P event name",
+                                            <MapView key={1} filterId={setIsFilter} marker={[{
+                                                id: "1",
+                                                name: eventDetails?.visit_associate?.place_unique_id?.placeNameEnglish,
                                                 position: {
-                                                    lat: latitude || 24.11,
-                                                    lng: longitude || 34.98
-                                                }
-                                            }]} />
+                                                    lat: latitude ? latitude : 24.11,
+                                                    lng: longitude ? longitude : 34.98
+                                                },
+                                                
+                                            }]}
+                                            zoom= {10}
+                                            />
                                             <Grid container className={`${styles['map-loctn-details']}`} >
                                                 <Grid item lg={5} md={5} sm={5}>
                                                     <Grid container className={`${styles['map-loctn-line']}`}>
@@ -694,6 +704,18 @@ const EventDetailsPage = () => {
                                         style={{
                                             background: "transparent",
                                         }}
+                                        onRow={(record: any, rowIndex: number | undefined) => {
+                                            return {
+                                                onClick: (library) => {
+                                                    if (typeof rowIndex === "number") {
+                                                        dispatch(setActiveLibraryItem(record));
+                                                        dispatch(setActiveLibraryItemIndex(rowIndex));
+                                                        console.log('hex: ', record)
+                                                        navigateTo(`/search-results/Library/${record.media_unique_id.uniqueId}`)
+                                                    }
+                                                },
+                                            };
+                                        }}
                                     ></StyledTableWrapper> :
                                     <NoTextPresent
                                         message={NO_TABLE_ROWS}
@@ -713,6 +735,9 @@ const EventDetailsPage = () => {
                                     {
                                         mediaGalleryLocal && mediaGalleryLocal.map((itemObj: MediaAssociateObj, inx: number) => (
                                             <Grid item lg={3} md={4} sm={4} key={inx} className={`${styles['media-grid-item']}`}
+                                            onClick={(e) => {
+                                                handleClickMediaItem(e, itemObj.media_unique_id.uniqueId);
+                                            }}
                                             >
                                                 <RenderFileData
                                                     fileData={{
@@ -732,7 +757,7 @@ const EventDetailsPage = () => {
                                                     <Grid container className={`${styles['media-grid-item-options-row']}`}>
                                                         <Grid item>
                                                             {/* To-do: modify featured image flag */}
-                                                            {inx === 0 && <Box component="div">
+                                                            {itemObj.media_unique_id.featuredImage && <Box component="div">
                                                                 <Grid container className={`${styles['star-icon-grid']}`}>
                                                                     <Grid item>
                                                                         <Box
@@ -747,7 +772,7 @@ const EventDetailsPage = () => {
                                                         </Grid>
                                                         <Grid item>
                                                             <MoreOptionsComponent
-                                                                type="Media" setEdit={setEdit} record={itemObj}
+                                                                type="Media" setEdit={setEdit} record={itemObj} setFeaturedMedia={setFeaturedMedia}
                                                             />
                                                         </Grid>
                                                     </Grid>

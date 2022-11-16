@@ -142,7 +142,7 @@ query RefinedMediaSearch(
         }
       ]
     }
-    sort: "updatedAt:desc"
+    sort: "createdAt:desc"
   ) {
     meta {
       pagination {

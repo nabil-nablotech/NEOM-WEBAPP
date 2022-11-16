@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import { useSelector } from "react-redux";
+import { Grid, Box } from "@mui/material";
 import {
   RobotoMediumMerino20px,
   RobotoLightMerino50px,
   ValignTextMiddle,
+  RalignText,
 } from "./styledMixins";
 import "./style.css";
 import "../../globals.css";
@@ -20,6 +22,9 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { setSearchText, setSearchApply } from "../../store/reducers/searchResultsReducer";
 import LandingPageImage from '../../assets/images/LandingPage.webp';
+import MediaIcon from '../../assets/icons/media.png';
+import EventIcon from '../../assets/icons/events.png';
+import LibraryIcon from '../../assets/icons/library.png';
 
 const landingPageData = {
   overlapGroup4:
@@ -94,6 +99,10 @@ function LandingPage() {
     }
   };
 
+  const handleClearSearchText = async () => {
+    await dispatch(setSearchText(""));
+  }
+
   if (!data) return null;
   return (
     <div className="container-center-horizontal">
@@ -106,6 +115,7 @@ function LandingPage() {
             <CustomSearchField
               handleChange={handleChange}
               onKeyDown={onKeyDown}
+              handleClearSearchText={handleClearSearchText}
               className={`${styles["custom-search-field"]} ${styles["landing-page-search-field"]}`}
             />
             <Inventory>
@@ -120,7 +130,7 @@ function LandingPage() {
                   <Text1>
                     <span>
                       <span className="roboto-light-merino-50px">
-                        {totalCounts?.places}
+                        {totalCounts?.places.toLocaleString()}
                       </span>
                     </span>
                   </Text1>
@@ -133,21 +143,19 @@ function LandingPage() {
               </Frame2608168>
               <Frame2608169 onClick={(e) => handleClick(e, "Events")}>
                 <OverlapGroup5>
-                  <Vector
-                    src="https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d1b90bcf8144ac5b76937/img/vector@1x.png"
-                    alt="Vector"
-                  />
+                <Vector1 src={EventIcon} alt="Vector" />
+                 
                 </OverlapGroup5>
                 <OverlapGroup1>
                   <Text2>
                     <span>
                       <span className="roboto-light-merino-50px">
-                        {totalCounts?.events}
+                        {totalCounts?.events.toLocaleString()}
                       </span>
                     </span>
                   </Text2>
                   <Places>
-                    <span className="roboto-medium-merino-20px">
+                    <span className="roboto-medium-merino-20px" style={{paddingLeft: 5}}>
                       {spanText5}
                     </span>
                   </Places>
@@ -155,13 +163,16 @@ function LandingPage() {
               </Frame2608169>
               <Frame2608170 onClick={(e) => handleClick(e, "Library")}>
                 <OverlapGroup5>
-                  <Vector1 src={vector2} alt="Vector" />
+                <Vector
+                    src={LibraryIcon}
+                    alt="Library"
+                  />
                 </OverlapGroup5>
                 <OverlapGroup2>
                   <Number>
                     <span>
                       <span className="roboto-light-merino-50px">
-                        {totalCounts?.library}
+                        {totalCounts?.library.toLocaleString()}
                       </span>
                     </span>
                   </Number>
@@ -174,13 +185,13 @@ function LandingPage() {
               </Frame2608170>
               <Frame2608171 onClick={(e) => handleClick(e, "Media")}>
                 <OverlapGroup5>
-                  <Vector2 src={vector3} alt="Vector" />
+                  <Vector2 src={MediaIcon} alt="Media" />
                 </OverlapGroup5>
                 <OverlapGroup3>
                   <Text3>
                     <span>
                       <span className="roboto-light-merino-50px">
-                        {totalCounts?.media}
+                        {totalCounts?.media.toLocaleString()}
                       </span>
                     </span>
                   </Text3>
@@ -192,6 +203,73 @@ function LandingPage() {
                 </OverlapGroup3>
               </Frame2608171>
             </Inventory>
+            {/* <Grid item md={12} display="flex" justifyContent={'space-evenly'}>
+              <Grid item xs={6} sm={6} md={4} display="flex">
+                  <IconLocationPin
+                    src={iconLocation_Pin}
+                    alt="icon-location_pin"
+                  />
+                  <Grid item xs={12} display="flex" flexDirection={"column"}>
+                   <span>
+                      <span className="roboto-light-no-line-height-merino-50px">
+                        {totalCounts?.places}
+                      </span>
+                    </span>
+                    <span className="roboto-medium-no-line-height-merino-20px">
+                      {spanText3}
+                    </span>
+                  </Grid>
+              </Grid>
+              <Grid item xs={6} sm={6} md={4} display="flex">
+                  <IconLocationPin
+                    src={EventIcon}
+                    alt="icon-location_pin"
+                  />
+                  <Grid item xs={12} display="flex" flexDirection={"column"}>
+                   <span>
+                      <span className="roboto-light-no-line-height-merino-50px">
+                        {totalCounts?.places}
+                      </span>
+                    </span>
+                    <span className="roboto-medium-no-line-height-merino-20px">
+                      {spanText3}
+                    </span>
+                  </Grid>
+              </Grid>
+              <Grid item xs={6} sm={6} md={4} display="flex">
+                  <IconLocationPin
+                    src={LibraryIcon}
+                    alt="icon-location_pin"
+                  />
+                  <Grid item xs={12} display="flex" flexDirection={"column"}>
+                   <span>
+                      <span className="roboto-light-no-line-height-merino-50px">
+                        {totalCounts?.places}
+                      </span>
+                    </span>
+                    <span className="roboto-medium-no-line-height-merino-20px">
+                      {spanText3}
+                    </span>
+                  </Grid>
+              </Grid>
+              <Grid item xs={6} sm={6} md={4} display="flex">
+                  <IconLocationPin
+                    src={MediaIcon}
+                    alt="icon-location_pin"
+                  />
+                  <Grid item xs={12} display="flex" flexDirection={"column"}>
+                   <span>
+                      <span className="roboto-light-no-line-height-merino-50px">
+                        {totalCounts?.places}
+                      </span>
+                    </span>
+                    <span className="roboto-medium-no-line-height-merino-20px">
+                      {spanText3}
+                    </span>
+                  </Grid>
+              </Grid>
+
+            </Grid> */}
           </Frame2608172>
         </OverlapGroup4>
         {/* <UserMenuComponent /> */}
@@ -257,6 +335,7 @@ const Inventory = styled.div`
   gap: 50px;
   border: 1px none;
   color: #ffff;
+  max-width: 50vw;
   @media (min-width: 575px) and (max-width: 1025px) {
     min-width: 500px;
     max-width: 70vw;
@@ -296,18 +375,20 @@ const OverlapGroup = styled.div`
 `;
 
 const Text1 = styled.h1`
-  ${ValignTextMiddle}
+  ${RalignText}
   ${RobotoLightMerino50px}
-            position: absolute;
+  position: absolute;
   width: 108px;
   height: 60px;
   top: 0;
   left: 0;
   letter-spacing: 0.5px;
   line-height: 24px;
+  align-item: flex-start;
 `;
 
 const Places = styled.div`
+  ${RalignText}
   ${RobotoMediumMerino20px}
   position: absolute;
   width: 91px;
@@ -316,13 +397,14 @@ const Places = styled.div`
   letter-spacing: 0.5px;
   line-height: 24px;
   white-space: nowrap;
+  align-item: flex-start;
 `;
 
 const Frame2608169 = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  min-width: 177px;
+  min-width: 176px;
   border: 1px none;
   cursor: pointer;
 `;
@@ -342,7 +424,7 @@ const OverlapGroup1 = styled.div`
 `;
 
 const Text2 = styled.div`
-  ${ValignTextMiddle}
+  ${RalignText}
   ${RobotoLightMerino50px}
             position: absolute;
   width: 110px;
@@ -351,6 +433,7 @@ const Text2 = styled.div`
   left: 0;
   letter-spacing: 0.5px;
   line-height: 24px;
+  padding: 0 5px;
 `;
 
 const Frame2608170 = styled.div`
@@ -363,7 +446,7 @@ const Frame2608170 = styled.div`
 `;
 
 const Vector1 = styled.img`
-  width: 26px;
+  width: 28px;
   height: 33px;
   align-self: center;
   margin-bottom: 21px;
@@ -377,7 +460,7 @@ const OverlapGroup2 = styled.div`
 `;
 
 const Number = styled.div`
-  ${ValignTextMiddle}
+  ${RalignText}
   ${RobotoLightMerino50px}
             position: absolute;
   width: 101px;
@@ -386,9 +469,11 @@ const Number = styled.div`
   left: 0;
   letter-spacing: 0.5px;
   line-height: 24px;
+  padding: 0 5px;
 `;
 
 const LibraryItems = styled.div`
+  ${RalignText}
   ${RobotoMediumMerino20px}
   position: absolute;
   width: 150px;
@@ -397,13 +482,14 @@ const LibraryItems = styled.div`
   letter-spacing: 0.5px;
   line-height: 24px;
   white-space: nowrap;
+  padding: 0 5px;
 `;
 
 const Frame2608171 = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  min-width: 179px;
+  min-width: 176px;
   border: 1px none;
   cursor: pointer;
 `;
@@ -423,18 +509,20 @@ const OverlapGroup3 = styled.div`
 `;
 
 const Text3 = styled.div`
-  ${ValignTextMiddle}
+  ${RalignText}
   ${RobotoLightMerino50px}
-            position: absolute;
+  position: absolute;
   width: 110px;
   height: 60px;
   top: 0;
   left: 0;
   letter-spacing: 0.5px;
   line-height: 24px;
+  padding: 0 5px;
 `;
 
 const MediaItems = styled.div`
+${RalignText}
   ${RobotoMediumMerino20px}
   position: absolute;
   width: 129px;
@@ -443,6 +531,7 @@ const MediaItems = styled.div`
   letter-spacing: 0.5px;
   line-height: 24px;
   white-space: nowrap;
+  padding: 0 5px;
 `;
 
 export default LandingPage;

@@ -465,6 +465,7 @@ export const UserManagementTable = (props: IUser) => {
   };
 
   const filterResults = (e: React.ChangeEvent<HTMLInputElement>) => {
+
     if (data.length > 0) {
       let newDatalist = [...data];
       /** filter when search string is not empty */
@@ -516,7 +517,8 @@ export const UserManagementTable = (props: IUser) => {
       <div className={`${styles["custom-search"]}`}>
         <CustomSearchField
           className={`${styles["custom-search-field"]}`}
-          handleChange={(e) => {
+          shouldHandleChangeFromParent={true}
+          handleChangeParent={(e) => {
             filterResults(e);
           }}
         />

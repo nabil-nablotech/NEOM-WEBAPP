@@ -82,6 +82,11 @@ export type InventoryAssociationType_Event = {
   }
 }
 
+export type ToggledStateTypes = {
+  states: null | Array<boolean>,
+  tabName: tabNameProps
+}
+
 export type SearchResultsState2 = {
   selectedCardIndex: number;
   searchApply: boolean;
@@ -96,6 +101,7 @@ export type SearchResultsState2 = {
   libararyMetaData: Meta | null;
   mediaMetaData: Meta | null;
   activeTab: tabNameProps | "";
+  toggledStates: ToggledStateTypes;
   newItemWindowOpen: boolean;
   showAddSuccess: boolean;
   showEditSuccess: boolean;
@@ -127,7 +133,8 @@ export type SearchResultsState2 = {
   deleteItemSuccess: boolean,
   isDeleteUserWindowOpen: DeleteUserReduxPayload
   deleteUserSuccess: boolean,
-  deletePayload: DeletePayloadType
+  deletePayload: DeletePayloadType,
+  history: Array<string> | []
 };
 
 export type DeletePayloadType = {
@@ -273,7 +280,7 @@ export type LibraryDetailsPageProps = {
   handleClose: () => any
 };
 
-type menuAction = {
+export type menuAction = {
   label: string;
   action: (data?: any) => void;
 };

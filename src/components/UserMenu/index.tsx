@@ -6,10 +6,10 @@ import { useSelector } from "react-redux";
 import { RobotoMediumMerino20px } from "../styledMixins";
 import WhiteCircle from "../../assets/images/WhiteCircle.svg";
 import useLogout from "../../hooks/useLogout";
-import { EVENTS_TAB_NAME, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME, stringAvatar } from "../../utils/services/helpers";
+import { EVENTS_TAB_NAME, itemAddEditAccess, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME, stringAvatar } from "../../utils/services/helpers";
 import { RootState } from "../../store";
 import { getRole } from "../../utils/storage/storage";
-
+import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import MenuList from "../MenuList";
 import { Box, LinearProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
@@ -32,7 +32,9 @@ import { deleteRecord } from "../../api/delete";
 import iconDownload from "../../assets/images/icon-button-settings.png"
 
 /** Component for top-right header icons */
-function UserMenuComponent() {
+function UserMenuComponent({
+  screen
+}: {screen?: string}) {
   const iconUserWhite = WhiteCircle;
   const icon =
     "https://anima-uploads.s3.amazonaws.com/projects/633d15940ae1dbd35fe0139d/releases/633d15a99ef6389a71e4e537/img/icon@1x.png";
@@ -52,7 +54,6 @@ function UserMenuComponent() {
 
   const open = Boolean(anchorEl);
   const admin = getRole() === 'Admin';
-  const editor = getRole() === 'Editor';
   const openSettings = Boolean(anchorElSettings);
   const dispatch = useDispatch()
 
@@ -145,7 +146,7 @@ function UserMenuComponent() {
         marginLeft: 'auto',
         marginRight: '1em'
       }}>
-        <Box component={"div"}>
+        {itemAddEditAccess && <Box component={"div"}>
           <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }} onClick={
             e => handlePlus()
           } />
@@ -161,10 +162,9 @@ function UserMenuComponent() {
               }} />
             </Box>
           }
-        </Box>
-        {true && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
-        {true && <IconDownload onClick={(e) => handleDownloadClick(e)} src={iconDownload} alt="icon-settings" />}
-
+        </Box>}
+        {admin && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
+        {admin && <IconDownload onClick={(e) => handleDownloadClick(e)} src={iconDownload} alt="icon-settings" />}
         <InitialsWrapper
           id="long-button"
           //@ts-ignore
@@ -243,21 +243,12 @@ function UserMenuComponent() {
             }}
             handleDelete={
               async () => {
-                
-
-
                 if (deletePayload && deleteItemType) {
 
                   const type = deleteItemType === 'Places' ? 'place' :
                     deleteItemType === 'Events' ? 'event' :
                       deleteItemType === 'Media' ? 'media' : 'library'
 
-                  // const res: { success: boolean } = await deleteRecord({
-                  //   visit_associates_id: deletePayload.visit_associates_id,
-                  //   media_associates_id: deletePayload.media_associates_id,
-                  //   remark_headers_id: deletePayload.remark_headers_id,
-                  //   visit: deletePayload.visit,
-                  // }, type, deletePayload.id)
                   const res: { success: boolean } = await deleteRecord(type, deletePayload.id)
 
                   if (res.success) {
@@ -295,7 +286,7 @@ const InitialsWrapper = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     ${RobotoMediumMerino20px};
-    font-size: 20px;
+    font-size: 15px;
   }
 `;
 

@@ -16,6 +16,10 @@
     aspect-ratio: 3/2;
     object-fit: cover;
     margin-block: 1em;
+    padding: 7em 7em 0 7em;
+}
+.image-bg {
+    background-color: darkgrey;
 }
 
 .desc {
@@ -87,9 +91,14 @@
     aspect-ratio: 1/1.2;
     background-color: var(--no-map-bg);
     height: 100%;
-    width: 99%;
-    padding: 7em;
 
+    /* width: 99%; */
+    /* padding: 7em; */
+}
+
+.anchor {
+    margin: auto;
+    padding-bottom: 1em;
 }
 
 @media (min-width: 575px) and (max-width: 1025px) {

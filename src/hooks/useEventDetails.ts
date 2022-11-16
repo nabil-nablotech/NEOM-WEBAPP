@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import {useMutation as apolloMutation} from '@apollo/client';
 import { useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +11,8 @@ import { EVENTS_TAB_NAME } from "../utils/services/helpers";
 import { RootState } from "../store";
 import { MediaApi } from "../types/Media";
 import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
+import { updateMedia } from "../query/media";
+import { graphQlHeaders } from "../utils/services/interceptor";
 
 const useEventDetails = () => {
   let { uniqueId, tabName } = useParams<{ tabName?: tabNameProps; uniqueId: string }>();
@@ -39,14 +42,11 @@ const useEventDetails = () => {
     retry: false,
   });
 
-  // const setEdit = () => {
-  //   if (data) {
-  //     dispatch(setEventData(data));
-  //     dispatch(setEventEdit(true));
-  //     dispatch(toggleNewItemWindow(true))
-  //     dispatch(setAddNewItemWindowType(EVENTS_TAB_NAME))
-  //   }
-  // };
+  const [updateMediaMutation, { data: updateData, reset }] = apolloMutation(updateMedia, {context: graphQlHeaders().context, onCompleted: (data) => {
+    if (uniqueId) {
+      fetchEventDetails(uniqueId);
+    }
+  }});
 
   useEffect(() => {
     if (confirmOpenEdit && editPayload) {
@@ -122,11 +122,21 @@ const useEventDetails = () => {
     }
   };
 
+  const setFeaturedMedia = (payload: any) => {
+    updateMediaMutation({
+      variables: {
+        featuredImage: !payload.media_unique_id.featuredImage,
+        id: payload.media_unique_id.id
+      }
+    })
+  }
+
   return {
     loading: isLoading,
     error,
     data,
     setEdit,
+    setFeaturedMedia
   };
 };
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { loginPayload } from "../types/User";
 import {setSession, setRole} from '../utils/storage/storage';
-import { useDispatch } from "react-redux";
 import { setUser, setScreenData } from "../store/reducers/loginReducers";
 import { login, loginScreenData } from "../api/auth";
 import { fetchMeUser } from "../api/user";

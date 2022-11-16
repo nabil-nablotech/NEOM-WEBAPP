@@ -16,6 +16,7 @@ import {Card} from './Card';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useNavigate } from 'react-router-dom';
+import { useHistory } from '../../../../hooks/useHistory';
 
 
 export type MediaProps = {
@@ -31,6 +32,7 @@ const GridView = (props: MediaProps) => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { navigateTo } = useHistory();
 
     const {data, hasMoreData, fetchData, loading, totalData, setEdit} = props;
 
@@ -66,7 +68,8 @@ const GridView = (props: MediaProps) => {
                         dispatch(setSelectedCardIndex(index))
                         dispatch(setActiveMediaItem(media[index]))
                         dispatch(setActiveMediaItemIndex(index))
-                        navigate(`/search-results/Media/${media[index].attributes.uniqueId}`, { replace: true })
+                        // navigate(`/search-results/Media/${media[index].attributes.uniqueId}`, { replace: true })
+                        navigateTo(`/search-results/Media/${media[index].attributes.uniqueId}`)
                     }}>
                             <Card
                                 itemIndex={index}

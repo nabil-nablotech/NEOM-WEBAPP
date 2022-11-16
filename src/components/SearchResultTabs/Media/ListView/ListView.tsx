@@ -17,9 +17,11 @@ import { Media } from "../../../../types/Media";
 // import CloseIcon from '@mui/icons-material/CloseOutlined';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useMediaQuery } from 'react-responsive'
 
 import { setActiveMediaItem, setActiveMediaItemIndex, setSelectedCardIndex } from '../../../../store/reducers/searchResultsReducer';
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
+import { useHistory } from "../../../../hooks/useHistory";
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -40,8 +42,13 @@ const StyledTableWrapper = styled(StyledAntTable)`
   }
   .ant-table-cell.more-menu-ant-cell {
     vertical-align: middle;
-    min-width: 20px;
-    width: 20px;
+  }
+  .more-menu-ant-cell,
+  .more-menu-ant-cell > div,
+  .ant-table-tbody > tr > td.more-menu-ant-cell {
+    width: 20px !important;
+    min-width: 20px !important;
+    max-width: 20px !important;
   }
   .more-menu-div {
     vertical-align: middle;
@@ -72,6 +79,9 @@ const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-cell {
     vertical-align: middle;
   }
+  .ant-table-tbody > tr > td.more-menu-ant-cell {
+    min-width: unset;
+  }
 
   @media (min-width: 575px) and (max-width: 1025px) {
     .ant-table-thead
@@ -94,6 +104,20 @@ const StyledTableWrapper = styled(StyledAntTable)`
     td.ant-table-cell {
     }
 
+    .ant-table td {
+      font-size: 12px;
+      white-space: break-spaces;
+    }
+    .ant-table th {
+      font-size: 13px;
+    }
+
+    .ant-table-tbody > tr > td {
+      word-wrap: unset;
+      word-break: unset;
+      white-space: break-spaces;
+    }
+
     .cell-image {
       min-width: 20ch !important;
     }
@@ -101,19 +125,25 @@ const StyledTableWrapper = styled(StyledAntTable)`
     .cell-description {
       min-width: 20ch !important;
     }
+
+    .cell-bearing {
+      min-width: 18ch !important;
+    }
   }
   ${antTablePaginationCss}
 `;
 
 const ListView = (props: MediaProps) => {
   const { data, hasMoreData, fetchData, loading, setEdit } = props;
-
+  const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
+  const { navigateTo } = useHistory()
   const tableHeaderJson: ColumnsType<any> = [
     {
       title: "Image",
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-image",
+      width: 150,
       render: (value: any, index: any) => (
         <>
           {value?.object?.data?.attributes ? <Box
@@ -127,42 +157,34 @@ const ListView = (props: MediaProps) => {
     },
 
     {
-      title: "IMAGE DESCRIPTION",
+      title: "TITLE",
+      key: "attributes",
+      dataIndex: "attributes",
+      className: "cell-title",
+      width: 170,
+      render: (value: any, index: any) => value?.fileName?.substring(0, 20),
+    },
+    {
+      title: "DESCRIPTION",
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-description",
-      render: (value: any, index: any) => value.description?.substring(0, 8),
+      width: 200,
+      render: (value: any, index: any) => value.description?.substring(0, 30),
     },
     {
-      title: "SITE",
+      title: "TYPE",
       key: "attributes",
       dataIndex: "attributes",
-      className: "cell-site",
-      sorter: (a: { title: string }, b: { title: any }) => {
-        return a.title?.localeCompare(b.title);
-      },
-      sortDirections: ["ascend"],
-      defaultSortOrder: "ascend",
-      // render: (value: string, index: any) => value.substring(0, 8),
-      render: (value: any, index: any) => value.title?.substring(0, 8), // need to remove once ste is confrmed
-    },
-    {
-      title: "SIZE",
-      key: "attributes",
-      dataIndex: "attributes",
-      render: (value, index) => formatBytes(value?.imageMetadata?.fileSize),
-    },
-    {
-      title: "UPDATED",
-      key: "attributes",
-      dataIndex: "attributes",
-      render: (value, index) => formatWebDate(value.updatedAt),
+      width: 100,
+      render: (value, index) => value.categoryType ? value.categoryType.join(', ') : '',
     },
     {
       title: "BEARING",
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-bearing",
+      width: isTablet? 80 : 60,
       render: (value: any, index: any) => value?.bearing?.substring(0, 2),
     },
     {
@@ -170,12 +192,19 @@ const ListView = (props: MediaProps) => {
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-bearing",
-      render: (value: any, index: any) => value.featuredImg ? 'Yes' : 'No',
+      width: isTablet? 80 : 60,
+      sorter: (a: Media, b: Media ) => {
+        return a?.attributes?.featuredImage.toString().localeCompare(b?.attributes?.featuredImage.toString())
+    },
+      render: (value: any, index: any) =>{
+        return  value.featuredImage ? 'Yes' : 'No'
+      },
     },
     {
       title: "",
       key: "action",
       fixed: "right",
+      width: 20,
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (
         <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
@@ -234,7 +263,8 @@ const ListView = (props: MediaProps) => {
                 if (typeof rowIndex === "number") {
                   dispatch(setActiveMediaItem(record))
                   dispatch(setActiveMediaItemIndex(rowIndex))
-                  navigate(`/search-results/Media/${record.attributes.uniqueId}`, { replace: true })
+                  // navigate(`/search-results/Media/${record.attributes.uniqueId}`, { replace: true })
+                  navigateTo(`/search-results/Media/${record.attributes.uniqueId}`)
                 }
               },
             };

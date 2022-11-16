@@ -13,6 +13,7 @@ import {formatDateTime} from '../../../../utils/services/helpers';
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import { Media } from "../../../../types/Media";
 import { Event } from "../../../../types/Event";
+import { useHistory } from "../../../../hooks/useHistory";
 
 export type PlacesProps = {
   data: Place[];
@@ -29,6 +30,7 @@ const GridView = (props: PlacesProps) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { navigateTo } = useHistory();
 
   if (!data) {
     return <h1>loadig....</h1>
@@ -67,13 +69,14 @@ const GridView = (props: PlacesProps) => {
                 className={`${gridStyles[""]}`}
                 onClick={(e) => {
                   dispatch(setSelectedCardIndex(index));
-                  navigate(`/search-results/Places/${item.attributes.uniqueId}`, {replace: true})
+                  // navigate(`/search-results/Places/${item.attributes.uniqueId}`, {replace: true})
+                  navigateTo(`/search-results/Places/${item.attributes.uniqueId}`)
                 }}
               >
                 <Card
                   key={index}
                   img={item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ? item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''}
-                  title={`${item.attributes?.placeNameEnglish}${item.attributes?.placeNameArabic} - ${item.attributes?.placeNumber}`}
+                  title={`${item.attributes?.placeNameEnglish} ${item.attributes?.placeNameArabic} - ${item.attributes?.placeNumber}`}
                   subTitle={item.attributes?.siteDescription}
                   dateString={`Last login on ${formatDateTime(item.attributes.updatedAt)}`}
                   period={item?.attributes?.period}

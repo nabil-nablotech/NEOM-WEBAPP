@@ -10,29 +10,9 @@ import PositionedSnackbar from "../../components/Snackbar";
 
 import {
   validateEmail,
-  validatePassword,
-  // baseUrl,
+  validatePassword
 } from "../../utils/services/helpers";
 import useLogin from "../../hooks/useLogin";
-// import { useSelector } from "react-redux";
-// import { RootState } from "../../store";
-
-// const LOGINDATA = gql`
-//   query GetLoginData {
-//     login {
-//       data {
-//         id
-//         attributes {
-//           title
-//           laebl
-//           button {
-//             theme
-//           }
-//         }
-//       }
-//     }
-//   }
-// `;
 
 type stateInput = {
   email: string;
@@ -52,16 +32,6 @@ type FormErrors = {
 export function Login() {
   const { clientLogin, error } = useLogin();
   const navigate = useNavigate();
-  // const screenData  = useSelector((rState: RootState) => rState.login.screenData);
-  // const data = screenData?.data;
-  // const textField1Data = {
-  //   children: "Email Address",
-  // };
-
-  // const textField2Data = {
-  //   children: data?.attributes?.input[1].placeholder || "",
-  //   className: "text-field-1",
-  // };
 
   const [state, setState] = useState<stateInput>({
     email: "",
@@ -165,7 +135,8 @@ export function Login() {
       password: state.password,
     });
     if (data) {
-      navigate("/");
+      // navigate("/");
+      window.location.reload();
     } else {
       setSnackbarErrorMessage(true);
     }

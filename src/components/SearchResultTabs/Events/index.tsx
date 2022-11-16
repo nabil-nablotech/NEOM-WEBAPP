@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Box from '@mui/material/Box';
 import styles from '../index.module.css'
 import Button from "../../../components/Button";
@@ -16,30 +16,51 @@ import useEvent from '../../../hooks/useEvent';
 import { Meta } from '../../../types/Place';
 import MapView from '../GoogleMap/MapView';
 import ExportModal from '../../ExportModal';
+import { importContentType } from '../../../utils/export-import/import-content-type';
+import { importCsvImagesZip } from '../../../utils/export-import/import-csv-images-zip';
+import {checkSearchParameter, EVENTS_TAB_NAME} from '../../../utils/services/helpers';
+import { setToggledStates } from '../../../store/reducers/searchResultsReducer';
+import { useDispatch } from 'react-redux';
 
 const PlacesTab = () => {
-  const { selectedCardIndex, events, totalCounts, eventMetaData } = useSelector(
+  const { selectedCardIndex, events, totalCounts, eventMetaData, searchText, searchApply,
+    toggledStates } = useSelector(
     (state: RootState) => state.searchResults
   );
+  const importFileInputRef: any = useRef(null);
+  const importZipFileInputRef: any = useRef(null);
+  const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
   const [img, setimg] = useState(MapImg1);
   const [isFilter, setIsFilter] = useState(null);
   const { fetchEvents, hasMoreData, loading, mapEvents, setEdit, searchData } = useEvent();
   const [open, setOpen] = React.useState(false);
   const [filter, setFilter] = React.useState(null);
 
-    useEffect(() => {
-        setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1)
-    }, [selectedCardIndex])
-    
-    const {openStates, toggleOpenStates} = useToggledView({count: 2})
+  useEffect(() => {
+    setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1)
+  }, [selectedCardIndex])
 
-    const meta: Meta | null = eventMetaData;
+  const { openStates, toggleOpenStates } = useToggledView({ count: 2 })
 
-    const handleNext = () => {
-      fetchEvents();
+  const meta: Meta | null = eventMetaData;
+
+  const handleNext = () => {
+    fetchEvents();
+  }
+
+  const dispatch = useDispatch()
+
+  /** Check if history list/grid view flag is present
+   * if yes - set it
+   */
+  useEffect(() => {
+    if (toggledStates.states && (toggledStates.tabName === EVENTS_TAB_NAME)) {
+      toggleOpenStates(toggledStates.states)
     }
 
-     /* Event handlers */
+  }, [toggledStates])
+
+  /* Event handlers */
   const exportEvent = async () => {
     let filter: any;
     if (searchData?.search) {
@@ -67,11 +88,150 @@ const PlacesTab = () => {
     setOpen(true);
   };
 
+  const chooseImportFile = () => {
+    importFileInputRef?.current?.click();
+  };
+
+  const chooseZipFile = () => {
+    importZipFileInputRef?.current?.click();
+  };
+
+  const importEvent = (event: any) => {
+    if (event?.target?.files?.length > 0) {
+      const file = event?.target?.files[0];
+      const fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
+      if (fileExtension === "json" || fileExtension === "csv" || fileExtension === "xlsx") {
+        importContentType(
+          file,
+          "api::visit.visit",
+          [
+            "siteType",
+            "researchValue",
+            "artifacts",
+            "tourismValue",
+            "stateOfConservation",
+            "recommendation",
+            "risk",
+            "period",
+            "assessmentType",
+            "keywords",
+          ],
+          [
+            "id",
+            "asset_config_id",
+            "visit_associates",
+            "remark_headers",
+            "media_associates",
+            "createdAt",
+            "updatedAt",
+          ]
+        );
+      }
+    }
+  };
+
+  const importZipEvent = (event: any) => {
+    if (event?.target?.files?.length > 0) {
+      const file = event?.target?.files[0];
+      const fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
+      importCsvImagesZip(
+        file,
+        "api::visit.visit",
+        [
+          "siteType",
+          "researchValue",
+          "artifacts",
+          "tourismValue",
+          "stateOfConservation",
+          "recommendation",
+          "risk",
+          "period",
+          "keywords",
+        ],
+        [
+          "id",
+          "asset_config_id",
+          "visit_associates",
+          "remark_headers",
+          "media_associates",
+          "createdAt",
+          "updatedAt",
+        ]
+      );
+    }
+  };
+
+  const showResults = checkSearchParameter(searchText, selectedValue) && searchApply;
     return (
         <Box component="div" className={`${styles['main-tab-content']}`}>
             <Box component="div" className={`${styles['utility-bar']}`}>
-                <Box component="div">{meta?.pagination?.total} Results | {totalCounts?.events} Total Events</Box>
+                <Box component="div">{showResults ? `${meta?.pagination?.total} Results | ` : null}{totalCounts?.events} Total Events</Box>
                 <Box component="div" style={{display:"flex"}}>
+                <Button
+            colors={[
+              "transparent",
+              "var(--table-black-text)",
+              "var(--table-black-text)",
+            ]}
+            className={`${styles["export-btn"]}`}
+            label="Import zip"
+            style={{
+              border: "1px solid var(--light-grey-border)",
+              borderRadius: "40px",
+              padding: "0.2em 15px",
+              lineHeight: "2",
+              height: "100%",
+              textAlign: "center",
+            }}
+            onClick={chooseZipFile}
+          />
+          <input
+            type="file"
+            hidden
+            ref={importZipFileInputRef}
+            onChange={importZipEvent}
+          />
+          <Button
+            colors={[
+              "transparent",
+              "var(--table-black-text)",
+              "var(--table-black-text)",
+            ]}
+            className={`${styles["export-btn"]}`}
+            label="Import data only"
+            style={{
+              border: "1px solid var(--light-grey-border)",
+              borderRadius: "40px",
+              padding: "0.2em 15px",
+              lineHeight: "2",
+              height: "100%",
+              textAlign: "center",
+            }}
+            onClick={chooseImportFile}
+          />
+          <input
+            type="file"
+            hidden
+            ref={importFileInputRef}
+            onChange={importEvent}
+          />
+          <Button
+            colors={[
+              "transparent",
+              "var(--table-black-text)",
+              "var(--table-black-text)",
+            ]}
+            className={`${styles["export-btn"]}`}
+            label="Select"
+            style={{
+              border: "1px solid var(--light-grey-border)",
+              borderRadius: "40px",
+              padding: "0.2em 15px",
+              lineHeight: "2",
+              height: "100%",
+              textAlign: "center",
+            }}
+          />
                 <Button
             colors={[
               "transparent",
@@ -109,13 +269,25 @@ const PlacesTab = () => {
           />
                 </Box>
                 <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={DetailsView}
-                    onClick={e => toggleOpenStates([true, false])}
+                    onClick={e => {
+                      toggleOpenStates([true, false])
+                      dispatch(setToggledStates({
+                        states: [true, false],
+                        tabName: EVENTS_TAB_NAME
+                      }))
+                    }}
                     style={{
                         opacity: openStates[0] ? '1' : '0.5'
                     }}
                 />
                 <Box className={`${styles['view-toggler-icon']}`} component="img" alt={""} src={ListViewIcon}
-                    onClick={e => toggleOpenStates([false, true])}
+                    onClick={e => {
+                      toggleOpenStates([false, true])
+                      dispatch(setToggledStates({
+                        states: [false, true],
+                        tabName: EVENTS_TAB_NAME
+                      }))
+                    }}
                     style={{
                         opacity: openStates[1] ? '1' : '0.5'
                     }}
