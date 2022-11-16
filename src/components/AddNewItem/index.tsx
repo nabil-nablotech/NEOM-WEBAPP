@@ -90,6 +90,7 @@ const StepContent = ({
                             {tabName === PLACES_TAB_NAME &&
                                 <>
                                     <TextInput
+                                        lang="en"
                                         className={`${styles["english-name"]}`}
                                         label="Name in English"
                                         name="english-name"
@@ -103,6 +104,7 @@ const StepContent = ({
                                     <TextInput
                                         className={`${styles["arabic-name"]}`}
                                         label="Name in Arabic"
+                                        lang="ar"
                                         name="arabic-name"
                                         value={''}
                                         onChange={(e) => { }}

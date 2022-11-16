@@ -47,6 +47,7 @@ interface TextInputProps {
   maxRows?: number
   endAdornment?: React.ReactNode
   errorField?: string
+  lang?: string
 };
 
 const NeomTextInput = styled(TextField)<TextInputProps>(({ theme }) => ({
@@ -103,6 +104,7 @@ export default function NTextFields(props: TextInputProps) {
     multiline = false,
     endAdornment,
     errorField,
+    lang = 'en',
     ...rest
   } = props;
 
@@ -122,6 +124,7 @@ export default function NTextFields(props: TextInputProps) {
           fullWidth={fullWidth}
           label={showLabel ? label : ''}
           value={value}
+          lang={lang}
           onChange={onChange}
           onBlur={onBlur}
           onFocus={onFocus}
