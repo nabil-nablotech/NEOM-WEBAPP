@@ -19,8 +19,7 @@ import { Media, MediaApi, MediaApi2 } from "../../types/Media";
 import { Options } from "../../types/RefinedSeachTypes";
 import { getRole } from "../storage/storage";
 
-// export const baseUrl = `${process.env.REACT_APP_STRAPI_BASE_URL}`;
-export const baseUrl = `http://localhost:9999`;
+export const baseUrl = `${process.env.REACT_APP_STRAPI_BASE_URL}`;
 // export const baseUrl = `https://877e-59-94-75-53.in.ngrok.io`;
 export const webUrl = `${process.env.REACT_APP_STRAPI_WEB_URL}`;
 export const limit = 10;
