@@ -1,13 +1,15 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { RootState } from "../store"
 import { setHistoryRedux } from "../store/reducers/searchResultsReducer"
+import { tabNameProps } from "../types/SearchResultsTabsProps"
 
 export const useHistory = () => {
 
     const [historyStack, setHistoryStack] = useState<Array<string> | []>([])
     const { history } = useSelector((state: RootState) => state.searchResults);
+    let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -40,7 +42,11 @@ export const useHistory = () => {
 
             if (lastEntry) {
                 navigate(lastEntry, { replace: true })
+            } else {
+                if (tabName) navigate(`/search-results/${tabName}`, { replace: true })
             }
+        } else {
+            if (tabName) navigate(`/search-results/${tabName}`, { replace: true })
         }
         dispatch(setHistoryRedux(newState))
 
