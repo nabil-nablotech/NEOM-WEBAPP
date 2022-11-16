@@ -29,6 +29,7 @@ import useLibrary from "../../hooks/useLibrary";
 import useMedia from "../../hooks/useMedia";
 import { ConfirmationModal } from "../ConfirmationModal";
 import { deleteRecord } from "../../api/delete";
+import iconDownload from "../../assets/images/icon-button-settings.png"
 
 /** Component for top-right header icons */
 function UserMenuComponent({
@@ -65,6 +66,10 @@ function UserMenuComponent({
     // setAnchorElSettings(event.currentTarget);
     navigate("/user-management");
   };
+  const handleDownloadClick = (event: React.MouseEvent<HTMLImageElement>) => {
+    navigate("/download");
+  };
+  
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -159,17 +164,7 @@ function UserMenuComponent({
           }
         </Box>}
         {admin && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
-        {
-          screen && (screen === 'landing') && <>
-            <DownloadOutlinedIcon sx={{
-              color: '#fff',
-              zIndex: 2,
-              width: '35px',
-              height: '35px',
-              cursor: 'pointer'
-            }}/>
-          </>
-        }
+        {admin && <IconDownload onClick={(e) => handleDownloadClick(e)} src={iconDownload} alt="icon-settings" />}
         <InitialsWrapper
           id="long-button"
           //@ts-ignore
@@ -310,6 +305,12 @@ const IconSettings = styled.img`
   height: 40px;
   // top: 24px;
   // left: 1317px;
+  z-index: 3;
+  cursor: pointer;
+`;
+const IconDownload = styled.img`
+  width: 40px;
+  height: 40px;
   z-index: 3;
   cursor: pointer;
 `;

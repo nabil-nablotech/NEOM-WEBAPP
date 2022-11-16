@@ -9362,9 +9362,9 @@
   "version" "6.12.2"
 
 "react-pdf@^6.0.2":
-  "integrity" "sha512-FU9mjpCkRzPR9Iq2/teIBYTPS6lh+w7fxEpZOTZevmeNRmRBrvPf5RWm9YL3Mih4yjPbkKIcL4h9KQAB2Or10w=="
-  "resolved" "https://registry.npmjs.org/react-pdf/-/react-pdf-6.0.2.tgz"
-  "version" "6.0.2"
+  "integrity" "sha512-lEm0l/yltgtc3tCfvza5/WzxXdjADOoo6NcMDkQaNWQv2YHt8ZcOeuiOwtSsWVKSiq47zP3JvxmKHIkDpbmusA=="
+  "resolved" "https://registry.npmjs.org/react-pdf/-/react-pdf-6.1.0.tgz"
+  "version" "6.1.0"
   dependencies:
     "@babel/runtime" "^7.0.0"
     "clsx" "^1.2.1"

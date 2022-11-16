@@ -10,6 +10,7 @@ import LandingPage from "../pages/LandingPage";
 import { SetPassword } from "../pages/SetPassword";
 import SearchResults from "../pages/SearchResults";
 import useAuth from "../hooks/useAuth";
+import ExportDownload from "../pages/ExportDownload";
 
 export const Navigation = () => {
   useAuth();
@@ -25,6 +26,11 @@ export const Navigation = () => {
         <AdminRoute path={"/user-management"} component={UserManagement} />
       ),
       // element: <PublicRoute component={UserManagement} />
+    },{
+      path: "/download",
+      element: (
+        <AdminRoute path={"/download"} component={ExportDownload} />
+      ),
     },
     {
       path: "/login",
