@@ -13,7 +13,7 @@ import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setActiveMediaItemIndex, setActiveMediaItem, toggleDeleteConfirmationWindowOpen, setDeleteItemType, setDeletePayload } from '../../../../store/reducers/searchResultsReducer';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import RenderFileData from '../../../RenderFileData';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
 import ModelViewer from '../../../Model';
@@ -29,6 +29,7 @@ import parse from 'html-react-parser';
 import { MediaApi } from '../../../../types/Media';
 import MapView from '../../GoogleMap/MapView';
 import RenderValueWithDefault from '../../../NoDataScreens/DefaultText';
+import { useHistory } from '../../../../hooks/useHistory';
 
 
 const TextualContent = ({
@@ -131,7 +132,7 @@ const MediaDetailsPage = ({
     const [isFilter, setIsFilter] = useState(null)
 
     const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const { navigateTo } = useHistory()
 
     const { data: mediaDetails, setEdit } = useMediaDetails();
 
@@ -177,7 +178,8 @@ const MediaDetailsPage = ({
                 newIndex = newIndex + 1
                 dispatch(setActiveMediaItem(media[newIndex]))
                 dispatch(setActiveMediaItemIndex(newIndex))
-                navigate(`/search-results/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                // navigate(`/search-results/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                navigateTo(`/search-results/Media/${media[newIndex].attributes.uniqueId}`)
             }
 
         }
@@ -188,7 +190,9 @@ const MediaDetailsPage = ({
 
                 dispatch(setActiveMediaItem(media[newIndex]))
                 dispatch(setActiveMediaItemIndex(newIndex))
-                navigate(`/search-results/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                // navigate(`/search-results/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                navigateTo(`/search-results/Media/${media[newIndex].attributes.uniqueId}`)
+
             }
 
         }
@@ -501,8 +505,8 @@ export const MediaDetailsModal = () => {
 
     const location = useLocation()
 
-    const navigate = useNavigate()
     const dispatch = useDispatch();
+    const {goBack} = useHistory();
 
     // const TotalMediaCount= (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates: 0
     const TotalMediaCount = (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates
@@ -514,7 +518,8 @@ export const MediaDetailsModal = () => {
         setModalOpen(false)
         dispatch(setActiveMediaItem(null))
         dispatch(setActiveMediaItemIndex(0))
-        navigate(`/search-results/Media`, { replace: true, state: null })
+        // navigate(`/search-results/Media`, { replace: true, state: null })
+        goBack()
     }
 
     const showVisitCount = (location.state && location.state.from === 'events') && activeMediaItem
@@ -547,7 +552,8 @@ export const MediaDetailsModal = () => {
                                 /** resetters */
                                 dispatch(setActiveMediaItem(null))
                                 dispatch(setActiveMediaItemIndex(0))
-                                navigate(`/search-results/${tabName}`, { replace: true })
+                                // navigate(`/search-results/${tabName}`, { replace: true })
+                                goBack()
                             }}
                         >
                             Back

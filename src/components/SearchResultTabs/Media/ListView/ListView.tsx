@@ -21,6 +21,7 @@ import { useMediaQuery } from 'react-responsive'
 
 import { setActiveMediaItem, setActiveMediaItemIndex, setSelectedCardIndex } from '../../../../store/reducers/searchResultsReducer';
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
+import { useHistory } from "../../../../hooks/useHistory";
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -135,7 +136,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
 const ListView = (props: MediaProps) => {
   const { data, hasMoreData, fetchData, loading, setEdit } = props;
   const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
-
+  const { navigateTo } = useHistory()
   const tableHeaderJson: ColumnsType<any> = [
     {
       title: "Image",
@@ -262,7 +263,8 @@ const ListView = (props: MediaProps) => {
                 if (typeof rowIndex === "number") {
                   dispatch(setActiveMediaItem(record))
                   dispatch(setActiveMediaItemIndex(rowIndex))
-                  navigate(`/search-results/Media/${record.attributes.uniqueId}`, { replace: true })
+                  // navigate(`/search-results/Media/${record.attributes.uniqueId}`, { replace: true })
+                  navigateTo(`/search-results/Media/${record.attributes.uniqueId}`)
                 }
               },
             };
