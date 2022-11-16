@@ -19,7 +19,7 @@ import {
   setDeletePayload,
   toggleDeleteConfirmationWindowOpen,
 } from "../../../../store/reducers/searchResultsReducer";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import useMediaDetails from "../../../../hooks/useMediaDetails";
 import Loader from "../../../Common/Loader";
@@ -31,11 +31,9 @@ import {
   itemAddEditAccess,
   itemDeleteAccess,
   LIBRARY_TAB_NAME,
-  MEDIA_TAB_NAME,
   MEDIA_TYPE_IMAGE,
 } from "../../../../utils/services/helpers";
 import dayjs from "dayjs";
-import { Place } from "../../../../types/Place";
 import BlankDocImage from "../../../../assets/images/searchResults/BlankDocument.svg";
 import type { UploadProps } from "antd";
 import { Upload } from "antd";
@@ -356,7 +354,6 @@ export const LibraryDetailsModal = () => {
   );
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { goBack } = useHistory()
 
