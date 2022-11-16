@@ -120,11 +120,18 @@ const LibraryDetailsPage = ({
               <>
                 {libraryDetails.object && (
                   <Box
+                  className={`${styles["image-bg"]}`}
+                  component="div"
+                >
+                  <Box
                     className={`${styles["image"]}`}
                     component="img"
                     alt={""}
                     src={`${baseUrl}${libraryDetails?.object?.url}`}
                   />
+                  <a className={`${styles['anchor']}`} href={`${baseUrl}${libraryDetails.object.url}`} target="_blank" 
+                    rel="noreferrer">{libraryDetails.object.name}</a>
+                  </Box>
                 )}
               </>
             ) : libraryDetails?.object?.url &&
@@ -138,13 +145,22 @@ const LibraryDetailsPage = ({
                                         style={{
                                             width: '100%'
                                         }}
+                                      
                                     /> */}
+                                    <Box
+                  className={`${styles["image-bg"]}`}
+                  component="div"
+                  display="grid"
+                >
                 <Box
                   component="img"
                   src={BlankDocImage}
                   alt={""}
-                  className={`${styles["blank-doc-image"]}`}
+                  className={`${styles["image"]}`}
                 />
+                <a href={`${baseUrl}${libraryDetails.object.url}`} target="_blank" 
+                    rel="noreferrer">{libraryDetails.object.name}</a>
+                    </Box>
                 {/* <div
                                         style={{
                                             height: '750px',
@@ -168,14 +184,20 @@ const LibraryDetailsPage = ({
                                     </Upload> */}
               </>
             ) : (
-              <>
+              <Box
+                  className={`${styles["blank-doc-image"]}`}
+                  component="div"
+                  display="grid"
+                >
                 <Box
                   component="img"
                   src={BlankDocImage}
                   alt={""}
-                  className={`${styles["blank-doc-image"]}`}
+                  className={`${styles['image']}`}
                 />
-              </>
+                <a className={`${styles['anchor']}`} href={`${baseUrl}${libraryDetails.object.url}`} target="_blank" 
+                    rel="noreferrer">{libraryDetails.object.name}</a>
+                    </Box>
             )}
           </Box>
         </Box>
