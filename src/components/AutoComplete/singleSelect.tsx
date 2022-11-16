@@ -48,7 +48,12 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
           />
         )}
         sx={{
-          ...selectStylesSx
+          ...selectStylesSx,
+          '& .MuiFormControl-root' : {
+            border: errorField ? '1px solid var(--orange-shade)' : 'inherit',
+            borderRadius: errorField ? '4px' : 'inherit',
+            
+          },
         }}
         getOptionLabel={(option: any) => option?.label || ''}
         renderOption={renderOption}

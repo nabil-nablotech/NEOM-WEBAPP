@@ -401,8 +401,9 @@ allowFullScreen
         {activeStep === 1 && (
           <>
             <TextInput
+              required
               className={`${styles["english-name"]}`}
-              label="Title*"
+              label="Title"
               name="title"
               value={formik.values.title}
               onChange={(e) => {
@@ -412,6 +413,11 @@ allowFullScreen
                 ...textInputSxStyles,
               }}
               formControlSx={commonFormControlSxStyles}
+              errorField={
+                formik.errors.title ?
+                  `${formik.errors.title}`
+                  : ''
+              }
             />
             <TextInput
               className={`${styles["site-description"]}`}

@@ -135,12 +135,15 @@ export default function NTextFields(props: TextInputProps) {
           sx={{
             ...sx,
             ...formControlSx,
-            '& .MuiInputBase-root.MuiOutlinedInput-root' : {
-              border: errorField ? '1px solid var(--orange-shade)' : 'inherit'
+            '& .MuiInputBase-root.MuiOutlinedInput-root input' : {
+              border: errorField ? '1px solid var(--orange-shade)' : 'inherit',
+              borderRadius: errorField ? '4px' : 'inherit',
+              
             },
-            // '& .MuiFormLabel-root.MuiInputLabel-root' : {
-            //   color: errorField ? 'var(--orange-shade)' : 'inherit'
-            // }
+            '& .MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-multiline' : errorField ? {
+              border: '1px solid var(--orange-shade)' ,
+              borderRadius: '4px' ,
+            } : {},
           }}
           InputProps={{
             ...InputProps
