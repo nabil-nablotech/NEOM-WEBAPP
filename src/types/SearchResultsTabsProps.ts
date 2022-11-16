@@ -133,7 +133,8 @@ export type SearchResultsState2 = {
   deleteItemSuccess: boolean,
   isDeleteUserWindowOpen: DeleteUserReduxPayload
   deleteUserSuccess: boolean,
-  deletePayload: DeletePayloadType
+  deletePayload: DeletePayloadType,
+  history: Array<string> | []
 };
 
 export type DeletePayloadType = {

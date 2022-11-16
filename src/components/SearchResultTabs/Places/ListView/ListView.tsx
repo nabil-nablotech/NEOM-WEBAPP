@@ -17,6 +17,7 @@ import { modifyAssociatedPlaces, setSelectedCardIndex } from "../../../../store/
 import MoreOptionsComponent from './MoreOption';
 import { InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
 import { useNavigate } from "react-router-dom";
+import { useHistory } from "../../../../hooks/useHistory";
  
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -141,6 +142,7 @@ const ListView = (props: PlacesProps) => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate();
+  const { navigateTo } = useHistory();
 
   const { isAssociationsStepOpen, associatedPlaces } = useSelector(
     (state: RootState) => state.searchResults
@@ -361,7 +363,8 @@ const ListView = (props: PlacesProps) => {
                             handleAttachClick(event, record)
                           } else {
                             dispatch(setSelectedCardIndex(rowIndex || record.id))
-                            navigate(`/search-results/Places/${record.attributes.uniqueId}`, { replace: true })
+                            // navigate(`/search-results/Places/${record.attributes.uniqueId}`, { replace: true })
+                            navigateTo(`/search-results/Places/${record.attributes.uniqueId}`)
                           }
                         }, // click row
                       };

@@ -12,10 +12,11 @@ import { baseUrl, detectMediaTypeFromMediaAssociate, isRecordHavingAssociations,
 import usePlaceDetails from "../../../hooks/usePlaceDetails";
 import Loader from "../../Common/Loader";
 import useEventDetails from "../../../hooks/useEventDetails";
+import { useHistory } from "../../../hooks/useHistory";
 
 const GalleryView = () => {
     const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const { navigateTo } = useHistory()
     const { media } = useSelector(
         (state: RootState) => state.searchResults
     );
@@ -109,7 +110,8 @@ const GalleryView = () => {
                                 })
                                 dispatch(setActiveMediaItem(respMediaItemObj))
                                 dispatch(setActiveMediaItemIndex(respMediaItemIndex))
-                                navigate(`/search-results/Media/${itemObj.media_unique_id.uniqueId}`, { replace: true })
+                                // navigate(`/search-results/Media/${itemObj.media_unique_id.uniqueId}`, { replace: true })
+                                navigateTo(`/search-results/Media/${itemObj.media_unique_id.uniqueId}`)
                             }}
                         >
                             {/* to-do: api based flag to show featured */}

@@ -61,6 +61,7 @@ const initialState: SearchResultsState2 = {
   },
   deleteUserSuccess: false,
   deletePayload: null,
+  history: []
 };
 
 export const searchResultsSlice = createSlice({
@@ -290,6 +291,9 @@ export const searchResultsSlice = createSlice({
     setDeletePayload: (state, action: PayloadAction<DeletePayloadType>) => {
       state.deletePayload = action.payload;
     },
+    setHistoryRedux: (state, action: PayloadAction<Array<string> | []>) => {
+      state.history = action.payload;
+    },
   },
 });
 
@@ -339,7 +343,8 @@ export const {
   setDeleteItemType,
   toggleDeleteUserWindowOpen,
   toggleDeleteUserSuccess,
-  setDeletePayload
+  setDeletePayload,
+  setHistoryRedux
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

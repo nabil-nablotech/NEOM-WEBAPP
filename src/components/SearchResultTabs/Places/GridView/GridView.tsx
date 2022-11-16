@@ -13,6 +13,7 @@ import {formatDateTime} from '../../../../utils/services/helpers';
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import { Media } from "../../../../types/Media";
 import { Event } from "../../../../types/Event";
+import { useHistory } from "../../../../hooks/useHistory";
 
 export type PlacesProps = {
   data: Place[];
@@ -29,6 +30,7 @@ const GridView = (props: PlacesProps) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { navigateTo } = useHistory();
 
   if (!data) {
     return <h1>loadig....</h1>
@@ -67,7 +69,8 @@ const GridView = (props: PlacesProps) => {
                 className={`${gridStyles[""]}`}
                 onClick={(e) => {
                   dispatch(setSelectedCardIndex(index));
-                  navigate(`/search-results/Places/${item.attributes.uniqueId}`, {replace: true})
+                  // navigate(`/search-results/Places/${item.attributes.uniqueId}`, {replace: true})
+                  navigateTo(`/search-results/Places/${item.attributes.uniqueId}`)
                 }}
               >
                 <Card

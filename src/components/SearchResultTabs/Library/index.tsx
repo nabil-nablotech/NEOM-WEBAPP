@@ -29,6 +29,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ExportModal from "../../ExportModal";
 import { useMediaQuery } from "react-responsive";
+import { useHistory } from "../../../hooks/useHistory";
 
 let viewWidths = ["20vw", "20vw", "20vw", "20vw", "5vw"];
 
@@ -145,7 +146,7 @@ const LibraryTab = () => {
   });
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { navigateTo } = useHistory();
 
   const { fetchLibraryItems, hasMoreData, loading, setEdit, searchData } =
     useLibrary();
@@ -406,9 +407,12 @@ const LibraryTab = () => {
               return {
                 onClick: (event: React.MouseEvent<HTMLElement>) => {
                   dispatch(setSelectedCardIndex(rowIndex || record.id));
-                  navigate(
-                    `/search-results/Library/${record.attributes.uniqueId}`,
-                    { replace: true }
+                  // navigate(
+                  //   `/search-results/Library/${record.attributes.uniqueId}`,
+                  //   { replace: true }
+                  // );
+                  navigateTo(
+                    `/search-results/Library/${record.attributes.uniqueId}`
                   );
                 },
               };
