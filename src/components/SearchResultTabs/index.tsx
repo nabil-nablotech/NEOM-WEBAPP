@@ -219,6 +219,10 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
 
       selectedValueCopy[name] = date;
       dispatch(setSelectedValue(selectedValueCopy));
+    }else if (name === "clearDate") {
+      selectedValueCopy['startDate'] = undefined;
+      selectedValueCopy['endDate'] = undefined;
+      dispatch(setSelectedValue(selectedValueCopy));
     }
   }
 

@@ -213,7 +213,6 @@ const StepContent = ({
               className={`${styles["latitude"]}`}
               label="Latitude"
               name="latitude"
-              type="number"
               value={formik.values.latitude}
               onChange={(e) => {
                 if (validateNumber(e.target.value)) {
@@ -229,7 +228,6 @@ const StepContent = ({
               className={`${styles["longitude"]}`}
               label="Longitude"
               name="longitude"
-              type="number"
               value={formik.values.longitude}
               onChange={(e) => {
                 if (validateNumber(e.target.value)) {
