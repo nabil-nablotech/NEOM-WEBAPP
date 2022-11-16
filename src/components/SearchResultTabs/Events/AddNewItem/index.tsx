@@ -209,7 +209,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
     }
 
     if (!values.visitNumber) {
-      currentError[1] = "Visit Number is required";
+      currentError[1] = "Event Number is required";
     }
 
     if (currentError.length === 0) {
