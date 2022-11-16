@@ -430,6 +430,9 @@ export const isEmptyValue: isEmptyType = (value: any) => {
   if (typeof value === "object" && Array.isArray(value) && value.length === 1)
     return isEmptyValue(value[0]);
 
+  if (typeof value === "object" && !Array.isArray(value) && Object.keys(value).length === 0)
+    return isEmptyValue(value[0]);
+
   return false;
 };
 
