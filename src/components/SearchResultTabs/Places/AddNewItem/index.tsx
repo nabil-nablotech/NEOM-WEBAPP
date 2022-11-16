@@ -406,8 +406,7 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
                 return (
                   <Step key={label} {...stepProps}
                     sx={{
-                      cursor: (activeStep !== index) &&
-                        !(formik.values.placeNumber.length > 0) ? 'not-allowed' : 'inherit',
+                      cursor: 'pointer'
                     }}
                   >
                     <StepButton color="inherit"
@@ -418,7 +417,7 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
                         } else {
                           handleBack()
                         }
-                        
+
                       }}
                       >
                       <StepLabel

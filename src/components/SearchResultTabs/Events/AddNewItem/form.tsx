@@ -111,6 +111,11 @@ const StepContent = ({
                 </Box>
               )}
               selectStylesSx={commonFormControlSxStyles}
+              errorField={
+                formik.errors.place ?
+                  `${formik.errors.place}`
+                  : ''
+              }
             />
             <TextInput
               className={`${styles["visit-number"]}`}
@@ -129,6 +134,11 @@ const StepContent = ({
                 },
               }}
               formControlSx={commonFormControlSxStyles}
+              errorField={
+                formik.errors.visitNumber ?
+                  `${formik.errors.visitNumber}`
+                  : ''
+              }
             />
 
             <ReactDatePicker
