@@ -416,7 +416,7 @@ const PlaceDetailsPage = () => {
   };
 
   useEffect(() => {
-    if (placeData && placeData?.siteDescription?.length < 500) {
+    if (placeData && placeData?.siteDescription?.length < 100) {
       toggleSeeMoreHidden(true);
     }
 
@@ -836,6 +836,13 @@ const PlaceDetailsPage = () => {
                       </Box>
                     </Grid>
                 )}
+                {!placeNameEnglish && !placeNameArabic && (
+                    <Grid item>
+                      <Box component="div" className={`${styles["item-name"]}`}>
+                        {placeNumber}
+                      </Box>
+                    </Grid>
+                )}
                 {placeNameArabic && (
                       <Grid item>
                         <Box
@@ -847,9 +854,9 @@ const PlaceDetailsPage = () => {
                       </Grid>
                     )}
                   </Grid>
-                <Box component="div" className={`${styles["item-number"]}`}>
+                {(placeNameEnglish || placeNameArabic) && <Box component="div" className={`${styles["item-number"]}`}>
                   {placeNumber}
-                </Box>
+                </Box>}
                 <Box component="div" className={`${styles["item-number"]}`}>
                   ID {placeData.id}
                 </Box>
