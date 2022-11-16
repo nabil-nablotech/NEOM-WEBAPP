@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useMutation } from "react-query";
+import {useMutation as apolloMutation} from '@apollo/client';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useNavigation, useParams } from "react-router-dom";
 import { mediaDetails, placeDetails, eventDetails, libraryDetails } from "../api/details";
@@ -9,9 +10,10 @@ import { PLACES_TAB_NAME } from "../utils/services/helpers";
 import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation, toggleEditConfirmationWindowOpen, toggleConfirmOpenEdit, setEditPayload } from "../store/reducers/searchResultsReducer";
 import { RootState } from "../store";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
-import { PlaceApi, Place } from "../types/Place";
+import { PlaceApi, Place, MediaAssociateObj } from "../types/Place";
 import { Media, MediaApi } from "../types/Media";
-import { Event } from "../types/Event";
+import { graphQlHeaders } from "../utils/services/interceptor";
+import { updateMedia } from "../query/media";
 
 const usePlaceDetails = () => {
   const { uniqueId , tabName} = useParams<{ uniqueId: string, tabName: tabNameProps }>();
@@ -36,6 +38,11 @@ const usePlaceDetails = () => {
   const { isLoading, error, data, mutate: fetchPlaceDetails } = useMutation('place-details', placeDetails, {
     retry: false
   });
+  const [updateMediaMutation] = apolloMutation(updateMedia, {context: graphQlHeaders().context, onCompleted: () => {
+    if (uniqueId) {
+      // fetchPlaceDetails(uniqueId);
+    }
+  }});
 
   useEffect(() => {
 
@@ -122,11 +129,33 @@ const usePlaceDetails = () => {
     }
   };
 
+  const setFeaturedMedia = async (payload: any) => {
+    const featuredMedia: MediaAssociateObj[] = data?.mediaItems.filter(x => x.media_unique_id.featuredImage);
+    if (featuredMedia?.length > 0) {
+      await updateMediaMutation({
+        variables: {
+          featuredImage: false,
+          id: featuredMedia[0].media_unique_id.id
+        }
+      })
+    }
+    await updateMediaMutation({
+      variables: {
+        featuredImage: !payload.media_unique_id.featuredImage,
+        id: payload.media_unique_id.id
+      }
+    });
+    if (uniqueId) {
+      await fetchPlaceDetails(uniqueId);
+    }
+  }
+
   return {
     loading: isLoading,
     error,
     data,
-    setEdit
+    setEdit,
+    setFeaturedMedia
   };
 };
 

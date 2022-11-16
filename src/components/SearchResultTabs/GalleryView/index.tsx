@@ -20,8 +20,8 @@ const GalleryView = () => {
     const { media } = useSelector(
         (state: RootState) => state.searchResults
     );
-    const { loading: placeLoading, data: placeData } = usePlaceDetails();
-    const { setEdit, setFeaturedMedia } = useEventDetails();
+    const { loading: placeLoading, data: placeData, setFeaturedMedia } = usePlaceDetails();
+    const { setEdit } = useEventDetails();
     
     const menuItems = [
         {

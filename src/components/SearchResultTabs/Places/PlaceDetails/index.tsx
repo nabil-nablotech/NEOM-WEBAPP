@@ -198,8 +198,8 @@ const PlaceDetailsPage = () => {
       title: "NAME",
       key: "attributes",
       dataIndex: "media_unique_id",
-      sorter: (a, b) => a?.fileName?.localeCompare(b?.fileName),
-      sortDirections: ["ascend"],
+      sorter: (a, b) =>
+        a?.attributes?.title?.localeCompare(b?.attributes?.title),
       defaultSortOrder: "ascend",
       className: "name-column",
       render: (value: any, record: any) => (
@@ -332,7 +332,6 @@ const PlaceDetailsPage = () => {
       key: "visit_unique_id",
       dataIndex: "visit_unique_id",
       className: "cell-new",
-      // render: (value: any, index: any) => "New",
       render: (value: any, index: any) => (
         <>
         {checkIsNew(value?.visitDate) ? <div className={`${gridStyles["card-new-flag"]}`}>
@@ -350,12 +349,14 @@ const PlaceDetailsPage = () => {
       title: "Date of Event",
       key: "visit_unique_id",
       dataIndex: "visit_unique_id",
-      // to-do
-      // Events will be sorted by Date of Event newest to oldest
+      defaultSortOrder: "descend",
+      sorter: (a, b) => {
+        const first = (new Date(a?.visit_unique_id?.visitDate)).getTime()
+        const second = (new Date(b?.visit_unique_id?.visitDate)).getTime()
+        console.log('hex: ', first, second)
 
-      // sorter: (a: { title: string }, b: { title: any }) => {
-      //     return a.title?.localeCompare(b.title);
-      //   },
+        return first < second ? 0 : 1
+      },
       render: (value, index) =>
         value?.visitDate
           ? format(
@@ -1173,10 +1174,7 @@ const PlaceDetailsPage = () => {
                       URL
                     </Grid>
                     <Grid item sm={7} md={8}>
-                      {/* to-do */}
-                      {/* When clicking on the URL link, the link should be copied to the clip board. 
-                                            A success message will be displayed with the message “URL copied to clipboard” */}
-                      <Box
+                     <Box
                         component="div"
                         style={{
                           cursor: "pointer",
