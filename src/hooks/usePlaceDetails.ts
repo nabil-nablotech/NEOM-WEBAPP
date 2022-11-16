@@ -14,7 +14,6 @@ import { PlaceApi, Place, MediaAssociateObj } from "../types/Place";
 import { Media, MediaApi } from "../types/Media";
 import { graphQlHeaders } from "../utils/services/interceptor";
 import { updateMedia } from "../query/media";
-import { AnyARecord } from "dns";
 
 const usePlaceDetails = () => {
   const { uniqueId , tabName} = useParams<{ uniqueId: string, tabName: tabNameProps }>();
