@@ -231,6 +231,8 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
           }
           formikObject.setErrors(obj)
         }
+      } else {
+        handleNext(null, values);
       }
     }
 

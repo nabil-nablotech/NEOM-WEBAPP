@@ -298,6 +298,8 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
     } else {
       if (activeStep === 0) {
         formikObject.setErrors({ placeNumber: "Place Number is required" })
+      } else {
+        handleNext(null, values);
       }
     }
 
