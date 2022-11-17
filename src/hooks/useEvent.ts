@@ -261,8 +261,10 @@ const useEvent = () => {
   }
 
   useEffect(() => {
-    const getData = setTimeout(() => filterPlaces(), 1000);
-    return () => clearTimeout(getData)
+    if (searchValue.length > 2) {
+      const getData = setTimeout(() => filterPlaces(), 1000);
+      return () => clearTimeout(getData)
+    }
   }, [searchValue])
 
   const filterPlaces = () => {
