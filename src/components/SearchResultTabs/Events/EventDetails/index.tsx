@@ -518,6 +518,7 @@ const EventDetailsPage = () => {
                           placeNumber:
                             eventDetails.visit_associate?.place_unique_id
                               .placeNumber ?? "",
+                          keywords: eventDetails.keywords ? eventDetails.keywords : []
                         };
 
                         dispatch(

@@ -11,6 +11,7 @@ import { RootState } from "../../store";
 import Loader from "../Common/Loader";
 import { getKeywords } from "../../api/keywords";
 import { dbIdTypes } from "../../types/Place";
+import { InventoryAssociationType, InventoryAssociationType_Event } from "../../types/SearchResultsTabsProps";
 
 
 const textInputSxStyles = {
@@ -119,7 +120,7 @@ export const StepperKeywordsComponent = ({
         text: "",
         suggestions: []
     });
-    const { addNewItemWindowType } = useSelector((state: RootState) => state.searchResults);
+    const { addNewItemWindowType, associatedPlaces, associatedEvents } = useSelector((state: RootState) => state.searchResults);
     const [currentlyShownList, setCurrentlyShownList] = useState<string[] | []>([])
     const [preloadedKeywordsList, setPreloadedKeywordsList] = useState<string[] | []>([])
     const [selectAll, setSelectAll] = useState<boolean>(false)
@@ -170,9 +171,23 @@ export const StepperKeywordsComponent = ({
 
         const res = await getCall()
 
-        if (res) {
-            setCurrentlyShownList(createSelectedFirstList([...res]))
-            setPreloadedKeywordsList([...res])
+        let displayedKeywords = [...res]
+
+        if(associatedPlaces && (associatedPlaces.length > 0)) {
+            associatedPlaces.map((item: InventoryAssociationType) => {
+                displayedKeywords = [...displayedKeywords, ...item.keywords]
+            })
+        }
+        if(associatedEvents && (associatedEvents.length > 0)) {
+            associatedEvents.map((item: InventoryAssociationType_Event) => {
+                displayedKeywords = [...displayedKeywords, ...item.keywords]
+            })
+        }
+
+        if (res || displayedKeywords) {
+            setCurrentlyShownList(createSelectedFirstList([...displayedKeywords]))
+            setPreloadedKeywordsList([...displayedKeywords])
+            setShowList([...displayedKeywords])
         }
     }
 

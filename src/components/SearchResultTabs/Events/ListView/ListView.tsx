@@ -238,6 +238,7 @@ const ListView = (props: EventsProps) => {
             placeNameEnglish: record.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish,
             placeNameArabic: record.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameArabic,
             placeNumber: record.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNumber,
+            keywords: record.attributes.keywords ? record.attributes.keywords : []
         }
         dispatch(modifyAssociatedEvents({
             newItem: data,

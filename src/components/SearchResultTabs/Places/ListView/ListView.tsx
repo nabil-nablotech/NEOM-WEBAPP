@@ -245,6 +245,7 @@ const ListView = (props: PlacesProps) => {
       placeNameEnglish: record.attributes.placeNameEnglish,
       placeNameArabic: record.attributes.placeNameArabic,
       placeNumber: record.attributes.placeNumber,
+      keywords: record.attributes.keywords ? [...record.attributes.keywords] : []
     }
     dispatch(modifyAssociatedPlaces({
       newItem: data,
