@@ -17,15 +17,22 @@ import { InventoryAssociationType_Event } from '../../../../types/SearchResultsT
 import DetachedIcon from '../../../Icons/DetachedIcon';
 import { RootState } from '../../../../store';
 import { useSelector } from 'react-redux';
+import { useHistory } from '../../../../hooks/useHistory';
 
 const StyledTableWrapper = styled(StyledAntTable)`
-td
-{
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+    td
+    {
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    td.cell-name {
+        max-width: 250px;
+    }
+    td.cell-conserve {
+        max-width: 80px;
+    }
     .ant-table-container {
     }
     .ant-table {
@@ -53,7 +60,7 @@ td
         min-width: 18ch !important;
     }
     .cell-conserve {
-        min-width: 25ch !important;
+        min-width: 20ch !important;
     }
     .ant-table-cell.more-menu-ant-cell {
         vertical-align:middle;
@@ -113,7 +120,7 @@ td
 
 const ListView = (props: EventsProps) => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const { navigateTo } = useHistory();
 
     const { isAssociationsStepOpen, associatedEvents, events } = useSelector(
         (state: RootState) => state.searchResults
@@ -122,30 +129,49 @@ const ListView = (props: EventsProps) => {
       const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([
         {
             title: "NAME",
-            key: `attributes`,
+            key: `attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish`,
             dataIndex: "attributes",
             className: 'cell-name',
-            // sorter: (a: { attributes: {visit_associate: VisitAssociate} }, b: { attributes: {visit_associate: VisitAssociate} }) => {
-            //     return a.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish.localeCompare(b.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish);
-            // },
-            // sortDirections: ["ascend"],
-            // defaultSortOrder: "ascend",
+              sorter: {
+                  compare: (a: Event, b: Event) => {
+                      return a.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish.localeCompare(b.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish);
+                  },
+                  multiple: 2,
+              },
+              width: 110,
             render: (value: any, index: number) => {
-              return `${value.visit_associate?.data?.attributes?.place_unique_id.data?.attributes.placeNameEnglish}${value.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic || ''}`          
-            }
+              return `${value.visit_associate?.data?.attributes?.place_unique_id.data?.attributes.placeNameEnglish} ${value.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic || ''}`          
+            },
+            filterMultiple: true
         },
         {
             title: "NUMBER",
-            key: `attributes`,
+            key: `attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNumber`,
             dataIndex: "attributes",
             className: 'cell-number',
-            render: (value: any, index: number) => value.visit_associate.data?.attributes.place_unique_id.data?.attributes.placeNumber || ''
+            sorter: {
+                compare: (a: Event, b: Event) => {
+                    return a?.attributes?.visit_associate?.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber.localeCompare(b?.attributes?.visit_associate?.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber);
+                },
+                multiple: 1,
+            },
+            render: (value: any, index: number) => value.visit_associate.data?.attributes.place_unique_id.data?.attributes.placeNumber || '',
+            filterMultiple: true
         },
         {
-            title: "TYPE",
+            title: "EVENT NUMBER",
             key: `attributes`,
             dataIndex: "attributes",
-            render: (value: any, index: number) => value.visit_associate.data?.attributes.place_unique_id.data?.attributes.siteType.map((x: string) => `${x};`) || ''
+            width: 80,
+            render: (value: any, index: number) => {
+                return `Event ${value.visitNumber}`
+            }
+        },
+        {
+            title: "SITE TYPE",
+            key: `attributes`,
+            dataIndex: "attributes",
+            render: (value: any, index: number) => value.visit_associate.data?.attributes.place_unique_id.data?.attributes.siteType.join('; ') || ''
         },
         {
             title: "RESEARCH VALUE",
@@ -153,7 +179,7 @@ const ListView = (props: EventsProps) => {
             dataIndex: "attributes",
             className: 'cell-research',
             render: (value: any, index: number) => {
-                return value?.researchValue.length > 0 ? value?.researchValue?.map((x: string) => `${x};`) : '';
+                return value?.researchValue.length > 0 ? value?.researchValue.join('; ') : ''
             },
         },
         {
@@ -161,7 +187,7 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-tourism',
-            render: (value: any, index: number) => value?.tourismValue.length > 0 ? value?.tourismValue?.map((x: string) => `${x};`) : ''
+            render: (value: any, index: number) => value?.tourismValue.length > 0 ? value?.tourismValue.join('; ') : ''
             // render: (value: any, index: number) => "Temp"
         },
         {
@@ -169,14 +195,14 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-conserve',
-            render: (value: any, index: number) => value?.stateOfConservation.length > 0 ? value?.stateOfConservation?.map((x: string) => `${x};`) : ''
+            render: (value: any, index: number) => value?.stateOfConservation.length > 0 ? value?.stateOfConservation.join('; ') : ''
         },
         {
             title: "RECOMMENDATION",
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-recommend',
-            render: (value: any, index: number) => value?.recommendation.length > 0 ? value?.recommendation?.map((x: string) => `${x || ''};`) : ''
+            render: (value: any, index: number) => value?.recommendation.length > 0 ? value?.recommendation.join('; ') : ''
             // render: (value: any, index: number) => "temp"
         },
         {
@@ -184,13 +210,13 @@ const ListView = (props: EventsProps) => {
             key: `attributes`,
             dataIndex: "attributes",
             className: 'cell-period',
-            render: (value: any, index: number) => value?.period.length > 0 ? value?.period?.map((x: string) => `${x};`) : ''
+            render: (value: any, index: number) => value?.period.length > 0 ? value?.period.join('; ') : ''
         },
         {
             title: "RISK",
             key: `attributes`,
             dataIndex: "attributes",
-            render: (value: any, index: number) => value?.risk?.length > 0 ? value?.risk?.map((x: string) => `${x};`) : ''
+            render: (value: any, index: number) => value?.risk?.length > 0 ? value?.risk.join('; ') : ''
         },
         {
             title: "",
@@ -212,6 +238,7 @@ const ListView = (props: EventsProps) => {
             placeNameEnglish: record.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish,
             placeNameArabic: record.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameArabic,
             placeNumber: record.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNumber,
+            keywords: record.attributes.keywords ? record.attributes.keywords : []
         }
         dispatch(modifyAssociatedEvents({
             newItem: data,
@@ -323,7 +350,8 @@ const ListView = (props: EventsProps) => {
                                 handleAttachClick(event, record)
                             } else {
                                 dispatch(setSelectedCardIndex(rowIndex || record.id))
-                                navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
+                                // navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
+                                navigateTo(`/search-results/Events/${record.attributes.uniqueId}`)
                             }
                           }, // click row
                         };

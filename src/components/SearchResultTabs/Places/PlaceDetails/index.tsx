@@ -28,10 +28,9 @@ import {
   NO_TEXT,
   shallRenderMedia,
   checkIsNew,
-  isRecordAttached,
   isPlaceDetailAttached,
   detectMediaTypeFromMediaAssociate,
-  toFixedFromString,
+  itemAddEditAccess,
 } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
@@ -47,10 +46,13 @@ import {
   modifyAssociatedPlaces,
   setActiveEventItem,
   setActiveEventItemIndex,
+  setActiveLibraryItem,
+  setActiveLibraryItemIndex,
   setActiveMediaItem,
   setActiveMediaItemIndex,
   setActivePlaceItem,
   setActivePlaceItemIndex,
+  setSearchApply,
   toggleGalleryView,
 } from "../../../../store/reducers/searchResultsReducer";
 import PositionedSnackbar from "../../../Snackbar";
@@ -64,6 +66,7 @@ import NoMapPresent from "../../../NoDataScreens/NoMapPresent";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import MoreOption from "../ListView/MoreOption";
 import useRemarks from "../../../../hooks/useRemarks";
+import { useHistory } from "../../../../hooks/useHistory";
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -196,8 +199,8 @@ const PlaceDetailsPage = () => {
       title: "NAME",
       key: "attributes",
       dataIndex: "media_unique_id",
-      sorter: (a, b) => a?.fileName?.localeCompare(b?.fileName),
-      sortDirections: ["ascend"],
+      sorter: (a, b) =>
+        a?.attributes?.title?.localeCompare(b?.attributes?.title),
       defaultSortOrder: "ascend",
       className: "name-column",
       render: (value: any, record: any) => (
@@ -266,7 +269,7 @@ const PlaceDetailsPage = () => {
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (
         // <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
-        <MoreOption type="Library" setEdit={setEdit} record={record} />
+        <>{itemAddEditAccess ? <MoreOption type="Library" setEdit={setEdit} record={record} /> : null}</>
       ),
     },
   ];
@@ -327,14 +330,14 @@ const PlaceDetailsPage = () => {
     },
     {
       title: "",
-      key: "new",
-      dataIndex: "new",
+      key: "visit_unique_id",
+      dataIndex: "visit_unique_id",
       className: "cell-new",
-      // render: (value: any, index: any) => "New",
       render: (value: any, index: any) => (
-        <div className={`${gridStyles["card-new-flag"]}`}>
-          {checkIsNew(value?.createdAt) ? "NEW!" : ""}
-        </div>
+        <>
+        {checkIsNew(value?.visitDate) ? <div className={`${gridStyles["card-new-flag"]}`}>
+          NEW!
+        </div> : null}</>
       ),
     },
     {
@@ -347,12 +350,14 @@ const PlaceDetailsPage = () => {
       title: "Date of Event",
       key: "visit_unique_id",
       dataIndex: "visit_unique_id",
-      // to-do
-      // Events will be sorted by Date of Event newest to oldest
+      defaultSortOrder: "descend",
+      sorter: (a, b) => {
+        const first = (new Date(a?.visit_unique_id?.visitDate)).getTime()
+        const second = (new Date(b?.visit_unique_id?.visitDate)).getTime()
+        console.log('hex: ', first, second)
 
-      // sorter: (a: { title: string }, b: { title: any }) => {
-      //     return a.title?.localeCompare(b.title);
-      //   },
+        return first < second ? 0 : 1
+      },
       render: (value, index) =>
         value?.visitDate
           ? format(
@@ -378,11 +383,11 @@ const PlaceDetailsPage = () => {
       fixed: "right",
       className: "more-menu-ant-cell events-table-more-menu",
       render: (value: any, record: Event) => (
-        // <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
-        <MoreOption type="Events" setEdit={setEdit} record={record} />
+        <>{itemAddEditAccess ? <MoreOption type="Events" setEdit={setEdit} record={record}  /> : null}</>
       ),
     },
   ];
+  const { navigateTo, goBack } = useHistory()
 
   const { loading } = useMedia();
   const {
@@ -410,14 +415,16 @@ const PlaceDetailsPage = () => {
      */
     e.preventDefault();
     if (media.length >= itemIndex) {
-      navigate(`/search-results/Media/${uniqueId}`, { replace: true });
+      // navigate(`/search-results/Media/${uniqueId}`, { replace: true });
+      navigateTo(`/search-results/Media/${uniqueId}`)
+
       dispatch(setActiveMediaItem(media[itemIndex - 1]));
       dispatch(setActiveMediaItemIndex(itemIndex - 1));
     }
   };
 
   useEffect(() => {
-    if (placeData && placeData?.siteDescription?.length < 500) {
+    if (placeData && placeData?.siteDescription?.length < 100) {
       toggleSeeMoreHidden(true);
     }
 
@@ -439,15 +446,16 @@ const PlaceDetailsPage = () => {
   }
 
   const handleSearch = (searchData: any) => {
-    // navigate(`/search-results/Places?{"search":"","refinedSearch":{"artifacts":["Observed"]}}`)
-    navigate({
+    dispatch(setSearchApply(true));
+    navigateTo({
       pathname: `/search-results/Places`,
       search: decodeURIComponent(
         JSON.stringify({
           refinedSearch: searchData,
         })
-      ),
+      )
     });
+    
   };
 
   const {
@@ -464,6 +472,7 @@ const PlaceDetailsPage = () => {
     recommendation,
     placeUIPath,
     media_associates,
+    mediaItems,
     libraryItems,
     visit_associates,
   } = placeData;
@@ -506,8 +515,9 @@ const PlaceDetailsPage = () => {
               dispatch(setActivePlaceItemIndex(0));
               dispatch(setActiveMediaItem(null));
               dispatch(setActiveMediaItemIndex(0));
-
-              navigate(`/search-results/${tabName}`, { replace: true });
+              // navigate(-1);
+              // navigate(`/search-results/${tabName}`, { replace: true });
+              goBack()
             }}
           >
             Back to search results
@@ -516,7 +526,7 @@ const PlaceDetailsPage = () => {
         <Box component="div" className={`${styles["content-section"]}`}>
           {
             // If you dont 1 image also, show placeholder section
-            !media_associates ||
+            !mediaItems ||
             (media_associates && media_associates.length < 1) ? (
               <Box component="div" className={`${styles["no-images-section"]}`}>
                 <NoImagePresent message={NO_MEDIA} />
@@ -532,7 +542,7 @@ const PlaceDetailsPage = () => {
                     zIndex: 10,
                   }}
                 >
-                  {media_associates && media_associates.length > 5 && (
+                  {mediaItems && mediaItems.length >= 2 && (
                     <Button
                       variant="contained"
                       type="button"
@@ -565,40 +575,79 @@ const PlaceDetailsPage = () => {
                       handleClickMediaItem(
                         e,
                         1,
-                        media_associates[0]?.media_unique_id.uniqueId
+                        mediaItems[0]?.media_unique_id.uniqueId
                       );
                     }}
                   >
-                    {/* {media_associates[0] && <RenderFileData */}
-                    {shallRenderMedia(1, media_associates) && (
+                    {shallRenderMedia(1, mediaItems) && (
                       <RenderFileData
                         fileData={{
                           alt: "",
-                          src: `${baseUrl}${media_associates[0]?.media_unique_id?.object?.url}`,
+                          src: `${baseUrl}${mediaItems[0]?.media_unique_id?.object?.url}`,
                           className: `${styles["single-image"]} ${styles["left-image"]}`,
                           videoType:
-                            media_associates[0].media_unique_id.videoType,
+                          mediaItems[0].media_unique_id.videoType,
                           iframeVideoLink:
-                            media_associates[0].media_unique_id.videoType ===
+                          mediaItems[0].media_unique_id.videoType ===
                             "url"
-                              ? media_associates[0].media_unique_id.referenceURL
+                              ? mediaItems[0].media_unique_id.referenceURL
                               : undefined,
                           staticVideoLink:
                             detectMediaTypeFromMediaAssociate(
-                              media_associates[0]
+                              mediaItems[0]
                             ) === "video" &&
-                            media_associates[0].media_unique_id.videoType ===
+                            mediaItems[0].media_unique_id.videoType ===
                               "video"
-                              ? `${baseUrl}${media_associates[0].media_unique_id.object?.url}`
+                              ? `${baseUrl}${mediaItems[0].media_unique_id.object?.url}`
                               : undefined,
                         }}
                         fileType={detectMediaTypeFromMediaAssociate(
-                          media_associates[0]
+                          mediaItems[0]
                         )}
                       />
                     )}
                   </Grid>
                   <Grid
+                    item
+                    sm={6}
+                    className={`${styles["grid-item"]}`}
+                    onClick={(e) => {
+                      handleClickMediaItem(
+                        e,
+                        2,
+                        mediaItems[1]?.media_unique_id.uniqueId
+                      );
+                    }}
+                  >
+                    {shallRenderMedia(2, mediaItems) && (
+                      <RenderFileData
+                        fileData={{
+                          alt: "",
+                          src: `${baseUrl}${mediaItems[1]?.media_unique_id?.object?.url}`,
+                          className: `${styles["single-image"]} ${styles["left-image"]}`,
+                          videoType:
+                          mediaItems[1].media_unique_id.videoType,
+                          iframeVideoLink:
+                          mediaItems[1].media_unique_id.videoType ===
+                            "url"
+                              ? mediaItems[1].media_unique_id.referenceURL
+                              : undefined,
+                          staticVideoLink:
+                            detectMediaTypeFromMediaAssociate(
+                              mediaItems[1]
+                            ) === "video" &&
+                            mediaItems[1].media_unique_id.videoType ===
+                              "video"
+                              ? `${baseUrl}${mediaItems[1].media_unique_id.object?.url}`
+                              : undefined,
+                        }}
+                        fileType={detectMediaTypeFromMediaAssociate(
+                          mediaItems[1]
+                        )}
+                      />
+                    )}
+                  </Grid>
+                  {/* <Grid
                     item
                     sm={6}
                     className={`${styles["image-grid-gap"]} ${styles["image-side-grid"]}`}
@@ -616,48 +665,39 @@ const PlaceDetailsPage = () => {
                           handleClickMediaItem(
                             e,
                             2,
-                            media_associates[1]?.media_unique_id.uniqueId
+                            mediaItems[1]?.media_unique_id.uniqueId
                           );
                         }}
                       >
-                        {shallRenderMedia(2, media_associates) && (
+                        {shallRenderMedia(2, mediaItems) && (
                           <RenderFileData
                             fileData={{
                               alt: "",
-                              src: `${baseUrl}${media_associates[1].media_unique_id?.object?.url}`,
+                              src: `${baseUrl}${mediaItems[1].media_unique_id?.object?.url}`,
                               className: `${styles["single-image"]} ${styles["right-image"]}`,
                               videoType:
-                                media_associates[1].media_unique_id.videoType,
+                              mediaItems[1].media_unique_id.videoType,
                               iframeVideoLink:
-                                media_associates[1].media_unique_id
+                              mediaItems[1].media_unique_id
                                   .videoType === "url"
-                                  ? media_associates[1].media_unique_id
+                                  ? mediaItems[1].media_unique_id
                                       .referenceURL
                                   : undefined,
                               staticVideoLink:
                                 detectMediaTypeFromMediaAssociate(
-                                  media_associates[0]
+                                  mediaItems[0]
                                 ) === "video" &&
-                                media_associates[1].media_unique_id
+                                mediaItems[1].media_unique_id
                                   .videoType === "video"
-                                  ? `${baseUrl}${media_associates[1].media_unique_id.object?.url}`
+                                  ? `${baseUrl}${mediaItems[1].media_unique_id.object?.url}`
                                   : undefined,
                             }}
                             fileType={detectMediaTypeFromMediaAssociate(
-                              media_associates[1]
+                              mediaItems[1]
                             )}
                           />
                         )}
-                        {/* YOUTUBE VIDEO LOAD REFERENCE: DONT DELETE YET */}
-                        {/* <RenderFileData
-                                            fileData={{
-                                                src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
-                                                className: `${styles["single-image"]} ${styles["right-image"]}`,
-                                                // thumbnail URL for youtube
-                                                thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg"
-                                            }}
-                                            fileType="video"
-                                        /> */}
+
                       </Grid>
                       <Grid
                         item
@@ -667,48 +707,38 @@ const PlaceDetailsPage = () => {
                           handleClickMediaItem(
                             e,
                             3,
-                            media_associates[2]?.media_unique_id.uniqueId
+                            mediaItems[2]?.media_unique_id.uniqueId
                           );
                         }}
                       >
-                        {shallRenderMedia(3, media_associates) && (
+                        {shallRenderMedia(3, mediaItems) && (
                           <RenderFileData
                             fileData={{
                               alt: "",
-                              src: `${baseUrl}${media_associates[2].media_unique_id?.object?.url}`,
+                              src: `${baseUrl}${mediaItems[2].media_unique_id?.object?.url}`,
                               className: `${styles["single-image"]} ${styles["right-image"]}`,
                               videoType:
-                                media_associates[2].media_unique_id.videoType,
+                              mediaItems[2].media_unique_id.videoType,
                               iframeVideoLink:
-                                media_associates[2].media_unique_id
+                              mediaItems[2].media_unique_id
                                   .videoType === "url"
-                                  ? media_associates[2].media_unique_id
+                                  ? mediaItems[2].media_unique_id
                                       .referenceURL
                                   : undefined,
                               staticVideoLink:
                                 detectMediaTypeFromMediaAssociate(
-                                  media_associates[2]
+                                  mediaItems[2]
                                 ) === "video" &&
-                                media_associates[2].media_unique_id
+                                mediaItems[2].media_unique_id
                                   .videoType === "video"
-                                  ? `${baseUrl}${media_associates[2].media_unique_id.object?.url}`
+                                  ? `${baseUrl}${mediaItems[2].media_unique_id.object?.url}`
                                   : undefined,
                             }}
                             fileType={detectMediaTypeFromMediaAssociate(
-                              media_associates[2]
+                              mediaItems[2]
                             )}
                           />
                         )}
-                        {/* 3D model LOAD REFERENCE: DONT DELETE YET */}
-                        {/* <RenderFileData
-                                            fileData={{
-                                                alt: "",
-                                                src: images[2],
-                                                thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
-                                                className: `${styles["single-image"]} ${styles["right-image"]}`
-                                            }}
-                                            fileType="3d"
-                                        /> */}
                       </Grid>
                     </Grid>
                     <Grid
@@ -724,50 +754,43 @@ const PlaceDetailsPage = () => {
                           handleClickMediaItem(
                             e,
                             4,
-                            media_associates[3]?.media_unique_id.uniqueId
+                            mediaItems[3]?.media_unique_id.uniqueId
                           );
                         }}
                       >
-                        {shallRenderMedia(4, media_associates) && (
+                        {shallRenderMedia(4, mediaItems) && (
                           <RenderFileData
                             fileData={{
                               alt: "",
-                              src: `${baseUrl}${media_associates[3].media_unique_id?.object?.url}`,
+                              src: `${baseUrl}${mediaItems[3].media_unique_id?.object?.url}`,
                               className: `${styles["single-image"]} ${styles["right-image"]}`,
                               objectURL:
-                                media_associates[3].media_unique_id.objectURL ||
+                              mediaItems[3].media_unique_id.objectURL ||
                                 "",
 
                               videoType:
-                                media_associates[3].media_unique_id.videoType,
+                              mediaItems[3].media_unique_id.videoType,
                               iframeVideoLink:
-                                media_associates[3].media_unique_id
+                              mediaItems[3].media_unique_id
                                   .videoType === "url"
-                                  ? media_associates[3].media_unique_id
+                                  ? mediaItems[3].media_unique_id
                                       .referenceURL
                                   : undefined,
                               staticVideoLink:
                                 detectMediaTypeFromMediaAssociate(
-                                  media_associates[3]
+                                  mediaItems[3]
                                 ) === "video" &&
-                                media_associates[3].media_unique_id
+                                mediaItems[3].media_unique_id
                                   .videoType === "video"
-                                  ? `${baseUrl}${media_associates[3].media_unique_id.object?.url}`
+                                  ? `${baseUrl}${mediaItems[3].media_unique_id.object?.url}`
                                   : undefined,
                             }}
                             fileType={detectMediaTypeFromMediaAssociate(
-                              media_associates[3]
+                              mediaItems[3]
                             )}
                           />
                         )}
-                        {/* <RenderFileData
-                                            fileData={{
-                                                alt: "",
-                                                src: images[3],
-                                                className: `${styles["single-image"]} ${styles["right-image"]}`
-                                            }}
-                                            fileType="image"
-                                        /> */}
+
                       </Grid>
                       <Grid
                         item
@@ -777,44 +800,44 @@ const PlaceDetailsPage = () => {
                           handleClickMediaItem(
                             e,
                             5,
-                            media_associates[4]?.media_unique_id.uniqueId
+                            mediaItems[4]?.media_unique_id.uniqueId
                           );
                         }}
                       >
-                        {shallRenderMedia(5, media_associates) && (
+                        {shallRenderMedia(5, mediaItems) && (
                           <RenderFileData
                             fileData={{
                               alt: "",
-                              src: `${baseUrl}${media_associates[4].media_unique_id?.object?.url}`,
+                              src: `${baseUrl}${mediaItems[4].media_unique_id?.object?.url}`,
                               className: `${styles["single-image"]} ${styles["right-image"]}`,
                               objectURL:
-                                media_associates[4].media_unique_id.objectURL ||
+                              mediaItems[4].media_unique_id.objectURL ||
                                 "",
                               videoType:
-                                media_associates[4].media_unique_id.videoType,
+                              mediaItems[4].media_unique_id.videoType,
                               iframeVideoLink:
-                                media_associates[4].media_unique_id
+                              mediaItems[4].media_unique_id
                                   .videoType === "url"
-                                  ? media_associates[4].media_unique_id
+                                  ? mediaItems[4].media_unique_id
                                       .referenceURL
                                   : undefined,
                               staticVideoLink:
                                 detectMediaTypeFromMediaAssociate(
-                                  media_associates[4]
+                                  mediaItems[4]
                                 ) === "video" &&
-                                media_associates[4].media_unique_id
+                                mediaItems[4].media_unique_id
                                   .videoType === "video"
-                                  ? `${baseUrl}${media_associates[4].media_unique_id.object?.url}`
+                                  ? `${baseUrl}${mediaItems[4].media_unique_id.object?.url}`
                                   : undefined,
                             }}
                             fileType={detectMediaTypeFromMediaAssociate(
-                              media_associates[4]
+                              mediaItems[4]
                             )}
                           />
                         )}
                       </Grid>
                     </Grid>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </Box>
             )
@@ -828,14 +851,22 @@ const PlaceDetailsPage = () => {
               >
                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
-                {placeNameEnglish && (
                   <Grid container>
+                {placeNameEnglish && (
                     <Grid item>
                       <Box component="div" className={`${styles["item-name"]}`}>
                         {placeNameEnglish}
                       </Box>
                     </Grid>
-                    {placeNameArabic && (
+                )}
+                {!placeNameEnglish && !placeNameArabic && (
+                    <Grid item>
+                      <Box component="div" className={`${styles["item-name"]}`}>
+                        {placeNumber}
+                      </Box>
+                    </Grid>
+                )}
+                {placeNameArabic && (
                       <Grid item>
                         <Box
                           component="div"
@@ -846,9 +877,11 @@ const PlaceDetailsPage = () => {
                       </Grid>
                     )}
                   </Grid>
-                )}
-                <Box component="div" className={`${styles["item-number"]}`}>
+                {(placeNameEnglish || placeNameArabic) && <Box component="div" className={`${styles["item-number"]}`}>
                   {placeNumber}
+                </Box>}
+                <Box component="div" className={`${styles["item-number"]}`}>
+                  ID {placeData.id}
                 </Box>
               </Grid>
               <Grid item sm={1}>
@@ -872,6 +905,7 @@ const PlaceDetailsPage = () => {
                           placeNameEnglish: placeData.placeNameEnglish,
                           placeNameArabic: placeData.placeNameArabic,
                           placeNumber: placeData.placeNumber,
+                          keywords: placeData.keywords ? [...placeData.keywords] : []
                         };
 
                         dispatch(
@@ -884,11 +918,11 @@ const PlaceDetailsPage = () => {
                     />
                   ) : (
                     // <></>:
-                    <MoreOption
+                    <>{itemAddEditAccess ? <MoreOption
                       type="Places"
                       setEdit={setEdit}
                       record={placeData}
-                    />
+                    />: null}</>
                   )}
                 </Box>
               </Grid>
@@ -1156,10 +1190,7 @@ const PlaceDetailsPage = () => {
                       URL
                     </Grid>
                     <Grid item sm={7} md={8}>
-                      {/* to-do */}
-                      {/* When clicking on the URL link, the link should be copied to the clip board. 
-                                            A success message will be displayed with the message “URL copied to clipboard” */}
-                      <Box
+                     <Box
                         component="div"
                         style={{
                           cursor: "pointer",
@@ -1197,6 +1228,7 @@ const PlaceDetailsPage = () => {
                           },
                         },
                       ]}
+                      zoom={10}
                     />
                     <Grid
                       container
@@ -1257,6 +1289,17 @@ const PlaceDetailsPage = () => {
                   style={{
                     background: "transparent",
                   }}
+                  onRow={(record: any, rowIndex: number | undefined) => {
+                    return {
+                      onClick: (library) => {
+                        if (typeof rowIndex === "number") {
+                          dispatch(setActiveLibraryItem(record));
+                          dispatch(setActiveLibraryItemIndex(rowIndex));
+                          navigateTo(`/search-results/Library/${record.media_unique_id.uniqueId}`)
+                        }
+                      },
+                    };
+                  }}
                 ></StyledTableWrapper>
               ) : (
                 <NoTextPresent message={NO_TABLE_ROWS} />
@@ -1295,10 +1338,11 @@ const PlaceDetailsPage = () => {
                         if (typeof rowIndex === "number") {
                           dispatch(setActiveEventItem(record));
                           dispatch(setActiveEventItemIndex(rowIndex));
-                          navigate(
-                            `/search-results/Events/${record.visit_unique_id.uniqueId}`,
-                            { replace: true }
-                          );
+                          // navigate(
+                          //   `/search-results/Events/${record.visit_unique_id.uniqueId}`,
+                          //   { replace: true }
+                          // );
+                          navigateTo(`/search-results/Events/${record.visit_unique_id.uniqueId}`)
                         }
                       },
                     };

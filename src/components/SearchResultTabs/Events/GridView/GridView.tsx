@@ -15,8 +15,8 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
 import { Card } from './Card';
 import dayjs from "dayjs";
-import { useNavigate } from "react-router-dom";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
+import { useHistory } from "../../../../hooks/useHistory";
 
 export type EventsProps = {
     data: Event[];
@@ -29,7 +29,7 @@ export type EventsProps = {
 const GridView = (props: EventsProps) => {
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const { navigateTo } = useHistory();
 
     const { data, handleNext, hasMoreData, loading, setEdit } = props;
 
@@ -44,7 +44,8 @@ const GridView = (props: EventsProps) => {
 
     const handleClick = (item: Event, index: number) => {
         dispatch(setSelectedCardIndex(index))
-        navigate(`/search-results/Events/${item.attributes.uniqueId}`, { replace: true })
+        // navigate(`/search-results/Events/${item.attributes.uniqueId}`, { replace: true })
+        navigateTo(`/search-results/Events/${item.attributes.uniqueId}`)
     }
 
     return (
@@ -76,13 +77,13 @@ const GridView = (props: EventsProps) => {
                                     img={item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ? item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''}
                   
                                     // img={item?.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url || ''}
-                                    title={item?.attributes?.visit_associate.data?.attributes?.place_unique_id ? `${item?.attributes?.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameEnglish}${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic} - ${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber}` : ''}
+                                    title={item?.attributes?.visit_associate.data?.attributes?.place_unique_id ? `${item?.attributes?.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameEnglish} ${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic} - ${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber}` : ''}
                                     subTitle={item?.attributes?.siteDescription || ''}
                                     dateString={`${format(
                                         new Date(item?.attributes?.visitDate),
                                         "MM/dd/yyyy"
                                     )}`}
-                                    isNew={checkIsNew(item.attributes.createdAt)}
+                                    isNew={checkIsNew(item.attributes.visitDate)}
                                     handleClick={handleClick}
                                     record={item}
                                     id={item.id}

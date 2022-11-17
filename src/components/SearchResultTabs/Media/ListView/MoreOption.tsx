@@ -3,7 +3,7 @@ import { Menu, MenuItem } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Media } from "../../../../types/Media";
 import { setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from "../../../../store/reducers/searchResultsReducer";
-import { isRecordHavingAssociations, MEDIA_TAB_NAME } from "../../../../utils/services/helpers";
+import { isRecordHavingAssociations, MEDIA_TAB_NAME, itemAddEditAccess, itemDeleteAccess } from "../../../../utils/services/helpers";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
@@ -28,7 +28,7 @@ export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payloa
       <div className="" onClick={handleClick}>
         <MoreHorizIcon className="more-menu-div" />
       </div>
-      <Menu
+      {itemAddEditAccess && <Menu
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
@@ -47,7 +47,7 @@ export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payloa
         >
           Edit
         </MenuItem>
-        <MenuItem key={3}
+       {itemDeleteAccess && <MenuItem key={3}
           onClick={(e) => {
             e.stopPropagation();
             dispatch(toggleDeleteConfirmationWindowOpen({
@@ -59,10 +59,11 @@ export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payloa
             dispatch(setDeleteItemType(MEDIA_TAB_NAME))
             dispatch(setDeletePayload({
               id: typeof record.id === 'string' ? parseInt(record.id) : record.id
-            }))
+            }));
+            handleClose();
           }}
-        >Delete</MenuItem>
-      </Menu>
+        >Delete</MenuItem>}
+      </Menu>}
     </>
   );
 };

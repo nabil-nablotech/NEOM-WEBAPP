@@ -55,7 +55,8 @@ const useLibrary = () => {
     }
   }});
   const [createMediaAssociateMutation, { loading: mediaAssociateload, error: mediaAssociateErr, data: mediaAssociate, reset: resetCreateMediaAssociate }] = useMutation(createMediaAssociate, {context: graphQlHeaders().context, onCompleted: () => {
-
+    
+    dispatch(resetMediaAssociation(null))
   }});
   const [updateMediaAssociateMutation, { loading: updateMediaAssociateload, error: updateMediaAssociateErr, data: updateMediaAssociateData, reset: resetUpdateAssociate }] = useMutation(updateMediaAssociate, {context: graphQlHeaders().context, onCompleted: () => {
     dispatch(toggleShowEditSuccess(true));
@@ -190,12 +191,14 @@ const useLibrary = () => {
   const createLibrary = async (payload: any | undefined) => {
     const uniqueId = generateUniqueId();
     const keywords = payload.keywords;
+    console.log('payload.....', payload);
     const data = {
       ...payload,
       visitNumber: parseFloat(payload.visitNumber),
       asset_config_id: [mediaType(payload.documentType)], // documentType should be string and media type
       keywords: keywords,
       siteType: payload.siteType && payload.siteType,
+      referenceURL: payload.referenceUrl && payload.referenceUrl,
       "latitude": payload.latitude && parseFloat(payload.latitude),
       "longitude": payload.longitude && parseFloat(payload.longitude),
       "categoryType": payload.categoryType && payload.categoryType,

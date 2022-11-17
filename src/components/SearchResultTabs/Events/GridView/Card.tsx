@@ -156,6 +156,7 @@ export const Card = ({
                         placeNumber:
                           record.attributes.visit_associate.data.attributes
                             .place_unique_id.data.attributes.placeNumber,
+                        keywords: record.attributes.keywords ? record.attributes.keywords : []
                       };
                       dispatch(
                         modifyAssociatedEvents({

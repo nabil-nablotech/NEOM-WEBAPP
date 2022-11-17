@@ -30,7 +30,6 @@ export type GridViewCard_Media = {
   img?: string;
   title: string;
   subTitle: string;
-  dateString: string;
   period?: string[] | null;
   onClick?: ((e: React.MouseEvent<Element, React.MouseEvent>) => void) &
     React.MouseEvent<Element, React.MouseEvent>;
@@ -67,6 +66,7 @@ export type InventoryAssociationType = {
   placeNameEnglish: string
   placeNameArabic: string
   placeNumber: string | null
+  keywords: string[] | []
 }
 export type InventoryAssociationType_Event = {
   id: string
@@ -80,6 +80,12 @@ export type InventoryAssociationType_Event = {
       placeNameArabic: string
     }
   }
+  keywords: string[] | []
+}
+
+export type ToggledStateTypes = {
+  states: null | Array<boolean>,
+  tabName: tabNameProps
 }
 
 export type SearchResultsState2 = {
@@ -96,6 +102,7 @@ export type SearchResultsState2 = {
   libararyMetaData: Meta | null;
   mediaMetaData: Meta | null;
   activeTab: tabNameProps | "";
+  toggledStates: ToggledStateTypes;
   newItemWindowOpen: boolean;
   showAddSuccess: boolean;
   showEditSuccess: boolean;
@@ -127,7 +134,9 @@ export type SearchResultsState2 = {
   deleteItemSuccess: boolean,
   isDeleteUserWindowOpen: DeleteUserReduxPayload
   deleteUserSuccess: boolean,
-  deletePayload: DeletePayloadType
+  deletePayload: DeletePayloadType,
+  history: Array<string> | []
+  isLogoutConfirmationWindowOpen: boolean
 };
 
 export type DeletePayloadType = {
@@ -273,7 +282,7 @@ export type LibraryDetailsPageProps = {
   handleClose: () => any
 };
 
-type menuAction = {
+export type menuAction = {
   label: string;
   action: (data?: any) => void;
 };

@@ -8,11 +8,13 @@ import {
   commonFormControlSxStyles,
   formatWebDate,
   textInputSxStyles,
+  remarksDeleteAccess,
+  remarkAddEditAccess,
 } from "../../utils/services/helpers";
 import TextInput from "../../components/TextInput";
 import styles from "./index.module.css";
 import { CustomMoreOptionsComponent } from "../CustomMoreOptionsComponent";
-import { Remark, ChildRemark, RemarkDetails } from "../../types/Remarks";
+import { Remark } from "../../types/Remarks";
 import SendIcon from "@mui/icons-material/Send";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
@@ -45,6 +47,15 @@ const SingleComment = ({
       },
     },
   ];
+
+  const deleteAction = [
+    {
+      label: "Delete",
+      action: () => {
+        handleAction('delete', remark, type);
+      },
+    }
+  ]
 
   const checkMine = () => {
     if (type === "child") {
@@ -119,7 +130,7 @@ const SingleComment = ({
                   ? formatWebDate(remark?.updatedAt)
                   : formatWebDate(remark?.remark_details.updatedAt)}
               </Grid>
-              {type === "child" ? null : (
+              {(type === "child" && !remarkAddEditAccess) ? null : (
                 <Grid
                   item
                   style={{
@@ -133,7 +144,7 @@ const SingleComment = ({
               )}
               {checkMine() ? <Grid item>
                 <CustomMoreOptionsComponent menuActions={editAction} />
-              </Grid> : null}
+              </Grid> : <>{remarksDeleteAccess ? <CustomMoreOptionsComponent menuActions={deleteAction} />: null}</>}
             </Grid>
 
             {remark.id === showInput ? (
@@ -214,7 +225,7 @@ const CommentsSection = ({
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.code === "Enter") {
       e.preventDefault();
-      handleRemarks()
+      // handleRemarks()
     }
   }
 
@@ -286,7 +297,7 @@ const CommentsSection = ({
 
   return (
     <Box component="div" className={`${styles["comments-container"]}`}>
-      <Grid
+       {remarkAddEditAccess && <Grid
         container
         style={{
           justifyContent: "start",
@@ -298,7 +309,7 @@ const CommentsSection = ({
         <Grid item>
           <SelfIcon />
         </Grid>
-        <Grid item>
+       <Grid item>
           <TextInput
             className={``}
             label="Remarks"
@@ -333,7 +344,7 @@ const CommentsSection = ({
             }}
           />
         </Grid>
-      </Grid>
+      </Grid>}
       <Box component="div" className={`${styles["comments-list-parent-box"]}`}>
         {remarks &&
           remarks.map((remark: Remark, index: number) => (

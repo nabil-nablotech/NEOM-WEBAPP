@@ -7,7 +7,7 @@ import TextInput from "../../../../components/TextInput";
 import DropdownComponent from "../../../Dropdown/index";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
-import { baseUrl } from "./../../../../utils/services/helpers";
+import { baseUrl, validateNumber } from "./../../../../utils/services/helpers";
 import CustomUpload from "../../../Upload/ImageUpload";
 import { SelectChangeEvent } from "@mui/material/Select";
 import AutoComplete from "../../../AutoComplete";
@@ -49,6 +49,8 @@ const commonFormControlSxStyles = {
     backgroundColor: "#fff",
   },
 };
+
+const youtubeRegex = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/watch\?v=([^&]+)/m;
 
 export const stepperIconSx = {
   color: "#fff",
@@ -226,6 +228,11 @@ allowFullScreen
                       ? `${baseUrl}${formik.values?.object[0]?.url}`
                       : ""
                   }
+                  handleDelete={() => {
+                    // formik.setFieldValue("object", undefined);
+                    formik.values.object = undefined;
+                    console.log('object in image', formik.values.object);
+                  }}
                 />
                 <Typography className={`${styles['file-upload-bottom-text']}`}>Accepted file types: .jpg, .png</Typography>
               </>
@@ -285,6 +292,8 @@ allowFullScreen
                             ...textInputSxStyles,
                           }}
                           formControlSx={commonFormControlSxStyles}
+                          error={!formik.values.valid}
+                          errorText={"Invalid Url"}
                         />
                          {!formik.values.valid && formik.values.url?.length > 10 && <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
                             <Button
@@ -326,6 +335,9 @@ allowFullScreen
                         uploadImage={uploadImage}
                         title={"Drag and drop your file here"}
                         existingImageUrl={""}
+                        handleDelete={() => {
+                          formik.setFieldValue("object", undefined);
+                        }}
                       />
                       }
                       </>
@@ -401,8 +413,9 @@ allowFullScreen
         {activeStep === 1 && (
           <>
             <TextInput
+              required
               className={`${styles["english-name"]}`}
-              label="Title*"
+              label="Title"
               name="title"
               value={formik.values.title}
               onChange={(e) => {
@@ -412,6 +425,11 @@ allowFullScreen
                 ...textInputSxStyles,
               }}
               formControlSx={commonFormControlSxStyles}
+              errorField={
+                formik.errors.title ?
+                  `${formik.errors.title}`
+                  : ''
+              }
             />
             <TextInput
               className={`${styles["site-description"]}`}
@@ -481,7 +499,9 @@ allowFullScreen
               name="longitude"
               value={formik.values.longitude}
               onChange={(e) => {
-                formik.setFieldValue("longitude", e.target.value);
+                if (validateNumber(e.target.value)) {
+                  formik.setFieldValue("longitude", e.target.value);
+                }
               }}
               sx={{
                 ...textInputSxStyles,
@@ -494,7 +514,9 @@ allowFullScreen
               name="latitude"
               value={formik.values.latitude}
               onChange={(e) => {
-                formik.setFieldValue("latitude", e.target.value);
+                if (validateNumber(e.target.value)) {
+                  formik.setFieldValue("latitude", e.target.value);
+                }
               }}
               sx={{
                 ...textInputSxStyles,

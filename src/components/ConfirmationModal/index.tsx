@@ -13,6 +13,7 @@ import { tabNameProps } from '../../types/SearchResultsTabsProps';
 import { EVENTS_TAB_NAME, getSingleInventoryNameFromTabName, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME } from '../../utils/services/helpers';
 import { useState, useEffect } from 'react';
 import parse from 'html-react-parser';
+import useLogout from '../../hooks/useLogout';
 
 const addSx = {
     '& .MuiButtonBase-root.MuiCheckbox-root': {
@@ -140,6 +141,7 @@ export const ConfirmationModal = ({
     let { tabName } = useParams<{ tabName?: tabNameProps }>();
     const { isDeleteUserWindowOpen, deleteItemType, isDeleteConfirmationWindowOpen } = useSelector((state: RootState) => state.searchResults);
 
+    const { clientLogout } = useLogout();
 
     const [enabledFlag, setEnabledFlag] = useState<boolean>(false)
 
@@ -164,11 +166,11 @@ export const ConfirmationModal = ({
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "space-between",
-                    alignItems: 'flex-end',
+                    alignItems: modalTypeLogout ? 'flex-start' : 'flex-end',
                 }}>
-                    <Grid item className={`${modalStyles['title']}`}>
+                    <Grid item className={`${modalStyles['title']}`} sm={11}>
                         {`${
-                            modalTypeEdit ? 'Edit' : (modalTypeDelete || modalTypeDeleteUser) ? 'Delete' : 'Logout'
+                            modalTypeEdit ? 'Edit' : (modalTypeDelete || modalTypeDeleteUser) ? 'Delete' : 'Adding/editing in Progress'
                         }${ 
                             modalTypeDeleteUser ? ' User' : ''
                         }${
@@ -203,7 +205,9 @@ export const ConfirmationModal = ({
                                     `Are you sure you want to delete this item? This action cannot be undone.` :
                                     modalTypeDeleteUser ?
                                         parse(`<span style="font-weight: bold;">${isDeleteUserWindowOpen?.mailId}</span> will be deleted and will no longer have access to the platform`) :
-                                        ``
+                                        modalTypeLogout ?
+                                            `You are currently adding/editing an item. If you sign out you will lose your changes` :
+                                            ``
                         }
                     </Box>
                     {
@@ -232,8 +236,12 @@ export const ConfirmationModal = ({
                         }}
                     />
                     <Button
-                        colors={["var(--orange-shade)", "#fff", "none"]}
-                        label={modalTypeEdit ? 'Edit' : (modalTypeDelete || modalTypeDeleteUser) ? 'Delete' : 'Logout'}
+                        colors={[
+                            modalTypeLogout ? "var(--table-black-text)" : "var(--orange-shade)",
+                            "#fff",
+                            "none"]
+                        }
+                        label={modalTypeEdit ? 'Edit' : (modalTypeDelete || modalTypeDeleteUser) ? 'Delete' : 'Sign Out'}
                         disabled={modalTypeDelete ? !enabledFlag : false}
                         type="button"
                         onClick={e => {
@@ -247,6 +255,10 @@ export const ConfirmationModal = ({
                                 if(modalTypeDeleteUser) {
                                     handleClose(e)
                                 }
+                            }
+                            if (modalTypeLogout) {
+                                handleClose(e)
+                                clientLogout()
                             }
 
                         }}

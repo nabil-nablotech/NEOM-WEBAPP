@@ -14,6 +14,7 @@ import AutoComplete from "../../../AutoComplete";
 import { SelectChangeEvent } from "@mui/material/Select";
 import ReactDatePicker from "react-datepicker";
 import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
+import { validateNumber } from "../../../../utils/services/helpers";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -86,8 +87,9 @@ const StepContent = ({
               label="Search Place*"
               placeholder="Search Place*"
               value={formik.values.place || ''}
-              // defaultValue={formik.}
-              handleClear={() => {}}
+              handleClear={() => {
+                formik.setFieldValue("place", '')
+              }}
               itemsList={places || []}
               handleSelectChange={(e, value, r, d) =>
                 {
@@ -101,16 +103,21 @@ const StepContent = ({
                   {...props}
                 >
                   <Typography>
-                    {option?.attributes?.placeNameEnglish || ''}
+                    {option?.attributes?.placeNameEnglish || ''} {' '}
                     {option?.attributes?.placeNameArabic || ''}
                   </Typography>
 
                   <Typography style={{ float: "right" }}>
-                    {option?.attributes?.placeNumber || '-'}
+                    {option?.attributes?.placeNumber || ''}
                   </Typography>
                 </Box>
               )}
               selectStylesSx={commonFormControlSxStyles}
+              errorField={
+                formik.errors.place ?
+                  `${formik.errors.place}`
+                  : ''
+              }
             />
             <TextInput
               className={`${styles["visit-number"]}`}
@@ -129,11 +136,17 @@ const StepContent = ({
                 },
               }}
               formControlSx={commonFormControlSxStyles}
+              errorField={
+                formik.errors.visitNumber ?
+                  `${formik.errors.visitNumber}`
+                  : ''
+              }
             />
 
             <ReactDatePicker
               placeholderText="Event Date"
               className={`${styles["date"]}`}
+              maxDate={new Date()}
               selected={
                 formik.values.eventDate && new Date(formik.values.eventDate)
               }
@@ -258,10 +271,11 @@ const StepContent = ({
               className={`${styles["latitude"]}`}
               label="Latitude"
               name="latitude"
-              type="number"
               value={formik.values.latitude}
               onChange={(e) => {
-                formik.setFieldValue("latitude", e.target.value);
+                if (validateNumber(e.target.value)) {
+                  formik.setFieldValue("latitude", e.target.value);
+                }
               }}
               sx={{
                 ...textInputSxStyles,
@@ -275,10 +289,11 @@ const StepContent = ({
               className={`${styles["longitude"]}`}
               label="Longitude"
               name="longitude"
-              type="number"
               value={formik.values.longitude}
               onChange={(e) => {
-                formik.setFieldValue("longitude", e.target.value);
+                if (validateNumber(e.target.value)) {
+                  formik.setFieldValue("longitude", e.target.value);
+                }
               }}
               sx={{
                 ...textInputSxStyles,

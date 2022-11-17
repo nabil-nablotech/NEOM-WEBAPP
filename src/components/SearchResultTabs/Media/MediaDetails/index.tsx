@@ -13,14 +13,14 @@ import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setActiveMediaItemIndex, setActiveMediaItem, toggleDeleteConfirmationWindowOpen, setDeleteItemType, setDeletePayload } from '../../../../store/reducers/searchResultsReducer';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import RenderFileData from '../../../RenderFileData';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
 import ModelViewer from '../../../Model';
 import { useEffect } from 'react';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
-import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations } from '../../../../utils/services/helpers';
+import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, copyToClipboard } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
@@ -29,6 +29,8 @@ import parse from 'html-react-parser';
 import { MediaApi } from '../../../../types/Media';
 import MapView from '../../GoogleMap/MapView';
 import RenderValueWithDefault from '../../../NoDataScreens/DefaultText';
+import { useHistory } from '../../../../hooks/useHistory';
+import PositionedSnackbar from '../../../Snackbar';
 
 
 const TextualContent = ({
@@ -42,6 +44,7 @@ const TextualContent = ({
         referenceURL, citation,
         categoryType, Author, bearing
     } = mediaDetails
+    const [isCopyDone, setCopyDone] = useState<boolean>(false);
 
     return <>
         <Box component="div" className={`${styles[`bottom-grid`]}`} >
@@ -51,7 +54,36 @@ const TextualContent = ({
             <div>Bearing: {RenderValueWithDefault(bearing)}</div>
             <div>Source URL: {RenderValueWithDefault(referenceURL)}</div>
             <div>Citation: {RenderValueWithDefault(citation)}</div>
-            <div>Item URL: {RenderValueWithDefault(locationRef)}</div>
+            <Grid container style={{
+                gap: '10px'
+            }}>
+                <Grid item sm={2} style={{
+                    maxWidth: 'fit-content'
+                }}>
+                    Item URL:
+                </Grid>
+                <Grid item sm={10}>
+                    <Box
+                        component="div"
+                        style={{
+                            cursor: "pointer",
+                        }}
+                        onClick={(e) => {
+                            setCopyDone(true);
+                            copyToClipboard(locationRef ?? "");
+                        }}
+                    >
+                        {RenderValueWithDefault(locationRef)}
+
+                    </Box>
+                </Grid>
+            </Grid>
+            <PositionedSnackbar
+                message={"Copied to clipboard"}
+                severity={"success"}
+                open={isCopyDone}
+                handleClose={() => setCopyDone(false)}
+            />
         </Box>
         {
             (mediaDetails.object || mediaDetails.media_type) && <Box component="div" className={`${styles[`bottom-grid`]}`} >
@@ -131,7 +163,7 @@ const MediaDetailsPage = ({
     const [isFilter, setIsFilter] = useState(null)
 
     const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const { navigateTo } = useHistory()
 
     const { data: mediaDetails, setEdit } = useMediaDetails();
 
@@ -177,7 +209,8 @@ const MediaDetailsPage = ({
                 newIndex = newIndex + 1
                 dispatch(setActiveMediaItem(media[newIndex]))
                 dispatch(setActiveMediaItemIndex(newIndex))
-                navigate(`/search-results/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                // navigate(`/search-results/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                navigateTo(`/search-results/Media/${media[newIndex].attributes.uniqueId}`)
             }
 
         }
@@ -188,7 +221,9 @@ const MediaDetailsPage = ({
 
                 dispatch(setActiveMediaItem(media[newIndex]))
                 dispatch(setActiveMediaItemIndex(newIndex))
-                navigate(`/search-results/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                // navigate(`/search-results/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                navigateTo(`/search-results/Media/${media[newIndex].attributes.uniqueId}`)
+
             }
 
         }
@@ -201,8 +236,10 @@ const MediaDetailsPage = ({
                 setEdit({ record: mediaDetails, type: "Media" });
                 // handleClose()
             },
-        },
-        {
+        }
+    ]
+    if (itemDeleteAccess) {
+        menuItems.push({
             label: "Delete",
             action: () => {
                 dispatch(toggleDeleteConfirmationWindowOpen({
@@ -216,8 +253,9 @@ const MediaDetailsPage = ({
                     id: typeof mediaDetails.id === 'string' ? parseInt(mediaDetails.id) : mediaDetails.id
                 }))
             },
-        },
-    ]
+        })
+    }
+
     return <>
         <Box component="div" className={`${styles['details-page-wrapper']}`}>
             <Box component="div" className={`${styles['img-wrapper']}`} >
@@ -320,10 +358,10 @@ const MediaDetailsPage = ({
                                     <Grid item sm={1} className={`${styles['more-icon-grid-item']}`} style={{
                                         marginLeft: 'auto'
                                     }}>
-                                        <CustomMoreOptionsComponent
+                                        {itemAddEditAccess && <CustomMoreOptionsComponent
                                             moreIconClassName={`${styles['more-icon']}`}
                                             menuActions={menuItems}
-                                        />
+                                        />}
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -346,13 +384,15 @@ const MediaDetailsPage = ({
                                     <MapView filterId={setIsFilter} key={4} marker={[{
                                         id: 0,
                                         name: `${mediaDetails?.media_associate?.data?.attributes?.place_unique_ids.data !== null ?
-                                            mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
-                                        : ''}`,
-                                        position: {
-                                            lat: latitude || 24.11,
-                                            lng: longitude || 34.98
-                                        }
-                                    }]} />
+                                                mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
+                                            : ''}`,
+                                            position: {
+                                                lat: latitude || 24.11,
+                                                lng: longitude || 34.98
+                                            }
+                                        }]}
+                                        zoom={10}
+                                    />
                                     <Grid container className={`${styles['map-loctn-details']}`} >
                                         <Grid item lg={5} md={5} sm={5}>
                                             <Grid container className={`${styles['map-loctn-line']}`}>
@@ -392,10 +432,11 @@ const MediaDetailsPage = ({
                             <Grid item sm={1} className={`${styles['more-icon-grid-item']}`} style={{
                                 marginLeft: 'auto'
                             }}>
-                                <CustomMoreOptionsComponent
-                                    moreIconClassName={`${styles['more-icon']}`}
-                                    menuActions={menuItems}
-                                />
+                                
+                                {itemAddEditAccess && <CustomMoreOptionsComponent
+                                            moreIconClassName={`${styles['more-icon']}`}
+                                            menuActions={menuItems}
+                                        />}
                             </Grid>
                         </Grid>
                         <Box component="div" className={`${styles[`video-desc`]}`}>
@@ -414,13 +455,15 @@ const MediaDetailsPage = ({
                                         <MapView filterId={setIsFilter} key={4} marker={[{
                                             id: 0,
                                             name: `${mediaDetails?.media_associate?.data?.attributes?.place_unique_ids.data !== null ?
-                                                mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
-                                                : ''}`,
-                                            position: {
-                                                lat: latitude || 24.11,
-                                                lng: longitude || 34.98
-                                            }
-                                        }]} />
+                                                    mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
+                                                    : ''}`,
+                                                position: {
+                                                    lat: latitude || 24.11,
+                                                    lng: longitude || 34.98
+                                                }
+                                            }]}
+                                            zoom={10}
+                                        />
                                         <Grid container className={`${styles['map-loctn-details']}`} >
                                             <Grid item lg={5} md={5} sm={5}>
                                                 <Grid container className={`${styles['map-loctn-line']}`}>
@@ -460,10 +503,10 @@ const MediaDetailsPage = ({
                             <Grid item sm={1} className={`${styles['more-icon-grid-item']}`} style={{
                                 marginLeft: 'auto'
                             }}>
-                                <CustomMoreOptionsComponent
-                                    moreIconClassName={`${styles['more-icon']}`}
-                                    menuActions={menuItems}
-                                />
+                                {itemAddEditAccess && <CustomMoreOptionsComponent
+                                            moreIconClassName={`${styles['more-icon']}`}
+                                            menuActions={menuItems}
+                                        />}
                             </Grid>
                         </Grid>
                         <Box component="div" className={`${styles[`three-d-modeldesc`]}`}>
@@ -493,8 +536,8 @@ export const MediaDetailsModal = () => {
 
     const location = useLocation()
 
-    const navigate = useNavigate()
     const dispatch = useDispatch();
+    const {goBack} = useHistory();
 
     // const TotalMediaCount= (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates: 0
     const TotalMediaCount = (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates
@@ -506,7 +549,8 @@ export const MediaDetailsModal = () => {
         setModalOpen(false)
         dispatch(setActiveMediaItem(null))
         dispatch(setActiveMediaItemIndex(0))
-        navigate(`/search-results/Media`, { replace: true, state: null })
+        // navigate(`/search-results/Media`, { replace: true, state: null })
+        goBack()
     }
 
     const showVisitCount = (location.state && location.state.from === 'events') && activeMediaItem
@@ -539,7 +583,8 @@ export const MediaDetailsModal = () => {
                                 /** resetters */
                                 dispatch(setActiveMediaItem(null))
                                 dispatch(setActiveMediaItemIndex(0))
-                                navigate(`/search-results/${tabName}`, { replace: true })
+                                // navigate(`/search-results/${tabName}`, { replace: true })
+                                goBack()
                             }}
                         >
                             Back

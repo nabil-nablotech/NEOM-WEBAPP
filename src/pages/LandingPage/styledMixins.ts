@@ -5,6 +5,12 @@ export const ValignTextMiddle = css`
   flex-direction: column;
   justify-content: center;
 `;
+export const RalignText = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+`;
 
 export const RobotoLightMerino50px = css`
   color: var(--merino);

@@ -8,6 +8,7 @@ import {
 } from "../../../../types/CustomDrawerTypes";
 import {
   handleEnter,
+  validateNumber
 } from "../../../../utils/services/helpers";
 import styles from "./addNewItem.module.css";
 import TextInput from "../../../../components/TextInput";
@@ -101,10 +102,17 @@ const StepContent = ({
               }}
               sx={{
                 ...textInputSxStyles,
+                borderColor: formik.errors.placeNumber ? 'red' : 'inherit'
               }}
               formControlSx={commonFormControlSxStyles}
+              errorField={
+                formik.errors.placeNumber ?
+                  `${formik.errors.placeNumber}`
+                  : ''
+              }
             />
             <TextInput
+              lang="en"
               className={`${styles["english-name"]}`}
               label="Name in English"
               name="english-name"
@@ -120,6 +128,7 @@ const StepContent = ({
             <TextInput
               className={`${styles["arabic-name"]}`}
               label="Name in Arabic"
+              lang="ar"
               name="arabic-name"
               value={formik.values.placeNameArabic}
               onChange={(e) => {
@@ -212,10 +221,11 @@ const StepContent = ({
               className={`${styles["latitude"]}`}
               label="Latitude"
               name="latitude"
-              type="number"
               value={formik.values.latitude}
               onChange={(e) => {
-                formik.setFieldValue("latitude", e.target.value);
+                if (validateNumber(e.target.value)) {
+                  formik.setFieldValue("latitude", e.target.value);
+                }
               }}
               sx={{
                 ...textInputSxStyles,
@@ -226,10 +236,11 @@ const StepContent = ({
               className={`${styles["longitude"]}`}
               label="Longitude"
               name="longitude"
-              type="number"
               value={formik.values.longitude}
               onChange={(e) => {
-                formik.setFieldValue("longitude", e.target.value);
+                if (validateNumber(e.target.value)) {
+                  formik.setFieldValue("longitude", e.target.value);
+                }
               }}
               sx={{
                 ...textInputSxStyles,

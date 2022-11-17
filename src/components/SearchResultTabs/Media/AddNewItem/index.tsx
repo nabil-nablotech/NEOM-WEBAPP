@@ -102,25 +102,11 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     embedCode: edit && tabData?.objectURL,
     submitEmbed: false,
     showUrl: Boolean(edit && tabData?.referenceURL),
-    url: edit ? tabData?.referenceURL : ""
+    url: edit ? tabData?.referenceURL : "",
+    valid: true
   }
-  const formik = useFormik({
-    initialValues: mediaInitialValue,
-    validate: (values) => {
-      if (!values.title && activeStep == 1) {
-        setFormError("Image Title is required");
-      } else {
-        setFormError("");
-      }
-    },
-    onSubmit: (values) => {
-      // alert(JSON.stringify(values, null, 2));
-      if (!formError) {
-        handleNext(null, values);
-      }
-    },
-  });
 
+  
   useEffect(() => {
 
     if (activeStep >= 2) {
@@ -222,6 +208,47 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     }
   };
 
+  const validation = (values: any, formikObject: any) => {
+    let currentError: [] | string[] = [];
+    if (!values.title) {
+      currentError[0] = "Title is required";
+    }
+
+    if (currentError.length === 0) {
+      handleNext(null, values);
+    } else {
+      if (activeStep === 1) {
+        
+        if (currentError.length > 0) {
+
+          let obj = {}
+
+          if (currentError[0]) {
+            obj = { title: currentError[0] }
+          }
+          formikObject.setErrors(obj)
+        }
+      } else {
+        handleNext(null, values);
+      }
+    }
+  }
+
+  const formik = useFormik({
+    initialValues: mediaInitialValue,
+    validate: (values) => {
+      if (!values.title && activeStep == 1) {
+        setFormError("Image Title is required");
+      } else {
+        setFormError("");
+      }
+    },
+    onSubmit: (values, { setErrors }) => {
+      validation(values, {setErrors })
+    },
+  });
+
+
 
 
   useEffect(() => {
@@ -318,6 +345,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
               {edit ? "Edit" : "Add"} Media
             </Typography>
             <Stepper
+              nonLinear 
               activeStep={activeStep}
               alternativeLabel
               className={`${styles["stepper"]} ${tabName === MEDIA_TAB_NAME ? styles["add-media-stepper"] : ""
@@ -337,8 +365,22 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
                 //     stepProps.completed = false;
                 // }
                 return (
-                  <Step key={label} {...stepProps}>
-                    <StepButton color="inherit" onClick={handleStep(index)}>
+                  <Step key={label} {...stepProps}
+                    sx={{
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <StepButton color="inherit"
+                      onClick={e => {
+
+                        if (index > activeStep) {
+                          validation(formik.values, { setErrors: formik.setErrors })
+                        } else if (index < activeStep){
+                          handleBack()
+                        }
+
+                      }}
+                    >
                       <StepLabel
                         {...labelProps}
                         className={`${styles["step-label"]}`}
@@ -372,11 +414,6 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
               </React.Fragment>
             </>
           </Box>
-          {formError && (
-            <Box component="div" className={`${styles["form-error"]}`}>
-              {formError}
-            </Box>
-          )}
           <Box
             component="div"
             className={`${styles["btn-row"]}`}

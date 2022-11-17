@@ -17,11 +17,19 @@ import { ColumnType } from "antd/lib/table";
 import { Event, EventApi } from "../../types/Event";
 import { Media, MediaApi, MediaApi2 } from "../../types/Media";
 import { Options } from "../../types/RefinedSeachTypes";
+import { getRole } from "../storage/storage";
 
 export const baseUrl = `${process.env.REACT_APP_STRAPI_BASE_URL}`;
 // export const baseUrl = `https://877e-59-94-75-53.in.ngrok.io`;
 export const webUrl = `${process.env.REACT_APP_STRAPI_WEB_URL}`;
 export const limit = 10;
+
+export const itemAddEditAccess = getRole() === 'SuperEditor' ? true : getRole() === 'Editor' ? true : false;
+export const itemDeleteAccess = getRole() === 'SuperEditor';
+export const remarksDeleteAccess = getRole() === 'SuperEditor';
+export const remarkAddEditAccess = getRole() === 'SuperEditor' ? true : getRole() === 'Editor' ? true : getRole() === 'Consumer' ? true: false;
+
+console.log('Welcome:', itemAddEditAccess);
 
 export const formatWebDate = (value: string) => {
   if (Date.parse(value)) {
@@ -59,6 +67,32 @@ export const validateEmail = (s: string) => {
   );
   return email_regex.test(s);
 };
+export const validateNumber = (s: string) => {
+  const regex = new RegExp(/^[0-9]*\.?[0-9]*$/);
+  return regex.test(s);
+}
+
+export const invalidChars = [
+  "-",
+  "+",
+  "e",
+];
+
+export const validateNumberField = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  /** ignore typing in of these characters in number type input */
+  const invalidChars = [
+    "-",
+    "+",
+    "e",
+  ];
+
+  if (
+    invalidChars.some(item => e.key === item)
+  ) {
+    e.preventDefault()
+  } 
+
+}
 
 /**
  * Password must contain min 8 letter with at least a symbol, upper and lower case letters and a number
@@ -397,6 +431,9 @@ export const isEmptyValue: isEmptyType = (value: any) => {
   if (typeof value === "object" && Array.isArray(value) && value.length === 1)
     return isEmptyValue(value[0]);
 
+  if (typeof value === "object" && !Array.isArray(value) && Object.keys(value).length === 0)
+    return isEmptyValue(value[0]);
+
   return false;
 };
 
@@ -511,7 +548,9 @@ export const detectMediaRecordType = (record: Media) => {
     : MEDIA_TYPE_3D;
 };
 
-export const isImagePathInvalid = (value: string) => {
+export const isImagePathInvalid = (value: string | undefined) => {
+
+  if(!value) return true
   return (
     value.toLowerCase().indexOf("undefined") !== -1 ||
     value.toLowerCase().indexOf("null") !== -1
@@ -566,10 +605,12 @@ export const toFixedFromString = (value: string | number, decimals: number) => {
   return "";
 };
 
-export const getSingleInventoryNameFromTabName = (value: tabNameProps) => {
-  let newValue: string = value;
+export const getSingleInventoryNameFromTabName = (value: tabNameProps | null) => {
+  let newValue: string | null = value;
 
-  if (newValue.charAt(newValue.length - 1).toLowerCase() === "s") {
+  if(!newValue) {
+    newValue = ''
+  } else if (newValue.charAt(newValue.length - 1).toLowerCase() === "s") {
     newValue = newValue.substring(0, newValue.length - 1);
   }
 
@@ -594,12 +635,12 @@ export const isRecordHavingAssociations = (record: Media) => {
 export const checkSearchParameter = (searchText: string, selectedValues: Options) => {
   const copiedValue = JSON.parse(JSON.stringify(selectedValues));
     copiedValue && Object.keys(copiedValue)?.map(x => {
-      if (copiedValue[x].length === 0 || copiedValue[x] === false) {
+      if (copiedValue[x]?.length === 0 || copiedValue[x] === false) {
         delete copiedValue[x];
       }
       return x;
     });
-  if (Object.keys(copiedValue).length === 0 && searchText.length === 0) {
+  if (Object.keys(copiedValue)?.length === 0 && searchText.length === 0) {
     return false;
   } else { 
     return true

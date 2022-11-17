@@ -5,7 +5,7 @@ import { Grid } from "@mui/material";
 import parse from "html-react-parser";
 import { GridViewCard_Places, InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
-import {baseUrl, detectMediaTypeFromMediaAssociateGraphQlRes, isRecordAttached} from "../../../../utils/services/helpers";
+import {baseUrl, detectMediaTypeFromMediaAssociateGraphQlRes, isImagePathInvalid, isRecordAttached} from "../../../../utils/services/helpers";
 import MoreOptionsComponent from "../ListView/MoreOption";
 import { useSelector } from "react-redux";
 import DetachedIcon from "../../../Icons/DetachedIcon";
@@ -40,6 +40,11 @@ export const Card = ({
             md={11}
             sm={11}
             className={`${gridStyles["card-image-wrapper"]}`}
+            style={{
+              minHeight: isImagePathInvalid(
+                record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}` : undefined
+              ) ? '150px' : ''
+            }}
           >
             
             {img ?<Box
@@ -48,21 +53,21 @@ export const Card = ({
               alt={""}
               src={`${baseUrl}${img}`}
             /> :
-            <RenderFileData
-            fileData={{
-                alt: "",
-                src: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}` : undefined,
-                className: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "VIDEO" ?
+              <RenderFileData
+                fileData={{
+                  alt: "",
+                  src: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}` : undefined,
+                  className: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "VIDEO" ?
                     `${gridStyles['video-card-parent']}` : record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ?
-                        `${gridStyles['card-image']}` : `${gridStyles['three-d-card-parent']}`,
-                objectURL: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.objectURL || '',
-                videoType: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.videoType,
-                iframeVideoLink: (record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.videoType === "url") ? record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.referenceURL : undefined,
-                staticVideoLink:  (record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.videoType === "video") ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}` : undefined
-            }}
-            fileType={detectMediaTypeFromMediaAssociateGraphQlRes(record.attributes?.media_associates?.data[0]?.attributes || record)}
-
-        /> }
+                      `${gridStyles['card-image']}` : `${gridStyles['three-d-card-parent']}`,
+                  objectURL: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.objectURL || '',
+                  videoType: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.videoType,
+                  iframeVideoLink: (record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.videoType === "url") ? record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.referenceURL : undefined,
+                  staticVideoLink: (record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.videoType === "video") ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}` : undefined
+                }}
+                fileType={detectMediaTypeFromMediaAssociateGraphQlRes(record.attributes?.media_associates?.data[0]?.attributes || record)}
+              />
+            }
         {/* :<NoImagePresent message={"No media item is available"} />} */}
           </Grid>
           <Grid
@@ -105,11 +110,13 @@ export const Card = ({
                     }}
                     shouldShowAttachIcon={isRecordAttached(record, associatedPlaces)}
                     onClick={e => {
+
                       const data: InventoryAssociationType = {
                         id: Number(record.id),
                         placeNameEnglish: record.attributes.placeNameEnglish,
                         placeNameArabic: record.attributes.placeNameArabic,
                         placeNumber: record.attributes.placeNumber,
+                        keywords: record.attributes.keywords ? [...record.attributes.keywords] : []
                       }
                       dispatch(modifyAssociatedPlaces({
                         newItem: data,

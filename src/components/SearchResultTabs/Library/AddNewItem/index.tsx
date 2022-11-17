@@ -200,6 +200,44 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     }
   };
 
+  const validation = (values: any, formikObject: any) => {
+    let currentError: [] | string[] = [];
+
+    if (!values.title) {
+      currentError[0] = "Title is required";
+    }
+
+    if (!values.description) {
+      currentError[1] = "Description is required";
+    }
+
+    if (currentError.length === 0) {
+      handleNext(null, values);
+    } else {
+      if (activeStep === 0) {
+        if (currentError.length > 0) {
+
+          let obj = {}
+
+          if (currentError[0]) {
+            obj = { title: currentError[0] }
+          }
+          if (currentError[1]) {
+            obj = {
+              ...obj,
+              description: currentError[1]
+            }
+          }
+          formikObject.setErrors(obj)
+        }
+      } else {
+        handleNext(null, values);
+      }
+    }
+
+  }
+
+
   const formik = useFormik({
     initialValues: {
       place: "",
@@ -210,8 +248,8 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       citation: edit ? tabData?.citation : "",
       keywords: [],
     },
-    onSubmit: (values) => {
-      handleNext(null, values);
+    onSubmit: (values, { setErrors }) => {
+      validation(values, {setErrors })
     },
   });
 
@@ -309,6 +347,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
               {edit ? "Edit" : "Add"} Library
             </Typography>
             <Stepper
+              nonLinear
               activeStep={activeStep}
               alternativeLabel
               className={`${styles["stepper"]}`}
@@ -320,8 +359,22 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
                 } = {};
 
                 return (
-                  <Step key={label} {...stepProps}>
-                    <StepButton color="inherit" onClick={handleStep(index)}>
+                  <Step key={label} {...stepProps}
+                    sx={{
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <StepButton color="inherit"
+                      onClick={e => {
+
+                        if (index > activeStep) {
+                          validation(formik.values, { setErrors: formik.setErrors })
+                        } else if (index < activeStep){
+                          handleBack()
+                        }
+
+                      }}
+                    >
                       <StepLabel {...labelProps} className={`${styles['step-label']}`}
                         StepIconProps={{
                           sx: {
@@ -395,7 +448,6 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
                 <Button
                   label={activeStep === steps.length - 1 ? "Add" : "Next"}
                   type="submit"
-                  disabled={!(formik.values.title.trim().length > 0 && formik.values.description.trim().length > 0)}
                 />
               )}
               {edit && activeStep !== steps.length - 1 && (
@@ -405,9 +457,10 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
                   onClick={(
                     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
                   ) => handleNext(e, undefined)}
+                  disabled={formik.values.title.length === 0 && formik.values.description.length === 0}
                 />
               )}
-              {edit && <Button label={"Update"} type="submit" />}
+              {edit && <Button label={"Update"} disabled={formik.values.title.length === 0 && formik.values.description.length === 0} type="submit" />}
             </Grid>
           </Box>
         </Box>

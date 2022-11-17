@@ -1,4 +1,4 @@
-import React, { ChangeEvent, KeyboardEvent, Ref, useRef } from "react";
+import React, { ChangeEvent, KeyboardEvent, Ref, useEffect, useRef } from "react";
 import TextInput from "../TextInput";
 import { Avatar, InputAdornment } from "@mui/material";
 import SearchIcon from "../SearchField/leading-icon.svg";
@@ -8,6 +8,7 @@ import CircleSharpIcon from '@mui/icons-material/CircleSharp';
 import {useSelector, useDispatch} from 'react-redux'
 import { RootState } from "../../store";
 import {setSearchText} from '../../store/reducers/searchResultsReducer';
+import { useLocation } from "react-router-dom";
 
 function CustomSearchField(props: {
   className?: string;
@@ -24,7 +25,7 @@ function CustomSearchField(props: {
   const dispatch = useDispatch();
 
   let {searchText} =  useSelector((state: RootState) => state.searchResults);
-
+  const { pathname } = useLocation();
   if(shouldHandleChangeFromParent && valueFromParent) {
     searchText = valueFromParent
   }
@@ -32,10 +33,20 @@ function CustomSearchField(props: {
 
     if(shouldHandleChangeFromParent && handleChangeParent) {
       handleChangeParent(e)
-    } else {
-      dispatch(setSearchText(e.target.value));
     }
   }
+
+  useEffect(() => {
+    /** Since this component is used at multiple places WITH common reducer state,
+     * need to clear state as soon as the route changes
+     */
+    /**
+     * If you want to clear the text then you need to clear it from the
+     */
+    // if (searchText) {
+    //   dispatch(setSearchText(''));
+    // }
+  }, [pathname])
 
   return <>
     <TextInput

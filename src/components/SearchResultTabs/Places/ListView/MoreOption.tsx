@@ -8,14 +8,11 @@ import { tabNameProps } from '../../../../types/SearchResultsTabsProps';
 import { Media } from '../../../../types/Media';
 import { useDispatch } from 'react-redux';
 import { setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen } from '../../../../store/reducers/searchResultsReducer';
-import { EVENTS_TAB_NAME, isRecordHavingAssociations, LIBRARY_TAB_NAME, PLACES_TAB_NAME } from '../../../../utils/services/helpers';
-import { deleteRecord } from '../../../../api/delete';
+import { EVENTS_TAB_NAME, isRecordHavingAssociations, LIBRARY_TAB_NAME, PLACES_TAB_NAME, itemAddEditAccess,
+    itemDeleteAccess } from '../../../../utils/services/helpers';
 import { useParams } from 'react-router-dom';
 import { RootState } from '../../../../store';
 import { useSelector } from 'react-redux';
-
-const superEditor = getRole() === 'SuperEditor';
-const editor = getRole() === 'Editor';
 
 const MoreOptionsComponent = ({
     type,
@@ -53,7 +50,7 @@ const MoreOptionsComponent = ({
             >
                 <MoreHorizIcon className="more-menu-div" />
             </div>
-            <Menu
+            {itemAddEditAccess && <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
                 open={open}
@@ -72,7 +69,7 @@ const MoreOptionsComponent = ({
                 >
                     Edit
                 </MenuItem>
-                <MenuItem key={2}
+                {itemDeleteAccess && <MenuItem key={2}
                     onClick={(e) => {
                         e.stopPropagation();
                         dispatch(toggleDeleteConfirmationWindowOpen({
@@ -91,12 +88,12 @@ const MoreOptionsComponent = ({
                             ) : record.id,
                             
                         }))
-                        
+                        handleClose();
                     }}
                 >
                    Delete
-                </MenuItem>
-            </Menu>
+                </MenuItem>}
+            </Menu>}
         </>
     );
 };

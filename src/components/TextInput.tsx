@@ -4,6 +4,7 @@ import TextField, {TextFieldProps} from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { styled, SxProps } from '@mui/material/styles';
 import { FormHelperTextProps } from "@mui/material";
+import FomrError from "./FormError";
 
 interface TextInputProps {
   error?: boolean;
@@ -36,7 +37,7 @@ interface TextInputProps {
   showLabel?: boolean;
   InputProps?: any;
   sx?: any;
-  ref?: React.RefObject<HTMLDivElement>;
+  ref?: React.RefObject<HTMLDivElement> | (((instance: HTMLDivElement | null) => void) & React.RefObject<HTMLDivElement>) | undefined | null;
   required?: boolean,
   autoComplete?: string,
   formControlSx?: SxProps
@@ -44,9 +45,12 @@ interface TextInputProps {
   multiline?: boolean
   minRows?: number
   maxRows?: number
+  endAdornment?: React.ReactNode
+  errorField?: string
+  lang?: string
 };
 
-const NeomTextInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
+const NeomTextInput = styled(TextField)<TextInputProps>(({ theme }) => ({
   // color: theme.palette.getContrastText(grey[500]),
   fontSize: 12,
   // lineHeight: 20,
@@ -98,6 +102,9 @@ export default function NTextFields(props: TextInputProps) {
     formControlSx,
     FormHelperTextProps,
     multiline = false,
+    endAdornment,
+    errorField,
+    lang = 'en',
     ...rest
   } = props;
 
@@ -117,6 +124,7 @@ export default function NTextFields(props: TextInputProps) {
           fullWidth={fullWidth}
           label={showLabel ? label : ''}
           value={value}
+          lang={lang}
           onChange={onChange}
           onBlur={onBlur}
           onFocus={onFocus}
@@ -129,7 +137,16 @@ export default function NTextFields(props: TextInputProps) {
           multiline={multiline}
           sx={{
             ...sx,
-            ...formControlSx
+            ...formControlSx,
+            '& .MuiInputBase-root.MuiOutlinedInput-root input' : errorField ? {
+              border:'1px solid var(--orange-shade)',
+              borderRadius:'4px',
+              
+            } : {},
+            '& .MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-multiline' : errorField ? {
+              border: '1px solid var(--orange-shade)' ,
+              borderRadius: '4px' ,
+            } : {},
           }}
           InputProps={{
             ...InputProps
@@ -138,10 +155,20 @@ export default function NTextFields(props: TextInputProps) {
           required={required}
           name={name}
           autoComplete={autoComplete}
+          endAdornment={endAdornment}
           {...rest}
         >
           {value}
           </NeomTextInput>
+        {
+          errorField &&
+          <FomrError
+            style={{
+              marginTop: '3px'
+            }}
+            msg={errorField}
+          />
+        }
       </Box>
     </Grid>
   );

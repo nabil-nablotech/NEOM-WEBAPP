@@ -5,9 +5,11 @@ import FormControl from "@mui/material/FormControl";
 import { InputAdornment } from "@mui/material";
 import { AutoCompleteSingleSelectProps } from '../../types/DropdownComponent';
 import SearchIcon from '@mui/icons-material/Search';
+import FomrError from '../FormError';
+import CloseIcon from '@mui/icons-material/Close';
 
-export default function FreeSolo({ className, formControlSx, itemsList, value, placeholder, label, defaultValue, selectStylesSx, handleSelectChange, handleChange, renderOption}: AutoCompleteSingleSelectProps) {
-
+export default function FreeSolo({ className, formControlSx, itemsList, value, placeholder, label, defaultValue, selectStylesSx, handleSelectChange, handleChange, renderOption,
+  errorField, handleClear }: AutoCompleteSingleSelectProps & {errorField?: string, handleClear?: () => void}) {
   return (
     <div className={className}>
       <FormControl sx={{ width: '100%', ...formControlSx }}>
@@ -39,6 +41,23 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
                     <SearchIcon sx={{}} />
                   </InputAdornment>
                 </>,
+                endAdornment: <>
+                  {
+                    value &&
+                    <InputAdornment position="end">
+                      <CloseIcon fontSize='small' sx={{
+                        marginRight: 1,
+                        cursor: 'pointer'
+                      }}
+                      onClick={
+                        e=> {
+                          handleClear && handleClear()
+                        }
+                      }
+                      />
+                    </InputAdornment>
+                  }
+                </>,
                 style: {
                   padding: 0,
                   paddingLeft: '0.6em'
@@ -47,12 +66,26 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
           />
         )}
         sx={{
-          ...selectStylesSx
+          ...selectStylesSx,
+          '& .MuiFormControl-root' : {
+            border: errorField ? '1px solid var(--orange-shade)' : 'inherit',
+            borderRadius: errorField ? '4px' : 'inherit',
+            
+          },
         }}
         getOptionLabel={(option: any) => option?.label || ''}
         renderOption={renderOption}
       />
       </FormControl>
+      {
+        errorField &&
+        <FomrError
+          style={{
+            marginTop: '3px'
+          }}
+          msg={errorField}
+        />
+      }
     </div>
   );
 }

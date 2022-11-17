@@ -43,7 +43,14 @@ const useMedia = () => {
     await dispatch(setMediaMetaData(null));
   };
 
-  const [createMediaMutation, { error: addErr, data: addData }] = useMutation(addLibrary, graphQlHeaders());
+  const [createMediaMutation, { error: addErr, data: addData }] = useMutation(addLibrary,{context: graphQlHeaders().context, onCompleted: (data) => {
+    if (associatedEvents.length !== 0 || associatedPlaces.length !== 0) {
+      createAssociation(data.createMedia.data.id);
+    } else  {
+      dispatch(storeAddItemProgressState(null));
+      navigate(`/search-results/Media/${data.createMedia.data.attributes.uniqueId}`, { replace: true })
+    }
+  }});
   const [updateMediaMutation, { data: updateData, reset }] = useMutation(updateMedia, {context: graphQlHeaders().context, onCompleted: () => {
     if (associatedEvents.length == 0 && associatedPlaces.length == 0) {
       dispatch(toggleShowEditSuccess(true));
@@ -99,12 +106,9 @@ const useMedia = () => {
       setHasMoreData(refineMediaData?.medias?.meta.pagination.pageCount !==
         refineMediaData?.medias.meta.pagination.page);
     }
-  }, [refineMediaData?.medias]);
+  }, [refineMediaData?.medias, JSON.stringify(refineMediaData)]);
 
   useEffect(() => {
-    if (addData) {
-      createAssociation(addData.createMedia.data.id);
-    }
     if (updateData) {
       resetEdit();
       if (updateData?.updateMedia.data.attributes?.media_associate?.data?.id) {
@@ -200,6 +204,7 @@ const useMedia = () => {
       asset_config_id: [mediaType(payload.media_type)], // documentType should be string and media type
       keywords: keywords,
       siteType: payload.siteType && payload.siteType,
+      referenceURL: payload.referenceUrl && payload.referenceUrl,
       "latitude": payload.latitude && parseFloat(payload.latitude),
       "longitude": payload.longitude && parseFloat(payload.longitude),
       "categoryType": payload.categoryType && payload?.categoryType,

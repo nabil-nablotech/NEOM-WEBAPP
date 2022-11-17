@@ -3,23 +3,28 @@ import { Box, Grid, IconButton } from "@mui/material";
 import { ColumnsType } from "antd/lib/table";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
-import { antTablePaginationCss, baseUrl } from "../../../../utils/services/helpers";
+import { antTablePaginationCss } from "../../../../utils/services/helpers";
 import InfiniteScroll from "react-infinite-scroll-component";
 import commonStyles from "../../index.module.css";
 import { Loader } from "../../../Loader";
 import { MediaProps } from "../GridView/GridView";
-import { formatWebDate, formatBytes } from '../../../../utils/services/helpers'
+import { baseUrl, detectMediaTypeFromMediaList } from '../../../../utils/services/helpers';
+import RenderFileData from '../../../RenderFileData';
+
 import { MoreOptionsComponent } from './MoreOption';
-import { Media } from "../../../../types/Media";
+import { Media, MediaAttributes } from "../../../../types/Media";
 // import {CustomModal} from '../../../CustomModal';
 // import {MediaDetailsPage} from '../DetailsPage';
 // import styles from './index.module.css';
 // import CloseIcon from '@mui/icons-material/CloseOutlined';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useMediaQuery } from 'react-responsive'
 
 import { setActiveMediaItem, setActiveMediaItemIndex, setSelectedCardIndex } from '../../../../store/reducers/searchResultsReducer';
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
+import { useHistory } from "../../../../hooks/useHistory";
+import styles from '../GridView/index.module.css'
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -28,6 +33,12 @@ const StyledTableWrapper = styled(StyledAntTable)`
     margin-block: 2em;
   }
 
+  td {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell),
   .ant-table-tbody
     > tr
@@ -40,8 +51,13 @@ const StyledTableWrapper = styled(StyledAntTable)`
   }
   .ant-table-cell.more-menu-ant-cell {
     vertical-align: middle;
-    min-width: 20px;
-    width: 20px;
+  }
+  .more-menu-ant-cell,
+  .more-menu-ant-cell > div,
+  .ant-table-tbody > tr > td.more-menu-ant-cell {
+    width: 20px !important;
+    min-width: 20px !important;
+    max-width: 20px !important;
   }
   .more-menu-div {
     vertical-align: middle;
@@ -72,6 +88,9 @@ const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-cell {
     vertical-align: middle;
   }
+  .ant-table-tbody > tr > td.more-menu-ant-cell {
+    min-width: unset;
+  }
 
   @media (min-width: 575px) and (max-width: 1025px) {
     .ant-table-thead
@@ -94,6 +113,20 @@ const StyledTableWrapper = styled(StyledAntTable)`
     td.ant-table-cell {
     }
 
+    .ant-table td {
+      font-size: 12px;
+      white-space: break-spaces;
+    }
+    .ant-table th {
+      font-size: 13px;
+    }
+
+    .ant-table-tbody > tr > td {
+      word-wrap: unset;
+      word-break: unset;
+      white-space: break-spaces;
+    }
+
     .cell-image {
       min-width: 20ch !important;
     }
@@ -101,81 +134,102 @@ const StyledTableWrapper = styled(StyledAntTable)`
     .cell-description {
       min-width: 20ch !important;
     }
+
+    .cell-bearing {
+      min-width: 18ch !important;
+    }
   }
   ${antTablePaginationCss}
 `;
 
 const ListView = (props: MediaProps) => {
   const { data, hasMoreData, fetchData, loading, setEdit } = props;
-
+  const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
+  const { navigateTo } = useHistory()
   const tableHeaderJson: ColumnsType<any> = [
     {
       title: "Image",
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-image",
-      render: (value: any, index: any) => (
+      width: 150,
+      render: (value: MediaAttributes, index: number) => (
         <>
-          {value?.object?.data?.attributes ? <Box
+          {/* {value?.object?.data?.attributes ? <Box
             className={`media-table-image`}
             component="img"
             alt={""}
             src={`${baseUrl}${value?.object?.data?.attributes?.url}`}
-          ></Box> : <NoImagePresent message={"No image to preview"} />}
+          ></Box> : <NoImagePresent message={"No image to preview"} />} */}
+           <>
+           <RenderFileData
+              fileData={{
+                  alt: "",
+                  src: value.object?.data?.attributes?.url ? `${baseUrl}${value?.object?.data?.attributes?.url}` : undefined,
+                  className: detectMediaTypeFromMediaList({attributes: value, id: index.toString()}) === "video" ?
+                      `${styles['video-card-parent']}` : detectMediaTypeFromMediaList({attributes: value, id: index.toString()}) === "image" ?
+                          `${styles['card-image']}` : `${styles['three-d-card-parent']}`,
+                  objectURL: value.objectURL || '',
+                  videoType: value.videoType,
+                  iframeVideoLink: (value.videoType === "url") ? value.referenceURL : undefined,
+                  staticVideoLink:  (detectMediaTypeFromMediaList({attributes: value, id: index.toString()}) === "video" && value.videoType === "video") ? `${baseUrl}${value.object?.data?.attributes?.url}` : undefined
+              }}
+              fileType={detectMediaTypeFromMediaList({attributes: value, id: index.toString()})}
+          />
+          </>
         </>
       ),
     },
 
     {
-      title: "IMAGE DESCRIPTION",
+      title: "TITLE",
+      key: "attributes",
+      dataIndex: "attributes",
+      className: "cell-title",
+      width: 170,
+      render: (value: any, index: any) => value?.fileName?.substring(0, 20),
+    },
+    {
+      title: "DESCRIPTION",
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-description",
-      render: (value: any, index: any) => value.description?.substring(0, 8),
+      width: 200,
+      render: (value: any, index: any) => value?.description || '',
     },
     {
-      title: "SITE",
+      title: "TYPE",
       key: "attributes",
       dataIndex: "attributes",
-      className: "cell-site",
-      sorter: (a: { title: string }, b: { title: any }) => {
-        return a.title?.localeCompare(b.title);
-      },
-      sortDirections: ["ascend"],
-      defaultSortOrder: "ascend",
-      // render: (value: string, index: any) => value.substring(0, 8),
-      render: (value: any, index: any) => value.title?.substring(0, 8), // need to remove once ste is confrmed
-    },
-    {
-      title: "SIZE",
-      key: "attributes",
-      dataIndex: "attributes",
-      render: (value, index) => formatBytes(value?.imageMetadata?.fileSize),
-    },
-    {
-      title: "UPDATED",
-      key: "attributes",
-      dataIndex: "attributes",
-      render: (value, index) => formatWebDate(value.updatedAt),
+      width: 100,
+      render: (value, index) => value.categoryType ? value.categoryType.join(', ') : '',
     },
     {
       title: "BEARING",
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-bearing",
-      render: (value: any, index: any) => value?.bearing?.substring(0, 2),
+      width: isTablet? 80 : 60,
+      render: (value: any, index: any) => value?.bearing,
     },
     {
       title: "FEATURED",
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-bearing",
-      render: (value: any, index: any) => value.featuredImg ? 'Yes' : 'No',
+      width: isTablet? 80 : 60,
+      sorter: (a: Media, b: Media ) => {
+        return a?.attributes?.featuredImage.toString().localeCompare(b?.attributes?.featuredImage.toString())
+    },
+      render: (value: any, index: any) =>{
+        return  value.featuredImage ? 'Yes' : 'No'
+      },
     },
     {
       title: "",
       key: "action",
       fixed: "right",
+      width: 20,
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (
         <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
@@ -221,7 +275,7 @@ const ListView = (props: MediaProps) => {
           pagination={false}
           loading={loading ? loading : false}
           bordered
-          scroll={{ x: 'max-content', y: 500, scrollToFirstRowOnChange: true }}
+          scroll={{ y: 500, scrollToFirstRowOnChange: true }}
           style={{
             background: "transparent",
           }}
@@ -234,7 +288,8 @@ const ListView = (props: MediaProps) => {
                 if (typeof rowIndex === "number") {
                   dispatch(setActiveMediaItem(record))
                   dispatch(setActiveMediaItemIndex(rowIndex))
-                  navigate(`/search-results/Media/${record.attributes.uniqueId}`, { replace: true })
+                  // navigate(`/search-results/Media/${record.attributes.uniqueId}`, { replace: true })
+                  navigateTo(`/search-results/Media/${record.attributes.uniqueId}`)
                 }
               },
             };

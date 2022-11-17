@@ -12,31 +12,29 @@ import { baseUrl, detectMediaTypeFromMediaAssociate, isRecordHavingAssociations,
 import usePlaceDetails from "../../../hooks/usePlaceDetails";
 import Loader from "../../Common/Loader";
 import useEventDetails from "../../../hooks/useEventDetails";
+import { useHistory } from "../../../hooks/useHistory";
 
 const GalleryView = () => {
     const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const { media, places, activePlaceItem, activeMediaItem } = useSelector(
+    const { navigateTo } = useHistory()
+    const { media } = useSelector(
         (state: RootState) => state.searchResults
     );
-    const { loading: placeLoading, data: placeData } = usePlaceDetails();
+    const { loading: placeLoading, data: placeData, setFeaturedMedia } = usePlaceDetails();
     const { setEdit } = useEventDetails();
     
     const menuItems = [
         {
             label: 'Feature',
-            action: () => { }
-        },
-        {
-            label: 'Share',
-            action: () => { }
+            action: (data: any) => { 
+                setFeaturedMedia(data);
+            }
         },
         {
             label: "Edit",
             action: (data: any) => {
                 if(data) {
-                    console.log('hex: ', data)
-                    setEdit({record: data, type: "Events"});
+                    setEdit({record: data, type: "Media"});
                 }
             },
         },
@@ -44,7 +42,6 @@ const GalleryView = () => {
             label: "Delete",
             action: (data: any) => {
                 if (data) {
-                    console.log('hex: ', data)
                     dispatch(toggleDeleteConfirmationWindowOpen({
                         flag: true,
                         isAssociatedToPlacesOrEvents: media ? isRecordHavingAssociations(
@@ -94,11 +91,11 @@ const GalleryView = () => {
                 <Grid item >
                     {`${placeData?.placeNameEnglish.substr(0, 20)}${placeData?.placeNameArabic.substr(0, 20)}`}
                 </Grid>
-                {placeData && <Grid item >{`${placeData?.media_associates.length} Items`}</Grid>}
+                {placeData && <Grid item >{`${placeData?.mediaItems.length} Items`}</Grid>}
             </Grid>
             <Grid container className={`${styles['media-grid']}`}>
                 {
-                    placeData && placeData.media_associates.map((itemObj, inx) => (
+                    placeData && placeData.mediaItems.map((itemObj, inx) => (
                         <Grid item md={3} lg={4} key={inx} className={`${styles['media-grid-item']}`}
                             onClick = {e => {
                                 let respMediaItemObj = null
@@ -113,7 +110,8 @@ const GalleryView = () => {
                                 })
                                 dispatch(setActiveMediaItem(respMediaItemObj))
                                 dispatch(setActiveMediaItemIndex(respMediaItemIndex))
-                                navigate(`/search-results/Media/${itemObj.media_unique_id.uniqueId}`, { replace: true })
+                                // navigate(`/search-results/Media/${itemObj.media_unique_id.uniqueId}`, { replace: true })
+                                navigateTo(`/search-results/Media/${itemObj.media_unique_id.uniqueId}`)
                             }}
                         >
                             {/* to-do: api based flag to show featured */}
@@ -140,7 +138,7 @@ const GalleryView = () => {
                                                 fileType="3d"
                                             />
                                         </> : */}
-                                        <RenderFileData
+                                        {!itemObj?.media_unique_id.deleted && <RenderFileData
                                             fileData={{
                                                 alt: "",
                                                 src: `${baseUrl}${itemObj?.media_unique_id.object?.url}`,
@@ -150,11 +148,11 @@ const GalleryView = () => {
 
                                             }}
                                             fileType={detectMediaTypeFromMediaAssociate(itemObj)}
-                                        />
+                                        />}
                             <Grid container className={`${styles['media-grid-item-options-row']}`}>
                                 <Grid item>
                                     {/* to-do: api based flag to show featured */}
-                                    {inx === 0 && <Box component="div">
+                                    {itemObj?.media_unique_id.featuredImage && <Box component="div">
                                         <Grid container className={`${styles['star-icon-box']}`}>
                                             <Grid item>
                                                 <Box

@@ -32,7 +32,7 @@ import { useDispatch } from "react-redux";
 import {setSelectedValue} from '../../store/reducers/refinedSearchReducer';
 import { MediaDetailsModal } from "./Media/MediaDetails";
 import GalleryView from './GalleryView/index';
-import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex } from "../../store/reducers/searchResultsReducer";
+import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, setSearchApply } from "../../store/reducers/searchResultsReducer";
 import PlaceDetailsPage from "./Places/PlaceDetails";
 import EventDetailsPage from "./Events/EventDetails";
 import { LibraryDetailsModal } from "./Library/LibraryDetails";
@@ -178,6 +178,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
 
   const handleButtonSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
+    dispatch(setSearchApply(true));
     const copiedValue = JSON.parse(JSON.stringify(selectedValue));
     Object.keys(copiedValue).map(x => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
@@ -217,6 +218,10 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     if (name && date) {
 
       selectedValueCopy[name] = date;
+      dispatch(setSelectedValue(selectedValueCopy));
+    }else if (name === "clearDate") {
+      selectedValueCopy['startDate'] = undefined;
+      selectedValueCopy['endDate'] = undefined;
       dispatch(setSelectedValue(selectedValueCopy));
     }
   }
