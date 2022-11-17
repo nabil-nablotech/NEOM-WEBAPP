@@ -142,12 +142,14 @@ allowFullScreen
     )
   }
 
-  const validateUrl = () => {
+  const validateUrl = (str: string) => {
     const regex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
-    if (regex.test(formik.values.url)) {
+    if (regex.test(str)) {
       formik.setFieldValue("valid", true);
+      formik.setFieldValue("errorUrl", '');
     } else {
       formik.setFieldValue("valid", false);
+      formik.setFieldValue("errorUrl", 'Invalid Url');
     }
   }
 
@@ -180,6 +182,7 @@ allowFullScreen
       formik.setFieldValue("valid", false);
     }
   }
+
   return (
     <>
       <Box component="div" className={`${styles["form"]}`}>
@@ -292,8 +295,8 @@ allowFullScreen
                             ...textInputSxStyles,
                           }}
                           formControlSx={commonFormControlSxStyles}
-                          error={!formik.values.valid}
-                          errorText={formik.values.valid ? '' : "Invalid Url"}
+                          error={formik.values.errorUrl?.length > 0}
+                          errorText={formik.values.errorUrl}
                         />
                          {!formik.values.valid && formik.values.url?.length > 10 && <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
                             <Button
@@ -302,7 +305,7 @@ allowFullScreen
                               
                               label={"VALIDATE"}
                               onClick={() => {
-                                validateUrl()
+                                validateUrl(formik.values.url)
                               }}
                             />
                         </Box>}
@@ -560,6 +563,16 @@ allowFullScreen
               to select the places and events you want to associate this library
               item to.
             </Box>
+            {formik.values.associationError && <Box
+              component="div"
+              style={{
+                display: "inline-block",
+                lineHeight: 1.5,
+                color: 'red'
+              }}
+            >
+              {formik.values.associationError}
+              </Box>}
             <AddedPlaces list={associatedPlaces} />
             <AddedEvents list={associatedEvents} />
           </Box>

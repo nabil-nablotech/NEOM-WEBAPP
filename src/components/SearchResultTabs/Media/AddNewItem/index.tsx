@@ -60,7 +60,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
   const { options } = useSelector((state: RootState) => state.refinedSearch);
 
-  const { showAddSuccess, addItemProgressState } = useSelector(
+  const { associatedPlaces, associatedEvents, addItemProgressState } = useSelector(
     (state: RootState) => state.searchResults
   );
   const { edit, tabData } = useSelector((state: RootState) => state.tabEdit);
@@ -103,7 +103,9 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     submitEmbed: false,
     showUrl: Boolean(edit && tabData?.referenceURL),
     url: edit ? tabData?.referenceURL : "",
-    valid: true
+    valid: false,
+    errorUrl: '',
+    associationError: ''
   }
 
   
@@ -137,8 +139,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
     if (activeStep + 1 === steps.length && data) {
       if (create && !edit) {
@@ -228,6 +229,12 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
           }
           formikObject.setErrors(obj)
         }
+      } else  if (activeStep === 2) {        
+        if (associatedPlaces.length === 0 || associatedEvents.length === 0) {
+          formik.setFieldValue('associationError', 'Please add atleast one association')
+        } else {
+          formik.setFieldValue('associationError', '')
+        }
       } else {
         handleNext(null, values);
       }
@@ -239,6 +246,8 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     validate: (values) => {
       if (!values.title && activeStep == 1) {
         setFormError("Image Title is required");
+      } else if ((associatedPlaces.length === 0 || associatedEvents.length === 0) && activeStep === 2) {
+        setFormError("Please create atleast one association");
       } else {
         setFormError("");
       }
