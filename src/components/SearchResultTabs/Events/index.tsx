@@ -21,6 +21,7 @@ import { importCsvImagesZip } from '../../../utils/export-import/import-csv-imag
 import {checkSearchParameter, EVENTS_TAB_NAME} from '../../../utils/services/helpers';
 import { setToggledStates } from '../../../store/reducers/searchResultsReducer';
 import { useDispatch } from 'react-redux';
+import { Relation } from "../../../types/RelationType";
 
 const PlacesTab = () => {
   const { selectedCardIndex, events, totalCounts, eventMetaData, searchText, searchApply,
@@ -100,7 +101,23 @@ const PlacesTab = () => {
     if (event?.target?.files?.length > 0) {
       const file = event?.target?.files[0];
       const fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
-      if (fileExtension === "json" || fileExtension === "csv" || fileExtension === "xlsx") {
+      if (
+        fileExtension === "json" ||
+        fileExtension === "csv" ||
+        fileExtension === "xlsx"
+      ) {
+        const relations: Relation[] = [
+          {
+            bindingContentType: "visit-associates",
+            keyContentType:"visits",
+            parentContentType:"places",
+            key: "visit_unique_id",
+            keyColumn: "uniqueId",
+            parent: "place_unique_id",
+            parentColumn: "Parent ID",
+            extra: { deleted: false },
+          },
+        ];
         importContentType(
           file,
           "api::visit.visit",
@@ -124,7 +141,8 @@ const PlacesTab = () => {
             "media_associates",
             "createdAt",
             "updatedAt",
-          ]
+          ],
+          relations
         );
       }
     }

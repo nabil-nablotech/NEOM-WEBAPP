@@ -1,7 +1,8 @@
+import { Relation } from "../../types/RelationType";
 import { onImportReaderLoad } from "./on-import-reader-load";
 
 export const importContentType = (file: any, slug: string, jsonTypes: string[] = [],
-  toBeRemovedColumns: string[] = []) => {
+  toBeRemovedColumns: string[] = [],relations:Relation[] = []) => {
   var reader = new FileReader();
   const fileName = file?.name;
   reader.onload = (loadEvent) => {
@@ -10,7 +11,8 @@ export const importContentType = (file: any, slug: string, jsonTypes: string[] =
       fileName?.substring(fileName.lastIndexOf(".") + 1),
       slug,
       jsonTypes,
-      toBeRemovedColumns
+      toBeRemovedColumns,
+      relations
     );
   };
 
