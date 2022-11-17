@@ -80,7 +80,7 @@ const useEvent = () => {
     dispatch(setEventEdit(false))
     // dispatch(toggleShowEditSuccess(false));
     /** re-direct */
-    if(updateData.updateVisit) {
+    if(updateData?.updateVisit) {
 
       navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
     }

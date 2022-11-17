@@ -59,7 +59,8 @@ export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payloa
             dispatch(setDeleteItemType(MEDIA_TAB_NAME))
             dispatch(setDeletePayload({
               id: typeof record.id === 'string' ? parseInt(record.id) : record.id
-            }))
+            }));
+            handleClose();
           }}
         >Delete</MenuItem>}
       </Menu>}

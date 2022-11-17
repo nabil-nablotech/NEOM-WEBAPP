@@ -88,7 +88,7 @@ const MoreOptionsComponent = ({
                             ) : record.id,
                             
                         }))
-                        
+                        handleClose();
                     }}
                 >
                    Delete

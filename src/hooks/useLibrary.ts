@@ -55,7 +55,8 @@ const useLibrary = () => {
     }
   }});
   const [createMediaAssociateMutation, { loading: mediaAssociateload, error: mediaAssociateErr, data: mediaAssociate, reset: resetCreateMediaAssociate }] = useMutation(createMediaAssociate, {context: graphQlHeaders().context, onCompleted: () => {
-
+    
+    dispatch(resetMediaAssociation(null))
   }});
   const [updateMediaAssociateMutation, { loading: updateMediaAssociateload, error: updateMediaAssociateErr, data: updateMediaAssociateData, reset: resetUpdateAssociate }] = useMutation(updateMediaAssociate, {context: graphQlHeaders().context, onCompleted: () => {
     dispatch(toggleShowEditSuccess(true));
