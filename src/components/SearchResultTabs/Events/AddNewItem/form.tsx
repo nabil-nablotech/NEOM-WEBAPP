@@ -101,12 +101,12 @@ const StepContent = ({
                   {...props}
                 >
                   <Typography>
-                    {option?.attributes?.placeNameEnglish || ''}
+                    {option?.attributes?.placeNameEnglish || ''} {' '}
                     {option?.attributes?.placeNameArabic || ''}
                   </Typography>
 
                   <Typography style={{ float: "right" }}>
-                    {option?.attributes?.placeNumber || '-'}
+                    {option?.attributes?.placeNumber || ''}
                   </Typography>
                 </Box>
               )}
