@@ -368,6 +368,7 @@ const BaseInputs = ({
               >
                 <Grid item sm={6} className={`${styles["date-popup-grid-item"]}`}>
                   <DatePicker
+                    maxDate={new Date()}
                     placeholderText="From Date"
                     className={`${styles["date"]} ${styles["date-subinput"]}`}
                     selected={selectedValue.startDate && new Date(selectedValue.startDate)}

@@ -46,7 +46,7 @@ export type EventApi = {
   latitude?: number
   libraryItems?: Media[]
   longitude?: number
-  mediaGallery?: Array<MediaAssociateObj>
+  mediaGallery?: Array<MediaAssociateObj> | []
   media_associates?: Array<MediaAssociateObj>
   period: string[]
   recommendation: string[]

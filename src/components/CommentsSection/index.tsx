@@ -8,7 +8,8 @@ import {
   commonFormControlSxStyles,
   formatWebDate,
   textInputSxStyles,
-  remarksDeleteAccess
+  remarksDeleteAccess,
+  remarkAddEditAccess,
 } from "../../utils/services/helpers";
 import TextInput from "../../components/TextInput";
 import styles from "./index.module.css";
@@ -129,7 +130,7 @@ const SingleComment = ({
                   ? formatWebDate(remark?.updatedAt)
                   : formatWebDate(remark?.remark_details.updatedAt)}
               </Grid>
-              {type === "child" ? null : (
+              {(type === "child" && !remarkAddEditAccess) ? null : (
                 <Grid
                   item
                   style={{
@@ -296,7 +297,7 @@ const CommentsSection = ({
 
   return (
     <Box component="div" className={`${styles["comments-container"]}`}>
-      <Grid
+       {remarkAddEditAccess && <Grid
         container
         style={{
           justifyContent: "start",
@@ -308,7 +309,7 @@ const CommentsSection = ({
         <Grid item>
           <SelfIcon />
         </Grid>
-        <Grid item>
+       <Grid item>
           <TextInput
             className={``}
             label="Remarks"
@@ -343,7 +344,7 @@ const CommentsSection = ({
             }}
           />
         </Grid>
-      </Grid>
+      </Grid>}
       <Box component="div" className={`${styles["comments-list-parent-box"]}`}>
         {remarks &&
           remarks.map((remark: Remark, index: number) => (

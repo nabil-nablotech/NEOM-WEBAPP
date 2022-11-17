@@ -146,6 +146,7 @@ const StepContent = ({
             <ReactDatePicker
               placeholderText="Event Date"
               className={`${styles["date"]}`}
+              maxDate={new Date()}
               selected={
                 formik.values.eventDate && new Date(formik.values.eventDate)
               }
