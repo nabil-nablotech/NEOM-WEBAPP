@@ -110,11 +110,13 @@ export const Card = ({
                     }}
                     shouldShowAttachIcon={isRecordAttached(record, associatedPlaces)}
                     onClick={e => {
+
                       const data: InventoryAssociationType = {
                         id: Number(record.id),
                         placeNameEnglish: record.attributes.placeNameEnglish,
                         placeNameArabic: record.attributes.placeNameArabic,
                         placeNumber: record.attributes.placeNumber,
+                        keywords: record.attributes.keywords ? [...record.attributes.keywords] : []
                       }
                       dispatch(modifyAssociatedPlaces({
                         newItem: data,

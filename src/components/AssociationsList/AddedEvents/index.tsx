@@ -37,6 +37,7 @@ const AddedEvents = ({
                                     placeNameEnglish: event.placeNameEnglish,
                                     placeNameArabic: event.placeNameArabic,
                                     placeNumber: event.placeNumber,
+                                    keywords: event.keywords,
                                 }}
                                 handleRemoveItem={handleRemoveItem}
                             />
