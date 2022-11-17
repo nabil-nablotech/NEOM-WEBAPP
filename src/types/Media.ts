@@ -13,9 +13,7 @@ type MediaTypeObject = {
   }
 }
 
-export type Media = {
-  id: string;
-  attributes: {
+export type MediaAttributes = {
     thumbnailUrl?: string;
     title: string;
     description: string;
@@ -50,7 +48,11 @@ export type Media = {
     media_type: {
       data: MediaTypeObject[]
     }
-  }
+}
+
+export type Media = {
+  id: string;
+  attributes: MediaAttributes
 };
 export type MediaApi = {
   categoryType: string[] | []

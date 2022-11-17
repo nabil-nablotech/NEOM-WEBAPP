@@ -3,14 +3,16 @@ import { Box, Grid, IconButton } from "@mui/material";
 import { ColumnsType } from "antd/lib/table";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
-import { antTablePaginationCss, baseUrl } from "../../../../utils/services/helpers";
+import { antTablePaginationCss } from "../../../../utils/services/helpers";
 import InfiniteScroll from "react-infinite-scroll-component";
 import commonStyles from "../../index.module.css";
 import { Loader } from "../../../Loader";
 import { MediaProps } from "../GridView/GridView";
-import { formatWebDate, formatBytes } from '../../../../utils/services/helpers'
+import { baseUrl, detectMediaTypeFromMediaList } from '../../../../utils/services/helpers';
+import RenderFileData from '../../../RenderFileData';
+
 import { MoreOptionsComponent } from './MoreOption';
-import { Media } from "../../../../types/Media";
+import { Media, MediaAttributes } from "../../../../types/Media";
 // import {CustomModal} from '../../../CustomModal';
 // import {MediaDetailsPage} from '../DetailsPage';
 // import styles from './index.module.css';
@@ -22,6 +24,7 @@ import { useMediaQuery } from 'react-responsive'
 import { setActiveMediaItem, setActiveMediaItemIndex, setSelectedCardIndex } from '../../../../store/reducers/searchResultsReducer';
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
 import { useHistory } from "../../../../hooks/useHistory";
+import styles from '../GridView/index.module.css'
 
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
@@ -30,6 +33,12 @@ const StyledTableWrapper = styled(StyledAntTable)`
     margin-block: 2em;
   }
 
+  td {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell),
   .ant-table-tbody
     > tr
@@ -144,14 +153,30 @@ const ListView = (props: MediaProps) => {
       dataIndex: "attributes",
       className: "cell-image",
       width: 150,
-      render: (value: any, index: any) => (
+      render: (value: MediaAttributes, index: number) => (
         <>
-          {value?.object?.data?.attributes ? <Box
+          {/* {value?.object?.data?.attributes ? <Box
             className={`media-table-image`}
             component="img"
             alt={""}
             src={`${baseUrl}${value?.object?.data?.attributes?.url}`}
-          ></Box> : <NoImagePresent message={"No image to preview"} />}
+          ></Box> : <NoImagePresent message={"No image to preview"} />} */}
+           <>
+           <RenderFileData
+              fileData={{
+                  alt: "",
+                  src: value.object?.data?.attributes?.url ? `${baseUrl}${value?.object?.data?.attributes?.url}` : undefined,
+                  className: detectMediaTypeFromMediaList({attributes: value, id: index.toString()}) === "video" ?
+                      `${styles['video-card-parent']}` : detectMediaTypeFromMediaList({attributes: value, id: index.toString()}) === "image" ?
+                          `${styles['card-image']}` : `${styles['three-d-card-parent']}`,
+                  objectURL: value.objectURL || '',
+                  videoType: value.videoType,
+                  iframeVideoLink: (value.videoType === "url") ? value.referenceURL : undefined,
+                  staticVideoLink:  (detectMediaTypeFromMediaList({attributes: value, id: index.toString()}) === "video" && value.videoType === "video") ? `${baseUrl}${value.object?.data?.attributes?.url}` : undefined
+              }}
+              fileType={detectMediaTypeFromMediaList({attributes: value, id: index.toString()})}
+          />
+          </>
         </>
       ),
     },
@@ -170,7 +195,7 @@ const ListView = (props: MediaProps) => {
       dataIndex: "attributes",
       className: "cell-description",
       width: 200,
-      render: (value: any, index: any) => value.description?.substring(0, 30),
+      render: (value: any, index: any) => value?.description || '',
     },
     {
       title: "TYPE",
@@ -185,7 +210,7 @@ const ListView = (props: MediaProps) => {
       dataIndex: "attributes",
       className: "cell-bearing",
       width: isTablet? 80 : 60,
-      render: (value: any, index: any) => value?.bearing?.substring(0, 2),
+      render: (value: any, index: any) => value?.bearing,
     },
     {
       title: "FEATURED",

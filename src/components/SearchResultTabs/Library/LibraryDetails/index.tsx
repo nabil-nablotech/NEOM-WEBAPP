@@ -36,9 +36,6 @@ import {
 import dayjs from "dayjs";
 import BlankDocImage from "../../../../assets/images/searchResults/BlankDocument.svg";
 import type { UploadProps } from "antd";
-import { Upload } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import { Button as AntdButton } from "antd";
 import RenderValueWithDefault from "../../../NoDataScreens/DefaultText";
 import { useHistory } from "../../../../hooks/useHistory";
 // import { Document, Page } from 'react-pdf/dist/esm/entry.webpack5';
