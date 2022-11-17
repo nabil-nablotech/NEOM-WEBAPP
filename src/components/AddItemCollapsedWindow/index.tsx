@@ -24,10 +24,7 @@ const AddItemCollapsedWindow = () => {
             <Grid container className={`${styles['container']}`}>
                 <Grid item>
                     <Box component="div">
-                        {edit ? 'Editing' : 'Adding'} {getSingleInventoryNameFromTabName(addNewItemWindowType)} {
-                            addNewItemWindowType === LIBRARY_TAB_NAME || addNewItemWindowType === MEDIA_TAB_NAME ?
-                            'item' : ''
-                        } <div className={`${styles['gold']}`}>In Progress</div>
+                        {edit ? 'Editing' : 'Adding'} {getSingleInventoryNameFromTabName(addNewItemWindowType)} item <div className={`${styles['gold']}`}>In Progress</div>
                     </Box>
                 </Grid>
                 <Grid item>
