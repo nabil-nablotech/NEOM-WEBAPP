@@ -1,4 +1,3 @@
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import type { UploadChangeParam } from 'antd/es/upload';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
@@ -43,7 +42,8 @@ const ImageUpload = ({
     title,
     existingImageUrl,
     uploadImage,
-    defaultImages
+    defaultImages,
+    handleDelete
 }: CustomUploadProps) => {
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState(existingImageUrl);
@@ -62,6 +62,11 @@ const ImageUpload = ({
          });
         } else if (info.file.status === 'error') {
           message.error(`${info.file.name} file upload failed.`);
+        }
+      }
+    const handleRemove: UploadProps['onRemove'] = (file: UploadFile<any>) => {
+        if (handleDelete) {
+            handleDelete();
         }
       }
 
@@ -86,6 +91,7 @@ const ImageUpload = ({
                 maxCount={1}
                 onChange={handleChange}
                 customRequest={uploadImage}
+                onRemove={handleRemove}
                 defaultFileList={defaultImages || []}
             >
                 {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}

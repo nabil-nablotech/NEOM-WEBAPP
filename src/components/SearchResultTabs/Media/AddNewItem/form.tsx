@@ -226,6 +226,11 @@ allowFullScreen
                       ? `${baseUrl}${formik.values?.object[0]?.url}`
                       : ""
                   }
+                  handleDelete={() => {
+                    // formik.setFieldValue("object", undefined);
+                    formik.values.object = undefined;
+                    console.log('object in image', formik.values.object);
+                  }}
                 />
                 <Typography className={`${styles['file-upload-bottom-text']}`}>Accepted file types: .jpg, .png</Typography>
               </>
@@ -326,6 +331,9 @@ allowFullScreen
                         uploadImage={uploadImage}
                         title={"Drag and drop your file here"}
                         existingImageUrl={""}
+                        handleDelete={() => {
+                          formik.setFieldValue("object", undefined);
+                        }}
                       />
                       }
                       </>
