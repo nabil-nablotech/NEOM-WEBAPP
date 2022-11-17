@@ -20,11 +20,14 @@ import Header from "../../components/Header";
 import useAuth from "../../hooks/useAuth";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { setSearchText, setSearchApply } from "../../store/reducers/searchResultsReducer";
-import LandingPageImage from '../../assets/images/LandingPage.webp';
-import MediaIcon from '../../assets/icons/media.png';
-import EventIcon from '../../assets/icons/events.png';
-import LibraryIcon from '../../assets/icons/library.png';
+import {
+  setSearchText,
+  setSearchApply,
+} from "../../store/reducers/searchResultsReducer";
+import LandingPageImage from "../../assets/images/LandingPage.webp";
+import MediaIcon from "../../assets/icons/media.png";
+import EventIcon from "../../assets/icons/events.png";
+import LibraryIcon from "../../assets/icons/library.png";
 
 const landingPageData = {
   overlapGroup4:
@@ -88,12 +91,14 @@ function LandingPage() {
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.code === 'Enter' && searchText.trim().length >= 3) {
+    if (e.code === "Enter" && searchText.trim().length >= 3) {
       navigate({
         pathname: `/search-results/Places`,
-        search: decodeURIComponent(JSON.stringify({
-          search: searchText
-        }))
+        search: decodeURIComponent(
+          JSON.stringify({
+            search: searchText,
+          })
+        ),
       });
       dispatch(setSearchApply(true));
     }
@@ -101,7 +106,7 @@ function LandingPage() {
 
   const handleClearSearchText = async () => {
     await dispatch(setSearchText(""));
-  }
+  };
 
   if (!data) return null;
   return (
@@ -113,6 +118,11 @@ function LandingPage() {
           <Frame2608172>
             <Image2 src={image2} alt="image 2" />
             <CustomSearchField
+              handleChangeParent={(e) => {
+                dispatch(setSearchText(e.target.value));
+              }}
+              shouldHandleChangeFromParent={true}
+              valueFromParent={searchText}
               handleChange={handleChange}
               onKeyDown={onKeyDown}
               handleClearSearchText={handleClearSearchText}
@@ -143,8 +153,7 @@ function LandingPage() {
               </Frame2608168>
               <Frame2608169 onClick={(e) => handleClick(e, "Events")}>
                 <OverlapGroup5>
-                <Vector1 src={EventIcon} alt="Vector" />
-                 
+                  <Vector1 src={EventIcon} alt="Vector" />
                 </OverlapGroup5>
                 <OverlapGroup1>
                   <Text2>
@@ -155,7 +164,10 @@ function LandingPage() {
                     </span>
                   </Text2>
                   <Places>
-                    <span className="roboto-medium-merino-20px" style={{paddingLeft: 5}}>
+                    <span
+                      className="roboto-medium-merino-20px"
+                      style={{ paddingLeft: 5 }}
+                    >
                       {spanText5}
                     </span>
                   </Places>
@@ -163,10 +175,7 @@ function LandingPage() {
               </Frame2608169>
               <Frame2608170 onClick={(e) => handleClick(e, "Library")}>
                 <OverlapGroup5>
-                <Vector
-                    src={LibraryIcon}
-                    alt="Library"
-                  />
+                  <Vector src={LibraryIcon} alt="Library" />
                 </OverlapGroup5>
                 <OverlapGroup2>
                   <Number>
@@ -522,7 +531,7 @@ const Text3 = styled.div`
 `;
 
 const MediaItems = styled.div`
-${RalignText}
+  ${RalignText}
   ${RobotoMediumMerino20px}
   position: absolute;
   width: 129px;
@@ -535,4 +544,3 @@ ${RalignText}
 `;
 
 export default LandingPage;
-

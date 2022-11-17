@@ -8,7 +8,7 @@ import CustomSearchField from "../SearchField";
 import { ConfirmationModal } from "../ConfirmationModal";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { toggleDeleteUserSuccess, toggleDeleteUserWindowOpen } from "../../store/reducers/searchResultsReducer";
+import { setSearchText, toggleDeleteUserSuccess, toggleDeleteUserWindowOpen } from "../../store/reducers/searchResultsReducer";
 import { useDispatch } from "react-redux";
 import PositionedSnackbar from "../Snackbar";
 
@@ -32,7 +32,7 @@ const Header = (props: IHeader) => {
   } = props
   const navigate = useNavigate();
   const dispatch = useDispatch()
-  const { isDeleteUserWindowOpen, deleteUserSuccess } = useSelector((state: RootState) => state.searchResults);
+  const { isDeleteUserWindowOpen, deleteUserSuccess, searchText } = useSelector((state: RootState) => state.searchResults);
 
   return (
     <>
@@ -55,9 +55,16 @@ const Header = (props: IHeader) => {
             {
               showSearch &&
               <CustomSearchField
+              handleChangeParent={(e) => {
+                dispatch(setSearchText(e.target.value));
+            }}
+            
+            shouldHandleChangeFromParent={true}
+            
+            valueFromParent={searchText}
                 onKeyDown={onKeyDown}
                 handleClearSearchText={handleClearSearchText}
-                className={`${styles["header-search"]}`}
+                // className={`${styles["header-search"]}`}
               />
             }
             <UserMenuComponent />

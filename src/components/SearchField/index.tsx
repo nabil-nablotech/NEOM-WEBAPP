@@ -31,7 +31,6 @@ function CustomSearchField(props: {
   }
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
-    dispatch(setSearchText(e.target.value));
     if(shouldHandleChangeFromParent && handleChangeParent) {
       handleChangeParent(e)
     }
@@ -41,9 +40,12 @@ function CustomSearchField(props: {
     /** Since this component is used at multiple places WITH common reducer state,
      * need to clear state as soon as the route changes
      */
-    if (searchText) {
-      dispatch(setSearchText(''));
-    }
+    /**
+     * If you want to clear the text then you need to clear it from the
+     */
+    // if (searchText) {
+    //   dispatch(setSearchText(''));
+    // }
   }, [pathname])
 
   return <>

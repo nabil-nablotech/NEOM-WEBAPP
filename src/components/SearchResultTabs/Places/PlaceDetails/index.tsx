@@ -540,7 +540,7 @@ const PlaceDetailsPage = () => {
                     zIndex: 10,
                   }}
                 >
-                  {mediaItems && mediaItems.length > 5 && (
+                  {mediaItems && mediaItems.length >= 2 && (
                     <Button
                       variant="contained"
                       type="button"
@@ -577,7 +577,6 @@ const PlaceDetailsPage = () => {
                       );
                     }}
                   >
-                    {/* {media_associates[0] && <RenderFileData */}
                     {shallRenderMedia(1, mediaItems) && (
                       <RenderFileData
                         fileData={{
@@ -607,6 +606,46 @@ const PlaceDetailsPage = () => {
                     )}
                   </Grid>
                   <Grid
+                    item
+                    sm={6}
+                    className={`${styles["grid-item"]}`}
+                    onClick={(e) => {
+                      handleClickMediaItem(
+                        e,
+                        2,
+                        mediaItems[1]?.media_unique_id.uniqueId
+                      );
+                    }}
+                  >
+                    {shallRenderMedia(2, mediaItems) && (
+                      <RenderFileData
+                        fileData={{
+                          alt: "",
+                          src: `${baseUrl}${mediaItems[1]?.media_unique_id?.object?.url}`,
+                          className: `${styles["single-image"]} ${styles["left-image"]}`,
+                          videoType:
+                          mediaItems[1].media_unique_id.videoType,
+                          iframeVideoLink:
+                          mediaItems[1].media_unique_id.videoType ===
+                            "url"
+                              ? mediaItems[1].media_unique_id.referenceURL
+                              : undefined,
+                          staticVideoLink:
+                            detectMediaTypeFromMediaAssociate(
+                              mediaItems[1]
+                            ) === "video" &&
+                            mediaItems[1].media_unique_id.videoType ===
+                              "video"
+                              ? `${baseUrl}${mediaItems[1].media_unique_id.object?.url}`
+                              : undefined,
+                        }}
+                        fileType={detectMediaTypeFromMediaAssociate(
+                          mediaItems[1]
+                        )}
+                      />
+                    )}
+                  </Grid>
+                  {/* <Grid
                     item
                     sm={6}
                     className={`${styles["image-grid-gap"]} ${styles["image-side-grid"]}`}
@@ -656,16 +695,7 @@ const PlaceDetailsPage = () => {
                             )}
                           />
                         )}
-                        {/* YOUTUBE VIDEO LOAD REFERENCE: DONT DELETE YET */}
-                        {/* <RenderFileData
-                                            fileData={{
-                                                src: "https://www.youtube.com/watch?v=aU08MWXL0XY",
-                                                className: `${styles["single-image"]} ${styles["right-image"]}`,
-                                                // thumbnail URL for youtube
-                                                thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg"
-                                            }}
-                                            fileType="video"
-                                        /> */}
+
                       </Grid>
                       <Grid
                         item
@@ -707,16 +737,6 @@ const PlaceDetailsPage = () => {
                             )}
                           />
                         )}
-                        {/* 3D model LOAD REFERENCE: DONT DELETE YET */}
-                        {/* <RenderFileData
-                                            fileData={{
-                                                alt: "",
-                                                src: images[2],
-                                                thumbNail: "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg",
-                                                className: `${styles["single-image"]} ${styles["right-image"]}`
-                                            }}
-                                            fileType="3d"
-                                        /> */}
                       </Grid>
                     </Grid>
                     <Grid
@@ -768,14 +788,7 @@ const PlaceDetailsPage = () => {
                             )}
                           />
                         )}
-                        {/* <RenderFileData
-                                            fileData={{
-                                                alt: "",
-                                                src: images[3],
-                                                className: `${styles["single-image"]} ${styles["right-image"]}`
-                                            }}
-                                            fileType="image"
-                                        /> */}
+
                       </Grid>
                       <Grid
                         item
@@ -822,7 +835,7 @@ const PlaceDetailsPage = () => {
                         )}
                       </Grid>
                     </Grid>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </Box>
             )
