@@ -102,7 +102,8 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     embedCode: edit && tabData?.objectURL,
     submitEmbed: false,
     showUrl: Boolean(edit && tabData?.referenceURL),
-    url: edit ? tabData?.referenceURL : ""
+    url: edit ? tabData?.referenceURL : "",
+    valid: true
   }
 
   

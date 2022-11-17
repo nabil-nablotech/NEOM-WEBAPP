@@ -50,6 +50,8 @@ const commonFormControlSxStyles = {
   },
 };
 
+const youtubeRegex = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/watch\?v=([^&]+)/m;
+
 export const stepperIconSx = {
   color: "#fff",
   border: "1px solid var(--table-black-text)",
@@ -290,6 +292,8 @@ allowFullScreen
                             ...textInputSxStyles,
                           }}
                           formControlSx={commonFormControlSxStyles}
+                          error={!formik.values.valid}
+                          errorText={"Invalid Url"}
                         />
                          {!formik.values.valid && formik.values.url?.length > 10 && <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
                             <Button
