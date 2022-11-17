@@ -55,7 +55,7 @@ const useEvent = () => {
   const searchParams = getQueryObj(search);
   useEffect(() => {
     if (searchParams) {
-      dispatch(setSearchText(searchParams.search))
+      dispatch(setSearchText(searchParams.search?.trim()))
       if (searchParams?.refinedSearch) {
         dispatch(setSelectedValue({
           ...initialSelectedValue,
@@ -167,7 +167,7 @@ const useEvent = () => {
     const text = local ? searchText : searchData?.search;
     const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData?.refinedSearch;
 
-    const searchWordArray = text?.split(' ') || [];
+    const searchWordArray = text?.trim()?.split(' ') || [];
     copiedValue && Object.keys(copiedValue)?.map(x => {
       if (copiedValue[x].length === 0) { delete copiedValue[x]; }
       return x;

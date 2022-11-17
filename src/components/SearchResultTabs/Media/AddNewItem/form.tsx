@@ -293,7 +293,7 @@ allowFullScreen
                           }}
                           formControlSx={commonFormControlSxStyles}
                           error={!formik.values.valid}
-                          errorText={"Invalid Url"}
+                          errorText={formik.values.valid ? '' : "Invalid Url"}
                         />
                          {!formik.values.valid && formik.values.url?.length > 10 && <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
                             <Button

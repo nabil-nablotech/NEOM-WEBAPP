@@ -152,7 +152,7 @@ const useMedia = () => {
   const fetchData = (skip: number = mediaItem.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);
     const text = local ? searchText : searchData?.search;
-    const searchWordArray = text?.split(' ') || [];
+    const searchWordArray = text?.trim()?.split(' ') || [];
     const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData?.refinedSearch;
     copiedValue && Object.keys(copiedValue).map(x => {
       if (copiedValue[x].length === 0) { delete copiedValue[x]; }

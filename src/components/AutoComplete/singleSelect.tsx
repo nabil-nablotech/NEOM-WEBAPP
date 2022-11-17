@@ -43,7 +43,7 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
                 </>,
                 endAdornment: <>
                   {
-                    value?.trim()?.length > 0 &&
+                    value &&
                     <InputAdornment position="end">
                       <CloseIcon fontSize='small' sx={{
                         marginRight: 1,

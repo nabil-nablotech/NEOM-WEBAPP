@@ -143,7 +143,7 @@ const usePlace = () => {
     const text = local ? searchText : searchData?.search;
     // filter non data from the array object
     const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData?.refinedSearch;
-    const searchWordArray = text?.split(" ") || [];
+    const searchWordArray = text?.trim()?.split(" ") || [];
     copiedValue && Object.keys(copiedValue)?.map(x => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
