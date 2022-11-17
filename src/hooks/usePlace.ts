@@ -197,8 +197,8 @@ const usePlace = () => {
       "researchValue": [payload.researchValue],
       "tourismValue": [payload.tourismValue],
       "recommendation": [payload.recommendation],
-      "latitude": payload.latitude && parseFloat(payload.latitude),
-      "longitude": payload.longitude && parseFloat(payload.longitude),
+      "latitude": payload.latitude ? parseFloat(payload.latitude) : null,
+      "longitude": payload.longitude ? parseFloat(payload.longitude) : null,
       // "assessmentType": ["Field-based"],
       artifacts: [payload.artifacts]
     }

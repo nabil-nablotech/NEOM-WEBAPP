@@ -632,12 +632,12 @@ export const isRecordHavingAssociations = (record: Media) => {
 export const checkSearchParameter = (searchText: string, selectedValues: Options) => {
   const copiedValue = JSON.parse(JSON.stringify(selectedValues));
     copiedValue && Object.keys(copiedValue)?.map(x => {
-      if (copiedValue[x].length === 0 || copiedValue[x] === false) {
+      if (copiedValue[x]?.length === 0 || copiedValue[x] === false) {
         delete copiedValue[x];
       }
       return x;
     });
-  if (Object.keys(copiedValue).length === 0 && searchText.length === 0) {
+  if (Object.keys(copiedValue)?.length === 0 && searchText.length === 0) {
     return false;
   } else { 
     return true
