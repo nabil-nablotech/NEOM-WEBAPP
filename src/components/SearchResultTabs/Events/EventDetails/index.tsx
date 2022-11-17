@@ -52,6 +52,7 @@ import {
   setActivePlaceItemIndex,
   setDeleteItemType,
   setDeletePayload,
+  setSearchApply,
   toggleDeleteConfirmationWindowOpen,
 } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
@@ -386,12 +387,7 @@ const EventDetailsPage = () => {
   };
 
   const handleSearch = (searchData: any) => {
-    // navigate({
-    //     pathname: `/search-results/Events`,
-    //     search: decodeURIComponent(JSON.stringify({
-    //         refinedSearch: searchData
-    //     }))
-    // });
+    dispatch(setSearchApply(true));
     navigateTo({
       pathname: `/search-results/Events`,
       search: decodeURIComponent(

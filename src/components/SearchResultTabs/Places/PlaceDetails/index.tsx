@@ -52,6 +52,7 @@ import {
   setActiveMediaItemIndex,
   setActivePlaceItem,
   setActivePlaceItemIndex,
+  setSearchApply,
   toggleGalleryView,
 } from "../../../../store/reducers/searchResultsReducer";
 import PositionedSnackbar from "../../../Snackbar";
@@ -445,6 +446,7 @@ const PlaceDetailsPage = () => {
   }
 
   const handleSearch = (searchData: any) => {
+    dispatch(setSearchApply(true));
     navigateTo({
       pathname: `/search-results/Places`,
       search: decodeURIComponent(
