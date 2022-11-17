@@ -6,9 +6,10 @@ import { InputAdornment } from "@mui/material";
 import { AutoCompleteSingleSelectProps } from '../../types/DropdownComponent';
 import SearchIcon from '@mui/icons-material/Search';
 import FomrError from '../FormError';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function FreeSolo({ className, formControlSx, itemsList, value, placeholder, label, defaultValue, selectStylesSx, handleSelectChange, handleChange, renderOption,
-  errorField }: AutoCompleteSingleSelectProps & {errorField?: string}) {
+  errorField, handleClear }: AutoCompleteSingleSelectProps & {errorField?: string, handleClear?: () => void}) {
   return (
     <div className={className}>
       <FormControl sx={{ width: '100%', ...formControlSx }}>
@@ -39,6 +40,23 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
                   <InputAdornment position="start">
                     <SearchIcon sx={{}} />
                   </InputAdornment>
+                </>,
+                endAdornment: <>
+                  {
+                    value &&
+                    <InputAdornment position="end">
+                      <CloseIcon fontSize='small' sx={{
+                        marginRight: 1,
+                        cursor: 'pointer'
+                      }}
+                      onClick={
+                        e=> {
+                          handleClear && handleClear()
+                        }
+                      }
+                      />
+                    </InputAdornment>
+                  }
                 </>,
                 style: {
                   padding: 0,

@@ -159,8 +159,8 @@ export const StepperKeywordsComponent = ({
             setShowList(newList)
 
         } else {
-            newList = []
-            setShowList([])
+            newList = [...preloadedKeywordsList]
+            setShowList(newList)
         }
     };
 
