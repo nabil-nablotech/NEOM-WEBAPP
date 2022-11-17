@@ -7,10 +7,12 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
+import { getSingleInventoryNameFromTabName, LIBRARY_TAB_NAME, MEDIA_TAB_NAME } from "../../utils/services/helpers";
 import styles from './index.module.css'
 
 const AddItemCollapsedWindow = () => {
     const { addNewItemWindowType } = useSelector((state: RootState) => state.searchResults);
+    const { edit } = useSelector((state: RootState) => state.tabEdit);
 
     const dispatch = useDispatch()
 
@@ -22,7 +24,10 @@ const AddItemCollapsedWindow = () => {
             <Grid container className={`${styles['container']}`}>
                 <Grid item>
                     <Box component="div">
-                        Adding {addNewItemWindowType} item <div className={`${styles['gold']}`}>In Progress</div>
+                        {edit ? 'Editing' : 'Adding'} {getSingleInventoryNameFromTabName(addNewItemWindowType)} {
+                            addNewItemWindowType === LIBRARY_TAB_NAME || addNewItemWindowType === MEDIA_TAB_NAME ?
+                            'item' : ''
+                        } <div className={`${styles['gold']}`}>In Progress</div>
                     </Box>
                 </Grid>
                 <Grid item>
