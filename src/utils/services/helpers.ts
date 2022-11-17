@@ -605,10 +605,12 @@ export const toFixedFromString = (value: string | number, decimals: number) => {
   return "";
 };
 
-export const getSingleInventoryNameFromTabName = (value: tabNameProps) => {
-  let newValue: string = value;
+export const getSingleInventoryNameFromTabName = (value: tabNameProps | null) => {
+  let newValue: string | null = value;
 
-  if (newValue.charAt(newValue.length - 1).toLowerCase() === "s") {
+  if(!newValue) {
+    newValue = ''
+  } else if (newValue.charAt(newValue.length - 1).toLowerCase() === "s") {
     newValue = newValue.substring(0, newValue.length - 1);
   }
 

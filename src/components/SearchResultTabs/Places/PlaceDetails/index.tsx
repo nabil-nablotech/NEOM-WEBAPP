@@ -905,6 +905,7 @@ const PlaceDetailsPage = () => {
                           placeNameEnglish: placeData.placeNameEnglish,
                           placeNameArabic: placeData.placeNameArabic,
                           placeNumber: placeData.placeNumber,
+                          keywords: placeData.keywords ? [...placeData.keywords] : []
                         };
 
                         dispatch(

@@ -13,7 +13,7 @@ import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import MenuList from "../MenuList";
 import { Box, LinearProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setAddNewItemWindowType, setDeletePayload, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleDeleteConfirmationWindowOpen, toggleDeleteItemSuccess, toggleEditConfirmationWindowOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, setDeletePayload, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleDeleteConfirmationWindowOpen, toggleDeleteItemSuccess, toggleEditConfirmationWindowOpen, toggleLogoutConfirmationWindowOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
 import CustomDrawer from "../CustomDrawer";
 import AddNewItem from "../../pages/AddNewItem";
 import AddNewPlace from "../SearchResultTabs/Places/AddNewItem";
@@ -45,7 +45,7 @@ function UserMenuComponent({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [anchorElSettings, setAnchorElSettings] = React.useState<null | HTMLElement>(null);
   const { newItemWindowOpen, addNewItemWindowType, addItemWindowMinimized, isEditConfirmationWindowOpen,
-    isDeleteConfirmationWindowOpen, deletePayload, deleteItemType
+    isDeleteConfirmationWindowOpen, deletePayload, deleteItemType, isLogoutConfirmationWindowOpen
    } = useSelector((state: RootState) => state.searchResults);
   const { createPlace } = usePlace();
   const { createEvent, setSearchValue } = useEvent();
@@ -98,7 +98,12 @@ function UserMenuComponent({
     {
       label: "Sign Out",
       handleClickMenuItem: () => {
-        clientLogout();
+        if(addItemWindowMinimized) {
+          dispatch(toggleLogoutConfirmationWindowOpen(true));
+        } else {
+          clientLogout();
+        }
+        
       },
     },
   ]
@@ -217,27 +222,34 @@ function UserMenuComponent({
         {
           (
             isEditConfirmationWindowOpen ||
-            isDeleteConfirmationWindowOpen.flag
+            isDeleteConfirmationWindowOpen.flag ||
+            isLogoutConfirmationWindowOpen
           ) &&
           <ConfirmationModal
             type={
               isEditConfirmationWindowOpen ? 
               "confirm-edit" :
+              isLogoutConfirmationWindowOpen ? 
+              'confirm-logout' :
               "confirm-delete-inventory" 
             }
             open={
               isEditConfirmationWindowOpen ||
-              isDeleteConfirmationWindowOpen.flag
+              isDeleteConfirmationWindowOpen.flag ||
+              isLogoutConfirmationWindowOpen
             }
             handleClose={() => {
-              if(isEditConfirmationWindowOpen) {
+              if (isEditConfirmationWindowOpen) {
                 dispatch(toggleEditConfirmationWindowOpen(false))
               }
-              if(isDeleteConfirmationWindowOpen.flag) {
+              if (isDeleteConfirmationWindowOpen.flag) {
                 dispatch(toggleDeleteConfirmationWindowOpen({
                   flag: false,
                   isAssociatedToPlacesOrEvents: false,
-              }))
+                }))
+              }
+              if(isLogoutConfirmationWindowOpen) {
+                dispatch(toggleLogoutConfirmationWindowOpen(false))
               }
               dispatch(setDeletePayload(null))
             }}

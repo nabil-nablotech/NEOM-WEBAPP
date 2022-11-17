@@ -42,12 +42,14 @@ const BaseInputs = ({
 }: BaseInputProps) => {
   const [locationModalOpen, toggleLocationModal] = useState<boolean>(false);
   const [dateModalOpen, toggleDateModal] = useState<boolean>(false);
+  const [otherAssessment, setOtherAssessment] = useState<string>('');
   const locationInputSx = {
     ...textInputSxStyles,
     "& .MuiInputBase-input.MuiOutlinedInput-input ": {
       paddingInline: "8px",
     },
   }
+
   return (
     <>
       <Grid item sm={2} className={`${styles["input-field"]}`}>
@@ -230,23 +232,47 @@ const BaseInputs = ({
         </Box>
       </Grid>
       {activeTab === EVENTS_TAB_NAME && (
-        <Grid item sm={2} className={`${styles["input-field"]}`}>
-          <AutoComplete
-            className={`${styles["dropdown"]}`}
-            label={"Assessment"}
-            name="assessmentType"
-            value={selectedValue.assessmentType}
-            multiple={true}
-            handleSelectChange={(e, val) => handleSelectChange(e, val, 'assessmentType')}
-            handleChange={() => {}}
-            handleClear={(e) => handleClear(e, "assessmentType")}
-            itemsList={options?.assessmentType || []}
-            selectStylesSx={{
-              ...commonSelectSxStyles,
-            }}
-            formControlSx={commonFormControlSxStyles}
-          />
-        </Grid>
+        <>
+          <Grid item sm={2} className={`${styles["input-field"]}`}>
+            <AutoComplete
+              className={`${styles["dropdown"]}`}
+              label={"Assessment"}
+              name="assessmentType"
+              value={selectedValue.assessmentType}
+              multiple={true}
+              handleSelectChange={(e, val) => handleSelectChange(e, val, 'assessmentType')}
+              handleChange={() => { }}
+              handleClear={(e) => handleClear(e, "assessmentType")}
+              itemsList={options?.assessmentType || []}
+              selectStylesSx={{
+                ...commonSelectSxStyles,
+              }}
+              formControlSx={commonFormControlSxStyles}
+            />
+          </Grid>
+          {
+            selectedValue?.assessmentType[0] &&
+            (selectedValue.assessmentType[0] === 'Other') &&
+            <>
+              <Grid item sm={2} className={`${styles["input-field"]}`}>
+                <TextInput
+                  lang="en"
+                  className={`${styles["dropdown"]}`}
+                  label="Other Assessment"
+                  name="other-assessment"
+                  value={otherAssessment}
+                  onChange={(e) => {
+                    setOtherAssessment(e.target.value)
+                  }}
+                  sx={{
+                    ...textInputSxStyles,
+                  }}
+                  formControlSx={commonFormControlSxStyles}
+                />
+              </Grid>
+            </>
+          }
+       </>
       )}
       <Grid item sm={2} className={`${styles["input-field"]}`}>
         <AutoComplete

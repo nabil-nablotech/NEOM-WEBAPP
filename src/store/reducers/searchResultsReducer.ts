@@ -61,7 +61,9 @@ const initialState: SearchResultsState2 = {
   },
   deleteUserSuccess: false,
   deletePayload: null,
-  history: []
+  history: [],
+  isLogoutConfirmationWindowOpen: false,
+
 };
 
 export const searchResultsSlice = createSlice({
@@ -294,6 +296,9 @@ export const searchResultsSlice = createSlice({
     setHistoryRedux: (state, action: PayloadAction<Array<string> | []>) => {
       state.history = action.payload;
     },
+    toggleLogoutConfirmationWindowOpen: (state, action: PayloadAction<boolean>) => {
+      state.isLogoutConfirmationWindowOpen = action.payload;
+    },
   },
 });
 
@@ -344,7 +349,8 @@ export const {
   toggleDeleteUserWindowOpen,
   toggleDeleteUserSuccess,
   setDeletePayload,
-  setHistoryRedux
+  setHistoryRedux,
+  toggleLogoutConfirmationWindowOpen
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

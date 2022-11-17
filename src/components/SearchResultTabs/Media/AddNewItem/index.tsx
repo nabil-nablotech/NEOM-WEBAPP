@@ -374,7 +374,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
 
                         if (index > activeStep) {
                           validation(formik.values, { setErrors: formik.setErrors })
-                        } else {
+                        } else if (index < activeStep){
                           handleBack()
                         }
 
