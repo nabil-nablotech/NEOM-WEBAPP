@@ -56,7 +56,7 @@ const MoreOptionsComponent = ({
                     "aria-labelledby": "basic-button",
                 }}
             >
-                {/* {type === "Media" && setFeaturedMedia && <MenuItem
+                {type === "Media" && setFeaturedMedia && <MenuItem
                     key={1}
                     onClick={(e) => {
                         e.stopPropagation();
@@ -65,7 +65,7 @@ const MoreOptionsComponent = ({
                     }}
                 >
                     Featured
-                </MenuItem>} */}
+                </MenuItem>}
                 <MenuItem
                     key={1}
                     onClick={(e) => {

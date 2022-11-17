@@ -44,7 +44,7 @@ const useEventDetails = () => {
 
   const [updateMediaMutation, { data: updateData, reset }] = apolloMutation(updateMedia, {context: graphQlHeaders().context, onCompleted: (data) => {
     if (uniqueId) {
-      fetchEventDetails(uniqueId);
+ 
     }
   }});
 
@@ -122,13 +122,25 @@ const useEventDetails = () => {
     }
   };
 
-  const setFeaturedMedia = (payload: any) => {
-    updateMediaMutation({
+  const setFeaturedMedia = async (payload: any) => {
+    const featuredMedia: any = data && data?.mediaGallery && data?.mediaGallery.filter(x => x.media_unique_id.featuredImage);
+    if (featuredMedia?.length > 0) {
+      await updateMediaMutation({
+        variables: {
+          featuredImage: false,
+          id: featuredMedia[0].media_unique_id.id
+        }
+      })
+    }
+    await updateMediaMutation({
       variables: {
         featuredImage: !payload.media_unique_id.featuredImage,
         id: payload.media_unique_id.id
       }
-    })
+    });
+    if (uniqueId) {
+      await fetchEventDetails(uniqueId);
+    }
   }
 
   return {
