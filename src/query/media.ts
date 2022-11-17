@@ -305,7 +305,7 @@ export const updateMedia = gql`
     $longitude: Float
     $featuredImage: Boolean
     $objectURL: String
-    $refrenceURL: String
+    $referenceURL: String
     $citation: String
     $keywords: JSON
     $fileSize: String
@@ -338,7 +338,7 @@ export const updateMedia = gql`
         featuredImage: $featuredImage
         objectURL: $objectURL
         videoType: $videoType
-        referenceURL: $refrenceURL
+        referenceURL: $referenceURL
         citation: $citation
         object: $object
         imageMetadata: {

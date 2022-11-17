@@ -204,6 +204,7 @@ const useMedia = () => {
       asset_config_id: [mediaType(payload.media_type)], // documentType should be string and media type
       keywords: keywords,
       siteType: payload.siteType && payload.siteType,
+      referenceURL: payload.referenceUrl && payload.referenceUrl,
       "latitude": payload.latitude && parseFloat(payload.latitude),
       "longitude": payload.longitude && parseFloat(payload.longitude),
       "categoryType": payload.categoryType && payload?.categoryType,

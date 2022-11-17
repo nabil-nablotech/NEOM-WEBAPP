@@ -248,7 +248,7 @@ mutation CreateLibrary(
   $longitude: Float
   $featuredImage: Boolean
   $objectURL: String
-  $refrenceURL: String
+  $referenceURL: String
   $citation: String
   $keywords: JSON
   $mediaUIPath: String
@@ -279,7 +279,7 @@ mutation CreateLibrary(
       media_type: $asset_config_id
       featuredImage: $featuredImage
       objectURL: $objectURL
-      referenceURL: $refrenceURL
+      referenceURL: $referenceURL
       citation: $citation
       mediaUIPath: $mediaUIPath
       imageMetadata: {
@@ -334,7 +334,7 @@ $latitude: Float
 $longitude: Float
 $featuredImage: Boolean
 $objectURL: String
-$refrenceURL: String
+$referenceURL: String
 $citation: String
 $keywords: JSON
 $fileSize: String
@@ -365,7 +365,7 @@ $deleted: Boolean
     media_type: $asset_config_id
     featuredImage: $featuredImage
     objectURL: $objectURL
-    referenceURL: $refrenceURL
+    referenceURL: $referenceURL
     citation: $citation
     object: $object
       imageMetadata: {
