@@ -457,9 +457,10 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
                   onClick={(
                     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
                   ) => handleNext(e, undefined)}
+                  disabled={formik.values.title.length === 0 && formik.values.description.length === 0}
                 />
               )}
-              {edit && <Button label={"Update"} type="submit" />}
+              {edit && <Button label={"Update"} disabled={formik.values.title.length === 0 && formik.values.description.length === 0} type="submit" />}
             </Grid>
           </Box>
         </Box>
