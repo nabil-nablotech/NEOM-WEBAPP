@@ -27,6 +27,7 @@ export const limit = 10;
 export const itemAddEditAccess = getRole() === 'SuperEditor' ? true : getRole() === 'Editor' ? true : false;
 export const itemDeleteAccess = getRole() === 'SuperEditor';
 export const remarksDeleteAccess = getRole() === 'SuperEditor';
+export const remarkAddEditAccess = getRole() === 'SuperEditor' ? true : getRole() === 'Editor' ? true : getRole() === 'Consumer' ? true: false;
 
 console.log('Welcome:', itemAddEditAccess);
 
