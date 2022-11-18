@@ -263,6 +263,8 @@ const ListView = (props: EventsProps) => {
                     }}
                     shouldShowAttachIcon={isEventRecordAttached(record, associatedEvents)}
                     onClick={e => {
+                        e.stopPropagation();
+                        handleAttachClick(e, record)
                     }}
                 />
             </Box>
@@ -347,6 +349,8 @@ const ListView = (props: EventsProps) => {
                             const clsList = target.classList
 
                             if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
+                                
+                                event.stopPropagation();
                                 handleAttachClick(event, record)
                             } else {
                                 dispatch(setSelectedCardIndex(rowIndex || record.id))

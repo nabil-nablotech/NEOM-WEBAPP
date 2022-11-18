@@ -256,6 +256,7 @@ const ListView = (props: PlacesProps) => {
   const attachIconColumnHeader: any = useMemo(() => ({
     title: "",
     key: "action",
+    dataIndex: "attributes",
     fixed: 'left',
     className: 'more-menu-ant-cell attach-icon',
     render: (value: any, record: Place) => {
@@ -269,6 +270,8 @@ const ListView = (props: PlacesProps) => {
           }}
           shouldShowAttachIcon={isRecordAttached(record, associatedPlaces)}
           onClick={e => {
+            e.stopPropagation();
+            handleAttachClick(e, record)
           }}
         />
       </Box>
@@ -361,10 +364,10 @@ const ListView = (props: PlacesProps) => {
                           const clsList = target.classList
 
                           if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
+                            event.stopPropagation();
                             handleAttachClick(event, record)
                           } else {
                             dispatch(setSelectedCardIndex(rowIndex || record.id))
-                            // navigate(`/search-results/Places/${record.attributes.uniqueId}`, { replace: true })
                             navigateTo(`/search-results/Places/${record.attributes.uniqueId}`)
                           }
                         }, // click row
