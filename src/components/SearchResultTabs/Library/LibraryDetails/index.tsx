@@ -26,6 +26,7 @@ import Loader from "../../../Common/Loader";
 import useLibraryDetails from "../../../../hooks/useLibraryDetails";
 import {
   baseUrl,
+  copyToClipboard,
   detectLibraryRecordApiType,
   isRecordHavingAssociations,
   itemAddEditAccess,
@@ -38,6 +39,7 @@ import BlankDocImage from "../../../../assets/images/searchResults/BlankDocument
 import type { UploadProps } from "antd";
 import RenderValueWithDefault from "../../../NoDataScreens/DefaultText";
 import { useHistory } from "../../../../hooks/useHistory";
+import PositionedSnackbar from "../../../Snackbar";
 // import { Document, Page } from 'react-pdf/dist/esm/entry.webpack5';
 // import { Document, Page } from 'react-pdf';
 // import DocViewer from "react-doc-viewer";
@@ -53,6 +55,7 @@ const LibraryDetailsPage = ({
   const { library } = useSelector((state: RootState) => state.searchResults);
   const dispatch = useDispatch();
   const { data: libraryDetails, setEdit } = useLibraryDetails();
+  const [isCopyDone, setCopyDone] = useState<boolean>(false);
 
   const locationRef = window.location.href;
 
@@ -245,7 +248,36 @@ const LibraryDetailsPage = ({
                   <p>Details</p>
                   <div>Source URL: {RenderValueWithDefault(referenceURL)}</div>
                   <div>Citation: {RenderValueWithDefault(citation)}</div>
-                  <div>Item URL: {RenderValueWithDefault(locationRef)}</div>
+                  <Grid container style={{
+                    gap: '10px'
+                  }}>
+                    <Grid item sm={2} style={{
+                      maxWidth: 'fit-content'
+                    }}>
+                      Item URL:
+                    </Grid>
+                    <Grid item sm={10}>
+                      <Box
+                        component="div"
+                        style={{
+                          cursor: "pointer",
+                        }}
+                        onClick={(e) => {
+                          setCopyDone(true);
+                          copyToClipboard(locationRef ?? "");
+                        }}
+                      >
+                        {RenderValueWithDefault(locationRef)}
+
+                      </Box>
+                    </Grid>
+                  </Grid>
+                  <PositionedSnackbar
+                    message={"Copied to clipboard"}
+                    severity={"success"}
+                    open={isCopyDone}
+                    handleClose={() => setCopyDone(false)}
+                  />
                 </Box>
 
                 {libraryDetails.object && (
