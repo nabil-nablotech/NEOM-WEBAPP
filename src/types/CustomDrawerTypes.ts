@@ -47,6 +47,7 @@ export type CustomUploadProps = {
     uploadImage?: (options: any) => void
     handleDelete?: () => void
     defaultImages?: any[]
+    accept: string;
 }
 
 export type InitialValues = {

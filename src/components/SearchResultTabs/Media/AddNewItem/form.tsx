@@ -226,6 +226,7 @@ allowFullScreen
                 <CustomUpload
                   defaultImages={formik.values.object}
                   uploadImage={uploadImage}
+                  accept={".jpg,.jpeg,.png"}
                   title={"Drag and drop your file here"}
                   existingImageUrl={
                     formik.values?.object && formik.values?.object[0]?.url
@@ -335,6 +336,7 @@ allowFullScreen
                         />
                       </video> :
                       <CustomUpload
+                        accept={'video/*'}
                         defaultImages={formik.values.object}
                         uploadImage={uploadImage}
                         title={"Drag and drop your file here"}
