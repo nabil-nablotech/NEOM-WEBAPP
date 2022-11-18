@@ -1,7 +1,7 @@
 export function PageNotFound() {
   return (
     <div>
-      <h2>404 Page not found</h2>
+      <h2>404 Neom Page not found</h2>
     </div>
   );
 }
