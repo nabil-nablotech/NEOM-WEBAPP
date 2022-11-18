@@ -354,7 +354,6 @@ const PlaceDetailsPage = () => {
       sorter: (a, b) => {
         const first = (new Date(a?.visit_unique_id?.visitDate)).getTime()
         const second = (new Date(b?.visit_unique_id?.visitDate)).getTime()
-        console.log('hex: ', first, second)
 
         return first < second ? 0 : 1
       },
