@@ -317,7 +317,7 @@ const BaseInputs = ({
               sx={{
                 ...locationInputSx,
                 "& .MuiInputBase-input.MuiOutlinedInput-input": {
-                  fontSize: '0.9em'
+                  fontSize: '1em'
                 }
               }}
               formControlSx={{

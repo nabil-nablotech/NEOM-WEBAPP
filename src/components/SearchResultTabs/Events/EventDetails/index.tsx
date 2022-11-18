@@ -428,6 +428,7 @@ const EventDetailsPage = () => {
           <Button
             variant="text"
             type="button"
+            className={`${styles["back-nav"]}`}
             startIcon={<KeyboardArrowLeftIcon fontSize="small" />}
             style={{
               color: "var(--table-black-text)",
@@ -497,12 +498,23 @@ const EventDetailsPage = () => {
                   <Box component="span">{recordingTeam}</Box>
                 </Box>
                 {visitNumber && (
-                  <Box component="div" className={`${styles["visit-count"]}`}>
+                  <Box component="div" className={`${styles["visit-count"]}`}
+                    style={{
+                      fontWeight: 'bold',
+                      lineHeight: 1.5,
+                      fontSize: 'large'
+                    }}
+                  >
                     VISIT {visitNumber}
                   </Box>
                 )}
                 {id && (
-                  <Box component="div" className={`${styles["visit-count"]}`}>
+                  <Box component="div" className={`${styles["visit-count"]}`}
+                    style={{
+                      lineHeight: 1.5,
+                      fontSize: 'medium'
+                    }}
+                  >
                     ID {id}
                   </Box>
                 )}
@@ -825,27 +837,31 @@ const EventDetailsPage = () => {
               <Grid item sm={5}>
                 {latitude && longitude ? (
                   <>
-                    <MapView
-                      key={1}
-                      filterId={setIsFilter}
-                      marker={[
-                        {
-                          id: "1",
-                          name: eventDetails?.visit_associate?.place_unique_id
-                            ?.placeNameEnglish,
-                          position: {
-                            lat: latitude ? latitude : 24.11,
-                            lng: longitude ? longitude : 34.98,
+                  <Box component="div" style={{
+                      height: '94%'
+                    }}>
+                      <MapView
+                        key={1}
+                        filterId={setIsFilter}
+                        marker={[
+                          {
+                            id: "1",
+                            name: eventDetails?.visit_associate?.place_unique_id
+                              ?.placeNameEnglish,
+                            position: {
+                              lat: latitude ? latitude : 24.11,
+                              lng: longitude ? longitude : 34.98,
+                            },
                           },
-                        },
-                      ]}
-                      zoom={10}
-                    />
+                        ]}
+                        zoom={10}
+                      />
+                    </Box>
                     <Grid
                       container
                       className={`${styles["map-loctn-details"]}`}
                     >
-                      <Grid item lg={5} md={5} sm={5}>
+                      <Grid item lg={4} md={5} sm={5}>
                         <Grid
                           container
                           className={`${styles["map-loctn-line"]}`}
