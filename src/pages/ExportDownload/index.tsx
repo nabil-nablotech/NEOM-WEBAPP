@@ -9,13 +9,38 @@ const ExportDownload = () => {
     <>
       <div> 
         <Header/>
-        <Grid container component="div" className={`${styles["content-section"]}`}>
-            <Grid item component="div" className={`${styles["section-heading"]}`}>
+        <Grid 
+          container 
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="center" 
+          component="div" className={`${styles["content-section"]}`}
+          >
+            {/* <Grid item component="div" className={`${styles["section-heading"]}`}>
                 your data exports
+            </Grid> */}
+            <Grid
+              item
+              direction="column"
+              justifyContent="flex-start"
+              alignItems="center"
+              component="div" className={`${styles["section-heading"]}`}
+            >
+              your data exports
             </Grid>
-            <Grid container component="div" className={`${styles["section-card"]}`}>
+            <Grid
+              item
+              direction="column"
+              justifyContent="flex-start"
+              alignItems="center"
+            >
+              <ExportCard/>
+              <ExportCard/>
+              <ExportCard/>
+            </Grid>
+            {/* <Grid container component="div" className={`${styles["section-card"]}`}>
                 <ExportCard/>
-            </Grid>
+            </Grid> */}
         </Grid>
       </div>
     </>

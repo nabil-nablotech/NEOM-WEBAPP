@@ -5,11 +5,11 @@
 }
 
 .section-heading {
-    position: absolute;
+    /* position: absolute;
     left: 32.92%;
     right: 32.85%;
     top: 15.47%;
-    bottom: 80.02%;
+    bottom: 80.02%; */
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 500;
