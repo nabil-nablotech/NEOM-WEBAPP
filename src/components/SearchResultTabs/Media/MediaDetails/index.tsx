@@ -62,6 +62,7 @@ export const MediaDetailsModal = () => {
                             showVisitCount ? '- static count 1' : ''
                         } */}
                         <Button variant="text" type="button"
+                            className={`${styles["back-nav"]}`}
                             startIcon={<KeyboardArrowLeftIcon fontSize="small" />}
                             style={{
                                 color: 'var(--medium-gray',

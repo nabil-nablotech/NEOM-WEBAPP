@@ -6,7 +6,7 @@
 }
 .left-grid-container {
     gap: 1em;
-    max-height: 100vh;
+    max-height: 79vh;
 
     overflow-y: scroll;
 }
@@ -19,6 +19,7 @@
     gap: 0.8em;
 }
 
+
 .content ,
 .content.MuiGrid-root {
     text-align: left;
@@ -26,9 +27,9 @@
     flex-direction: column !important;
 
     padding: 0;
-    justify-content: space-between;
     position: relative;
-    gap: 0.5em;
+    justify-content: flex-start;
+    gap: 1em;
 }
 
 .card-title {
@@ -64,6 +65,7 @@
     width: 100%;
     aspect-ratio: 3/1.8;
     object-fit: cover;
+    min-height: 150px;
 }
 
 .keyword-pill {
