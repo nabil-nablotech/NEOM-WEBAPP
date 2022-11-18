@@ -17,6 +17,7 @@ import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 import AddedEvents from "../../../AssociationsList/AddedEvents";
 import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
 import FormError from "../../../FormError";
+import type { UploadFile } from 'antd/es/upload/interface';
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -184,6 +185,8 @@ allowFullScreen
     }
   }
 
+  console.log('formik.values?.object............', formik.values?.object)
+
   return (
     <>
       <Box component="div" className={`${styles["form"]}`}>
@@ -229,14 +232,12 @@ allowFullScreen
                   accept={".jpg,.jpeg,.png"}
                   title={"Drag and drop your file here"}
                   existingImageUrl={
-                    formik.values?.object && formik.values?.object[0]?.url
+                   (formik.values?.object && formik.values?.object.length > 0 && formik.values?.object[0]?.url)
                       ? `${baseUrl}${formik.values?.object[0]?.url}`
                       : ""
                   }
-                  handleDelete={() => {
-                    // formik.setFieldValue("object", undefined);
-                    formik.values.object = undefined;
-                    console.log('object in image', formik.values.object);
+                  handleDelete={(file: UploadFile<any>) => {
+                    formik.setFieldValue("object", []);
                   }}
                 />
                 <Typography className={`${styles['file-upload-bottom-text']}`}>Accepted file types: .jpg, .png</Typography>
@@ -342,7 +343,7 @@ allowFullScreen
                         title={"Drag and drop your file here"}
                         existingImageUrl={""}
                         handleDelete={() => {
-                          formik.setFieldValue("object", undefined);
+                          formik.setFieldValue("object", []);
                         }}
                       />
                       }

@@ -53,6 +53,9 @@ const ImageUpload = ({
         if (info.file.status !== 'uploading') {
             setLoading(true);
         }
+        if (info.file.status === 'removed') {
+            setImageUrl('');
+        }
         if (info.file.status === 'done') {
             setLoading(false);
           message.success(`${info.file.name} file uploaded successfully`);
@@ -67,7 +70,7 @@ const ImageUpload = ({
       }
     const handleRemove: UploadProps['onRemove'] = (file: UploadFile<any>) => {
         if (handleDelete) {
-            handleDelete();
+            handleDelete(file);
         }
       }
 
@@ -92,6 +95,7 @@ const ImageUpload = ({
                 multiple={false}
                 maxCount={1}
                 onChange={handleChange}
+                beforeUpload={() => false}
                 customRequest={uploadImage}
                 onRemove={handleRemove}
                 defaultFileList={defaultImages || []}

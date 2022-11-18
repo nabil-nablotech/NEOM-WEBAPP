@@ -1,9 +1,7 @@
-import { ApolloCache, DefaultContext, MutationFunctionOptions, OperationVariables } from "@apollo/client"
-import { MutateFunction } from "react-query"
-import { AddEventState } from "../store/reducers/eventReducer"
 import { Place } from "./Place"
 import { Options } from "./RefinedSeachTypes"
 import { tabNameProps } from "./SearchResultsTabsProps"
+import type { UploadFile } from 'antd/es/upload/interface';
 
 export type CustomDrawerProps = {
     origin: "top" | "right" | "bottom" | "left" | undefined
@@ -45,7 +43,7 @@ export type CustomUploadProps = {
     title?: string,
     existingImageUrl?: string,
     uploadImage?: (options: any) => void
-    handleDelete?: () => void
+    handleDelete?: (file: UploadFile<any>) => void
     defaultImages?: any[]
     accept: string;
 }
