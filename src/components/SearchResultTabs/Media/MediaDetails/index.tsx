@@ -199,7 +199,6 @@ const MediaDetailsPage = ({
         categoryType, Author, bearing, latitude, longitude
     } = mediaDetails
 
-
     const handleNextOrPrevious = (e: handleAction['e'], action: handleAction['action']) => {
         e.preventDefault()
         let newIndex = activeMediaItemIndex
@@ -314,7 +313,10 @@ const MediaDetailsPage = ({
                                     // `${baseUrl}${mediaDetails.object.url}` :
                                     "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg"
                                 , // thumbnail URL for youtube
-                                isOpened: true
+                                isOpened: true,
+                                noVideoStyles: {
+                                    height: '400px'
+                                }
                             }}
                             fileType="video"
                         />
