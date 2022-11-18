@@ -185,8 +185,6 @@ allowFullScreen
     }
   }
 
-  console.log('formik.values?.object............', formik.values?.object)
-
   return (
     <>
       <Box component="div" className={`${styles["form"]}`}>
@@ -229,7 +227,7 @@ allowFullScreen
                 <CustomUpload
                   defaultImages={formik.values.object}
                   uploadImage={uploadImage}
-                  accept={".jpg,.jpeg,.png"}
+                  accept={".jpg,.jpeg,.png,.bmp,.gif"}
                   title={"Drag and drop your file here"}
                   existingImageUrl={
                    (formik.values?.object && formik.values?.object.length > 0 && formik.values?.object[0]?.url)
@@ -330,12 +328,14 @@ allowFullScreen
                     ) : (
                       <>
                       {formik.values?.object && formik.values?.object[0]?.url ? 
+                      <>
                         <video width="338" height="190" controls>
                         <source
                           src={`${baseUrl}${formik.values.object[0].url}`}
                           type="video/mp4"
                         />
-                      </video> :
+                      
+                      </video>
                       <CustomUpload
                         accept={'video/*'}
                         defaultImages={formik.values.object}
@@ -343,6 +343,18 @@ allowFullScreen
                         title={"Drag and drop your file here"}
                         existingImageUrl={""}
                         handleDelete={() => {
+                          formik.setFieldValue("object", []);
+                        }}
+                      />
+                      </> :
+                      <CustomUpload
+                        accept={'video/*'}
+                        defaultImages={formik.values.object}
+                        uploadImage={uploadImage}
+                        title={"Drag and drop your file here"}
+                        existingImageUrl={""}
+                        handleDelete={() => {
+                          console.log('inside delete');
                           formik.setFieldValue("object", []);
                         }}
                       />

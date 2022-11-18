@@ -381,6 +381,7 @@ const BaseInputs = ({
                     className={`${styles["date"]} ${styles["date-subinput"]}`}
                     selected={selectedValue.endDate && new Date(selectedValue.endDate)}
                     minDate={selectedValue.startDate && new Date(selectedValue.startDate)}
+                    maxDate={new Date()}
                     onChange={(date: Date) => handleDate(date, "endDate")}
                   />
                 </Grid>

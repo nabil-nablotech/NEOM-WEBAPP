@@ -95,7 +95,6 @@ const ImageUpload = ({
                 multiple={false}
                 maxCount={1}
                 onChange={handleChange}
-                beforeUpload={() => false}
                 customRequest={uploadImage}
                 onRemove={handleRemove}
                 defaultFileList={defaultImages || []}

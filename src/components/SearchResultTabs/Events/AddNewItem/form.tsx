@@ -79,6 +79,7 @@ const StepContent = ({
 
   return (
     <>
+      
       <Box component="div" className={`${styles["form"]}`}>
         {activeStep === 0 && (
           <>
@@ -124,10 +125,12 @@ const StepContent = ({
               label="Event Number"
               required
               name="visit-number"
-              type="number"
+              // type="number"
               value={formik.values.visitNumber}
               onChange={(e) => {
-                formik.setFieldValue("visitNumber", e.target.value);
+                if (validateNumber(e.target.value)) {
+                  formik.setFieldValue("visitNumber", e.target.value);
+                }
               }}
               sx={{
                 ...textInputSxStyles,

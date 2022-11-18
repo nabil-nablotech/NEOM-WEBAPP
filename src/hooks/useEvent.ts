@@ -21,7 +21,7 @@ import { Place } from "../types/Place";
 import { places } from "../query/places";
 import { eventDetails } from "../api/details";
 
-import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
+import { setLatestItem, setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -75,7 +75,9 @@ const useEvent = () => {
   /**
    * fetch places with two words
    */
-  const [createEventMuation, { loading, error, data }] = useMutation(addEvent, graphQlHeaders());
+  const [createEventMuation, { loading, error, data }] = useMutation(addEvent, {context: graphQlHeaders().context, onCompleted: (data) => {
+    dispatch(setLatestItem({tab:'Events', data:data.createVisit.data}));
+  }});
   const [updateEventMuation, { loading: updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateEvent, {context: graphQlHeaders().context, onCompleted: () => {
     dispatch(setEventEdit(false))
     // dispatch(toggleShowEditSuccess(false));

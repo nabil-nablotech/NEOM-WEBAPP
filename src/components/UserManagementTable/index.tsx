@@ -259,6 +259,7 @@ const StyledTable = styled(Table)`
       align-item: center;
       gap: 10px;
   }
+
 `;
 export type IUser = {
   data: User[] | [];
@@ -294,6 +295,7 @@ export const UserManagementTable = (props: IUser) => {
     generateLink,
   } = props;
   const [dataList, setDataList] = useState<User[] | []>([]);
+  const [search, setSearch] = useState<string>('')
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -464,12 +466,12 @@ export const UserManagementTable = (props: IUser) => {
     );
   };
 
-  const filterResults = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const filterResults = (value: string) => {
 
     if (data.length > 0) {
       let newDatalist = [...data];
       /** filter when search string is not empty */
-      if (e.target.value !== "") {
+      if (value !== "") {
         newDatalist = dataList
           ? dataList.filter((obj) => {
               let flag = false;
@@ -482,7 +484,7 @@ export const UserManagementTable = (props: IUser) => {
                     obj[key as keyof User]
                       .toString()
                       .toLowerCase()
-                      .indexOf(e.target.value.toLowerCase()) !== -1
+                      .indexOf(value.toLowerCase()) !== -1
                   ) {
                     flag = true;
                   }
@@ -507,6 +509,9 @@ export const UserManagementTable = (props: IUser) => {
         confirmLoading={confirmLoading}
         roles={userRoles}
       />
+      <div className={`${styles["search-title"]}`}>
+        USERS
+      </div>
       <div className={`${styles["add-user-btn"]}`}>
         <Button
           label="USER"
@@ -514,12 +519,19 @@ export const UserManagementTable = (props: IUser) => {
           StartIcon={AddIcon}
         />
       </div>
+
       <div className={`${styles["custom-search"]}`}>
         <CustomSearchField
           className={`${styles["custom-search-field"]}`}
           shouldHandleChangeFromParent={true}
+          valueFromParent={search}
           handleChangeParent={(e) => {
-            filterResults(e);
+            setSearch(e.target.value);
+            filterResults(e.target.value);
+          }}
+          handleClearSearchText={() => {
+            setSearch('');
+            filterResults('');
           }}
         />
       </div>

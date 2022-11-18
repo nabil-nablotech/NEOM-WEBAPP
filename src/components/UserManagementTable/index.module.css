@@ -15,6 +15,17 @@
     width: 50ch;
 }
 
+.search-title {
+    font-family: Roboto;
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 35px;
+    letter-spacing: 5px;
+    text-align: left;
+    color: #13100D80;
+    /* padding-bottom: 30px; */
+}
+
 .custom-search-field,
 .custom-search-field >form > div {
     width: 100%;

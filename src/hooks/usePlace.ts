@@ -13,7 +13,7 @@ import {
   toggleShowAddSuccess,
   toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, toggleEditConfirmationWindowOpen, setEditPayload, toggleConfirmOpenEdit
 } from "../store/reducers/searchResultsReducer";
-import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
+import { setLatestItem, setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 import { Place } from "../types/Place";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 
@@ -68,7 +68,9 @@ const usePlace = () => {
    */
   const { loading:refineLoading, error:refineErrorData, data:refinePlaceData, refetch:refineSearchPlaces} = useQuery(refinePlaces, graphQlHeaders());
 
-  const [createPlaceMutation, {data, loading, error}] = useMutation(addPlace, graphQlHeaders());
+  const [createPlaceMutation, {data, loading, error}] = useMutation(addPlace, {context: graphQlHeaders().context, onCompleted: (data) => {
+    dispatch(setLatestItem({tab:'Places', data:data.createPlace.data}));
+  }});
   const [updatePlaceMutation, {data: updateData, loading: updateLoading, error: updateErr}] = useMutation(updatePlace, graphQlHeaders());
 
   useEffect(() => {
@@ -204,7 +206,7 @@ const usePlace = () => {
     }
     if (!edit) {
       data.uniqueId = uniqueId;
-      data.placeUIPath = `${webUrl}/search-results/Events/${uniqueId}`;
+      data.placeUIPath = `${webUrl}/search-results/Places/${uniqueId}`;
       createPlaceMutation({variables: data})
     }
     if (edit && tabData?.id) {

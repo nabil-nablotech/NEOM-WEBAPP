@@ -414,6 +414,11 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
             </Stepper>
             <>
               <React.Fragment>
+              {edit && tabData && (
+                  <Box component="div" className={`${styles["visit-count"]}`}>
+                    {edit ? `ID ${tabData.id}` : null}
+                  </Box>
+                )}
                 <StepContent
                   tabName={tabName}
                   options={options}
