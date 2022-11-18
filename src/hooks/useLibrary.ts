@@ -151,7 +151,7 @@ const useLibrary = () => {
   const fetchData = (skip: number = libItem.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);
     const text = local ? searchText : searchData?.search;
-    const searchWordArray = text?.split(' ') || [];
+    const searchWordArray = text?.trim()?.split(' ') || [];
     const copiedValue = JSON.parse(JSON.stringify(selectedValue));
     Object.keys(copiedValue).map(x => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
@@ -191,7 +191,6 @@ const useLibrary = () => {
   const createLibrary = async (payload: any | undefined) => {
     const uniqueId = generateUniqueId();
     const keywords = payload.keywords;
-    console.log('payload.....', payload);
     const data = {
       ...payload,
       visitNumber: parseFloat(payload.visitNumber),

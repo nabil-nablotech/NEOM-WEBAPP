@@ -264,9 +264,9 @@ const StepContent = ({
                             {
                                 formState.media_type.toLowerCase() === 'image' &&
                                 <>
-                                    <CustomUpload
+                                    {/* <CustomUpload
                                         title={'Drag and drop you file here'}
-                                    />
+                                    /> */}
                                 </>
                             }
                         </>

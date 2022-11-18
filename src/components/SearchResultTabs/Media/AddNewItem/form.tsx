@@ -7,7 +7,7 @@ import TextInput from "../../../../components/TextInput";
 import DropdownComponent from "../../../Dropdown/index";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
-import { baseUrl, validateNumber } from "./../../../../utils/services/helpers";
+import { ASSOCIATIONS_MANDATORY_ERR_MESSAGE, baseUrl, validateNumber } from "./../../../../utils/services/helpers";
 import CustomUpload from "../../../Upload/ImageUpload";
 import { SelectChangeEvent } from "@mui/material/Select";
 import AutoComplete from "../../../AutoComplete";
@@ -16,6 +16,8 @@ import DetachedIcon from "../../../Icons/DetachedIcon";
 import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 import AddedEvents from "../../../AssociationsList/AddedEvents";
 import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
+import FormError from "../../../FormError";
+import type { UploadFile } from 'antd/es/upload/interface';
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -80,7 +82,7 @@ const StepContent = ({
   options,
   formik,
 }: StepContentTypes) => {
-  const { associatedPlaces, associatedEvents } = useSelector(
+  const { associatedPlaces, associatedEvents, isAssociationStepInvalid } = useSelector(
     (state: RootState) => state.searchResults
   );
   const handleSelectChange = (
@@ -142,12 +144,14 @@ allowFullScreen
     )
   }
 
-  const validateUrl = () => {
+  const validateUrl = (str: string) => {
     const regex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
-    if (regex.test(formik.values.url)) {
+    if (regex.test(str)) {
       formik.setFieldValue("valid", true);
+      formik.setFieldValue("errorUrl", '');
     } else {
       formik.setFieldValue("valid", false);
+      formik.setFieldValue("errorUrl", 'Invalid Url');
     }
   }
 
@@ -180,6 +184,9 @@ allowFullScreen
       formik.setFieldValue("valid", false);
     }
   }
+
+  console.log('formik.values?.object............', formik.values?.object)
+
   return (
     <>
       <Box component="div" className={`${styles["form"]}`}>
@@ -222,16 +229,15 @@ allowFullScreen
                 <CustomUpload
                   defaultImages={formik.values.object}
                   uploadImage={uploadImage}
+                  accept={".jpg,.jpeg,.png"}
                   title={"Drag and drop your file here"}
                   existingImageUrl={
-                    formik.values?.object && formik.values?.object[0]?.url
+                   (formik.values?.object && formik.values?.object.length > 0 && formik.values?.object[0]?.url)
                       ? `${baseUrl}${formik.values?.object[0]?.url}`
                       : ""
                   }
-                  handleDelete={() => {
-                    // formik.setFieldValue("object", undefined);
-                    formik.values.object = undefined;
-                    console.log('object in image', formik.values.object);
+                  handleDelete={(file: UploadFile<any>) => {
+                    formik.setFieldValue("object", []);
                   }}
                 />
                 <Typography className={`${styles['file-upload-bottom-text']}`}>Accepted file types: .jpg, .png</Typography>
@@ -292,8 +298,8 @@ allowFullScreen
                             ...textInputSxStyles,
                           }}
                           formControlSx={commonFormControlSxStyles}
-                          error={!formik.values.valid}
-                          errorText={"Invalid Url"}
+                          error={formik.values.errorUrl?.length > 0}
+                          errorText={formik.values.errorUrl}
                         />
                          {!formik.values.valid && formik.values.url?.length > 10 && <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
                             <Button
@@ -302,7 +308,7 @@ allowFullScreen
                               
                               label={"VALIDATE"}
                               onClick={() => {
-                                validateUrl()
+                                validateUrl(formik.values.url)
                               }}
                             />
                         </Box>}
@@ -331,12 +337,13 @@ allowFullScreen
                         />
                       </video> :
                       <CustomUpload
+                        accept={'video/*'}
                         defaultImages={formik.values.object}
                         uploadImage={uploadImage}
                         title={"Drag and drop your file here"}
                         existingImageUrl={""}
                         handleDelete={() => {
-                          formik.setFieldValue("object", undefined);
+                          formik.setFieldValue("object", []);
                         }}
                       />
                       }
@@ -560,6 +567,15 @@ allowFullScreen
               to select the places and events you want to associate this library
               item to.
             </Box>
+            {
+              isAssociationStepInvalid &&
+              <FormError
+                style={{
+                  marginTop: '1em'
+                }}
+                msg={ASSOCIATIONS_MANDATORY_ERR_MESSAGE}
+              />
+            }
             <AddedPlaces list={associatedPlaces} />
             <AddedEvents list={associatedEvents} />
           </Box>

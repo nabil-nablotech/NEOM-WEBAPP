@@ -74,6 +74,13 @@ const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table {
     margin-block: 2em;
   }
+  td
+  {
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+  }
 
   .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell),
   .ant-table-tbody
@@ -199,12 +206,22 @@ const PlaceDetailsPage = () => {
       title: "NAME",
       key: "attributes",
       dataIndex: "media_unique_id",
-      sorter: (a, b) =>
-        a?.attributes?.title?.localeCompare(b?.attributes?.title),
+      sorter: (a, b) => {
+        if(
+          a?.media_unique_id?.fileName && b?.media_unique_id?.fileName
+        ) {
+          return a?.media_unique_id?.fileName?.localeCompare(b?.media_unique_id?.fileName)
+        } else if(
+          a?.media_unique_id?.object?.name && b?.media_unique_id?.object?.name
+        ) {
+          return a?.media_unique_id?.object?.name?.localeCompare(b?.media_unique_id?.object?.name)
+        } else return true
+        
+      },
       defaultSortOrder: "ascend",
       className: "name-column",
-      render: (value: any, record: any) => (
-        <Box
+      render: (value: any, record: any) => {
+        return <Box
           component="div"
           sx={{
             display: "flex",
@@ -212,9 +229,9 @@ const PlaceDetailsPage = () => {
           }}
         >
           <InsertDriveFileOutlinedIcon fontSize="small" />
-          <Box component="div">{value?.fileName}</Box>
+          <Box component="div">{value?.title}</Box>
         </Box>
-      ),
+      },
     },
     {
       title: "DESCRIPTION",
@@ -354,7 +371,6 @@ const PlaceDetailsPage = () => {
       sorter: (a, b) => {
         const first = (new Date(a?.visit_unique_id?.visitDate)).getTime()
         const second = (new Date(b?.visit_unique_id?.visitDate)).getTime()
-        console.log('hex: ', first, second)
 
         return first < second ? 0 : 1
       },
@@ -1285,7 +1301,7 @@ const PlaceDetailsPage = () => {
                   pagination={false}
                   loading={false}
                   bordered
-                  scroll={{ x: true, y: 300 }}
+                  scroll={{ x: 'max-content', y: 300 }}
                   style={{
                     background: "transparent",
                   }}

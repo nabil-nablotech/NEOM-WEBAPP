@@ -13,22 +13,27 @@ export const useHistory = () => {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const { pathname } = useLocation()
+    const { pathname, search } = useLocation()
 
     const navigateTo = (stack: string | { search: string, pathname: string }) => {
 
-        /** set current path as history */
-        dispatch(setHistoryRedux([...history, pathname]))
-
         /** navigate to expected path */
         if (typeof stack === 'string') {
+
+            const searchString = search ? search : '' // eg. ?{"refinedSearch":{"period":["Modern"]}}
+            dispatch(setHistoryRedux([...history, `${pathname}${searchString}`]))
+
             navigate(stack, { replace: true })
         }
+
         if (
             (typeof stack === 'object') &&
             stack.search &&
             stack.pathname
         ) {
+
+            /** set current path as history */
+            dispatch(setHistoryRedux([...history, `${pathname}?${stack.search}`]))
             navigate(stack);
         }
     }

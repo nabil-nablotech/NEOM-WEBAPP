@@ -291,12 +291,23 @@ const EventDetailsPage = () => {
       title: "NAME",
       key: "attributes",
       dataIndex: "media_unique_id",
-      sorter: (a, b) => a?.fileName?.localeCompare(b?.fileName),
+      sorter: (a, b) => {
+        console.log('hex: ', a, b)
+        if(
+          a?.media_unique_id?.fileName && b?.media_unique_id?.fileName
+        ) {
+          return a?.media_unique_id?.fileName?.localeCompare(b?.media_unique_id?.fileName)
+        } else if(
+          a?.media_unique_id?.object?.name && b?.media_unique_id?.object?.name
+        ) {
+          return a?.media_unique_id?.object?.name?.localeCompare(b?.media_unique_id?.object?.name)
+        } else return true
+      },
       sortDirections: ["ascend"],
       defaultSortOrder: "ascend",
       className: "name-column",
-      render: (value: any, record: any) => (
-        <Box
+      render: (value: any, record: any) => {
+        return <Box
           component="div"
           sx={{
             display: "flex",
@@ -304,9 +315,9 @@ const EventDetailsPage = () => {
           }}
         >
           <InsertDriveFileOutlinedIcon fontSize="small" />
-          <Box component="div">{value.fileName}</Box>
+          <Box component="div">{value?.fileName ? value?.fileName : value?.object?.name}</Box>
         </Box>
-      ),
+      },
     },
     {
       title: "DESCRIPTION",
@@ -895,7 +906,7 @@ const EventDetailsPage = () => {
                         if (typeof rowIndex === "number") {
                           dispatch(setActiveLibraryItem(record));
                           dispatch(setActiveLibraryItemIndex(rowIndex));
-                          console.log("hex: ", record);
+                          
                           navigateTo(
                             `/search-results/Library/${record.media_unique_id.uniqueId}`
                           );

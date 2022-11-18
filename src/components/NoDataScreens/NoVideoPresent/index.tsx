@@ -9,7 +9,9 @@ const NoVideoPresent = ({
     return (
         <Box component="div" className={`${styles['wrapper']} ${styles['no-video-wrapper']}`} style={{ ...style }}>
             <Grid container className={`${styles['content-grid']}`} style={{
-                flexDirection: 'column'
+                flexDirection: 'column',
+                height: '100%',
+                width: '100%',
             }}>
                 <Grid item style={{
                     display: 'flex',

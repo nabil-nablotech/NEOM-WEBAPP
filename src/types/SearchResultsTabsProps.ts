@@ -137,6 +137,7 @@ export type SearchResultsState2 = {
   deletePayload: DeletePayloadType,
   history: Array<string> | []
   isLogoutConfirmationWindowOpen: boolean
+  isAssociationStepInvalid: boolean
 };
 
 export type DeletePayloadType = {
@@ -228,6 +229,7 @@ export type FileDataType = {
   iframeVideoLink?: string
   staticVideoLink?: string
   videoType?: "video" | "url" | "embededCode";
+  noVideoStyles?: React.CSSProperties
 };
 
 export type RenderFileDataProps = {
