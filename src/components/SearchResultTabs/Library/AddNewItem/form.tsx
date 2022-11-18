@@ -15,7 +15,7 @@ import {
   AddNewItemProps,
   StepContentTypes,
 } from "../../../../types/CustomDrawerTypes";
-import { addItemLibrarySteps, baseUrl, handleEnter } from "../../../../utils/services/helpers";
+import { ASSOCIATIONS_MANDATORY_ERR_MESSAGE } from "../../../../utils/services/helpers";
 import styles from '../../Places/AddNewItem/addNewItem.module.css'
 import TextInput from "../../../../components/TextInput";import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
@@ -25,6 +25,7 @@ import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 import CloseIcon from '@mui/icons-material/Close';
 import AddedEvents from "../../../AssociationsList/AddedEvents";
 import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
+import FormError from "../../../FormError";
 
 const textInputSxStyles = {
   "& .MuiInputBase-input.MuiOutlinedInput-input": {
@@ -73,7 +74,7 @@ const StepContent = ({
   activeStep,
   formik,
 }: StepContentTypes) => {
-  const { associatedPlaces, associatedEvents } = useSelector(
+  const { associatedPlaces, associatedEvents, isAssociationStepInvalid } = useSelector(
     (state: RootState) => state.searchResults
   );
 
@@ -198,6 +199,15 @@ const StepContent = ({
               />
               {' '}to select the places and events you want to associate this library item to.
             </Box>
+            {
+              isAssociationStepInvalid &&
+              <FormError
+                style={{
+                  marginTop: '1em'
+                }}
+                msg={ASSOCIATIONS_MANDATORY_ERR_MESSAGE}
+              />
+            }
             <AddedPlaces
               list={associatedPlaces}
             />

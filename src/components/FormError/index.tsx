@@ -8,7 +8,7 @@ type FormErrorTypes = {
     style?: React.CSSProperties
 }
 
-const FomrError = ({
+const FormError = ({
     msg,
     style = {}
 }: FormErrorTypes) => {
@@ -24,4 +24,4 @@ const FomrError = ({
     );
 }
 
-export default FomrError;
+export default FormError;

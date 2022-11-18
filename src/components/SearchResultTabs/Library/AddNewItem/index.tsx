@@ -16,13 +16,12 @@ import {
   StepContentTypes,
 } from "../../../../types/CustomDrawerTypes";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
-import { addItemLibrarySteps, baseUrl, handleEnter } from "../../../../utils/services/helpers";
+import { addItemLibrarySteps, baseUrl, isEmptyValue } from "../../../../utils/services/helpers";
 import styles from '../../Places/AddNewItem/addNewItem.module.css'
-import TextInput from "../../../../components/TextInput";
 import Button from "../../../../components/Button";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setAddNewItemWindowType, storeAddItemProgressState, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess } from "../../../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, storeAddItemProgressState, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleIsAssociationStepInvalid, toggleNewItemWindow, toggleShowAddSuccess, toggleShowEditSuccess } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import { useFormik } from "formik";
@@ -81,7 +80,8 @@ export const stepperIconSx = {
 const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { showAddSuccess, addItemProgressState, addNewItemWindowType } = useSelector(
+  const { addItemProgressState, 
+    associatedPlaces, associatedEvents } = useSelector(
     (state: RootState) => state.searchResults
   );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
@@ -211,7 +211,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       currentError[1] = "Description is required";
     }
 
-    if (currentError.length === 0) {
+    if (currentError.length === 0 && (activeStep !== 1)) {
       handleNext(null, values);
     } else {
       if (activeStep === 0) {
@@ -230,7 +230,21 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
           }
           formikObject.setErrors(obj)
         }
-      } else {
+      } 
+      else if(
+        activeStep === 1
+      ) {
+        if (
+          isEmptyValue(associatedPlaces) &&
+          isEmptyValue(associatedEvents)
+        ) {
+          dispatch(toggleIsAssociationStepInvalid(true))
+        } else {
+          dispatch(toggleIsAssociationStepInvalid(false))
+          handleNext(null, values);
+        }
+      } 
+      else {
         handleNext(null, values);
       }
     }

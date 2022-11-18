@@ -15,6 +15,7 @@ import {
 } from "../../../../types/CustomDrawerTypes";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import {
+  isEmptyValue,
   MEDIA_TAB_NAME,
 } from "../../../../utils/services/helpers";
 import styles from "../../Places/AddNewItem/addNewItem.module.css";
@@ -30,6 +31,7 @@ import {
   storeAddItemProgressState,
   toggleAssociationsIconDisabled,
   toggleShowEditSuccess,
+  toggleIsAssociationStepInvalid,
 } from "../../../../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
@@ -215,7 +217,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
       currentError[0] = "Title is required";
     }
 
-    if (currentError.length === 0) {
+    if (currentError.length === 0 && (activeStep !== 2)) {
       handleNext(null, values);
     } else {
       if (activeStep === 1) {
@@ -229,13 +231,21 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
           }
           formikObject.setErrors(obj)
         }
-      } else  if (activeStep === 2) {        
-        if (associatedPlaces.length === 0 || associatedEvents.length === 0) {
-          formik.setFieldValue('associationError', 'Please add atleast one association')
+      }
+      else if (
+        activeStep === 2
+      ) {
+        if (
+          isEmptyValue(associatedPlaces) &&
+          isEmptyValue(associatedEvents)
+        ) {
+          dispatch(toggleIsAssociationStepInvalid(true))
         } else {
-          formik.setFieldValue('associationError', '')
+          dispatch(toggleIsAssociationStepInvalid(false))
+          handleNext(null, values);
         }
-      } else {
+      }
+      else {
         handleNext(null, values);
       }
     }
