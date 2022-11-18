@@ -8,7 +8,7 @@ import RenderFileData from "../../RenderFileData";
 import YellowStar from '../../../assets/images/searchResults/YellowStar.svg'
 import { CustomMoreOptionsComponent } from "../../CustomMoreOptionsComponent";
 import { useNavigate } from 'react-router-dom';
-import { baseUrl, detectMediaTypeFromMediaAssociate, isRecordHavingAssociations, MEDIA_TAB_NAME } from "../../../utils/services/helpers";
+import { baseUrl, detectMediaTypeFromMediaAssociate, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, MEDIA_TAB_NAME } from "../../../utils/services/helpers";
 import usePlaceDetails from "../../../hooks/usePlaceDetails";
 import Loader from "../../Common/Loader";
 import useEventDetails from "../../../hooks/useEventDetails";
@@ -38,7 +38,10 @@ const GalleryView = () => {
                 }
             },
         },
-        {
+    ]
+
+    if (itemDeleteAccess) {
+        menuItems.push( {
             label: "Delete",
             action: (data: any) => {
                 if (data) {
@@ -55,9 +58,8 @@ const GalleryView = () => {
                 }
 
             },
-        },
-    ]
-
+        })
+    }
     
     if (placeLoading) {
         return <Loader />
@@ -165,12 +167,12 @@ const GalleryView = () => {
                                         </Grid>
                                     </Box>}
                                 </Grid>
-                                <Grid item>
+                                {itemAddEditAccess && <Grid item>
                                     <CustomMoreOptionsComponent
                                         menuActions={menuItems}
                                         data={itemObj}
                                     />
-                                </Grid>
+                                </Grid>}
                             </Grid>
                         </Grid>
                     ))

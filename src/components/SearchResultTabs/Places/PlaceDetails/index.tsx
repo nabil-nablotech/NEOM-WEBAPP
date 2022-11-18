@@ -74,6 +74,13 @@ const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table {
     margin-block: 2em;
   }
+  td
+  {
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+  }
 
   .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell),
   .ant-table-tbody
@@ -212,7 +219,7 @@ const PlaceDetailsPage = () => {
           }}
         >
           <InsertDriveFileOutlinedIcon fontSize="small" />
-          <Box component="div">{value?.fileName}</Box>
+          <Box component="div">{value?.title}</Box>
         </Box>
       ),
     },
@@ -1285,7 +1292,7 @@ const PlaceDetailsPage = () => {
                   pagination={false}
                   loading={false}
                   bordered
-                  scroll={{ x: true, y: 300 }}
+                  scroll={{ x: 'max-content', y: 300 }}
                   style={{
                     background: "transparent",
                   }}
