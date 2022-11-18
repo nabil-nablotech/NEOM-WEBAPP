@@ -318,7 +318,8 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
         }
       }}>
         <Accordion className={`${styles["refined-search-wrapper"]}`} sx={{
-          '& .Mui-expanded': {
+          '& .MuiButtonBase-root.MuiAccordionSummary-root.Mui-expanded': {
+            minHeight: 'fit-content'
           }
         }}>
           <AccordionSummary
