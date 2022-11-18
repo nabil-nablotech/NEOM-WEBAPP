@@ -895,7 +895,7 @@ const EventDetailsPage = () => {
                         if (typeof rowIndex === "number") {
                           dispatch(setActiveLibraryItem(record));
                           dispatch(setActiveLibraryItemIndex(rowIndex));
-                          console.log("hex: ", record);
+                          
                           navigateTo(
                             `/search-results/Library/${record.media_unique_id.uniqueId}`
                           );

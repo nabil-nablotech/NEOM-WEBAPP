@@ -7,7 +7,7 @@ import TextInput from "../../../../components/TextInput";
 import DropdownComponent from "../../../Dropdown/index";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
-import { baseUrl, validateNumber } from "./../../../../utils/services/helpers";
+import { ASSOCIATIONS_MANDATORY_ERR_MESSAGE, baseUrl, validateNumber } from "./../../../../utils/services/helpers";
 import CustomUpload from "../../../Upload/ImageUpload";
 import { SelectChangeEvent } from "@mui/material/Select";
 import AutoComplete from "../../../AutoComplete";
@@ -16,6 +16,7 @@ import DetachedIcon from "../../../Icons/DetachedIcon";
 import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 import AddedEvents from "../../../AssociationsList/AddedEvents";
 import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
+import FormError from "../../../FormError";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -80,7 +81,7 @@ const StepContent = ({
   options,
   formik,
 }: StepContentTypes) => {
-  const { associatedPlaces, associatedEvents } = useSelector(
+  const { associatedPlaces, associatedEvents, isAssociationStepInvalid } = useSelector(
     (state: RootState) => state.searchResults
   );
   const handleSelectChange = (
@@ -563,16 +564,15 @@ allowFullScreen
               to select the places and events you want to associate this library
               item to.
             </Box>
-            {formik.values.associationError && <Box
-              component="div"
-              style={{
-                display: "inline-block",
-                lineHeight: 1.5,
-                color: 'red'
-              }}
-            >
-              {formik.values.associationError}
-              </Box>}
+            {
+              isAssociationStepInvalid &&
+              <FormError
+                style={{
+                  marginTop: '1em'
+                }}
+                msg={ASSOCIATIONS_MANDATORY_ERR_MESSAGE}
+              />
+            }
             <AddedPlaces list={associatedPlaces} />
             <AddedEvents list={associatedEvents} />
           </Box>

@@ -426,7 +426,7 @@ export const isEmptyValue: isEmptyType = (value: any) => {
   if (typeof value === "string") return value === "";
 
   if (typeof value === "object" && Array.isArray(value) && value.length === 0)
-    return value.length === 0;
+    return true;
 
   if (typeof value === "object" && Array.isArray(value) && value.length === 1)
     return isEmptyValue(value[0]);
@@ -646,3 +646,5 @@ export const checkSearchParameter = (searchText: string, selectedValues: Options
     return true
   }
 }
+
+export const ASSOCIATIONS_MANDATORY_ERR_MESSAGE = `*Please associate at least one Place or Event`

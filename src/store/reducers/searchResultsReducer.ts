@@ -63,7 +63,7 @@ const initialState: SearchResultsState2 = {
   deletePayload: null,
   history: [],
   isLogoutConfirmationWindowOpen: false,
-
+  isAssociationStepInvalid: false
 };
 
 export const searchResultsSlice = createSlice({
@@ -214,6 +214,9 @@ export const searchResultsSlice = createSlice({
         )
       ) {
         state.associatedPlaces = [...state.associatedPlaces, action.payload.newItem];
+
+        /** reset invalid flag */
+        state.isAssociationStepInvalid = false
       }
     },
     modifyAssociatedEvents: (state, action: PayloadAction<{newItem: InventoryAssociationType_Event | null, removeId: string | null}>) => {
@@ -236,6 +239,9 @@ export const searchResultsSlice = createSlice({
         )
       ) {
         state.associatedEvents = [...state.associatedEvents, action.payload.newItem];
+        
+        /** reset invalid flag */
+        state.isAssociationStepInvalid = false
       }
     },
     resetMediaAssociation: (state, action: PayloadAction<null>) => {
@@ -299,6 +305,9 @@ export const searchResultsSlice = createSlice({
     toggleLogoutConfirmationWindowOpen: (state, action: PayloadAction<boolean>) => {
       state.isLogoutConfirmationWindowOpen = action.payload;
     },
+    toggleIsAssociationStepInvalid: (state, action: PayloadAction<boolean>) => {
+      state.isAssociationStepInvalid = action.payload;
+    },
   },
 });
 
@@ -350,7 +359,8 @@ export const {
   toggleDeleteUserSuccess,
   setDeletePayload,
   setHistoryRedux,
-  toggleLogoutConfirmationWindowOpen
+  toggleLogoutConfirmationWindowOpen,
+  toggleIsAssociationStepInvalid
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;
