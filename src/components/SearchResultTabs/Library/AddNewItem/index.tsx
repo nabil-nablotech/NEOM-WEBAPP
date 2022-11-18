@@ -125,9 +125,20 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
+    } else if (
+      activeStep === 2
+    ) {
+      if (
+        isEmptyValue(associatedPlaces) &&
+        isEmptyValue(associatedEvents)
+      ) {
+        dispatch(toggleIsAssociationStepInvalid(true))
+      } else {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      }
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
     if (activeStep + 1 === steps.length && data) {
       // console.log('data.....', data);
