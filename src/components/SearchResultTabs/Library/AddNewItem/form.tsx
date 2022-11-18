@@ -206,7 +206,7 @@ const StepContent = ({
                   marginTop: '1em'
                 }}
                 msg={ASSOCIATIONS_MANDATORY_ERR_MESSAGE}
-            />
+              />
             }
             <AddedPlaces
               list={associatedPlaces}
