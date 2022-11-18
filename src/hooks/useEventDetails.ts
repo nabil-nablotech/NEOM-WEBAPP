@@ -62,7 +62,7 @@ const useEventDetails = () => {
 
     /** navigate to latest list after deleting item */
     if (deleteItemSuccess && (deleteItemType === "Events")) {
-      navigate(`/search-results/Events`, { replace: true })
+      navigate(`/Events`, { replace: true })
     }
 
     /** means if media or libr is deleted from places */

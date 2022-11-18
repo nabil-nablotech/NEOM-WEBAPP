@@ -59,7 +59,7 @@ const useLibrary = () => {
   const [createMediaAssociateMutation, { loading: mediaAssociateload, error: mediaAssociateErr, data: mediaAssociate, reset: resetCreateMediaAssociate }] = useMutation(createMediaAssociate, {context: graphQlHeaders().context, onCompleted: () => {
     dispatch(resetMediaAssociation(null));
     dispatch(toggleShowAddSuccess(true));
-    navigate(`/search-results/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true});
+    navigate(`/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true});
   }});
   const [updateMediaAssociateMutation, { loading: updateMediaAssociateload, error: updateMediaAssociateErr, data: updateMediaAssociateData, reset: resetUpdateAssociate }] = useMutation(updateMediaAssociate, {context: graphQlHeaders().context, onCompleted: () => {
     dispatch(toggleShowEditSuccess(true));
@@ -124,7 +124,7 @@ const useLibrary = () => {
       dispatch(storeAddItemProgressState(null));
 
       /** re-direct */
-      navigate(`/search-results/Library/${updateData?.updateMedia.data.attributes.uniqueId}`, {replace: true});
+      navigate(`/Library/${updateData?.updateMedia.data.attributes.uniqueId}`, {replace: true});
     }
   }, [addData, updateData])
 
@@ -207,7 +207,7 @@ const useLibrary = () => {
     if (!edit) {
       data.uniqueId = uniqueId;
       data.created = formatStrapiDate(new Date());
-      data.mediaUIPath = `${webUrl}/search-results/Library/${uniqueId}`;
+      data.mediaUIPath = `${webUrl}/Library/${uniqueId}`;
       createLibraryMutation({variables: data})
     }
     if (edit && tabData?.id) {

@@ -59,7 +59,7 @@ const usePlaceDetails = () => {
 
     /** navigate to latest list after deleting item */
     if (deleteItemSuccess && (deleteItemType === "Places")) {
-      navigate(`/search-results/Places`, {replace: true})
+      navigate(`/Places`, {replace: true})
 
       
     }

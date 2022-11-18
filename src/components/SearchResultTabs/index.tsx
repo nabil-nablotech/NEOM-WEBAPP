@@ -169,7 +169,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     dispatch(setActiveMediaItemIndex(0))
 
     navigate({
-      pathname: `/search-results/${newLabel ? newLabel : "Places"}`,
+      pathname: `/${newLabel ? newLabel : "Places"}`,
       search: decodeURIComponent(JSON.stringify({
         search: searchText
       }))
@@ -199,7 +199,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
       handleSubmit();
     }
     navigate({
-      pathname: `/search-results/${tabName}`,
+      pathname: `/${tabName}`,
       search: searchParams
     });
   };

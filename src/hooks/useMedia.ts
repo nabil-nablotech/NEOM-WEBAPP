@@ -48,7 +48,7 @@ const useMedia = () => {
       createAssociation(data.createMedia.data.id);
     } else  {
       dispatch(storeAddItemProgressState(null));
-      navigate(`/search-results/Media/${data.createMedia.data.attributes.uniqueId}`, { replace: true })
+      navigate(`/Media/${data.createMedia.data.attributes.uniqueId}`, { replace: true })
     }
     dispatch(setLatestItem({tab:'Media', data:data.createMedia.data}))
   }});
@@ -61,7 +61,7 @@ const useMedia = () => {
     if (d) {
       dispatch(resetMediaAssociation(null));
       dispatch(storeAddItemProgressState(null));
-      navigate(`/search-results/Media/${addData?.createMedia?.data?.attributes?.uniqueId}`, { replace: true })
+      navigate(`/Media/${addData?.createMedia?.data?.attributes?.uniqueId}`, { replace: true })
     }
   }});
   const [updateMediaAssociateMutation, { data: updateMediaAssociateData }] = useMutation(updateMediaAssociate, graphQlHeaders());
@@ -131,7 +131,7 @@ const useMedia = () => {
 
       dispatch(storeAddItemProgressState(null));
       /** re-direct */
-      navigate(`/search-results/Media/${updateData?.updateMedia.data.attributes.uniqueId}`, { replace: true })
+      navigate(`/Media/${updateData?.updateMedia.data.attributes.uniqueId}`, { replace: true })
 
     }
   }, [addData, updateData, addErr])
@@ -217,7 +217,7 @@ const useMedia = () => {
     if (!edit) {
       data.uniqueId = uniqueId;
       data.created = formatStrapiDate(new Date());
-      data.mediaUIPath = `${webUrl}/search-results/Media/${uniqueId}`;
+      data.mediaUIPath = `${webUrl}/Media/${uniqueId}`;
       createMediaMutation({ variables: data })
     }
     if (edit && tabData?.id) {

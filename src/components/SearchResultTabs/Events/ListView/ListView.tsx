@@ -354,8 +354,8 @@ const ListView = (props: EventsProps) => {
                                 handleAttachClick(event, record)
                             } else {
                                 dispatch(setSelectedCardIndex(rowIndex || record.id))
-                                // navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
-                                navigateTo(`/search-results/Events/${record.attributes.uniqueId}`)
+                                // navigate(`/Events/${record.attributes.uniqueId}`, {replace: true})
+                                navigateTo(`/Events/${record.attributes.uniqueId}`)
                             }
                           }, // click row
                         };

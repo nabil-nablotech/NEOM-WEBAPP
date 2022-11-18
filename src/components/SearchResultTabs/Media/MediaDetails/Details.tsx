@@ -84,8 +84,8 @@ const MediaDetailsPage = ({
                 newIndex = newIndex + 1
                 dispatch(setActiveMediaItem(media[newIndex]))
                 dispatch(setActiveMediaItemIndex(newIndex))
-                // navigate(`/search-results/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
-                navigateTo(`/search-results/Media/${media[newIndex].attributes.uniqueId}`)
+                // navigate(`/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                navigateTo(`/Media/${media[newIndex].attributes.uniqueId}`)
             }
 
         }
@@ -96,8 +96,8 @@ const MediaDetailsPage = ({
 
                 dispatch(setActiveMediaItem(media[newIndex]))
                 dispatch(setActiveMediaItemIndex(newIndex))
-                // navigate(`/search-results/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
-                navigateTo(`/search-results/Media/${media[newIndex].attributes.uniqueId}`)
+                // navigate(`/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                navigateTo(`/Media/${media[newIndex].attributes.uniqueId}`)
 
             }
 

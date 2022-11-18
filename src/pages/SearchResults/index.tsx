@@ -79,7 +79,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       e.preventDefault();
       dispatch(setSearchApply(true));
       navigate({
-        pathname: `/search-results/${tabName}`,
+        pathname: `/${tabName}`,
         search: decodeURIComponent(JSON.stringify({
           search: searchText
         }))
@@ -106,7 +106,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         break;
     }
     navigate({
-      pathname: `/search-results/${tabName}`,
+      pathname: `/${tabName}`,
     });
   };
 

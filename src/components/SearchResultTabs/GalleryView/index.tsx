@@ -112,8 +112,8 @@ const GalleryView = () => {
                                 })
                                 dispatch(setActiveMediaItem(respMediaItemObj))
                                 dispatch(setActiveMediaItemIndex(respMediaItemIndex))
-                                // navigate(`/search-results/Media/${itemObj.media_unique_id.uniqueId}`, { replace: true })
-                                navigateTo(`/search-results/Media/${itemObj.media_unique_id.uniqueId}`)
+                                // navigate(`/Media/${itemObj.media_unique_id.uniqueId}`, { replace: true })
+                                navigateTo(`/Media/${itemObj.media_unique_id.uniqueId}`)
                             }}
                         >
                             {/* to-do: api based flag to show featured */}

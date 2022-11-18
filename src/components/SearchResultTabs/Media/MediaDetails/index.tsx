@@ -39,7 +39,7 @@ export const MediaDetailsModal = () => {
         setModalOpen(false)
         dispatch(setActiveMediaItem(null))
         dispatch(setActiveMediaItemIndex(0))
-        // navigate(`/search-results/Media`, { replace: true, state: null })
+        // navigate(`/Media`, { replace: true, state: null })
         goBack()
     }
 
@@ -74,7 +74,7 @@ export const MediaDetailsModal = () => {
                                 /** resetters */
                                 dispatch(setActiveMediaItem(null))
                                 dispatch(setActiveMediaItemIndex(0))
-                                // navigate(`/search-results/${tabName}`, { replace: true })
+                                // navigate(`/${tabName}`, { replace: true })
                                 goBack()
                             }}
                         >

@@ -84,7 +84,7 @@ const useEvent = () => {
     /** re-direct */
     if(updateData?.updateVisit) {
 
-      navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
+      navigate(`/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
     }
 
   }});
@@ -148,7 +148,7 @@ const useEvent = () => {
       dispatch(toggleShowAddSuccess(true))
 
       /** re-direct */
-      navigate(`/search-results/Events/${data.createVisit.data.attributes.uniqueId}`, { replace: true })
+      navigate(`/Events/${data.createVisit.data.attributes.uniqueId}`, { replace: true })
     }
   }, [visitAssociate])
 
@@ -249,7 +249,7 @@ const useEvent = () => {
     setPlace(data.place);
     if (!edit) {
       data.uniqueId = uniqueId;
-      data.visitUIPath = `${webUrl}/search-results/Events/${uniqueId}`;
+      data.visitUIPath = `${webUrl}/Events/${uniqueId}`;
       createEventMuation({ variables: data })
     }
     if (edit && event?.id) {

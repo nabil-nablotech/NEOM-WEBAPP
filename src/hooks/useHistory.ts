@@ -48,10 +48,10 @@ export const useHistory = () => {
             if (lastEntry) {
                 navigate(lastEntry, { replace: true })
             } else {
-                if (tabName) navigate(`/search-results/${tabName}`, { replace: true })
+                if (tabName) navigate(`/${tabName}`, { replace: true })
             }
         } else {
-            if (tabName) navigate(`/search-results/${tabName}`, { replace: true })
+            if (tabName) navigate(`/${tabName}`, { replace: true })
         }
         dispatch(setHistoryRedux(newState))
 

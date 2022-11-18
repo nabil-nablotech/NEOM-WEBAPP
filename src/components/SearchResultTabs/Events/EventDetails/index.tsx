@@ -389,8 +389,8 @@ const EventDetailsPage = () => {
      * 1st , 2nd etc.
      */
     e.preventDefault();
-    // navigate(`/search-results/Media/${uniqueId}`, { replace: true })
-    navigateTo(`/search-results/Media/${uniqueId}`);
+    // navigate(`/Media/${uniqueId}`, { replace: true })
+    navigateTo(`/Media/${uniqueId}`);
     // if (media.length >= itemIndex) {
     //     dispatch(setActiveMediaItem(media[itemIndex - 1]))
     //     dispatch(setActiveMediaItemIndex(itemIndex - 1))
@@ -400,7 +400,7 @@ const EventDetailsPage = () => {
   const handleSearch = (searchData: any) => {
     dispatch(setSearchApply(true));
     navigateTo({
-      pathname: `/search-results/Events`,
+      pathname: `/Events`,
       search: decodeURIComponent(
         JSON.stringify({
           refinedSearch: searchData,
@@ -442,7 +442,7 @@ const EventDetailsPage = () => {
               dispatch(setActiveMediaItem(null));
               dispatch(setActiveMediaItemIndex(0));
 
-              // navigate(`/search-results/${tabName}`, { replace: true })
+              // navigate(`/${tabName}`, { replace: true })
               goBack();
             }}
           >
@@ -924,7 +924,7 @@ const EventDetailsPage = () => {
                           dispatch(setActiveLibraryItemIndex(rowIndex));
                           
                           navigateTo(
-                            `/search-results/Library/${record.media_unique_id.uniqueId}`
+                            `/Library/${record.media_unique_id.uniqueId}`
                           );
                         }
                       },

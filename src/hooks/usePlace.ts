@@ -123,7 +123,7 @@ const usePlace = () => {
       // dispatch(toggleShowAddSuccess(true))
 
       /** rdirect */
-      navigate(`/search-results/Places/${data.createPlace.data.attributes.uniqueId}`, {replace: true})
+      navigate(`/Places/${data.createPlace.data.attributes.uniqueId}`, {replace: true})
       /** insert in reducer */
       /** map that to screen  */
     }
@@ -134,7 +134,7 @@ const usePlace = () => {
         dispatch(setTabEdit(false));
         dispatch(setTabData({}));
         dispatch(toggleShowEditSuccess(true))
-        navigate(`/search-results/Places/${updateData.updatePlace.data.attributes.uniqueId}`, {replace: true})
+        navigate(`/Places/${updateData.updatePlace.data.attributes.uniqueId}`, {replace: true})
     }
   }, [updateData])
 
@@ -206,7 +206,7 @@ const usePlace = () => {
     }
     if (!edit) {
       data.uniqueId = uniqueId;
-      data.placeUIPath = `${webUrl}/search-results/Places/${uniqueId}`;
+      data.placeUIPath = `${webUrl}/Places/${uniqueId}`;
       createPlaceMutation({variables: data})
     }
     if (edit && tabData?.id) {

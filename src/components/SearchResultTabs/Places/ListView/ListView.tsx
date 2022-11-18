@@ -368,7 +368,7 @@ const ListView = (props: PlacesProps) => {
                             handleAttachClick(event, record)
                           } else {
                             dispatch(setSelectedCardIndex(rowIndex || record.id))
-                            navigateTo(`/search-results/Places/${record.attributes.uniqueId}`)
+                            navigateTo(`/Places/${record.attributes.uniqueId}`)
                           }
                         }, // click row
                       };

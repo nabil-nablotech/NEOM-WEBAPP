@@ -404,7 +404,7 @@ export const LibraryDetailsModal = () => {
     setModalOpen(false);
     dispatch(setActiveLibraryItem(null));
     dispatch(setActiveLibraryItemIndex(0));
-    // navigate(`/search-results/Library`, { replace: true, state: null });
+    // navigate(`/Library`, { replace: true, state: null });
     goBack()
 
   };
