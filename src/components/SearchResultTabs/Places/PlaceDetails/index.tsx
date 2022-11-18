@@ -199,12 +199,22 @@ const PlaceDetailsPage = () => {
       title: "NAME",
       key: "attributes",
       dataIndex: "media_unique_id",
-      sorter: (a, b) =>
-        a?.attributes?.title?.localeCompare(b?.attributes?.title),
+      sorter: (a, b) => {
+        if(
+          a?.media_unique_id?.fileName && b?.media_unique_id?.fileName
+        ) {
+          return a?.media_unique_id?.fileName?.localeCompare(b?.media_unique_id?.fileName)
+        } else if(
+          a?.media_unique_id?.object?.name && b?.media_unique_id?.object?.name
+        ) {
+          return a?.media_unique_id?.object?.name?.localeCompare(b?.media_unique_id?.object?.name)
+        } else return true
+        
+      },
       defaultSortOrder: "ascend",
       className: "name-column",
-      render: (value: any, record: any) => (
-        <Box
+      render: (value: any, record: any) => {
+        return <Box
           component="div"
           sx={{
             display: "flex",
@@ -212,9 +222,9 @@ const PlaceDetailsPage = () => {
           }}
         >
           <InsertDriveFileOutlinedIcon fontSize="small" />
-          <Box component="div">{value?.fileName}</Box>
+          <Box component="div">{value?.fileName ? value?.fileName : value?.object?.name}</Box>
         </Box>
-      ),
+      },
     },
     {
       title: "DESCRIPTION",
