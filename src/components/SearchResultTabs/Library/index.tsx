@@ -408,11 +408,11 @@ const LibraryTab = () => {
                 onClick: (event: React.MouseEvent<HTMLElement>) => {
                   dispatch(setSelectedCardIndex(rowIndex || record.id));
                   // navigate(
-                  //   `/search-results/Library/${record.attributes.uniqueId}`,
+                  //   `/Library/${record.attributes.uniqueId}`,
                   //   { replace: true }
                   // );
                   navigateTo(
-                    `/search-results/Library/${record.attributes.uniqueId}`
+                    `/Library/${record.attributes.uniqueId}`
                   );
                 },
               };

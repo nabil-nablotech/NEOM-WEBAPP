@@ -48,7 +48,7 @@ const useMediaDetails = () => {
 
     /** navigate to latest list after deleting item */
     if (deleteItemSuccess && (deleteItemType === "Media")) {
-      navigate(`/search-results/Media`, {replace: true})
+      navigate(`/Media`, {replace: true})
     }
   }, [deleteItemSuccess, deleteItemType])
 

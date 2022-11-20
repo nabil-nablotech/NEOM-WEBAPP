@@ -26,7 +26,7 @@ export const initialValue = {
   createdAt: "",
   updatedAt: "",
   deleted: false,
-  id: undefined
+  id: undefined,
 };
 
 export type AddEventState = {
@@ -54,9 +54,11 @@ export type AddEventState = {
   assessmentTypeOther?: string;
 };
 
-const initialState: { tabData: any; edit: boolean } = {
+const initialState: { tabData: any; edit: boolean;
+  lastAdded: any | null; } = {
   tabData: initialValue,
-  edit: false
+  edit: false,
+  lastAdded: null
 };
 
 export const tabEditSlice = createSlice({
@@ -69,10 +71,13 @@ export const tabEditSlice = createSlice({
     },
     setTabEdit: (state,action: PayloadAction<boolean>) => {
       state.edit = action.payload;
+    },
+    setLatestItem: (state,action: PayloadAction<any>) => {
+      state.lastAdded = action.payload;
     }
   },
 });
 
-export const { setTabData, setTabEdit } = tabEditSlice.actions;
+export const { setTabData, setTabEdit, setLatestItem } = tabEditSlice.actions;
 
 export default tabEditSlice.reducer;

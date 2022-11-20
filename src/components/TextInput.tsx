@@ -4,7 +4,7 @@ import TextField, {TextFieldProps} from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { styled, SxProps } from '@mui/material/styles';
 import { FormHelperTextProps } from "@mui/material";
-import FomrError from "./FormError";
+import FormError from "./FormError";
 
 interface TextInputProps {
   error?: boolean;
@@ -162,7 +162,7 @@ export default function NTextFields(props: TextInputProps) {
           </NeomTextInput>
         {
           errorField &&
-          <FomrError
+          <FormError
             style={{
               marginTop: '3px'
             }}

@@ -21,7 +21,7 @@ import { Place } from "../types/Place";
 import { places } from "../query/places";
 import { eventDetails } from "../api/details";
 
-import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
+import { setLatestItem, setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -55,7 +55,7 @@ const useEvent = () => {
   const searchParams = getQueryObj(search);
   useEffect(() => {
     if (searchParams) {
-      dispatch(setSearchText(searchParams.search))
+      dispatch(setSearchText(searchParams.search?.trim()))
       if (searchParams?.refinedSearch) {
         dispatch(setSelectedValue({
           ...initialSelectedValue,
@@ -75,14 +75,16 @@ const useEvent = () => {
   /**
    * fetch places with two words
    */
-  const [createEventMuation, { loading, error, data }] = useMutation(addEvent, graphQlHeaders());
+  const [createEventMuation, { loading, error, data }] = useMutation(addEvent, {context: graphQlHeaders().context, onCompleted: (data) => {
+    dispatch(setLatestItem({tab:'Events', data:data.createVisit.data}));
+  }});
   const [updateEventMuation, { loading: updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateEvent, {context: graphQlHeaders().context, onCompleted: () => {
     dispatch(setEventEdit(false))
     // dispatch(toggleShowEditSuccess(false));
     /** re-direct */
     if(updateData?.updateVisit) {
 
-      navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
+      navigate(`/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
     }
 
   }});
@@ -146,7 +148,7 @@ const useEvent = () => {
       dispatch(toggleShowAddSuccess(true))
 
       /** re-direct */
-      navigate(`/search-results/Events/${data.createVisit.data.attributes.uniqueId}`, { replace: true })
+      navigate(`/Events/${data.createVisit.data.attributes.uniqueId}`, { replace: true })
     }
   }, [visitAssociate])
 
@@ -167,7 +169,7 @@ const useEvent = () => {
     const text = local ? searchText : searchData?.search;
     const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData?.refinedSearch;
 
-    const searchWordArray = text?.split(' ') || [];
+    const searchWordArray = text?.trim()?.split(' ') || [];
     copiedValue && Object.keys(copiedValue)?.map(x => {
       if (copiedValue[x].length === 0) { delete copiedValue[x]; }
       return x;
@@ -247,7 +249,7 @@ const useEvent = () => {
     setPlace(data.place);
     if (!edit) {
       data.uniqueId = uniqueId;
-      data.visitUIPath = `${webUrl}/search-results/Events/${uniqueId}`;
+      data.visitUIPath = `${webUrl}/Events/${uniqueId}`;
       createEventMuation({ variables: data })
     }
     if (edit && event?.id) {
@@ -261,8 +263,10 @@ const useEvent = () => {
   }
 
   useEffect(() => {
-    const getData = setTimeout(() => filterPlaces(), 1000);
-    return () => clearTimeout(getData)
+    if (searchValue.length > 2) {
+      const getData = setTimeout(() => filterPlaces(), 1000);
+      return () => clearTimeout(getData)
+    }
   }, [searchValue])
 
   const filterPlaces = () => {

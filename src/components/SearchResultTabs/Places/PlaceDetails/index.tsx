@@ -74,6 +74,13 @@ const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table {
     margin-block: 2em;
   }
+  td
+  {
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+  }
 
   .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell),
   .ant-table-tbody
@@ -199,12 +206,22 @@ const PlaceDetailsPage = () => {
       title: "NAME",
       key: "attributes",
       dataIndex: "media_unique_id",
-      sorter: (a, b) =>
-        a?.attributes?.title?.localeCompare(b?.attributes?.title),
+      sorter: (a, b) => {
+        if(
+          a?.media_unique_id?.fileName && b?.media_unique_id?.fileName
+        ) {
+          return a?.media_unique_id?.fileName?.localeCompare(b?.media_unique_id?.fileName)
+        } else if(
+          a?.media_unique_id?.object?.name && b?.media_unique_id?.object?.name
+        ) {
+          return a?.media_unique_id?.object?.name?.localeCompare(b?.media_unique_id?.object?.name)
+        } else return true
+        
+      },
       defaultSortOrder: "ascend",
       className: "name-column",
-      render: (value: any, record: any) => (
-        <Box
+      render: (value: any, record: any) => {
+        return <Box
           component="div"
           sx={{
             display: "flex",
@@ -212,9 +229,9 @@ const PlaceDetailsPage = () => {
           }}
         >
           <InsertDriveFileOutlinedIcon fontSize="small" />
-          <Box component="div">{value?.fileName}</Box>
+          <Box component="div">{value?.title}</Box>
         </Box>
-      ),
+      },
     },
     {
       title: "DESCRIPTION",
@@ -354,7 +371,6 @@ const PlaceDetailsPage = () => {
       sorter: (a, b) => {
         const first = (new Date(a?.visit_unique_id?.visitDate)).getTime()
         const second = (new Date(b?.visit_unique_id?.visitDate)).getTime()
-        console.log('hex: ', first, second)
 
         return first < second ? 0 : 1
       },
@@ -415,8 +431,8 @@ const PlaceDetailsPage = () => {
      */
     e.preventDefault();
     if (media.length >= itemIndex) {
-      // navigate(`/search-results/Media/${uniqueId}`, { replace: true });
-      navigateTo(`/search-results/Media/${uniqueId}`)
+      // navigate(`/Media/${uniqueId}`, { replace: true });
+      navigateTo(`/Media/${uniqueId}`)
 
       dispatch(setActiveMediaItem(media[itemIndex - 1]));
       dispatch(setActiveMediaItemIndex(itemIndex - 1));
@@ -448,7 +464,7 @@ const PlaceDetailsPage = () => {
   const handleSearch = (searchData: any) => {
     dispatch(setSearchApply(true));
     navigateTo({
-      pathname: `/search-results/Places`,
+      pathname: `/Places`,
       search: decodeURIComponent(
         JSON.stringify({
           refinedSearch: searchData,
@@ -498,6 +514,7 @@ const PlaceDetailsPage = () => {
           <Button
             variant="text"
             type="button"
+            className={`${styles["back-nav"]}`}
             startIcon={<KeyboardArrowLeftIcon fontSize="small" />}
             style={{
               color: "var(--table-black-text)",
@@ -516,7 +533,7 @@ const PlaceDetailsPage = () => {
               dispatch(setActiveMediaItem(null));
               dispatch(setActiveMediaItemIndex(0));
               // navigate(-1);
-              // navigate(`/search-results/${tabName}`, { replace: true });
+              // navigate(`/${tabName}`, { replace: true });
               goBack()
             }}
           >
@@ -877,10 +894,22 @@ const PlaceDetailsPage = () => {
                       </Grid>
                     )}
                   </Grid>
-                {(placeNameEnglish || placeNameArabic) && <Box component="div" className={`${styles["item-number"]}`}>
-                  {placeNumber}
-                </Box>}
-                <Box component="div" className={`${styles["item-number"]}`}>
+                {(placeNameEnglish || placeNameArabic) &&
+                  <Box component="div" className={`${styles["item-number"]}`}
+                    style={{
+                      fontWeight: 'bold',
+                      lineHeight: 1.5,
+                      fontSize: 'large'
+                    }}
+                  >
+                    {placeNumber}
+                  </Box>}
+                <Box component="div" className={`${styles["item-number"]}`}
+                  style={{
+                    lineHeight: 1.5,
+                    fontSize: 'medium'
+                  }}
+                >
                   ID {placeData.id}
                 </Box>
               </Grid>
@@ -1215,26 +1244,30 @@ const PlaceDetailsPage = () => {
               <Grid item sm={5}>
                 {latitude && longitude ? (
                   <>
-                    <MapView
-                      filterId={setIsFilter}
-                      key={4}
-                      marker={[
-                        {
-                          id: 0,
-                          name: `${placeNameEnglish}`,
-                          position: {
-                            lat: latitude,
-                            lng: longitude,
+                    <Box component="div" style={{
+                      height: '94%'
+                    }}>
+                      <MapView
+                        filterId={setIsFilter}
+                        key={4}
+                        marker={[
+                          {
+                            id: 0,
+                            name: `${placeNameEnglish}`,
+                            position: {
+                              lat: latitude,
+                              lng: longitude,
+                            },
                           },
-                        },
-                      ]}
-                      zoom={10}
-                    />
+                        ]}
+                        zoom={10}
+                      />
+                    </Box>
                     <Grid
                       container
                       className={`${styles["map-loctn-details"]}`}
                     >
-                      <Grid item lg={5} md={5} sm={5}>
+                      <Grid item lg={4} md={5} sm={5}>
                         <Grid
                           container
                           className={`${styles["map-loctn-line"]}`}
@@ -1285,7 +1318,7 @@ const PlaceDetailsPage = () => {
                   pagination={false}
                   loading={false}
                   bordered
-                  scroll={{ x: true, y: 300 }}
+                  scroll={{ x: 'max-content', y: 300 }}
                   style={{
                     background: "transparent",
                   }}
@@ -1295,7 +1328,7 @@ const PlaceDetailsPage = () => {
                         if (typeof rowIndex === "number") {
                           dispatch(setActiveLibraryItem(record));
                           dispatch(setActiveLibraryItemIndex(rowIndex));
-                          navigateTo(`/search-results/Library/${record.media_unique_id.uniqueId}`)
+                          navigateTo(`/Library/${record.media_unique_id.uniqueId}`)
                         }
                       },
                     };
@@ -1339,10 +1372,10 @@ const PlaceDetailsPage = () => {
                           dispatch(setActiveEventItem(record));
                           dispatch(setActiveEventItemIndex(rowIndex));
                           // navigate(
-                          //   `/search-results/Events/${record.visit_unique_id.uniqueId}`,
+                          //   `/Events/${record.visit_unique_id.uniqueId}`,
                           //   { replace: true }
                           // );
-                          navigateTo(`/search-results/Events/${record.visit_unique_id.uniqueId}`)
+                          navigateTo(`/Events/${record.visit_unique_id.uniqueId}`)
                         }
                       },
                     };

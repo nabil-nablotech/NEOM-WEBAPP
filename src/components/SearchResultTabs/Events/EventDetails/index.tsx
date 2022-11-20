@@ -291,12 +291,23 @@ const EventDetailsPage = () => {
       title: "NAME",
       key: "attributes",
       dataIndex: "media_unique_id",
-      sorter: (a, b) => a?.fileName?.localeCompare(b?.fileName),
+      sorter: (a, b) => {
+        console.log('hex: ', a, b)
+        if(
+          a?.media_unique_id?.fileName && b?.media_unique_id?.fileName
+        ) {
+          return a?.media_unique_id?.fileName?.localeCompare(b?.media_unique_id?.fileName)
+        } else if(
+          a?.media_unique_id?.object?.name && b?.media_unique_id?.object?.name
+        ) {
+          return a?.media_unique_id?.object?.name?.localeCompare(b?.media_unique_id?.object?.name)
+        } else return true
+      },
       sortDirections: ["ascend"],
       defaultSortOrder: "ascend",
       className: "name-column",
-      render: (value: any, record: any) => (
-        <Box
+      render: (value: any, record: any) => {
+        return <Box
           component="div"
           sx={{
             display: "flex",
@@ -304,9 +315,9 @@ const EventDetailsPage = () => {
           }}
         >
           <InsertDriveFileOutlinedIcon fontSize="small" />
-          <Box component="div">{value.fileName}</Box>
+          <Box component="div">{value?.fileName ? value?.fileName : value?.object?.name}</Box>
         </Box>
-      ),
+      },
     },
     {
       title: "DESCRIPTION",
@@ -378,8 +389,8 @@ const EventDetailsPage = () => {
      * 1st , 2nd etc.
      */
     e.preventDefault();
-    // navigate(`/search-results/Media/${uniqueId}`, { replace: true })
-    navigateTo(`/search-results/Media/${uniqueId}`);
+    // navigate(`/Media/${uniqueId}`, { replace: true })
+    navigateTo(`/Media/${uniqueId}`);
     // if (media.length >= itemIndex) {
     //     dispatch(setActiveMediaItem(media[itemIndex - 1]))
     //     dispatch(setActiveMediaItemIndex(itemIndex - 1))
@@ -389,7 +400,7 @@ const EventDetailsPage = () => {
   const handleSearch = (searchData: any) => {
     dispatch(setSearchApply(true));
     navigateTo({
-      pathname: `/search-results/Events`,
+      pathname: `/Events`,
       search: decodeURIComponent(
         JSON.stringify({
           refinedSearch: searchData,
@@ -417,6 +428,7 @@ const EventDetailsPage = () => {
           <Button
             variant="text"
             type="button"
+            className={`${styles["back-nav"]}`}
             startIcon={<KeyboardArrowLeftIcon fontSize="small" />}
             style={{
               color: "var(--table-black-text)",
@@ -430,7 +442,7 @@ const EventDetailsPage = () => {
               dispatch(setActiveMediaItem(null));
               dispatch(setActiveMediaItemIndex(0));
 
-              // navigate(`/search-results/${tabName}`, { replace: true })
+              // navigate(`/${tabName}`, { replace: true })
               goBack();
             }}
           >
@@ -486,12 +498,23 @@ const EventDetailsPage = () => {
                   <Box component="span">{recordingTeam}</Box>
                 </Box>
                 {visitNumber && (
-                  <Box component="div" className={`${styles["visit-count"]}`}>
+                  <Box component="div" className={`${styles["visit-count"]}`}
+                    style={{
+                      fontWeight: 'bold',
+                      lineHeight: 1.5,
+                      fontSize: 'large'
+                    }}
+                  >
                     VISIT {visitNumber}
                   </Box>
                 )}
                 {id && (
-                  <Box component="div" className={`${styles["visit-count"]}`}>
+                  <Box component="div" className={`${styles["visit-count"]}`}
+                    style={{
+                      lineHeight: 1.5,
+                      fontSize: 'medium'
+                    }}
+                  >
                     ID {id}
                   </Box>
                 )}
@@ -814,27 +837,31 @@ const EventDetailsPage = () => {
               <Grid item sm={5}>
                 {latitude && longitude ? (
                   <>
-                    <MapView
-                      key={1}
-                      filterId={setIsFilter}
-                      marker={[
-                        {
-                          id: "1",
-                          name: eventDetails?.visit_associate?.place_unique_id
-                            ?.placeNameEnglish,
-                          position: {
-                            lat: latitude ? latitude : 24.11,
-                            lng: longitude ? longitude : 34.98,
+                  <Box component="div" style={{
+                      height: '94%'
+                    }}>
+                      <MapView
+                        key={1}
+                        filterId={setIsFilter}
+                        marker={[
+                          {
+                            id: "1",
+                            name: eventDetails?.visit_associate?.place_unique_id
+                              ?.placeNameEnglish,
+                            position: {
+                              lat: latitude ? latitude : 24.11,
+                              lng: longitude ? longitude : 34.98,
+                            },
                           },
-                        },
-                      ]}
-                      zoom={10}
-                    />
+                        ]}
+                        zoom={10}
+                      />
+                    </Box>
                     <Grid
                       container
                       className={`${styles["map-loctn-details"]}`}
                     >
-                      <Grid item lg={5} md={5} sm={5}>
+                      <Grid item lg={4} md={5} sm={5}>
                         <Grid
                           container
                           className={`${styles["map-loctn-line"]}`}
@@ -895,9 +922,9 @@ const EventDetailsPage = () => {
                         if (typeof rowIndex === "number") {
                           dispatch(setActiveLibraryItem(record));
                           dispatch(setActiveLibraryItemIndex(rowIndex));
-                          console.log("hex: ", record);
+                          
                           navigateTo(
-                            `/search-results/Library/${record.media_unique_id.uniqueId}`
+                            `/Library/${record.media_unique_id.uniqueId}`
                           );
                         }
                       },

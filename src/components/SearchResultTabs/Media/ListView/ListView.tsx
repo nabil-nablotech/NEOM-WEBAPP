@@ -288,8 +288,8 @@ const ListView = (props: MediaProps) => {
                 if (typeof rowIndex === "number") {
                   dispatch(setActiveMediaItem(record))
                   dispatch(setActiveMediaItemIndex(rowIndex))
-                  // navigate(`/search-results/Media/${record.attributes.uniqueId}`, { replace: true })
-                  navigateTo(`/search-results/Media/${record.attributes.uniqueId}`)
+                  // navigate(`/Media/${record.attributes.uniqueId}`, { replace: true })
+                  navigateTo(`/Media/${record.attributes.uniqueId}`)
                 }
               },
             };

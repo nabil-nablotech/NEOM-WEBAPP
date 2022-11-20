@@ -19,9 +19,13 @@
 .row-1 {
     margin-bottom: 0.5em;
 }
+.back-nav {
+    margin-block: 0.5em;
+}
 
 .title-section {
-    margin-top: 1em;
+    margin-top: 2em;
+    margin-bottom: 1em;
     max-width: 55%;
 }
 .title-section-grid {
@@ -42,7 +46,7 @@
     color: var(--table-black-text);
 }
 .item-name {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.2em;
     margin-right: 1em;
 }
 
@@ -185,7 +189,7 @@
 }
 
 .heading-title {
-    margin-top: 2em;
+    margin-top: 4em;
     margin-bottom: 1em;
     display: flex;
     align-items: baseline;

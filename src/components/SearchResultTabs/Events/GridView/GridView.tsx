@@ -44,8 +44,8 @@ const GridView = (props: EventsProps) => {
 
     const handleClick = (item: Event, index: number) => {
         dispatch(setSelectedCardIndex(index))
-        // navigate(`/search-results/Events/${item.attributes.uniqueId}`, { replace: true })
-        navigateTo(`/search-results/Events/${item.attributes.uniqueId}`)
+        // navigate(`/Events/${item.attributes.uniqueId}`, { replace: true })
+        navigateTo(`/Events/${item.attributes.uniqueId}`)
     }
 
     return (

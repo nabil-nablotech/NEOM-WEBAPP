@@ -69,8 +69,8 @@ const GridView = (props: PlacesProps) => {
                 className={`${gridStyles[""]}`}
                 onClick={(e) => {
                   dispatch(setSelectedCardIndex(index));
-                  // navigate(`/search-results/Places/${item.attributes.uniqueId}`, {replace: true})
-                  navigateTo(`/search-results/Places/${item.attributes.uniqueId}`)
+                  // navigate(`/Places/${item.attributes.uniqueId}`, {replace: true})
+                  navigateTo(`/Places/${item.attributes.uniqueId}`)
                 }}
               >
                 <Card

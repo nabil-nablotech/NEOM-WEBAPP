@@ -317,7 +317,7 @@ const BaseInputs = ({
               sx={{
                 ...locationInputSx,
                 "& .MuiInputBase-input.MuiOutlinedInput-input": {
-                  fontSize: '0.9em'
+                  fontSize: '1em'
                 }
               }}
               formControlSx={{
@@ -381,6 +381,7 @@ const BaseInputs = ({
                     className={`${styles["date"]} ${styles["date-subinput"]}`}
                     selected={selectedValue.endDate && new Date(selectedValue.endDate)}
                     minDate={selectedValue.startDate && new Date(selectedValue.startDate)}
+                    maxDate={new Date()}
                     onChange={(date: Date) => handleDate(date, "endDate")}
                   />
                 </Grid>

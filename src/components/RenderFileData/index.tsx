@@ -17,6 +17,8 @@ const RenderFileData = ({
 }: RenderFileDataProps) => {
     const [openVideoModal, toggleVideoModal] = useState<boolean>(false)
 
+    const noVideoCondition  = !fileData.src && !fileData.iframeVideoLink && !fileData.staticVideoLink && !fileData.objectURL
+
     return (
         <>
             {
@@ -50,11 +52,13 @@ const RenderFileData = ({
                 {}
                     <Box component="div"
                         style={{
-                            position: 'relative'
+                            position: 'relative',
+                            width: noVideoCondition ? '100%' : 'inherit'
                         }}>
-                        {(!fileData.src && !fileData.iframeVideoLink && !fileData.staticVideoLink && !fileData.objectURL) ?
+                        {(noVideoCondition) ?
                             <NoVideoPresent message="Video not found" style={{
-                                height: '400px'
+                                ...fileData.noVideoStyles,
+                                width: '100%'
                             }} /> :
                             // !fileData.isOpened ? <>
                             //     <Box
@@ -92,7 +96,7 @@ const RenderFileData = ({
                                                         </> :
                                                         <>
                                                             <iframe title="video-player-iframe" style={{
-                                                                width: '100%'
+                                                                width: '100%',
                                                             }}
 
                                                                 src={fileData.iframeVideoLink.replace('/watch', '/embed')}
@@ -104,7 +108,7 @@ const RenderFileData = ({
                                             </> :
                                             fileData.staticVideoLink ?
                                                 <>
-                                                    <video width="100%" height="auto" controls autoPlay={false}>
+                                                    <video width="100%" height="100%" controls autoPlay={false}>
                                                         <source
                                                             src={fileData.staticVideoLink}
                                                             type="video/mp4"

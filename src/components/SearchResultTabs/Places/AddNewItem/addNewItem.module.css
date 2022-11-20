@@ -8,7 +8,15 @@
     flex-direction: column;
     justify-content: space-between;
 }
-
+.unique-id {
+    font-family: Roboto;
+font-size: 14px;
+font-weight: 400;
+line-height: 24px;
+letter-spacing: 0.5px;
+text-align: left;
+color: #13100D80;
+}
 .hide-btn {
     margin-bottom: 5vw;
 }
@@ -23,7 +31,7 @@
 }
 
 .form {
-    margin-top: 2em;
+    margin-top: 1em;
     display: flex;
     flex-direction: column;
     gap: 1em;
@@ -63,6 +71,7 @@
 
 .visit-count {
     color: var(--grey-text);
+    margin-top: 1em;
 }
 
 .file-upload-url-bottom-text {

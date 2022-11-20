@@ -68,8 +68,7 @@ const GridView = (props: MediaProps) => {
                         dispatch(setSelectedCardIndex(index))
                         dispatch(setActiveMediaItem(media[index]))
                         dispatch(setActiveMediaItemIndex(index))
-                        // navigate(`/search-results/Media/${media[index].attributes.uniqueId}`, { replace: true })
-                        navigateTo(`/search-results/Media/${media[index].attributes.uniqueId}`)
+                        navigateTo(`/Media/${media[index].attributes.uniqueId}`)
                     }}>
                             <Card
                                 itemIndex={index}

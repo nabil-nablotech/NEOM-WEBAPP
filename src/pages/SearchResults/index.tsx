@@ -39,6 +39,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   const { searchText, showAddSuccess,deleteItemType, showEditSuccess, deleteItemSuccess,
     addNewItemWindowType} =
     useSelector((state: RootState) => state.searchResults);
+  const {lastAdded} = useSelector((state: RootState) => state.tabEdit);
   const { fetchEvents, clearSearch: clearEventSearch, setEdit: setEditEvents } = useEvent();
   const { fetchLibraryItems, setEdit: setEditLibrary } = useLibrary();
   const { fetchPlaces, clearSearch: clearPlaceSearch, setEdit: setEditPlaces } = usePlace();
@@ -78,7 +79,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       e.preventDefault();
       dispatch(setSearchApply(true));
       navigate({
-        pathname: `/search-results/${tabName}`,
+        pathname: `/${tabName}`,
         search: decodeURIComponent(JSON.stringify({
           search: searchText
         }))
@@ -105,7 +106,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         break;
     }
     navigate({
-      pathname: `/search-results/${tabName}`,
+      pathname: `/${tabName}`,
     });
   };
 
@@ -115,28 +116,28 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   };
 
   const handleEdit = () => {
-    if (uniqueId) {
+    if (lastAdded) {
       let record = {}
-      switch (tabName) {
+      switch (lastAdded.tab) {
         case 'Media':
           setEditMedia({attributes: {
-            uniqueId
+            uniqueId: lastAdded.data.attributes.uniqueId
           }});
           break;
         case 'Library':
           setEditLibrary({record: {attributes: {
-            uniqueId
-          }}, type: tabName})
+            uniqueId: lastAdded.data.attributes.uniqueId
+          }}, type: 'Library'})
           break;
         case 'Events':
           setEditEvents({record: {attributes: {
-            uniqueId
-          }}, type: tabName})
+            uniqueId: lastAdded.data.attributes.uniqueId
+          }}, type: 'Events'})
           break;
         case 'Places':
           setEditPlaces({record: {attributes: {
-            uniqueId
-          }}, type: tabName})
+            uniqueId: lastAdded.data.attributes.uniqueId
+          }}, type: 'Places'})
           break;
       }
       dispatch(toggleShowAddSuccess(false));

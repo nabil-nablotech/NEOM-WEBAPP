@@ -48,7 +48,7 @@ const useLibraryDetails = () => {
 
     /** navigate to latest list after deleting item */
     if (deleteItemSuccess && (deleteItemType === "Library")) {
-      navigate(`/search-results/Library`, { replace: true })
+      navigate(`/Library`, { replace: true })
     }
   }, [deleteItemSuccess, deleteItemType])
 

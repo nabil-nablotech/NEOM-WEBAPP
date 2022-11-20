@@ -43,7 +43,8 @@ const ImageUpload = ({
     existingImageUrl,
     uploadImage,
     defaultImages,
-    handleDelete
+    handleDelete,
+    accept
 }: CustomUploadProps) => {
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState(existingImageUrl);
@@ -51,6 +52,9 @@ const ImageUpload = ({
     const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
         if (info.file.status !== 'uploading') {
             setLoading(true);
+        }
+        if (info.file.status === 'removed') {
+            setImageUrl('');
         }
         if (info.file.status === 'done') {
             setLoading(false);
@@ -66,7 +70,7 @@ const ImageUpload = ({
       }
     const handleRemove: UploadProps['onRemove'] = (file: UploadFile<any>) => {
         if (handleDelete) {
-            handleDelete();
+            handleDelete(file);
         }
       }
 
@@ -87,6 +91,7 @@ const ImageUpload = ({
         <>
             <StyledUpload
                 name={'file'}
+                accept={accept}
                 multiple={false}
                 maxCount={1}
                 onChange={handleChange}
