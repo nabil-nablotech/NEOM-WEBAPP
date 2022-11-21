@@ -63,7 +63,9 @@ const initialState: SearchResultsState2 = {
   deletePayload: null,
   history: [],
   isLogoutConfirmationWindowOpen: false,
-  isAssociationStepInvalid: false
+  isAssociationStepInvalid: false,
+  isSelect:false,
+  selectedKey:[]
 };
 
 export const searchResultsSlice = createSlice({
@@ -313,6 +315,12 @@ export const searchResultsSlice = createSlice({
     toggleIsAssociationStepInvalid: (state, action: PayloadAction<boolean>) => {
       state.isAssociationStepInvalid = action.payload;
     },
+    setIsSelect: (state, action: PayloadAction<boolean>) => {
+      state.isSelect = action.payload;
+    },
+    setSelectedKey: (state, action: PayloadAction<any>) => {
+      state.selectedKey = action.payload;
+    },
   },
 });
 
@@ -365,7 +373,9 @@ export const {
   setDeletePayload,
   setHistoryRedux,
   toggleLogoutConfirmationWindowOpen,
-  toggleIsAssociationStepInvalid
+  toggleIsAssociationStepInvalid,
+  setIsSelect,
+  setSelectedKey
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

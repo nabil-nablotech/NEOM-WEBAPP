@@ -21,7 +21,8 @@ export type PlacesProps = {
   hasMoreData: boolean;
   loading: boolean;
   totalData?: number;
-  setEdit: (payload:  {record: Place | PlaceApi | Media | Event, type: tabNameProps}) => void
+  setEdit: (payload:  {record: Place | PlaceApi | Media | Event, type: tabNameProps}) => void;
+  isSelect:boolean;
 }
 
 const GridView = (props: PlacesProps) => {
@@ -33,7 +34,7 @@ const GridView = (props: PlacesProps) => {
   const { navigateTo } = useHistory();
 
   if (!data) {
-    return <h1>loadig....</h1>
+    return <h1>loading....</h1>
   }
 
   if (totalData === 0) {

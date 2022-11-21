@@ -18,11 +18,11 @@ import { importContentType } from "../../../utils/export-import/import-content-t
 import { importCsvImagesZip } from "../../../utils/export-import/import-csv-images-zip";
 import {checkSearchParameter, PLACES_TAB_NAME} from '../../../utils/services/helpers';
 import { useDispatch } from "react-redux";
-import { setToggledStates } from "../../../store/reducers/searchResultsReducer";
+import { setToggledStates, setIsSelect } from "../../../store/reducers/searchResultsReducer";
 import { Relation } from "../../../types/RelationType";
 
 const PlacesTab = () => {
-  const { searchText, places, placeMetaData, totalCounts, searchApply, toggledStates } = useSelector(
+  const { searchText, places, placeMetaData, totalCounts, searchApply, toggledStates, isSelect } = useSelector(
     (state: RootState) => state.searchResults
   );
   const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
@@ -217,7 +217,7 @@ const PlacesTab = () => {
               "var(--table-black-text)",
             ]}
             className={`${styles["export-btn"]}`}
-            label="Select"
+            label={isSelect?"Cancel":"Select"}
             style={{
               border: "1px solid var(--light-grey-border)",
               borderRadius: "40px",
@@ -226,6 +226,7 @@ const PlacesTab = () => {
               height: "100%",
               textAlign: "center",
             }}
+            onClick={()=>{dispatch(setIsSelect(!isSelect))}}
           />
           <Button
             colors={[
@@ -298,6 +299,7 @@ const PlacesTab = () => {
                   }
                   fetchData={fetchPlaces}
                   hasMoreData={hasMoreData}
+                  isSelect = {isSelect}
                 />
               </Grid>
               {/* To-do: map view */}
@@ -337,6 +339,7 @@ const PlacesTab = () => {
                 }
                 fetchData={fetchPlaces}
                 hasMoreData={hasMoreData}
+                isSelect = {isSelect}
               />
             </Box>
           )}

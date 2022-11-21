@@ -12,7 +12,8 @@ import Checkbox from '@mui/material/Checkbox';
 import client from '../../utils/services/axiosClient';
 import { baseUrl } from '../../utils/services/helpers';
 import { useNavigate } from "react-router-dom";
-
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 import qs from 'qs';
 
 const style = {
@@ -31,11 +32,12 @@ export default function ExportModal({open, setOpen, count, path, filter}:any) {
   const [isAssets, setIsAssets] = useState(false);
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
+  const { isSelect, selectedKey } = useSelector((state: RootState) => state.searchResults);
   const exportData = async () => {
     try {
       await client.get(
         `${baseUrl}/api/custom/${path}`,
-        { params: { filter: qs.stringify(filter), isAssets:isAssets } }
+        { params: { filter: qs.stringify(filter), isAssets:isAssets, isSelect:isSelect, selectedKey:selectedKey } }
       );
       await handleClose();
       await navigate('/download');

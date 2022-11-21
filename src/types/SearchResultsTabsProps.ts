@@ -137,7 +137,9 @@ export type SearchResultsState2 = {
   deletePayload: DeletePayloadType,
   history: Array<string> | []
   isLogoutConfirmationWindowOpen: boolean
-  isAssociationStepInvalid: boolean
+  isAssociationStepInvalid: boolean,
+  isSelect:boolean,
+  selectedKey:[]
 };
 
 export type DeletePayloadType = {
