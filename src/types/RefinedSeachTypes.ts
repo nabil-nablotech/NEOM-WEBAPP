@@ -26,7 +26,7 @@ export type BaseInputProps = {
   selectedValue: any;
   handleSelectChange: ((event: React.SyntheticEvent<Element, Event>, value: string[], reason?: string, details?: AutocompleteChangeDetails<string> | undefined) => void);
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleClear: (e: React.MouseEvent<HTMLButtonElement>, name?: string) => void;
+  handleClear: (e: any, name?: string) => void;
   handleDate: (date: Date | null, name: string) => void
 }
 export type MediaInputProps = {
@@ -37,7 +37,7 @@ export type MediaInputProps = {
   selectedValue: any;
   handleSelectChange: ((event: React.SyntheticEvent<Element, Event>, value: string[], reason?: string, details?: AutocompleteChangeDetails<string> | undefined) => void);
   handleChange: (event: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>, checked?:boolean) => void;
-  handleClear: (e: React.MouseEvent<HTMLButtonElement>, name?: string) => void;
+  handleClear: (e: any, name?: string) => void;
 }
 export type Translation = {
 

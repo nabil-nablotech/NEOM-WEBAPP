@@ -150,12 +150,13 @@ export default function NTextFields(props: TextInputProps) {
           }}
           InputProps={{
             ...InputProps,
-            endAdornment: endAdornment
+            // endAdornment: endAdornment
           }}
           ref={ref ? ref : null}
           required={required}
           name={name}
           autoComplete={autoComplete}
+          endAdornment={endAdornment}
           {...rest}
         >
           {value}

@@ -39,7 +39,6 @@ const GridView = (props: PlacesProps) => {
   if (totalData === 0) {
     return <h1>No data found</h1>
   }
-  console.log('hex pay: ',data)
 
   return (
     <Box component="div" className={`${gridStyles["left-grid-box"]}`}>

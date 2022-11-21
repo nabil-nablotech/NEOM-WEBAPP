@@ -1,6 +1,7 @@
 import {
   Box,
   Button as DefaultButton,
+  Grid,
   Typography
 } from "@mui/material";
 import {
@@ -100,17 +101,25 @@ const StepContent = ({
               renderOption={(props, option: any) => (
                 <Box
                   component="li"
-                  sx={{ display: "flex", justifyContent: "space-between" }}
                   {...props}
                 >
-                  <Typography>
-                    {option?.attributes?.placeNameEnglish || ''} {' '}
-                    {option?.attributes?.placeNameArabic || ''}
-                  </Typography>
-
-                  <Typography style={{ float: "right" }}>
-                    {option?.attributes?.placeNumber || ''}
-                  </Typography>
+                  <Grid container style={{
+                    justifyContent: 'space-between'
+                  }}>
+                    <Grid item sm={10} sx={{ width: '80%' }}>
+                      {
+                        `${option?.attributes?.placeNameEnglish || ''
+                        }${option?.attributes?.placeNameArabic ? ` ${option?.attributes?.placeNameArabic}` : ''
+                        }`
+                      }
+                    </Grid>
+                    <Grid item sm={2}>
+                      {
+                        `${option?.attributes?.placeNumber ? `${option?.attributes?.placeNumber}` : ''
+                        }`
+                      }
+                    </Grid>
+                  </Grid>
                 </Box>
               )}
               selectStylesSx={commonFormControlSxStyles}

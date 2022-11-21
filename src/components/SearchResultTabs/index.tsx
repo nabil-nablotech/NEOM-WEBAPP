@@ -206,8 +206,19 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
 
   const handleClear = (e: any, name?: string) => {
     const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
+    
     if (name) {
-      selectedValueCopy[name] = name === 'location' ? '' : [];
+      selectedValueCopy[name] = (
+        name === 'location'
+      ) ? '' : [];
+
+      if(
+        (name === 'latitude') || (name === 'longitude')
+      ) {
+        selectedValueCopy['latitude'] = ''
+        selectedValueCopy['longitude'] = ''
+      }
+
       e.preventDefault();
       dispatch(setSelectedValue(selectedValueCopy));
     }
