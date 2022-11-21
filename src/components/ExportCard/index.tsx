@@ -7,7 +7,8 @@ import GetAppOutlinedIcon from '@mui/icons-material/GetAppOutlined';
 import {
     Button
 } from "@mui/material";
-
+import { Download } from "../../types/download";
+import useDownloader from 'react-use-downloader';
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#f9f7f2',
   ...theme.typography.body2,
@@ -15,11 +16,11 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   maxWidth: 751,
 }));
 
-const handleClick = () =>{
-    console.log("Download clicked")
+const ExportCard = ({ title, filePath, dataCount, fileCount, libraryCount, visitCount, token }: Download) => {
+const { size, elapsed, percentage, download, cancel, error, isInProgress } = useDownloader();
+const handleClick = async (filePath:string) =>{
+    await download(`${process.env.REACT_APP_STRAPI_BASE_URL+''+filePath}`, "dat.zip");
 }
-const ExportCard = () => {
-
   return (
     <>
         <StyledPaper
@@ -33,10 +34,10 @@ const ExportCard = () => {
             <Grid container wrap="nowrap" spacing={2}>
                 <Grid item xs={12} sm={6} md={6} component="div" className={`${styles["grid-one"]}`}>
                     <Grid item xs={12} component="div" className={`${styles["box-heading"]}`}>
-                            Places - Data and Files
+                            {title} - Data and Files
                     </Grid>
                     <Grid item xs={12} component="div" className={`${styles["box-span"]}`}>
-                            3 places | 50 media files | 3 library files
+                            {dataCount} places | {fileCount} media files | {libraryCount} library files
                     </Grid>
                 </Grid>
                 {/* <Grid item xs={12} sm={6} md={6} component="div"className={`${styles["grid-two"]}`}>
@@ -51,7 +52,7 @@ const ExportCard = () => {
                     <Grid item xs={12} display="flex" justifyContent="flex-end" >
                         <Button
                             variant="text"
-                            onClick= {handleClick}                        
+                            onClick= {()=>{handleClick(filePath)}}                        
                             style={{
                                 color:"white",
                                 backgroundColor: "black",

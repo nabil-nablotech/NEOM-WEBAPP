@@ -4,6 +4,7 @@ import searchResultsReducer from './reducers/searchResultsReducer';
 import refinedSearchReducer from './reducers/refinedSearchReducer';
 import eventReducer from './reducers/eventReducer';
 import tabEditReducer from './reducers/tabEditReducer';
+import downloadReducer from './reducers/downloadReducer';
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
     searchResults: searchResultsReducer,
     refinedSearch: refinedSearchReducer,
     event: eventReducer,
-    tabEdit: tabEditReducer
+    tabEdit: tabEditReducer,
+    download: downloadReducer
   },
   // Storing date in redux throwd cmd errors, hence to ignore those
   middleware: getDefaultMiddleware =>

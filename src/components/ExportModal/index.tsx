@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
-import styles from "./index.module.css";
 import Grid from '@mui/material/Grid';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
@@ -10,10 +9,9 @@ import Button from "../../components/Button";
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { exportCsvImagesZip } from '../../utils/export-import/export-csv-images-zip';
 import client from '../../utils/services/axiosClient';
 import { baseUrl } from '../../utils/services/helpers';
-import { Parser } from "json2csv";
+import { useNavigate } from "react-router-dom";
 
 import qs from 'qs';
 
@@ -32,49 +30,18 @@ const style = {
 export default function ExportModal({open, setOpen, count, path, filter}:any) {
   const [isAssets, setIsAssets] = useState(false);
   const handleClose = () => setOpen(false);
+  const navigate = useNavigate();
   const exportData = async () => {
     try {
-      const response = await client.get(
+      await client.get(
         `${baseUrl}/api/custom/${path}`,
         { params: { filter: qs.stringify(filter), isAssets:isAssets } }
       );
-      if (response?.data?.length > 0) {
-        const fields = Object.keys(response?.data[0]);
-        const opts = { fields,withBom:true,delimiter:"," };
-        const parser = new Parser(opts);
-        const csv = parser.parse(response?.data);
-        var a = window.document.createElement("a");
-        a.href = window.URL.createObjectURL(
-          new Blob([csv], { type: "text/csv" })
-        );
-        a.download = `export.csv`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      }
+      await handleClose();
+      await navigate('/download');
     } catch (err) {
       console.log(err);
     }
-  }
-
-  const exportAssestsDataZip = async () => {
-    try {
-        const response = await client.get(`${baseUrl}/api/custom/${path}`, {
-          params: { filter: qs.stringify(filter), isAssets:isAssets },
-        });
-        if(path === 'visits' || path === 'places'){
-          const files: { fileName: string; fileUrl: string }[] = [];
-        await exportCsvImagesZip(files, response?.data);
-        }else{
-        const files = response?.data?.map((item: any) => ({
-          fileName: item?.fileName,
-          fileUrl: `${baseUrl}${item?.object?.url}`,
-        }));
-        await exportCsvImagesZip(files, response?.data);
-      }
-      } catch (err) {
-        console.log(err);
-      }
   }
 
   return (
@@ -139,7 +106,7 @@ export default function ExportModal({open, setOpen, count, path, filter}:any) {
                             height: "100%",
                             textAlign: "center",
                         }}
-                        onClick={isAssets?exportAssestsDataZip:exportData}
+                        onClick={exportData}
                     />
                 </Grid>
             </Grid>
