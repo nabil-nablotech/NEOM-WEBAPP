@@ -167,6 +167,28 @@ const StepContent = ({
               selectStylesSx={commonSelectSxStyles}
               formControlSx={commonFormControlSxStyles}
             />
+            {
+              formik.values?.assessmentType &&
+              (formik.values.assessmentType === 'Other') &&
+              <>
+                <TextInput
+                  className={`${styles["latitude"]}`}
+                  label="Other Assessment"
+                  name="Other Assessment"
+                  value={formik.values.otherAssessment}
+                  onChange={(e) => {
+                    formik.setFieldValue("otherAssessment", e.target.value)
+                  }}
+                  sx={{
+                    ...textInputSxStyles,
+                    "& .MuiInputBase-inputMultiline": {
+                      paddingInline: "0 !important",
+                    },
+                  }}
+                  formControlSx={commonFormControlSxStyles}
+                />
+              </>
+            }
             <TextInput
               className={`${styles["recording-team"]}`}
               label="Recording Team"

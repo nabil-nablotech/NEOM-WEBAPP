@@ -232,6 +232,7 @@ const EventDetailsPage = () => {
     fieldNarrative,
     stateOfConservation,
     assessmentType,
+    otherAssessment,
     risk,
     tourismValue,
     researchValue,
@@ -245,6 +246,7 @@ const EventDetailsPage = () => {
     visit_associate,
     id,
   } = eventDetails;
+  console.log('hex: ', eventDetails)
 
   const mediaGalleryLocal =
     mediaGallery && mediaGridActiveItems + mediaCount <= mediaGallery?.length
@@ -683,11 +685,24 @@ const EventDetailsPage = () => {
                       Assesment Type
                     </Grid>
                     {!isEmptyValue(assessmentType) ? (
-                      assessmentType.map((item: string, index: number) => (
-                        <Grid item key={index}>
-                          {item}
-                        </Grid>
-                      ))
+                      <>
+                        {
+                          assessmentType.map((item: string, index: number) => (
+                            <Grid item key={index}>
+                              {item}
+                            </Grid>
+                          ))
+                          
+                        }
+                        {
+                          assessmentType &&
+                          (assessmentType[0] === "Other") &&
+                          otherAssessment &&
+                          <>
+                            &nbsp;{`(${otherAssessment})`}
+                          </>
+                        }
+                      </>
                     ) : (
                       <Grid item>
                         <NoTextPresent message={NO_TEXT} />

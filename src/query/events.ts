@@ -143,6 +143,7 @@ query RefineSearchEvent(
   $period: JSON
   $siteType: JSON
   $assessmentType: JSON
+  $otherAssessment: String
   $latitude: Float
   $longitude: Float
   $artifacts: JSON
@@ -179,6 +180,7 @@ query RefineSearchEvent(
         { artifacts: { containsi: $artifacts } }
         { siteType: { containsi: $siteType } }
         { assessmentType: { containsi: $assessmentType } }
+        { otherAssessment: { containsi: $otherAssessment } }
         { latitude: { gte: $latitude } }
         { longitude: { lte: $longitude } }
         { visitDate: { gte: $startDate }}
@@ -295,6 +297,7 @@ export const addEvent = gql`
     $artifacts: JSON
     $keywords: JSON
     $assessmentType: JSON
+    $otherAssessment: String
   ) {
     createVisit(
       data: {
@@ -319,6 +322,7 @@ export const addEvent = gql`
         period: $period
         artifacts: $artifacts
         assessmentType: $assessmentType
+        otherAssessment: $otherAssessment
       }
     ) {
       data {
@@ -360,6 +364,7 @@ export const updateEvent = gql`
     $artifacts: JSON
     $keywords: JSON
     $assessmentType: JSON
+    $otherAssessment: String
     $deleted: Boolean
   ) {
     updateVisit(
@@ -387,6 +392,7 @@ export const updateEvent = gql`
         period: $period
         artifacts: $artifacts
         assessmentType: $assessmentType
+        otherAssessment: $otherAssessment
       }
     ) {
       data {
