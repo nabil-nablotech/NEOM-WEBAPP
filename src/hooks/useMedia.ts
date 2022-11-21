@@ -67,6 +67,7 @@ const useMedia = () => {
   const [updateMediaAssociateMutation, { data: updateMediaAssociateData }] = useMutation(updateMediaAssociate, graphQlHeaders());
 
   const createAssociation = async (mediaId: number) => {
+
     if (associatedPlaces.length > 0 || associatedEvents.length > 0) {
       await createMediaAssociateMutation({
         variables: {
@@ -141,7 +142,7 @@ const useMedia = () => {
 
   useEffect(() => {
     if (updateMediaAssociateData) {
-      dispatch(resetMediaAssociation(null));
+      // dispatch(resetMediaAssociation(null));
     }
   }, [updateMediaAssociateData])
 
@@ -277,6 +278,7 @@ const useMedia = () => {
     } else {
       /** Detect if user comes via normal edit */
       openEditFlow(payload)
+      dispatch(resetMediaAssociation(null));
     }
   };
 

@@ -9,7 +9,7 @@ import LibraryIcon from '../../assets/images/searchResults/Library.svg'
 import MediaIcon from '../../assets/images/searchResults/Media.svg'
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch } from "react-redux";
-import { setAddNewItemWindowType } from "../../store/reducers/searchResultsReducer";
+import { resetMediaAssociation, setAddNewItemWindowType } from "../../store/reducers/searchResultsReducer";
 import { EVENTS_TAB_NAME, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME } from "../../utils/services/helpers";
 
 const StepContent = () => {
@@ -20,6 +20,7 @@ const StepContent = () => {
             <Grid item sm={4} className={`${styles['tab-name-tile']}`}
                 onClick={e => {
                     dispatch(setAddNewItemWindowType(PLACES_TAB_NAME))
+                    dispatch(resetMediaAssociation(null))
                 }}
             >
                 <Box
@@ -32,6 +33,7 @@ const StepContent = () => {
             <Grid item sm={4} className={`${styles['tab-name-tile']}`}
                 onClick={e => {
                     dispatch(setAddNewItemWindowType(EVENTS_TAB_NAME))
+                    dispatch(resetMediaAssociation(null))
                 }}
             >
                 <Box
@@ -44,6 +46,7 @@ const StepContent = () => {
             <Grid item sm={4} className={`${styles['tab-name-tile']}`}
                 onClick={e => {
                     dispatch(setAddNewItemWindowType(LIBRARY_TAB_NAME))
+                    dispatch(resetMediaAssociation(null))
                 }}
             >
                 <Box
@@ -56,6 +59,7 @@ const StepContent = () => {
             <Grid item sm={4} className={`${styles['tab-name-tile']}`}
                 onClick={e => {
                     dispatch(setAddNewItemWindowType(MEDIA_TAB_NAME))
+                    dispatch(resetMediaAssociation(null))
                 }}
             >
                 <Box

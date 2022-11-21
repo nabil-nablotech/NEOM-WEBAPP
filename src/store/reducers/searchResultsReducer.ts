@@ -148,8 +148,8 @@ export const searchResultsSlice = createSlice({
         state.activeMediaItemIndex = 0
         state.activeLibraryItem = null
         state.activeLibraryItemIndex = 0
-        state.associatedPlaces=[]
-        state.associatedEvents=[]
+        // state.associatedPlaces=[]
+        // state.associatedEvents=[]
       }
     },
     setActiveMediaItem: (state, action: PayloadAction<Object | any>) => {
