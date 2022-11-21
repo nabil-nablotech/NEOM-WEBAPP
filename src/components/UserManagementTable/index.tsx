@@ -402,7 +402,8 @@ export const UserManagementTable = (props: IUser) => {
       setAnchorEl(null);
     };
     // const showRecoveryLink = selectedUserLink?.find((x: LinkGenerate) => x?.user?.id === record.id);
-    const showRecoveryLink = record.recoveryToken;
+    const showRecoveryLink = record.recoveryToken && (record.recoveryToken !== "null");
+    
     return (
       <>
         {showRecoveryLink ? (
