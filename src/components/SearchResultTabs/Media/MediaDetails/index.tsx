@@ -11,7 +11,7 @@ import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setActiveMediaItemIndex, setActiveMediaItem} from '../../../../store/reducers/searchResultsReducer';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useHistory } from '../../../../hooks/useHistory';
 import MediaDetailsPage from './Details';
 
@@ -19,7 +19,7 @@ export const MediaDetailsModal = () => {
 
     const [isModalOpen, setModalOpen] = useState<boolean>(true)
 
-    const { media, activeMediaItem, activeMediaItemIndex, activeEventItem } = useSelector(
+    const { media, activeMediaItem, activeMediaItemIndex, activeEventItem, totalCounts } = useSelector(
         (state: RootState) => state.searchResults
     )
     let { tabName } = useParams<{ tabName?: tabNameProps }>();
@@ -28,6 +28,7 @@ export const MediaDetailsModal = () => {
 
     const dispatch = useDispatch();
     const {goBack} = useHistory();
+    const navigate = useNavigate();
 
     // const TotalMediaCount= (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates: 0
     const TotalMediaCount = (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates
@@ -74,8 +75,8 @@ export const MediaDetailsModal = () => {
                                 /** resetters */
                                 dispatch(setActiveMediaItem(null))
                                 dispatch(setActiveMediaItemIndex(0))
-                                // navigate(`/${tabName}`, { replace: true })
-                                goBack()
+                                navigate(`/${tabName}`, { replace: true })
+                                // goBack()
                             }}
                         >
                             Back
@@ -89,7 +90,7 @@ export const MediaDetailsModal = () => {
                             right: "50%",
                         }}
                     >
-                        {`${activeMediaItemIndex + 1}/${TotalMediaCount}`}
+                        {`${activeMediaItemIndex + 1}/${totalCounts ? totalCounts?.media : TotalMediaCount}`}
                     </Grid>
                 </Grid>
             }
