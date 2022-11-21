@@ -89,7 +89,9 @@ const useMedia = () => {
   const { loading: refineLoading, error: refineErrorData, data: refineMediaData, refetch: refineSearchMedia, } = useQuery(refineMedia, graphQlHeaders());
 
   useEffect(() => {
-    if (updateMediaAssociateData || (updateData && mediaAssociate)) {
+    if (updateMediaAssociateData 
+      // || (updateData && mediaAssociate)
+      ) {
       if(!showEditSuccess) {
         dispatch(toggleShowEditSuccess(true))
       }
