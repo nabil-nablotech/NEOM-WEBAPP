@@ -98,7 +98,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     referenceURL: edit ? tabData?.referenceURL : "",
     keywords: edit && tabData?.keywords ? tabData?.keywords : [],
     object: edit && tabData?.object ? [tabData?.object] : undefined,
-    mediaType: "", 
+    mediaType: "",
     refrenceUrl: "",
     showEmbeded: Boolean(edit && tabData?.objectURL),
     embedCode: edit && tabData?.objectURL,
@@ -110,7 +110,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     associationError: ''
   }
 
-  
+
   useEffect(() => {
 
     if (activeStep >= 2) {
@@ -233,7 +233,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
       handleNext(null, values);
     } else {
       if (activeStep === 1) {
-        
+
         if (currentError.length > 0) {
 
           let obj = {}
@@ -275,7 +275,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
       }
     },
     onSubmit: (values, { setErrors }) => {
-      validation(values, {setErrors })
+      validation(values, { setErrors })
     },
   });
 
@@ -324,7 +324,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     };
     fmData.append("files", file, file.name);
     try {
-      
+
       const res = await axios.post(
         `${baseUrl}/api/upload`,
         fmData,
@@ -376,7 +376,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
               {edit ? "Edit" : "Add"} Media
             </Typography>
             <Stepper
-              nonLinear 
+              nonLinear
               activeStep={activeStep}
               alternativeLabel
               className={`${styles["stepper"]} ${tabName === MEDIA_TAB_NAME ? styles["add-media-stepper"] : ""
@@ -406,7 +406,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
 
                         if (index > activeStep) {
                           validation(formik.values, { setErrors: formik.setErrors })
-                        } else if (index < activeStep){
+                        } else if (index < activeStep) {
                           handleBack()
                         }
 
@@ -430,7 +430,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
             </Stepper>
             <>
               <React.Fragment>
-              {edit && tabData && (
+                {activeStep == 0 && edit && tabData && (
                   <Box component="div" className={`${styles["visit-count"]}`}>
                     {edit ? `ID ${tabData.id}` : null}
                   </Box>
@@ -489,11 +489,11 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
               </Box>
             )}
             <Grid item display={"flex"}>
-            {!edit && (
+              {!edit && (
                 <Button
                   label={activeStep === steps.length - 1 ? "Add" : "Next"}
                   type="submit"
-                  // disabled={!(formik.values.title.trim().length > 0)}
+                // disabled={!(formik.values.title.trim().length > 0)}
                 />
               )}
               {edit && activeStep !== steps.length - 1 && (
