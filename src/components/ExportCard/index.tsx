@@ -19,7 +19,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 const ExportCard = ({ title, filePath, dataCount, fileCount, libraryCount, visitCount, token }: Download) => {
 const { size, elapsed, percentage, download, cancel, error, isInProgress } = useDownloader();
 const handleClick = async (filePath:string) =>{
-    await download(`${process.env.REACT_APP_STRAPI_BASE_URL+''+filePath}`, "dat.zip");
+    await download(`${process.env.REACT_APP_STRAPI_BASE_URL+''+filePath}`, `data_${Date.now()}.zip`);
 }
   return (
     <>
@@ -37,7 +37,7 @@ const handleClick = async (filePath:string) =>{
                             {title} - Data and Files
                     </Grid>
                     <Grid item xs={12} component="div" className={`${styles["box-span"]}`}>
-                            {dataCount} places | {fileCount} media files | {libraryCount} library files
+                            {dataCount} {title==='Media'?"items":<></>} | {fileCount} {title!=='Media'?"media files":"files"} {title!=='Media'?<>| {libraryCount} library files</>:<></>}
                     </Grid>
                 </Grid>
                 {/* <Grid item xs={12} sm={6} md={6} component="div"className={`${styles["grid-two"]}`}>

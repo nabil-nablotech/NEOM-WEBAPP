@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import { useDispatch } from "react-redux";
-import { modifyAssociatedPlaces, setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
+import { modifyAssociatedPlaces, setSelectedCardIndex, setSelectedKey } from "../../../../store/reducers/searchResultsReducer";
 import MoreOptionsComponent from './MoreOption';
 import { InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +25,14 @@ const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table {
     margin-block: 2em;
   }
-
+  thead tr th:first-child .ant-checkbox-inner::after {
+    background-color: rgba(19, 16, 13, 0.9);
+    border-color: 1px solid #E8E9E9;
+  }
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: rgba(19, 16, 13, 0.9);
+    border-color: 1px solid #E8E9E9;
+  }
   .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell),
   .ant-table-tbody
     > tr
@@ -139,12 +146,13 @@ const StyledTableWrapper = styled(StyledAntTable)`
 `;
 
 const ListView = (props: PlacesProps) => {
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const { navigateTo } = useHistory();
 
-  const { isAssociationsStepOpen, associatedPlaces } = useSelector(
+  const { isAssociationsStepOpen, associatedPlaces, selectedKey } = useSelector(
     (state: RootState) => state.searchResults
   );
 
@@ -279,7 +287,7 @@ const ListView = (props: PlacesProps) => {
   }), [associatedPlaces]
   )
 
-    const {data, hasMoreData, fetchData, loading} = props;
+    const {data, hasMoreData, fetchData, loading, isSelect} = props;
 
     useEffect(() => {
         /** Needs to be done , since InfiniteSCroll needs a relation with
@@ -317,7 +325,15 @@ const ListView = (props: PlacesProps) => {
 
   }, [isAssociationsStepOpen, associatedPlaces]);
 
-
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    dispatch(setSelectedKey(newSelectedRowKeys))
+  };
+  
+  const rowSelection = {
+    selectedKey,
+    onChange: onSelectChange,
+  };
+  console.log(selectedKey);
     return (
         <Box component="div" id={'places-list-parent'}>
             <InfiniteScroll
@@ -341,6 +357,7 @@ const ListView = (props: PlacesProps) => {
                     dataSource={data}
                     pagination={false}
                     loading={loading}
+                    rowSelection={isSelect?rowSelection:undefined}
                     bordered
                     scroll={{ x: 'max-content' , y: 500 }}
                     style={{
