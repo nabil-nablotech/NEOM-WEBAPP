@@ -445,18 +445,23 @@ export const UserManagementTable = (props: IUser) => {
             key={1}
             onClick={() => {
               generateLink({ user: record, recovery: true });
+              handleClose()
             }}
           >
             Recover Password
           </MenuItem>
-          <MenuItem key={2} onClick={() => showModal(record)}>
+          <MenuItem key={2} onClick={() => {
+            showModal(record)
+            handleClose()
+          }}>
             Edit
           </MenuItem>
           <MenuItem key={3} onClick={(e) => {
             e.stopPropagation();
+            handleClose()
             dispatch(toggleDeleteUserWindowOpen({
               flag: true,
-              mailId: 'sample'
+              mailId: record.email ? record.email : 'User'
             }))
           }}>
             Delete
