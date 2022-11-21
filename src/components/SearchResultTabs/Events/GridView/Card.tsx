@@ -114,7 +114,7 @@ export const Card = ({
             className={`${gridStyles["content"]}`}
           >
             <div className={`${gridStyles["card-title"]}`}>
-              {parse(title)} on {dateString}
+              {parse(title)} {dateString ? `on ${dateString}` : ''}
             </div>
             <div className={`${gridStyles["card-subtitle"]}`}>{subTitle}</div>
             {isNew && (
