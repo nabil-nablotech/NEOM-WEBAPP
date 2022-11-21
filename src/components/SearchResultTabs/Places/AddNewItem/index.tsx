@@ -118,7 +118,7 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
   const isStepSkipped = (step: number) => {
     return skipped.has(step);
   };
-  const handleNext = (e: any, data: any) => {
+  const handleNext = (e: any, data: any, navigateOnly?: boolean) => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -126,6 +126,8 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
     }
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
+    if (navigateOnly) return
 
     if (activeStep + 1 === steps.length && data) {
       if (create && !edit) {
@@ -286,7 +288,7 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
     }
   };
 
-  const validation = (values: any, formikObject: any) => {
+  const validation = (values: any, formikObject: any, navigateOnly?: boolean) => {
     let currentError = "";
 
     if (!values.placeNumber) {
@@ -294,12 +296,12 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
     }
 
     if (!currentError) {
-      handleNext(null, values);
+      handleNext(null, values, navigateOnly);
     } else {
       if (activeStep === 0) {
         formikObject.setErrors({ placeNumber: "Place Number is required" })
       } else {
-        handleNext(null, values);
+        handleNext(null, values, navigateOnly);
       }
     }
 
@@ -415,7 +417,7 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
                       onClick={e => {
 
                         if (index > activeStep) {
-                          validation(formik.values, { setErrors: formik.setErrors })
+                          validation(formik.values, { setErrors: formik.setErrors }, true)
                         } else if (index < activeStep) {
                           handleBack()
                         }

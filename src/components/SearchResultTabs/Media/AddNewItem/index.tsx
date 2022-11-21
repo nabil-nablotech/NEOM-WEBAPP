@@ -135,7 +135,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     return skipped.has(step);
   };
 
-  const handleNext = (e: any, data: any) => {
+  const handleNext = (e: any, data: any, navigateOnly?: boolean) => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -154,6 +154,8 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
+
+    if (navigateOnly) return
 
     if (activeStep + 1 === steps.length && data) {
       if (create && !edit) {
@@ -223,14 +225,14 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     }
   };
 
-  const validation = (values: any, formikObject: any) => {
+  const validation = (values: any, formikObject: any, navigateOnly?: boolean) => {
     let currentError: [] | string[] = [];
     if (!values.title) {
       currentError[0] = "Title is required";
     }
 
     if (currentError.length === 0 && (activeStep !== 2)) {
-      handleNext(null, values);
+      handleNext(null, values, navigateOnly);
     } else {
       if (activeStep === 1) {
 
@@ -254,11 +256,11 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
           dispatch(toggleIsAssociationStepInvalid(true))
         } else {
           dispatch(toggleIsAssociationStepInvalid(false))
-          handleNext(null, values);
+          handleNext(null, values, navigateOnly);
         }
       }
       else {
-        handleNext(null, values);
+        handleNext(null, values, navigateOnly);
       }
     }
   }
@@ -405,7 +407,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
                       onClick={e => {
 
                         if (index > activeStep) {
-                          validation(formik.values, { setErrors: formik.setErrors })
+                          validation(formik.values, { setErrors: formik.setErrors }, true)
                         } else if (index < activeStep) {
                           handleBack()
                         }
