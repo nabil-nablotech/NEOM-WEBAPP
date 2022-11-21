@@ -1,6 +1,7 @@
 import {
   Box,
   Button as DefaultButton,
+  Grid,
   Typography
 } from "@mui/material";
 import {
@@ -79,6 +80,7 @@ const StepContent = ({
 
   return (
     <>
+      
       <Box component="div" className={`${styles["form"]}`}>
         {activeStep === 0 && (
           <>
@@ -99,17 +101,25 @@ const StepContent = ({
               renderOption={(props, option: any) => (
                 <Box
                   component="li"
-                  sx={{ display: "flex", justifyContent: "space-between" }}
                   {...props}
                 >
-                  <Typography>
-                    {option?.attributes?.placeNameEnglish || ''} {' '}
-                    {option?.attributes?.placeNameArabic || ''}
-                  </Typography>
-
-                  <Typography style={{ float: "right" }}>
-                    {option?.attributes?.placeNumber || ''}
-                  </Typography>
+                  <Grid container style={{
+                    justifyContent: 'space-between'
+                  }}>
+                    <Grid item sm={10} sx={{ width: '80%' }}>
+                      {
+                        `${option?.attributes?.placeNameEnglish || ''
+                        }${option?.attributes?.placeNameArabic ? ` ${option?.attributes?.placeNameArabic}` : ''
+                        }`
+                      }
+                    </Grid>
+                    <Grid item sm={2}>
+                      {
+                        `${option?.attributes?.placeNumber ? `${option?.attributes?.placeNumber}` : ''
+                        }`
+                      }
+                    </Grid>
+                  </Grid>
                 </Box>
               )}
               selectStylesSx={commonFormControlSxStyles}
@@ -124,10 +134,12 @@ const StepContent = ({
               label="Event Number"
               required
               name="visit-number"
-              type="number"
+              // type="number"
               value={formik.values.visitNumber}
               onChange={(e) => {
-                formik.setFieldValue("visitNumber", e.target.value);
+                if (validateNumber(e.target.value)) {
+                  formik.setFieldValue("visitNumber", e.target.value);
+                }
               }}
               sx={{
                 ...textInputSxStyles,
@@ -164,6 +176,28 @@ const StepContent = ({
               selectStylesSx={commonSelectSxStyles}
               formControlSx={commonFormControlSxStyles}
             />
+            {
+              formik.values?.assessmentType &&
+              (formik.values.assessmentType === 'Other') &&
+              <>
+                <TextInput
+                  className={`${styles["latitude"]}`}
+                  label="Other Assessment"
+                  name="Other Assessment"
+                  value={formik.values.otherAssessment}
+                  onChange={(e) => {
+                    formik.setFieldValue("otherAssessment", e.target.value)
+                  }}
+                  sx={{
+                    ...textInputSxStyles,
+                    "& .MuiInputBase-inputMultiline": {
+                      paddingInline: "0 !important",
+                    },
+                  }}
+                  formControlSx={commonFormControlSxStyles}
+                />
+              </>
+            }
             <TextInput
               className={`${styles["recording-team"]}`}
               label="Recording Team"

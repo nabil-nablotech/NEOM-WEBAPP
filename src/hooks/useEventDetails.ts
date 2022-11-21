@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { eventDetails, mediaDetails } from "../api/details";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { setEventEdit, setEventData } from "../store/reducers/eventReducer";
-import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation, toggleEditConfirmationWindowOpen, setEditPayload, toggleConfirmOpenEdit } from "../store/reducers/searchResultsReducer";
+import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation, toggleEditConfirmationWindowOpen, setEditPayload, toggleConfirmOpenEdit, resetMediaAssociation } from "../store/reducers/searchResultsReducer";
 import { EVENTS_TAB_NAME } from "../utils/services/helpers";
 import { RootState } from "../store";
 import { MediaApi } from "../types/Media";
@@ -62,7 +62,7 @@ const useEventDetails = () => {
 
     /** navigate to latest list after deleting item */
     if (deleteItemSuccess && (deleteItemType === "Events")) {
-      navigate(`/search-results/Events`, { replace: true })
+      navigate(`/Events`, { replace: true })
     }
 
     /** means if media or libr is deleted from places */
@@ -119,6 +119,7 @@ const useEventDetails = () => {
     } else {
       /** Detect if user comes via normal edit */
       openEditFlow(payload)
+      dispatch(resetMediaAssociation(null));
     }
   };
 

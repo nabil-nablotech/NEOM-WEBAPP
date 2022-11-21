@@ -44,7 +44,7 @@ const FileUpload = ({uploadImage, defaultImages}: {uploadImage: (options: any) =
   }
   const props: UploadProps = {
     name: 'file',
-    accept: ".xls,.xlsx,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    accept: ".xls,.xlsx,.pdf,.doc,.docx,.txt,.csv,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     multiple: false,
     maxCount: 1,
     customRequest: uploadImage,

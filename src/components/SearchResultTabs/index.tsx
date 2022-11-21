@@ -169,7 +169,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
     dispatch(setActiveMediaItemIndex(0))
 
     navigate({
-      pathname: `/search-results/${newLabel ? newLabel : "Places"}`,
+      pathname: `/${newLabel ? newLabel : "Places"}`,
       search: decodeURIComponent(JSON.stringify({
         search: searchText
       }))
@@ -199,15 +199,26 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
       handleSubmit();
     }
     navigate({
-      pathname: `/search-results/${tabName}`,
+      pathname: `/${tabName}`,
       search: searchParams
     });
   };
 
   const handleClear = (e: any, name?: string) => {
     const selectedValueCopy = JSON.parse(JSON.stringify(selectedValue));
+    
     if (name) {
-      selectedValueCopy[name] = name === 'location' ? '' : [];
+      selectedValueCopy[name] = (
+        name === 'location'
+      ) ? '' : [];
+
+      if(
+        (name === 'latitude') || (name === 'longitude')
+      ) {
+        selectedValueCopy['latitude'] = ''
+        selectedValueCopy['longitude'] = ''
+      }
+
       e.preventDefault();
       dispatch(setSelectedValue(selectedValueCopy));
     }
@@ -318,7 +329,8 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
         }
       }}>
         <Accordion className={`${styles["refined-search-wrapper"]}`} sx={{
-          '& .Mui-expanded': {
+          '& .MuiButtonBase-root.MuiAccordionSummary-root.Mui-expanded': {
+            minHeight: 'fit-content'
           }
         }}>
           <AccordionSummary

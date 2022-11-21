@@ -104,10 +104,12 @@ const useUser = () => {
       exp: expDate,
     });
     const token = encryptUser(user);
-    setShowSnackbar({
-      open: true,
-      message: "Password recovery link created",
-    });
+    if(userData.recovery) {
+      setShowSnackbar({
+        open: true,
+        message: "Password recovery link created",
+      });
+    }
     await setUserData(userData.user);
     await editUserMutation({
       user: {recoveryToken: token},

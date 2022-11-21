@@ -128,8 +128,8 @@ const LibraryDetailsPage = ({
                     alt={""}
                     src={`${baseUrl}${libraryDetails?.object?.url}`}
                   />
-                  <a className={`${styles['anchor']}`} href={`${baseUrl}${libraryDetails.object.url}`} target="_blank" 
-                    rel="noreferrer">{libraryDetails.object.name}</a>
+                  <a className={`${styles['anchor']}`} href={`${baseUrl}${libraryDetails?.object?.url}`} target="_blank" 
+                    rel="noreferrer">{libraryDetails?.object?.name}</a>
                   </Box>
                 )}
               </>
@@ -157,8 +157,8 @@ const LibraryDetailsPage = ({
                   alt={""}
                   className={`${styles["image"]}`}
                 />
-                <a className={`${styles['anchor']}`} href={`${baseUrl}${libraryDetails.object.url}`} target="_blank" 
-                    rel="noreferrer">{libraryDetails.object.name}</a>
+                <a className={`${styles['anchor']}`} href={`${baseUrl}${libraryDetails?.object?.url}`} target="_blank" 
+                    rel="noreferrer">{libraryDetails?.object?.name}</a>
                     </Box>
                 {/* <div
                                         style={{
@@ -194,8 +194,8 @@ const LibraryDetailsPage = ({
                   alt={""}
                   className={`${styles['image']}`}
                 />
-                <a className={`${styles['anchor']}`} href={`${baseUrl}${libraryDetails.object.url}`} target="_blank" 
-                    rel="noreferrer">{libraryDetails.object.name}</a>
+                <a className={`${styles['anchor']}`} href={`${baseUrl}${libraryDetails?.object?.url}`} target="_blank" 
+                    rel="noreferrer">{libraryDetails?.object?.name}</a>
                     </Box>
             )}
           </Box>
@@ -404,7 +404,7 @@ export const LibraryDetailsModal = () => {
     setModalOpen(false);
     dispatch(setActiveLibraryItem(null));
     dispatch(setActiveLibraryItemIndex(0));
-    // navigate(`/search-results/Library`, { replace: true, state: null });
+    // navigate(`/Library`, { replace: true, state: null });
     goBack()
 
   };

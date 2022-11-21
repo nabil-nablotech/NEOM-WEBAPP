@@ -13,7 +13,7 @@ import { tabNameProps } from '../types/SearchResultsTabsProps';
 import { limit, getQueryObj, webUrl, generateUniqueId, MEDIA_TAB_NAME, formatBytes, formatStrapiDate } from '../utils/services/helpers';
 import { graphQlHeaders } from '../utils/services/interceptor';
 import { mediaDetails } from "../api/details";
-import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
+import { setLatestItem, setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 
 const useMedia = () => {
   const [hasMoreData, setHasMoreData] = useState(false);
@@ -48,18 +48,26 @@ const useMedia = () => {
       createAssociation(data.createMedia.data.id);
     } else  {
       dispatch(storeAddItemProgressState(null));
-      navigate(`/search-results/Media/${data.createMedia.data.attributes.uniqueId}`, { replace: true })
+      navigate(`/Media/${data.createMedia.data.attributes.uniqueId}`, { replace: true })
     }
+    dispatch(setLatestItem({tab:'Media', data:data.createMedia.data}))
   }});
   const [updateMediaMutation, { data: updateData, reset }] = useMutation(updateMedia, {context: graphQlHeaders().context, onCompleted: () => {
     if (associatedEvents.length == 0 && associatedPlaces.length == 0) {
       dispatch(toggleShowEditSuccess(true));
     }
   }});
-  const [createMediaAssociateMutation, { data: mediaAssociate }] = useMutation(createMediaAssociate, graphQlHeaders());
+  const [createMediaAssociateMutation, { data: mediaAssociate }] = useMutation(createMediaAssociate, {context: graphQlHeaders().context, onCompleted: (d) => {
+    if (d) {
+      dispatch(resetMediaAssociation(null));
+      dispatch(storeAddItemProgressState(null));
+      navigate(`/Media/${addData?.createMedia?.data?.attributes?.uniqueId}`, { replace: true })
+    }
+  }});
   const [updateMediaAssociateMutation, { data: updateMediaAssociateData }] = useMutation(updateMediaAssociate, graphQlHeaders());
 
   const createAssociation = async (mediaId: number) => {
+
     if (associatedPlaces.length > 0 || associatedEvents.length > 0) {
       await createMediaAssociateMutation({
         variables: {
@@ -82,8 +90,9 @@ const useMedia = () => {
   const { loading: refineLoading, error: refineErrorData, data: refineMediaData, refetch: refineSearchMedia, } = useQuery(refineMedia, graphQlHeaders());
 
   useEffect(() => {
-
-    if (updateMediaAssociateData || (updateData && mediaAssociate)) {
+    if (updateMediaAssociateData 
+      // || (updateData && mediaAssociate)
+      ) {
       if(!showEditSuccess) {
         dispatch(toggleShowEditSuccess(true))
       }
@@ -125,29 +134,17 @@ const useMedia = () => {
 
       dispatch(storeAddItemProgressState(null));
       /** re-direct */
-      navigate(`/search-results/Media/${updateData?.updateMedia.data.attributes.uniqueId}`, { replace: true })
+      navigate(`/Media/${updateData?.updateMedia.data.attributes.uniqueId}`, { replace: true })
 
     }
   }, [addData, updateData, addErr])
 
 
   useEffect(() => {
-    let id = null;
-    if (addData) {
-      id = addData?.createMedia?.data?.attributes?.uniqueId;
-    }
     if (updateMediaAssociateData) {
-      dispatch(resetMediaAssociation(null));
+      // dispatch(resetMediaAssociation(null));
     }
-    if (mediaAssociate) {
-      dispatch(resetMediaAssociation(null));
-      if (id) {
-
-        dispatch(storeAddItemProgressState(null));
-        navigate(`/search-results/Media/${id}`, { replace: true })
-      }
-    }
-  }, [mediaAssociate, updateMediaAssociateData])
+  }, [updateMediaAssociateData])
 
   const fetchData = (skip: number = mediaItem.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);
@@ -223,7 +220,7 @@ const useMedia = () => {
     if (!edit) {
       data.uniqueId = uniqueId;
       data.created = formatStrapiDate(new Date());
-      data.mediaUIPath = `${webUrl}/search-results/Media/${uniqueId}`;
+      data.mediaUIPath = `${webUrl}/Media/${uniqueId}`;
       createMediaMutation({ variables: data })
     }
     if (edit && tabData?.id) {
@@ -281,6 +278,7 @@ const useMedia = () => {
     } else {
       /** Detect if user comes via normal edit */
       openEditFlow(payload)
+      dispatch(resetMediaAssociation(null));
     }
   };
 

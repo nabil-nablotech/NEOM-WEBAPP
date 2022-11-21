@@ -44,7 +44,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { useFormik } from "formik";
 import ReactDatePicker from "react-datepicker";
 import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
-import StepContent from './form';
+import StepContent from "./form";
 import { updateKeywords } from "../../../../api/keywords";
 
 const commonSelectSxStyles = {
@@ -102,7 +102,9 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
   const { showAddSuccess, addItemProgressState } = useSelector(
     (state: RootState) => state.searchResults
   );
-  const { edit, event, places } = useSelector((state: RootState) => state.event);
+  const { edit, event, places } = useSelector(
+    (state: RootState) => state.event
+  );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
 
   const [activeStep, setActiveStep] = useState(0);
@@ -121,7 +123,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
   const isStepSkipped = (step: number) => {
     return skipped.has(step);
   };
-  const handleNext = (e: any, data?: any) => {
+  const handleNext = (e: any, data?: any, navigateOnly?: boolean) => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -130,30 +132,37 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
-    if ((activeStep + 1 === steps.length) && data) {
+    if (navigateOnly) return
+
+    if (activeStep + 1 === steps.length && data) {
       if (create && !edit) {
         create({
           ...data,
         });
         handleReset();
-        updateKeywords({
-          keywords: data.keywords
-        }, 'event')
+        updateKeywords(
+          {
+            keywords: data.keywords,
+          },
+          "event"
+        );
         dispatch(toggleShowAddSuccess(true));
-        dispatch(toggleNewItemWindow(false))
+        dispatch(toggleNewItemWindow(false));
       }
-      
     }
     if (edit && create && data) {
       create({
         ...data,
       });
       handleReset();
-      updateKeywords({
-        keywords: data.keywords
-      }, 'event')
+      updateKeywords(
+        {
+          keywords: data.keywords,
+        },
+        "event"
+      );
       dispatch(toggleNewItemWindow(false));
-      dispatch(toggleShowEditSuccess(true))
+      dispatch(toggleShowEditSuccess(true));
     }
 
     setSkipped(newSkipped);
@@ -161,8 +170,8 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
 
   const handleBack = () => {
     if (activeStep === 0) {
-      dispatch(toggleNewItemWindow(false))
-      dispatch(setAddNewItemWindowType(null))
+      dispatch(toggleNewItemWindow(false));
+      dispatch(setAddNewItemWindowType(null));
       handleReset();
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -187,13 +196,11 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
   const handleReset = () => {
     setActiveStep(0);
 
-    dispatch(toggleAddItemWindowMinimized(null))
+    dispatch(toggleAddItemWindowMinimized(null));
 
     /** remove the data when change in add item type window occurs */
-    dispatch(storeAddItemProgressState(null))
-
-    
-}
+    dispatch(storeAddItemProgressState(null));
+  };
 
   const handleStep = (step: number) => () => {
     if (activeStep > step) {
@@ -201,7 +208,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
     }
   };
 
-  const validation = (values: any, formikObject: any) => {
+  const validation = (values: any, formikObject: any, navigateOnly?: boolean) => {
     let currentError: [] | string[] = [];
 
     if (!values.place || isEmptyValue(values.place)) {
@@ -213,53 +220,65 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
     }
 
     if (currentError.length === 0) {
-      handleNext(null, values);
+      handleNext(null, values, navigateOnly);
     } else {
       if (activeStep === 0) {
-        if(currentError.length > 0) {
+        if (currentError.length > 0) {
+          let obj = {};
 
-          let obj = {}
-
-          if(currentError[0]) {
-            obj = { place: currentError[0]  }
+          if (currentError[0]) {
+            obj = { place: currentError[0] };
           }
-          if(currentError[1]) {
+          if (currentError[1]) {
             obj = {
-              ...obj, 
-              visitNumber: currentError[1] 
-            }
+              ...obj,
+              visitNumber: currentError[1],
+            };
           }
-          formikObject.setErrors(obj)
+          formikObject.setErrors(obj);
         }
       } else {
-        handleNext(null, values);
+        handleNext(null, values, navigateOnly);
       }
     }
-
-  }
-
+  };
 
   const formik = useFormik({
     initialValues: {
-      place: (edit && event?.visit_associate && event?.visit_associate?.place_unique_id) ? event?.visit_associate?.place_unique_id : {},
+      place:
+        edit &&
+          event?.visit_associate &&
+          event?.visit_associate?.place_unique_id
+          ? event?.visit_associate?.place_unique_id
+          : {},
       eventDate:
         edit && event.visitDate ? new Date(event.visitDate) : undefined,
       recordingTeam: edit ? event?.recordingTeam : "",
       visitNumber: edit ? event?.visitNumber : "",
       siteDescription: edit ? event?.siteDescription : "",
       fieldNarrative: edit ? event?.fieldNarrative : "",
-      artifacts: (edit && event?.artifacts) ? event?.artifacts[0] : "",
+      artifacts: edit && event?.artifacts ? event?.artifacts[0] : "",
       latitude: edit ? event?.latitude : null,
       longitude: edit ? event?.longitude : null,
-      assessmentType: (edit && event?.assessmentType && event?.assessmentType?.length) > 0 ? event?.assessmentType[0] : "",
-      stateOfConservation: edit && event?.stateOfConservation ? event?.stateOfConservation[0] : "",
+      assessmentType:
+        (edit && event?.assessmentType && event?.assessmentType?.length) > 0
+          ? event?.assessmentType[0]
+          : "",
+      otherAssessment: edit ? event?.otherAssessment : "",
+      stateOfConservation:
+        edit && event?.stateOfConservation ? event?.stateOfConservation[0] : "",
       siteType: edit ? event?.siteType : [],
       risk: edit && event?.risk.length > 0 ? event?.risk[0] : "",
-      tourismValue: edit && event?.tourismValue?.length > 0 ? event?.tourismValue[0] : "",
-      researchValue: edit && event?.researchValue?.length > 0 ? event?.researchValue[0] : "",
-      recommendation: edit && event?.recommendation?.length > 0 ? event?.recommendation[0] : "",
-      period: (edit && event?.period) ? event?.period : [],
-      keywords: (edit && event?.keywords) ? event?.keywords : [],
+      tourismValue:
+        edit && event?.tourismValue?.length > 0 ? event?.tourismValue[0] : "",
+      researchValue:
+        edit && event?.researchValue?.length > 0 ? event?.researchValue[0] : "",
+      recommendation:
+        edit && event?.recommendation?.length > 0
+          ? event?.recommendation[0]
+          : "",
+      period: edit && event?.period ? event?.period : [],
+      keywords: edit && event?.keywords ? event?.keywords : [],
     },
     validate: (values) => {
       // if (!values.visitNumber) {
@@ -269,7 +288,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
       // }
     },
     onSubmit: (values, { setErrors }) => {
-      validation(values, {setErrors })
+      validation(values, { setErrors });
     },
   });
 
@@ -278,28 +297,28 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
      * and remove the data when change in add item type window occurs
      */
     if (addItemProgressState && addItemProgressState.formData) {
+      setActiveStep(addItemProgressState.activeStep);
 
-      setActiveStep(addItemProgressState.activeStep)
-
-      Object.keys(addItemProgressState.formData).forEach(keyName => {
+      Object.keys(addItemProgressState.formData).forEach((keyName) => {
         // @ts-ignore
-        formik.setFieldValue(keyName, addItemProgressState.formData[keyName])
-      })
+        formik.setFieldValue(keyName, addItemProgressState.formData[keyName]);
+      });
     }
-
-  }, [])
+  }, []);
 
   const handleHide = () => {
-    onHide()
+    onHide();
 
     /** store data when unmounting */
-    dispatch(storeAddItemProgressState({
-      activeStep: activeStep,
-      formData: {
-        ...formik.values
-      }
-    }))
-  }
+    dispatch(
+      storeAddItemProgressState({
+        activeStep: activeStep,
+        formData: {
+          ...formik.values,
+        },
+      })
+    );
+  };
 
   const handleChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -364,20 +383,23 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
                 //     stepProps.completed = false;
                 // }
                 return (
-                  <Step key={label} {...stepProps}
+                  <Step
+                    key={label}
+                    {...stepProps}
                     sx={{
-                      cursor: 'pointer'
+                      cursor: "pointer",
                     }}
                   >
-                    <StepButton color="inherit"
-                      onClick={e => {
-                        
+                    <StepButton
+                      color="inherit"
+                      onClick={(e) => {
                         if (index > activeStep) {
-                          validation(formik.values, { setErrors: formik.setErrors })
-                        } else if (index < activeStep){
-                          handleBack()
+                          validation(formik.values, {
+                            setErrors: formik.setErrors,
+                          }, true);
+                        } else if (index < activeStep) {
+                          handleBack();
                         }
-
                       }}
                     >
                       <StepLabel
@@ -398,9 +420,9 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
             </Stepper>
             <>
               <React.Fragment>
-                {edit && event && (
-                  <Box component="div" className={`${styles['visit-count']}`}>
-                    {event?.visitNumber || event?.attributes?.visitNumber}
+                {activeStep == 0 && edit && event && (
+                  <Box component="div" className={`${styles["visit-count"]}`}>
+                    {edit ? `ID ${event.id}` : null}
                   </Box>
                 )}
                 <StepContent
@@ -450,7 +472,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
                 <Button
                   label={activeStep === steps.length - 1 ? "Add" : "Next"}
                   type="submit"
-                  // onClick={handleNext}
+                // onClick={handleNext}
                 />
               )}
               {edit && activeStep !== steps.length - 1 && (
@@ -464,8 +486,11 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
                 <Button
                   label={"Update"}
                   type="submit"
-                  disabled={(formik.values.visitNumber.length === 0) && !(formik.values.place?.id)}
-                  // onClick={handleNext}
+                  disabled={
+                    formik.values.visitNumber.length === 0 &&
+                    !formik.values.place?.id
+                  }
+                // onClick={handleNext}
                 />
               )}
             </Grid>

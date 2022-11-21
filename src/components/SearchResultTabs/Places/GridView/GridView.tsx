@@ -39,6 +39,7 @@ const GridView = (props: PlacesProps) => {
   if (totalData === 0) {
     return <h1>No data found</h1>
   }
+
   return (
     <Box component="div" className={`${gridStyles["left-grid-box"]}`}>
       <InfiniteScroll
@@ -69,13 +70,13 @@ const GridView = (props: PlacesProps) => {
                 className={`${gridStyles[""]}`}
                 onClick={(e) => {
                   dispatch(setSelectedCardIndex(index));
-                  // navigate(`/search-results/Places/${item.attributes.uniqueId}`, {replace: true})
-                  navigateTo(`/search-results/Places/${item.attributes.uniqueId}`)
+                  // navigate(`/Places/${item.attributes.uniqueId}`, {replace: true})
+                  navigateTo(`/Places/${item.attributes.uniqueId}`)
                 }}
               >
                 <Card
                   key={index}
-                  img={item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ? item.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''}
+                  img={item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ? item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''}
                   title={`${item.attributes?.placeNameEnglish} ${item.attributes?.placeNameArabic} - ${item.attributes?.placeNumber}`}
                   subTitle={item.attributes?.siteDescription}
                   dateString={`Last updated on ${formatDateTime(item.attributes.updatedAt)}`}

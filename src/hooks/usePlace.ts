@@ -11,9 +11,9 @@ import {
   setPlaceMetaData,
   setSearchText,
   toggleShowAddSuccess,
-  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, toggleEditConfirmationWindowOpen, setEditPayload, toggleConfirmOpenEdit
+  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, toggleEditConfirmationWindowOpen, setEditPayload, toggleConfirmOpenEdit, resetMediaAssociation
 } from "../store/reducers/searchResultsReducer";
-import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
+import { setLatestItem, setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 import { Place } from "../types/Place";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 
@@ -68,7 +68,9 @@ const usePlace = () => {
    */
   const { loading:refineLoading, error:refineErrorData, data:refinePlaceData, refetch:refineSearchPlaces} = useQuery(refinePlaces, graphQlHeaders());
 
-  const [createPlaceMutation, {data, loading, error}] = useMutation(addPlace, graphQlHeaders());
+  const [createPlaceMutation, {data, loading, error}] = useMutation(addPlace, {context: graphQlHeaders().context, onCompleted: (data) => {
+    dispatch(setLatestItem({tab:'Places', data:data.createPlace.data}));
+  }});
   const [updatePlaceMutation, {data: updateData, loading: updateLoading, error: updateErr}] = useMutation(updatePlace, graphQlHeaders());
 
   useEffect(() => {
@@ -121,7 +123,7 @@ const usePlace = () => {
       // dispatch(toggleShowAddSuccess(true))
 
       /** rdirect */
-      navigate(`/search-results/Places/${data.createPlace.data.attributes.uniqueId}`, {replace: true})
+      navigate(`/Places/${data.createPlace.data.attributes.uniqueId}`, {replace: true})
       /** insert in reducer */
       /** map that to screen  */
     }
@@ -132,7 +134,7 @@ const usePlace = () => {
         dispatch(setTabEdit(false));
         dispatch(setTabData({}));
         dispatch(toggleShowEditSuccess(true))
-        navigate(`/search-results/Places/${updateData.updatePlace.data.attributes.uniqueId}`, {replace: true})
+        navigate(`/Places/${updateData.updatePlace.data.attributes.uniqueId}`, {replace: true})
     }
   }, [updateData])
 
@@ -204,7 +206,7 @@ const usePlace = () => {
     }
     if (!edit) {
       data.uniqueId = uniqueId;
-      data.placeUIPath = `${webUrl}/search-results/Events/${uniqueId}`;
+      data.placeUIPath = `${webUrl}/Places/${uniqueId}`;
       createPlaceMutation({variables: data})
     }
     if (edit && tabData?.id) {
@@ -258,6 +260,7 @@ const usePlace = () => {
     } else {
       /** Detect if user comes via normal edit */
       openEditFlow(payload)
+      dispatch(resetMediaAssociation(null));
     }
   };
 

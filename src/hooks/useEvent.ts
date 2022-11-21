@@ -11,7 +11,7 @@ import {
   setEventMetaData,
   setSearchText,
   toggleShowAddSuccess,
-  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, toggleEditConfirmationWindowOpen, toggleConfirmOpenEdit, setEditPayload
+  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, toggleEditConfirmationWindowOpen, toggleConfirmOpenEdit, setEditPayload, resetMediaAssociation
 } from "../store/reducers/searchResultsReducer";
 import { setEventEdit, setPlaces, setEventData } from '../store/reducers/eventReducer';
 import { limit, getQueryObj, generateUniqueId, webUrl, EVENTS_TAB_NAME } from '../utils/services/helpers';
@@ -21,7 +21,7 @@ import { Place } from "../types/Place";
 import { places } from "../query/places";
 import { eventDetails } from "../api/details";
 
-import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
+import { setLatestItem, setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -75,14 +75,16 @@ const useEvent = () => {
   /**
    * fetch places with two words
    */
-  const [createEventMuation, { loading, error, data }] = useMutation(addEvent, graphQlHeaders());
+  const [createEventMuation, { loading, error, data }] = useMutation(addEvent, {context: graphQlHeaders().context, onCompleted: (data) => {
+    dispatch(setLatestItem({tab:'Events', data:data.createVisit.data}));
+  }});
   const [updateEventMuation, { loading: updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateEvent, {context: graphQlHeaders().context, onCompleted: () => {
     dispatch(setEventEdit(false))
     // dispatch(toggleShowEditSuccess(false));
     /** re-direct */
     if(updateData?.updateVisit) {
 
-      navigate(`/search-results/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
+      navigate(`/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
     }
 
   }});
@@ -146,7 +148,7 @@ const useEvent = () => {
       dispatch(toggleShowAddSuccess(true))
 
       /** re-direct */
-      navigate(`/search-results/Events/${data.createVisit.data.attributes.uniqueId}`, { replace: true })
+      navigate(`/Events/${data.createVisit.data.attributes.uniqueId}`, { replace: true })
     }
   }, [visitAssociate])
 
@@ -247,7 +249,7 @@ const useEvent = () => {
     setPlace(data.place);
     if (!edit) {
       data.uniqueId = uniqueId;
-      data.visitUIPath = `${webUrl}/search-results/Events/${uniqueId}`;
+      data.visitUIPath = `${webUrl}/Events/${uniqueId}`;
       createEventMuation({ variables: data })
     }
     if (edit && event?.id) {
@@ -318,6 +320,7 @@ const useEvent = () => {
     } else {
       /** Detect if user comes via normal edit */
       openEditFlow(payload)
+      dispatch(resetMediaAssociation(null));
     }
     
   };

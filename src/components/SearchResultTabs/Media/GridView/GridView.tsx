@@ -64,12 +64,11 @@ const GridView = (props: MediaProps) => {
             <Grid container spacing={1} id={'media-scrollable-div'} className={`${gridStyles['left-grid-container']}`}>
                 {
                     data?.map((item: Media, index: number ) => 
-                    <Grid key={index} item lg={4} md={5} className={`${gridStyles['card-item']}`} onClick={e => {
+                    <Grid key={index} item lg={4} md={4} className={`${gridStyles['card-item']}`} onClick={e => {
                         dispatch(setSelectedCardIndex(index))
                         dispatch(setActiveMediaItem(media[index]))
                         dispatch(setActiveMediaItemIndex(index))
-                        // navigate(`/search-results/Media/${media[index].attributes.uniqueId}`, { replace: true })
-                        navigateTo(`/search-results/Media/${media[index].attributes.uniqueId}`)
+                        navigateTo(`/Media/${media[index].attributes.uniqueId}`)
                     }}>
                             <Card
                                 itemIndex={index}

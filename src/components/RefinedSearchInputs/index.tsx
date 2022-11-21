@@ -27,6 +27,7 @@ import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined
 import ClearIcon from '@mui/icons-material/Clear';
 import AutoCompleteKeyWordsComponent from "../AutoCompleteKeyWords"
 // import { DateRangePicker } from "../DateRangePicker";
+import CloseIcon from '@mui/icons-material/Close';
 
 const BaseInputs = ({
   activeTab,
@@ -159,6 +160,35 @@ const BaseInputs = ({
                   selectedValue.latitude ? "," : ""
               }${selectedValue.longitude}`}
               onChange={(e) => {}}
+              InputProps={{
+                endAdornment: <>
+                  {
+                    (selectedValue.latitude || selectedValue.longitude) &&
+                    <InputAdornment position="end" >
+                      <IconButton edge="end" onClick={
+                        e => {
+                          e.stopPropagation()
+
+                          if (validateNumber(selectedValue.latitude)) {
+                            handleClear(e, "latitude")
+                          }
+                          if (validateNumber(selectedValue.longitude)) {
+                            setTimeout(() => {
+                              handleClear(e, "longitude")
+                            }, 10);
+                          }
+                        }
+                      }>
+                        <CloseIcon fontSize='small' sx={{
+                          marginRight: 0,
+                          cursor: 'pointer',
+                          zIndex: 6
+                        }} />
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                </>
+              }}
               sx={{
                 ...locationInputSx
               }}
@@ -317,7 +347,7 @@ const BaseInputs = ({
               sx={{
                 ...locationInputSx,
                 "& .MuiInputBase-input.MuiOutlinedInput-input": {
-                  fontSize: '0.9em'
+                  fontSize: '1em'
                 }
               }}
               formControlSx={{
@@ -381,6 +411,7 @@ const BaseInputs = ({
                     className={`${styles["date"]} ${styles["date-subinput"]}`}
                     selected={selectedValue.endDate && new Date(selectedValue.endDate)}
                     minDate={selectedValue.startDate && new Date(selectedValue.startDate)}
+                    maxDate={new Date()}
                     onChange={(date: Date) => handleDate(date, "endDate")}
                   />
                 </Grid>
@@ -431,6 +462,36 @@ const MediaInputs = ({
               onChange={(e) => { }}
               sx={{
                 ...locationInputSx
+              }}
+              InputProps={{
+                endAdornment: <>
+                  {
+                    (selectedValue.latitude || selectedValue.longitude) &&
+                    <InputAdornment position="end" >
+                      <IconButton edge="end" onClick={
+                        e => {
+                          e.stopPropagation()
+
+                          if (validateNumber(selectedValue.latitude)) {
+                            handleClear(e, "latitude")
+                          }
+                          if (validateNumber(selectedValue.longitude)) {
+                            setTimeout(() => {
+                              handleClear(e, "longitude")
+                            }, 10);
+                          }
+
+                        }
+                      }>
+                        <CloseIcon fontSize='small' sx={{
+                          marginRight: 0,
+                          cursor: 'pointer',
+                          zIndex: 6
+                        }} />
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                </>
               }}
               formControlSx={commonFormControlSxStyles}
             />

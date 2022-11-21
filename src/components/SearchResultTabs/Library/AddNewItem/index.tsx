@@ -80,10 +80,10 @@ export const stepperIconSx = {
 const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { addItemProgressState, 
+  const { addItemProgressState,
     associatedPlaces, associatedEvents } = useSelector(
-    (state: RootState) => state.searchResults
-  );
+      (state: RootState) => state.searchResults
+    );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
 
   const { edit, tabData } = useSelector((state: RootState) => state.tabEdit);
@@ -120,7 +120,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   const isStepSkipped = (step: number) => {
     return skipped.has(step);
   };
-  const handleNext = (e: any, data?: any) => {
+  const handleNext = (e: any, data?: any, navigateOnly?: boolean) => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -139,6 +139,8 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
+
+    if (navigateOnly) return
 
     if (activeStep + 1 === steps.length && data) {
       if (create && !edit) {
@@ -210,7 +212,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     }
   };
 
-  const validation = (values: any, formikObject: any) => {
+  const validation = (values: any, formikObject: any, navigateOnly?: boolean) => {
     let currentError: [] | string[] = [];
 
     if (!values.title) {
@@ -222,7 +224,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     }
 
     if (currentError.length === 0 && (activeStep !== 1)) {
-      handleNext(null, values);
+      handleNext(null, values, navigateOnly);
     } else {
       if (activeStep === 0) {
         if (currentError.length > 0) {
@@ -240,8 +242,8 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
           }
           formikObject.setErrors(obj)
         }
-      } 
-      else if(
+      }
+      else if (
         activeStep === 1
       ) {
         if (
@@ -251,11 +253,11 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
           dispatch(toggleIsAssociationStepInvalid(true))
         } else {
           dispatch(toggleIsAssociationStepInvalid(false))
-          handleNext(null, values);
+          handleNext(null, values, navigateOnly);
         }
-      } 
+      }
       else {
-        handleNext(null, values);
+        handleNext(null, values, navigateOnly);
       }
     }
 
@@ -273,7 +275,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       keywords: [],
     },
     onSubmit: (values, { setErrors }) => {
-      validation(values, {setErrors })
+      validation(values, { setErrors })
     },
   });
 
@@ -392,8 +394,8 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
                       onClick={e => {
 
                         if (index > activeStep) {
-                          validation(formik.values, { setErrors: formik.setErrors })
-                        } else if (index < activeStep){
+                          validation(formik.values, { setErrors: formik.setErrors }, true)
+                        } else if (index < activeStep) {
                           handleBack()
                         }
 
@@ -414,6 +416,11 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
             </Stepper>
             <>
               <React.Fragment>
+                {activeStep == 0 && edit && tabData && (
+                  <Box component="div" className={`${styles["visit-count"]}`}>
+                    {edit ? `ID ${tabData.id}` : null}
+                  </Box>
+                )}
                 <StepContent
                   tabName={tabName}
                   options={options}
@@ -453,20 +460,20 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
               }}
             />
             {activeStep > 0 && (
-                <Box component="div" style={{
-                  marginRight: 0,
-                  marginLeft: 'auto',
-                }}>
-                  <Button
-                    label="Back"
-                    colors={["#fff", "var(--table-black-text)", "none"]}
-                    onClick={handleBack}
-                    style={{
-                      border: '1px solid var(--table-black-text)',
-                    }}
-                  />
-                </Box>
-              )}
+              <Box component="div" style={{
+                marginRight: 0,
+                marginLeft: 'auto',
+              }}>
+                <Button
+                  label="Back"
+                  colors={["#fff", "var(--table-black-text)", "none"]}
+                  onClick={handleBack}
+                  style={{
+                    border: '1px solid var(--table-black-text)',
+                  }}
+                />
+              </Box>
+            )}
             <Grid item display={"flex"}>
               {!edit && (
                 <Button

@@ -232,6 +232,7 @@ const EventDetailsPage = () => {
     fieldNarrative,
     stateOfConservation,
     assessmentType,
+    otherAssessment,
     risk,
     tourismValue,
     researchValue,
@@ -292,7 +293,7 @@ const EventDetailsPage = () => {
       key: "attributes",
       dataIndex: "media_unique_id",
       sorter: (a, b) => {
-        console.log('hex: ', a, b)
+        
         if(
           a?.media_unique_id?.fileName && b?.media_unique_id?.fileName
         ) {
@@ -389,8 +390,8 @@ const EventDetailsPage = () => {
      * 1st , 2nd etc.
      */
     e.preventDefault();
-    // navigate(`/search-results/Media/${uniqueId}`, { replace: true })
-    navigateTo(`/search-results/Media/${uniqueId}`);
+    // navigate(`/Media/${uniqueId}`, { replace: true })
+    navigateTo(`/Media/${uniqueId}`);
     // if (media.length >= itemIndex) {
     //     dispatch(setActiveMediaItem(media[itemIndex - 1]))
     //     dispatch(setActiveMediaItemIndex(itemIndex - 1))
@@ -400,7 +401,7 @@ const EventDetailsPage = () => {
   const handleSearch = (searchData: any) => {
     dispatch(setSearchApply(true));
     navigateTo({
-      pathname: `/search-results/Events`,
+      pathname: `/Events`,
       search: decodeURIComponent(
         JSON.stringify({
           refinedSearch: searchData,
@@ -428,6 +429,7 @@ const EventDetailsPage = () => {
           <Button
             variant="text"
             type="button"
+            className={`${styles["back-nav"]}`}
             startIcon={<KeyboardArrowLeftIcon fontSize="small" />}
             style={{
               color: "var(--table-black-text)",
@@ -441,7 +443,7 @@ const EventDetailsPage = () => {
               dispatch(setActiveMediaItem(null));
               dispatch(setActiveMediaItemIndex(0));
 
-              // navigate(`/search-results/${tabName}`, { replace: true })
+              // navigate(`/${tabName}`, { replace: true })
               goBack();
             }}
           >
@@ -497,12 +499,23 @@ const EventDetailsPage = () => {
                   <Box component="span">{recordingTeam}</Box>
                 </Box>
                 {visitNumber && (
-                  <Box component="div" className={`${styles["visit-count"]}`}>
+                  <Box component="div" className={`${styles["visit-count"]}`}
+                    style={{
+                      fontWeight: 'bold',
+                      lineHeight: 1.5,
+                      fontSize: 'large'
+                    }}
+                  >
                     VISIT {visitNumber}
                   </Box>
                 )}
                 {id && (
-                  <Box component="div" className={`${styles["visit-count"]}`}>
+                  <Box component="div" className={`${styles["visit-count"]}`}
+                    style={{
+                      lineHeight: 1.5,
+                      fontSize: 'medium'
+                    }}
+                  >
                     ID {id}
                   </Box>
                 )}
@@ -671,11 +684,24 @@ const EventDetailsPage = () => {
                       Assesment Type
                     </Grid>
                     {!isEmptyValue(assessmentType) ? (
-                      assessmentType.map((item: string, index: number) => (
-                        <Grid item key={index}>
-                          {item}
-                        </Grid>
-                      ))
+                      <>
+                        {
+                          assessmentType.map((item: string, index: number) => (
+                            <Grid item key={index}>
+                              {item}
+                            </Grid>
+                          ))
+                          
+                        }
+                        {
+                          assessmentType &&
+                          (assessmentType[0] === "Other") &&
+                          otherAssessment &&
+                          <>
+                            &nbsp;{`(${otherAssessment})`}
+                          </>
+                        }
+                      </>
                     ) : (
                       <Grid item>
                         <NoTextPresent message={NO_TEXT} />
@@ -825,27 +851,31 @@ const EventDetailsPage = () => {
               <Grid item sm={5}>
                 {latitude && longitude ? (
                   <>
-                    <MapView
-                      key={1}
-                      filterId={setIsFilter}
-                      marker={[
-                        {
-                          id: "1",
-                          name: eventDetails?.visit_associate?.place_unique_id
-                            ?.placeNameEnglish,
-                          position: {
-                            lat: latitude ? latitude : 24.11,
-                            lng: longitude ? longitude : 34.98,
+                  <Box component="div" style={{
+                      height: '94%'
+                    }}>
+                      <MapView
+                        key={1}
+                        filterId={setIsFilter}
+                        marker={[
+                          {
+                            id: "1",
+                            name: eventDetails?.visit_associate?.place_unique_id
+                              ?.placeNameEnglish,
+                            position: {
+                              lat: latitude ? latitude : 24.11,
+                              lng: longitude ? longitude : 34.98,
+                            },
                           },
-                        },
-                      ]}
-                      zoom={10}
-                    />
+                        ]}
+                        zoom={10}
+                      />
+                    </Box>
                     <Grid
                       container
                       className={`${styles["map-loctn-details"]}`}
                     >
-                      <Grid item lg={5} md={5} sm={5}>
+                      <Grid item lg={4} md={5} sm={5}>
                         <Grid
                           container
                           className={`${styles["map-loctn-line"]}`}
@@ -908,7 +938,7 @@ const EventDetailsPage = () => {
                           dispatch(setActiveLibraryItemIndex(rowIndex));
                           
                           navigateTo(
-                            `/search-results/Library/${record.media_unique_id.uniqueId}`
+                            `/Library/${record.media_unique_id.uniqueId}`
                           );
                         }
                       },

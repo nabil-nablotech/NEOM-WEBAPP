@@ -41,28 +41,29 @@ export const Navigation = () => {
       element: <PublicRoute component={SetPassword} />,
     },
     {
-      path: "/search-results",
+      path: "/:tabName",
       element: <PrivateRoute component={SearchResults} />,
+      // children: [
+      //   {
+      //     path: "",
+      //     element: <PrivateRoute component={SearchResults} />,
+      //   },
+      //   {
+      //     path: ":tabName",
+      //     element: <PrivateRoute component={SearchResults} />,
+          
+      //   },
+      // ],
       children: [
         {
-          path: "",
+          path: "?search=",
           element: <PrivateRoute component={SearchResults} />,
         },
         {
-          path: ":tabName",
+          path: ":uniqueId",
           element: <PrivateRoute component={SearchResults} />,
-          children: [
-            {
-              path: "?search=",
-              element: <PrivateRoute component={SearchResults} />,
-            },
-            {
-              path: ":uniqueId",
-              element: <PrivateRoute component={SearchResults} />,
-            }
-          ]
-        },
-      ],
+        }
+      ]
     },
     {
       path: "/details",

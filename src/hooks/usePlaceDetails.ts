@@ -7,7 +7,7 @@ import { mediaDetails, placeDetails, eventDetails, libraryDetails } from "../api
 import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 import { setEventEdit, setPlaces, setEventData } from '../store/reducers/eventReducer';
 import { PLACES_TAB_NAME } from "../utils/services/helpers";
-import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation, toggleEditConfirmationWindowOpen, toggleConfirmOpenEdit, setEditPayload } from "../store/reducers/searchResultsReducer";
+import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation, toggleEditConfirmationWindowOpen, toggleConfirmOpenEdit, setEditPayload, resetMediaAssociation } from "../store/reducers/searchResultsReducer";
 import { RootState } from "../store";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { PlaceApi, Place, MediaAssociateObj } from "../types/Place";
@@ -59,7 +59,7 @@ const usePlaceDetails = () => {
 
     /** navigate to latest list after deleting item */
     if (deleteItemSuccess && (deleteItemType === "Places")) {
-      navigate(`/search-results/Places`, {replace: true})
+      navigate(`/Places`, {replace: true})
 
       
     }
@@ -126,6 +126,7 @@ const usePlaceDetails = () => {
     } else {
       /** Detect if user comes via normal edit */
       openEditFlow(payload)
+      dispatch(resetMediaAssociation(null));
     }
   };
 

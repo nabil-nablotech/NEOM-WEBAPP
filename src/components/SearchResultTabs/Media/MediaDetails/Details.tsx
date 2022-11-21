@@ -23,6 +23,7 @@ import parse from 'html-react-parser';
 import MapView from '../../GoogleMap/MapView';
 import { useHistory } from '../../../../hooks/useHistory';
 import TextualContent from './TextualContent';
+import useMedia from '../../../../hooks/useMedia';
 
 const MediaDetailsPage = ({
     currentItemIndex,
@@ -33,13 +34,14 @@ const MediaDetailsPage = ({
         e: React.MouseEvent<HTMLElement>
         action: string
     }
-    const { media, activeMediaItemIndex, places } = useSelector(
+    const { media, activeMediaItemIndex, places, totalCounts } = useSelector(
         (state: RootState) => state.searchResults
     );
     const [isFilter, setIsFilter] = useState(null)
 
     const dispatch = useDispatch()
     const { navigateTo } = useHistory()
+    const { fetchMediaItems } = useMedia();
 
     const { data: mediaDetails, setEdit } = useMediaDetails();
 
@@ -80,12 +82,22 @@ const MediaDetailsPage = ({
         let newIndex = activeMediaItemIndex
 
         if (action === 'next') {
-            if (newIndex + 1 < media.length) {
-                newIndex = newIndex + 1
-                dispatch(setActiveMediaItem(media[newIndex]))
-                dispatch(setActiveMediaItemIndex(newIndex))
-                // navigate(`/search-results/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
-                navigateTo(`/search-results/Media/${media[newIndex].attributes.uniqueId}`)
+            if(totalCounts) {
+                if (newIndex + 1 < totalCounts.media) {
+                    newIndex = newIndex + 1
+                    dispatch(setActiveMediaItem(media[newIndex]))
+                    dispatch(setActiveMediaItemIndex(newIndex))
+                    // navigate(`/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                    navigateTo(`/Media/${media[newIndex].attributes.uniqueId}`)
+                }
+                
+                /** when you are on 9th item, fetch further set of 10 items */
+                if (
+                    (newIndex + 1 === media.length) &&
+                    (media.length <= totalCounts.media)
+                ) {
+                    fetchMediaItems(newIndex + 1)
+                }
             }
 
         }
@@ -96,8 +108,8 @@ const MediaDetailsPage = ({
 
                 dispatch(setActiveMediaItem(media[newIndex]))
                 dispatch(setActiveMediaItemIndex(newIndex))
-                // navigate(`/search-results/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
-                navigateTo(`/search-results/Media/${media[newIndex].attributes.uniqueId}`)
+                // navigate(`/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                navigateTo(`/Media/${media[newIndex].attributes.uniqueId}`)
 
             }
 
@@ -120,7 +132,7 @@ const MediaDetailsPage = ({
                 dispatch(toggleDeleteConfirmationWindowOpen({
                     flag: true,
                     isAssociatedToPlacesOrEvents: media ? isRecordHavingAssociations(
-                        media.filter(item => item?.id === mediaDetails?.media_unique_id?.id?.toString())[0]
+                        media.filter((item: any) => item?.id === mediaDetails?.media_unique_id?.id?.toString())[0]
                     ) : false,
                 }))
                 dispatch(setDeleteItemType(MEDIA_TAB_NAME))

@@ -116,8 +116,8 @@ const TextualContent = ({
                 {
                     (mediaDetails.media_associate?.place_unique_ids && (mediaDetails.media_associate?.place_unique_ids?.length > 0)) ?
                         (
-                            mediaDetails.media_associate?.place_unique_ids?.map((placeObj: InventoryAssociationType) => (
-                                <div>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
+                            mediaDetails.media_associate?.place_unique_ids?.map((placeObj: InventoryAssociationType, index: number) => (
+                                <div key={index}>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
                             ))
                         ) :
                         RenderValueWithDefault('')
@@ -128,11 +128,11 @@ const TextualContent = ({
                 {
                     (mediaDetails.media_associate?.visit_unique_ids && mediaDetails.media_associate?.visit_unique_ids.length > 0) ?
                         (
-                            mediaDetails.media_associate?.visit_unique_ids?.map((visitObj: InventoryAssociationType_Event) => (
+                            mediaDetails.media_associate?.visit_unique_ids?.map((visitObj: InventoryAssociationType_Event, index: number) => (
                                 <>
                                     {
                                         visitObj &&
-                                        <div>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
+                                        <div key={index}>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
                                             mediaDetails.media_associate?.visit_unique_ids[0].visitNumber ?
                                                 `Visit ${mediaDetails.media_associate?.visit_unique_ids[0].visitNumber}` :
                                                 ''

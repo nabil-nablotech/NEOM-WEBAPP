@@ -98,7 +98,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     referenceURL: edit ? tabData?.referenceURL : "",
     keywords: edit && tabData?.keywords ? tabData?.keywords : [],
     object: edit && tabData?.object ? [tabData?.object] : undefined,
-    mediaType: "", 
+    mediaType: "",
     refrenceUrl: "",
     showEmbeded: Boolean(edit && tabData?.objectURL),
     embedCode: edit && tabData?.objectURL,
@@ -110,7 +110,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     associationError: ''
   }
 
-  
+
   useEffect(() => {
 
     if (activeStep >= 2) {
@@ -135,7 +135,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     return skipped.has(step);
   };
 
-  const handleNext = (e: any, data: any) => {
+  const handleNext = (e: any, data: any, navigateOnly?: boolean) => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -154,6 +154,8 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
+
+    if (navigateOnly) return
 
     if (activeStep + 1 === steps.length && data) {
       if (create && !edit) {
@@ -223,17 +225,17 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     }
   };
 
-  const validation = (values: any, formikObject: any) => {
+  const validation = (values: any, formikObject: any, navigateOnly?: boolean) => {
     let currentError: [] | string[] = [];
     if (!values.title) {
       currentError[0] = "Title is required";
     }
 
     if (currentError.length === 0 && (activeStep !== 2)) {
-      handleNext(null, values);
+      handleNext(null, values, navigateOnly);
     } else {
       if (activeStep === 1) {
-        
+
         if (currentError.length > 0) {
 
           let obj = {}
@@ -254,11 +256,11 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
           dispatch(toggleIsAssociationStepInvalid(true))
         } else {
           dispatch(toggleIsAssociationStepInvalid(false))
-          handleNext(null, values);
+          handleNext(null, values, navigateOnly);
         }
       }
       else {
-        handleNext(null, values);
+        handleNext(null, values, navigateOnly);
       }
     }
   }
@@ -275,7 +277,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
       }
     },
     onSubmit: (values, { setErrors }) => {
-      validation(values, {setErrors })
+      validation(values, { setErrors })
     },
   });
 
@@ -324,7 +326,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     };
     fmData.append("files", file, file.name);
     try {
-      
+
       const res = await axios.post(
         `${baseUrl}/api/upload`,
         fmData,
@@ -376,7 +378,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
               {edit ? "Edit" : "Add"} Media
             </Typography>
             <Stepper
-              nonLinear 
+              nonLinear
               activeStep={activeStep}
               alternativeLabel
               className={`${styles["stepper"]} ${tabName === MEDIA_TAB_NAME ? styles["add-media-stepper"] : ""
@@ -405,8 +407,8 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
                       onClick={e => {
 
                         if (index > activeStep) {
-                          validation(formik.values, { setErrors: formik.setErrors })
-                        } else if (index < activeStep){
+                          validation(formik.values, { setErrors: formik.setErrors }, true)
+                        } else if (index < activeStep) {
                           handleBack()
                         }
 
@@ -430,6 +432,11 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
             </Stepper>
             <>
               <React.Fragment>
+                {activeStep == 0 && edit && tabData && (
+                  <Box component="div" className={`${styles["visit-count"]}`}>
+                    {edit ? `ID ${tabData.id}` : null}
+                  </Box>
+                )}
                 <StepContent
                   tabName={tabName}
                   formState={formState}
@@ -484,11 +491,11 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
               </Box>
             )}
             <Grid item display={"flex"}>
-            {!edit && (
+              {!edit && (
                 <Button
                   label={activeStep === steps.length - 1 ? "Add" : "Next"}
                   type="submit"
-                  // disabled={!(formik.values.title.trim().length > 0)}
+                // disabled={!(formik.values.title.trim().length > 0)}
                 />
               )}
               {edit && activeStep !== steps.length - 1 && (

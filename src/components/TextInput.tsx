@@ -149,7 +149,8 @@ export default function NTextFields(props: TextInputProps) {
             } : {},
           }}
           InputProps={{
-            ...InputProps
+            ...InputProps,
+            // endAdornment: endAdornment
           }}
           ref={ref ? ref : null}
           required={required}

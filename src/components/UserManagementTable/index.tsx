@@ -259,6 +259,7 @@ const StyledTable = styled(Table)`
       align-item: center;
       gap: 10px;
   }
+
 `;
 export type IUser = {
   data: User[] | [];
@@ -294,6 +295,7 @@ export const UserManagementTable = (props: IUser) => {
     generateLink,
   } = props;
   const [dataList, setDataList] = useState<User[] | []>([]);
+  const [search, setSearch] = useState<string>('')
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -400,7 +402,8 @@ export const UserManagementTable = (props: IUser) => {
       setAnchorEl(null);
     };
     // const showRecoveryLink = selectedUserLink?.find((x: LinkGenerate) => x?.user?.id === record.id);
-    const showRecoveryLink = record.recoveryToken;
+    const showRecoveryLink = record.recoveryToken && (record.recoveryToken !== "null");
+    
     return (
       <>
         {showRecoveryLink ? (
@@ -443,18 +446,23 @@ export const UserManagementTable = (props: IUser) => {
             key={1}
             onClick={() => {
               generateLink({ user: record, recovery: true });
+              handleClose()
             }}
           >
             Recover Password
           </MenuItem>
-          <MenuItem key={2} onClick={() => showModal(record)}>
+          <MenuItem key={2} onClick={() => {
+            showModal(record)
+            handleClose()
+          }}>
             Edit
           </MenuItem>
           <MenuItem key={3} onClick={(e) => {
             e.stopPropagation();
+            handleClose()
             dispatch(toggleDeleteUserWindowOpen({
               flag: true,
-              mailId: 'sample'
+              mailId: record.email ? record.email : 'User'
             }))
           }}>
             Delete
@@ -464,12 +472,12 @@ export const UserManagementTable = (props: IUser) => {
     );
   };
 
-  const filterResults = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const filterResults = (value: string) => {
 
     if (data.length > 0) {
       let newDatalist = [...data];
       /** filter when search string is not empty */
-      if (e.target.value !== "") {
+      if (value !== "") {
         newDatalist = dataList
           ? dataList.filter((obj) => {
               let flag = false;
@@ -482,7 +490,7 @@ export const UserManagementTable = (props: IUser) => {
                     obj[key as keyof User]
                       .toString()
                       .toLowerCase()
-                      .indexOf(e.target.value.toLowerCase()) !== -1
+                      .indexOf(value.toLowerCase()) !== -1
                   ) {
                     flag = true;
                   }
@@ -507,6 +515,9 @@ export const UserManagementTable = (props: IUser) => {
         confirmLoading={confirmLoading}
         roles={userRoles}
       />
+      <div className={`${styles["search-title"]}`}>
+        USERS
+      </div>
       <div className={`${styles["add-user-btn"]}`}>
         <Button
           label="USER"
@@ -514,12 +525,19 @@ export const UserManagementTable = (props: IUser) => {
           StartIcon={AddIcon}
         />
       </div>
+
       <div className={`${styles["custom-search"]}`}>
         <CustomSearchField
           className={`${styles["custom-search-field"]}`}
           shouldHandleChangeFromParent={true}
+          valueFromParent={search}
           handleChangeParent={(e) => {
-            filterResults(e);
+            setSearch(e.target.value);
+            filterResults(e.target.value);
+          }}
+          handleClearSearchText={() => {
+            setSearch('');
+            filterResults('');
           }}
         />
       </div>

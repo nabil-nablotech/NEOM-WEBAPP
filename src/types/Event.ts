@@ -37,6 +37,7 @@ export type Event = {
 export type EventApi = {
   artifacts: string[]
   assessmentType: string[]
+  otherAssessment: string | null
   assessmentTypeOther: null | string
   createdAt: string
   deleted: boolean

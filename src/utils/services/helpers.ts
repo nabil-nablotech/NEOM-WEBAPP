@@ -474,7 +474,8 @@ export const isEventRecordAttached = (
   list: Array<InventoryAssociationType_Event>,
   type: string = ""
 ) => {
-  if (!list || !record) return false;
+
+  if (!list || list.length < 1 || !record) return false;
 
   return list.some((item) => {
     return parseInt(item.id) === parseInt(record.id);

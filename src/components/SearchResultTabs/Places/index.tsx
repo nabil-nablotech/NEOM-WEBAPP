@@ -19,6 +19,7 @@ import { importCsvImagesZip } from "../../../utils/export-import/import-csv-imag
 import {checkSearchParameter, PLACES_TAB_NAME} from '../../../utils/services/helpers';
 import { useDispatch } from "react-redux";
 import { setToggledStates } from "../../../store/reducers/searchResultsReducer";
+import { Relation } from "../../../types/RelationType";
 
 const PlacesTab = () => {
   const { searchText, places, placeMetaData, totalCounts, searchApply, toggledStates } = useSelector(
@@ -96,6 +97,7 @@ const PlacesTab = () => {
       const file = event?.target?.files[0];
       const fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
       if (fileExtension === "json" || fileExtension === "csv" || fileExtension === "xlsx") {
+       
         importContentType(
           file,
           "api::place.place",
@@ -111,13 +113,12 @@ const PlacesTab = () => {
             "keywords",
           ],
           [
-            "id",
-            "asset_config_id",
-            "visit_associates",
+            /* "id", */
+           /*  "visit_associates",
             "remark_headers",
             "media_associates",
             "createdAt",
-            "updatedAt",
+            "updatedAt", */
           ]
         );
       }

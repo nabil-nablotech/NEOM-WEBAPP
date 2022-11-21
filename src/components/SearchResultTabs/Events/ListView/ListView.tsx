@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Box } from '@mui/material';
 import { ColumnsType } from 'antd/lib/table';
 import { useNavigate } from "react-router-dom";
@@ -273,6 +273,7 @@ const ListView = (props: EventsProps) => {
     )
 
     const {data, handleNext: fetchData, hasMoreData, loading} = props;
+
     useEffect(() => {
         /** Needs to be done , since InfiniteSCroll needs a relation with
          * div being scrolled. Here its tbody of ant table
@@ -289,23 +290,15 @@ const ListView = (props: EventsProps) => {
     * when associations have changed.
     */
     useEffect(() => {
+
+        /** set default headers */
         setTableHeaderJson(state => state.filter(item => {
             return shouldAddAtttachColumnHeader(item)
         }))
 
-        setTableHeaderJson(state => {
-            let newState = [...state]
-            if (newState.every(item => shouldAddAtttachColumnHeader(item))) {
-                newState = [attachIconColumnHeader, ...state]
-            }
-
-            return newState
-        })
-    }, [associatedEvents]);
-
-    useEffect(() => {
-
         if (isAssociationsStepOpen) {
+
+            /** refresh headers for re-render*/
             setTableHeaderJson(state => {
                 let newState = [...state]
                 if (newState.every(item => shouldAddAtttachColumnHeader(item))) {
@@ -314,13 +307,9 @@ const ListView = (props: EventsProps) => {
 
                 return newState
             })
-        } else {
-            setTableHeaderJson(state => state.filter(item => {
-                return shouldAddAtttachColumnHeader(item)
-            }))
         }
 
-    }, [isAssociationsStepOpen]);
+    }, [isAssociationsStepOpen, associatedEvents]);
   
 
     return (
@@ -354,8 +343,8 @@ const ListView = (props: EventsProps) => {
                                 handleAttachClick(event, record)
                             } else {
                                 dispatch(setSelectedCardIndex(rowIndex || record.id))
-                                // navigate(`/search-results/Events/${record.attributes.uniqueId}`, {replace: true})
-                                navigateTo(`/search-results/Events/${record.attributes.uniqueId}`)
+                                // navigate(`/Events/${record.attributes.uniqueId}`, {replace: true})
+                                navigateTo(`/Events/${record.attributes.uniqueId}`)
                             }
                           }, // click row
                         };

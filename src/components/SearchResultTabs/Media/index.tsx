@@ -123,7 +123,24 @@ const MediaTab = () => {
     if (event?.target?.files?.length > 0) {
       const file = event?.target?.files[0];
       const fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
-      importCsvImagesZip(file, "api::media.media");
+      importCsvImagesZip(file, "api::media.media",["categoryType","keywords"],[
+        "id",
+        "object",
+        "media_associate",
+        "imageMetadata:fileName",
+        "imageMetadata:longitude",
+        "imageMetadata:latitude",
+        "imageMetadata:Created",
+        "imageMetadata:Modified",
+        "imageMetadata:Depth",
+        "imageMetadata:Dimension",
+        "imageMetadata:File Size",
+        "imageMetadata:Make",
+        "imageMetadata:Model",
+        "imageMetadata:Storage",
+        "createdAt",
+        "updatedAt",
+      ],[],true);
 
     }
   };

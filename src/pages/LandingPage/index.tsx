@@ -83,7 +83,7 @@ function LandingPage() {
     tabName: tabNameProps
   ) => {
     dispatch(setSearchApply(false));
-    navigate(`search-results/${tabName}`);
+    navigate(`${tabName}`);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,7 +93,8 @@ function LandingPage() {
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.code === "Enter" && searchText.trim().length >= 3) {
       navigate({
-        pathname: `/search-results/Places`,
+        // pathname: `/Places`,
+        pathname: `/Places`,
         search: decodeURIComponent(
           JSON.stringify({
             search: searchText,
