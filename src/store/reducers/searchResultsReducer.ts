@@ -111,6 +111,11 @@ export const searchResultsSlice = createSlice({
     },
     toggleNewItemWindow: (state, action: PayloadAction<boolean>) => {
       state.newItemWindowOpen = action.payload;
+
+      /** make the flag false in  case the panel is already closed as per payload */
+      if(!action.payload && state.addItemWindowMinimized) {
+        state.addItemWindowMinimized = false
+      }
     },
     toggleShowAddSuccess: (state, action: PayloadAction<boolean>) => {
       state.showAddSuccess = action.payload;
@@ -148,8 +153,8 @@ export const searchResultsSlice = createSlice({
         state.activeMediaItemIndex = 0
         state.activeLibraryItem = null
         state.activeLibraryItemIndex = 0
-        state.associatedPlaces=[]
-        state.associatedEvents=[]
+        // state.associatedPlaces=[]
+        // state.associatedEvents=[]
       }
     },
     setActiveMediaItem: (state, action: PayloadAction<Object | any>) => {

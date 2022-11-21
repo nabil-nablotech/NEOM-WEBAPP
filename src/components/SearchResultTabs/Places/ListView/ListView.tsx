@@ -292,42 +292,31 @@ const ListView = (props: PlacesProps) => {
  
     }, []);
 
-    /** Effect needed to refresh the headers, 
-     * when associations have changed.
-     */
-    useEffect(() => {
-      setTableHeaderJson(state => state.filter(item => {
-        return shouldAddAtttachColumnHeader(item)
-      }))
+  /** Effect needed to refresh the headers, 
+  * when associations have changed.
+  */
+  useEffect(() => {
 
+    /** set default headers */
+    setTableHeaderJson(state => state.filter(item => {
+      return shouldAddAtttachColumnHeader(item)
+    }))
+
+    if (isAssociationsStepOpen) {
+
+      /** refresh headers for re-render*/
       setTableHeaderJson(state => {
         let newState = [...state]
-        if(newState.every(item => shouldAddAtttachColumnHeader(item))) {
-          newState = [attachIconColumnHeader , ...state]
+        if (newState.every(item => shouldAddAtttachColumnHeader(item))) {
+          newState = [attachIconColumnHeader, ...state]
         }
 
-        return newState 
+        return newState
       })
-    }, [associatedPlaces]);
+    }
 
-    useEffect(() => {
+  }, [isAssociationsStepOpen, associatedPlaces]);
 
-        if(isAssociationsStepOpen) {
-          setTableHeaderJson(state => {
-            let newState = [...state]
-            if(newState.every(item => shouldAddAtttachColumnHeader(item))) {
-              newState = [attachIconColumnHeader , ...state]
-            }
-
-            return newState 
-          })
-        } else {
-          setTableHeaderJson(state => state.filter(item => {
-            return shouldAddAtttachColumnHeader(item)
-          }))
-        }
- 
-    }, [isAssociationsStepOpen]);
 
     return (
         <Box component="div" id={'places-list-parent'}>

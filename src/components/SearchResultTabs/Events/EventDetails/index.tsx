@@ -246,7 +246,6 @@ const EventDetailsPage = () => {
     visit_associate,
     id,
   } = eventDetails;
-  console.log('hex: ', eventDetails)
 
   const mediaGalleryLocal =
     mediaGallery && mediaGridActiveItems + mediaCount <= mediaGallery?.length
@@ -294,7 +293,7 @@ const EventDetailsPage = () => {
       key: "attributes",
       dataIndex: "media_unique_id",
       sorter: (a, b) => {
-        console.log('hex: ', a, b)
+        
         if(
           a?.media_unique_id?.fileName && b?.media_unique_id?.fileName
         ) {

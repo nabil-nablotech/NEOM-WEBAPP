@@ -57,7 +57,7 @@ const useLibrary = () => {
     }
   }});
   const [createMediaAssociateMutation, { loading: mediaAssociateload, error: mediaAssociateErr, data: mediaAssociate, reset: resetCreateMediaAssociate }] = useMutation(createMediaAssociate, {context: graphQlHeaders().context, onCompleted: () => {
-    dispatch(resetMediaAssociation(null));
+    // dispatch(resetMediaAssociation(null));
     dispatch(toggleShowAddSuccess(true));
     navigate(`/Library/${addData.createMedia.data.attributes.uniqueId}`, {replace: true});
   }});
@@ -261,6 +261,7 @@ const useLibrary = () => {
     } else {
       /** Detect if user comes via normal edit */
       openEditFlow(payload)
+      dispatch(resetMediaAssociation(null));
     }
   };
 

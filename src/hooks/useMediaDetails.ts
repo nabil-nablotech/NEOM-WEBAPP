@@ -7,7 +7,7 @@ import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { MediaApi } from "../types/Media";
 import { setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
 import { MEDIA_TAB_NAME } from '../utils/services/helpers';
-import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation, toggleEditConfirmationWindowOpen, toggleConfirmOpenEdit, setEditPayload } from "../store/reducers/searchResultsReducer";
+import { toggleNewItemWindow, setAddNewItemWindowType, setDefaultMediaAssociation, toggleEditConfirmationWindowOpen, toggleConfirmOpenEdit, setEditPayload, resetMediaAssociation } from "../store/reducers/searchResultsReducer";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 
@@ -78,6 +78,7 @@ const useMediaDetails = () => {
     } else {
       /** Detect if user comes via normal edit */
       openEditFlow(payload)
+      dispatch(resetMediaAssociation(null));
     }
   };
 

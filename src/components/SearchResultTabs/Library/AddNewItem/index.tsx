@@ -120,7 +120,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   const isStepSkipped = (step: number) => {
     return skipped.has(step);
   };
-  const handleNext = (e: any, data?: any) => {
+  const handleNext = (e: any, data?: any, navigateOnly?: boolean) => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -139,6 +139,8 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
+
+    if (navigateOnly) return
 
     if (activeStep + 1 === steps.length && data) {
       if (create && !edit) {
@@ -210,7 +212,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     }
   };
 
-  const validation = (values: any, formikObject: any) => {
+  const validation = (values: any, formikObject: any, navigateOnly?: boolean) => {
     let currentError: [] | string[] = [];
 
     if (!values.title) {
@@ -222,7 +224,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     }
 
     if (currentError.length === 0 && (activeStep !== 1)) {
-      handleNext(null, values);
+      handleNext(null, values, navigateOnly);
     } else {
       if (activeStep === 0) {
         if (currentError.length > 0) {
@@ -251,11 +253,11 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
           dispatch(toggleIsAssociationStepInvalid(true))
         } else {
           dispatch(toggleIsAssociationStepInvalid(false))
-          handleNext(null, values);
+          handleNext(null, values, navigateOnly);
         }
       }
       else {
-        handleNext(null, values);
+        handleNext(null, values, navigateOnly);
       }
     }
 
@@ -392,7 +394,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
                       onClick={e => {
 
                         if (index > activeStep) {
-                          validation(formik.values, { setErrors: formik.setErrors })
+                          validation(formik.values, { setErrors: formik.setErrors }, true)
                         } else if (index < activeStep) {
                           handleBack()
                         }
