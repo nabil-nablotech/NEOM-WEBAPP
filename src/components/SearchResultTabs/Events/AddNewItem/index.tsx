@@ -262,6 +262,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
         (edit && event?.assessmentType && event?.assessmentType?.length) > 0
           ? event?.assessmentType[0]
           : "",
+      otherAssessment: edit ? event?.otherAssessment : "",
       stateOfConservation:
         edit && event?.stateOfConservation ? event?.stateOfConservation[0] : "",
       siteType: edit ? event?.siteType : [],

@@ -151,7 +151,9 @@ function UserMenuComponent({
         marginLeft: 'auto',
         marginRight: '1em'
       }}>
-        {itemAddEditAccess && <Box component={"div"}>
+        {itemAddEditAccess && <Box component={"div"} style={{
+          zIndex: 2
+        }}>
           <Icon src={icon} alt="icon" style={{ cursor: 'pointer' }} onClick={
             e => handlePlus()
           } />
