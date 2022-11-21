@@ -245,8 +245,8 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
     initialValues: {
       place:
         edit &&
-        event?.visit_associate &&
-        event?.visit_associate?.place_unique_id
+          event?.visit_associate &&
+          event?.visit_associate?.place_unique_id
           ? event?.visit_associate?.place_unique_id
           : {},
       eventDate:
@@ -418,7 +418,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
             </Stepper>
             <>
               <React.Fragment>
-                {edit && event && (
+                {activeStep == 0 && edit && event && (
                   <Box component="div" className={`${styles["visit-count"]}`}>
                     {edit ? `ID ${event.id}` : null}
                   </Box>
@@ -470,7 +470,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
                 <Button
                   label={activeStep === steps.length - 1 ? "Add" : "Next"}
                   type="submit"
-                  // onClick={handleNext}
+                // onClick={handleNext}
                 />
               )}
               {edit && activeStep !== steps.length - 1 && (
@@ -488,7 +488,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
                     formik.values.visitNumber.length === 0 &&
                     !formik.values.place?.id
                   }
-                  // onClick={handleNext}
+                // onClick={handleNext}
                 />
               )}
             </Grid>

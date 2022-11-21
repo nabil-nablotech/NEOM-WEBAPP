@@ -80,10 +80,10 @@ export const stepperIconSx = {
 const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { addItemProgressState, 
+  const { addItemProgressState,
     associatedPlaces, associatedEvents } = useSelector(
-    (state: RootState) => state.searchResults
-  );
+      (state: RootState) => state.searchResults
+    );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
 
   const { edit, tabData } = useSelector((state: RootState) => state.tabEdit);
@@ -240,8 +240,8 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
           }
           formikObject.setErrors(obj)
         }
-      } 
-      else if(
+      }
+      else if (
         activeStep === 1
       ) {
         if (
@@ -253,7 +253,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
           dispatch(toggleIsAssociationStepInvalid(false))
           handleNext(null, values);
         }
-      } 
+      }
       else {
         handleNext(null, values);
       }
@@ -273,7 +273,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       keywords: [],
     },
     onSubmit: (values, { setErrors }) => {
-      validation(values, {setErrors })
+      validation(values, { setErrors })
     },
   });
 
@@ -393,7 +393,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
 
                         if (index > activeStep) {
                           validation(formik.values, { setErrors: formik.setErrors })
-                        } else if (index < activeStep){
+                        } else if (index < activeStep) {
                           handleBack()
                         }
 
@@ -414,7 +414,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
             </Stepper>
             <>
               <React.Fragment>
-              {edit && tabData && (
+                {activeStep == 0 && edit && tabData && (
                   <Box component="div" className={`${styles["visit-count"]}`}>
                     {edit ? `ID ${tabData.id}` : null}
                   </Box>
@@ -458,20 +458,20 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
               }}
             />
             {activeStep > 0 && (
-                <Box component="div" style={{
-                  marginRight: 0,
-                  marginLeft: 'auto',
-                }}>
-                  <Button
-                    label="Back"
-                    colors={["#fff", "var(--table-black-text)", "none"]}
-                    onClick={handleBack}
-                    style={{
-                      border: '1px solid var(--table-black-text)',
-                    }}
-                  />
-                </Box>
-              )}
+              <Box component="div" style={{
+                marginRight: 0,
+                marginLeft: 'auto',
+              }}>
+                <Button
+                  label="Back"
+                  colors={["#fff", "var(--table-black-text)", "none"]}
+                  onClick={handleBack}
+                  style={{
+                    border: '1px solid var(--table-black-text)',
+                  }}
+                />
+              </Box>
+            )}
             <Grid item display={"flex"}>
               {!edit && (
                 <Button
