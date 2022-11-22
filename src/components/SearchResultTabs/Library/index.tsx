@@ -24,7 +24,8 @@ import MoreOptionsComponent from "../Places/ListView/MoreOption";
 import { Media } from "../../../types/Media";
 import { HtmlTooltip } from "../../../components/Tooltip";
 import { Typography } from "@mui/material";
-import { setSelectedCardIndex } from "../../../store/reducers/searchResultsReducer";
+import { setSelectedCardIndex, setIsSelect,setSelectedKey } from "../../../store/reducers/searchResultsReducer";
+
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ExportModal from "../../ExportModal";
@@ -44,6 +45,14 @@ const StyledTableWrapper = styled(StyledAntTable)`
   }
   .ant-table {
     margin-block: 2em;
+  }
+  thead tr th:first-child .ant-checkbox-inner::after {
+    background-color: rgba(19, 16, 13, 0.9);
+    border-color: 1px solid #E8E9E9;
+  }
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: rgba(19, 16, 13, 0.9);
+    border-color: 1px solid #E8E9E9;
   }
 
   .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell),
@@ -136,8 +145,9 @@ const StyledTableWrapper = styled(StyledAntTable)`
 `;
 
 const LibraryTab = () => {
-  const { searchApply, library, searchText, totalCounts, libararyMetaData } =
+  const { searchApply, library, searchText, totalCounts, libararyMetaData, isSelect,selectedKey } =
     useSelector((state: RootState) => state.searchResults);
+
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
   );
@@ -318,6 +328,16 @@ const LibraryTab = () => {
   };
   const showResults =
     checkSearchParameter(searchText, selectedValue) && searchApply;
+
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+     dispatch(setSelectedKey(newSelectedRowKeys))
+  };
+    
+  const rowSelection = {
+    selectedKey,
+    onChange: onSelectChange,
+  };
+
   return (
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
@@ -334,7 +354,7 @@ const LibraryTab = () => {
               "var(--table-black-text)",
             ]}
             className={`${styles["export-btn"]}`}
-            label="Select"
+            label={isSelect?"Cancel":"Select"}
             style={{
               border: "1px solid var(--light-grey-border)",
               borderRadius: "40px",
@@ -343,7 +363,7 @@ const LibraryTab = () => {
               height: "100%",
               textAlign: "center",
             }}
-            onClick={() => {}}
+            onClick={()=>{dispatch(setIsSelect(!isSelect))}}
           />
           <Button
             colors={[
@@ -392,6 +412,7 @@ const LibraryTab = () => {
             size="small"
             columns={tableHeaderJson}
             dataSource={library}
+            rowSelection={isSelect?rowSelection:undefined}
             pagination={false}
             loading={loading ? loading : false}
             bordered

@@ -23,7 +23,8 @@ export type EventsProps = {
     handleNext: () => void;
     hasMoreData: boolean;
     loading: boolean;
-    setEdit: (payload: { record: Event | Media | MediaAssociateObj, type: tabNameProps }) => void
+    setEdit: (payload: { record: Event | Media | MediaAssociateObj, type: tabNameProps }) => void,
+    isSelect:boolean;
 }
 
 const GridView = (props: EventsProps) => {

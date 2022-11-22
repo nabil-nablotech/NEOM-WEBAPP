@@ -21,11 +21,12 @@ import { importContentType } from '../../../utils/export-import/import-content-t
 import { importCsvImagesZip } from '../../../utils/export-import/import-csv-images-zip';
 import Loader from '../../Common/Loader';
 import { useDispatch } from 'react-redux';
-import { setToggledStates } from '../../../store/reducers/searchResultsReducer';
+import { setToggledStates,setIsSelect } from '../../../store/reducers/searchResultsReducer';
+
 
 const MediaTab = () => {
     const { selectedCardIndex, media, mediaMetaData, totalCounts, searchText, searchApply,
-      toggledStates } = useSelector(
+      toggledStates, isSelect } = useSelector(
         (state: RootState) => state.searchResults
     );
     const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
@@ -196,7 +197,7 @@ const MediaTab = () => {
               "var(--table-black-text)",
             ]}
             className={`${styles["export-btn"]}`}
-            label="Select"
+            label={isSelect?"Cancel":"Select"}
             style={{
               border: "1px solid var(--light-grey-border)",
               borderRadius: "40px",
@@ -205,6 +206,7 @@ const MediaTab = () => {
               height: "100%",
               textAlign: "center",
             }}
+            onClick={()=>{dispatch(setIsSelect(!isSelect))}}
           />
           <Button
             colors={[
@@ -263,7 +265,7 @@ const MediaTab = () => {
                         <GridView />
                     </Grid>} */}
                     {openStates[0] && <Grid item xl={12}>
-                        <GridView totalData={meta?.pagination?.total} loading={loading} data={media} fetchData={fetchMediaItems} hasMoreData={hasMoreData} setEdit={setEdit} />
+                        <GridView totalData={meta?.pagination?.total} loading={loading} data={media} fetchData={fetchMediaItems} hasMoreData={hasMoreData} setEdit={setEdit} isSelect = {isSelect}/>
                     </Grid>}
                     {/* To-do: map view */}
                     {/* <Grid item xl={6} lg={6} md={7} sm={7}>
@@ -274,7 +276,7 @@ const MediaTab = () => {
                         <Box component={'div'} style={{
                             width: '100%'
                         }}>
-                            <ListView loading={loading} data={media} fetchData={fetchMediaItems} hasMoreData={hasMoreData} setEdit={setEdit} />
+                            <ListView loading={loading} data={media} fetchData={fetchMediaItems} hasMoreData={hasMoreData} setEdit={setEdit} isSelect = {isSelect}/>
                         </Box>
                     }
                 </Grid>

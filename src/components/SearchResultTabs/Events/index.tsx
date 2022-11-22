@@ -19,13 +19,13 @@ import ExportModal from '../../ExportModal';
 import { importContentType } from '../../../utils/export-import/import-content-type';
 import { importCsvImagesZip } from '../../../utils/export-import/import-csv-images-zip';
 import {checkSearchParameter, EVENTS_TAB_NAME} from '../../../utils/services/helpers';
-import { setToggledStates } from '../../../store/reducers/searchResultsReducer';
+import { setToggledStates,setIsSelect } from '../../../store/reducers/searchResultsReducer';
 import { useDispatch } from 'react-redux';
 import { Relation } from "../../../types/RelationType";
 
 const PlacesTab = () => {
   const { selectedCardIndex, events, totalCounts, eventMetaData, searchText, searchApply,
-    toggledStates } = useSelector(
+    toggledStates, isSelect } = useSelector(
     (state: RootState) => state.searchResults
   );
   const importFileInputRef: any = useRef(null);
@@ -240,7 +240,7 @@ const PlacesTab = () => {
               "var(--table-black-text)",
             ]}
             className={`${styles["export-btn"]}`}
-            label="Select"
+            label={isSelect?"Cancel":"Select"}
             style={{
               border: "1px solid var(--light-grey-border)",
               borderRadius: "40px",
@@ -249,23 +249,7 @@ const PlacesTab = () => {
               height: "100%",
               textAlign: "center",
             }}
-          />
-                <Button
-            colors={[
-              "transparent",
-              "var(--table-black-text)",
-              "var(--table-black-text)",
-            ]}
-            className={`${styles["export-btn"]}`}
-            label="Select"
-            style={{
-              border: "1px solid var(--light-grey-border)",
-              borderRadius: "40px",
-              padding: "0.2em 15px",
-              lineHeight: "2",
-              height: "100%",
-              textAlign: "center",
-            }}
+            onClick={()=>{dispatch(setIsSelect(!isSelect))}}
           />
           <Button
             colors={[
@@ -314,7 +298,7 @@ const PlacesTab = () => {
             <Box component={'section'} className={`${styles['result-section']}`}>
                 <Grid container spacing={1} className={`${styles['result-section--grid']}`}>
                     {openStates[0] && <><Grid item xl={6} lg={6} md={5} sm={5}>
-                        <GridView key={10} loading={loading} data={isFilter===null?events:events.filter((item)=>{return item.id===isFilter})} handleNext={handleNext} setEdit={setEdit} hasMoreData={hasMoreData}  />
+                        <GridView key={10} loading={loading} data={isFilter===null?events:events.filter((item)=>{return item.id===isFilter})} handleNext={handleNext} setEdit={setEdit} hasMoreData={hasMoreData} isSelect = {isSelect}/>
                     </Grid>
                     {/* To-do: map view */}
                     <Grid item xl={6} lg={6} md={7} sm={7} className={`${styles["map-section"]}`}>                     
@@ -325,7 +309,7 @@ const PlacesTab = () => {
                         <Box component={'div'} style={{
                             width: '100%'
                         }}>
-                            <ListView setEdit={setEdit} key={12} loading={loading} data={isFilter===null?events:events.filter((item)=>{return item.id===isFilter})} handleNext={handleNext} hasMoreData={hasMoreData} />
+                            <ListView setEdit={setEdit} key={12} loading={loading} data={isFilter===null?events:events.filter((item)=>{return item.id===isFilter})} handleNext={handleNext} hasMoreData={hasMoreData} isSelect = {isSelect}/>
                         </Box>
                     }
                 </Grid>
