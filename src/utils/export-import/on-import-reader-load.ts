@@ -47,18 +47,26 @@ export const onImportReaderLoad = async (
 
     const originalJsonObject = await csvToJson().fromString(requestData.data);
     const jsonObject = [...originalJsonObject];
-    for (let i = 0; i < jsonObject.length; i++) {
 
+    const assetConfig = await client.get(
+      `${baseUrl}/api/asset-configs?filters[$or][0][typeCode][$eq]=PLACE&filters[$or][0][typeCode][$eq]=VISIT&filters[$or][0][typeCode][$eq]=IMAGE`
+    );
+
+    for (let i = 0; i < jsonObject.length; i++) {
+      let assetConfigId;
       switch (slug) {
         case "api::place.place":
-        jsonObject[i].asset_config_id = "8";
-        break;
+          assetConfigId = assetConfig.data.data?.find((item: any) => item.attributes.typeCode === "PLACE").id;
+          jsonObject[i].asset_config_id = assetConfigId;
+          break;
         case "api::visit.visit":
-        jsonObject[i].asset_config_id = "1";
-        break;
+          assetConfigId = assetConfig.data.data?.find((item: any) => item.attributes.typeCode === "VISIT").id;
+          jsonObject[i].asset_config_id = assetConfigId;
+          break;
         case "api::media.media":
-        jsonObject[i].media_type = "5";
-        break;
+          assetConfigId = assetConfig.data.data?.find((item: any) => item.attributes.typeCode === "IMAGE").id;
+          jsonObject[i].media_type = assetConfigId;
+          break;
       }
       /* if media, consturct imagemetadata and attach media object */
       if (zip) {
