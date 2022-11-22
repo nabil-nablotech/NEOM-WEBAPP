@@ -15,13 +15,21 @@ const useAuth = () => {
   const { edit: tabEdit, tabData  } = useSelector(
     (state: RootState) => state.tabEdit
   );
-
+  const { showAddSuccess, deleteItemSuccess } = useSelector((state: RootState) => state.searchResults);
+  
   useEffect(() => {
     if (getToken()) {
       fetchSession();
       getSearchCount();
     }
   }, [edit, tabEdit]);
+
+  /**refresh count */
+  useEffect(() => {
+    if (showAddSuccess || deleteItemSuccess) {
+      getSearchCount();
+    }
+  }, [showAddSuccess , deleteItemSuccess]);
 
   /**
    * get user session details

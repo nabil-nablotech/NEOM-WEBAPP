@@ -29,8 +29,6 @@ export const itemDeleteAccess = getRole() === 'SuperEditor';
 export const remarksDeleteAccess = getRole() === 'SuperEditor';
 export const remarkAddEditAccess = getRole() === 'SuperEditor' ? true : getRole() === 'Editor' ? true : getRole() === 'Consumer' ? true: false;
 
-console.log('Welcome:', itemAddEditAccess);
-
 export const formatWebDate = (value: string) => {
   if (Date.parse(value)) {
     return dayjs(value).format("ddd, DD MMM, hh:mm A");
