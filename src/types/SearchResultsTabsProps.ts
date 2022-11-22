@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from "react";
 import { DashboardResponse } from "./dashboard";
-import { Place, Meta, PlaceApi, MediaAssociateObj } from "./Place";
+import { Place, Meta, PlaceApi, MediaAssociateObj, MediaAssociates2_MediaObject } from "./Place";
 import { Event, EventApi } from "./Event";
 import { Media } from "./Media";
 import { RemarksPayload, Remark, ChildRemark, RemarkDetails, RemarksEditPayload } from "./Remarks";
@@ -232,6 +232,7 @@ export type FileDataType = {
   staticVideoLink?: string
   videoType?: "video" | "url" | "embededCode";
   noVideoStyles?: React.CSSProperties
+  fileObject?: MediaAssociates2_MediaObject
 };
 
 export type RenderFileDataProps = {

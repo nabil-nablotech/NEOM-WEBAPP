@@ -11,7 +11,7 @@ import { ASSOCIATIONS_MANDATORY_ERR_MESSAGE, baseUrl, get_youtube_thumbnail, rep
 import CustomUpload from "../../../Upload/ImageUpload";
 import { SelectChangeEvent } from "@mui/material/Select";
 import AutoComplete from "../../../AutoComplete";
-
+import ReactPlayer from "react-player";
 import DetachedIcon from "../../../Icons/DetachedIcon";
 import AddedPlaces from "../../../AssociationsList/AddedPlaces";
 import AddedEvents from "../../../AssociationsList/AddedEvents";
@@ -77,40 +77,32 @@ const HandleUrl = ({
 
   const [errorInShowingThumnail, setErrorInShowingThumbnail] = useState<boolean>(false)
 
-
-  // if(errorInShowingThumnail || !formik.values.valid) {
-  //   return <NoVideoPresent message="Preview Not Available" style={{
-  //     height: 'auto'
-  //   }} />
-  // }
   return (
-    <iframe
-      width="338"
-      height="190"
-      // onCanPlay={e => console.log('hex: ', e)}
-      onLoad={e => {
-        setErrorInShowingThumbnail(false)
+    // <iframe
+    //   width="338"
+    //   height="190"
+    //   onError={(e) => {
+    //     console.log(e, "error")
+    //     alert('YESS')
+    //     setErrorInShowingThumbnail(true)
+    //   }}
+    //   src={replaceWatchWithEmbed(formik.values.url)}
+    //   // srcDoc={
+    //   //   `<div classname="${styles["no-preview-url"]}" > <img src="${get_youtube_thumbnail(formik.values.url, "high")}" width="100%" height="100%" /></div>`
+    //   // }
+    //   title="YouTube video player"
+    //   frameBorder="0"
+    //   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    //   allowFullScreen
+    // ></iframe>
+    <ReactPlayer
+      width="100%" height="auto"
+      playing={false}
+      url={formik.values.url}
+      style={{
+        aspectRatio: '3/1.65'
       }}
-      onError={(e) => {
-        console.log(e, "error")
-        alert('YESS')
-        setErrorInShowingThumbnail(true)
-      }}
-      src={replaceWatchWithEmbed(formik.values.url)}
-      srcDoc={
-        `<div classname="${styles["no-preview-url"]}" > <img src="${get_youtube_thumbnail(formik.values.url, "high")}" width="100%" height="100%" /></div>`
-      }
-      title="YouTube video player"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-    ></iframe>
-    // <video width="100%" height="100%" controls autoPlay={false}>
-    //   <source
-    //     src={replaceWatchWithEmbed(formik.values.url)}
-    //     type="auto"
-    //   />
-    // </video>
+    />
   );
 };
 
@@ -177,13 +169,11 @@ allowFullScreen
     const regex = /^(http(s)??\:\/\/)?(www\.)?((youtube\.com\/watch\?v=)|(youtu.be\/))([a-zA-Z0-9\-_])+/;
     if (regex.test(str)) {
       formik.setFieldValue("valid", true);
+      formik.setFieldValue("objectURL", str);
       formik.setFieldValue("errorUrl", '');
-      console.log('hex: valid',)
     } else {
       formik.setFieldValue("valid", false);
       formik.setFieldValue("errorUrl", 'Invalid Url');
-      console.log('hex: invalid',)
-
     }
   }
 

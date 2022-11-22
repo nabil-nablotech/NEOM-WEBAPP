@@ -204,7 +204,8 @@ const MediaDetailsPage = ({
                                 isOpened: true,
                                 noVideoStyles: {
                                     height: '400px'
-                                }
+                                },
+                                fileObject: mediaDetails.object
                             }}
                             fileType="video"
                         />

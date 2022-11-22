@@ -53,7 +53,7 @@ const RenderFileData = ({
                     <Box component="div"
                         style={{
                             position: 'relative',
-                            width: noVideoCondition ? '100%' : 'inherit'
+                            width: noVideoCondition || fileData.objectURL ? '100%' : 'inherit'
                         }}>
                         {(noVideoCondition) ?
                             <NoVideoPresent message="Video not found" style={{
@@ -111,14 +111,31 @@ const RenderFileData = ({
                                                     <video width="100%" height="100%" controls autoPlay={false}>
                                                         <source
                                                             src={fileData.staticVideoLink}
-                                                            type="video/mp4"
+                                                            type={
+                                                                fileData.fileObject && fileData.fileObject?.mime ?
+                                                                fileData.fileObject.mime :
+                                                                // "video/mp4"
+                                                                "auto"
+                                                            }
                                                         />
                                                     </video>
                                                 </> :
                                                 <>
-                                                {fileData.objectURL ? 
-                                                <>
-                                                    <div dangerouslySetInnerHTML={{ __html: fileData.objectURL }} />
+                                                {fileData.objectURL ?
+                                                    <>
+                                                        {
+                                                            fileData.objectURL.indexOf('iframe') !== -1 ?
+                                                                <div dangerouslySetInnerHTML={{ __html: fileData.objectURL }} /> :
+                                                                <ReactPlayer
+                                                                    width="100%" height="auto"
+                                                                    playing={fileData.isOpened}
+                                                                    url={fileData.objectURL}
+                                                                    style={{
+                                                                        aspectRatio: '3/1.65'
+                                                                    }}
+                                                                />
+
+                                                        }
                                                     </>
                                                 :
                                                     <Box component="div" className={`${styles['video-player-box']}`}>
@@ -126,8 +143,10 @@ const RenderFileData = ({
                                                             !fileData.isOpened &&
                                                             <PlayCircleFilledWhiteIcon
                                                                 sx={{
-                                                                    width: '40%',
+                                                                    width: 'fit-content',
                                                                     height: '40%',
+                                                                    background: "rgba(255,255,255,0.5)",
+                                                                    borderRadius: '50%',
                                                                 }}
                                                                 fontSize="large" className={`${styles['video-play-icon']}`}
                                                                 onClick={e => {

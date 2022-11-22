@@ -210,7 +210,7 @@ const useMedia = () => {
       storage: payload?.object && payload?.object[0]?.provider,
       dimension: payload?.object && `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
       refrenceURL: payload?.url,
-      objectURL: payload?.embedCode,
+      objectURL: payload?.embedCode ? payload?.embedCode : payload?.objectURL ? payload?.objectURL : "",
       make: "",
       model: "",
       depth: "",

@@ -1,4 +1,4 @@
-import { Place } from "./Place";
+import { MediaAssociates2_MediaObject, Place } from "./Place";
 import { InventoryAssociationType_Event, InventoryAssociationType } from "./SearchResultsTabsProps";
 
 export type PlaceUnique = {
@@ -78,16 +78,7 @@ export type MediaApi = {
     fileSize: Number;
   };
   uniqueId: string;
-  object: {
-    url: string;
-    name: string
-    size: number
-    createdAt: string
-    updatedAt: string
-    ext: string
-    width: number
-    height: number
-  };
+  object: MediaAssociates2_MediaObject;
   media_unique_id: {
     id: number
   };

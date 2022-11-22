@@ -684,3 +684,5 @@ export const get_youtube_thumbnail = (url: string, quality: "high" | 'low' | 'me
   }
   return false;
 }
+
+export const convertKbtoMb = (num: number) => (num/1000).toFixed(5)
