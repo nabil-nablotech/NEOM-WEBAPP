@@ -137,7 +137,7 @@ const SingleComment = ({
                     marginRight: "2em",
                     cursor: "pointer",
                   }}
-                  onClick={() => openReply && openReply(remark.id)}
+                  onClick={() => openReply && openReply(remark.id === showInput ? null : remark.id)}
                 >
                   Reply
                 </Grid>

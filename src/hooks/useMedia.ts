@@ -210,12 +210,12 @@ const useMedia = () => {
       storage: payload?.object && payload?.object[0]?.provider,
       dimension: payload?.object && `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
       refrenceURL: payload?.url,
-      objectURL: payload?.embedCode,
+      objectURL: payload?.embedCode ? payload?.embedCode : payload?.objectURL ? payload?.objectURL : "",
       make: "",
       model: "",
       depth: "",
       modified: new Date(),
-      videoType: payload?.embedCode?.length > 0 ? 'embededCode' : payload?.url?.length > 0 ? 'url' : 'video',
+      videoType: payload?.embedCode?.length > 0 ? 'embededCode' : (payload?.url?.length > 0 || payload?.objectURL?.length > 0) ? 'url' : 'video',
     }
     if (!edit) {
       data.uniqueId = uniqueId;

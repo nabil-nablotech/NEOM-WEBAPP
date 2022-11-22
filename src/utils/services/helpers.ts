@@ -27,9 +27,8 @@ export const limit = 10;
 export const itemAddEditAccess = getRole() === 'SuperEditor' ? true : getRole() === 'Editor' ? true : false;
 export const itemDeleteAccess = getRole() === 'SuperEditor';
 export const remarksDeleteAccess = getRole() === 'SuperEditor';
-export const remarkAddEditAccess = getRole() === 'SuperEditor' ? true : getRole() === 'Editor' ? true : getRole() === 'Consumer' ? true: false;
-
-console.log('Welcome:', itemAddEditAccess);
+// export const remarkAddEditAccess = getRole() === 'SuperEditor' || getRole() === 'Editor' || getRole() === 'Admin'  ? true : getRole() === 'Consumer' ? true: false;
+export const remarkAddEditAccess = true;
 
 export const formatWebDate = (value: string) => {
   if (Date.parse(value)) {
@@ -649,3 +648,40 @@ export const checkSearchParameter = (searchText: string, selectedValues: Options
 }
 
 export const ASSOCIATIONS_MANDATORY_ERR_MESSAGE = `*Please associate at least one Place or Event`
+
+export const replaceWatchWithEmbed = (str: string) => str.replace('watch', 'embed')
+
+export const get_youtube_thumbnail = (url: string, quality: "high" | 'low' | 'medium') => {
+  if(url){
+      var video_id, thumbnail, result;
+      if(result = url.match(/youtube\.com.*(\?v=|\/embed\/)(.{11})/))
+      {
+          video_id = result.pop();
+      }
+      else if(result = url.match(/youtu.be\/(.{11})/))
+      {
+          video_id = result.pop();
+      }
+
+      if(video_id){
+          if(typeof quality == "undefined"){
+              quality = 'high';
+          }
+      
+          var quality_key = 'maxresdefault'; // Max quality
+          if(quality === 'low'){
+              quality_key = 'sddefault';
+          }else if(quality === 'medium'){
+              quality_key = 'mqdefault';
+          } else if (quality === 'high') {
+              quality_key = 'hqdefault';
+          }
+
+          thumbnail = "http://img.youtube.com/vi/"+video_id+"/"+quality_key+".jpg";
+          return thumbnail;
+      }
+  }
+  return false;
+}
+
+export const convertKbtoMb = (num: number) => (num/1000).toFixed(5)

@@ -53,7 +53,8 @@ const RenderFileDataForGrid = ({
                         }}>
                         {(!fileData.src && !fileData.iframeVideoLink && !fileData.staticVideoLink && !fileData.objectURL) ?
                             <NoVideoPresent message="Video not found" style={{
-                                height: '400px'
+                                minHeight: '150px',
+                                height: 'auto'
                             }} /> :
                             // !fileData.isOpened ? <>
                             //     <Box

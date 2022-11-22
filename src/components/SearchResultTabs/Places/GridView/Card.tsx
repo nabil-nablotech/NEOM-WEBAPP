@@ -12,7 +12,7 @@ import DetachedIcon from "../../../Icons/DetachedIcon";
 import { modifyAssociatedPlaces } from "../../../../store/reducers/searchResultsReducer";
 import { RootState } from "../../../../store";
 import { useDispatch } from "react-redux";
-import RenderFileData from "../../../RenderFileDataForGrid";
+import RenderFileDataForGrid from "../../../RenderFileDataForGrid";
 
 export const Card = ({
   img,
@@ -53,7 +53,7 @@ export const Card = ({
               alt={""}
               src={`${baseUrl}${img}`}
             /> :
-              <RenderFileData
+              <RenderFileDataForGrid
                 fileData={{
                   alt: "",
                   src: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}` : undefined,

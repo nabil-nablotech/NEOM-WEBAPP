@@ -66,6 +66,7 @@ const GridView = (props: MediaProps) => {
                 {
                     data?.map((item: Media, index: number ) => 
                     <Grid key={index} item lg={4} md={4} className={`${gridStyles['card-item']}`} onClick={e => {
+                        e.stopPropagation()
                         dispatch(setSelectedCardIndex(index))
                         dispatch(setActiveMediaItem(media[index]))
                         dispatch(setActiveMediaItemIndex(index))

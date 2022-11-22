@@ -114,9 +114,11 @@ export const searchResultsSlice = createSlice({
     toggleNewItemWindow: (state, action: PayloadAction<boolean>) => {
       state.newItemWindowOpen = action.payload;
 
-      /** make the flag false in  case the panel is already closed as per payload */
-      if(!action.payload && state.addItemWindowMinimized) {
-        state.addItemWindowMinimized = false
+      /** make the flag false in  case the panel is already closed post add or edit success */
+      if(!action.payload && state.addItemWindowMinimized && (
+        state.showAddSuccess || state.showEditSuccess
+      )) {
+        // state.addItemWindowMinimized = false
       }
     },
     toggleShowAddSuccess: (state, action: PayloadAction<boolean>) => {

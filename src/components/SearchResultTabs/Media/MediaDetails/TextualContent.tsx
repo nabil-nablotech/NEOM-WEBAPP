@@ -20,7 +20,7 @@ import ModelViewer from '../../../Model';
 import { useEffect } from 'react';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
 import Loader from '../../../Common/Loader';
-import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, copyToClipboard } from '../../../../utils/services/helpers';
+import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, copyToClipboard, convertKbtoMb } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
 import { Place } from '../../../../types/Place';
 import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
@@ -95,7 +95,11 @@ const TextualContent = ({
                 <div>
                     <span>Modified: <span>{RenderValueWithDefault(`${dayjs(mediaDetails?.updatedAt).format("MM/DD/YYYY")}`)}</span></span>
                 </div>
-                <div>Size: {RenderValueWithDefault(mediaDetails?.object?.size)} {mediaDetails?.object?.size ? 'MB' : ''}</div>
+                <div>Size: {
+                    mediaDetails?.object?.size ?
+                        RenderValueWithDefault(convertKbtoMb(mediaDetails?.object?.size)) :
+                        RenderValueWithDefault(mediaDetails?.object?.size)
+                } {mediaDetails?.object?.size ? 'MB' : ''}</div>
 
                 <div>Storage: {RenderValueWithDefault('')}</div>
                 <div>Depth: {RenderValueWithDefault('')}</div>

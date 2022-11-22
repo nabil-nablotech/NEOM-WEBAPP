@@ -495,7 +495,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
                 <Button
                   label={activeStep === steps.length - 1 ? "Add" : "Next"}
                   type="submit"
-                // disabled={!(formik.values.title.trim().length > 0)}
+                disabled={(activeStep === 0) && (!formik.values.valid) && formik.values.showUrl}
                 />
               )}
               {edit && activeStep !== steps.length - 1 && (
