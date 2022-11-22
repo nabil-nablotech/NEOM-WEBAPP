@@ -10,7 +10,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import {EventsProps} from '../GridView/GridView';
-import { modifyAssociatedEvents, setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
+import { modifyAssociatedEvents, setSelectedCardIndex, setSelectedKey} from "../../../../store/reducers/searchResultsReducer";
 import MoreOptionsComponent from './MoreOption';
 import { Event } from '../../../../types/Event';
 import { InventoryAssociationType_Event } from '../../../../types/SearchResultsTabsProps';
@@ -38,6 +38,14 @@ const StyledTableWrapper = styled(StyledAntTable)`
     .ant-table {
         margin-block: 2em;
     }
+    thead tr th:first-child .ant-checkbox-inner::after {
+        background-color: rgba(19, 16, 13, 0.9);
+        border-color: 1px solid #E8E9E9;
+      }
+      .ant-checkbox-checked .ant-checkbox-inner {
+        background-color: rgba(19, 16, 13, 0.9);
+        border-color: 1px solid #E8E9E9;
+      }
     
     .ant-table-thead > tr > th:not(.ant-table-thead > tr > th.more-menu-ant-cell) ,
     .ant-table-tbody > tr > td:not(.ant-table-tbody > tr > td.more-menu-ant-cell) {
@@ -122,7 +130,7 @@ const ListView = (props: EventsProps) => {
     const dispatch = useDispatch();
     const { navigateTo } = useHistory();
 
-    const { isAssociationsStepOpen, associatedEvents, events } = useSelector(
+    const { isAssociationsStepOpen, associatedEvents, events, selectedKey} = useSelector(
         (state: RootState) => state.searchResults
       );
 
@@ -272,7 +280,7 @@ const ListView = (props: EventsProps) => {
     }), [associatedEvents]
     )
 
-    const {data, handleNext: fetchData, hasMoreData, loading} = props;
+    const {data, handleNext: fetchData, hasMoreData, loading, isSelect} = props;
 
     useEffect(() => {
         /** Needs to be done , since InfiniteSCroll needs a relation with
@@ -311,7 +319,14 @@ const ListView = (props: EventsProps) => {
 
     }, [isAssociationsStepOpen, associatedEvents]);
   
-
+    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+        dispatch(setSelectedKey(newSelectedRowKeys))
+      };
+      
+      const rowSelection = {
+        selectedKey,
+        onChange: onSelectChange,
+      };
     return (
         <Box component="div" id={'events-list-parent'}>
             <InfiniteScroll
@@ -331,6 +346,7 @@ const ListView = (props: EventsProps) => {
                 {data.length > 0 ? <StyledTableWrapper
                     // className={`${styles["table-container"]}`}
                     rowKey={"id"}
+                    rowSelection={isSelect?rowSelection:undefined}
                     onRow={(record: any, rowIndex) => {
                         return {
                           onClick: (event: React.MouseEvent<HTMLElement>) => {
