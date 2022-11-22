@@ -48,16 +48,20 @@ export const onImportReaderLoad = async (
     const originalJsonObject = await csvToJson().fromString(requestData.data);
     const jsonObject = [...originalJsonObject];
     for (let i = 0; i < jsonObject.length; i++) {
+
+      switch (slug) {
+        case "api::place.place":
+        jsonObject[i].asset_config_id = "8";
+        break;
+        case "api::visit.visit":
+        jsonObject[i].asset_config_id = "1";
+        break;
+        case "api::media.media":
+        jsonObject[i].media_type = "5";
+        break;
+      }
       /* if media, consturct imagemetadata and attach media object */
       if (zip) {
-
-        /* media type id */
-        switch (jsonObject[i]["media_type"]) {
-          case "IMAGE":
-            jsonObject[i].media_type = "5";
-            break;
-        }
-
         /* put the imageMetaData properties under the imageMetaData object */
         jsonObject[i].imageMetadata = {};
         if (jsonObject[i]["imageMetadata:latitude"]) {
