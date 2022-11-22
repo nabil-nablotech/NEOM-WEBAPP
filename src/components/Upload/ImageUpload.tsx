@@ -86,7 +86,6 @@ const ImageUpload = ({
         </div>
     );
 
-
     return (
         <>
             <StyledUpload
@@ -102,7 +101,12 @@ const ImageUpload = ({
                 {
                     imageUrl ?
                         <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> :
-                        (defaultImages && (defaultImages.length < 1)) ?
+                        (
+                            !defaultImages ||
+                            (
+                                defaultImages && (defaultImages.length < 1)
+                            )
+                        ) ?
                             uploadButton :
                             <></>
                 }

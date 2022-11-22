@@ -126,5 +126,8 @@ color: #13100D80;
 }
 
 .no-preview-url {
-    background: #13100D80;
+    /* background: #13100D80; */
+    aspect-ratio: 3/2;
+    width: 100%;
+    height: 100%;
 }

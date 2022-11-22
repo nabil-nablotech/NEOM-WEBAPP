@@ -7,7 +7,7 @@ import TextInput from "../../../../components/TextInput";
 import DropdownComponent from "../../../Dropdown/index";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
-import { ASSOCIATIONS_MANDATORY_ERR_MESSAGE, baseUrl, validateNumber } from "./../../../../utils/services/helpers";
+import { ASSOCIATIONS_MANDATORY_ERR_MESSAGE, baseUrl, get_youtube_thumbnail, replaceWatchWithEmbed, validateNumber } from "./../../../../utils/services/helpers";
 import CustomUpload from "../../../Upload/ImageUpload";
 import { SelectChangeEvent } from "@mui/material/Select";
 import AutoComplete from "../../../AutoComplete";
@@ -18,6 +18,7 @@ import AddedEvents from "../../../AssociationsList/AddedEvents";
 import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
 import FormError from "../../../FormError";
 import type { UploadFile } from 'antd/es/upload/interface';
+import NoVideoPresent from "../../../NoDataScreens/NoVideoPresent";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -70,6 +71,50 @@ export const stepperIconSx = {
   },
 };
 
+const HandleUrl = ({
+  formik
+}: {formik: any}) => {
+
+  const [errorInShowingThumnail, setErrorInShowingThumbnail] = useState<boolean>(false)
+
+
+  // if(errorInShowingThumnail || !formik.values.valid) {
+  //   return <NoVideoPresent message="Preview Not Available" style={{
+  //     height: 'auto'
+  //   }} />
+  // }
+  return (
+    <iframe
+      width="338"
+      height="190"
+      // onCanPlay={e => console.log('hex: ', e)}
+      onLoad={e => {
+        setErrorInShowingThumbnail(false)
+      }}
+      onError={(e) => {
+        console.log(e, "error")
+        alert('YESS')
+        setErrorInShowingThumbnail(true)
+      }}
+      src={replaceWatchWithEmbed(formik.values.url)}
+      srcDoc={
+        `<div classname="${styles["no-preview-url"]}" > <img src="${get_youtube_thumbnail(formik.values.url, "high")}" width="100%" height="100%" /></div>`
+      }
+      title="YouTube video player"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+    ></iframe>
+    // <video width="100%" height="100%" controls autoPlay={false}>
+    //   <source
+    //     src={replaceWatchWithEmbed(formik.values.url)}
+    //     type="auto"
+    //   />
+    // </video>
+  );
+};
+
+
 const StepContent = ({
   uploadImage,
   tabName,
@@ -108,24 +153,7 @@ allowFullScreen
     return <div dangerouslySetInnerHTML={{ __html: data }} />;
   };
 
-  const handleUrl = () => {
-    return (
-      <iframe
-        width="338"
-        height="190"
-        onError={(e) => console.log(e, "error")}
-        src={formik.values.url}
-        srcDoc={
-          '<div className="no-preview-url> <img src={iconUrl} width="338" /></div>'
-        }
-        title="YouTube video player"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-      ></iframe>
-    );
-  };
-
+  
   const renderEmbedSubmitButton = () => {
     return(
       <>
@@ -145,13 +173,17 @@ allowFullScreen
   }
 
   const validateUrl = (str: string) => {
-    const regex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
+    // const regex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
+    const regex = /^(http(s)??\:\/\/)?(www\.)?((youtube\.com\/watch\?v=)|(youtu.be\/))([a-zA-Z0-9\-_])+/;
     if (regex.test(str)) {
       formik.setFieldValue("valid", true);
       formik.setFieldValue("errorUrl", '');
+      console.log('hex: valid',)
     } else {
       formik.setFieldValue("valid", false);
       formik.setFieldValue("errorUrl", 'Invalid Url');
+      console.log('hex: invalid',)
+
     }
   }
 
@@ -315,7 +347,9 @@ allowFullScreen
                             component={"div"}
                             className={`${styles["embed-box"]}`}
                           >
-                            {handleUrl()}
+                            <HandleUrl
+                              formik={formik}
+                            />
                             <Typography
                               mt={1}
                               className={`${styles["file-upload-url-bottom-text"]}`}
