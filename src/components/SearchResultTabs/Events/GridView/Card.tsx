@@ -20,7 +20,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { RootState } from "../../../../store";
 import { modifyAssociatedEvents } from "../../../../store/reducers/searchResultsReducer";
-import RenderFileData from "../../../RenderFileDataForGrid";
+import RenderFileDataForGrid from "../../../RenderFileDataForGrid";
 
 export const Card = ({
   img,
@@ -62,7 +62,8 @@ export const Card = ({
               <>
               {record.attributes?.media_associates?.data[0]?.attributes
                 ?.media_unique_id?.data?.attributes?.media_type?.data[0]
-                ?.attributes?.categoryCode === "MEDIA" ? <RenderFileData
+                ?.attributes?.categoryCode === "MEDIA" ? 
+                <RenderFileDataForGrid
                 fileData={{
                   alt: "",
                   src: record.attributes?.media_associates?.data[0]?.attributes

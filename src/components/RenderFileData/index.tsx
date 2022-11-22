@@ -127,12 +127,31 @@ const RenderFileData = ({
                                                             fileData.objectURL.indexOf('iframe') !== -1 ?
                                                                 <div dangerouslySetInnerHTML={{ __html: fileData.objectURL }} /> :
                                                                 <ReactPlayer
-                                                                    width="100%" height="auto"
-                                                                    playing={fileData.isOpened}
+                                                                    width="100%" height="100%"
+                                                                    playing={false}
                                                                     url={fileData.objectURL}
                                                                     style={{
-                                                                        aspectRatio: '3/1.65'
+                                                                        aspectRatio: '3/1.65',
+                                                                        pointerEvents: 'none'
                                                                     }}
+                                                                    playIcon={
+                                                                        <>
+                                                                            <PlayCircleFilledWhiteIcon
+                                                                                sx={{
+                                                                                    width: 'fit-content',
+                                                                                    height: '40%',
+                                                                                    background: "rgba(255,255,255,0.5)",
+                                                                                    borderRadius: '50%',
+                                                                                    pointerEvents: 'all'
+                                                                                }}
+                                                                                fontSize="large" className={`${styles['video-play-icon']}`}
+                                                                                onClick={e => {
+                                                                                    e.preventDefault()
+                                                                                    // toggleVideoModal(true)
+                                                                                }}
+                                                                            />
+                                                                        </>
+                                                                    }
                                                                 />
 
                                                         }
