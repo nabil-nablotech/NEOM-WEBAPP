@@ -20,8 +20,11 @@ import { Media, MediaAttributes } from "../../../../types/Media";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useMediaQuery } from 'react-responsive'
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../store';
 
-import { setActiveMediaItem, setActiveMediaItemIndex, setSelectedCardIndex } from '../../../../store/reducers/searchResultsReducer';
+import { setActiveMediaItem, setActiveMediaItemIndex, setSelectedCardIndex, setSelectedKey} from '../../../../store/reducers/searchResultsReducer';
+
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
 import { useHistory } from "../../../../hooks/useHistory";
 import styles from '../GridView/index.module.css'
@@ -31,6 +34,15 @@ const StyledTableWrapper = styled(StyledAntTable)`
   }
   .ant-table {
     margin-block: 2em;
+  }
+
+  thead tr th:first-child .ant-checkbox-inner::after {
+    background-color: rgba(19, 16, 13, 0.9);
+    border-color: 1px solid #E8E9E9;
+  }
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: rgba(19, 16, 13, 0.9);
+    border-color: 1px solid #E8E9E9;
   }
 
   td {
@@ -143,7 +155,11 @@ const StyledTableWrapper = styled(StyledAntTable)`
 `;
 
 const ListView = (props: MediaProps) => {
-  const { data, hasMoreData, fetchData, loading, setEdit } = props;
+  const { data, hasMoreData, fetchData, loading, setEdit,isSelect } = props;
+  const {selectedKey} = useSelector(
+    (state: RootState) => state.searchResults
+  );
+
   const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
   const { navigateTo } = useHistory()
   const tableHeaderJson: ColumnsType<any> = [
@@ -252,6 +268,15 @@ const ListView = (props: MediaProps) => {
     }
   }, []);
 
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    dispatch(setSelectedKey(newSelectedRowKeys))
+  };
+  
+  const rowSelection = {
+    selectedKey,
+    onChange: onSelectChange,
+  };
+
   return (
     <Box component="div" id={"media-list-parent"}>
       <InfiniteScroll
@@ -272,6 +297,7 @@ const ListView = (props: MediaProps) => {
           size="small"
           columns={tableHeaderJson}
           dataSource={data}
+          rowSelection={isSelect?rowSelection:undefined}
           pagination={false}
           loading={loading ? loading : false}
           bordered

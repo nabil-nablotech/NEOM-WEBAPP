@@ -37,7 +37,7 @@ const handleClick = async (filePath:string) =>{
                             {title} - Data and Files
                     </Grid>
                     <Grid item xs={12} component="div" className={`${styles["box-span"]}`}>
-                            {dataCount} {title==='Media'?"items":<></>} | {fileCount} {title!=='Media'?"media files":"files"} {title!=='Media'?<>| {libraryCount} library files</>:<></>}
+                            {dataCount} {title==='Media'?"items":<>{title}</>} | {fileCount} {title!=='Media'?"media files":"files"} {title!=='Media'?<>| {libraryCount} library files</>:<></>}
                     </Grid>
                 </Grid>
                 {/* <Grid item xs={12} sm={6} md={6} component="div"className={`${styles["grid-two"]}`}>

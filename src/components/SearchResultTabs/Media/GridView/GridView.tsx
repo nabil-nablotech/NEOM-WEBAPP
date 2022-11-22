@@ -25,7 +25,8 @@ export type MediaProps = {
     hasMoreData: boolean;
     loading: boolean;
     totalData?: number;
-    setEdit: (payload: Media) => void
+    setEdit: (payload: Media) => void,
+    isSelect:boolean;
   }
 
 const GridView = (props: MediaProps) => {
