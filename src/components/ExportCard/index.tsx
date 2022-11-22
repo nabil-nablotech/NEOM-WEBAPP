@@ -4,6 +4,8 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import IconButton from "@mui/material/IconButton";
 import GetAppOutlinedIcon from '@mui/icons-material/GetAppOutlined';
+import { formatDateTimeZone } from '../../utils/services/helpers';
+
 import {
     Button
 } from "@mui/material";
@@ -16,7 +18,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   maxWidth: 751,
 }));
 
-const ExportCard = ({ title, filePath, dataCount, fileCount, libraryCount, visitCount, token }: Download) => {
+const ExportCard = ({ title, filePath, dataCount, fileCount, libraryCount, visitCount, createdAt, token }: Download) => {
 const { size, elapsed, percentage, download, cancel, error, isInProgress } = useDownloader();
 const handleClick = async (filePath:string) =>{
     await download(`${process.env.REACT_APP_STRAPI_BASE_URL+''+filePath}`, `data_${Date.now()}.zip`);
@@ -38,6 +40,9 @@ const handleClick = async (filePath:string) =>{
                     </Grid>
                     <Grid item xs={12} component="div" className={`${styles["box-span"]}`}>
                             {dataCount} {title==='Media'?"items":<>{title}</>} | {fileCount} {title!=='Media'?"media files":"files"} {title!=='Media'?<>| {libraryCount} library files</>:<></>}
+                    </Grid>
+                    <Grid item xs={12} component="div" className={`${styles["box-span"]}`}>
+                            {formatDateTimeZone(createdAt.toString())}
                     </Grid>
                 </Grid>
                 {/* <Grid item xs={12} sm={6} md={6} component="div"className={`${styles["grid-two"]}`}>
@@ -78,6 +83,7 @@ const handleClick = async (filePath:string) =>{
             </Grid>
             
         </StyledPaper>
+        
         
     </>
   );

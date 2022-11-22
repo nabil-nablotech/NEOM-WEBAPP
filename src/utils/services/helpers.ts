@@ -49,6 +49,12 @@ export const formatDateTime = (value: string) => {
   }
   return "";
 };
+export const formatDateTimeZone = (value: string) => {
+  if (Date.parse(value)) {
+    return dayjs(value).format("MM/DD/YYYY hh:mm:ss A EST");
+  }
+  return "";
+};
 export const formatTime = (value: string) => {
   if (Date.parse(value)) {
     return dayjs(value).format("hh:mm A");

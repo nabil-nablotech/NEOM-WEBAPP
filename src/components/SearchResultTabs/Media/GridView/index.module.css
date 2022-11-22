@@ -21,6 +21,12 @@
     flex-basis: 32% !important;
     max-width: 32% !important;
 }
+.card-checkbox {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+}
 
 .content ,
 .content.MuiGrid-root {
