@@ -47,17 +47,29 @@ export const onImportReaderLoad = async (
 
     const originalJsonObject = await csvToJson().fromString(requestData.data);
     const jsonObject = [...originalJsonObject];
+
+    const assetConfig = await client.get(
+      `${baseUrl}/api/asset-configs?filters[$or][0][typeCode][$eq]=PLACE&filters[$or][0][typeCode][$eq]=VISIT&filters[$or][0][typeCode][$eq]=IMAGE`
+    );
+
     for (let i = 0; i < jsonObject.length; i++) {
+      let assetConfigId;
+      switch (slug) {
+        case "api::place.place":
+          assetConfigId = assetConfig.data.data?.find((item: any) => item.attributes.typeCode === "PLACE").id;
+          jsonObject[i].asset_config_id = assetConfigId;
+          break;
+        case "api::visit.visit":
+          assetConfigId = assetConfig.data.data?.find((item: any) => item.attributes.typeCode === "VISIT").id;
+          jsonObject[i].asset_config_id = assetConfigId;
+          break;
+        case "api::media.media":
+          assetConfigId = assetConfig.data.data?.find((item: any) => item.attributes.typeCode === "IMAGE").id;
+          jsonObject[i].media_type = assetConfigId;
+          break;
+      }
       /* if media, consturct imagemetadata and attach media object */
       if (zip) {
-
-        /* media type id */
-        switch (jsonObject[i]["media_type"]) {
-          case "IMAGE":
-            jsonObject[i].media_type = "5";
-            break;
-        }
-
         /* put the imageMetaData properties under the imageMetaData object */
         jsonObject[i].imageMetadata = {};
         if (jsonObject[i]["imageMetadata:latitude"]) {

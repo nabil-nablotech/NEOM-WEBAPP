@@ -86,7 +86,6 @@ const ImageUpload = ({
         </div>
     );
 
-
     return (
         <>
             <StyledUpload
@@ -99,7 +98,18 @@ const ImageUpload = ({
                 onRemove={handleRemove}
                 defaultFileList={defaultImages || []}
             >
-                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                {
+                    imageUrl ?
+                        <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> :
+                        (
+                            !defaultImages ||
+                            (
+                                defaultImages && (defaultImages.length < 1)
+                            )
+                        ) ?
+                            uploadButton :
+                            <></>
+                }
             </StyledUpload>
 
         </>

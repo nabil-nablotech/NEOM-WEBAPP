@@ -83,6 +83,7 @@ const GridView = (props: MediaProps) => {
                     <Grid key={index} item lg={4} md={4} className={`${gridStyles['card-item']}`} >
                          { isSelect ? <><Checkbox className={`${gridStyles['card-checkbox']}`}  color="default" onChange={(e)=>handleChange(e, item.id)}/></> : <></> }
                          <Grid onClick={e => {
+                            e.stopPropagation();
                             dispatch(setSelectedCardIndex(index))
                             dispatch(setActiveMediaItem(media[index]))
                             dispatch(setActiveMediaItemIndex(index))
