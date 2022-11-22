@@ -27,7 +27,8 @@ export const limit = 10;
 export const itemAddEditAccess = getRole() === 'SuperEditor' ? true : getRole() === 'Editor' ? true : false;
 export const itemDeleteAccess = getRole() === 'SuperEditor';
 export const remarksDeleteAccess = getRole() === 'SuperEditor';
-export const remarkAddEditAccess = getRole() === 'SuperEditor' ? true : getRole() === 'Editor' ? true : getRole() === 'Consumer' ? true: false;
+// export const remarkAddEditAccess = getRole() === 'SuperEditor' || getRole() === 'Editor' || getRole() === 'Admin'  ? true : getRole() === 'Consumer' ? true: false;
+export const remarkAddEditAccess = true;
 
 export const formatWebDate = (value: string) => {
   if (Date.parse(value)) {
