@@ -4,6 +4,7 @@ export const download = gql`
 query searchDownloads($token: String) {
   downloads(
     filters: { token: { eq: $token } }
+    sort: "createdAt:desc"
   ) {
     data {
       id
@@ -14,6 +15,7 @@ query searchDownloads($token: String) {
         fileCount,
         libraryCount,
         visitCount,
+        createdAt,
         token
       }
     }
