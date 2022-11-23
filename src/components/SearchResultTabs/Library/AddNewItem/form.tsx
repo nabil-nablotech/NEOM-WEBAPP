@@ -139,13 +139,13 @@ const StepContent = ({
             <TextInput
               className={`${styles["referenceUrl"]}`}
               label="Reference URL"
-              name="referenceUrl"
+              name="referenceURL"
               multiline
               minRows={2}
               maxRows={2}
-              value={formik.values.referenceUrl}
+              value={formik.values.referenceURL}
               onChange={(e) => {
-                formik.setFieldValue("referenceUrl", e.target.value);
+                formik.setFieldValue("referenceURL", e.target.value);
               }}
               sx={{
                 ...textInputSxStyles,
