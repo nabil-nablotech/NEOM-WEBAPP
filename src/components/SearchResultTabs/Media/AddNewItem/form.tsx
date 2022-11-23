@@ -184,6 +184,7 @@ allowFullScreen
     formik.setFieldValue("media_type", e);
     if (typeof e === 'string' && e.toLowerCase() === 'image') {
       formik.setFieldValue("url", '');
+      formik.setFieldValue("objectUrl", "");
       formik.setFieldValue("showUrl", false);
       formik.setFieldValue("embedCode", '');
       formik.setFieldValue("showEmbeded", false);
@@ -193,6 +194,7 @@ allowFullScreen
     else if (typeof e === 'string' && e.toLowerCase() === 'video') {
       formik.setFieldValue("object", undefined);
       formik.setFieldValue("url", '');
+      formik.setFieldValue("objectUrl", "");
       formik.setFieldValue("showUrl", false);
       formik.setFieldValue("embedCode", '');
       formik.setFieldValue("showEmbeded", false);
@@ -202,6 +204,7 @@ allowFullScreen
     else if (typeof e === 'string' && e.toLowerCase() === '3dmodel') {
       formik.setFieldValue("object", undefined);
       formik.setFieldValue("url", '');
+      formik.setFieldValue("objectUrl", "");
       formik.setFieldValue("showUrl", false);
       formik.setFieldValue("embedCode", '');
       formik.setFieldValue("showEmbeded", false);
@@ -406,7 +409,10 @@ allowFullScreen
                       !formik.values.showEmbeded
                     );
                     formik.setFieldValue("showUrl", false);
+                    formik.setFieldValue("url", '');
+                    formik.setFieldValue("objectUrl", "");
                     formik.setFieldValue("valid", false);
+                    formik.setFieldValue("submitEmbed", false);
                   }}
                   className={`${styles["file-upload-url-bottom-text"]}`}
                 >
@@ -425,6 +431,8 @@ allowFullScreen
                     formik.setFieldValue("showEmbeded", false);
                     formik.setFieldValue("embedCode", "");
                     formik.setFieldValue("showUrl", !formik.values.showUrl);
+                    formik.setFieldValue("url", '');
+                    formik.setFieldValue("objectUrl", "");
                     formik.setFieldValue("valid", false);
                   }}
                 >
