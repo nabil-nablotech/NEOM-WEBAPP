@@ -125,6 +125,7 @@ export type SearchResultsState2 = {
     galleryViewItemList: MediaAssociateObj[] | []
   }
   addNewItemWindowType: tabNameProps | null
+  successInventoryName: tabNameProps | null
   isAssociationsStepOpen: boolean
   associatedPlaces: InventoryAssociationType[] | []
   associatedEvents: InventoryAssociationType_Event[] | []

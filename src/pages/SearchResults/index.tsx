@@ -37,7 +37,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   const navigate = useNavigate();
   // const { searchText, activeTab, newItemWindowOpen, showAddSuccess } =
   const { searchText, showAddSuccess,deleteItemType, showEditSuccess, deleteItemSuccess,
-    addNewItemWindowType} =
+    successInventoryName} =
     useSelector((state: RootState) => state.searchResults);
   const {lastAdded} = useSelector((state: RootState) => state.tabEdit);
   const { fetchEvents, clearSearch: clearEventSearch, setEdit: setEditEvents } = useEvent();
@@ -152,7 +152,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
         gap: '10px',
         alignItems: 'center'
       }}>
-        <Grid item>{`New ${getSingleInventoryNameFromTabName(tabName ? tabName : 'Places').toLowerCase()} added.`}</Grid>
+        <Grid item>{`New ${getSingleInventoryNameFromTabName(successInventoryName).toLowerCase()} added.`}</Grid>
         <Grid item className={`${styles['continue-btn']}`}>
           <Button variant="text" onClick={e => {
               handleEdit();
@@ -178,7 +178,7 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
 
   const successMessage = () => {
     let screen = 'Place';
-    switch (addNewItemWindowType) {
+    switch (successInventoryName) {
       case 'Events':
         screen = 'Event'
         break;

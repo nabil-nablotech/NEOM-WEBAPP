@@ -71,7 +71,8 @@ const initialState: SearchResultsState2 = {
   isAssociationStepInvalid: false,
   isSelect:false,
   selectedKey:[],
-  fetchLimit: limit
+  fetchLimit: limit,
+  successInventoryName: null
 };
 
 export const searchResultsSlice = createSlice({
@@ -132,6 +133,16 @@ export const searchResultsSlice = createSlice({
 
       if(action.payload) {
         state.shallUpdateKeywords = true
+
+        if(state.newItemWindowOpen) {
+          state.newItemWindowOpen = false
+        }
+        if(state.addNewItemWindowType) {
+          state.successInventoryName = state.addNewItemWindowType
+        }
+      }
+      if(!action.payload) {
+        state.successInventoryName = null
       }
 
       if(action.payload) {
@@ -152,6 +163,17 @@ export const searchResultsSlice = createSlice({
 
       if(action.payload) {
         state.shallUpdateKeywords = true
+
+        if(state.newItemWindowOpen) {
+          state.newItemWindowOpen = false
+        }
+        if(state.addNewItemWindowType) {
+          state.successInventoryName = state.addNewItemWindowType
+        }
+      }
+
+      if(!action.payload) {
+        state.successInventoryName = null
       }
 
       if(action.payload) {
@@ -370,6 +392,9 @@ export const searchResultsSlice = createSlice({
     setFetchLimit: (state, action: PayloadAction<number>) => {
       state.fetchLimit = action.payload;
     },
+    setSuccessInventoryName: (state, action: PayloadAction<tabNameProps | null>) => {
+      state.successInventoryName = action.payload;
+    },
   },
 });
 
@@ -425,7 +450,8 @@ export const {
   toggleIsAssociationStepInvalid,
   setIsSelect,
   setSelectedKey,
-  setFetchLimit
+  setFetchLimit,
+  setSuccessInventoryName
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;
