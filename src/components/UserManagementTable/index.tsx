@@ -329,7 +329,7 @@ export const UserManagementTable = (props: IUser) => {
         blocked: true,
         confirmed: false,
         password: pass,
-        username: values.firstName,
+        username: values.email,
       });
     }
   };
