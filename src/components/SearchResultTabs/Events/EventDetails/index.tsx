@@ -453,7 +453,6 @@ const EventDetailsPage = () => {
     ) {
       setMediaGridActiveItems(8);
     } else {
-      console.log('hex')
       setMediaGridActiveItems((state) => state + 8);
     }
   }
