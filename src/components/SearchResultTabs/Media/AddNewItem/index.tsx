@@ -15,6 +15,7 @@ import {
 } from "../../../../types/CustomDrawerTypes";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import {
+  allowedVideoFormats,
   isEmptyValue,
   MEDIA_TAB_NAME,
 } from "../../../../utils/services/helpers";
@@ -282,7 +283,15 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
   });
 
 
+  const [disableNext, setDisableNext] = useState<boolean>(false)
 
+  useEffect(() => {
+    setDisableNext(
+      (activeStep === 0) && 
+      (!formik.values.valid)  // check if all media formats are validated after upload
+    )
+
+  }, [formik, activeStep])
 
   useEffect(() => {
     /** Effect needed to load history data,
@@ -315,6 +324,18 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
   const uploadImage = async (options: any) => {
     const { onSuccess, onError, file, onProgress } = options;
 
+    if (
+      (formik.values.media_type === "VIDEO") &&
+      allowedVideoFormats.every(item => file.type?.toLowerCase().indexOf(item.toLowerCase()) === -1)
+    ) {
+      file.status = "error"
+      file.response = "Format not supported."
+      formik.setFieldValue("valid", false);
+
+      onError({ message: 'Format not supported.' });
+      return
+    } 
+
     const fmData = new FormData();
     const config: any = {
       headers: { "content-type": "multipart/form-data", "authorization": `Bearer ${getToken()}` },
@@ -334,9 +355,11 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
       );
       formik.values.object = res.data;
       formik.setFieldValue("title", res.data[0].name.split('.')[0]);
+      formik.setFieldValue("valid", true);
       onSuccess("Ok");
     } catch (err) {
       console.log("Eroor: ", err);
+      formik.setFieldValue("valid", false);
       const error = new Error("Some error");
       onError({ err });
     }
@@ -495,7 +518,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
                 <Button
                   label={activeStep === steps.length - 1 ? "Add" : "Next"}
                   type="submit"
-                disabled={(activeStep === 0) && (!formik.values.valid) && formik.values.showUrl}
+                disabled={disableNext}
                 />
               )}
               {edit && activeStep !== steps.length - 1 && (

@@ -11,7 +11,7 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import RenderFileData from "../../../RenderFileData";
-import { Place } from "../../../../types/Place";
+import { MediaAssociateObj, Place } from "../../../../types/Place";
 import { StyledAntTable } from "../../../StyledAntTable";
 import { ColumnsType } from "antd/lib/table";
 import {
@@ -426,24 +426,7 @@ const PlaceDetailsPage = () => {
 
   const dispatch = useDispatch();
 
-  const handleClickMediaItem = (
-    e: React.MouseEvent,
-    itemIndex: number,
-    uniqueId: string
-  ) => {
-    /** itemIndex used to track which item being clicked out of 5;
-     * 1st , 2nd etc.
-     */
-    e.preventDefault();
-    if (media.length >= itemIndex) {
-      // navigate(`/Media/${uniqueId}`, { replace: true });
-      navigateTo(`/Media/${uniqueId}`)
-
-      dispatch(setActiveMediaItem(media[itemIndex - 1]));
-      dispatch(setActiveMediaItemIndex(itemIndex - 1));
-    }
-  };
-
+  
   useEffect(() => {
     if (placeData && placeData?.siteDescription?.length < 100) {
       toggleSeeMoreHidden(true);
@@ -465,6 +448,41 @@ const PlaceDetailsPage = () => {
   if (!placeData) {
     return null;
   }
+
+  const handleClickMediaItem = (
+    e: React.MouseEvent,
+    itemIndex: number,
+    uniqueId: string
+  ) => {
+    /** itemIndex used to track which item being clicked out of 5;
+     * 1st , 2nd etc.
+     */
+    e.preventDefault();
+    // if (placeData?.mediaItems.length >= itemIndex) {
+
+      let newList: any = []
+
+      placeData.mediaItems.forEach((item: MediaAssociateObj, index: number) => {
+          newList.push({
+              id: item.id.toString(),
+              attributes: {
+                  ...item.media_unique_id
+              }
+          })
+      })
+
+      dispatch(toggleGalleryView({
+          flag: "from-place-details",
+          galleryViewItemList: newList
+      }))
+
+      navigateTo(`/Media/${uniqueId}`)
+
+      dispatch(setActiveMediaItem(placeData.mediaItems[itemIndex - 1]));
+      dispatch(setActiveMediaItemIndex(itemIndex - 1));
+    // }
+  };
+
 
   const handleSearch = (searchData: any) => {
     dispatch(setSearchApply(true));
@@ -577,7 +595,11 @@ const PlaceDetailsPage = () => {
                       }}
                       onClick={(e) => {
                         e.preventDefault();
-                        dispatch(toggleGalleryView(true));
+                        dispatch(toggleGalleryView({
+                          flag: "from-place-details-gallery",
+                          galleryViewItemList: mediaItems && mediaItems.length > 0 ?
+                            mediaItems : []
+                        }));
                       }}
                     >
                       View all
@@ -938,12 +960,14 @@ const PlaceDetailsPage = () => {
                         associatedPlaces
                       )}
                       onClick={(e) => {
+
                         const data: InventoryAssociationType = {
                           id: Number(placeData.id),
                           placeNameEnglish: placeData.placeNameEnglish,
                           placeNameArabic: placeData.placeNameArabic,
                           placeNumber: placeData.placeNumber,
-                          keywords: placeData.keywords ? [...placeData.keywords] : []
+                          keywords: placeData.keywords ? [...placeData.keywords] : [],
+                          previousMediaPresent: placeData.media_associates && (placeData.media_associates?.length > 0)
                         };
 
                         dispatch(

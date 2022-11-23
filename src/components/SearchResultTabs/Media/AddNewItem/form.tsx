@@ -73,7 +73,7 @@ export const stepperIconSx = {
 
 const HandleUrl = ({
   formik
-}: {formik: any}) => {
+}: { formik: any }) => {
 
   const [errorInShowingThumnail, setErrorInShowingThumbnail] = useState<boolean>(false)
 
@@ -145,21 +145,24 @@ allowFullScreen
     return <div dangerouslySetInnerHTML={{ __html: data }} />;
   };
 
-  
+
   const renderEmbedSubmitButton = () => {
-    return(
+    return (
       <>
-      {formik.values?.embedCode?.length > 10 && (
-                  <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
-                    <Button
-                      colors={["#fff", "var(--table-black-text)"]}
-                      variant="outlined"
-                      
-                      label={"EMBED"}
-                      onClick={() => formik.setFieldValue("submitEmbed", true)}
-                    />
-                  </Box>
-                )}
+        {formik.values?.embedCode && (
+          <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
+            <Button
+              colors={["#fff", "var(--table-black-text)"]}
+              variant="outlined"
+
+              label={"EMBED"}
+              onClick={() => {
+                formik.setFieldValue("submitEmbed", true)
+                formik.setFieldValue("valid", true)
+              }}
+            />
+          </Box>
+        )}
       </>
     )
   }
@@ -181,6 +184,7 @@ allowFullScreen
     formik.setFieldValue("media_type", e);
     if (typeof e === 'string' && e.toLowerCase() === 'image') {
       formik.setFieldValue("url", '');
+      formik.setFieldValue("objectUrl", "");
       formik.setFieldValue("showUrl", false);
       formik.setFieldValue("embedCode", '');
       formik.setFieldValue("showEmbeded", false);
@@ -190,6 +194,7 @@ allowFullScreen
     else if (typeof e === 'string' && e.toLowerCase() === 'video') {
       formik.setFieldValue("object", undefined);
       formik.setFieldValue("url", '');
+      formik.setFieldValue("objectUrl", "");
       formik.setFieldValue("showUrl", false);
       formik.setFieldValue("embedCode", '');
       formik.setFieldValue("showEmbeded", false);
@@ -199,6 +204,7 @@ allowFullScreen
     else if (typeof e === 'string' && e.toLowerCase() === '3dmodel') {
       formik.setFieldValue("object", undefined);
       formik.setFieldValue("url", '');
+      formik.setFieldValue("objectUrl", "");
       formik.setFieldValue("showUrl", false);
       formik.setFieldValue("embedCode", '');
       formik.setFieldValue("showEmbeded", false);
@@ -225,7 +231,7 @@ allowFullScreen
               handleChange={(e: SelectChangeEvent<string | string[]>) => {
                 handleDropdown(e.target.value)
               }}
-              handleClear={(e: React.MouseEvent) => {}}
+              handleClear={(e: React.MouseEvent) => { }}
               itemsList={[
                 {
                   label: "Image",
@@ -252,7 +258,7 @@ allowFullScreen
                   accept={".jpg,.jpeg,.png,.bmp,.gif"}
                   title={"Drag and drop your file here"}
                   existingImageUrl={
-                   (formik.values?.object && formik.values?.object.length > 0 && formik.values?.object[0]?.url)
+                    (formik.values?.object && formik.values?.object.length > 0 && formik.values?.object[0]?.url)
                       ? `${baseUrl}${formik.values?.object[0]?.url}`
                       : ""
                   }
@@ -285,8 +291,8 @@ allowFullScreen
                         label="Embed Code"
                         name="embedCode"
                         multiline
-                        minRows={4}
-                        maxRows={4}
+                        minRows={8}
+                        maxRows={8}
                         value={formik.values.embedCode}
                         onChange={(e) => {
                           formik.setFieldValue("embedCode", e.target.value);
@@ -294,11 +300,14 @@ allowFullScreen
                         sx={{
                           ...textInputSxStyles,
                           marginBottom: "8em",
+                          height: '90px',
                           "& .MuiInputBase-inputMultiline": {
                             paddingInline: "0 !important",
-                          },
+                          }
                         }}
-                        formControlSx={commonFormControlSxStyles}
+                        formControlSx={{
+                          ...commonFormControlSxStyles,
+                        }}
                       />
                     )}
                   </>
@@ -321,16 +330,17 @@ allowFullScreen
                           error={formik.values.errorUrl?.length > 0}
                           errorText={formik.values.errorUrl}
                         />
-                         {!formik.values.valid && formik.values.url?.length > 10 && <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
-                            <Button
-                              colors={["#fff", "var(--table-black-text)"]}
-                              variant="outlined"
-                              
-                              label={"VALIDATE"}
-                              onClick={() => {
-                                validateUrl(formik.values.url)
-                              }}
-                            />
+                        {!formik.values.valid && formik.values.url?.length > 0 &&
+                        <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
+                          <Button
+                            colors={["#fff", "var(--table-black-text)"]}
+                            variant="outlined"
+
+                            label={"VALIDATE"}
+                            onClick={() => {
+                              validateUrl(formik.values.url)
+                            }}
+                          />
                         </Box>}
                         {formik.values.valid && (
                           <Box
@@ -351,38 +361,42 @@ allowFullScreen
                       </>
                     ) : (
                       <>
-                      {formik.values?.object && formik.values?.object[0]?.url ? 
-                      <>
-                        <video width="338" height="190" controls>
-                        <source
-                          src={`${baseUrl}${formik.values.object[0].url}`}
-                          type="video/mp4"
-                        />
-                      
-                      </video>
-                      <CustomUpload
-                        accept={'video/*'}
-                        defaultImages={formik.values.object}
-                        uploadImage={uploadImage}
-                        title={"Drag and drop your file here"}
-                        existingImageUrl={""}
-                        handleDelete={() => {
-                          formik.setFieldValue("object", []);
-                        }}
-                      />
-                      </> :
-                      <CustomUpload
-                        accept={'video/*'}
-                        defaultImages={formik.values.object}
-                        uploadImage={uploadImage}
-                        title={"Drag and drop your file here"}
-                        existingImageUrl={""}
-                        handleDelete={() => {
-                          console.log('inside delete');
-                          formik.setFieldValue("object", []);
-                        }}
-                      />
-                      }
+                        {formik.values?.object && formik.values?.object[0]?.url ?
+                          <>
+                            <video width="338" height="190" controls>
+                              <source
+                                src={`${baseUrl}${formik.values.object[0].url}`}
+                              // type="video/mp4"
+                              />
+
+                            </video>
+                            <CustomUpload
+                              accept={'video/*, audio/ogg'}
+                              defaultImages={formik.values.object}
+                              uploadImage={uploadImage}
+                              title={"Drag and drop your file here"}
+                              existingImageUrl={""}
+                              handleDelete={() => {
+                                formik.setFieldValue("object", []);
+                              }}
+                            />
+                            <Typography className={`${styles['file-upload-bottom-text']}`}>Accepted file types: .mp4, .webm, .ogg</Typography>
+                          </> :
+                          <>
+                            <CustomUpload
+                              accept={'video/*, audio/ogg'}
+                              defaultImages={formik.values.object}
+                              uploadImage={uploadImage}
+                              title={"Drag and drop your file here"}
+                              existingImageUrl={""}
+                              handleDelete={() => {
+                                console.log('inside delete');
+                                formik.setFieldValue("object", []);
+                              }}
+                            />
+                            <Typography className={`${styles['file-upload-bottom-text']}`}>Accepted file types: .mp4, .webm, .ogg</Typography>
+                          </>
+                        }
                       </>
                     )}
                   </>
@@ -396,6 +410,11 @@ allowFullScreen
                       !formik.values.showEmbeded
                     );
                     formik.setFieldValue("showUrl", false);
+                    formik.setFieldValue("url", '');
+                    formik.setFieldValue("objectUrl", "");
+                    formik.setFieldValue("object", undefined);
+                    formik.setFieldValue("valid", false);
+                    formik.setFieldValue("submitEmbed", false);
                   }}
                   className={`${styles["file-upload-url-bottom-text"]}`}
                 >
@@ -414,6 +433,10 @@ allowFullScreen
                     formik.setFieldValue("showEmbeded", false);
                     formik.setFieldValue("embedCode", "");
                     formik.setFieldValue("showUrl", !formik.values.showUrl);
+                    formik.setFieldValue("url", '');
+                    formik.setFieldValue("objectUrl", "");
+                    formik.setFieldValue("object", undefined);
+                    formik.setFieldValue("valid", false);
                   }}
                 >
                   Add URL
@@ -441,11 +464,15 @@ allowFullScreen
                     sx={{
                       ...textInputSxStyles,
                       marginBottom: "8em",
+                      height: '90px',
                       "& .MuiInputBase-inputMultiline": {
                         paddingInline: "0 !important",
-                      },
+                      }
                     }}
-                    formControlSx={commonFormControlSxStyles}
+                    formControlSx={{
+                      ...commonFormControlSxStyles,
+                      
+                    }}
                   />
                 )}
                 {formik.values.submitEmbed ? null : renderEmbedSubmitButton()}
@@ -531,7 +558,7 @@ allowFullScreen
               handleSelectChange={(e, value) =>
                 formik.setFieldValue("categoryType", value)
               }
-              handleClear={(e) => {}}
+              handleClear={(e) => { }}
               itemsList={options?.actionType || []}
               selectStylesSx={commonSelectSxStyles}
               formControlSx={commonFormControlSxStyles}
@@ -598,7 +625,7 @@ allowFullScreen
                   top: "3px",
                 }}
                 className="remove-motion"
-                onClick={(e) => {}}
+                onClick={(e) => { }}
               />{" "}
               to select the places and events you want to associate this library
               item to.
@@ -621,7 +648,7 @@ allowFullScreen
             <StepperKeywordsComponent
               onKeyDown={(keywordString) => {
                 formik.setFieldValue("keywords", [
-                  ...new Set([keywordString, ...formik.values.keywords ]),
+                  ...new Set([keywordString, ...formik.values.keywords]),
                 ]);
               }}
               onDelete={(value) => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Box, Button, Grid } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -54,6 +54,7 @@ import {
   setDeletePayload,
   setSearchApply,
   toggleDeleteConfirmationWindowOpen,
+  toggleGalleryView,
 } from "../../../../store/reducers/searchResultsReducer";
 import { CustomMoreOptionsComponent } from "../../../CustomMoreOptionsComponent";
 import PositionedSnackbar from "../../../Snackbar";
@@ -170,7 +171,7 @@ const EventDetailsPage = () => {
   }>();
   const { goBack, navigateTo } = useHistory();
   const [isFilter, setIsFilter] = useState(null);
-  const { places, isAssociationsStepOpen, associatedEvents, media } =
+  const { places, isAssociationsStepOpen, associatedEvents, activeMediaItem, activeMediaItemIndex } =
     useSelector((state: RootState) => state.searchResults);
   const { data } = useSelector((state: RootState) => state.login);
 
@@ -385,17 +386,51 @@ const EventDetailsPage = () => {
     },
   ];
 
-  const handleClickMediaItem = (e: React.MouseEvent, uniqueId: string) => {
+  const handleClickMediaItem = (e: React.MouseEvent,  itemIndex: number, uniqueId: string) => {
     /** itemIndex used to track which item being clicked out of 5;
      * 1st , 2nd etc.
      */
     e.preventDefault();
     // navigate(`/Media/${uniqueId}`, { replace: true })
-    navigateTo(`/Media/${uniqueId}`);
     // if (media.length >= itemIndex) {
-    //     dispatch(setActiveMediaItem(media[itemIndex - 1]))
-    //     dispatch(setActiveMediaItemIndex(itemIndex - 1))
+
+    let newList: any = []
+
+
+    if(!mediaGalleryLocal) {
+      dispatch(toggleGalleryView({
+        flag: "from-event-details",
+        galleryViewItemList: []
+      }))
+
+      return
+    } 
+    
+    /**load next set of items */
+    /** To-do */
+    // if(itemIndex + 1 === mediaGalleryLocal.length) {
+    //   handleSeeMore()
     // }
+
+    mediaGalleryLocal.forEach((item: MediaAssociateObj, index: number) => {
+      newList.push({
+        id: item.id.toString(),
+        attributes: {
+          ...item.media_unique_id
+        }
+      })
+    })
+
+    dispatch(toggleGalleryView({
+      flag: "from-event-details",
+      galleryViewItemList: newList
+    }))
+    navigateTo(`/Media/${uniqueId}`)
+
+    dispatch(setActiveMediaItem(mediaGalleryLocal[itemIndex - 1]));
+    dispatch(setActiveMediaItemIndex(itemIndex - 1));
+    // }
+
   };
 
   const handleSearch = (searchData: any) => {
@@ -410,6 +445,19 @@ const EventDetailsPage = () => {
     });
   };
 
+  const handleSeeMore = () => {
+    if (
+      mediaGalleryLocal &&
+      mediaGallery &&
+      mediaGalleryLocal.length === mediaGallery.length
+    ) {
+      setMediaGridActiveItems(8);
+    } else {
+      console.log('hex')
+      setMediaGridActiveItems((state) => state + 8);
+    }
+  }
+  
   const handleImageUrl = (url: string) => {
     let imagePath = url.split("/");
     return `${baseUrl}/${imagePath[1]}/small_${imagePath[2]}`;
@@ -535,6 +583,7 @@ const EventDetailsPage = () => {
                         associatedEvents
                       )}
                       onClick={(e) => {
+                        
                         const data: InventoryAssociationType_Event = {
                           id: eventDetails.id ? eventDetails.id.toString() : "",
                           visitNumber: eventDetails.visitNumber,
@@ -547,7 +596,8 @@ const EventDetailsPage = () => {
                           placeNumber:
                             eventDetails.visit_associate?.place_unique_id
                               .placeNumber ?? "",
-                          keywords: eventDetails.keywords ? eventDetails.keywords : []
+                          keywords: eventDetails.keywords ? eventDetails.keywords : [],
+                          previousMediaPresent: eventDetails.media_associates && (eventDetails.media_associates?.length > 0)
                         };
 
                         dispatch(
@@ -982,6 +1032,7 @@ const EventDetailsPage = () => {
                           onClick={(e) => {
                             handleClickMediaItem(
                               e,
+                              inx + 1,
                               itemObj.media_unique_id.uniqueId
                             );
                           }}
@@ -1096,15 +1147,7 @@ const EventDetailsPage = () => {
                       }}
                       onClick={(e) => {
                         e.preventDefault();
-                        if (
-                          mediaGalleryLocal &&
-                          mediaGallery &&
-                          mediaGalleryLocal.length === mediaGallery.length
-                        ) {
-                          setMediaGridActiveItems(8);
-                        } else {
-                          setMediaGridActiveItems((state) => state + 8);
-                        }
+                        handleSeeMore()
                       }}
                     >
                       See{" "}

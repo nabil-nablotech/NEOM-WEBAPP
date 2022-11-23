@@ -26,7 +26,11 @@
 .star-icon-box {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
+}
+.title-grid {
+    align-items: center;
+    gap: 30px;
 }
 
 .featured-col {

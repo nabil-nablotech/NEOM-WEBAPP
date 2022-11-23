@@ -241,3 +241,5 @@ export type deleteRecordPayload = {
   remark_headers_id: Array<number> | []
   visit: Array<number> | []
 }
+
+export type DirectGalleryViewSteps = "from-place-details" | "from-place-details-gallery" | "from-event-details"

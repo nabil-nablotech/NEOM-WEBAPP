@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { addItemProgressPayload, addItemProgressStateType, DeletePayloadType, InventoryAssociationType, InventoryAssociationType_Event, SearchResultsState2, tabNameProps, ToggledStateTypes } from "../../types/SearchResultsTabsProps";
 import { DashboardResponse } from "../../types/dashboard";
-import { Place, Meta } from "../../types/Place";
+import { Place, Meta, MediaAssociateObj, DirectGalleryViewSteps } from "../../types/Place";
 import { Event } from "../../types/Event";
 import { Media } from "../../types/Media";
 import { DeleteRecordReduxPayload, DeleteUserReduxPayload } from "../../types/User";
+import { limit } from "../../utils/services/helpers";
 
 const initialState: SearchResultsState2 = {
   selectedCardIndex: 0,
@@ -35,7 +36,11 @@ const initialState: SearchResultsState2 = {
   activeMediaItemIndex: 0,
   activeLibraryItem: null,
   activeLibraryItemIndex: 0,
-  isOpenGalleryView: false,
+  openGalleryView: {
+    flag: false,
+    galleryViewIdList: [],
+    galleryViewItemList: []
+  },
   addNewItemWindowType: null,
   isAssociationsStepOpen: false,
   associatedPlaces: [],
@@ -65,7 +70,8 @@ const initialState: SearchResultsState2 = {
   isLogoutConfirmationWindowOpen: false,
   isAssociationStepInvalid: false,
   isSelect:false,
-  selectedKey:[]
+  selectedKey:[],
+  fetchLimit: limit
 };
 
 export const searchResultsSlice = createSlice({
@@ -185,8 +191,17 @@ export const searchResultsSlice = createSlice({
     setActiveLibraryItemIndex: (state, action: PayloadAction<number>) => {
       state.activeLibraryItemIndex = action.payload;
     },
-    toggleGalleryView: (state, action: PayloadAction<boolean>) => {
-      state.isOpenGalleryView = action.payload;
+    toggleGalleryView: (state, action: PayloadAction<{
+      flag: DirectGalleryViewSteps | false, galleryViewIdList?: string[] | [], galleryViewItemList: MediaAssociateObj[] | []
+    }>) => {
+      state.openGalleryView.flag = action.payload.flag;
+
+      state.openGalleryView.galleryViewIdList = action.payload.galleryViewIdList ?
+        action.payload.galleryViewIdList : [];
+
+      state.openGalleryView.galleryViewItemList = action.payload.galleryViewItemList ?
+        action.payload.galleryViewItemList : [];
+
     },
     setSearchApply: (state, action: PayloadAction<boolean>) => {
       state.searchApply = action.payload;
@@ -258,8 +273,37 @@ export const searchResultsSlice = createSlice({
       state.associatedPlaces=[];
     },
     setDefaultMediaAssociation: (state, action: PayloadAction<{events: InventoryAssociationType_Event[], places: InventoryAssociationType[]}>) => {
-      state.associatedEvents=action.payload.events;
-      state.associatedPlaces=action.payload.places;
+
+      /** modification needed to add previousMediaPresent flag */
+      let newAssociatedPlaces: InventoryAssociationType[] | [] = []
+      let newAssociatedEvents: InventoryAssociationType_Event[] | [] = []
+
+      if(action.payload.places.length > 0) {
+        
+        newAssociatedPlaces = action.payload.places.map(item => {
+          return ({
+            ...item,
+            previousMediaPresent: true // since this item is already assigned to a media
+          })
+        })
+      } else {
+        newAssociatedPlaces = [...action.payload.places]
+      }
+
+      if(action.payload.events.length > 0) {
+        
+          newAssociatedEvents = action.payload.events.map(item => {
+              return ({
+                ...item,
+                previousMediaPresent:  true // since this item is already assigned to a media
+              })
+          })
+      } else {
+        newAssociatedEvents = [...action.payload.events]
+      }
+
+      state.associatedEvents = newAssociatedEvents;
+      state.associatedPlaces = newAssociatedPlaces;
     },
     toggleAddItemWindowMinimized: (state, action: PayloadAction<boolean | null>) => {
       state.addItemWindowMinimized = action.payload;
@@ -323,6 +367,9 @@ export const searchResultsSlice = createSlice({
     setSelectedKey: (state, action: PayloadAction<any>) => {
       state.selectedKey = action.payload;
     },
+    setFetchLimit: (state, action: PayloadAction<number>) => {
+      state.fetchLimit = action.payload;
+    },
   },
 });
 
@@ -377,7 +424,8 @@ export const {
   toggleLogoutConfirmationWindowOpen,
   toggleIsAssociationStepInvalid,
   setIsSelect,
-  setSelectedKey
+  setSelectedKey,
+  setFetchLimit
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;
