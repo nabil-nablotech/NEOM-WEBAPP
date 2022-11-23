@@ -21,6 +21,7 @@ const useUser = () => {
   const [showSnackbar, setShowSnackbar] = useState<ISnackbar>({
     open: false,
     message: "",
+    severity: "success"
   });
   // Access the client
   const queryClient = useQueryClient();
@@ -44,11 +45,17 @@ const useUser = () => {
       setShowSnackbar({
         open: true,
         message: "New user added",
+        severity: "success"
       });
       generateLink({ user: data, recovery: false });
     },
-    onError: () => {
+    onError: (e: any) => {
       setConfirmLoading(false);
+      setShowSnackbar({
+        open: true,
+        message: e?.response?.data?.error?.message ? e?.response?.data?.error?.message : "Some error occured",
+        severity: "error"
+      });
     },
   });
 
@@ -66,6 +73,7 @@ const useUser = () => {
             setShowSnackbar({
             open: true,
             message: "User updated",
+            severity: "success"
           });
         }
       },
@@ -108,6 +116,7 @@ const useUser = () => {
       setShowSnackbar({
         open: true,
         message: "Password recovery link created",
+        severity: "success"
       });
     }
     await setUserData(userData.user);
@@ -128,6 +137,7 @@ const useUser = () => {
     setShowSnackbar({
       open: true,
       message: "Password recovery link copied",
+      severity: "success"
     });
   };
 
