@@ -27,7 +27,7 @@ export const Card = ({
                     <RenderFileData
                         fileData={{
                             alt: "",
-                            src: record?.attributes?.object?.data?.attributes?.url ? handleImageUrl(record.attributes.object.data.attributes.url, "medium_") : undefined,
+                            src: record?.attributes?.object?.data?.attributes?.url ? handleImageUrl(record.attributes.object.data.attributes.url, "small_") : undefined,
                             className: detectMediaTypeFromMediaList(record) === "video" ?
                                 `${styles['video-card-parent']}` : detectMediaTypeFromMediaList(record) === "image" ?
                                     `${gridStyles['card-image']}` : `${styles['three-d-card-parent']}`,
