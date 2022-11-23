@@ -35,7 +35,10 @@ const initialState: SearchResultsState2 = {
   activeMediaItemIndex: 0,
   activeLibraryItem: null,
   activeLibraryItemIndex: 0,
-  isOpenGalleryView: false,
+  openGalleryView: {
+    flag: false,
+    galleryViewIdList: []
+  },
   addNewItemWindowType: null,
   isAssociationsStepOpen: false,
   associatedPlaces: [],
@@ -185,8 +188,12 @@ export const searchResultsSlice = createSlice({
     setActiveLibraryItemIndex: (state, action: PayloadAction<number>) => {
       state.activeLibraryItemIndex = action.payload;
     },
-    toggleGalleryView: (state, action: PayloadAction<boolean>) => {
-      state.isOpenGalleryView = action.payload;
+    toggleGalleryView: (state, action: PayloadAction<{flag: boolean, galleryViewIdList: string[] | []}>) => {
+      state.openGalleryView.flag = action.payload.flag;
+
+      state.openGalleryView.galleryViewIdList = action.payload.galleryViewIdList ?
+        action.payload.galleryViewIdList : [];
+
     },
     setSearchApply: (state, action: PayloadAction<boolean>) => {
       state.searchApply = action.payload;

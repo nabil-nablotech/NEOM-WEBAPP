@@ -130,7 +130,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { searchText, isOpenGalleryView } = useSelector((state: RootState) => state.searchResults);
+  const { searchText, openGalleryView } = useSelector((state: RootState) => state.searchResults);
   const { options, selectedValue } = useSelector((state: RootState) => state.refinedSearch);
 
   useEffect(() => {
@@ -243,7 +243,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
   if(uniqueId) {
     if(tabName === PLACES_TAB_NAME) {
 
-      if (isOpenGalleryView) {
+      if (openGalleryView.flag) {
         return <div className={`${styles["search-results-wrapper"]}`}>
           <GalleryView />
         </div>

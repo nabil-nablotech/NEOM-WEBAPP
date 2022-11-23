@@ -119,7 +119,10 @@ export type SearchResultsState2 = {
   activeMediaItemIndex: number;
   activeLibraryItem: Media | null;
   activeLibraryItemIndex: number;
-  isOpenGalleryView: boolean
+  openGalleryView: {
+    flag: boolean,
+    galleryViewIdList: string[] | []
+  }
   addNewItemWindowType: tabNameProps | null
   isAssociationsStepOpen: boolean
   associatedPlaces: InventoryAssociationType[] | []

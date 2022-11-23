@@ -572,7 +572,11 @@ const PlaceDetailsPage = () => {
                       }}
                       onClick={(e) => {
                         e.preventDefault();
-                        dispatch(toggleGalleryView(true));
+                        dispatch(toggleGalleryView({
+                          flag: true,
+                          galleryViewIdList: mediaItems && mediaItems.length > 0 ?
+                            mediaItems.map(item => item.media_unique_id.uniqueId) : []
+                        }));
                       }}
                     >
                       View all

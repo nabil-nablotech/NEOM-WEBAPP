@@ -83,7 +83,10 @@ const GalleryView = () => {
                         textTransform: 'none'
                     }}
                     onClick={e => {
-                        dispatch(toggleGalleryView(false))
+                        dispatch(toggleGalleryView({
+                            flag: false,
+                            galleryViewIdList: []
+                        }))
                     }}
                 >
                     Back

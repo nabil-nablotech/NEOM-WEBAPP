@@ -24,6 +24,7 @@ import MapView from '../../GoogleMap/MapView';
 import { useHistory } from '../../../../hooks/useHistory';
 import TextualContent from './TextualContent';
 import useMedia from '../../../../hooks/useMedia';
+import { useNavigate } from 'react-router-dom';
 
 const MediaDetailsPage = ({
     currentItemIndex,
@@ -40,6 +41,7 @@ const MediaDetailsPage = ({
     const [isFilter, setIsFilter] = useState(null)
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const { navigateTo } = useHistory()
     const { fetchMediaItems } = useMedia();
 
@@ -87,8 +89,8 @@ const MediaDetailsPage = ({
                     newIndex = newIndex + 1
                     dispatch(setActiveMediaItem(media[newIndex]))
                     dispatch(setActiveMediaItemIndex(newIndex))
-                    // navigate(`/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
-                    navigateTo(`/Media/${media[newIndex].attributes.uniqueId}`)
+                    navigate(`/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                    // navigateTo(`/Media/${media[newIndex].attributes.uniqueId}`)
                 }
                 
                 /** when you are on 9th item, fetch further set of 10 items */
@@ -108,8 +110,8 @@ const MediaDetailsPage = ({
 
                 dispatch(setActiveMediaItem(media[newIndex]))
                 dispatch(setActiveMediaItemIndex(newIndex))
-                // navigate(`/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
-                navigateTo(`/Media/${media[newIndex].attributes.uniqueId}`)
+                navigate(`/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                // navigateTo(`/Media/${media[newIndex].attributes.uniqueId}`)
 
             }
 
