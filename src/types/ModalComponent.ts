@@ -1,5 +1,5 @@
 import { IUser } from './../components/Modal/index';
-import { UserModalstate, Roles } from './User';
+import { UserModalstate, Roles, ISnackbar } from './User';
 
 export type ModalComponentProps = {
 
@@ -8,6 +8,7 @@ export type ModalComponentProps = {
     handleOk: (values: AddUserState) => void
     handleCancel: () => void
     roles?: Roles
+    showSnackbar: ISnackbar
 } & Partial<IUser>
 
 export type AddUserState = {

@@ -116,6 +116,7 @@ const ModalComponent = ({
   handleOk,
   handleCancel,
   roles,
+  showSnackbar
 }: ModalComponentProps & Partial<IUser>) => {
   const roleDataList: any = roles
     ? roles?.roles?.map((x: Role) => {
@@ -237,15 +238,21 @@ const ModalComponent = ({
 
     if (Object.keys(errObj).length < 1) {
       handleOk(values)
-      formik.setFieldValue('firstName', '')
-      formik.setFieldValue('lastName', '')
-      formik.setFieldValue('email', '')
-      formik.setFieldValue('role', '')
+      
     } else {
       formikObject.setErrors(errObj)
     }
 
   }
+
+  useEffect(() => {
+    if(showSnackbar.severity === "success") {
+      formik.setFieldValue('firstName', '')
+      formik.setFieldValue('lastName', '')
+      formik.setFieldValue('email', '')
+      formik.setFieldValue('role', '')
+    }
+  }, [showSnackbar])
 
   const formik = useFormik({
     initialValues: {

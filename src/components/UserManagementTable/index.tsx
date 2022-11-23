@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Table } from "antd";
 import Button from "../../components/Button";
-import { Roles, User, UserModalstate } from "../../types/User";
+import { ISnackbar, Roles, User, UserModalstate } from "../../types/User";
 
 import styles from "./index.module.css";
 import CustomSearchField from "./../SearchField/index";
@@ -272,6 +272,7 @@ export type IUser = {
   setConfirmLoading: (e: boolean) => void;
   confirmLoading: boolean;
   updatedUser?: User;
+  showSnackbar: ISnackbar
   setModalState: (e: UserModalstate) => void;
   modalState: UserModalstate;
   userRoles?: Roles;
@@ -293,6 +294,7 @@ export const UserManagementTable = (props: IUser) => {
     userRoles,
     copyLink,
     generateLink,
+    showSnackbar
   } = props;
   const [dataList, setDataList] = useState<User[] | []>([]);
   const [search, setSearch] = useState<string>('')
@@ -514,6 +516,7 @@ export const UserManagementTable = (props: IUser) => {
         handleCancel={handleCancel}
         confirmLoading={confirmLoading}
         roles={userRoles}
+        showSnackbar={showSnackbar}
       />
       <div className={`${styles["search-title"]}`}>
         USERS

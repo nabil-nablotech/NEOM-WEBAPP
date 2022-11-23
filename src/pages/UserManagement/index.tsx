@@ -40,6 +40,7 @@ const UserManagement = () => {
               handleUser={handleUser}
               editUser={editUserMutation}
               postUser={postUserMutation}
+              showSnackbar={showSnackbar}
               userData={userData}
               setConfirmLoading={setConfirmLoading}
               confirmLoading={confirmLoading}
@@ -56,6 +57,7 @@ const UserManagement = () => {
             open={showSnackbar.open}
             handleClose={handleSnackbar}
             severity={showSnackbar.severity ? showSnackbar.severity : "error"}
+            duration={5000}
           />
         </div>
       </div>
