@@ -313,6 +313,7 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
       placeNameEnglish: edit ? tabData?.placeNameEnglish : "",
       placeNameArabic: edit ? tabData?.placeNameArabic : "",
       siteDescription: edit ? tabData?.siteDescription : "",
+      previousNumber: edit ? tabData?.previousNumber : "",
       siteType: edit && tabData?.siteType ? tabData?.siteType : [],
       period: edit && tabData?.period ? tabData?.period : [],
       stateOfConservation:

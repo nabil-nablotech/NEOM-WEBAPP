@@ -191,7 +191,7 @@ const usePlace = () => {
       asset_config_id: 8,
       keywords: payload.keywords,
       siteType: payload.siteType,
-      previousNumber: "",
+      previousNumber: payload.previousNumber,
       placeValue: 0,
       "stateOfConservation": [payload.stateOfConservation],
       "risk": [payload.risk],

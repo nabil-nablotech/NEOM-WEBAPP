@@ -32,7 +32,7 @@ const TextualContent = ({
             <div>Author: {RenderValueWithDefault(Author)}</div>
             <div>Category Type: {RenderValueWithDefault(categoryType)}</div>
             <div>Bearing: {RenderValueWithDefault(bearing)}</div>
-            <div>Source URL: {RenderValueWithDefault(referenceURL)}</div>
+            <div>Reference URL: {RenderValueWithDefault(referenceURL)}</div>
             <div>Citation: {RenderValueWithDefault(citation)}</div>
             <Grid container style={{
                 gap: '10px'

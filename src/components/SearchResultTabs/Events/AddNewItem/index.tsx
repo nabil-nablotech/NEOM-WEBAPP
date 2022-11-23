@@ -479,6 +479,10 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
                 <Button
                   colors={["#fff", "var(--table-black-text)", "none"]}
                   label={"Next"}
+                  disabled={
+                    ((formik.values.visitNumber.length === 0) || (!formik.values.visitNumber)) ||
+                    (!formik.values.place?.id || !formik.values.place)
+                  }
                   onClick={handleNext}
                 />
               )}
@@ -487,8 +491,8 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
                   label={"Update"}
                   type="submit"
                   disabled={
-                    formik.values.visitNumber.length === 0 &&
-                    !formik.values.place?.id
+                    ((formik.values.visitNumber.length === 0) || (!formik.values.visitNumber)) ||
+                    (!formik.values.place?.id || !formik.values.place)
                   }
                 // onClick={handleNext}
                 />
