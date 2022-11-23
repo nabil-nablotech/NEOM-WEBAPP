@@ -246,7 +246,7 @@ const LibraryDetailsPage = ({
                 </Box>
                 <Box component="div" className={`${styles[`bottom-grid`]}`}>
                   <p>Details</p>
-                  <div>Source URL: {RenderValueWithDefault(referenceURL)}</div>
+                  <div>Reference URL: {RenderValueWithDefault(referenceURL)}</div>
                   <div>Citation: {RenderValueWithDefault(citation)}</div>
                   <Grid container style={{
                     gap: '10px'
