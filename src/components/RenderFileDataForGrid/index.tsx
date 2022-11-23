@@ -107,9 +107,10 @@ const RenderFileDataForGrid = ({
                                                     <video width="100%" height="auto" controls={false} autoPlay={false}>
                                                         <source
                                                             src={fileData.staticVideoLink}
-                                                            type="video/mp4"
+                                                            type="auto"
                                                         />
                                                     </video>
+                                                
                                                 </> :
                                                 <>
                                                 {fileData.objectURL ? 
