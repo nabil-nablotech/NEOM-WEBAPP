@@ -120,7 +120,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
   const isStepSkipped = (step: number) => {
     return skipped.has(step);
   };
-  const handleNext = (e: any, data?: any, navigateOnly?: boolean) => {
+  const handleNext = (e: any, data?: any, navigateOnly?: boolean, jumpToStep?: number) => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -134,10 +134,10 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
       ) {
         dispatch(toggleIsAssociationStepInvalid(true))
       } else {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        setActiveStep((prevActiveStep) => jumpToStep && edit ? jumpToStep : prevActiveStep + 1);
       }
     } else {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      setActiveStep((prevActiveStep) => jumpToStep && edit ? jumpToStep : prevActiveStep + 1);
     }
 
     if (navigateOnly) return
@@ -212,7 +212,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     }
   };
 
-  const validation = (values: any, formikObject: any, navigateOnly?: boolean) => {
+  const validation = (values: any, formikObject: any, navigateOnly?: boolean, jumpToStep?: number) => {
     let currentError: [] | string[] = [];
 
     if (!values.title) {
@@ -224,7 +224,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
     }
 
     if (currentError.length === 0 && (activeStep !== 1)) {
-      handleNext(null, values, navigateOnly);
+      handleNext(null, values, navigateOnly, jumpToStep);
     } else {
       if (activeStep === 0) {
         if (currentError.length > 0) {
@@ -253,11 +253,11 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
           dispatch(toggleIsAssociationStepInvalid(true))
         } else {
           dispatch(toggleIsAssociationStepInvalid(false))
-          handleNext(null, values, navigateOnly);
+          handleNext(null, values, navigateOnly, jumpToStep);
         }
       }
       else {
-        handleNext(null, values, navigateOnly);
+        handleNext(null, values, navigateOnly, jumpToStep);
       }
     }
 
@@ -394,7 +394,7 @@ const AddNewLibraryItem = ({ onHide, create }: AddNewItemProps) => {
                       onClick={e => {
 
                         if (index > activeStep) {
-                          validation(formik.values, { setErrors: formik.setErrors }, true)
+                          validation(formik.values, { setErrors: formik.setErrors }, true, index)
                         } else if (index < activeStep) {
                           handleBack()
                         }
