@@ -10,6 +10,7 @@ export type PlaceApi = {
   placeNameEnglish: string;
   placeNameArabic: string;
   siteDescription: string;
+  previousNumber: string;
   siteType: string[];
   updatedAt: string;
   keywords: string[] | null;

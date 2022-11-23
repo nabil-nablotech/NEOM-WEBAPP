@@ -502,6 +502,7 @@ const PlaceDetailsPage = () => {
     placeNameArabic,
     placeNumber,
     siteDescription,
+    previousNumber,
     siteType,
     period,
     stateOfConservation,
@@ -1101,6 +1102,31 @@ const PlaceDetailsPage = () => {
                       </Box>
                     </Grid>
                   </Grid>
+                  {
+                    previousNumber &&
+                    <Grid container className={`${styles["table-row"]}`}>
+                      <Grid
+                        item
+                        sm={5}
+                        md={4}
+                        className={`${styles["table-parameter"]} `}
+                      >
+                        Previous Number
+                      </Grid>
+                      <Grid item>
+                        <Box
+                          component={"div"}
+                          className={`${styles["text-anchors-parent"]}`}
+                        >
+                          {!isEmpty(previousNumber) ? (
+                            `${previousNumber}`
+                          ) : (
+                            <NoTextPresent message={NO_TEXT} />
+                          )}
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  }
                   <Grid container className={`${styles["table-row"]}`}>
                     <Grid
                       item
