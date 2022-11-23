@@ -56,7 +56,7 @@ const MapView = ({ marker, filterId, zoom = 25 }) => {
   }, [])
 
   const handleActiveMarker = (marker) => {
-    filterId(marker)
+    // filterId(marker)
     if (marker === activeMarker) {
       return;
     }

@@ -51,6 +51,7 @@ const MediaTab = () => {
   * if yes - set it
   */
   useEffect(() => {
+    dispatch(setIsSelect(false))
     if (toggledStates.states && (toggledStates.tabName === MEDIA_TAB_NAME)) {
       toggleOpenStates(toggledStates.states)
     }

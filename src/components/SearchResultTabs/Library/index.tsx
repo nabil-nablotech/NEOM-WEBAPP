@@ -271,6 +271,7 @@ const LibraryTab = () => {
     /** Needs to be done , since InfiniteSCroll needs a relation with
      * div being scrolled. Here its tbody of ant table
      */
+     dispatch(setIsSelect(false));
     const ele = document.querySelector("#library-list-parent .ant-table-body");
     if (ele) {
       ele.id = "library-list-div";
