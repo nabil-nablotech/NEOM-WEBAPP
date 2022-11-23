@@ -53,7 +53,7 @@ const MediaDetailsPage = ({
         // setMediaType("video")
         // setMediaType("3d")
 
-        if (mediaDetails && (Object.keys(mediaDetails).length !== 0) ) {
+        if (mediaDetails && (Object.keys(mediaDetails).length !== 0)) {
             if (
                 detectMediaRecordApiType(mediaDetails) === MEDIA_TYPE_VIDEO
             ) {
@@ -82,7 +82,7 @@ const MediaDetailsPage = ({
         let newIndex = activeMediaItemIndex
 
         if (action === 'next') {
-            if(totalCounts) {
+            if (totalCounts) {
                 if (newIndex + 1 < totalCounts.media) {
                     newIndex = newIndex + 1
                     dispatch(setActiveMediaItem(media[newIndex]))
@@ -90,7 +90,7 @@ const MediaDetailsPage = ({
                     // navigate(`/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
                     navigateTo(`/Media/${media[newIndex].attributes.uniqueId}`)
                 }
-                
+
                 /** when you are on 9th item, fetch further set of 10 items */
                 if (
                     (newIndex + 1 === media.length) &&
@@ -114,6 +114,11 @@ const MediaDetailsPage = ({
             }
 
         }
+    }
+
+    const handleImageUrl = (url: string, size: string) => {
+        let imagePath = url.split("/");
+        return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
     }
 
     const menuItems = [
@@ -164,7 +169,7 @@ const MediaDetailsPage = ({
                         <>
                             {
                                 mediaDetails?.object?.url ?
-                                    <Box className={`${styles['image']}`} component="img" alt={""} src={`${baseUrl}${mediaDetails?.object?.url}`}
+                                    <Box className={`${styles['image']}`} component="img" alt={""} src={handleImageUrl(mediaDetails.object.url, "large_")}
                                         style={{
                                             objectFit: (mediaDetails && (mediaDetails?.object.width / mediaDetails?.object.height > 1.5)) ? 'cover' : 'contain'
                                         }}
@@ -193,7 +198,7 @@ const MediaDetailsPage = ({
                                 ,
                                 iframeVideoLink: mediaDetails.referenceURL ? mediaDetails.referenceURL : "",  // means its an iframe
                                 staticVideoLink: typeof mediaDetails.object?.url === 'string' ? //means its an uploaded video
-                                    `${baseUrl}${mediaDetails.object.url}` : "",
+                                    handleImageUrl(mediaDetails.object.url, "medium_") : "",
                                 className: `${styles["single-image"]}`,
                                 thumbNail:
                                     // TO-DO : api based thumnail
@@ -275,13 +280,13 @@ const MediaDetailsPage = ({
                                     <MapView filterId={setIsFilter} key={4} marker={[{
                                         id: 0,
                                         name: `${mediaDetails?.media_associate?.data?.attributes?.place_unique_ids.data !== null ?
-                                                mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
+                                            mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
                                             : ''}`,
-                                            position: {
-                                                lat: latitude || 24.11,
-                                                lng: longitude || 34.98
-                                            }
-                                        }]}
+                                        position: {
+                                            lat: latitude || 24.11,
+                                            lng: longitude || 34.98
+                                        }
+                                    }]}
                                         zoom={10}
                                     />
                                     <Grid container className={`${styles['map-loctn-details']}`} >
@@ -323,63 +328,63 @@ const MediaDetailsPage = ({
                             <Grid item sm={1} className={`${styles['more-icon-grid-item']}`} style={{
                                 marginLeft: 'auto'
                             }}>
-                                
+
                                 {itemAddEditAccess && <CustomMoreOptionsComponent
-                                            moreIconClassName={`${styles['more-icon']}`}
-                                            menuActions={menuItems}
-                                        />}
+                                    moreIconClassName={`${styles['more-icon']}`}
+                                    menuActions={menuItems}
+                                />}
                             </Grid>
                         </Grid>
                         <Box component="div" className={`${styles[`video-desc`]}`}>
                             {description}
                         </Box>
-                            <Grid container style={{
-                                justifyContent: 'space-between'
-                            }}>
-                                <Grid item sm={6} lg={7}>
-                                    <TextualContent
-                                        mediaDetails={mediaDetails}
-                                    />
-                                </Grid>
-                                <Grid item sm={6} lg={5} className={`${styles[`map-wrapper`]}`}>
-                                    {(latitude && longitude) ? <>
-                                        <MapView filterId={setIsFilter} key={4} marker={[{
-                                            id: 0,
-                                            name: `${mediaDetails?.media_associate?.data?.attributes?.place_unique_ids.data !== null ?
-                                                    mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
-                                                    : ''}`,
-                                                position: {
-                                                    lat: latitude || 24.11,
-                                                    lng: longitude || 34.98
-                                                }
-                                            }]}
-                                            zoom={10}
-                                        />
-                                        <Grid container className={`${styles['map-loctn-details']}`} >
-                                            <Grid item lg={5} md={5} sm={5}>
-                                                <Grid container className={`${styles['map-loctn-line']}`}>
-                                                    <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                                    <Grid item>{`${toFixedFromString(latitude, 6)}`}</Grid>
-                                                </Grid>
-                                            </Grid>
-                                            <Grid item lg={5} md={5} sm={6}>
-                                                <Grid container className={`${styles['map-loctn-line']}`}>
-                                                    <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                                    <Grid item>{`${toFixedFromString(longitude, 6)}`}</Grid>
-                                                </Grid>
-                                            </Grid>
-                                        </Grid> </>
-                                        :
-                                        <NoMapPresent
-                                            className="light-version"
-                                            message={NO_LOCATION}
-                                            style={{
-                                                backgroundColor: 'var(--blank-doc-bg)',
-                                                color: 'var(--no-map-bg)'
-                                            }}
-                                        />}
-                                </Grid>
+                        <Grid container style={{
+                            justifyContent: 'space-between'
+                        }}>
+                            <Grid item sm={6} lg={7}>
+                                <TextualContent
+                                    mediaDetails={mediaDetails}
+                                />
                             </Grid>
+                            <Grid item sm={6} lg={5} className={`${styles[`map-wrapper`]}`}>
+                                {(latitude && longitude) ? <>
+                                    <MapView filterId={setIsFilter} key={4} marker={[{
+                                        id: 0,
+                                        name: `${mediaDetails?.media_associate?.data?.attributes?.place_unique_ids.data !== null ?
+                                            mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
+                                            : ''}`,
+                                        position: {
+                                            lat: latitude || 24.11,
+                                            lng: longitude || 34.98
+                                        }
+                                    }]}
+                                        zoom={10}
+                                    />
+                                    <Grid container className={`${styles['map-loctn-details']}`} >
+                                        <Grid item lg={5} md={5} sm={5}>
+                                            <Grid container className={`${styles['map-loctn-line']}`}>
+                                                <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
+                                                <Grid item>{`${toFixedFromString(latitude, 6)}`}</Grid>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid item lg={5} md={5} sm={6}>
+                                            <Grid container className={`${styles['map-loctn-line']}`}>
+                                                <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
+                                                <Grid item>{`${toFixedFromString(longitude, 6)}`}</Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid> </>
+                                    :
+                                    <NoMapPresent
+                                        className="light-version"
+                                        message={NO_LOCATION}
+                                        style={{
+                                            backgroundColor: 'var(--blank-doc-bg)',
+                                            color: 'var(--no-map-bg)'
+                                        }}
+                                    />}
+                            </Grid>
+                        </Grid>
                     </Box>
                 }
                 {
@@ -395,9 +400,9 @@ const MediaDetailsPage = ({
                                 marginLeft: 'auto'
                             }}>
                                 {itemAddEditAccess && <CustomMoreOptionsComponent
-                                            moreIconClassName={`${styles['more-icon']}`}
-                                            menuActions={menuItems}
-                                        />}
+                                    moreIconClassName={`${styles['more-icon']}`}
+                                    menuActions={menuItems}
+                                />}
                             </Grid>
                         </Grid>
                         <Box component="div" className={`${styles[`three-d-modeldesc`]}`}>

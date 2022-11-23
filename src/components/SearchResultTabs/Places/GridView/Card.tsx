@@ -5,7 +5,7 @@ import { Grid } from "@mui/material";
 import parse from "html-react-parser";
 import { GridViewCard_Places, InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
-import {baseUrl, detectMediaTypeFromMediaAssociateGraphQlRes, isImagePathInvalid, isRecordAttached} from "../../../../utils/services/helpers";
+import { baseUrl, detectMediaTypeFromMediaAssociateGraphQlRes, isImagePathInvalid, isRecordAttached } from "../../../../utils/services/helpers";
 import MoreOptionsComponent from "../ListView/MoreOption";
 import { useSelector } from "react-redux";
 import DetachedIcon from "../../../Icons/DetachedIcon";
@@ -26,6 +26,10 @@ export const Card = ({
   const { isAssociationsStepOpen, associatedPlaces } = useSelector(
     (state: RootState) => state.searchResults
   );
+  if (img) {
+    let imagePath = img.split("/");
+    img = `/${imagePath[1]}/thumbnail_${imagePath[2]}`;
+  }
 
   const dispatch = useDispatch()
 
@@ -46,8 +50,8 @@ export const Card = ({
               ) ? '150px' : ''
             }}
           >
-            
-            {img ?<Box
+
+            {img ? <Box
               className={`${gridStyles["card-image"]}`}
               component="img"
               alt={""}
@@ -68,7 +72,7 @@ export const Card = ({
                 fileType={detectMediaTypeFromMediaAssociateGraphQlRes(record.attributes?.media_associates?.data[0]?.attributes || record)}
               />
             }
-        {/* :<NoImagePresent message={"No media item is available"} />} */}
+            {/* :<NoImagePresent message={"No media item is available"} />} */}
           </Grid>
           <Grid
             item
@@ -83,7 +87,7 @@ export const Card = ({
             <div className={`${gridStyles["card-date"]}`}>{dateString}</div>
             <div className={`${gridStyles["card-keywords"]}`}>
               {period && period.length > 0 && period?.map((item, keyInx) => (
-               <> {2 > keyInx ? <div key={keyInx} className={`${gridStyles["keyword-pill"]}`}>
+                <> {2 > keyInx ? <div key={keyInx} className={`${gridStyles["keyword-pill"]}`}>
                   {item}
                 </div> : null}
                 </>
@@ -93,7 +97,7 @@ export const Card = ({
               className={`${gridStyles["more-icon-span"]}`}
               component={"span"}
             >
-             <Box
+              <Box
                 className={`${gridStyles["more-icon"]}`}
                 component={"span"}
                 onClick={(e) => {
