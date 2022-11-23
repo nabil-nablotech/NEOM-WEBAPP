@@ -157,7 +157,8 @@ export const Card = ({
                         placeNumber:
                           record.attributes.visit_associate.data.attributes
                             .place_unique_id.data.attributes.placeNumber,
-                        keywords: record.attributes.keywords ? record.attributes.keywords : []
+                        keywords: record.attributes.keywords ? record.attributes.keywords : [],
+                        previousMediaPresent: record.attributes?.media_associates.data && (record.attributes?.media_associates.data?.length > 0)
                       };
                       dispatch(
                         modifyAssociatedEvents({

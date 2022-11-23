@@ -73,7 +73,7 @@ const useMedia = () => {
         variables: {
           "place_unique_ids": associatedPlaces.map(x => x.id),
           "visit_unique_ids": associatedEvents.map(x => x.id),
-          "media_unique_id": mediaId
+          "media_unique_id": mediaId,
         }
       });
     }
@@ -195,6 +195,24 @@ const useMedia = () => {
   const createMedia = async (payload: any | undefined) => {
     const uniqueId = generateUniqueId();
     const keywords = payload.keywords;
+
+    /** If media items were NOT present for either places or events,
+     * then THIS MEDIA ITEM becomes "Featured" 
+     */
+    let featuredFlag = false
+
+    if (
+      (
+        (associatedPlaces.length > 0) && (associatedPlaces.every(item => !item.previousMediaPresent))
+      ) ||
+      (
+        (associatedEvents.length > 0) && (associatedEvents.every(item => !item.previousMediaPresent))
+      )
+    ) {
+
+      featuredFlag = true
+    }
+
     const data = {
       ...payload,
       visitNumber: parseFloat(payload.visitNumber),
@@ -202,6 +220,7 @@ const useMedia = () => {
       keywords: keywords,
       siteType: payload.siteType && payload.siteType,
       referenceURL: payload.referenceUrl && payload.referenceUrl,
+      featuredImage: featuredFlag,
       "latitude": payload.latitude && parseFloat(payload.latitude),
       "longitude": payload.longitude && parseFloat(payload.longitude),
       "categoryType": payload.categoryType && payload?.categoryType,

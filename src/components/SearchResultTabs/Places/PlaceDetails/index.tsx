@@ -929,12 +929,14 @@ const PlaceDetailsPage = () => {
                         associatedPlaces
                       )}
                       onClick={(e) => {
+
                         const data: InventoryAssociationType = {
                           id: Number(placeData.id),
                           placeNameEnglish: placeData.placeNameEnglish,
                           placeNameArabic: placeData.placeNameArabic,
                           placeNumber: placeData.placeNumber,
-                          keywords: placeData.keywords ? [...placeData.keywords] : []
+                          keywords: placeData.keywords ? [...placeData.keywords] : [],
+                          previousMediaPresent: placeData.media_associates && (placeData.media_associates?.length > 0)
                         };
 
                         dispatch(

@@ -530,6 +530,7 @@ const EventDetailsPage = () => {
                         associatedEvents
                       )}
                       onClick={(e) => {
+                        
                         const data: InventoryAssociationType_Event = {
                           id: eventDetails.id ? eventDetails.id.toString() : "",
                           visitNumber: eventDetails.visitNumber,
@@ -542,7 +543,8 @@ const EventDetailsPage = () => {
                           placeNumber:
                             eventDetails.visit_associate?.place_unique_id
                               .placeNumber ?? "",
-                          keywords: eventDetails.keywords ? eventDetails.keywords : []
+                          keywords: eventDetails.keywords ? eventDetails.keywords : [],
+                          previousMediaPresent: eventDetails.media_associates && (eventDetails.media_associates?.length > 0)
                         };
 
                         dispatch(

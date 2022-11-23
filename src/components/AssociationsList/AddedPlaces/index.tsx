@@ -36,7 +36,8 @@ const AddedPlaces = ({
                                     placeNameEnglish: place.placeNameEnglish,
                                     placeNameArabic: place.placeNameArabic,
                                     placeNumber: place.placeNumber,
-                                    keywords: place.keywords
+                                    keywords: place.keywords,
+                                    previousMediaPresent: place.previousMediaPresent
                                 }}
                                 handleRemoveItem={handleRemoveItem}
                             />

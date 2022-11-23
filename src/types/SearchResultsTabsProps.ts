@@ -67,6 +67,7 @@ export type InventoryAssociationType = {
   placeNameArabic: string
   placeNumber: string | null
   keywords: string[] | []
+  previousMediaPresent?: boolean
 }
 export type InventoryAssociationType_Event = {
   id: string
@@ -81,6 +82,7 @@ export type InventoryAssociationType_Event = {
     }
   }
   keywords: string[] | []
+  previousMediaPresent?: boolean
 }
 
 export type ToggledStateTypes = {
