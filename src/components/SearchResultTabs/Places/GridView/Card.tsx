@@ -31,6 +31,11 @@ export const Card = ({
     img = `/${imagePath[1]}/thumbnail_${imagePath[2]}`;
   }
 
+  const handleImageUrl = (url: string, size: string) => {
+    let imagePath = url.split("/");
+    return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
+  }
+
   const dispatch = useDispatch()
 
   return (
@@ -60,7 +65,7 @@ export const Card = ({
               <RenderFileDataForGrid
                 fileData={{
                   alt: "",
-                  src: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}` : undefined,
+                  src: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? handleImageUrl(record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url, "thumbnail_") : undefined,
                   className: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "VIDEO" ?
                     `${gridStyles['video-card-parent']}` : record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ?
                       `${gridStyles['card-image']}` : `${gridStyles['three-d-card-parent']}`,
