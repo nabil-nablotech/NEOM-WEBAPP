@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { addItemProgressPayload, addItemProgressStateType, DeletePayloadType, InventoryAssociationType, InventoryAssociationType_Event, SearchResultsState2, tabNameProps, ToggledStateTypes } from "../../types/SearchResultsTabsProps";
 import { DashboardResponse } from "../../types/dashboard";
-import { Place, Meta, MediaAssociateObj } from "../../types/Place";
+import { Place, Meta, MediaAssociateObj, DirectGalleryViewSteps } from "../../types/Place";
 import { Event } from "../../types/Event";
 import { Media } from "../../types/Media";
 import { DeleteRecordReduxPayload, DeleteUserReduxPayload } from "../../types/User";
@@ -192,7 +192,7 @@ export const searchResultsSlice = createSlice({
       state.activeLibraryItemIndex = action.payload;
     },
     toggleGalleryView: (state, action: PayloadAction<{
-      flag: boolean, galleryViewIdList?: string[] | [], galleryViewItemList: MediaAssociateObj[] | []
+      flag: DirectGalleryViewSteps | false, galleryViewIdList?: string[] | [], galleryViewItemList: MediaAssociateObj[] | []
     }>) => {
       state.openGalleryView.flag = action.payload.flag;
 

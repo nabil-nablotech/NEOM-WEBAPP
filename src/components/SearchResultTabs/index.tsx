@@ -243,7 +243,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
   if(uniqueId) {
     if(tabName === PLACES_TAB_NAME) {
 
-      if (openGalleryView.flag) {
+      if (openGalleryView.flag === "from-place-details-gallery") {
         return <div className={`${styles["search-results-wrapper"]}`}>
           <GalleryView />
         </div>

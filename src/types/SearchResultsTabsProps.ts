@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from "react";
 import { DashboardResponse } from "./dashboard";
-import { Place, Meta, PlaceApi, MediaAssociateObj, MediaAssociates2_MediaObject } from "./Place";
+import { Place, Meta, PlaceApi, MediaAssociateObj, MediaAssociates2_MediaObject, DirectGalleryViewSteps } from "./Place";
 import { Event, EventApi } from "./Event";
 import { Media } from "./Media";
 import { RemarksPayload, Remark, ChildRemark, RemarkDetails, RemarksEditPayload } from "./Remarks";
@@ -120,7 +120,7 @@ export type SearchResultsState2 = {
   activeLibraryItem: Media | null;
   activeLibraryItemIndex: number;
   openGalleryView: {
-    flag: boolean,
+    flag: DirectGalleryViewSteps | false,
     galleryViewIdList: string[] | []
     galleryViewItemList: MediaAssociateObj[] | []
   }

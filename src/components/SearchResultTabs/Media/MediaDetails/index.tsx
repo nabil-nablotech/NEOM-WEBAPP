@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setActiveMediaItemIndex, setActiveMediaItem} from '../../../../store/reducers/searchResultsReducer';
+import { setActiveMediaItemIndex, setActiveMediaItem, toggleGalleryView} from '../../../../store/reducers/searchResultsReducer';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useHistory } from '../../../../hooks/useHistory';
 import MediaDetailsPage from './Details';
@@ -78,6 +78,14 @@ export const MediaDetailsModal = () => {
                                 dispatch(setActiveMediaItemIndex(0))
                                 // navigate(`/${tabName}`, { replace: true })
                                 goBack()
+
+                                if(openGalleryView.flag) {
+                                    /**reset item list */
+                                    dispatch(toggleGalleryView({
+                                        flag: openGalleryView.flag,
+                                        galleryViewItemList: []
+                                    }))
+                                }
                             }}
                         >
                             Back

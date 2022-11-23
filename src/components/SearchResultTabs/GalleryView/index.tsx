@@ -129,7 +129,7 @@ const GalleryView = () => {
                                 })
 
                                 dispatch(toggleGalleryView({
-                                    flag: true,
+                                    flag: "from-place-details-gallery",
                                     galleryViewItemList: newList
                                 }))
 
