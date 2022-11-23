@@ -324,7 +324,7 @@ allowFullScreen
                           error={formik.values.errorUrl?.length > 0}
                           errorText={formik.values.errorUrl}
                         />
-                        {!formik.values.valid && formik.values.url?.length > 10 && <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
+                        {!formik.values.valid && formik.values.url?.length && <Box component={"div"} className={`${styles["embed-submit-button"]}`}>
                           <Button
                             colors={["#fff", "var(--table-black-text)"]}
                             variant="outlined"
