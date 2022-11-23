@@ -135,7 +135,6 @@ const PlacesTab = () => {
           ],
           [
             "id",
-            "asset_config_id",
             "visit_associates",
             "remark_headers",
             "media_associates",

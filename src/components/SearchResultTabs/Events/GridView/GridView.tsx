@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import parse from "html-react-parser";
 import { useDispatch } from "react-redux";
 import { Grid } from "@mui/material";
+import Checkbox from '@mui/material/Checkbox';
 import { format } from "date-fns";
 import { Event } from '../../../../types/Event'
 import { MediaAssociateObj } from '../../../../types/Place'
@@ -11,8 +12,7 @@ import gridStyles from './index.module.css'
 import commonStyles from '../../index.module.css'
 import MoreIcon from '../../../../assets/images/searchResults/MoreMenu.svg'
 import InfiniteScroll from 'react-infinite-scroll-component';
-
-import { setSelectedCardIndex } from "../../../../store/reducers/searchResultsReducer";
+import { setSelectedCardIndex,setSelectedKey } from "../../../../store/reducers/searchResultsReducer";
 import { Card } from './Card';
 import dayjs from "dayjs";
 import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
@@ -28,11 +28,11 @@ export type EventsProps = {
 }
 
 const GridView = (props: EventsProps) => {
-
+    let newSelectedKey:any = [];
     const dispatch = useDispatch();
     const { navigateTo } = useHistory();
 
-    const { data, handleNext, hasMoreData, loading, setEdit } = props;
+    const { data, handleNext, hasMoreData, loading, setEdit, isSelect } = props;
 
     if (!data) {
         return <h1>Loading...</h1>
@@ -48,6 +48,17 @@ const GridView = (props: EventsProps) => {
         // navigate(`/Events/${item.attributes.uniqueId}`, { replace: true })
         navigateTo(`/Events/${item.attributes.uniqueId}`)
     }
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>, keyId:string) => {
+        if(event.target.checked){
+          newSelectedKey.push(keyId);
+          dispatch(setSelectedKey(newSelectedKey))
+        }else{
+          let filteredData = newSelectedKey.filter((item:any)=>{return item !== keyId});
+          newSelectedKey=filteredData;
+          dispatch(setSelectedKey(newSelectedKey))
+        }
+    
+    };
 
     return (
         <Box component="div" className={`${gridStyles['']}`}
@@ -68,10 +79,18 @@ const GridView = (props: EventsProps) => {
                 className={`${commonStyles['infinite-scroll-cls']}`}
             >
 
-                <Grid container id={'events-scrollable-div'} spacing={1} className={`${gridStyles['left-grid-container']}`}>
+                <Grid container id={'events-scrollable-div'} className={`${gridStyles['left-grid-container']}`}>
                     {
-                        data?.map((item: Event, index: number) =>
-                            <Grid item className={`${gridStyles['card-grid-item']}`} key={index} sm={12} onClick={() => handleClick(item, index)}>
+                        data?.map((item: Event, index: number) =>(
+                            <Grid
+                                container
+                                direction="column"
+                                justifyContent="flex-start"
+                                alignItems="center"
+                            >
+                                { isSelect ? <><Checkbox color="default" onChange={(e)=>handleChange(e, item.id)}/></> : <></> }
+
+                                <Grid item className={`${gridStyles['card-grid-item']}`} key={index} sm={12} onClick={() => handleClick(item, index)}>
                                 
                                 <Card
                                     key={index}
@@ -95,6 +114,9 @@ const GridView = (props: EventsProps) => {
                                     setEdit={setEdit}
                                 />
                             </Grid>
+                            </Grid>
+                        )
+                            
                         )
                     }
                 </Grid>

@@ -194,7 +194,7 @@ const EventDetailsPage = () => {
   // get from api
   const [isCopyDone, setCopyDone] = useState<boolean>(false);
 
-  const {} = useAnchor();
+  const { } = useAnchor();
 
   const {
     loading: loadingRemarks,
@@ -252,9 +252,9 @@ const EventDetailsPage = () => {
     mediaGallery && mediaGridActiveItems + mediaCount <= mediaGallery?.length
       ? mediaGallery?.slice(0, mediaGridActiveItems + mediaCount)
       : mediaGallery?.slice(
-          0,
-          mediaGridActiveItems + (mediaGallery?.length - mediaGridActiveItems)
-        );
+        0,
+        mediaGridActiveItems + (mediaGallery?.length - mediaGridActiveItems)
+      );
 
   const { latitude, longitude } = eventDetails;
   if (visit_associate?.place_unique_id) {
@@ -294,12 +294,12 @@ const EventDetailsPage = () => {
       key: "attributes",
       dataIndex: "media_unique_id",
       sorter: (a, b) => {
-        
-        if(
+
+        if (
           a?.media_unique_id?.fileName && b?.media_unique_id?.fileName
         ) {
           return a?.media_unique_id?.fileName?.localeCompare(b?.media_unique_id?.fileName)
-        } else if(
+        } else if (
           a?.media_unique_id?.object?.name && b?.media_unique_id?.object?.name
         ) {
           return a?.media_unique_id?.object?.name?.localeCompare(b?.media_unique_id?.object?.name)
@@ -456,6 +456,11 @@ const EventDetailsPage = () => {
       console.log('hex')
       setMediaGridActiveItems((state) => state + 8);
     }
+  }
+  
+  const handleImageUrl = (url: string) => {
+    let imagePath = url.split("/");
+    return `${baseUrl}/${imagePath[1]}/small_${imagePath[2]}`;
   }
 
   return (
@@ -741,7 +746,7 @@ const EventDetailsPage = () => {
                               {item}
                             </Grid>
                           ))
-                          
+
                         }
                         {
                           assessmentType &&
@@ -901,7 +906,7 @@ const EventDetailsPage = () => {
               <Grid item sm={5}>
                 {latitude && longitude ? (
                   <>
-                  <Box component="div" style={{
+                    <Box component="div" style={{
                       height: '94%'
                     }}>
                       <MapView
@@ -986,7 +991,7 @@ const EventDetailsPage = () => {
                         if (typeof rowIndex === "number") {
                           dispatch(setActiveLibraryItem(record));
                           dispatch(setActiveLibraryItemIndex(rowIndex));
-                          
+
                           navigateTo(
                             `/Library/${record.media_unique_id.uniqueId}`
                           );
@@ -1037,7 +1042,7 @@ const EventDetailsPage = () => {
                               alt: "",
                               // src: itemObj.attributes.media_associates.data[0].attributes.media_unique_id.data.attributes.object.data.attributes.url,
                               src: itemObj.media_unique_id?.object?.url
-                                ? `${baseUrl}${itemObj.media_unique_id.object.url}`
+                                ? handleImageUrl(itemObj.media_unique_id.object.url)
                                 : undefined,
                               className: styles["media-image"],
                               objectURL: itemObj.media_unique_id.objectURL
@@ -1051,7 +1056,7 @@ const EventDetailsPage = () => {
                               staticVideoLink:
                                 itemObj.media_unique_id?.media_type[0]?.typeCode?.toLowerCase() ===
                                   "video" &&
-                                itemObj.media_unique_id.videoType === "video"
+                                  itemObj.media_unique_id.videoType === "video"
                                   ? `${baseUrl}${itemObj.media_unique_id.object?.url}`
                                   : undefined,
                             }}
@@ -1110,13 +1115,13 @@ const EventDetailsPage = () => {
                   sx={{
                     justifyContent: "center",
                     "& .MuiGrid-root.MuiGrid-item:has(.Mui-disabled.MuiButtonBase-root.MuiButton-root)":
-                      {
-                        cursor: "not-allowed",
-                      },
+                    {
+                      cursor: "not-allowed",
+                    },
                     "& .MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary:hover":
-                      {
-                        backgroundColor: "unset",
-                      },
+                    {
+                      backgroundColor: "unset",
+                    },
                   }}
                 >
                   <Grid
@@ -1124,9 +1129,9 @@ const EventDetailsPage = () => {
                     sx={{
                       width: "fit-content",
                       "& .MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary:hover":
-                        {
-                          backgroundColor: "unset",
-                        },
+                      {
+                        backgroundColor: "unset",
+                      },
                     }}
                   >
                     <Button
@@ -1147,8 +1152,8 @@ const EventDetailsPage = () => {
                     >
                       See{" "}
                       {mediaGalleryLocal &&
-                      mediaGallery &&
-                      mediaGalleryLocal.length === mediaGallery.length
+                        mediaGallery &&
+                        mediaGalleryLocal.length === mediaGallery.length
                         ? "Less"
                         : "More"}
                     </Button>

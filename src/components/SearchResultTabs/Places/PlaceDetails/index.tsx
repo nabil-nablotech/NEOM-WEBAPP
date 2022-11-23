@@ -190,6 +190,11 @@ const PlaceDetailsPage = () => {
     }
   }, []);
 
+  const handleImageUrl = (url: string, size: string) => {
+    let imagePath = url.split("/");
+    return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
+  }
+
   places.forEach((placeItem: Place, inx: number) => {
     if (placeItem.attributes.uniqueId === uniqueId) {
       selectedPlaceObj = placeItem;
@@ -207,16 +212,16 @@ const PlaceDetailsPage = () => {
       key: "attributes",
       dataIndex: "media_unique_id",
       sorter: (a, b) => {
-        if(
+        if (
           a?.media_unique_id?.fileName && b?.media_unique_id?.fileName
         ) {
           return a?.media_unique_id?.fileName?.localeCompare(b?.media_unique_id?.fileName)
-        } else if(
+        } else if (
           a?.media_unique_id?.object?.name && b?.media_unique_id?.object?.name
         ) {
           return a?.media_unique_id?.object?.name?.localeCompare(b?.media_unique_id?.object?.name)
         } else return true
-        
+
       },
       defaultSortOrder: "ascend",
       className: "name-column",
@@ -301,22 +306,22 @@ const PlaceDetailsPage = () => {
         return (
           <>
             {value?.media_associates[0] &&
-            value?.media_associates[0]?.media_unique_id?.media_type[0]
-              .categoryCode === "MEDIA" ? (
+              value?.media_associates[0]?.media_unique_id?.media_type[0]
+                .categoryCode === "MEDIA" ? (
               <RenderFileData
                 fileData={{
                   alt: "",
                   src: value?.media_associates[0]?.media_unique_id?.object?.url
-                    ? `${baseUrl}${value?.media_associates[0]?.media_unique_id?.object?.url}`
+                    ? handleImageUrl(value.media_associates[0].media_unique_id.object.url, "medium_")
                     : undefined,
                   className:
                     value?.media_associates[0]?.media_unique_id?.media_type[0]
                       .typeCode === "VIDEO"
                       ? `${gridStyles["video-card-parent"]}`
                       : value?.media_associates[0]?.media_unique_id
-                          ?.media_type[0].typeCode === "IMAGE"
-                      ? `${gridStyles["card-image"]}`
-                      : `${gridStyles["three-d-card-parent"]}`,
+                        ?.media_type[0].typeCode === "IMAGE"
+                        ? `${gridStyles["card-image"]}`
+                        : `${gridStyles["three-d-card-parent"]}`,
                   objectURL:
                     value?.media_associates[0]?.media_unique_id?.objectURL ||
                     "",
@@ -324,13 +329,13 @@ const PlaceDetailsPage = () => {
                     value?.media_associates[0]?.media_unique_id?.videoType,
                   iframeVideoLink:
                     value?.media_associates[0]?.media_unique_id?.videoType ===
-                    "url"
+                      "url"
                       ? value?.media_associates[0]?.media_unique_id
-                          ?.referenceURL
+                        ?.referenceURL
                       : undefined,
                   staticVideoLink:
                     value?.media_associates[0]?.media_unique_id?.videoType ===
-                    "video"
+                      "video"
                       ? `${baseUrl}${value?.media_associates[0]?.media_unique_id?.object?.url}`
                       : undefined,
                 }}
@@ -352,9 +357,9 @@ const PlaceDetailsPage = () => {
       className: "cell-new",
       render: (value: any, index: any) => (
         <>
-        {checkIsNew(value?.visitDate) ? <div className={`${gridStyles["card-new-flag"]}`}>
-          NEW!
-        </div> : null}</>
+          {checkIsNew(value?.visitDate) ? <div className={`${gridStyles["card-new-flag"]}`}>
+            NEW!
+          </div> : null}</>
       ),
     },
     {
@@ -377,12 +382,12 @@ const PlaceDetailsPage = () => {
       render: (value, index) =>
         value?.visitDate
           ? format(
-              new Date(
-                // item.attributes.updatedAt
-                value?.visitDate
-              ),
-              "MM-dd-yyyy"
-            )
+            new Date(
+              // item.attributes.updatedAt
+              value?.visitDate
+            ),
+            "MM-dd-yyyy"
+          )
           : "-",
     },
     {
@@ -399,7 +404,7 @@ const PlaceDetailsPage = () => {
       fixed: "right",
       className: "more-menu-ant-cell events-table-more-menu",
       render: (value: any, record: Event) => (
-        <>{itemAddEditAccess ? <MoreOption type="Events" setEdit={setEdit} record={record}  /> : null}</>
+        <>{itemAddEditAccess ? <MoreOption type="Events" setEdit={setEdit} record={record} /> : null}</>
       ),
     },
   ];
@@ -489,7 +494,7 @@ const PlaceDetailsPage = () => {
         })
       )
     });
-    
+
   };
 
   const {
@@ -562,7 +567,7 @@ const PlaceDetailsPage = () => {
           {
             // If you dont 1 image also, show placeholder section
             !mediaItems ||
-            (media_associates && media_associates.length < 1) ? (
+              (media_associates && media_associates.length < 1) ? (
               <Box component="div" className={`${styles["no-images-section"]}`}>
                 <NoImagePresent message={NO_MEDIA} />
               </Box>
@@ -622,20 +627,22 @@ const PlaceDetailsPage = () => {
                       <RenderFileData
                         fileData={{
                           alt: "",
-                          src: `${baseUrl}${mediaItems[0]?.media_unique_id?.object?.url}`,
+                          src: mediaItems[0]?.media_unique_id?.object?.url
+                            ? handleImageUrl(mediaItems[0].media_unique_id.object.url, "small_")
+                            : undefined,
                           className: `${styles["single-image"]} ${styles["left-image"]}`,
                           videoType:
-                          mediaItems[0].media_unique_id.videoType,
+                            mediaItems[0].media_unique_id.videoType,
                           iframeVideoLink:
-                          mediaItems[0].media_unique_id.videoType ===
-                            "url"
+                            mediaItems[0].media_unique_id.videoType ===
+                              "url"
                               ? mediaItems[0].media_unique_id.referenceURL
                               : undefined,
                           staticVideoLink:
                             detectMediaTypeFromMediaAssociate(
                               mediaItems[0]
                             ) === "video" &&
-                            mediaItems[0].media_unique_id.videoType ===
+                              mediaItems[0].media_unique_id.videoType ===
                               "video"
                               ? `${baseUrl}${mediaItems[0].media_unique_id.object?.url}`
                               : undefined,
@@ -662,20 +669,22 @@ const PlaceDetailsPage = () => {
                       <RenderFileData
                         fileData={{
                           alt: "",
-                          src: `${baseUrl}${mediaItems[1]?.media_unique_id?.object?.url}`,
+                          src: mediaItems[1]?.media_unique_id?.object?.url
+                            ? handleImageUrl(mediaItems[1].media_unique_id.object.url, "small_")
+                            : undefined,
                           className: `${styles["single-image"]} ${styles["left-image"]}`,
                           videoType:
-                          mediaItems[1].media_unique_id.videoType,
+                            mediaItems[1].media_unique_id.videoType,
                           iframeVideoLink:
-                          mediaItems[1].media_unique_id.videoType ===
-                            "url"
+                            mediaItems[1].media_unique_id.videoType ===
+                              "url"
                               ? mediaItems[1].media_unique_id.referenceURL
                               : undefined,
                           staticVideoLink:
                             detectMediaTypeFromMediaAssociate(
                               mediaItems[1]
                             ) === "video" &&
-                            mediaItems[1].media_unique_id.videoType ===
+                              mediaItems[1].media_unique_id.videoType ===
                               "video"
                               ? `${baseUrl}${mediaItems[1].media_unique_id.object?.url}`
                               : undefined,
@@ -890,32 +899,32 @@ const PlaceDetailsPage = () => {
               >
                 {/* to-do:  Make these true && dependent on incoming API variable.
                                 If it exists, render the jsx */}
-                  <Grid container>
-                {placeNameEnglish && (
+                <Grid container>
+                  {placeNameEnglish && (
                     <Grid item>
                       <Box component="div" className={`${styles["item-name"]}`}>
                         {placeNameEnglish}
                       </Box>
                     </Grid>
-                )}
-                {!placeNameEnglish && !placeNameArabic && (
+                  )}
+                  {!placeNameEnglish && !placeNameArabic && (
                     <Grid item>
                       <Box component="div" className={`${styles["item-name"]}`}>
                         {placeNumber}
                       </Box>
                     </Grid>
-                )}
-                {placeNameArabic && (
-                      <Grid item>
-                        <Box
-                          component="div"
-                          className={`${styles["item-name-arabic"]}`}
-                        >
-                          {placeNameArabic}
-                        </Box>
-                      </Grid>
-                    )}
-                  </Grid>
+                  )}
+                  {placeNameArabic && (
+                    <Grid item>
+                      <Box
+                        component="div"
+                        className={`${styles["item-name-arabic"]}`}
+                      >
+                        {placeNameArabic}
+                      </Box>
+                    </Grid>
+                  )}
+                </Grid>
                 {(placeNameEnglish || placeNameArabic) &&
                   <Box component="div" className={`${styles["item-number"]}`}
                     style={{
@@ -975,7 +984,7 @@ const PlaceDetailsPage = () => {
                       type="Places"
                       setEdit={setEdit}
                       record={placeData}
-                    />: null}</>
+                    /> : null}</>
                   )}
                 </Box>
               </Grid>
@@ -998,9 +1007,8 @@ const PlaceDetailsPage = () => {
                       <>
                         <Box
                           component="div"
-                          className={`${styles["site-desc-condensed"]} ${
-                            isSeeMoreHidden ? styles["see-more-active"] : ""
-                          }`}
+                          className={`${styles["site-desc-condensed"]} ${isSeeMoreHidden ? styles["see-more-active"] : ""
+                            }`}
                         >
                           {siteDescription.substring(
                             0,
@@ -1243,7 +1251,7 @@ const PlaceDetailsPage = () => {
                       URL
                     </Grid>
                     <Grid item sm={7} md={8}>
-                     <Box
+                      <Box
                         component="div"
                         style={{
                           cursor: "pointer",

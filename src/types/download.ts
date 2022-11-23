@@ -9,6 +9,7 @@ export interface Download {
     fileCount: number,
     libraryCount: number,
     visitCount: number,
+    createdAt: Date,
     token: string
 }
   
