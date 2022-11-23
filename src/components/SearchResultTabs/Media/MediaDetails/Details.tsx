@@ -10,12 +10,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setActiveMediaItemIndex, setActiveMediaItem, toggleDeleteConfirmationWindowOpen, setDeleteItemType, setDeletePayload } from '../../../../store/reducers/searchResultsReducer';
+import { setActiveMediaItemIndex, setActiveMediaItem, toggleDeleteConfirmationWindowOpen, setDeleteItemType, setDeletePayload, setMedia, setFetchLimit } from '../../../../store/reducers/searchResultsReducer';
 import RenderFileData from '../../../RenderFileData';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
 import { useEffect } from 'react';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
-import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, copyToClipboard } from '../../../../utils/services/helpers';
+import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, copyToClipboard, MAX_FETCH_LIMIT, limit } from '../../../../utils/services/helpers';
 
 import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
 import NoImagePresent from '../../../NoDataScreens/NoImagePresent';
@@ -24,6 +24,9 @@ import MapView from '../../GoogleMap/MapView';
 import { useHistory } from '../../../../hooks/useHistory';
 import TextualContent from './TextualContent';
 import useMedia from '../../../../hooks/useMedia';
+import { useNavigate } from 'react-router-dom';
+import { Media, MediaApi } from '../../../../types/Media';
+import { MediaAssociateObj } from '../../../../types/Place';
 
 const MediaDetailsPage = ({
     currentItemIndex,
@@ -34,12 +37,13 @@ const MediaDetailsPage = ({
         e: React.MouseEvent<HTMLElement>
         action: string
     }
-    const { media, activeMediaItemIndex, places, totalCounts } = useSelector(
+    const { media, activeMediaItemIndex, places, totalCounts, openGalleryView, fetchLimit } = useSelector(
         (state: RootState) => state.searchResults
     );
     const [isFilter, setIsFilter] = useState(null)
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const { navigateTo } = useHistory()
     const { fetchMediaItems } = useMedia();
 
@@ -53,7 +57,7 @@ const MediaDetailsPage = ({
         // setMediaType("video")
         // setMediaType("3d")
 
-        if (mediaDetails && (Object.keys(mediaDetails).length !== 0) ) {
+        if (mediaDetails && (Object.keys(mediaDetails).length !== 0)) {
             if (
                 detectMediaRecordApiType(mediaDetails) === MEDIA_TYPE_VIDEO
             ) {
@@ -68,6 +72,17 @@ const MediaDetailsPage = ({
 
     }, [mediaDetails])
 
+    useEffect(() => {
+
+        if(openGalleryView.flag) {
+            setListToBeReferred(openGalleryView.galleryViewItemList)
+        } else {
+            setListToBeReferred(media)
+        }
+    }, [ openGalleryView])
+
+    const [listToBeReferred, setListToBeReferred] = useState<any>(media)
+
     if (!mediaDetails) {
         return <>Cant display Media Details</>
     }
@@ -77,27 +92,29 @@ const MediaDetailsPage = ({
         categoryType, Author, bearing, latitude, longitude
     } = mediaDetails
 
+
     const handleNextOrPrevious = (e: handleAction['e'], action: handleAction['action']) => {
         e.preventDefault()
         let newIndex = activeMediaItemIndex
 
+        const TotalCountToRefer = openGalleryView.flag ? openGalleryView.galleryViewItemList.length :
+            totalCounts ? totalCounts.media : 0
+
         if (action === 'next') {
-            if(totalCounts) {
-                if (newIndex + 1 < totalCounts.media) {
-                    newIndex = newIndex + 1
-                    dispatch(setActiveMediaItem(media[newIndex]))
-                    dispatch(setActiveMediaItemIndex(newIndex))
-                    // navigate(`/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
-                    navigateTo(`/Media/${media[newIndex].attributes.uniqueId}`)
-                }
-                
-                /** when you are on 9th item, fetch further set of 10 items */
-                if (
-                    (newIndex + 1 === media.length) &&
-                    (media.length <= totalCounts.media)
-                ) {
-                    fetchMediaItems(newIndex + 1)
-                }
+            if (newIndex + 1 < TotalCountToRefer) {
+                newIndex = newIndex + 1
+                dispatch(setActiveMediaItem(listToBeReferred[newIndex]))
+                dispatch(setActiveMediaItemIndex(newIndex))
+                navigate(`/Media/${listToBeReferred[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                // navigateTo(`/Media/${listToBeReferred[newIndex].attributes.uniqueId}`)
+            }
+
+            /** when you are on 9th item, fetch further set of 10 items */
+            if (
+                (newIndex + 1 === listToBeReferred.length) &&
+                (listToBeReferred.length <= TotalCountToRefer)
+            ) {
+                fetchMediaItems(newIndex + 1)
             }
 
         }
@@ -106,14 +123,19 @@ const MediaDetailsPage = ({
             if (newIndex - 1 >= 0) {
                 newIndex = newIndex - 1
 
-                dispatch(setActiveMediaItem(media[newIndex]))
+                dispatch(setActiveMediaItem(listToBeReferred[newIndex]))
                 dispatch(setActiveMediaItemIndex(newIndex))
-                // navigate(`/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
-                navigateTo(`/Media/${media[newIndex].attributes.uniqueId}`)
+                navigate(`/Media/${listToBeReferred[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                // navigateTo(`/Media/${media[newIndex].attributes.uniqueId}`)
 
             }
 
         }
+    }
+
+    const handleImageUrl = (url: string, size: string) => {
+        let imagePath = url.split("/");
+        return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
     }
 
     const menuItems = [
@@ -131,8 +153,8 @@ const MediaDetailsPage = ({
             action: () => {
                 dispatch(toggleDeleteConfirmationWindowOpen({
                     flag: true,
-                    isAssociatedToPlacesOrEvents: media ? isRecordHavingAssociations(
-                        media.filter((item: any) => item?.id === mediaDetails?.media_unique_id?.id?.toString())[0]
+                    isAssociatedToPlacesOrEvents: listToBeReferred ? isRecordHavingAssociations(
+                        listToBeReferred.filter((item: any) => item?.id === mediaDetails?.media_unique_id?.id?.toString())[0]
                     ) : false,
                 }))
                 dispatch(setDeleteItemType(MEDIA_TAB_NAME))
@@ -164,7 +186,7 @@ const MediaDetailsPage = ({
                         <>
                             {
                                 mediaDetails?.object?.url ?
-                                    <Box className={`${styles['image']}`} component="img" alt={""} src={`${baseUrl}${mediaDetails?.object?.url}`}
+                                    <Box className={`${styles['image']}`} component="img" alt={""} src={handleImageUrl(mediaDetails.object.url, "large_")}
                                         style={{
                                             objectFit: (mediaDetails && (mediaDetails?.object.width / mediaDetails?.object.height > 1.5)) ? 'cover' : 'contain'
                                         }}
@@ -193,7 +215,7 @@ const MediaDetailsPage = ({
                                 ,
                                 iframeVideoLink: mediaDetails.referenceURL ? mediaDetails.referenceURL : "",  // means its an iframe
                                 staticVideoLink: typeof mediaDetails.object?.url === 'string' ? //means its an uploaded video
-                                    `${baseUrl}${mediaDetails.object.url}` : "",
+                                    handleImageUrl(mediaDetails.object.url, "medium_") : "",
                                 className: `${styles["single-image"]}`,
                                 thumbNail:
                                     // TO-DO : api based thumnail
@@ -228,7 +250,7 @@ const MediaDetailsPage = ({
                             justifyContent: 'space-between'
                         }}>
                             <Grid item sm={12} >
-                                <Grid container style={{ gap: '10px', alignItems: 'center' }}>
+                                <Grid container className={`${styles['title-grid']}`} >
                                     <Grid item>
                                         <Box component="div" className={`${styles['overview-title']}`}>
                                             {title}
@@ -275,13 +297,13 @@ const MediaDetailsPage = ({
                                     <MapView filterId={setIsFilter} key={4} marker={[{
                                         id: 0,
                                         name: `${mediaDetails?.media_associate?.data?.attributes?.place_unique_ids.data !== null ?
-                                                mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
+                                            mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
                                             : ''}`,
-                                            position: {
-                                                lat: latitude || 24.11,
-                                                lng: longitude || 34.98
-                                            }
-                                        }]}
+                                        position: {
+                                            lat: latitude || 24.11,
+                                            lng: longitude || 34.98
+                                        }
+                                    }]}
                                         zoom={10}
                                     />
                                     <Grid container className={`${styles['map-loctn-details']}`} >
@@ -323,63 +345,63 @@ const MediaDetailsPage = ({
                             <Grid item sm={1} className={`${styles['more-icon-grid-item']}`} style={{
                                 marginLeft: 'auto'
                             }}>
-                                
+
                                 {itemAddEditAccess && <CustomMoreOptionsComponent
-                                            moreIconClassName={`${styles['more-icon']}`}
-                                            menuActions={menuItems}
-                                        />}
+                                    moreIconClassName={`${styles['more-icon']}`}
+                                    menuActions={menuItems}
+                                />}
                             </Grid>
                         </Grid>
                         <Box component="div" className={`${styles[`video-desc`]}`}>
                             {description}
                         </Box>
-                            <Grid container style={{
-                                justifyContent: 'space-between'
-                            }}>
-                                <Grid item sm={6} lg={7}>
-                                    <TextualContent
-                                        mediaDetails={mediaDetails}
-                                    />
-                                </Grid>
-                                <Grid item sm={6} lg={5} className={`${styles[`map-wrapper`]}`}>
-                                    {(latitude && longitude) ? <>
-                                        <MapView filterId={setIsFilter} key={4} marker={[{
-                                            id: 0,
-                                            name: `${mediaDetails?.media_associate?.data?.attributes?.place_unique_ids.data !== null ?
-                                                    mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
-                                                    : ''}`,
-                                                position: {
-                                                    lat: latitude || 24.11,
-                                                    lng: longitude || 34.98
-                                                }
-                                            }]}
-                                            zoom={10}
-                                        />
-                                        <Grid container className={`${styles['map-loctn-details']}`} >
-                                            <Grid item lg={5} md={5} sm={5}>
-                                                <Grid container className={`${styles['map-loctn-line']}`}>
-                                                    <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
-                                                    <Grid item>{`${toFixedFromString(latitude, 6)}`}</Grid>
-                                                </Grid>
-                                            </Grid>
-                                            <Grid item lg={5} md={5} sm={6}>
-                                                <Grid container className={`${styles['map-loctn-line']}`}>
-                                                    <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
-                                                    <Grid item>{`${toFixedFromString(longitude, 6)}`}</Grid>
-                                                </Grid>
-                                            </Grid>
-                                        </Grid> </>
-                                        :
-                                        <NoMapPresent
-                                            className="light-version"
-                                            message={NO_LOCATION}
-                                            style={{
-                                                backgroundColor: 'var(--blank-doc-bg)',
-                                                color: 'var(--no-map-bg)'
-                                            }}
-                                        />}
-                                </Grid>
+                        <Grid container style={{
+                            justifyContent: 'space-between'
+                        }}>
+                            <Grid item sm={6} lg={7}>
+                                <TextualContent
+                                    mediaDetails={mediaDetails}
+                                />
                             </Grid>
+                            <Grid item sm={6} lg={5} className={`${styles[`map-wrapper`]}`}>
+                                {(latitude && longitude) ? <>
+                                    <MapView filterId={setIsFilter} key={4} marker={[{
+                                        id: 0,
+                                        name: `${mediaDetails?.media_associate?.data?.attributes?.place_unique_ids.data !== null ?
+                                            mediaDetails?.media_associate?.data?.attributes?.place_unique_ids?.data[0]?.attributes.placeNameEnglish
+                                            : ''}`,
+                                        position: {
+                                            lat: latitude || 24.11,
+                                            lng: longitude || 34.98
+                                        }
+                                    }]}
+                                        zoom={10}
+                                    />
+                                    <Grid container className={`${styles['map-loctn-details']}`} >
+                                        <Grid item lg={5} md={5} sm={5}>
+                                            <Grid container className={`${styles['map-loctn-line']}`}>
+                                                <Grid item style={{ fontWeight: 'bold' }} >Latitude</Grid>
+                                                <Grid item>{`${toFixedFromString(latitude, 6)}`}</Grid>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid item lg={5} md={5} sm={6}>
+                                            <Grid container className={`${styles['map-loctn-line']}`}>
+                                                <Grid item style={{ fontWeight: 'bold' }} >Longitude</Grid>
+                                                <Grid item>{`${toFixedFromString(longitude, 6)}`}</Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid> </>
+                                    :
+                                    <NoMapPresent
+                                        className="light-version"
+                                        message={NO_LOCATION}
+                                        style={{
+                                            backgroundColor: 'var(--blank-doc-bg)',
+                                            color: 'var(--no-map-bg)'
+                                        }}
+                                    />}
+                            </Grid>
+                        </Grid>
                     </Box>
                 }
                 {
@@ -395,9 +417,9 @@ const MediaDetailsPage = ({
                                 marginLeft: 'auto'
                             }}>
                                 {itemAddEditAccess && <CustomMoreOptionsComponent
-                                            moreIconClassName={`${styles['more-icon']}`}
-                                            menuActions={menuItems}
-                                        />}
+                                    moreIconClassName={`${styles['more-icon']}`}
+                                    menuActions={menuItems}
+                                />}
                             </Grid>
                         </Grid>
                         <Box component="div" className={`${styles[`three-d-modeldesc`]}`}>

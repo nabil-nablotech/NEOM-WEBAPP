@@ -5,7 +5,7 @@ import { Grid } from "@mui/material";
 import parse from "html-react-parser";
 import { GridViewCard_Places, InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
-import {baseUrl, detectMediaTypeFromMediaAssociateGraphQlRes, isImagePathInvalid, isRecordAttached} from "../../../../utils/services/helpers";
+import { baseUrl, detectMediaTypeFromMediaAssociateGraphQlRes, isImagePathInvalid, isRecordAttached } from "../../../../utils/services/helpers";
 import MoreOptionsComponent from "../ListView/MoreOption";
 import { useSelector } from "react-redux";
 import DetachedIcon from "../../../Icons/DetachedIcon";
@@ -26,6 +26,15 @@ export const Card = ({
   const { isAssociationsStepOpen, associatedPlaces } = useSelector(
     (state: RootState) => state.searchResults
   );
+  if (img) {
+    let imagePath = img.split("/");
+    img = `/${imagePath[1]}/thumbnail_${imagePath[2]}`;
+  }
+
+  const handleImageUrl = (url: string, size: string) => {
+    let imagePath = url.split("/");
+    return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
+  }
 
   const dispatch = useDispatch()
 
@@ -46,8 +55,8 @@ export const Card = ({
               ) ? '150px' : ''
             }}
           >
-            
-            {img ?<Box
+
+            {img ? <Box
               className={`${gridStyles["card-image"]}`}
               component="img"
               alt={""}
@@ -56,7 +65,7 @@ export const Card = ({
               <RenderFileDataForGrid
                 fileData={{
                   alt: "",
-                  src: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}` : undefined,
+                  src: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? handleImageUrl(record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url, "thumbnail_") : undefined,
                   className: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "VIDEO" ?
                     `${gridStyles['video-card-parent']}` : record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ?
                       `${gridStyles['card-image']}` : `${gridStyles['three-d-card-parent']}`,
@@ -68,7 +77,7 @@ export const Card = ({
                 fileType={detectMediaTypeFromMediaAssociateGraphQlRes(record.attributes?.media_associates?.data[0]?.attributes || record)}
               />
             }
-        {/* :<NoImagePresent message={"No media item is available"} />} */}
+            {/* :<NoImagePresent message={"No media item is available"} />} */}
           </Grid>
           <Grid
             item
@@ -83,7 +92,7 @@ export const Card = ({
             <div className={`${gridStyles["card-date"]}`}>{dateString}</div>
             <div className={`${gridStyles["card-keywords"]}`}>
               {period && period.length > 0 && period?.map((item, keyInx) => (
-               <> {2 > keyInx ? <div key={keyInx} className={`${gridStyles["keyword-pill"]}`}>
+                <> {2 > keyInx ? <div key={keyInx} className={`${gridStyles["keyword-pill"]}`}>
                   {item}
                 </div> : null}
                 </>
@@ -93,7 +102,7 @@ export const Card = ({
               className={`${gridStyles["more-icon-span"]}`}
               component={"span"}
             >
-             <Box
+              <Box
                 className={`${gridStyles["more-icon"]}`}
                 component={"span"}
                 onClick={(e) => {
@@ -116,7 +125,8 @@ export const Card = ({
                         placeNameEnglish: record.attributes.placeNameEnglish,
                         placeNameArabic: record.attributes.placeNameArabic,
                         placeNumber: record.attributes.placeNumber,
-                        keywords: record.attributes.keywords ? [...record.attributes.keywords] : []
+                        keywords: record.attributes.keywords ? [...record.attributes.keywords] : [],
+                        previousMediaPresent: record.attributes?.media_associates.data && (record.attributes?.media_associates.data?.length > 0)
                       }
                       dispatch(modifyAssociatedPlaces({
                         newItem: data,

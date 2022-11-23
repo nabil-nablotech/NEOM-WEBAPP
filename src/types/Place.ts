@@ -10,6 +10,7 @@ export type PlaceApi = {
   placeNameEnglish: string;
   placeNameArabic: string;
   siteDescription: string;
+  previousNumber: string;
   siteType: string[];
   updatedAt: string;
   keywords: string[] | null;
@@ -241,3 +242,5 @@ export type deleteRecordPayload = {
   remark_headers_id: Array<number> | []
   visit: Array<number> | []
 }
+
+export type DirectGalleryViewSteps = "from-place-details" | "from-place-details-gallery" | "from-event-details"

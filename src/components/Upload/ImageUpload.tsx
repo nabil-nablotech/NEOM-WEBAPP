@@ -50,23 +50,28 @@ const ImageUpload = ({
     const [imageUrl, setImageUrl] = useState(existingImageUrl);
 
     const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
-        if (info.file.status !== 'uploading') {
-            setLoading(true);
-        }
-        if (info.file.status === 'removed') {
-            setImageUrl('');
-        }
-        if (info.file.status === 'done') {
-            setLoading(false);
-          message.success(`${info.file.name} file uploaded successfully`);
-          // Get this url from response in real world.
-          getBase64(info.file.originFileObj as RcFile, url => {
-             setLoading(false);
-             setImageUrl(url);
-         });
-        } else if (info.file.status === 'error') {
-          message.error(`${info.file.name} file upload failed.`);
-        }
+
+            if (info.file.status !== 'uploading') {
+                setLoading(true);
+            }
+            if (info.file.status === 'removed') {
+                setImageUrl('');
+            }
+            if (info.file.status === 'done') {
+
+                setLoading(false);
+                message.success(`${info.file.name} file uploaded successfully`);
+                // Get this url from response in real world.
+                getBase64(info.file.originFileObj as RcFile, url => {
+                    setLoading(false);
+                    setImageUrl(url);
+                });
+
+            } else if (info.file.status === 'error') {
+                message.error(`${info.file.name} file upload failed.${info.file.error?.message ? `:${info.file.error?.message}` : ''}`);
+            }
+        
+
       }
     const handleRemove: UploadProps['onRemove'] = (file: UploadFile<any>) => {
         if (handleDelete) {

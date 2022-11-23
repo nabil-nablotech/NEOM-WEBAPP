@@ -38,6 +38,7 @@ const AddedEvents = ({
                                     placeNameArabic: event.placeNameArabic,
                                     placeNumber: event.placeNumber,
                                     keywords: event.keywords,
+                                    previousMediaPresent: event.previousMediaPresent,
                                 }}
                                 handleRemoveItem={handleRemoveItem}
                             />

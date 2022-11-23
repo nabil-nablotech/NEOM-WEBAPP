@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from "react";
 import { DashboardResponse } from "./dashboard";
-import { Place, Meta, PlaceApi, MediaAssociateObj, MediaAssociates2_MediaObject } from "./Place";
+import { Place, Meta, PlaceApi, MediaAssociateObj, MediaAssociates2_MediaObject, DirectGalleryViewSteps } from "./Place";
 import { Event, EventApi } from "./Event";
 import { Media } from "./Media";
 import { RemarksPayload, Remark, ChildRemark, RemarkDetails, RemarksEditPayload } from "./Remarks";
@@ -67,6 +67,7 @@ export type InventoryAssociationType = {
   placeNameArabic: string
   placeNumber: string | null
   keywords: string[] | []
+  previousMediaPresent?: boolean
 }
 export type InventoryAssociationType_Event = {
   id: string
@@ -77,10 +78,13 @@ export type InventoryAssociationType_Event = {
   fieldNarrative?: string
   visit_associate?: {
     place_unique_id: {
+      placeNameEnglish: string
       placeNameArabic: string
+      placeNumber: string
     }
   }
   keywords: string[] | []
+  previousMediaPresent?: boolean
 }
 
 export type ToggledStateTypes = {
@@ -115,8 +119,13 @@ export type SearchResultsState2 = {
   activeMediaItemIndex: number;
   activeLibraryItem: Media | null;
   activeLibraryItemIndex: number;
-  isOpenGalleryView: boolean
+  openGalleryView: {
+    flag: DirectGalleryViewSteps | false,
+    galleryViewIdList: string[] | []
+    galleryViewItemList: MediaAssociateObj[] | []
+  }
   addNewItemWindowType: tabNameProps | null
+  successInventoryName: tabNameProps | null
   isAssociationsStepOpen: boolean
   associatedPlaces: InventoryAssociationType[] | []
   associatedEvents: InventoryAssociationType_Event[] | []
@@ -139,7 +148,8 @@ export type SearchResultsState2 = {
   isLogoutConfirmationWindowOpen: boolean
   isAssociationStepInvalid: boolean,
   isSelect:boolean,
-  selectedKey:[]
+  selectedKey:[],
+  fetchLimit: number
 };
 
 export type DeletePayloadType = {

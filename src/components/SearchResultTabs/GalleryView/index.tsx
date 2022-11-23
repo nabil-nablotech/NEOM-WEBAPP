@@ -2,17 +2,18 @@ import { Box, Grid, Button } from "@mui/material";
 import styles from "./index.module.css";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveMediaItem, setActiveMediaItemIndex, setDeleteItemType, setDeletePayload, toggleDeleteConfirmationWindowOpen, toggleGalleryView } from "../../../store/reducers/searchResultsReducer";
+import { setActiveMediaItem, setActiveMediaItemIndex, setDeleteItemType, setDeletePayload, setFetchLimit, setMedia, toggleDeleteConfirmationWindowOpen, toggleGalleryView } from "../../../store/reducers/searchResultsReducer";
 import { RootState } from "../../../store";
 import RenderFileData from "../../RenderFileData";
 import YellowStar from '../../../assets/images/searchResults/YellowStar.svg'
 import { CustomMoreOptionsComponent } from "../../CustomMoreOptionsComponent";
 import { useNavigate } from 'react-router-dom';
-import { baseUrl, detectMediaTypeFromMediaAssociate, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, MEDIA_TAB_NAME } from "../../../utils/services/helpers";
+import { baseUrl, detectMediaTypeFromMediaAssociate, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, MAX_FETCH_LIMIT, MEDIA_TAB_NAME } from "../../../utils/services/helpers";
 import usePlaceDetails from "../../../hooks/usePlaceDetails";
 import Loader from "../../Common/Loader";
 import useEventDetails from "../../../hooks/useEventDetails";
 import { useHistory } from "../../../hooks/useHistory";
+import { MediaAssociateObj } from "../../../types/Place";
 
 const GalleryView = () => {
     const dispatch = useDispatch()
@@ -83,7 +84,10 @@ const GalleryView = () => {
                         textTransform: 'none'
                     }}
                     onClick={e => {
-                        dispatch(toggleGalleryView(false))
+                        dispatch(toggleGalleryView({
+                            flag: false,
+                            galleryViewItemList: []
+                        }))
                     }}
                 >
                     Back
@@ -111,7 +115,24 @@ const GalleryView = () => {
                                     }
                                 })
                                 dispatch(setActiveMediaItem(respMediaItemObj))
-                                dispatch(setActiveMediaItemIndex(respMediaItemIndex))
+                                dispatch(setActiveMediaItemIndex(inx))
+
+                                let newList: any = []
+
+                                placeData.mediaItems.forEach((item: MediaAssociateObj, index: number) => {
+                                    newList.push({
+                                        id: item.id.toString(),
+                                        attributes: {
+                                            ...item.media_unique_id
+                                        }
+                                    })
+                                })
+
+                                dispatch(toggleGalleryView({
+                                    flag: "from-place-details-gallery",
+                                    galleryViewItemList: newList
+                                }))
+
                                 // navigate(`/Media/${itemObj.media_unique_id.uniqueId}`, { replace: true })
                                 navigateTo(`/Media/${itemObj.media_unique_id.uniqueId}`)
                             }}

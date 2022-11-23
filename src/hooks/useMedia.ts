@@ -20,7 +20,7 @@ const useMedia = () => {
 
   const {searchText, media: mediaItem, associatedPlaces, associatedEvents,
     addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized,
-    showEditSuccess, deleteItemSuccess, deleteItemType, showAddSuccess } = useSelector((state: RootState) => state.searchResults);
+    showEditSuccess, deleteItemSuccess, deleteItemType, showAddSuccess, fetchLimit } = useSelector((state: RootState) => state.searchResults);
   const {search} = useLocation();
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
@@ -73,7 +73,7 @@ const useMedia = () => {
         variables: {
           "place_unique_ids": associatedPlaces.map(x => x.id),
           "visit_unique_ids": associatedEvents.map(x => x.id),
-          "media_unique_id": mediaId
+          "media_unique_id": mediaId,
         }
       });
     }
@@ -165,7 +165,7 @@ const useMedia = () => {
       keywords: copiedValue && copiedValue?.keyWords && copiedValue?.keyWords,
       featuredImage: copiedValue && copiedValue?.featuredImage,
       text: searchWordArray,
-      limit: limit,
+      limit: fetchLimit,
       skip: skip,
     };
     if (clear) {
@@ -195,13 +195,32 @@ const useMedia = () => {
   const createMedia = async (payload: any | undefined) => {
     const uniqueId = generateUniqueId();
     const keywords = payload.keywords;
+
+    /** If media items were NOT present for either places or events,
+     * then THIS MEDIA ITEM becomes "Featured" 
+     */
+    let featuredFlag = false
+
+    if (
+      (
+        (associatedPlaces.length > 0) && (associatedPlaces.every(item => !item.previousMediaPresent))
+      ) ||
+      (
+        (associatedEvents.length > 0) && (associatedEvents.every(item => !item.previousMediaPresent))
+      )
+    ) {
+
+      featuredFlag = true
+    }
+
     const data = {
       ...payload,
       visitNumber: parseFloat(payload.visitNumber),
       asset_config_id: [mediaType(payload.media_type)], // documentType should be string and media type
       keywords: keywords,
       siteType: payload.siteType && payload.siteType,
-      referenceURL: payload.referenceUrl && payload.referenceUrl,
+      referenceURL: payload.referenceURL && payload.referenceURL,
+      featuredImage: featuredFlag,
       "latitude": payload.latitude && parseFloat(payload.latitude),
       "longitude": payload.longitude && parseFloat(payload.longitude),
       "categoryType": payload.categoryType && payload?.categoryType,

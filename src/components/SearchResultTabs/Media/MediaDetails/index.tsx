@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setActiveMediaItemIndex, setActiveMediaItem} from '../../../../store/reducers/searchResultsReducer';
+import { setActiveMediaItemIndex, setActiveMediaItem, toggleGalleryView} from '../../../../store/reducers/searchResultsReducer';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useHistory } from '../../../../hooks/useHistory';
 import MediaDetailsPage from './Details';
@@ -19,7 +19,7 @@ export const MediaDetailsModal = () => {
 
     const [isModalOpen, setModalOpen] = useState<boolean>(true)
 
-    const { media, activeMediaItem, activeMediaItemIndex, activeEventItem, totalCounts } = useSelector(
+    const { media, activeMediaItem, activeMediaItemIndex, activeEventItem, totalCounts, openGalleryView, placeMetaData } = useSelector(
         (state: RootState) => state.searchResults
     )
     let { tabName } = useParams<{ tabName?: tabNameProps }>();
@@ -31,9 +31,10 @@ export const MediaDetailsModal = () => {
     const navigate = useNavigate();
 
     // const TotalMediaCount= (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates: 0
-    const TotalMediaCount = (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates
-        : media ? media.length : 0
-
+    const TotalMediaCount = openGalleryView.flag ? openGalleryView.galleryViewItemList.length :
+        totalCounts ? totalCounts?.media :
+            (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates
+                : media ? media.length : 0
 
 
     const handleClose = () => {
@@ -75,8 +76,16 @@ export const MediaDetailsModal = () => {
                                 /** resetters */
                                 dispatch(setActiveMediaItem(null))
                                 dispatch(setActiveMediaItemIndex(0))
-                                navigate(`/${tabName}`, { replace: true })
-                                // goBack()
+                                // navigate(`/${tabName}`, { replace: true })
+                                goBack()
+
+                                if(openGalleryView.flag) {
+                                    /**reset item list */
+                                    dispatch(toggleGalleryView({
+                                        flag: openGalleryView.flag,
+                                        galleryViewItemList: []
+                                    }))
+                                }
                             }}
                         >
                             Back
@@ -90,7 +99,7 @@ export const MediaDetailsModal = () => {
                             right: "50%",
                         }}
                     >
-                        {`${activeMediaItemIndex + 1}/${totalCounts ? totalCounts?.media : TotalMediaCount}`}
+                        {`${activeMediaItemIndex + 1}/${TotalMediaCount}`}
                     </Grid>
                 </Grid>
             }

@@ -23,7 +23,7 @@ import { useMediaQuery } from 'react-responsive'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 
-import { setActiveMediaItem, setActiveMediaItemIndex, setSelectedCardIndex, setSelectedKey} from '../../../../store/reducers/searchResultsReducer';
+import { setActiveMediaItem, setActiveMediaItemIndex, setSelectedCardIndex, setSelectedKey } from '../../../../store/reducers/searchResultsReducer';
 
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
 import { useHistory } from "../../../../hooks/useHistory";
@@ -155,10 +155,15 @@ const StyledTableWrapper = styled(StyledAntTable)`
 `;
 
 const ListView = (props: MediaProps) => {
-  const { data, hasMoreData, fetchData, loading, setEdit,isSelect } = props;
-  const {selectedKey} = useSelector(
+  const { data, hasMoreData, fetchData, loading, setEdit, isSelect } = props;
+  const { selectedKey } = useSelector(
     (state: RootState) => state.searchResults
   );
+
+  const handleImageUrl = (url: string, size: string) => {
+    let imagePath = url.split("/");
+    return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
+  }
 
   const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
   const { navigateTo } = useHistory()
@@ -177,21 +182,21 @@ const ListView = (props: MediaProps) => {
             alt={""}
             src={`${baseUrl}${value?.object?.data?.attributes?.url}`}
           ></Box> : <NoImagePresent message={"No image to preview"} />} */}
-           <>
-           <RenderFileData
+          <>
+            <RenderFileData
               fileData={{
-                  alt: "",
-                  src: value.object?.data?.attributes?.url ? `${baseUrl}${value?.object?.data?.attributes?.url}` : undefined,
-                  className: detectMediaTypeFromMediaList({attributes: value, id: index.toString()}) === "video" ?
-                      `${styles['video-card-parent']}` : detectMediaTypeFromMediaList({attributes: value, id: index.toString()}) === "image" ?
-                          `${styles['card-image']}` : `${styles['three-d-card-parent']}`,
-                  objectURL: value.objectURL || '',
-                  videoType: value.videoType,
-                  iframeVideoLink: (value.videoType === "url") ? value.referenceURL : undefined,
-                  staticVideoLink:  (detectMediaTypeFromMediaList({attributes: value, id: index.toString()}) === "video" && value.videoType === "video") ? `${baseUrl}${value.object?.data?.attributes?.url}` : undefined
+                alt: "",
+                src: value.object?.data?.attributes?.url ? handleImageUrl(value.object.data.attributes.url, "thumbnail_") : undefined,
+                className: detectMediaTypeFromMediaList({ attributes: value, id: index.toString() }) === "video" ?
+                  `${styles['video-card-parent']}` : detectMediaTypeFromMediaList({ attributes: value, id: index.toString() }) === "image" ?
+                    `${styles['card-image']}` : `${styles['three-d-card-parent']}`,
+                objectURL: value.objectURL || '',
+                videoType: value.videoType,
+                iframeVideoLink: (value.videoType === "url") ? value.referenceURL : undefined,
+                staticVideoLink: (detectMediaTypeFromMediaList({ attributes: value, id: index.toString() }) === "video" && value.videoType === "video") ? `${baseUrl}${value.object?.data?.attributes?.url}` : undefined
               }}
-              fileType={detectMediaTypeFromMediaList({attributes: value, id: index.toString()})}
-          />
+              fileType={detectMediaTypeFromMediaList({ attributes: value, id: index.toString() })}
+            />
           </>
         </>
       ),
@@ -225,7 +230,7 @@ const ListView = (props: MediaProps) => {
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-bearing",
-      width: isTablet? 80 : 60,
+      width: isTablet ? 80 : 60,
       render: (value: any, index: any) => value?.bearing,
     },
     {
@@ -233,12 +238,12 @@ const ListView = (props: MediaProps) => {
       key: "attributes",
       dataIndex: "attributes",
       className: "cell-bearing",
-      width: isTablet? 80 : 60,
-      sorter: (a: Media, b: Media ) => {
+      width: isTablet ? 80 : 60,
+      sorter: (a: Media, b: Media) => {
         return a?.attributes?.featuredImage.toString().localeCompare(b?.attributes?.featuredImage.toString())
-    },
-      render: (value: any, index: any) =>{
-        return  value.featuredImage ? 'Yes' : 'No'
+      },
+      render: (value: any, index: any) => {
+        return value.featuredImage ? 'Yes' : 'No'
       },
     },
     {
@@ -271,7 +276,7 @@ const ListView = (props: MediaProps) => {
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     dispatch(setSelectedKey(newSelectedRowKeys))
   };
-  
+
   const rowSelection = {
     selectedKey,
     onChange: onSelectChange,
@@ -297,7 +302,7 @@ const ListView = (props: MediaProps) => {
           size="small"
           columns={tableHeaderJson}
           dataSource={data}
-          rowSelection={isSelect?rowSelection:undefined}
+          rowSelection={isSelect ? rowSelection : undefined}
           pagination={false}
           loading={loading ? loading : false}
           bordered

@@ -36,6 +36,11 @@ export const Card = ({
     (state: RootState) => state.searchResults
   );
 
+  if (img) {
+    let imagePath = img.split("/");
+    img = `/${imagePath[1]}/thumbnail_${imagePath[2]}`;
+  }
+
   const dispatch = useDispatch();
 
   return (
@@ -49,7 +54,7 @@ export const Card = ({
             md={11}
             sm={11}
             className={`${gridStyles["card-image-wrapper"]}`}
-            onClick={() => {}}
+            onClick={() => { }}
           >
             {img ? (
               <Box
@@ -60,49 +65,49 @@ export const Card = ({
               />
             ) : (
               <>
-              {record.attributes?.media_associates?.data[0]?.attributes
-                ?.media_unique_id?.data?.attributes?.media_type?.data[0]
-                ?.attributes?.categoryCode === "MEDIA" ? 
-                <RenderFileDataForGrid
-                fileData={{
-                  alt: "",
-                  src: record.attributes?.media_associates?.data[0]?.attributes
-                    ?.media_unique_id?.data?.attributes?.object?.data
-                    ?.attributes?.url
-                    ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}`
-                    : undefined,
-                  className:
-                    record.attributes?.media_associates?.data[0]?.attributes
-                      ?.media_unique_id?.data?.attributes?.media_type?.data[0]
-                      ?.attributes?.typeCode === "VIDEO"
-                      ? `${gridStyles["video-card-parent"]}`
-                      : record.attributes?.media_associates?.data[0]?.attributes
-                          ?.media_unique_id?.data?.attributes?.media_type
-                          ?.data[0]?.attributes?.typeCode === "IMAGE"
-                      ? `${gridStyles["card-image"]}`
-                      : `${gridStyles["three-d-card-parent"]}`,
-                  objectURL:
-                    record.attributes?.media_associates?.data[0]?.attributes
-                      ?.media_unique_id?.data?.attributes?.objectURL || "",
-                  videoType:
-                    record.attributes?.media_associates?.data[0]?.attributes
-                      ?.media_unique_id?.data?.attributes?.videoType,
-                  iframeVideoLink:
-                    record.attributes?.media_associates?.data[0]?.attributes
-                      ?.media_unique_id?.data?.attributes.videoType === "url"
-                      ? record.attributes?.media_associates?.data[0]?.attributes
-                          ?.media_unique_id?.data?.attributes.referenceURL
-                      : undefined,
-                  staticVideoLink:
-                    record.attributes?.media_associates?.data[0]?.attributes
-                      ?.media_unique_id?.data?.attributes.videoType === "video"
-                      ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}`
-                      : undefined,
-                }}
-                fileType={detectMediaTypeFromMediaAssociateGraphQlRes(record.attributes?.media_associates?.data[0]?.attributes || record)}
-              /> : 
-                <NoImagePresent message={"No media item is available"} />
-              }
+                {record.attributes?.media_associates?.data[0]?.attributes
+                  ?.media_unique_id?.data?.attributes?.media_type?.data[0]
+                  ?.attributes?.categoryCode === "MEDIA" ?
+                  <RenderFileDataForGrid
+                    fileData={{
+                      alt: "",
+                      src: record.attributes?.media_associates?.data[0]?.attributes
+                        ?.media_unique_id?.data?.attributes?.object?.data
+                        ?.attributes?.url
+                        ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}`
+                        : undefined,
+                      className:
+                        record.attributes?.media_associates?.data[0]?.attributes
+                          ?.media_unique_id?.data?.attributes?.media_type?.data[0]
+                          ?.attributes?.typeCode === "VIDEO"
+                          ? `${gridStyles["video-card-parent"]}`
+                          : record.attributes?.media_associates?.data[0]?.attributes
+                            ?.media_unique_id?.data?.attributes?.media_type
+                            ?.data[0]?.attributes?.typeCode === "IMAGE"
+                            ? `${gridStyles["card-image"]}`
+                            : `${gridStyles["three-d-card-parent"]}`,
+                      objectURL:
+                        record.attributes?.media_associates?.data[0]?.attributes
+                          ?.media_unique_id?.data?.attributes?.objectURL || "",
+                      videoType:
+                        record.attributes?.media_associates?.data[0]?.attributes
+                          ?.media_unique_id?.data?.attributes?.videoType,
+                      iframeVideoLink:
+                        record.attributes?.media_associates?.data[0]?.attributes
+                          ?.media_unique_id?.data?.attributes.videoType === "url"
+                          ? record.attributes?.media_associates?.data[0]?.attributes
+                            ?.media_unique_id?.data?.attributes.referenceURL
+                          : undefined,
+                      staticVideoLink:
+                        record.attributes?.media_associates?.data[0]?.attributes
+                          ?.media_unique_id?.data?.attributes.videoType === "video"
+                          ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}`
+                          : undefined,
+                    }}
+                    fileType={detectMediaTypeFromMediaAssociateGraphQlRes(record.attributes?.media_associates?.data[0]?.attributes || record)}
+                  /> :
+                  <NoImagePresent message={"No media item is available"} />
+                }
               </>
             )}
           </Grid>
@@ -157,7 +162,8 @@ export const Card = ({
                         placeNumber:
                           record.attributes.visit_associate.data.attributes
                             .place_unique_id.data.attributes.placeNumber,
-                        keywords: record.attributes.keywords ? record.attributes.keywords : []
+                        keywords: record.attributes.keywords ? record.attributes.keywords : [],
+                        previousMediaPresent: record.attributes?.media_associates.data && (record.attributes?.media_associates.data?.length > 0)
                       };
                       dispatch(
                         modifyAssociatedEvents({
