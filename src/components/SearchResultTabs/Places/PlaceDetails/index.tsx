@@ -312,7 +312,7 @@ const PlaceDetailsPage = () => {
                 fileData={{
                   alt: "",
                   src: value?.media_associates[0]?.media_unique_id?.object?.url
-                    ? handleImageUrl(value.media_associates[0].media_unique_id.object.url, "medium_")
+                    ? handleImageUrl(value.media_associates[0].media_unique_id.object.url, "thumbnail_")
                     : undefined,
                   className:
                     value?.media_associates[0]?.media_unique_id?.media_type[0]
@@ -426,7 +426,7 @@ const PlaceDetailsPage = () => {
 
   const dispatch = useDispatch();
 
-  
+
   useEffect(() => {
     if (placeData && placeData?.siteDescription?.length < 100) {
       toggleSeeMoreHidden(true);
@@ -460,26 +460,26 @@ const PlaceDetailsPage = () => {
     e.preventDefault();
     // if (placeData?.mediaItems.length >= itemIndex) {
 
-      let newList: any = []
+    let newList: any = []
 
-      placeData.mediaItems.forEach((item: MediaAssociateObj, index: number) => {
-          newList.push({
-              id: item.id.toString(),
-              attributes: {
-                  ...item.media_unique_id
-              }
-          })
+    placeData.mediaItems.forEach((item: MediaAssociateObj, index: number) => {
+      newList.push({
+        id: item.id.toString(),
+        attributes: {
+          ...item.media_unique_id
+        }
       })
+    })
 
-      dispatch(toggleGalleryView({
-          flag: "from-place-details",
-          galleryViewItemList: newList
-      }))
+    dispatch(toggleGalleryView({
+      flag: "from-place-details",
+      galleryViewItemList: newList
+    }))
 
-      navigateTo(`/Media/${uniqueId}`)
+    navigateTo(`/Media/${uniqueId}`)
 
-      dispatch(setActiveMediaItem(placeData.mediaItems[itemIndex - 1]));
-      dispatch(setActiveMediaItemIndex(itemIndex - 1));
+    dispatch(setActiveMediaItem(placeData.mediaItems[itemIndex - 1]));
+    dispatch(setActiveMediaItemIndex(itemIndex - 1));
     // }
   };
 
@@ -629,7 +629,7 @@ const PlaceDetailsPage = () => {
                         fileData={{
                           alt: "",
                           src: mediaItems[0]?.media_unique_id?.object?.url
-                            ? handleImageUrl(mediaItems[0].media_unique_id.object.url, "small_")
+                            ? handleImageUrl(mediaItems[0].media_unique_id.object.url, "large_")
                             : undefined,
                           className: `${styles["single-image"]} ${styles["left-image"]}`,
                           videoType:
