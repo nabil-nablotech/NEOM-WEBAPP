@@ -1,35 +1,15 @@
 
-import { Box, Grid, Button } from '@mui/material';
-import YellowStar from '../../../../assets/images/searchResults/YellowStar.svg'
+import { Box, Grid } from '@mui/material';
 import styles from './index.module.css';
 // import { useState } from 'react';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { CustomModal } from '../../../CustomModal';
-import { InventoryAssociationType, InventoryAssociationType_Event, MediaDetailsPageProps, tabNameProps } from '../../../../types/SearchResultsTabsProps';
+import { InventoryAssociationType, InventoryAssociationType_Event } from '../../../../types/SearchResultsTabsProps';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setActiveMediaItemIndex, setActiveMediaItem, toggleDeleteConfirmationWindowOpen, setDeleteItemType, setDeletePayload } from '../../../../store/reducers/searchResultsReducer';
-import { useLocation, useParams } from 'react-router-dom';
-import RenderFileData from '../../../RenderFileData';
-import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
-import ModelViewer from '../../../Model';
-import { useEffect } from 'react';
-import useMediaDetails from '../../../../hooks/useMediaDetails';
-import Loader from '../../../Common/Loader';
-import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, copyToClipboard, convertKbtoMb } from '../../../../utils/services/helpers';
+import { copyToClipboard, convertKbtoMb } from '../../../../utils/services/helpers';
 import dayjs from 'dayjs';
-import { Place } from '../../../../types/Place';
-import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
-import NoImagePresent from '../../../NoDataScreens/NoImagePresent';
-import parse from 'html-react-parser';
 import { MediaApi } from '../../../../types/Media';
-import MapView from '../../GoogleMap/MapView';
 import RenderValueWithDefault from '../../../NoDataScreens/DefaultText';
-import { useHistory } from '../../../../hooks/useHistory';
 import PositionedSnackbar from '../../../Snackbar';
 
 

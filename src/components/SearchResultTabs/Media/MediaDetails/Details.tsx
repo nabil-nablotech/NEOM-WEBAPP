@@ -228,7 +228,7 @@ const MediaDetailsPage = ({
                             justifyContent: 'space-between'
                         }}>
                             <Grid item sm={12} >
-                                <Grid container style={{ gap: '10px', alignItems: 'center' }}>
+                                <Grid container className={`${styles['title-grid']}`} >
                                     <Grid item>
                                         <Box component="div" className={`${styles['overview-title']}`}>
                                             {title}
