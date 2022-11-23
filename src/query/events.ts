@@ -1,106 +1,5 @@
 import { gql } from "@apollo/client";
 
-export const events = gql`
-  query SearchEvents(
-    $search_one: String
-    $search_two: String
-    $search_three: String
-    $limit: Int
-    $skip: Int
-  ) {
-    visits(
-      pagination: { limit: $limit, start: $skip }
-      filters: {
-        or: [
-          # {	siteType: {containsi: $search_one} }
-          { siteDescription: { contains: $search_one } }
-          # {	period: {containsi: $search_one}}
-          { recordingTeam: { contains: $search_one } }
-          { fieldNarrative: { contains: $search_one } }
-          # { keywords: { contains: $search_one } }
-          # { siteType: {containsi:$search_two} }
-          { siteDescription: { contains: $search_two } }
-          # {	period: {containsi: $search_two}}
-          { recordingTeam: { contains: $search_two } }
-          { fieldNarrative: { contains: $search_two } }
-          # { keywords: { contains: $search_one } }
-          # {	siteType: {containsi: $search_three }}
-          { siteDescription: { contains: $search_three } }
-          # {	period: {containsi: $search_three}}
-          { recordingTeam: { contains: $search_three } }
-          { fieldNarrative: { contains: $search_three } }
-          # { keywords: { contains: $search_three } }
-        ]
-      }
-    ) {
-      meta {
-        pagination {
-          total
-          pageCount
-          pageSize
-          page
-        }
-      }
-      data {
-        id
-        attributes {
-          recordingTeam
-          siteDescription
-          updatedAt
-          createdAt
-          keywords
-          visitNumber
-          latitude
-          longitude
-          uniqueId
-          period
-          researchValue
-          tourismValue
-          stateOfConservation
-          recommendation
-          risk
-          media_associates {
-            data {
-              attributes {
-                media_unique_id {
-                  data {
-                    attributes {
-                      object {
-                        data {
-                          attributes {
-                            url
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          visit_associate {
-            data {
-              id
-              attributes {
-                place_unique_id {
-                  data {
-                    attributes {
-                      placeNumber
-                      placeNameEnglish
-                      placeNameArabic
-                      siteType
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
 export const eventByEventNumber = gql`
   query SearchEvents(
     $visitNumber: String
@@ -263,6 +162,106 @@ query RefineSearchEvent(
                     placeNameEnglish
                     placeNameArabic
                     siteType
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
+export const refineEventsMap = gql`
+query RefineSearchEventMap(
+  $search_one: String
+  $search_two: String
+  $search_three: String
+  $text: JSON
+  $researchValue: JSON
+  $tourismValue: JSON
+  $stateOfConservation: JSON
+  $recommendation: JSON
+  $risk: JSON
+  $period: JSON
+  $siteType: JSON
+  $assessmentType: JSON
+  $otherAssessment: String
+  $latitude: Float
+  $longitude: Float
+  $artifacts: JSON
+  $keywords: JSON
+  $limit: Int
+  $skip: Int
+  $startDate: Date
+  $endDate: Date
+)
+{
+  visits(
+    pagination: { limit: $limit, start: $skip }
+    filters: {
+      or: [
+        { siteDescription: { contains: $search_one } }
+        { recordingTeam: { contains: $search_one } }
+        { fieldNarrative: { contains: $search_one } }
+        { siteDescription: { contains: $search_two } }
+        { recordingTeam: { contains: $search_two } }
+        { fieldNarrative: { contains: $search_two } }
+        { siteDescription: { contains: $search_three } }
+        { recordingTeam: { contains: $search_three } }
+        { fieldNarrative: { contains: $search_three } }
+        { keywords: { contains: $text } }
+        { siteType: { containsi: $text } }
+      ]
+      and: [
+        { stateOfConservation: { containsi: $stateOfConservation } }
+        { period: { containsi: $period } }
+        { researchValue: { containsi: $researchValue } }
+        { tourismValue: { containsi: $tourismValue } }
+        { recommendation: { containsi: $recommendation } }
+        { risk: { containsi: $risk } }
+        { artifacts: { containsi: $artifacts } }
+        { siteType: { containsi: $siteType } }
+        { assessmentType: { containsi: $assessmentType } }
+        { otherAssessment: { containsi: $otherAssessment } }
+        { latitude: { gte: $latitude } }
+        { longitude: { lte: $longitude } }
+        { visitDate: { gte: $startDate }}
+        { visitDate: { lte: $endDate }}
+        { keywords: { containsi: $keywords } }
+        {
+          deleted: {
+            eq: false
+          }
+        }
+      ]
+    }
+    sort: "createdAt:desc"
+  ) {
+    meta {
+      pagination {
+        total
+        pageCount
+        pageSize
+        page
+      }
+    }
+    data {
+      id
+      attributes {
+        latitude
+        longitude
+        visit_associate {
+          data {
+            id
+            attributes {
+              place_unique_id {
+                data {
+                id
+                  attributes {
+                    placeNameEnglish
                   }
                 }
               }

@@ -68,7 +68,7 @@ export default function ExportModal({open, setOpen, count, path, filter}:any) {
                 </Grid>
             </Grid>
             <Typography id="modal-modal-title-places" component="p">
-                {count} {path}
+                {isSelect?selectedKey.length:count} {path}
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 Select what you want to export.

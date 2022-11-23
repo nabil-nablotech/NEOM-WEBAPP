@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { placeDetails } from "../api/details";
-import { addPlace, refinePlaces, updatePlace } from "../query/places";
+import { addPlace, refinePlaces, updatePlace, refinePlacesMap } from "../query/places";
 import { RootState } from "../store";
 import { initialSelectedValue, setSelectedValue } from "../store/reducers/refinedSearchReducer";
 import {
@@ -67,6 +67,7 @@ const usePlace = () => {
    * fetch places with two words
    */
   const { loading:refineLoading, error:refineErrorData, data:refinePlaceData, refetch:refineSearchPlaces} = useQuery(refinePlaces, graphQlHeaders());
+  const { loading:refineLoadingMap, error:refineErrorDataMap, data:refinePlaceDataMap, refetch:refineSearchPlacesMap} = useQuery(refinePlacesMap, graphQlHeaders());
 
   const [createPlaceMutation, {data, loading, error}] = useMutation(addPlace, {context: graphQlHeaders().context, onCompleted: (data) => {
     dispatch(setLatestItem({tab:'Places', data:data.createPlace.data}));
@@ -74,7 +75,7 @@ const usePlace = () => {
   const [updatePlaceMutation, {data: updateData, loading: updateLoading, error: updateErr}] = useMutation(updatePlace, graphQlHeaders());
 
   useEffect(() => {
-    if (refinePlaceData?.places) {
+    if (refinePlaceData?.places && refinePlaceDataMap?.places) {
       const places = JSON.parse(JSON.stringify(refinePlaceData?.places.data))
 
       places.map((x: Place) => {
@@ -100,14 +101,14 @@ const usePlace = () => {
       );
 
       let dummyArray: any = [];
-      for (let i = 0; i < refinePlaceData?.places?.data?.length; i++) {
-        if (refinePlaceData?.places?.data[i]?.attributes?.latitude && refinePlaceData?.places?.data[i]?.attributes?.longitude) {
+      for (let i = 0; i < refinePlaceDataMap?.places?.data?.length; i++) {
+        if (refinePlaceDataMap?.places?.data[i]?.attributes?.latitude && refinePlaceDataMap?.places?.data[i]?.attributes?.longitude) {
           dummyArray.push({
-            id:refinePlaceData?.places?.data[i].id,
-            name: refinePlaceData?.places?.data[i].attributes["placeNameEnglish"],
+            id:refinePlaceDataMap?.places?.data[i].id,
+            name: refinePlaceDataMap?.places?.data[i].attributes["placeNameEnglish"],
             position: {
-              lat: refinePlaceData?.places?.data[i].attributes["latitude"],
-              lng: refinePlaceData?.places?.data[i].attributes["longitude"],
+              lat: refinePlaceDataMap?.places?.data[i].attributes["latitude"],
+              lng: refinePlaceDataMap?.places?.data[i].attributes["longitude"],
             },
           });
         }

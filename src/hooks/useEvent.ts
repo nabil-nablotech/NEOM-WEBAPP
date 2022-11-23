@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
-import { addEvent, refineEvents, updateEvent } from "../query/events";
+import { addEvent, refineEvents, updateEvent, refineEventsMap } from "../query/events";
 import { createVisitAssociate } from "../query/eventAssociate";
 import { RootState } from "../store";
 import { setSelectedValue, initialSelectedValue } from "../store/reducers/refinedSearchReducer";
@@ -11,14 +11,13 @@ import {
   setEventMetaData,
   setSearchText,
   toggleShowAddSuccess,
-  toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, toggleEditConfirmationWindowOpen, toggleConfirmOpenEdit, setEditPayload, resetMediaAssociation
+  toggleNewItemWindow, setAddNewItemWindowType, toggleEditConfirmationWindowOpen, toggleConfirmOpenEdit, setEditPayload, resetMediaAssociation
 } from "../store/reducers/searchResultsReducer";
-import { setEventEdit, setPlaces, setEventData } from '../store/reducers/eventReducer';
+import { setEventEdit, setEventData } from '../store/reducers/eventReducer';
 import { limit, getQueryObj, generateUniqueId, webUrl, EVENTS_TAB_NAME } from '../utils/services/helpers';
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { graphQlHeaders } from "../utils/services/interceptor";
 import { Place } from "../types/Place";
-import { places } from "../query/places";
 import { eventDetails } from "../api/details";
 
 import { setLatestItem, setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
@@ -90,11 +89,10 @@ const useEvent = () => {
   }});
   const [createVisitAssociateMuation, { loading: visitAssociateload, error: visitAssociateErr, data: visitAssociate }] = useMutation(createVisitAssociate, graphQlHeaders());
   const { loading: refineLoading, error: refineErrorData, data: refineEventData, refetch: refineSearchEvents } = useQuery(refineEvents, graphQlHeaders());
-
-  const { loading: placesLoading, error: placesErr, data: placeList, refetch: refetchPlaces } = useQuery(places, graphQlHeaders());
+  const { loading: refineLoadingMap, error: refineErrorDataMap, data: refineEventDataMap, refetch: refineSearchEventsMap } = useQuery(refineEventsMap, graphQlHeaders());
 
   useEffect(() => {
-    if (refineEventData?.visits) {
+    if (refineEventData?.visits && refineEventDataMap?.visits) {
       // update the data for the pagination
       if (refineEventData?.visits.meta.pagination.page === 1 && refineEventData?.visits.data.length > 0) {
         dispatch(setEvents([...refineEventData?.visits?.data]));
@@ -110,14 +108,14 @@ const useEvent = () => {
         refineEventData?.visits.meta.pagination.page);
 
       let dummyArray: any = [];
-      for (let i = 0; i < refineEventData?.visits?.data?.length; i++) {
-        if (refineEventData?.visits?.data[i]?.attributes?.latitude && refineEventData?.visits?.data[i]?.attributes?.longitude)
+      for (let i = 0; i < refineEventDataMap?.visits?.data?.length; i++) {
+        if (refineEventDataMap?.visits?.data[i]?.attributes?.latitude && refineEventDataMap?.visits?.data[i]?.attributes?.longitude)
           dummyArray.push({
-            id: refineEventData?.visits?.data[i].id,
-            name: refineEventData?.visits?.data[i].attributes['recordingTeam'],
+            id: refineEventDataMap?.visits?.data[i].id,
+            name: refineEventDataMap?.visits?.data[i].attributes?.visit_associate?.data?.attributes?.place_unique_id?.data?.attributes?.placeNameEnglish,
             position: {
-              lat: refineEventData?.visits?.data[i]?.attributes?.latitude,
-              lng: refineEventData?.visits?.data[i]?.attributes?.longitude
+              lat: refineEventDataMap?.visits?.data[i]?.attributes?.latitude,
+              lng: refineEventDataMap?.visits?.data[i]?.attributes?.longitude
             }
           })
       }
@@ -151,18 +149,6 @@ const useEvent = () => {
       navigate(`/Events/${data.createVisit.data.attributes.uniqueId}`, { replace: true })
     }
   }, [visitAssociate])
-
-  useEffect(() => {
-    if (placeList?.places) {
-      const places = JSON.parse(JSON.stringify(placeList?.places.data))
-      places.map((x: Place) => {
-        x.label = `${x?.attributes?.placeNameEnglish}${x?.attributes?.placeNameArabic}` || '';
-        x.value = x?.id;
-        return x;
-      })
-      dispatch((setPlaces(places)))
-    }
-  }, [placeList])
 
   const fetchData = (skip: number = eventsData.length, local: boolean = false, clear: boolean = false) => {
     const searchData = getQueryObj(search);
@@ -261,24 +247,6 @@ const useEvent = () => {
       })
     }
   }
-
-  useEffect(() => {
-    if (searchValue.length > 2) {
-      const getData = setTimeout(() => filterPlaces(), 1000);
-      return () => clearTimeout(getData)
-    }
-  }, [searchValue])
-
-  const filterPlaces = () => {
-    if (searchValue.trim().length > 2) {
-      refetchPlaces({
-        search: searchValue,
-        limit: 100,
-        skip: 0
-      })
-    }
-  }
-
 
   useEffect(() => {
     if (confirmOpenEdit && editPayload && (tabName === EVENTS_TAB_NAME)) {

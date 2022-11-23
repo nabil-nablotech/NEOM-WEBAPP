@@ -44,6 +44,7 @@ const PlacesTab = () => {
   * if yes - set it
   */
   useEffect(() => {
+    dispatch(setIsSelect(false));
     if (toggledStates.states && (toggledStates.tabName === PLACES_TAB_NAME)) {
       toggleOpenStates(toggledStates.states)
     }

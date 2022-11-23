@@ -27,8 +27,8 @@ export type PlacesProps = {
   isSelect:boolean;
 }
 
+let newSelectedKey:any = [];
 const GridView = (props: PlacesProps) => {
-  let newSelectedKey:any = [];
   const {data, loading, fetchData, hasMoreData, totalData, setEdit, isSelect} = props;
 
   const dispatch = useDispatch();
@@ -45,13 +45,11 @@ const GridView = (props: PlacesProps) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, keyId:string) => {
     if(event.target.checked){
       newSelectedKey.push(keyId);
-      dispatch(setSelectedKey(newSelectedKey))
     }else{
       let filteredData = newSelectedKey.filter((item:any)=>{return item !== keyId});
       newSelectedKey=filteredData;
-      dispatch(setSelectedKey(newSelectedKey))
     }
-
+    dispatch(setSelectedKey(newSelectedKey))
   };
 
   return (

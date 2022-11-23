@@ -39,6 +39,7 @@ const PlacesTab = () => {
 
   useEffect(() => {
     setimg(selectedCardIndex % 2 === 0 ? MapImg2 : MapImg1)
+    dispatch(setIsSelect(false))
   }, [selectedCardIndex])
 
   const { openStates, toggleOpenStates } = useToggledView({ count: 2 })
