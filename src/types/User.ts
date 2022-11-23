@@ -48,6 +48,7 @@ export interface UserModalstate {
 export interface ISnackbar {
   open: boolean
   message: string
+  severity?: "success" | "error"
 }
 
 export type Roles = {

@@ -13,6 +13,9 @@ import Button from "../../components/Button";
 import DropdownComponent from "../Dropdown";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { UseMutateFunction } from "react-query";
+import { useFormik } from "formik";
+import FormError from "../FormError";
+import { validateEmail } from "../../utils/services/helpers";
 
 const StyledModal = styled(Modal)`
   .ant-modal {
@@ -87,7 +90,7 @@ const Footer = ({
   handleCancel,
 }: {
   modalState: UserModalstate;
-  handleSubmit: () => void;
+  handleSubmit: (e: any) => void;
   handleCancel: () => void;
 }) => {
   return (
@@ -100,6 +103,7 @@ const Footer = ({
       />
       <Button
         label={modalState.editing ? "UPDATE" : "ADD"}
+        type="submit"
         onClick={handleSubmit}
       />
     </div>
@@ -115,13 +119,13 @@ const ModalComponent = ({
 }: ModalComponentProps & Partial<IUser>) => {
   const roleDataList: any = roles
     ? roles?.roles?.map((x: Role) => {
-        x.label = x.name;
-        x.value = x.id;
-        return x;
-      })
+      x.label = x.name;
+      x.value = x.id;
+      return x;
+    })
     : [];
 
-  const statusDataList = [{value: 'active', label: 'ACTIVE'}, {value: 'inactive', label: 'INACTIVE'}];
+  const statusDataList = [{ value: 'active', label: 'ACTIVE' }, { value: 'inactive', label: 'INACTIVE' }];
 
   // const [form] = Form.useForm();
   // const [formErrors, setFormErrors] = useState<AddUserFormErrors>({
@@ -197,96 +201,166 @@ const ModalComponent = ({
     setState({ ...lclState });
   };
 
+  const validation = (values: any, formikObject: any) => {
+    let errObj = {}
+    if (!values.firstName) {
+      errObj = {
+        ...errObj,
+        firstName: 'First Name is required'
+      }
+    }
+    if (!values.lastName) {
+      errObj = {
+        ...errObj,
+        lastName: 'Last Name is required' 
+      }
+    }
+    if (!values.email) {
+      errObj = {
+        ...errObj,
+        email: 'Email is required'
+      }
+    }
+    if (values.email && !validateEmail(values.email)) {
+      errObj = {
+        ...errObj,
+        email: 'Please enter a valid Email'
+      }
+    }
+    if (!values.role) {
+      errObj = {
+        ...errObj,
+        role: 'Role is required' 
+      }
+    }
+    
+
+    if (Object.keys(errObj).length < 1) {
+      handleOk(values)
+      formik.setFieldValue('firstName', '')
+      formik.setFieldValue('lastName', '')
+      formik.setFieldValue('email', '')
+      formik.setFieldValue('role', '')
+    } else {
+      formikObject.setErrors(errObj)
+    }
+
+  }
+
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: "",
+    },
+    onSubmit: (values, { setErrors }) => {
+   
+        validation(values, formik)
+      
+    },
+  });
+
   return (
     <>
       {modalState.visible && (
         <div className={`${styles["container-div"]}`}>
-          <StyledModal
-            centered
-            className={`${styles["container"]}`}
-            title={modalState.editing ? "Edit User" : "Add User"}
-            open={modalState.visible}
-            onCancel={handleCancel}
-            confirmLoading={confirmLoading}
-            closeIcon={
-              <ClearSharpIcon sx={{ width: "1.7em", height: "1.7em" }} />
-            }
-            footer={[
-              <Footer
-                modalState={modalState}
-                handleSubmit={handleSubmit}
-                handleCancel={handleCancel}
-              />,
-            ]}
-          >
-            <Spin spinning={confirmLoading}>
-              {/* <Form
-                initialValues={modalState.editing || undefined}
-                form={form}
-                layout="vertical"
-                name="form_in_modal"
-              > */}
-              {/* <Form.Item name="firstName" label="Firstname"> */}
-              <TextInput
-                className={`${styles["input-field"]} ${styles["firstName"]}`}
-                label="First Name"
-                name="firstName"
-                value={state.firstName}
-                // error={formErrors.firstName.message ? true : false}
-                // errorText={formErrors.firstName.message}
-                onChange={(e) => handleChange(e, "firstName")}
-                // onBlur={() => validateCredentials('email')}
-                required
-              />
-              {/* </Form.Item> */}
-              <TextInput
-                className={`${styles["input-field"]} ${styles["lastName"]}`}
-                label="Last Name"
-                name="lastName"
-                value={state.lastName}
-                onChange={(e) => handleChange(e, "lastName")}
-              />
-              <TextInput
-                className={`${styles["input-field"]} ${styles["email"]}`}
-                label="Email"
-                name="email"
-                value={state.email}
-                onChange={(e) => handleChange(e, "email")}
-              />
-              {/* <TextInput
-                                    className={`${styles['input-field']} ${styles['role']}`}
-                                    label="Role"
-                                    value={state.role}
-                                    onChange={(e) => handleChange(e, "role")}
-                                /> */}
-              {/* <StyledDropdown /> */}
-              <DropdownComponent
-                className={`WEDR ${styles["role-dropdown"]}`}
-                label={"Role"}
-                name="role"
-                value={state.role}
-                handleChange={(e) => handleChange(e, "role")}
-                handleClear={(e) => handleClear(e, 'role')}
-                itemsList={roleDataList}
-              />
-              {modalState.editing && <DropdownComponent
-                className={`WEDR ${styles["role-dropdown"]}`}
-                label={"Status"}
-                name="blocked"
-                value={state.blocked}
-                handleChange={(e) => handleChange(e, "blocked")}
-                handleClear={(e) => handleClear(e, 'blocked')}
-                itemsList={statusDataList}
-              />}
-              {/* </Form> */}
-            </Spin>
-            {!modalState.editing && (
-              <div className={`${styles["disclaimer"]}`}>
-                Once the new user is added, the access link will be created so
-                it can be shared with the new user.
-              </div>
-            )}
-          </StyledModal>
+            <StyledModal
+              centered
+              className={`${styles["container"]}`}
+              title={modalState.editing ? "Edit User" : "Add User"}
+              open={modalState.visible}
+              onCancel={handleCancel}
+              confirmLoading={confirmLoading}
+              closeIcon={
+                <ClearSharpIcon sx={{ width: "1.7em", height: "1.7em" }} />
+              }
+              footer={[
+                <Footer
+                  modalState={modalState}
+                  handleSubmit={formik.handleSubmit}
+                  handleCancel={handleCancel}
+                />,
+              ]}
+            >
+          <form onSubmit={formik.handleSubmit}>
+
+              <Spin spinning={confirmLoading}>
+                <TextInput
+                  className={`${styles["input-field"]} ${styles["firstName"]}`}
+                  label="First Name"
+                  name="firstName"
+                  value={formik.values.firstName}
+                  errorField={
+                    formik.errors.firstName ?
+                      `${formik.errors.firstName}`
+                      : ''
+                  }
+                  onChange={(e) => formik.setFieldValue("firstName", e.target.value)}
+                  required
+                />
+                <TextInput
+                  className={`${styles["input-field"]} ${styles["lastName"]}`}
+                  label="Last Name"
+                  name="lastName"
+                  value={formik.values.lastName}
+                  errorField={
+                    formik.errors.lastName ?
+                      `${formik.errors.lastName}`
+                      : ''
+                  }
+                  onChange={(e) => formik.setFieldValue("lastName", e.target.value)}
+                  required
+                />
+                <TextInput
+                  className={`${styles["input-field"]} ${styles["email"]}`}
+                  label="Email"
+                  name="email"
+                  value={formik.values.email}
+                  errorField={
+                    formik.errors.email ?
+                      `${formik.errors.email}`
+                      : ''
+                  }
+                  onChange={(e) => formik.setFieldValue("email", e.target.value)}
+                  required
+                />
+                <DropdownComponent
+                  className={`WEDR ${styles["role-dropdown"]}`}
+                  label={"Role"}
+                  name="role"
+                  value={formik.values.role}
+                  handleChange={(e) => formik.setFieldValue("role", e.target.value)}
+                  handleClear={(e) => formik.setFieldValue("role", roleDataList[0].value)}
+                  itemsList={roleDataList}
+                />
+                {
+                  formik.errors.role &&
+                  <FormError
+                    style={{
+                      marginTop: '3px'
+                    }}
+                    msg={"Please select role"}
+                  />
+                }
+                {modalState.editing && <DropdownComponent
+                  className={`WEDR ${styles["role-dropdown"]}`}
+                  label={"Status"}
+                  name="blocked"
+                  value={state.blocked}
+                  handleChange={(e) => handleChange(e, "blocked")}
+                  handleClear={(e) => handleClear(e, 'blocked')}
+                  itemsList={statusDataList}
+                />}
+              </Spin>
+              {!modalState.editing && (
+                <div className={`${styles["disclaimer"]}`}>
+                  Once the new user is added, the access link will be created so
+                  it can be shared with the new user.
+                </div>
+              )}
+          </form>
+            </StyledModal>
         </div>
       )}
     </>

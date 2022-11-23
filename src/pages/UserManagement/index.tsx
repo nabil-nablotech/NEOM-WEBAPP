@@ -55,6 +55,7 @@ const UserManagement = () => {
             message={showSnackbar.message}
             open={showSnackbar.open}
             handleClose={handleSnackbar}
+            severity={showSnackbar.severity ? showSnackbar.severity : "error"}
           />
         </div>
       </div>
