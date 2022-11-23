@@ -14,7 +14,7 @@ import { RootState } from "../store";
 const useMediaDetails = () => {
   const { uniqueId } = useParams<{ uniqueId: string }>()
   const { addNewItemWindowType, confirmOpenEdit, editPayload,
-    addItemWindowMinimized, deleteItemSuccess, deleteItemType } = useSelector((state: RootState) => state.searchResults);
+    addItemWindowMinimized, deleteItemSuccess, deleteItemType, showEditSuccess } = useSelector((state: RootState) => state.searchResults);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,6 +24,12 @@ const useMediaDetails = () => {
       fetchMediaDetails(uniqueId)
     }
   }, [uniqueId])
+
+  useEffect(() => {
+    if (uniqueId && showEditSuccess && addNewItemWindowType === MEDIA_TAB_NAME) {
+      fetchMediaDetails(uniqueId)
+    }
+  }, [showEditSuccess])
 
   /**
    * fetch places with two words

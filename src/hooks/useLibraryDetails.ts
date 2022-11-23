@@ -17,7 +17,7 @@ const useLibraryDetails = () => {
   const { search } = useLocation();
   const { uniqueId } = useParams<{ uniqueId: string }>()
   const { addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized, 
-    deleteItemSuccess, deleteItemType} = useSelector((state: RootState) => state.searchResults);
+    deleteItemSuccess, deleteItemType, showEditSuccess} = useSelector((state: RootState) => state.searchResults);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -26,6 +26,12 @@ const useLibraryDetails = () => {
       fetchLibraryDetails(uniqueId)
     }
   }, [uniqueId])
+
+  useEffect(() => {
+    if (uniqueId && showEditSuccess && addNewItemWindowType === LIBRARY_TAB_NAME ) {
+      fetchLibraryDetails(uniqueId)
+    }
+  }, [showEditSuccess])
 
   /**
    * fetch with two words
