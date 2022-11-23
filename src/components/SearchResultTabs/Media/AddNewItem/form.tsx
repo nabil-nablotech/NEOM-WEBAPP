@@ -285,8 +285,8 @@ allowFullScreen
                         label="Embed Code"
                         name="embedCode"
                         multiline
-                        minRows={4}
-                        maxRows={4}
+                        minRows={8}
+                        maxRows={8}
                         value={formik.values.embedCode}
                         onChange={(e) => {
                           formik.setFieldValue("embedCode", e.target.value);
@@ -294,11 +294,14 @@ allowFullScreen
                         sx={{
                           ...textInputSxStyles,
                           marginBottom: "8em",
+                          height: '90px',
                           "& .MuiInputBase-inputMultiline": {
                             paddingInline: "0 !important",
-                          },
+                          }
                         }}
-                        formControlSx={commonFormControlSxStyles}
+                        formControlSx={{
+                          ...commonFormControlSxStyles,
+                        }}
                       />
                     )}
                   </>
@@ -445,11 +448,15 @@ allowFullScreen
                     sx={{
                       ...textInputSxStyles,
                       marginBottom: "8em",
+                      height: '90px',
                       "& .MuiInputBase-inputMultiline": {
                         paddingInline: "0 !important",
-                      },
+                      }
                     }}
-                    formControlSx={commonFormControlSxStyles}
+                    formControlSx={{
+                      ...commonFormControlSxStyles,
+                      
+                    }}
                   />
                 )}
                 {formik.values.submitEmbed ? null : renderEmbedSubmitButton()}

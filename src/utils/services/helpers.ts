@@ -685,3 +685,5 @@ export const get_youtube_thumbnail = (url: string, quality: "high" | 'low' | 'me
 }
 
 export const convertKbtoMb = (num: number) => (num/1000).toFixed(5)
+
+export const allowedVideoFormats = ['webm', 'mp4', 'ogg']
