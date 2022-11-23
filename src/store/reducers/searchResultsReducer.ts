@@ -258,8 +258,37 @@ export const searchResultsSlice = createSlice({
       state.associatedPlaces=[];
     },
     setDefaultMediaAssociation: (state, action: PayloadAction<{events: InventoryAssociationType_Event[], places: InventoryAssociationType[]}>) => {
-      state.associatedEvents=action.payload.events;
-      state.associatedPlaces=action.payload.places;
+
+      /** modification needed to add previousMediaPresent flag */
+      let newAssociatedPlaces: InventoryAssociationType[] | [] = []
+      let newAssociatedEvents: InventoryAssociationType_Event[] | [] = []
+
+      if(action.payload.places.length > 0) {
+        
+        newAssociatedPlaces = action.payload.places.map(item => {
+          return ({
+            ...item,
+            previousMediaPresent: true // since this item is already assigned to a media
+          })
+        })
+      } else {
+        newAssociatedPlaces = [...action.payload.places]
+      }
+
+      if(action.payload.events.length > 0) {
+        
+          newAssociatedEvents = action.payload.events.map(item => {
+              return ({
+                ...item,
+                previousMediaPresent:  true // since this item is already assigned to a media
+              })
+          })
+      } else {
+        newAssociatedEvents = [...action.payload.events]
+      }
+
+      state.associatedEvents = newAssociatedEvents;
+      state.associatedPlaces = newAssociatedPlaces;
     },
     toggleAddItemWindowMinimized: (state, action: PayloadAction<boolean | null>) => {
       state.addItemWindowMinimized = action.payload;

@@ -78,7 +78,9 @@ export type InventoryAssociationType_Event = {
   fieldNarrative?: string
   visit_associate?: {
     place_unique_id: {
+      placeNameEnglish: string
       placeNameArabic: string
+      placeNumber: string
     }
   }
   keywords: string[] | []
