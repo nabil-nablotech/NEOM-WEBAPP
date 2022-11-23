@@ -122,6 +122,7 @@ export type SearchResultsState2 = {
   openGalleryView: {
     flag: boolean,
     galleryViewIdList: string[] | []
+    galleryViewItemList: MediaAssociateObj[] | []
   }
   addNewItemWindowType: tabNameProps | null
   isAssociationsStepOpen: boolean
@@ -146,7 +147,8 @@ export type SearchResultsState2 = {
   isLogoutConfirmationWindowOpen: boolean
   isAssociationStepInvalid: boolean,
   isSelect:boolean,
-  selectedKey:[]
+  selectedKey:[],
+  fetchLimit: number
 };
 
 export type DeletePayloadType = {

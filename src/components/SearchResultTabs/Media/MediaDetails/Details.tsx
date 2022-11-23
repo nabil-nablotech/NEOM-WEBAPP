@@ -10,12 +10,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setActiveMediaItemIndex, setActiveMediaItem, toggleDeleteConfirmationWindowOpen, setDeleteItemType, setDeletePayload } from '../../../../store/reducers/searchResultsReducer';
+import { setActiveMediaItemIndex, setActiveMediaItem, toggleDeleteConfirmationWindowOpen, setDeleteItemType, setDeletePayload, setMedia, setFetchLimit } from '../../../../store/reducers/searchResultsReducer';
 import RenderFileData from '../../../RenderFileData';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
 import { useEffect } from 'react';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
-import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, copyToClipboard } from '../../../../utils/services/helpers';
+import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, copyToClipboard, MAX_FETCH_LIMIT, limit } from '../../../../utils/services/helpers';
 
 import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
 import NoImagePresent from '../../../NoDataScreens/NoImagePresent';
@@ -25,6 +25,8 @@ import { useHistory } from '../../../../hooks/useHistory';
 import TextualContent from './TextualContent';
 import useMedia from '../../../../hooks/useMedia';
 import { useNavigate } from 'react-router-dom';
+import { Media, MediaApi } from '../../../../types/Media';
+import { MediaAssociateObj } from '../../../../types/Place';
 
 const MediaDetailsPage = ({
     currentItemIndex,
@@ -35,7 +37,7 @@ const MediaDetailsPage = ({
         e: React.MouseEvent<HTMLElement>
         action: string
     }
-    const { media, activeMediaItemIndex, places, totalCounts } = useSelector(
+    const { media, activeMediaItemIndex, places, totalCounts, openGalleryView, fetchLimit } = useSelector(
         (state: RootState) => state.searchResults
     );
     const [isFilter, setIsFilter] = useState(null)
@@ -70,6 +72,17 @@ const MediaDetailsPage = ({
 
     }, [mediaDetails])
 
+    useEffect(() => {
+
+        if(openGalleryView.flag) {
+            setListToBeReferred(openGalleryView.galleryViewItemList)
+        } else {
+            setListToBeReferred(media)
+        }
+    }, [ openGalleryView])
+
+    const [listToBeReferred, setListToBeReferred] = useState<any>(media)
+
     if (!mediaDetails) {
         return <>Cant display Media Details</>
     }
@@ -79,27 +92,29 @@ const MediaDetailsPage = ({
         categoryType, Author, bearing, latitude, longitude
     } = mediaDetails
 
+
     const handleNextOrPrevious = (e: handleAction['e'], action: handleAction['action']) => {
         e.preventDefault()
         let newIndex = activeMediaItemIndex
 
+        const TotalCountToRefer = openGalleryView.flag ? openGalleryView.galleryViewItemList.length :
+            totalCounts ? totalCounts.media : 0
+
         if (action === 'next') {
-            if(totalCounts) {
-                if (newIndex + 1 < totalCounts.media) {
-                    newIndex = newIndex + 1
-                    dispatch(setActiveMediaItem(media[newIndex]))
-                    dispatch(setActiveMediaItemIndex(newIndex))
-                    navigate(`/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
-                    // navigateTo(`/Media/${media[newIndex].attributes.uniqueId}`)
-                }
-                
-                /** when you are on 9th item, fetch further set of 10 items */
-                if (
-                    (newIndex + 1 === media.length) &&
-                    (media.length <= totalCounts.media)
-                ) {
-                    fetchMediaItems(newIndex + 1)
-                }
+            if (newIndex + 1 < TotalCountToRefer) {
+                newIndex = newIndex + 1
+                dispatch(setActiveMediaItem(listToBeReferred[newIndex]))
+                dispatch(setActiveMediaItemIndex(newIndex))
+                navigate(`/Media/${listToBeReferred[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                // navigateTo(`/Media/${listToBeReferred[newIndex].attributes.uniqueId}`)
+            }
+
+            /** when you are on 9th item, fetch further set of 10 items */
+            if (
+                (newIndex + 1 === listToBeReferred.length) &&
+                (listToBeReferred.length <= TotalCountToRefer)
+            ) {
+                fetchMediaItems(newIndex + 1)
             }
 
         }
@@ -108,9 +123,9 @@ const MediaDetailsPage = ({
             if (newIndex - 1 >= 0) {
                 newIndex = newIndex - 1
 
-                dispatch(setActiveMediaItem(media[newIndex]))
+                dispatch(setActiveMediaItem(listToBeReferred[newIndex]))
                 dispatch(setActiveMediaItemIndex(newIndex))
-                navigate(`/Media/${media[newIndex].attributes.uniqueId}`, { replace: true, state: null })
+                navigate(`/Media/${listToBeReferred[newIndex].attributes.uniqueId}`, { replace: true, state: null })
                 // navigateTo(`/Media/${media[newIndex].attributes.uniqueId}`)
 
             }
@@ -133,8 +148,8 @@ const MediaDetailsPage = ({
             action: () => {
                 dispatch(toggleDeleteConfirmationWindowOpen({
                     flag: true,
-                    isAssociatedToPlacesOrEvents: media ? isRecordHavingAssociations(
-                        media.filter((item: any) => item?.id === mediaDetails?.media_unique_id?.id?.toString())[0]
+                    isAssociatedToPlacesOrEvents: listToBeReferred ? isRecordHavingAssociations(
+                        listToBeReferred.filter((item: any) => item?.id === mediaDetails?.media_unique_id?.id?.toString())[0]
                     ) : false,
                 }))
                 dispatch(setDeleteItemType(MEDIA_TAB_NAME))

@@ -23,6 +23,7 @@ export const baseUrl = `${process.env.REACT_APP_STRAPI_BASE_URL}`;
 // export const baseUrl = `https://877e-59-94-75-53.in.ngrok.io`;
 export const webUrl = `${process.env.REACT_APP_STRAPI_WEB_URL}`;
 export const limit = 10;
+export const MAX_FETCH_LIMIT = 10000;
 
 export const itemAddEditAccess = getRole() === 'SuperEditor' ? true : getRole() === 'Editor' ? true : false;
 export const itemDeleteAccess = getRole() === 'SuperEditor';

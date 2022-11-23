@@ -31,7 +31,7 @@ export const MediaDetailsModal = () => {
     const navigate = useNavigate();
 
     // const TotalMediaCount= (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates: 0
-    const TotalMediaCount = openGalleryView.flag ? openGalleryView.galleryViewIdList.length :
+    const TotalMediaCount = openGalleryView.flag ? openGalleryView.galleryViewItemList.length :
         totalCounts ? totalCounts?.media :
             (activeEventItem && activeEventItem?.visit_unique_id) ? activeEventItem.visit_unique_id.media_associates
                 : media ? media.length : 0

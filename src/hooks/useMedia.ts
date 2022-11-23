@@ -20,7 +20,7 @@ const useMedia = () => {
 
   const {searchText, media: mediaItem, associatedPlaces, associatedEvents,
     addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized,
-    showEditSuccess, deleteItemSuccess, deleteItemType, showAddSuccess } = useSelector((state: RootState) => state.searchResults);
+    showEditSuccess, deleteItemSuccess, deleteItemType, showAddSuccess, fetchLimit } = useSelector((state: RootState) => state.searchResults);
   const {search} = useLocation();
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
@@ -165,7 +165,7 @@ const useMedia = () => {
       keywords: copiedValue && copiedValue?.keyWords && copiedValue?.keyWords,
       featuredImage: copiedValue && copiedValue?.featuredImage,
       text: searchWordArray,
-      limit: limit,
+      limit: fetchLimit,
       skip: skip,
     };
     if (clear) {

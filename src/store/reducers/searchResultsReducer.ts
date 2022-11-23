@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { addItemProgressPayload, addItemProgressStateType, DeletePayloadType, InventoryAssociationType, InventoryAssociationType_Event, SearchResultsState2, tabNameProps, ToggledStateTypes } from "../../types/SearchResultsTabsProps";
 import { DashboardResponse } from "../../types/dashboard";
-import { Place, Meta } from "../../types/Place";
+import { Place, Meta, MediaAssociateObj } from "../../types/Place";
 import { Event } from "../../types/Event";
 import { Media } from "../../types/Media";
 import { DeleteRecordReduxPayload, DeleteUserReduxPayload } from "../../types/User";
+import { limit } from "../../utils/services/helpers";
 
 const initialState: SearchResultsState2 = {
   selectedCardIndex: 0,
@@ -37,7 +38,8 @@ const initialState: SearchResultsState2 = {
   activeLibraryItemIndex: 0,
   openGalleryView: {
     flag: false,
-    galleryViewIdList: []
+    galleryViewIdList: [],
+    galleryViewItemList: []
   },
   addNewItemWindowType: null,
   isAssociationsStepOpen: false,
@@ -68,7 +70,8 @@ const initialState: SearchResultsState2 = {
   isLogoutConfirmationWindowOpen: false,
   isAssociationStepInvalid: false,
   isSelect:false,
-  selectedKey:[]
+  selectedKey:[],
+  fetchLimit: limit
 };
 
 export const searchResultsSlice = createSlice({
@@ -188,11 +191,16 @@ export const searchResultsSlice = createSlice({
     setActiveLibraryItemIndex: (state, action: PayloadAction<number>) => {
       state.activeLibraryItemIndex = action.payload;
     },
-    toggleGalleryView: (state, action: PayloadAction<{flag: boolean, galleryViewIdList: string[] | []}>) => {
+    toggleGalleryView: (state, action: PayloadAction<{
+      flag: boolean, galleryViewIdList?: string[] | [], galleryViewItemList: MediaAssociateObj[] | []
+    }>) => {
       state.openGalleryView.flag = action.payload.flag;
 
       state.openGalleryView.galleryViewIdList = action.payload.galleryViewIdList ?
         action.payload.galleryViewIdList : [];
+
+      state.openGalleryView.galleryViewItemList = action.payload.galleryViewItemList ?
+        action.payload.galleryViewItemList : [];
 
     },
     setSearchApply: (state, action: PayloadAction<boolean>) => {
@@ -359,6 +367,9 @@ export const searchResultsSlice = createSlice({
     setSelectedKey: (state, action: PayloadAction<any>) => {
       state.selectedKey = action.payload;
     },
+    setFetchLimit: (state, action: PayloadAction<number>) => {
+      state.fetchLimit = action.payload;
+    },
   },
 });
 
@@ -413,7 +424,8 @@ export const {
   toggleLogoutConfirmationWindowOpen,
   toggleIsAssociationStepInvalid,
   setIsSelect,
-  setSelectedKey
+  setSelectedKey,
+  setFetchLimit
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;
