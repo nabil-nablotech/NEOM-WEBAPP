@@ -156,7 +156,10 @@ allowFullScreen
               variant="outlined"
 
               label={"EMBED"}
-              onClick={() => formik.setFieldValue("submitEmbed", true)}
+              onClick={() => {
+                formik.setFieldValue("submitEmbed", true)
+                formik.setFieldValue("valid", true)
+              }}
             />
           </Box>
         )}
@@ -403,6 +406,7 @@ allowFullScreen
                       !formik.values.showEmbeded
                     );
                     formik.setFieldValue("showUrl", false);
+                    formik.setFieldValue("valid", false);
                   }}
                   className={`${styles["file-upload-url-bottom-text"]}`}
                 >
@@ -421,6 +425,7 @@ allowFullScreen
                     formik.setFieldValue("showEmbeded", false);
                     formik.setFieldValue("embedCode", "");
                     formik.setFieldValue("showUrl", !formik.values.showUrl);
+                    formik.setFieldValue("valid", false);
                   }}
                 >
                   Add URL
