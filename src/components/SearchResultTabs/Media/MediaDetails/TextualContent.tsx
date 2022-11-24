@@ -101,7 +101,14 @@ const TextualContent = ({
                     (mediaDetails.media_associate?.place_unique_ids && (mediaDetails.media_associate?.place_unique_ids?.length > 0)) ?
                         (
                             mediaDetails.media_associate?.place_unique_ids?.map((placeObj: InventoryAssociationType, index: number) => (
-                                <div key={index}>{placeObj.placeNameEnglish} {placeObj.placeNameArabic}</div>
+                                <div key={index}>
+                                    {`${placeObj.placeNameEnglish}${
+                                        placeObj.placeNameArabic ? ` ${placeObj.placeNameArabic}` : ''
+                                    }${
+                                        !placeObj.placeNameEnglish && !placeObj.placeNameEnglish && placeObj.placeNumber ?
+                                        `${placeObj.placeNumber}` : ''
+                                    }`}
+                                </div>
                             ))
                         ) :
                         RenderValueWithDefault('')

@@ -77,6 +77,11 @@ export type MediaApi = {
   imageMetadata: {
     fileSize: Number;
   };
+  formats : {
+    thumbnail?: any
+    small?: any
+    large?: any
+  }
   uniqueId: string;
   object: MediaAssociates2_MediaObject;
   media_unique_id: {
