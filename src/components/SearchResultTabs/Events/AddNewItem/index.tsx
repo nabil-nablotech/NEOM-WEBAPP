@@ -99,10 +99,10 @@ export const stepperIconSx = {
 const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { showAddSuccess, addItemProgressState } = useSelector(
+  const { showAddSuccess, addItemProgressState, places } = useSelector(
     (state: RootState) => state.searchResults
   );
-  const { edit, event, places } = useSelector(
+  const { edit, event } = useSelector(
     (state: RootState) => state.event
   );
   const { options } = useSelector((state: RootState) => state.refinedSearch);

@@ -88,7 +88,7 @@ const MoreOptionsComponent = ({
                             ) : false,
                         }))
                         dispatch(setDeleteItemType(
-                            type === "Library" ? LIBRARY_TAB_NAME : MEDIA_TAB_NAME 
+                            type === "Library" ? LIBRARY_TAB_NAME : type === "Events" ? EVENTS_TAB_NAME : MEDIA_TAB_NAME 
                         ))
 
                         dispatch(setDeletePayload({
