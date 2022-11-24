@@ -5,7 +5,7 @@ import { Grid } from "@mui/material";
 import parse from "html-react-parser";
 import { GridViewCard_Places, InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
-import { baseUrl, detectMediaTypeFromMediaAssociateGraphQlRes, isImagePathInvalid, isRecordAttached } from "../../../../utils/services/helpers";
+import { baseUrl, detectMediaTypeFromMediaAssociateGraphQlRes, isImagePathInvalid, isRecordAttached, itemAddEditAccess } from "../../../../utils/services/helpers";
 import MoreOptionsComponent from "../ListView/MoreOption";
 import { useSelector } from "react-redux";
 import DetachedIcon from "../../../Icons/DetachedIcon";
@@ -134,8 +134,9 @@ export const Card = ({
                       }))
                     }}
                   /> :
-                  <MoreOptionsComponent type="Places" setEdit={setEdit} record={record} />
-                }
+                  (
+                    itemAddEditAccess && <MoreOptionsComponent type="Places" setEdit={setEdit} record={record} />
+                  )}
               </Box>
             </Box>
           </Grid>

@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { StyledAntTable } from '../../../StyledAntTable';
 import styled from "styled-components";
-import { antTablePaginationCss, DETACH_ICON_CLASSNAME, isEventRecordAttached, isRecordAttached, shouldAddAtttachColumnHeader } from '../../../../utils/services/helpers';
+import { antTablePaginationCss, DETACH_ICON_CLASSNAME, isEventRecordAttached, isRecordAttached, shouldAddAtttachColumnHeader, itemAddEditAccess } from '../../../../utils/services/helpers';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
-import {EventsProps} from '../GridView/GridView';
-import { modifyAssociatedEvents, setSelectedCardIndex, setSelectedKey} from "../../../../store/reducers/searchResultsReducer";
+import { EventsProps } from '../GridView/GridView';
+import { modifyAssociatedEvents, setSelectedCardIndex, setSelectedKey } from "../../../../store/reducers/searchResultsReducer";
 import MoreOptionsComponent from './MoreOption';
 import { Event } from '../../../../types/Event';
 import { InventoryAssociationType_Event } from '../../../../types/SearchResultsTabsProps';
@@ -124,31 +124,31 @@ const StyledTableWrapper = styled(StyledAntTable)`
         
     }
     ${antTablePaginationCss}
-` 
+`
 
 const ListView = (props: EventsProps) => {
     const dispatch = useDispatch();
     const { navigateTo } = useHistory();
 
-    const { isAssociationsStepOpen, associatedEvents, events, selectedKey} = useSelector(
+    const { isAssociationsStepOpen, associatedEvents, events, selectedKey } = useSelector(
         (state: RootState) => state.searchResults
-      );
+    );
 
-      const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([
+    const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([
         {
             title: "NAME",
             key: `attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish`,
             dataIndex: "attributes",
             className: 'cell-name',
-              sorter: {
-                  compare: (a: Event, b: Event) => {
-                      return a.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish.localeCompare(b.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish);
-                  },
-                  multiple: 2,
-              },
-              width: 110,
+            sorter: {
+                compare: (a: Event, b: Event) => {
+                    return a.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish.localeCompare(b.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish);
+                },
+                multiple: 2,
+            },
+            width: 110,
             render: (value: any, index: number) => {
-              return `${value.visit_associate?.data?.attributes?.place_unique_id.data?.attributes.placeNameEnglish} ${value.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic || ''}`          
+                return `${value.visit_associate?.data?.attributes?.place_unique_id.data?.attributes.placeNameEnglish} ${value.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic || ''}`
             },
             filterMultiple: true
         },
@@ -232,7 +232,7 @@ const ListView = (props: EventsProps) => {
             fixed: 'right',
             className: 'more-menu-ant-cell',
             render: (value: any, record: Event) => (
-
+                itemAddEditAccess &&
                 <MoreOptionsComponent type="Events" setEdit={props.setEdit} record={record} />
             ),
         },
@@ -281,7 +281,7 @@ const ListView = (props: EventsProps) => {
     }), [associatedEvents]
     )
 
-    const {data, handleNext: fetchData, hasMoreData, loading, isSelect} = props;
+    const { data, handleNext: fetchData, hasMoreData, loading, isSelect } = props;
 
     useEffect(() => {
         /** Needs to be done , since InfiniteSCroll needs a relation with
@@ -319,15 +319,15 @@ const ListView = (props: EventsProps) => {
         }
 
     }, [isAssociationsStepOpen, associatedEvents]);
-  
+
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
         dispatch(setSelectedKey(newSelectedRowKeys))
-      };
-      
-      const rowSelection = {
+    };
+
+    const rowSelection = {
         selectedKey,
         onChange: onSelectChange,
-      };
+    };
     return (
         <Box component="div" id={'events-list-parent'}>
             <InfiniteScroll
@@ -347,25 +347,25 @@ const ListView = (props: EventsProps) => {
                 {data.length > 0 ? <StyledTableWrapper
                     // className={`${styles["table-container"]}`}
                     rowKey={"id"}
-                    rowSelection={isSelect?rowSelection:undefined}
+                    rowSelection={isSelect ? rowSelection : undefined}
                     onRow={(record: any, rowIndex) => {
                         return {
-                          onClick: (event: React.MouseEvent<HTMLElement>) => {
-                            const target = event.target as Element;
-                            const clsList = target.classList
+                            onClick: (event: React.MouseEvent<HTMLElement>) => {
+                                const target = event.target as Element;
+                                const clsList = target.classList
 
-                            if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
-                                
-                                event.stopPropagation();
-                                handleAttachClick(event, record)
-                            } else {
-                                dispatch(setSelectedCardIndex(rowIndex || record.id))
-                                // navigate(`/Events/${record.attributes.uniqueId}`, {replace: true})
-                                navigateTo(`/Events/${record.attributes.uniqueId}`)
-                            }
-                          }, // click row
+                                if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
+
+                                    event.stopPropagation();
+                                    handleAttachClick(event, record)
+                                } else {
+                                    dispatch(setSelectedCardIndex(rowIndex || record.id))
+                                    // navigate(`/Events/${record.attributes.uniqueId}`, {replace: true})
+                                    navigateTo(`/Events/${record.attributes.uniqueId}`)
+                                }
+                            }, // click row
                         };
-                      }}
+                    }}
                     size="small"
                     columns={tableHeaderJson}
                     dataSource={data}
@@ -373,7 +373,7 @@ const ListView = (props: EventsProps) => {
                     loading={loading ? loading : false}
                     bordered
                     // scroll={{ y: 500, scrollToFirstRowOnChange: true }}
-                    scroll={{ x: 'max-content' , y: '500', scrollToFirstRowOnChange: true }}
+                    scroll={{ x: 'max-content', y: '500', scrollToFirstRowOnChange: true }}
                     style={{
                         background: "transparent",
                     }}

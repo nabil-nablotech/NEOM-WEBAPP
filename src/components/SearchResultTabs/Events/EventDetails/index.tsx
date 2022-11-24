@@ -386,7 +386,7 @@ const EventDetailsPage = () => {
     },
   ];
 
-  const handleClickMediaItem = (e: React.MouseEvent,  itemIndex: number, uniqueId: string) => {
+  const handleClickMediaItem = (e: React.MouseEvent, itemIndex: number, uniqueId: string) => {
     /** itemIndex used to track which item being clicked out of 5;
      * 1st , 2nd etc.
      */
@@ -397,15 +397,15 @@ const EventDetailsPage = () => {
     let newList: any = []
 
 
-    if(!mediaGalleryLocal) {
+    if (!mediaGalleryLocal) {
       dispatch(toggleGalleryView({
         flag: "from-event-details",
         galleryViewItemList: []
       }))
 
       return
-    } 
-    
+    }
+
     /**load next set of items */
     /** To-do */
     // if(itemIndex + 1 === mediaGalleryLocal.length) {
@@ -456,7 +456,7 @@ const EventDetailsPage = () => {
       setMediaGridActiveItems((state) => state + 8);
     }
   }
-  
+
   const handleImageUrl = (url: string) => {
     let imagePath = url.split("/");
     return `${baseUrl}/${imagePath[1]}/small_${imagePath[2]}`;
@@ -582,7 +582,7 @@ const EventDetailsPage = () => {
                         associatedEvents
                       )}
                       onClick={(e) => {
-                        
+
                         const data: InventoryAssociationType_Event = {
                           id: eventDetails.id ? eventDetails.id.toString() : "",
                           visitNumber: eventDetails.visitNumber,
@@ -1089,12 +1089,12 @@ const EventDetailsPage = () => {
                                 )}
                               </Grid>
                               <Grid item>
-                                <MoreOptionsComponent
+                                {itemAddEditAccess && (<MoreOptionsComponent
                                   type="Media"
                                   setEdit={setEdit}
                                   record={itemObj}
                                   setFeaturedMedia={setFeaturedMedia}
-                                />
+                                />)}
                               </Grid>
                             </Grid>
                           </Box>

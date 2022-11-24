@@ -3,11 +3,11 @@ import { Box } from "@mui/material";
 import { ColumnsType } from "antd/lib/table";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
-import { antTablePaginationCss, DETACH_ICON_CLASSNAME, isRecordAttached, shouldAddAtttachColumnHeader } from '../../../../utils/services/helpers';
+import { antTablePaginationCss, DETACH_ICON_CLASSNAME, isRecordAttached, shouldAddAtttachColumnHeader, itemAddEditAccess } from '../../../../utils/services/helpers';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
-import {PlacesProps} from '../GridView/GridView';
+import { PlacesProps } from '../GridView/GridView';
 import { FieldOption, Place } from "../../../../types/Place";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
@@ -18,7 +18,7 @@ import MoreOptionsComponent from './MoreOption';
 import { InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
 import { useNavigate } from "react-router-dom";
 import { useHistory } from "../../../../hooks/useHistory";
- 
+
 const StyledTableWrapper = styled(StyledAntTable)`
   .ant-table-container {
   }
@@ -156,98 +156,98 @@ const ListView = (props: PlacesProps) => {
     (state: RootState) => state.searchResults
   );
 
-    const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([
-      {
-          title: "NAME",
-          key: `attributes.placeNameEnglish`,
-          dataIndex: "attributes",
-          className: 'cell-name',
-          sorter: {
-            compare: (a: { attributes: {placeNameEnglish: string;} }, b: { attributes: {placeNameEnglish: string;} }) => {
-                return a.attributes.placeNameEnglish.localeCompare(b.attributes.placeNameEnglish)
-            },
-            multiple: 2
-          },
-          filterMultiple: true,
-          render: (value: any, index: number) => {
-            return `${value.placeNameEnglish} ${value.placeNameArabic}`            
-          }
+  const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([
+    {
+      title: "NAME",
+      key: `attributes.placeNameEnglish`,
+      dataIndex: "attributes",
+      className: 'cell-name',
+      sorter: {
+        compare: (a: { attributes: { placeNameEnglish: string; } }, b: { attributes: { placeNameEnglish: string; } }) => {
+          return a.attributes.placeNameEnglish.localeCompare(b.attributes.placeNameEnglish)
+        },
+        multiple: 2
       },
-      {
-          title: "NUMBER",
-          key: `attributes.placeNumber`,
-          dataIndex: "attributes",
-          className: 'cell-number',
-          sorter: {
-            compare: (a: { attributes: {placeNumber: string;} }, b: { attributes: {placeNumber: string;} }) => {
-                return a.attributes.placeNumber.localeCompare(b.attributes.placeNumber)
-            },
-            multiple: 1
-          },
-          filterMultiple: true,
-          render: (value: any, index: number) => value.placeNumber
+      filterMultiple: true,
+      render: (value: any, index: number) => {
+        return `${value.placeNameEnglish} ${value.placeNameArabic}`
+      }
+    },
+    {
+      title: "NUMBER",
+      key: `attributes.placeNumber`,
+      dataIndex: "attributes",
+      className: 'cell-number',
+      sorter: {
+        compare: (a: { attributes: { placeNumber: string; } }, b: { attributes: { placeNumber: string; } }) => {
+          return a.attributes.placeNumber.localeCompare(b.attributes.placeNumber)
+        },
+        multiple: 1
       },
-      {
-          title: "TYPE",
-          key: `attributes`,
-          dataIndex: "attributes",
-          render: (value: any, index: number) => value?.siteType.map((x: string) => `${x}`)
+      filterMultiple: true,
+      render: (value: any, index: number) => value.placeNumber
+    },
+    {
+      title: "TYPE",
+      key: `attributes`,
+      dataIndex: "attributes",
+      render: (value: any, index: number) => value?.siteType.map((x: string) => `${x}`)
+    },
+    {
+      title: "RESEARCH VALUE",
+      key: `attributes`,
+      dataIndex: "attributes",
+      className: 'cell-research',
+      render: (value: any, index: number) => {
+        return value.researchValue
       },
-      {
-          title: "RESEARCH VALUE",
-          key: `attributes`,
-          dataIndex: "attributes",
-          className: 'cell-research',
-          render: (value: any, index: number) => {
-              return value.researchValue
-          },
-      },
-      {
-          title: "TOURISM VALUE",
-          key: `attributes`,
-          dataIndex: "attributes",
-          className: 'cell-tourism',
-          render: (value: any, index: number) => value.tourismValue.map((x: string) => `${x}`)
-      },
-      {
-          title: "STATE OF CONSERVATION",
-          key: `attributes`,
-          dataIndex: "attributes",
-          className: 'cell-conserve',
-          render: (value: any, index: number) => value.stateOfConservation.map((x: string) => `${x}`)
-      },
-      {
-          title: "RECOMMENDATION",
-          key: `attributes`,
-          dataIndex: "attributes",
-          className: 'cell-recommend',
-          render: (value: any, index: number) => value.recommendation.map((x: string) => `${x}`)
-      },
-      {
-          title: "PERIOD",
-          key: `attributes`,
-          dataIndex: "attributes",
-          className: 'cell-period',
-          render: (value: any, index: number) => value.period.map((x: string) => `${x}`)
-      },
-      {
-          title: "RISK",
-          key: `attributes`,
-          dataIndex: "attributes",
-          render: (value: any, index: number) => value.risk.map((x: string) => `${x}`)
-      },
-      {
-          title: "",
-          key: "action",
-          fixed: 'right',
-          className: 'more-menu-ant-cell',
-          render: (value: any, record: Place) => (
-              <MoreOptionsComponent type="Places" setEdit={props.setEdit} record={record} />
-          ),
-      },
+    },
+    {
+      title: "TOURISM VALUE",
+      key: `attributes`,
+      dataIndex: "attributes",
+      className: 'cell-tourism',
+      render: (value: any, index: number) => value.tourismValue.map((x: string) => `${x}`)
+    },
+    {
+      title: "STATE OF CONSERVATION",
+      key: `attributes`,
+      dataIndex: "attributes",
+      className: 'cell-conserve',
+      render: (value: any, index: number) => value.stateOfConservation.map((x: string) => `${x}`)
+    },
+    {
+      title: "RECOMMENDATION",
+      key: `attributes`,
+      dataIndex: "attributes",
+      className: 'cell-recommend',
+      render: (value: any, index: number) => value.recommendation.map((x: string) => `${x}`)
+    },
+    {
+      title: "PERIOD",
+      key: `attributes`,
+      dataIndex: "attributes",
+      className: 'cell-period',
+      render: (value: any, index: number) => value.period.map((x: string) => `${x}`)
+    },
+    {
+      title: "RISK",
+      key: `attributes`,
+      dataIndex: "attributes",
+      render: (value: any, index: number) => value.risk.map((x: string) => `${x}`)
+    },
+    {
+      title: "",
+      key: "action",
+      fixed: 'right',
+      className: 'more-menu-ant-cell',
+      render: (value: any, record: Place) => (
+        itemAddEditAccess && <MoreOptionsComponent type="Places" setEdit={props.setEdit} record={record} />
+      ),
+    },
   ])
 
-  const handleAttachClick = (e:any, record: Place) => {
+  const handleAttachClick = (e: any, record: Place) => {
     const data: InventoryAssociationType = {
       id: Number(record.id),
       placeNameEnglish: record.attributes.placeNameEnglish,
@@ -288,18 +288,18 @@ const ListView = (props: PlacesProps) => {
   }), [associatedPlaces]
   )
 
-    const {data, hasMoreData, fetchData, loading, isSelect} = props;
+  const { data, hasMoreData, fetchData, loading, isSelect } = props;
 
-    useEffect(() => {
-        /** Needs to be done , since InfiniteSCroll needs a relation with
-         * div being scrolled. Here its tbody of ant table
-         */
-        const ele = document.querySelector('#places-list-parent .ant-table-body')
-        if (ele) {
-            ele.id = "places-list-div"
-        }
- 
-    }, []);
+  useEffect(() => {
+    /** Needs to be done , since InfiniteSCroll needs a relation with
+     * div being scrolled. Here its tbody of ant table
+     */
+    const ele = document.querySelector('#places-list-parent .ant-table-body')
+    if (ele) {
+      ele.id = "places-list-div"
+    }
+
+  }, []);
 
   /** Effect needed to refresh the headers, 
   * when associations have changed.
@@ -329,61 +329,61 @@ const ListView = (props: PlacesProps) => {
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     dispatch(setSelectedKey(newSelectedRowKeys))
   };
-  
+
   const rowSelection = {
     selectedKey,
     onChange: onSelectChange,
   };
   console.log(selectedKey);
-    return (
-        <Box component="div" id={'places-list-parent'}>
-            <InfiniteScroll
-                dataLength={data.length} //This is important field to render the next data
-                next={() => fetchData()}
+  return (
+    <Box component="div" id={'places-list-parent'}>
+      <InfiniteScroll
+        dataLength={data.length} //This is important field to render the next data
+        next={() => fetchData()}
 
-                hasMore={hasMoreData}
-                loader={loading ? <Loader /> : null}
-                endMessage={
-                    <p style={{ textAlign: 'center' }}>
-                        <b>END OF RESULTS</b>
-                    </p>
+        hasMore={hasMoreData}
+        loader={loading ? <Loader /> : null}
+        endMessage={
+          <p style={{ textAlign: 'center' }}>
+            <b>END OF RESULTS</b>
+          </p>
+        }
+        scrollableTarget={'places-list-div'}
+        className={`${commonStyles['infinite-scroll-cls']}`}
+      >
+        <StyledTableWrapper
+          rowKey={"id"}
+          size="small"
+          columns={tableHeaderJson}
+          dataSource={data}
+          pagination={false}
+          loading={loading}
+          rowSelection={isSelect ? rowSelection : undefined}
+          bordered
+          scroll={{ x: 'max-content', y: 500 }}
+          style={{
+            background: "transparent",
+          }}
+          onRow={(record: any, rowIndex) => {
+            return {
+              onClick: (event: React.MouseEvent<HTMLElement>) => {
+                const target = event.target as Element;
+                const clsList = target.classList
+
+                if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
+                  event.stopPropagation();
+                  handleAttachClick(event, record)
+                } else {
+                  dispatch(setSelectedCardIndex(rowIndex || record.id))
+                  navigateTo(`/Places/${record.attributes.uniqueId}`)
                 }
-                scrollableTarget={'places-list-div'}
-                className={`${commonStyles['infinite-scroll-cls']}`}
-            >
-                <StyledTableWrapper
-                    rowKey={"id"}
-                    size="small"
-                    columns={tableHeaderJson}
-                    dataSource={data}
-                    pagination={false}
-                    loading={loading}
-                    rowSelection={isSelect?rowSelection:undefined}
-                    bordered
-                    scroll={{ x: 'max-content' , y: 500 }}
-                    style={{
-                        background: "transparent",
-                    }}
-                    onRow={(record: any, rowIndex) => {
-                      return {
-                        onClick: (event: React.MouseEvent<HTMLElement>) => {
-                          const target = event.target as Element;
-                          const clsList = target.classList
-
-                          if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
-                            event.stopPropagation();
-                            handleAttachClick(event, record)
-                          } else {
-                            dispatch(setSelectedCardIndex(rowIndex || record.id))
-                            navigateTo(`/Places/${record.attributes.uniqueId}`)
-                          }
-                        }, // click row
-                      };
-                    }}
-                />
-            </InfiniteScroll>
-        </Box>
-    );
+              }, // click row
+            };
+          }}
+        />
+      </InfiniteScroll>
+    </Box>
+  );
 }
 
 export default ListView;

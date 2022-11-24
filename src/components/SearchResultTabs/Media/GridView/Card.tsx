@@ -7,7 +7,7 @@ import { Grid } from '@mui/material';
 import { MoreOptionsComponent } from "../ListView/MoreOption";
 // import { usePaginatedArray } from '../../../../hooks/usePaginatedArray';
 /** indicating that we can send html later on wherever we parse */
-import { baseUrl, detectMediaTypeFromMediaList } from '../../../../utils/services/helpers';
+import { baseUrl, detectMediaTypeFromMediaList, itemAddEditAccess } from '../../../../utils/services/helpers';
 import RenderFileData from '../../../RenderFileData';
 
 export const Card = ({
@@ -20,7 +20,7 @@ export const Card = ({
         return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
     }
 
-    if(detectMediaTypeFromMediaList(record) === 'video') {
+    if (detectMediaTypeFromMediaList(record) === 'video') {
         // console.log('hex: ', record)
     }
 
@@ -33,9 +33,9 @@ export const Card = ({
                             alt: "",
                             src: record?.attributes?.object?.data?.attributes?.url ? (
                                 detectMediaTypeFromMediaList(record) === "image" ?
-                                handleImageUrl(record.attributes.object.data.attributes.url, "small_") :
-                                `${baseUrl}${record.attributes.object.data.attributes.url}`
-                             ) : undefined,
+                                    handleImageUrl(record.attributes.object.data.attributes.url, "small_") :
+                                    `${baseUrl}${record.attributes.object.data.attributes.url}`
+                            ) : undefined,
                             className: detectMediaTypeFromMediaList(record) === "video" ?
                                 `${styles['video-card-parent']}` : detectMediaTypeFromMediaList(record) === "image" ?
                                     `${gridStyles['card-image']}` : `${styles['three-d-card-parent']}`,
@@ -46,7 +46,7 @@ export const Card = ({
                                 (detectMediaTypeFromMediaList(record) === "video" || record?.attributes.videoType === "video") &&
                                 record?.attributes.object?.data?.attributes?.url
                             ) ? `${baseUrl}${record?.attributes.object?.data?.attributes?.url}` : undefined,
-                            isOpened :false
+                            isOpened: false
                         }}
                         fileType={detectMediaTypeFromMediaList(record)}
 
@@ -66,7 +66,8 @@ export const Card = ({
                                     console.log('click on more')
                                 }}
                             >
-                                <MoreOptionsComponent setEdit={setEdit} record={record} id={record.id} />
+                                {
+                                    itemAddEditAccess && <MoreOptionsComponent setEdit={setEdit} record={record} id={record.id} />}
                             </Box>
                         </Box>
                     </Grid>
