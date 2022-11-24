@@ -76,7 +76,9 @@ const StepContent = ({
   formik,
   places,
   handleChange,
-}: StepContentTypes) => {
+  searchValue,
+  setSearchValue
+}: StepContentTypes & {searchValue: string, setSearchValue?: (str: string) => void}) => {
 
   return (
     <>
@@ -91,7 +93,9 @@ const StepContent = ({
               value={formik.values.place || ''}
               handleClear={() => {
                 formik.setFieldValue("place", '')
+                // if(setSearchValue) setSearchValue('')
               }}
+              searchValue={searchValue}
               itemsList={places || []}
               handleSelectChange={(e, value, r, d) =>
                 {

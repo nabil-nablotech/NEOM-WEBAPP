@@ -96,7 +96,7 @@ export const stepperIconSx = {
   },
 };
 
-const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
+const AddNewEvent = ({ onHide, create, setSearchValue, searchValue }: AddNewItemProps & { searchValue:string }) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
   const { showAddSuccess, addItemProgressState, places } = useSelector(
@@ -461,6 +461,8 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
                   formik={formik}
                   handleBack={handleBack}
                   handleChange={handleChange}
+                  searchValue={searchValue}
+                  setSearchValue={setSearchValue}
                 />
               </React.Fragment>
             </>

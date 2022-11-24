@@ -48,7 +48,7 @@ function UserMenuComponent({
     isDeleteConfirmationWindowOpen, deletePayload, deleteItemType, isLogoutConfirmationWindowOpen
    } = useSelector((state: RootState) => state.searchResults);
   const { createPlace } = usePlace();
-  const { createEvent, setSearchValue } = useEvent();
+  const { createEvent, setSearchValue, searchValue } = useEvent();
   const { createLibrary } = useLibrary();
   const { createMedia } = useMedia();
 
@@ -205,7 +205,7 @@ function UserMenuComponent({
           }
           {
             addNewItemWindowType === EVENTS_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewEvent create={createEvent} setSearchValue={setSearchValue} onHide={() => onHide()} />
+            <AddNewEvent create={createEvent} setSearchValue={setSearchValue} searchValue={searchValue} onHide={() => onHide()} />
           }
           {
             addNewItemWindowType === LIBRARY_TAB_NAME && !addItemWindowMinimized &&
