@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { RenderFileDataProps } from "../../types/SearchResultsTabsProps";
-import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
+import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
 import styles from './index.module.css';
 import { useState } from "react";
 import ReactPlayer from "react-player";
@@ -10,6 +10,13 @@ import { isImagePathInvalid, NO_IMAGE } from "../../utils/services/helpers";
 import ThreeDIcon from '../../assets/images/icon-3d-model.svg';
 import parse from 'html-react-parser';
 
+export const playIconSx = {
+    width: 'fit-content',
+    height: '40%',
+    color: "black",
+    background: 'radial-gradient(circle, rgba(255,255,255,1) 20%, transparent 68%)',
+    pointerEvents: 'all'
+}
 /** component created to erender normal image -video - blob based on props */
 const RenderFileDataForGrid = ({
     fileType,
@@ -63,7 +70,7 @@ const RenderFileDataForGrid = ({
                             //         alt={fileData.alt ? fileData.alt : ''}
                             //         src={fileData.thumbNail}
                             //     />
-                            //     <PlayCircleFilledWhiteIcon
+                            //     <PlayCircleFilledOutlinedIcon
                             //         sx={{
                             //             width: '40%',
                             //             height: '40%',
@@ -98,14 +105,9 @@ const RenderFileDataForGrid = ({
                                                                 src={fileData.iframeVideoLink.replace('/watch', '/embed')}
                                                         >
                                                             {!fileData.isOpened && <>
-                                                                <PlayCircleFilledWhiteIcon
+                                                                <PlayCircleFilledOutlinedIcon
                                                                     sx={{
-                                                                        width: 'fit-content',
-                                                                        height: '40%',
-                                                                        background: "rgba(255,255,255,0.4)",
-                                                                        borderRadius: '60%',
-                                                                        pointerEvents: 'all',
-                                                                        mixBlendMode: 'screen'
+                                                                        ...playIconSx
                                                                     }}
                                                                     fontSize="large" className={`${styles['video-play-icon']}`}
                                                                     onClick={e => {
