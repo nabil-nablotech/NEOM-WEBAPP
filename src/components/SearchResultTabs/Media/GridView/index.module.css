@@ -35,9 +35,17 @@
         padding-top: 0;
 }
 .card-image,
-.card-image-wrapper video {
+.card-image-wrapper video ,
+.card-image-wrapper > div {
     aspect-ratio: 3/2;
     object-fit: cover;
+}
+
+.card-image-wrapper > div:has( > div) {
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .card-checkbox {
     display: flex !important;
@@ -84,8 +92,8 @@
 .card-image {
     width: 100%;
     min-width: 15vw;
-    min-height: 12vw;
-    aspect-ratio: 3/2;
+    /* min-height: 12vw; */
+    /* aspect-ratio: 3/2; */
     object-fit: cover;
 }
 

@@ -96,8 +96,23 @@ const RenderFileDataForGrid = ({
                                                             }}
 
                                                                 src={fileData.iframeVideoLink.replace('/watch', '/embed')}
-                                                            >
-
+                                                        >
+                                                            {!fileData.isOpened && <>
+                                                                <PlayCircleFilledWhiteIcon
+                                                                    sx={{
+                                                                        width: 'fit-content',
+                                                                        height: '40%',
+                                                                        background: "rgba(255,255,255,0.4)",
+                                                                        borderRadius: '60%',
+                                                                        pointerEvents: 'all',
+                                                                        mixBlendMode: 'screen'
+                                                                    }}
+                                                                    fontSize="large" className={`${styles['video-play-icon']}`}
+                                                                    onClick={e => {
+                                                                        e.preventDefault()
+                                                                    }}
+                                                                />
+                                                            </>}
                                                             </iframe>
                                                         </>
                                                 }

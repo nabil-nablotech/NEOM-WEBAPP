@@ -104,8 +104,12 @@ const RenderFileData = ({
                                                             }}
 
                                                                 src={fileData.iframeVideoLink.replace('/watch', '/embed')}
-                                                            >
-
+                                                                onClick={e => {
+                                                                    if(!fileData.isOpened) {
+                                                                        e.preventDefault()
+                                                                    }
+                                                                }}
+                                                        >
                                                             </iframe>
                                                         </>
                                                 }
@@ -122,7 +126,7 @@ const RenderFileData = ({
                                                         />
                                                     
                                                     </video>
-                                                    <>
+                                                    {!fileData.isOpened && <>
                                                         <PlayCircleFilledWhiteIcon
                                                             sx={{
                                                                 width: 'fit-content',
@@ -137,7 +141,7 @@ const RenderFileData = ({
                                                                 e.preventDefault()
                                                             }}
                                                         />
-                                                    </>
+                                                    </>}
                                                 </Box> :
                                                 <>
                                                 {/* {fileData.objectURL ?
@@ -206,7 +210,25 @@ const RenderFileData = ({
                                                     <>
                                                         {
                                                             fileData.objectURL.indexOf('iframe') !== -1 ?
-                                                                <div dangerouslySetInnerHTML={{ __html: fileData.objectURL }} /> :
+                                                                <>
+                                                                    <div dangerouslySetInnerHTML={{ __html: fileData.objectURL }} />
+                                                                    {!fileData.isOpened && <>
+                                                                        <PlayCircleFilledWhiteIcon
+                                                                            sx={{
+                                                                                width: 'fit-content',
+                                                                                height: '40%',
+                                                                                background: "rgba(255,255,255,0.4)",
+                                                                                borderRadius: '60%',
+                                                                                pointerEvents: 'all',
+                                                                                mixBlendMode: 'screen'
+                                                                            }}
+                                                                            fontSize="large" className={`${styles['video-play-icon']}`}
+                                                                            onClick={e => {
+                                                                                e.preventDefault()
+                                                                            }}
+                                                                        />
+                                                                    </>}
+                                                            </> :
                                                                 <ReactPlayer
                                                                     width="100%" height="100%"
                                                                     playing={false}
