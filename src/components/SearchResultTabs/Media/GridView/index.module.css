@@ -15,11 +15,29 @@
     font-family: 'Roboto-Regular';
     position: relative;
     padding-inline: 0em;
+    gap: 0;
 }
 .card-item {
     /* padding-left: 0 !important; */
-    flex-basis: 32% !important;
-    max-width: 32% !important;
+
+    --viewWidth : 32%;
+    flex-basis: var(--viewWidth) !important;
+    max-width: var(--viewWidth) !important;
+}
+
+.card-image-wrapper {
+    min-height: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.05);
+        padding-left: 0;
+        padding-top: 0;
+}
+.card-image,
+.card-image-wrapper video {
+    aspect-ratio: 3/2;
+    object-fit: cover;
 }
 .card-checkbox {
     display: flex !important;
@@ -28,23 +46,22 @@
     align-items: flex-start !important;
 }
 
-.content ,
-.content.MuiGrid-root {
+.content > * {
     text-align: left;
     display: flex;
-    flex-direction: column !important;
+    flex-direction: row !important;
 
     padding: 0;
     justify-content: space-between;
+    align-items: center;
     position: relative;
-    gap: 0.5em;
+    gap: 0;
 }
 
 .card-title {
     font-size: clamp(16px, 1.4vw, 26px);
     line-height: 1;
     font-weight: 500;
-    max-width: 96%;
     margin-left: 0;
 }
 
@@ -62,9 +79,6 @@
 }
 
 .card-image-wrapper {
-    display: flex;
-    aspect-ratio: 3/2;
-    flex-direction: column;
 }
 
 .card-image {
@@ -94,10 +108,11 @@
 }
 
 .more-icon-span {
-    position: absolute;
-    top: 0;
-    right: 0;
     cursor: pointer;
+}
+
+.more-icon-span * {
+    width: fit-content;
 }
 
 
@@ -116,16 +131,13 @@ div > :has(.three-d-card-parent) {
 
 @media (min-width: 575px) and (max-width: 1025px) {
     .card-item {
-        flex-basis: 49% !important;
-        max-width: 49% !important;
+        --viewWidth: 49%
         flex-grow: 1;
     }
     .left-grid-container {
         max-height: 77vh;
     }
-    .card-grid {
-        gap: 5px;
-    }
+    
     .card-image {
         min-width: 12vw;
         min-height: 10vw;

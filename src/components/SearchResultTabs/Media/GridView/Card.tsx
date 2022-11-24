@@ -26,7 +26,7 @@ export const Card = ({
 
     return <>
         <Box component="div" className={`${gridStyles['card-container']}`} >
-            <Grid container spacing={1} className={`${gridStyles['card-grid']}`}>
+            <Grid container className={`${gridStyles['card-grid']}`}>
                 <Grid item sm={12} className={`${gridStyles['card-image-wrapper']}`}>
                     <RenderFileData
                         fileData={{
@@ -53,22 +53,24 @@ export const Card = ({
                     />
                 </Grid>
                 <Grid item sm={12} className={`${gridStyles['content']}`}>
-                    <Grid item sm={11}>
-                        <div className={`${gridStyles['card-title']}`}>{record.attributes.title}</div>
-                    </Grid>
-                    <Grid item sm={1}>
-                        <Box className={`${gridStyles["more-icon-span"]}`} component={"span"}>
-                            <Box
-                                className={`${gridStyles["more-icon"]}`}
-                                component={"span"}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    console.log('click on more')
-                                }}
-                            >
-                                <MoreOptionsComponent setEdit={setEdit} record={record} id={record.id} />
+                    <Grid container>
+                        <Grid item>
+                            <div className={`${gridStyles['card-title']}`}>{record.attributes.title}</div>
+                        </Grid>
+                        <Grid item>
+                            <Box className={`${gridStyles["more-icon-span"]}`} component={"span"}>
+                                <Box
+                                    className={`${gridStyles["more-icon"]}`}
+                                    component={"span"}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        console.log('click on more')
+                                    }}
+                                >
+                                    <MoreOptionsComponent setEdit={setEdit} record={record} id={record.id} />
+                                </Box>
                             </Box>
-                        </Box>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Grid>

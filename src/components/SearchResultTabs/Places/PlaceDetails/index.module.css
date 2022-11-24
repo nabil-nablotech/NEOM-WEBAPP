@@ -2,6 +2,13 @@
     padding-inline: 2em;
     font-family: 'Roboto-Regular';
 }
+.grid-item {
+    min-height: 400px;
+    background-color: rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .images-section {
     position: relative;
 }

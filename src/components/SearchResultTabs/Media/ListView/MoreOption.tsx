@@ -7,6 +7,7 @@ import { isRecordHavingAssociations, MEDIA_TAB_NAME, itemAddEditAccess, itemDele
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
+import styles from './index.module.css';
 
 export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payload: Media) => void; id: string; record: any }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -26,7 +27,7 @@ export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payloa
   return (
     <>
       <div className="" onClick={handleClick}>
-        <MoreHorizIcon className="more-menu-div" />
+        <MoreHorizIcon className={`${styles["more-menu-div"]}`}  />
       </div>
       {itemAddEditAccess && <Menu
         id="basic-menu"
