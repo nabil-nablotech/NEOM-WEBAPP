@@ -146,10 +146,9 @@ query refinedSearch(
   $artifacts: JSON
   $keywords: JSON
   $limit: Int
-  $skip: Int
 ) {
   places(
-    pagination: { limit: $limit, start: $skip }
+    pagination: { limit: $limit, start: 0 }
     filters: {
       or: [
         { placeNameEnglish: { containsi: $search_one } }

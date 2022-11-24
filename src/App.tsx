@@ -14,6 +14,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { store } from "./store";
 import { Provider } from "react-redux";
 import { baseUrl } from "./utils/services/helpers";
+import SessionTimeOut from "./components/SessionTimeOut";
 
 // apollo client
 const client = new ApolloClient({
@@ -50,6 +51,7 @@ function App() {
                     <Navigation />
                   </Suspense>
                 </BrowserRouter>
+                <SessionTimeOut/>
               </div>
             </SnackbarProvider>
           </QueryClientProvider>

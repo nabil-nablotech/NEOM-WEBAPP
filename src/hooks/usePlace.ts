@@ -66,9 +66,9 @@ const usePlace = () => {
   /**
    * fetch places with two words
    */
-  const { loading:refineLoading, error:refineErrorData, data:refinePlaceData, refetch:refineSearchPlaces} = useQuery(refinePlaces, graphQlHeaders());
   const { loading:refineLoadingMap, error:refineErrorDataMap, data:refinePlaceDataMap, refetch:refineSearchPlacesMap} = useQuery(refinePlacesMap, graphQlHeaders());
-
+  const { loading:refineLoading, error:refineErrorData, data:refinePlaceData, refetch:refineSearchPlaces} = useQuery(refinePlaces, graphQlHeaders());
+  
   const [createPlaceMutation, {data, loading, error}] = useMutation(addPlace, {context: graphQlHeaders().context, onCompleted: (data) => {
     dispatch(setLatestItem({tab:'Places', data:data.createPlace.data}));
   }});
@@ -100,23 +100,26 @@ const usePlace = () => {
         refinePlaceData?.places.meta.pagination.page
       );
 
+      if(refinePlaceData?.places?.meta?.pagination?.total){
       let dummyArray: any = [];
-      for (let i = 0; i < refinePlaceDataMap?.places?.data?.length; i++) {
-        if (refinePlaceDataMap?.places?.data[i]?.attributes?.latitude && refinePlaceDataMap?.places?.data[i]?.attributes?.longitude) {
-          dummyArray.push({
-            id:refinePlaceDataMap?.places?.data[i].id,
-            name: refinePlaceDataMap?.places?.data[i].attributes["placeNameEnglish"],
-            position: {
-              lat: refinePlaceDataMap?.places?.data[i].attributes["latitude"],
-              lng: refinePlaceDataMap?.places?.data[i].attributes["longitude"],
-            },
-          });
+      fetchMapData(refinePlaceData?.places?.meta.pagination.total,true)
+        for (let i = 0; i < refinePlaceDataMap?.places?.data?.length; i++) {
+          if (refinePlaceDataMap?.places?.data[i]?.attributes?.latitude && refinePlaceDataMap?.places?.data[i]?.attributes?.longitude) {
+            dummyArray.push({
+              id:refinePlaceDataMap?.places?.data[i].id,
+              name: refinePlaceDataMap?.places?.data[i].attributes["placeNameEnglish"],
+              position: {
+                lat: refinePlaceDataMap?.places?.data[i].attributes["latitude"],
+                lng: refinePlaceDataMap?.places?.data[i].attributes["longitude"],
+              },
+            });
+          }
         }
-
+        setMapPlaces(dummyArray);
       }
-      setMapPlaces(dummyArray);
+
     }
-  }, [refinePlaceData]);
+  }, [refinePlaceData, refinePlaceDataMap]);
 
   useEffect(() => {
     if (data) {
@@ -177,8 +180,43 @@ const usePlace = () => {
       delete obj.search_two;
       delete obj.search_three;
     }
-    refineSearchPlaces(obj)
+    refineSearchPlaces(obj);
   };
+
+  const fetchMapData = (limit: number, local: boolean = false) => {
+    // get the query from the url parameters
+    const searchData = getQueryObj(search);
+    // check if the search is coming from local or using link
+    const text = local ? searchText : searchData?.search;
+    // filter non data from the array object
+    const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData?.refinedSearch;
+    const searchWordArray = text?.trim()?.split(" ") || [];
+    copiedValue && Object.keys(copiedValue)?.map(x => {
+      if (copiedValue[x].length === 0) {delete copiedValue[x];}
+      return x;
+    });
+    const objOfMap: any = {
+      researchValue: copiedValue&&copiedValue?.researchValue && copiedValue?.researchValue,
+      tourismValue: copiedValue&&copiedValue.tourismValue && copiedValue?.tourismValue,
+      stateOfConservation: copiedValue&&copiedValue?.stateOfConservation && copiedValue?.stateOfConservation,
+      recommendation: copiedValue&&copiedValue?.recommendation && copiedValue?.recommendation,
+      risk: copiedValue&&copiedValue?.risk && copiedValue?.risk,
+      period: copiedValue&&copiedValue?.period && copiedValue?.period,
+      latitude: copiedValue&&copiedValue?.latitude && parseFloat(copiedValue?.latitude),
+      longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
+      artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts,
+      actionType: copiedValue&&copiedValue?.actionType && copiedValue?.actionType,
+      keywords: copiedValue&&copiedValue?.keyWords && copiedValue?.keyWords,
+      siteType: copiedValue&&copiedValue?.siteType && copiedValue?.siteType,
+      search_one: searchWordArray[0],
+      search_two: searchWordArray[1],
+      search_three: searchWordArray[2],
+      text: searchWordArray,
+      limit: limit
+    };
+    refineSearchPlacesMap(objOfMap);
+  };
+  
 
   const clearTextSearch = () => {
     fetchData(0, true, true);

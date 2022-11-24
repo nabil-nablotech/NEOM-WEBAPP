@@ -92,7 +92,7 @@ const useEvent = () => {
   const { loading: refineLoadingMap, error: refineErrorDataMap, data: refineEventDataMap, refetch: refineSearchEventsMap } = useQuery(refineEventsMap, graphQlHeaders());
 
   useEffect(() => {
-    if (refineEventData?.visits && refineEventDataMap?.visits) {
+    if (refineEventData?.visits) {
       // update the data for the pagination
       if (refineEventData?.visits.meta.pagination.page === 1 && refineEventData?.visits.data.length > 0) {
         dispatch(setEvents([...refineEventData?.visits?.data]));
@@ -106,22 +106,25 @@ const useEvent = () => {
       // this flag decides to fetch next set of data 
       setHasMoreData(refineEventData?.visits?.meta.pagination.pageCount !==
         refineEventData?.visits.meta.pagination.page);
-
-      let dummyArray: any = [];
-      for (let i = 0; i < refineEventDataMap?.visits?.data?.length; i++) {
-        if (refineEventDataMap?.visits?.data[i]?.attributes?.latitude && refineEventDataMap?.visits?.data[i]?.attributes?.longitude)
-          dummyArray.push({
-            id: refineEventDataMap?.visits?.data[i].id,
-            name: refineEventDataMap?.visits?.data[i].attributes?.visit_associate?.data?.attributes?.place_unique_id?.data?.attributes?.placeNameEnglish,
-            position: {
-              lat: refineEventDataMap?.visits?.data[i]?.attributes?.latitude,
-              lng: refineEventDataMap?.visits?.data[i]?.attributes?.longitude
-            }
-          })
+        
+      if(refineEventData?.visits?.meta?.pagination?.total){
+        let dummyArray: any = [];
+        fetchMapData(refineEventData?.visits?.meta?.pagination?.total,true)
+        for (let i = 0; i < refineEventDataMap?.visits?.data?.length; i++) {
+          if (refineEventDataMap?.visits?.data[i]?.attributes?.latitude && refineEventDataMap?.visits?.data[i]?.attributes?.longitude)
+            dummyArray.push({
+              id: refineEventDataMap?.visits?.data[i].id,
+              name: refineEventDataMap?.visits?.data[i].attributes?.visit_associate?.data?.attributes?.place_unique_id?.data?.attributes?.placeNameEnglish,
+              position: {
+                lat: refineEventDataMap?.visits?.data[i]?.attributes?.latitude,
+                lng: refineEventDataMap?.visits?.data[i]?.attributes?.longitude
+              }
+            })
+        }
+        setMapEvents(dummyArray)
       }
-      setMapEvents(dummyArray)
     }
-  }, [refineEventData]);
+  }, [refineEventData, refineEventDataMap]);
 
   useEffect(() => {
     if (data && place) {
@@ -188,6 +191,7 @@ const useEvent = () => {
       limit: limit,
       skip: skip,
     };
+
     if (clear) {
       obj.skip = 0;
       obj.search_one = '';
@@ -199,6 +203,46 @@ const useEvent = () => {
     else {
       refineSearchEvents(obj)
     }
+  };
+
+  const fetchMapData = (limit: number, local: boolean = false) => {
+    const searchData = getQueryObj(search);
+    const text = local ? searchText : searchData?.search;
+    const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData?.refinedSearch;
+
+    const searchWordArray = text?.trim()?.split(' ') || [];
+    copiedValue && Object.keys(copiedValue)?.map(x => {
+      if (copiedValue[x].length === 0) { delete copiedValue[x]; }
+      return x;
+    });
+
+    const startDate = new Date(copiedValue?.startDate);
+    const visitStartDate = (copiedValue?.startDate && startDate?.getFullYear()) ? `${startDate?.getFullYear()}-${startDate?.getMonth() + 1}-${startDate?.getDate()}` : undefined;
+    const endDate = new Date(copiedValue?.endDate);
+    const visitEndDate = (copiedValue?.endDate && endDate?.getFullYear()) ? `${endDate?.getFullYear()}-${endDate?.getMonth() + 1}-${endDate?.getDate()}` : undefined;
+
+    const objOfMap: any = {
+      researchValue: copiedValue && copiedValue?.researchValue && copiedValue?.researchValue,
+      tourismValue: copiedValue && copiedValue.tourismValue && copiedValue?.tourismValue,
+      stateOfConservation: copiedValue && copiedValue?.stateOfConservation && copiedValue?.stateOfConservation,
+      recommendation: copiedValue && copiedValue?.recommendation && copiedValue?.recommendation,
+      risk: copiedValue && copiedValue?.risk && copiedValue?.risk,
+      period: copiedValue && copiedValue?.period && copiedValue?.period,
+      latitude: copiedValue && copiedValue?.latitude && parseFloat(copiedValue?.latitude),
+      longitude: copiedValue && copiedValue?.longitude && parseFloat(copiedValue?.longitude),
+      artifacts: copiedValue && copiedValue?.artifacts && copiedValue?.artifacts,
+      assessmentType: copiedValue && copiedValue?.assessmentType && copiedValue?.assessmentType,
+      keywords: copiedValue && copiedValue?.keyWords && copiedValue?.keyWords,
+      siteType: copiedValue && copiedValue?.siteType && copiedValue?.siteType,
+      startDate: visitStartDate && visitStartDate,
+      endDate: visitEndDate && visitEndDate,
+      search_one: searchWordArray[0],
+      search_two: searchWordArray[1],
+      search_three: searchWordArray[2],
+      text: searchWordArray,
+      limit: limit,
+    };
+    refineSearchEventsMap(objOfMap);
   };
 
   const clearTextSearch = () => {
