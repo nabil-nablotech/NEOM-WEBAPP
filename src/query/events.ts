@@ -193,14 +193,13 @@ query RefineSearchEventMap(
   $longitude: Float
   $artifacts: JSON
   $keywords: JSON
-  $limit: Int
-  $skip: Int
   $startDate: Date
   $endDate: Date
+  $limit: Int
 )
 {
   visits(
-    pagination: { limit: $limit, start: $skip }
+    pagination: { limit: $limit, start: 0 }
     filters: {
       or: [
         { siteDescription: { contains: $search_one } }
