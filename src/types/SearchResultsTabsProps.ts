@@ -149,7 +149,8 @@ export type SearchResultsState2 = {
   isAssociationStepInvalid: boolean,
   isSelect:boolean,
   selectedKey:[],
-  fetchLimit: number
+  fetchLimit: number,
+  allPlaces: Place[] | []
 };
 
 export type DeletePayloadType = {

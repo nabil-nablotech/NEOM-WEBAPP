@@ -19,6 +19,10 @@ const RenderFileData = ({
 
     const noVideoCondition  = !fileData.src && !fileData.iframeVideoLink && !fileData.staticVideoLink && !fileData.objectURL
 
+    if(fileType === 'video') {
+        // console.log('hex: ', fileData)
+    }
+
     return (
         <>
             {
@@ -107,21 +111,36 @@ const RenderFileData = ({
                                                 }
                                             </> :
                                             fileData.staticVideoLink ?
-                                                <>
-                                                    <video width="100%" height="100%" controls autoPlay={false}>
+                                                <Box component="div" style={{
+                                                    position: 'relative'
+                                                }}>
+                                                    <video width="100%" height="100%"
+                                                        controls={fileData.isOpened ? true : false} autoPlay={false}
+                                                    >
                                                         <source
                                                             src={fileData.staticVideoLink}
-                                                            type={
-                                                                fileData.fileObject && fileData.fileObject?.mime ?
-                                                                fileData.fileObject.mime :
-                                                                // "video/mp4"
-                                                                "auto"
-                                                            }
                                                         />
+                                                    
                                                     </video>
-                                                </> :
+                                                    <>
+                                                        <PlayCircleFilledWhiteIcon
+                                                            sx={{
+                                                                width: 'fit-content',
+                                                                height: '40%',
+                                                                background: "rgba(255,255,255,0.4)",
+                                                                borderRadius: '60%',
+                                                                pointerEvents: 'all',
+                                                                mixBlendMode: 'screen'
+                                                            }}
+                                                            fontSize="large" className={`${styles['video-play-icon']}`}
+                                                            onClick={e => {
+                                                                e.preventDefault()
+                                                            }}
+                                                        />
+                                                    </>
+                                                </Box> :
                                                 <>
-                                                {fileData.objectURL ?
+                                                {/* {fileData.objectURL ?
                                                     <>
                                                         {
                                                             fileData.objectURL.indexOf('iframe') !== -1 ?
@@ -164,7 +183,7 @@ const RenderFileData = ({
                                                                 sx={{
                                                                     width: 'fit-content',
                                                                     height: '40%',
-                                                                    background: "rgba(255,255,255,0.5)",
+                                                                    background: "rgba(255,155,255,0.5)",
                                                                     borderRadius: '50%',
                                                                 }}
                                                                 fontSize="large" className={`${styles['video-play-icon']}`}
@@ -181,6 +200,52 @@ const RenderFileData = ({
                                                             style={{
                                                                 aspectRatio: '3/1.65'
                                                             }}
+                                                        />
+                                                    </Box>} */}
+                                                {fileData.objectURL ?
+                                                    <>
+                                                        {
+                                                            fileData.objectURL.indexOf('iframe') !== -1 ?
+                                                                <div dangerouslySetInnerHTML={{ __html: fileData.objectURL }} /> :
+                                                                <ReactPlayer
+                                                                    width="100%" height="100%"
+                                                                    playing={false}
+                                                                    url={fileData.objectURL}
+                                                                    style={{
+                                                                        aspectRatio: '3/1.65',
+                                                                        pointerEvents: 'none'
+                                                                    }}
+                                                                />
+
+                                                        }
+                                                    </>
+                                                    :
+                                                    <Box component="div" className={`${styles['video-player-box']}`}>
+                                                        <ReactPlayer
+                                                            width="100%" height="auto"
+                                                            playing={fileData.isOpened} url={fileData.src}
+                                                            style={{
+                                                                aspectRatio: '3/1.65'
+                                                            }}
+                                                            // playIcon={
+                                                            //     <>
+                                                            //         <PlayCircleFilledWhiteIcon
+                                                            //             sx={{
+                                                            //                 width: 'fit-content',
+                                                            //                 height: '40%',
+                                                            //                 background: "rgba(255,255,255,0.5)",
+                                                            //                 borderRadius: '50%',
+                                                            //                 pointerEvents: 'all',
+                                                            //                 zIndex: 22
+                                                            //             }}
+                                                            //             fontSize="large" className={`${styles['video-play-icon']}`}
+                                                            //             onClick={e => {
+                                                            //                 e.preventDefault()
+                                                            //                 // toggleVideoModal(true)
+                                                            //             }}
+                                                            //         />
+                                                            //     </>
+                                                            // }
                                                         />
                                                     </Box>}
                                                 </>

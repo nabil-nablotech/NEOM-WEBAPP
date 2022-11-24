@@ -17,13 +17,14 @@ import { setLatestItem, setTabData, setTabEdit } from "../store/reducers/tabEdit
 import { Place } from "../types/Place";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 
-import {limit, getQueryObj, generateUniqueId, webUrl, PLACES_TAB_NAME} from '../utils/services/helpers';
+import {limit, getQueryObj, generateUniqueId, webUrl, PLACES_TAB_NAME, MAX_FETCH_LIMIT} from '../utils/services/helpers';
 import {graphQlHeaders} from '../utils/services/interceptor';
 
 
 const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [mapPlaces, setMapPlaces] = useState([]);
+  const [allPlaces, setAllPlaces] = useState<Place[] | []>([]);
   const { searchText, places: placeData, addNewItemWindowType, confirmOpenEdit, editPayload,
     addItemWindowMinimized, deleteItemSuccess, deleteItemType } = useSelector(
     (state: RootState) => state.searchResults
@@ -68,6 +69,7 @@ const usePlace = () => {
    */
   const { loading:refineLoadingMap, error:refineErrorDataMap, data:refinePlaceDataMap, refetch:refineSearchPlacesMap} = useQuery(refinePlacesMap, graphQlHeaders());
   const { loading:refineLoading, error:refineErrorData, data:refinePlaceData, refetch:refineSearchPlaces} = useQuery(refinePlaces, graphQlHeaders());
+  const { loading:refineLoadingDirect, error:refineErrorDataDirect, data:refinePlaceDataDirect, refetch:refineSearchPlacesDirect} = useQuery(refinePlaces, graphQlHeaders());
   
   const [createPlaceMutation, {data, loading, error}] = useMutation(addPlace, {context: graphQlHeaders().context, onCompleted: (data) => {
     dispatch(setLatestItem({tab:'Places', data:data.createPlace.data}));
@@ -121,6 +123,13 @@ const usePlace = () => {
     }
   }, [refinePlaceData, refinePlaceDataMap]);
 
+  /** set list of all places the application has */
+  useEffect(() => {
+    if (refinePlaceDataDirect && !refineLoadingDirect) {
+      setAllPlaces(refinePlaceDataDirect?.places?.data)
+    }
+  }, [refinePlaceDataDirect, refineLoadingDirect])
+
   useEffect(() => {
     if (data) {
       fetchData(0);
@@ -141,6 +150,47 @@ const usePlace = () => {
         navigate(`/Places/${updateData.updatePlace.data.attributes.uniqueId}`, {replace: true})
     }
   }, [updateData])
+
+  const fetchDataDirect = (skip: number = placeData.length, local: boolean = false, clear: boolean = false) => {
+    // get the query from the url parameters
+    const searchData = getQueryObj(search);
+    // check if the search is coming from local or using link
+    const text = local ? searchText : searchData?.search;
+    // filter non data from the array object
+    const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData?.refinedSearch;
+    const searchWordArray = text?.trim()?.split(" ") || [];
+    copiedValue && Object.keys(copiedValue)?.map(x => {
+      if (copiedValue[x].length === 0) {delete copiedValue[x];}
+      return x;
+    });
+    const obj: any = {
+      researchValue: copiedValue&&copiedValue?.researchValue && copiedValue?.researchValue,
+      tourismValue: copiedValue&&copiedValue.tourismValue && copiedValue?.tourismValue,
+      stateOfConservation: copiedValue&&copiedValue?.stateOfConservation && copiedValue?.stateOfConservation,
+      recommendation: copiedValue&&copiedValue?.recommendation && copiedValue?.recommendation,
+      risk: copiedValue&&copiedValue?.risk && copiedValue?.risk,
+      period: copiedValue&&copiedValue?.period && copiedValue?.period,
+      latitude: copiedValue&&copiedValue?.latitude && parseFloat(copiedValue?.latitude),
+      longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
+      artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts,
+      actionType: copiedValue&&copiedValue?.actionType && copiedValue?.actionType,
+      keywords: copiedValue&&copiedValue?.keyWords && copiedValue?.keyWords,
+      siteType: copiedValue&&copiedValue?.siteType && copiedValue?.siteType,
+      search_one: searchWordArray[0],
+      search_two: searchWordArray[1],
+      search_three: searchWordArray[2],
+      text: searchWordArray,
+      limit: MAX_FETCH_LIMIT, // only change from the original function
+      skip: skip,
+    };
+    if (clear) {
+      obj.skip = 0;
+      obj.search_one = '';
+      delete obj.search_two;
+      delete obj.search_three;
+    }
+    refineSearchPlacesDirect(obj);
+  };
 
   const fetchData = (skip: number = placeData.length, local: boolean = false, clear: boolean = false) => {
     // get the query from the url parameters
@@ -306,11 +356,14 @@ const usePlace = () => {
 
   return {
     loading: refineLoading,
+    loadingDirect: refineLoadingDirect,
     error: refineErrorData,
     data: refinePlaceData,
+    dataDirect: allPlaces,
     mapPlaces,
     hasMoreData,
     fetchPlaces: fetchData,
+    fetchPlacesDirect: fetchDataDirect,
     clearSearch: clearTextSearch,
     createPlace: createPlace,
     setEdit,

@@ -72,7 +72,8 @@ const initialState: SearchResultsState2 = {
   isSelect:false,
   selectedKey:[],
   fetchLimit: limit,
-  successInventoryName: null
+  successInventoryName: null,
+  allPlaces: []
 };
 
 export const searchResultsSlice = createSlice({
@@ -395,6 +396,9 @@ export const searchResultsSlice = createSlice({
     setSuccessInventoryName: (state, action: PayloadAction<tabNameProps | null>) => {
       state.successInventoryName = action.payload;
     },
+    setAllPlaces: (state, action: PayloadAction<Place[] | []>) => {
+      state.allPlaces = action.payload;
+    },
   },
 });
 
@@ -451,7 +455,8 @@ export const {
   setIsSelect,
   setSelectedKey,
   setFetchLimit,
-  setSuccessInventoryName
+  setSuccessInventoryName,
+  setAllPlaces
 } = searchResultsSlice.actions;
 
 export default searchResultsSlice.reducer;

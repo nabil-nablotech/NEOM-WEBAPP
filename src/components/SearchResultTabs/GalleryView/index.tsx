@@ -8,7 +8,7 @@ import RenderFileData from "../../RenderFileData";
 import YellowStar from '../../../assets/images/searchResults/YellowStar.svg'
 import { CustomMoreOptionsComponent } from "../../CustomMoreOptionsComponent";
 import { useNavigate } from 'react-router-dom';
-import { baseUrl, detectMediaTypeFromMediaAssociate, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, MAX_FETCH_LIMIT, MEDIA_TAB_NAME } from "../../../utils/services/helpers";
+import { baseUrl, detectMediaTypeFromMediaAssociate, handleImageUrl, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, MAX_FETCH_LIMIT, MEDIA_TAB_NAME } from "../../../utils/services/helpers";
 import usePlaceDetails from "../../../hooks/usePlaceDetails";
 import Loader from "../../Common/Loader";
 import useEventDetails from "../../../hooks/useEventDetails";
@@ -164,11 +164,20 @@ const GalleryView = () => {
                                         {!itemObj?.media_unique_id.deleted && <RenderFileData
                                             fileData={{
                                                 alt: "",
-                                                src: `${baseUrl}${itemObj?.media_unique_id.object?.url}`,
-                                                // src: itemObj.media_unique_id.object.attributes.url,
-                                                className: styles['image'],
-                                                objectURL: itemObj.media_unique_id.objectURL || ''
-
+                                                src: itemObj?.media_unique_id?.object?.url ? (
+                                                    detectMediaTypeFromMediaAssociate(itemObj) === "image" ?
+                                                    handleImageUrl(itemObj.media_unique_id?.object.url, "small_") :
+                                                    `${baseUrl}${itemObj.media_unique_id?.object.url}`
+                                                 ) : undefined,
+                                                 className: styles['image'],
+                                                 objectURL: itemObj?.media_unique_id?.objectURL || '',
+                                                videoType: itemObj?.videoType,
+                                                iframeVideoLink: (itemObj?.media_unique_id?.videoType === "url") ? itemObj?.media_unique_id?.referenceURL : undefined,
+                                                staticVideoLink: (
+                                                    (detectMediaTypeFromMediaAssociate(itemObj) === "video" || itemObj?.media_unique_id?.videoType === "video") &&
+                                                    itemObj?.media_unique_id?.object?.url
+                                                ) ? `${baseUrl}${itemObj?.media_unique_id?.object?.url}` : undefined,
+                                                isOpened :false
                                             }}
                                             fileType={detectMediaTypeFromMediaAssociate(itemObj)}
                                         />}

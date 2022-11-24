@@ -372,6 +372,7 @@ const useEvent = () => {
     clearSearch: clearTextSearch,
     createEvent,
     setSearchValue,
+    searchValue,
     setEdit,
     setEditEvent,
     deleteEvent,

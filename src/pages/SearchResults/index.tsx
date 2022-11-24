@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {Box, Grid, Button} from "@mui/material";
 import { useSelector } from "react-redux";
@@ -14,9 +13,12 @@ import useEvent from "../../hooks/useEvent";
 import usePlace from "../../hooks/usePlace";
 import useLibrary from "../../hooks/useLibrary";
 import useMedia from "../../hooks/useMedia";
+import { useEffect, useState } from 'react';
+
 import {
   setActiveTab,
   setAddNewItemWindowType,
+  setAllPlaces,
   setDeleteItemType,
   setSearchApply,
   toggleAddItemWindowMinimized,
@@ -25,11 +27,12 @@ import {
   toggleShowEditSuccess
 } from "../../store/reducers/searchResultsReducer";
 import PositionedSnackbar from "../../components/Snackbar";
-import { getSingleInventoryNameFromTabName, PLACES_TAB_NAME } from "../../utils/services/helpers";
+import { EVENTS_TAB_NAME, getSingleInventoryNameFromTabName, PLACES_TAB_NAME } from "../../utils/services/helpers";
 import useRefinedSearch from "../../hooks/useRefinedSearchOptions";
 import {setSearchText, } from '../../store/reducers/searchResultsReducer';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import styles from './index.module.css'
+import { Place } from "../../types/Place";
 
 const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId?: string}>();
@@ -37,12 +40,12 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   const navigate = useNavigate();
   // const { searchText, activeTab, newItemWindowOpen, showAddSuccess } =
   const { searchText, showAddSuccess,deleteItemType, showEditSuccess, deleteItemSuccess,
-    successInventoryName} =
+    successInventoryName, places, addNewItemWindowType } =
     useSelector((state: RootState) => state.searchResults);
   const {lastAdded} = useSelector((state: RootState) => state.tabEdit);
   const { fetchEvents, clearSearch: clearEventSearch, setEdit: setEditEvents } = useEvent();
   const { fetchLibraryItems, setEdit: setEditLibrary } = useLibrary();
-  const { fetchPlaces, clearSearch: clearPlaceSearch, setEdit: setEditPlaces } = usePlace();
+  const { fetchPlaces, clearSearch: clearPlaceSearch, setEdit: setEditPlaces, fetchPlacesDirect, dataDirect } = usePlace();
   const { fetchMediaItems, setEdit: setEditMedia } = useMedia();
 
   const dispatch = useDispatch();
@@ -55,6 +58,30 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
       dispatch(setActiveTab(tabName));
     }
   }, []);
+
+  useEffect(() => {
+    if(
+      places &&
+      places.length > 0
+    ) {
+      dispatch(setAllPlaces(places))
+    }
+  }, [])
+
+  useEffect(() => {
+    if(
+      addNewItemWindowType &&
+      (addNewItemWindowType === EVENTS_TAB_NAME)
+    ) {
+
+      fetchPlacesDirect(0)
+    }
+  }, [addNewItemWindowType])
+
+  useEffect(() => {
+    dispatch(setAllPlaces(dataDirect))
+  }, [dataDirect])
+
 
   const handleSubmit = () => {
     switch (tabName) {
