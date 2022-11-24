@@ -32,17 +32,8 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
 
           getOptionLabel={(option: any) => {
 
-            return option?.label ?? option
-            // return option?.label?.toLowerCase() || ''
-            // return (
-            //   option?.attributes?.placeNameEnglish?.toLowerCase() ?
-            //     option?.attributes?.placeNameEnglish?.toLowerCase() :
-            //     option?.attributes?.placeNameArabic?.toLowerCase() ?
-            //       option?.attributes?.placeNameArabic?.toLowerCase() :
-            //       option?.attributes?.placeNumber?.toLowerCase() ?
-            //         option?.attributes?.placeNumber?.toLowerCase() : ''
-
-            // )
+            return option?.label || ''
+            
           }}
           renderOption={renderOption}
           renderInput={(params) => (
