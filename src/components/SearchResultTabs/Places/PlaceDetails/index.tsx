@@ -593,6 +593,7 @@ const PlaceDetailsPage = () => {
                         borderRadius: "2em",
                         margin: "1em",
                         padding: "0.4em 1.2em",
+                        boxShadow: 'rgb(255 255 255 / 62%) 0px 0px 5px 5px'
                       }}
                       onClick={(e) => {
                         e.preventDefault();
