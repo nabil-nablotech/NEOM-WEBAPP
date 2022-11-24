@@ -15,7 +15,7 @@ import RenderFileData from '../../../RenderFileData';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
 import { useEffect } from 'react';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
-import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, copyToClipboard, MAX_FETCH_LIMIT, limit } from '../../../../utils/services/helpers';
+import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, copyToClipboard, MAX_FETCH_LIMIT, limit, detectMediaTypeFromMediaDetailPage } from '../../../../utils/services/helpers';
 
 import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
 import NoImagePresent from '../../../NoDataScreens/NoImagePresent';
@@ -209,25 +209,22 @@ const MediaDetailsPage = ({
                         mediaType === MEDIA_TYPE_VIDEO &&
                         <RenderFileData
                             fileData={{
-                                src:
-                                    typeof mediaDetails.objectURL === 'string' ?
-                                        mediaDetails.objectURL : ""
-                                ,
-                                iframeVideoLink: mediaDetails.referenceURL ? mediaDetails.referenceURL : "",  // means its an iframe
-                                staticVideoLink: `${baseUrl}${mediaDetails?.object?.url}` ,
-                                className: `${styles["single-image"]}`,
-                                thumbNail:
-                                    // TO-DO : api based thumnail
-                                    // mediaDetails.object.url ?
-                                    // `${baseUrl}${mediaDetails.object.url}` :
-                                    "https://img.youtube.com/vi/aU08MWXL0XY/mqdefault.jpg"
-                                , // thumbnail URL for youtube
-                                isOpened: true,
-                                noVideoStyles: {
-                                    height: '400px'
-                                },
-                                fileObject: mediaDetails.object
-                            }}
+                                alt: "",
+                                src: mediaDetails?.object?.url ? (
+                                  detectMediaTypeFromMediaDetailPage(mediaDetails) === "image" ?
+                                    handleImageUrl(mediaDetails?.object.url, "small_") :
+                                    `${baseUrl}${mediaDetails?.object.url}`
+                                ) : undefined,
+                                className: styles['image'],
+                                objectURL: mediaDetails?.objectURL || '',
+                                videoType: mediaDetails?.videoType,
+                                iframeVideoLink: (mediaDetails?.videoType === "url") ? mediaDetails?.referenceURL : undefined,
+                                staticVideoLink: (
+                                  (detectMediaTypeFromMediaDetailPage(mediaDetails) === "video" || mediaDetails?.videoType === "video") &&
+                                  mediaDetails?.object?.url
+                                ) ? `${baseUrl}${mediaDetails?.object?.url}` : undefined,
+                                isOpened: true
+                              }}
                             fileType="video"
                         />
                     }
