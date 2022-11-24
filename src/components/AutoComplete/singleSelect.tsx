@@ -29,40 +29,45 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
           onChange={handleSelectChange}
           // clearOnBlur={false}
           // clearOnEscape={false}
-          // filterOptions={(options) => {
+          filterOptions={(options, state) => {
 
-          //   let newOptions = [...options]
+            let newOptions = [...options]
 
-          //   newOptions = newOptions.filter(item => {
+            if(!state.inputValue) {
+              return options
+            }
 
-          //     try {
-          //       return searchValue &&
-          //       (
-          //         item.attributes.placeNameEnglish ||
-          //         item.attributes.placeNameArabic ||
-          //         item.attributes.placeNumber
-          //       ) &&
-          //       (
-          //         (item.attributes.placeNameEnglish && item.attributes.placeNameEnglish.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1) ||
-          //         (item.attributes.placeNameArabic && item.attributes.placeNameArabic?.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1) ||
-          //         (item.attributes.placeNumber && item.attributes.placeNumber?.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1)
-          //       )
-          //     } catch(e) {
-          //       console.error('hex Error while filtering places: ', e)
-          //       return true
-          //     }
-          //   })
-          //   console.log(
-          //     'hex: ', newOptions
-          //   )
+            newOptions = newOptions.filter(item => {
 
-          //   // if(!searchValue) newOptions = [...itemsList]
+              try {
+                return state.inputValue &&
+                (
+                  item.attributes.placeNameEnglish ||
+                  item.attributes.placeNameArabic ||
+                  item.attributes.placeNumber
+                ) &&
+                (
+                  (item.attributes.placeNameEnglish && item.attributes.placeNameEnglish.toLowerCase().indexOf(state.inputValue.toLowerCase()) !== -1) ||
+                  (item.attributes.placeNameArabic && item.attributes.placeNameArabic?.toLowerCase().indexOf(state.inputValue.toLowerCase()) !== -1) ||
+                  (item.attributes.placeNumber && item.attributes.placeNumber?.toLowerCase().indexOf(state.inputValue.toLowerCase()) !== -1)
+                )
+              } catch(e) {
+                console.error('hex Error while filtering places: ', e)
+                return true
+              }
+            })
             
-          //   return newOptions
-          // }}
+            return newOptions
+          }}
           getOptionLabel={(option: any) => {
 
-            return option?.label || ''
+            return option?.label ? option?.label : `${
+              option?.attributes?.placeNameEnglish ? option?.attributes?.placeNameEnglish : ''
+            }${
+              option?.attributes?.placeNameArabic ? `  ${option?.attributes?.placeNameArabic}` : ''
+            }${
+              option?.attributes?.placeNumber ? ` - ${option?.attributes?.placeNumber}` : ''
+            }`
             
           }}
           renderOption={renderOption}

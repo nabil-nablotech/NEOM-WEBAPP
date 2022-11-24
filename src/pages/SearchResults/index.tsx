@@ -60,7 +60,12 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   }, []);
 
   useEffect(() => {
-    dispatch(setAllPlaces(places))
+    if(
+      places &&
+      places.length > 0
+    ) {
+      dispatch(setAllPlaces(places))
+    }
   }, [])
 
   useEffect(() => {
