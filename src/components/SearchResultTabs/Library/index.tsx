@@ -19,12 +19,13 @@ import {
   formatBytes,
   antTablePaginationCss,
   checkSearchParameter,
+  itemAddEditAccess
 } from "../../../utils/services/helpers";
 import MoreOptionsComponent from "../Places/ListView/MoreOption";
 import { Media } from "../../../types/Media";
 import { HtmlTooltip } from "../../../components/Tooltip";
 import { Typography } from "@mui/material";
-import { setSelectedCardIndex, setIsSelect,setSelectedKey } from "../../../store/reducers/searchResultsReducer";
+import { setSelectedCardIndex, setIsSelect, setSelectedKey } from "../../../store/reducers/searchResultsReducer";
 
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -145,7 +146,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
 `;
 
 const LibraryTab = () => {
-  const { searchApply, library, searchText, totalCounts, libararyMetaData, isSelect,selectedKey } =
+  const { searchApply, library, searchText, totalCounts, libararyMetaData, isSelect, selectedKey } =
     useSelector((state: RootState) => state.searchResults);
 
   const { selectedValue } = useSelector(
@@ -256,6 +257,7 @@ const LibraryTab = () => {
       fixed: "right",
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (
+        itemAddEditAccess &&
         <MoreOptionsComponent
           type="Library"
           setEdit={setEdit}
@@ -271,7 +273,7 @@ const LibraryTab = () => {
     /** Needs to be done , since InfiniteSCroll needs a relation with
      * div being scrolled. Here its tbody of ant table
      */
-     dispatch(setIsSelect(false));
+    dispatch(setIsSelect(false));
     const ele = document.querySelector("#library-list-parent .ant-table-body");
     if (ele) {
       ele.id = "library-list-div";
@@ -331,9 +333,9 @@ const LibraryTab = () => {
     checkSearchParameter(searchText, selectedValue) && searchApply;
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-     dispatch(setSelectedKey(newSelectedRowKeys))
+    dispatch(setSelectedKey(newSelectedRowKeys))
   };
-    
+
   const rowSelection = {
     selectedKey,
     onChange: onSelectChange,
@@ -355,7 +357,7 @@ const LibraryTab = () => {
               "var(--table-black-text)",
             ]}
             className={`${styles["export-btn"]}`}
-            label={isSelect?"Cancel":"Select"}
+            label={isSelect ? "Cancel" : "Select"}
             style={{
               border: "1px solid var(--light-grey-border)",
               borderRadius: "40px",
@@ -364,7 +366,7 @@ const LibraryTab = () => {
               height: "100%",
               textAlign: "center",
             }}
-            onClick={()=>{dispatch(setIsSelect(!isSelect))}}
+            onClick={() => { dispatch(setIsSelect(!isSelect)) }}
           />
           <Button
             colors={[
@@ -413,7 +415,7 @@ const LibraryTab = () => {
             size="small"
             columns={tableHeaderJson}
             dataSource={library}
-            rowSelection={isSelect?rowSelection:undefined}
+            rowSelection={isSelect ? rowSelection : undefined}
             pagination={false}
             loading={loading ? loading : false}
             bordered

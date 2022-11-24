@@ -12,6 +12,7 @@ import {
   baseUrl,
   detectMediaTypeFromMediaAssociateGraphQlRes,
   isEventRecordAttached,
+  itemAddEditAccess
 } from "../../../../utils/services/helpers";
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
 import MoreOptionsComponent from "../ListView/MoreOption";
@@ -174,7 +175,7 @@ export const Card = ({
                     }}
                   />
                 ) : (
-                  <MoreOptionsComponent
+                  itemAddEditAccess && <MoreOptionsComponent
                     type="Events"
                     setEdit={setEdit}
                     record={record}

@@ -8,7 +8,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import commonStyles from "../../index.module.css";
 import { Loader } from "../../../Loader";
 import { MediaProps } from "../GridView/GridView";
-import { baseUrl, detectMediaTypeFromMediaList } from '../../../../utils/services/helpers';
+import { baseUrl, detectMediaTypeFromMediaList, itemAddEditAccess } from '../../../../utils/services/helpers';
 import RenderFileData from '../../../RenderFileData';
 
 import { MoreOptionsComponent } from './MoreOption';
@@ -253,6 +253,7 @@ const ListView = (props: MediaProps) => {
       width: 20,
       className: "more-menu-ant-cell",
       render: (value: any, record: Media) => (
+        itemAddEditAccess &&
         <MoreOptionsComponent id={record.id} record={record} setEdit={setEdit} />
       ),
     },
