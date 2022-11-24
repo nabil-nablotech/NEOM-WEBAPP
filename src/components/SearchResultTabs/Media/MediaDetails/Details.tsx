@@ -214,8 +214,7 @@ const MediaDetailsPage = ({
                                         mediaDetails.objectURL : ""
                                 ,
                                 iframeVideoLink: mediaDetails.referenceURL ? mediaDetails.referenceURL : "",  // means its an iframe
-                                staticVideoLink: typeof mediaDetails.object?.url === 'string' ? //means its an uploaded video
-                                    handleImageUrl(mediaDetails.object.url, "medium_") : "",
+                                staticVideoLink: `${baseUrl}${mediaDetails?.object?.url}` ,
                                 className: `${styles["single-image"]}`,
                                 thumbNail:
                                     // TO-DO : api based thumnail

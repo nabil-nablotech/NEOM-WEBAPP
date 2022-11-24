@@ -20,6 +20,10 @@ export const Card = ({
         return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
     }
 
+    if(detectMediaTypeFromMediaList(record) === 'video') {
+        // console.log('hex: ', record)
+    }
+
     return <>
         <Box component="div" className={`${gridStyles['card-container']}`} >
             <Grid container spacing={1} className={`${gridStyles['card-grid']}`}>
@@ -27,14 +31,22 @@ export const Card = ({
                     <RenderFileData
                         fileData={{
                             alt: "",
-                            src: record?.attributes?.object?.data?.attributes?.url ? handleImageUrl(record.attributes.object.data.attributes.url, "small_") : undefined,
+                            src: record?.attributes?.object?.data?.attributes?.url ? (
+                                detectMediaTypeFromMediaList(record) === "image" ?
+                                handleImageUrl(record.attributes.object.data.attributes.url, "small_") :
+                                `${baseUrl}${record.attributes.object.data.attributes.url}`
+                             ) : undefined,
                             className: detectMediaTypeFromMediaList(record) === "video" ?
                                 `${styles['video-card-parent']}` : detectMediaTypeFromMediaList(record) === "image" ?
                                     `${gridStyles['card-image']}` : `${styles['three-d-card-parent']}`,
                             objectURL: record?.attributes.objectURL || '',
                             videoType: record?.attributes.videoType,
                             iframeVideoLink: (record?.attributes.videoType === "url") ? record?.attributes.referenceURL : undefined,
-                            staticVideoLink: (detectMediaTypeFromMediaList(record) === "video" && record?.attributes.videoType === "video") ? `${baseUrl}${record?.attributes.object?.data?.attributes?.url}` : undefined
+                            staticVideoLink: (
+                                (detectMediaTypeFromMediaList(record) === "video" || record?.attributes.videoType === "video") &&
+                                record?.attributes.object?.data?.attributes?.url
+                            ) ? `${baseUrl}${record?.attributes.object?.data?.attributes?.url}` : undefined,
+                            isOpened :false
                         }}
                         fileType={detectMediaTypeFromMediaList(record)}
 

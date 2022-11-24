@@ -694,3 +694,8 @@ export const get_youtube_thumbnail = (url: string, quality: "high" | 'low' | 'me
 export const convertKbtoMb = (num: number) => (num/1000).toFixed(5)
 
 export const allowedVideoFormats = ['webm', 'mp4', 'ogg']
+
+export const handleImageUrl = (url: string, size: string) => {
+    let imagePath = url.split("/");
+    return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
+}
