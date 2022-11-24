@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 export default function FreeSolo({ className, formControlSx, itemsList, value, placeholder, label, defaultValue, selectStylesSx, handleSelectChange, handleChange, renderOption,
   errorField, handleClear }: AutoCompleteSingleSelectProps & {errorField?: string, handleClear?: () => void}) {
+
   return (
     <div className={className}>
       <FormControl sx={{ width: '100%', ...formControlSx }}>
@@ -21,6 +22,7 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
       /> */}
         <Autocomplete
           freeSolo
+          disablePortal
           id="free-solo-2-demo"
           disableClearable
           options={itemsList}
@@ -28,6 +30,21 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
           defaultValue={defaultValue}
           onChange={handleSelectChange}
 
+          getOptionLabel={(option: any) => {
+
+            return option?.label ?? option
+            // return option?.label?.toLowerCase() || ''
+            // return (
+            //   option?.attributes?.placeNameEnglish?.toLowerCase() ?
+            //     option?.attributes?.placeNameEnglish?.toLowerCase() :
+            //     option?.attributes?.placeNameArabic?.toLowerCase() ?
+            //       option?.attributes?.placeNameArabic?.toLowerCase() :
+            //       option?.attributes?.placeNumber?.toLowerCase() ?
+            //         option?.attributes?.placeNumber?.toLowerCase() : ''
+
+            // )
+          }}
+          renderOption={renderOption}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -73,8 +90,6 @@ export default function FreeSolo({ className, formControlSx, itemsList, value, p
             
           },
         }}
-        getOptionLabel={(option: any) => option?.label || ''}
-        renderOption={renderOption}
       />
       </FormControl>
       {

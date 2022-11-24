@@ -108,6 +108,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
   const { options } = useSelector((state: RootState) => state.refinedSearch);
 
   const [activeStep, setActiveStep] = useState(0);
+  const [filteredPlaces, setFilteredPlaces] = useState(places);
 
   const [skipped, setSkipped] = useState(new Set<number>());
 
@@ -323,8 +324,33 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
   const handleChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    if (setSearchValue && e.target.value.length >= 3) {
+
+    if (setSearchValue) {
       setSearchValue(e.target.value);
+
+      // let newList = !e.target.value ? places : places.filter(item => {
+
+      //   try {
+      //     return e.target.value &&
+      //     (
+      //       item.attributes.placeNameEnglish ||
+      //       item.attributes.placeNameArabic ||
+      //       item.attributes.placeNumber
+      //     ) &&
+      //     (
+      //       (item.attributes.placeNameEnglish && item.attributes.placeNameEnglish.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1) ||
+      //       (item.attributes.placeNameArabic && item.attributes.placeNameArabic?.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1) ||
+      //       (item.attributes.placeNumber && item.attributes.placeNumber?.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)
+      //     )
+      //   } catch(e) {
+      //     console.error('hex Error while filtering places: ', e)
+      //     return true
+      //   }
+      // })
+
+      // setFilteredPlaces(newList)
+      setFilteredPlaces(places)
+      
     }
   };
 
@@ -428,7 +454,7 @@ const AddNewEvent = ({ onHide, create, setSearchValue }: AddNewItemProps) => {
                 <StepContent
                   tabName={tabName}
                   options={options}
-                  places={places}
+                  places={filteredPlaces}
                   activeStep={activeStep}
                   steps={steps}
                   handleNext={handleNext}
