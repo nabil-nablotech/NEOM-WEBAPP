@@ -16,6 +16,8 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import ReactDatePicker from "react-datepicker";
 import { StepperKeywordsComponent } from "../../../StepperKeywordsComponent";
 import { validateNumber } from "../../../../utils/services/helpers";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store";
 
 const commonSelectSxStyles = {
   textAlign: "left",
@@ -79,6 +81,8 @@ const StepContent = ({
   searchValue,
   setSearchValue
 }: StepContentTypes & {searchValue: string, setSearchValue?: (str: string) => void}) => {
+  
+  const { allPlaces } = useSelector((state: RootState) => state.searchResults);
 
   return (
     <>
@@ -96,7 +100,7 @@ const StepContent = ({
                 // if(setSearchValue) setSearchValue('')
               }}
               searchValue={searchValue}
-              itemsList={places || []}
+              itemsList={allPlaces || []}
               handleSelectChange={(e, value, r, d) =>
                 {
                   formik.setFieldValue("place", value)}
