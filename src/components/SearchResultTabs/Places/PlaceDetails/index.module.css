@@ -193,6 +193,12 @@
     align-items: center;
 }
 
+.three-d-card-parent > img {
+    height: 55%;
+    background: radial-gradient(circle, rgba(255,255,255,1) 62%, transparent 73%);
+    padding: 2px;
+}
+
 
 @media (min-width: 575px) and (max-width: 1025px) {
 

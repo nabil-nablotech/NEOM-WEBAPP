@@ -506,6 +506,7 @@ const PlaceDetailsPage = () => {
     siteType,
     period,
     stateOfConservation,
+    artifacts,
     risk,
     tourismValue,
     researchValue,
@@ -634,7 +635,10 @@ const PlaceDetailsPage = () => {
                                 handleImageUrl(mediaItems[0].media_unique_id?.object.url, "small_") :
                                 `${baseUrl}${mediaItems[0].media_unique_id?.object.url}`
                             ) : undefined,
-                            className: styles['image'],
+                            className: `${styles['image']}${
+                              detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ? 
+                                ` ${styles['three-d-card-parent']}` : ''
+                            }`,
                             objectURL: mediaItems[0]?.media_unique_id?.objectURL || '',
                             videoType: mediaItems[0]?.videoType,
                             iframeVideoLink: (mediaItems[0]?.media_unique_id?.videoType === "url") ? mediaItems[0]?.media_unique_id?.referenceURL : undefined,
@@ -671,7 +675,10 @@ const PlaceDetailsPage = () => {
                               handleImageUrl(mediaItems[1].media_unique_id?.object.url, "small_") :
                               `${baseUrl}${mediaItems[1].media_unique_id?.object.url}`
                           ) : undefined,
-                          className: styles['image'],
+                          className: `${styles['image']}${
+                            detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ? 
+                              ` ${styles['three-d-card-parent']}` : ''
+                          }`,
                           objectURL: mediaItems[1]?.media_unique_id?.objectURL || '',
                           videoType: mediaItems[1]?.videoType,
                           iframeVideoLink: (mediaItems[1]?.media_unique_id?.videoType === "url") ? mediaItems[1]?.media_unique_id?.referenceURL : undefined,
@@ -1056,6 +1063,34 @@ const PlaceDetailsPage = () => {
                       </Box>
                     </Grid>
                   </Grid>
+                  
+                  <Grid container className={`${styles["table-row"]}`}>
+                    <Grid
+                      item
+                      sm={5}
+                      md={4}
+                      className={`${styles["table-parameter"]}`}
+                    >
+                      Artifacts
+                    </Grid>
+                    {!isEmptyValue(artifacts) ? (
+                      artifacts.map((item: string, index: number) => (
+                        <Grid
+                          item
+                          key={index}
+                          onClick={() =>
+                            handleSearch({ artifacts: [item] })
+                          }
+                        >
+                          {item}
+                        </Grid>
+                      ))
+                    ) : (
+                      <Grid item>
+                        <NoTextPresent message={NO_TEXT} />
+                      </Grid>
+                    )}
+                  </Grid>
                   <Grid container className={`${styles["table-row"]}`}>
                     <Grid
                       item
@@ -1221,17 +1256,6 @@ const PlaceDetailsPage = () => {
                         <NoTextPresent message={NO_TEXT} />
                       </Grid>
                     )}
-                  </Grid>
-                  <Grid container className={`${styles["table-row"]}`}>
-                    <Grid
-                      item
-                      sm={5}
-                      md={4}
-                      className={`${styles["table-parameter"]}`}
-                    >
-                      Assessment
-                    </Grid>
-                    <Grid item>-</Grid>
                   </Grid>
                   <Grid container className={`${styles["table-row"]}`}>
                     <Grid

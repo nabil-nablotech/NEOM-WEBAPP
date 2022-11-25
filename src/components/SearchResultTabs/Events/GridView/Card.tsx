@@ -10,8 +10,11 @@ import gridStyles from "./index.module.css";
 import MoreIcon from "../../../../assets/images/searchResults/MoreMenu.svg";
 import {
   baseUrl,
+  detectMediaTypeFromEvent,
   detectMediaTypeFromMediaAssociateGraphQlRes,
+  handleImageUrl,
   isEventRecordAttached,
+  isImagePathInvalid,
   itemAddEditAccess
 } from "../../../../utils/services/helpers";
 import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
@@ -47,7 +50,7 @@ export const Card = ({
   return (
     <>
       <Box component="div" className={`${gridStyles["card-container"]}`}>
-        <Grid container spacing={1} className={`${gridStyles["card-grid"]}`}>
+        <Grid container className={`${gridStyles["card-grid"]}`}>
           <Grid
             item
             xl={4}
@@ -56,6 +59,11 @@ export const Card = ({
             sm={11}
             className={`${gridStyles["card-image-wrapper"]}`}
             onClick={() => { }}
+            style={{
+              minHeight: isImagePathInvalid(
+                record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}` : undefined
+              ) ? '120px' : ''
+            }}
           >
             {img ? (
               <Box
@@ -66,49 +74,36 @@ export const Card = ({
               />
             ) : (
               <>
-                {record.attributes?.media_associates?.data[0]?.attributes
-                  ?.media_unique_id?.data?.attributes?.media_type?.data[0]
-                  ?.attributes?.categoryCode === "MEDIA" ?
-                  <RenderFileDataForGrid
-                    fileData={{
-                      alt: "",
-                      src: record.attributes?.media_associates?.data[0]?.attributes
-                        ?.media_unique_id?.data?.attributes?.object?.data
-                        ?.attributes?.url
-                        ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}`
-                        : undefined,
-                      className:
-                        record.attributes?.media_associates?.data[0]?.attributes
-                          ?.media_unique_id?.data?.attributes?.media_type?.data[0]
-                          ?.attributes?.typeCode === "VIDEO"
-                          ? `${gridStyles["video-card-parent"]}`
-                          : record.attributes?.media_associates?.data[0]?.attributes
-                            ?.media_unique_id?.data?.attributes?.media_type
-                            ?.data[0]?.attributes?.typeCode === "IMAGE"
-                            ? `${gridStyles["card-image"]}`
-                            : `${gridStyles["three-d-card-parent"]}`,
-                      objectURL:
-                        record.attributes?.media_associates?.data[0]?.attributes
-                          ?.media_unique_id?.data?.attributes?.objectURL || "",
-                      videoType:
-                        record.attributes?.media_associates?.data[0]?.attributes
-                          ?.media_unique_id?.data?.attributes?.videoType,
-                      iframeVideoLink:
-                        record.attributes?.media_associates?.data[0]?.attributes
-                          ?.media_unique_id?.data?.attributes.videoType === "url"
-                          ? record.attributes?.media_associates?.data[0]?.attributes
-                            ?.media_unique_id?.data?.attributes.referenceURL
-                          : undefined,
-                      staticVideoLink:
-                        record.attributes?.media_associates?.data[0]?.attributes
-                          ?.media_unique_id?.data?.attributes.videoType === "video"
-                          ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}`
-                          : undefined,
-                    }}
-                    fileType={detectMediaTypeFromMediaAssociateGraphQlRes(record.attributes?.media_associates?.data[0]?.attributes || record)}
-                  /> :
-                  <NoImagePresent message={"No media item is available"} />
-                }
+                  {
+                    record.attributes?.media_associates?.data[0]?.attributes
+                      ?.media_unique_id?.data?.attributes?.media_type?.data[0]
+                      ?.attributes?.categoryCode === "MEDIA"
+                      ?
+                      <RenderFileDataForGrid
+                        fileData={{
+                          alt: "",
+                          src: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? (
+                            detectMediaTypeFromEvent(record) === "image" ?
+                              handleImageUrl(record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url, "small_") :
+                              `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}`
+                          ) : undefined,
+                          className: detectMediaTypeFromEvent(record) === "video" ?
+                            `${gridStyles['video-card-parent']}` : detectMediaTypeFromEvent(record) === "image" ?
+                              `${gridStyles['card-image']}` : `${gridStyles['three-d-card-parent']}`,
+                          objectURL: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.objectURL || '',
+                          videoType: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.videoType,
+                          iframeVideoLink: (record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.videoType === "url")
+                            ? record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.referenceURL : undefined,
+                          staticVideoLink: (
+                            (detectMediaTypeFromEvent(record) === "video" || record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.videoType === "video") &&
+                            record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url
+                          ) ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}` : undefined,
+                          isOpened: false
+                        }}
+                        fileType={detectMediaTypeFromEvent(record)}
+                      /> :
+                      <NoImagePresent message={"No media item is available"} />
+                  }
               </>
             )}
           </Grid>

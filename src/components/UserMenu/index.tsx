@@ -171,7 +171,7 @@ function UserMenuComponent({
           }
         </Box>}
         {admin && <IconSettings onClick={(e) => handleSettingsClick(e)} src={iconSettings} alt="icon-settings" />}
-        {admin && <IconDownload onClick={(e) => handleDownloadClick(e)} src={iconDownload} alt="icon-settings" />}
+        <IconDownload onClick={(e) => handleDownloadClick(e)} src={iconDownload} alt="icon-settings" />
         <InitialsWrapper
           id="long-button"
           //@ts-ignore
