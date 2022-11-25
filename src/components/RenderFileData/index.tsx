@@ -54,7 +54,6 @@ const RenderFileData = ({
             {
                 fileType === 'video' &&
                 <>
-                {}
                     <Box component="div"
                         style={{
                             position: 'relative',
@@ -272,11 +271,13 @@ const RenderFileData = ({
             {
                 fileType === '3d' &&
                 <>
-                    <Box component="div" style={{
+                    <Box component="div" 
+                    className={fileData.className}
+                    style={{
                         position: 'relative'
                     }}>
                         <Box
-                            className={`${fileData.className} ${styles['three-d-model-box']}`}
+                            className={`${styles['three-d-model-box']} ${styles[fileData.className]} `}
                             component="div"
                         >
                             {fileData.objectURL ? parse(fileData.objectURL) : ''}
@@ -285,10 +286,11 @@ const RenderFileData = ({
                             component="img"
                             src={ThreeDIcon}
                             sx={{
-                                width: 1 / 4,
-                                height: 1 / 4,
+                                ...playIconSx,
+                                background: 'radial-gradient(circle, rgba(255,255,255,1) 64%, transparent 75%)',
+                                padding: '2px'
                             }}
-                            className={`${styles['video-play-icon']}`}
+                            className={`${styles['three-model-play-icon']}`}
                         // onClick={e => {
                         //     e.preventDefault()
                         // }}

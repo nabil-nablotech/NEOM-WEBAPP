@@ -573,6 +573,15 @@ export const detectMediaTypeFromMediaAssociate = (obj: MediaAssociateObj) => {
     return MEDIA_TYPE_3D;
   } else return MEDIA_TYPE_IMAGE;
 };
+export const detectMediaTypeFromPlace = (obj: Place) => {
+  if (obj.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE") {
+    return MEDIA_TYPE_IMAGE;
+  } else if (obj.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "VIDEO") {
+    return MEDIA_TYPE_VIDEO;
+  } else if (obj.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "3DMODEL") {
+    return MEDIA_TYPE_3D;
+  } else return MEDIA_TYPE_IMAGE;
+};
 
 export const detectMediaTypeFromMediaDetailPage = (obj: MediaApi) => {
   if (obj.media_type[0].typeCode === "IMAGE") {

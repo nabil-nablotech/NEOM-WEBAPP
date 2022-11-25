@@ -137,6 +137,13 @@ div > :has(.three-d-card-parent) {
 
 }
 
+.three-d-card-parent > img { /** play 3d icon */
+    height: 35%;
+    top: 45%;
+    background: radial-gradient(circle, rgba(255,255,255,1) 51%, transparent 75%);
+}
+
+
 @media (min-width: 575px) and (max-width: 1025px) {
     .card-item {
         --viewWidth: 49%

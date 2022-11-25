@@ -635,7 +635,10 @@ const PlaceDetailsPage = () => {
                                 handleImageUrl(mediaItems[0].media_unique_id?.object.url, "small_") :
                                 `${baseUrl}${mediaItems[0].media_unique_id?.object.url}`
                             ) : undefined,
-                            className: styles['image'],
+                            className: `${styles['image']}${
+                              detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ? 
+                                ` ${styles['three-d-card-parent']}` : ''
+                            }`,
                             objectURL: mediaItems[0]?.media_unique_id?.objectURL || '',
                             videoType: mediaItems[0]?.videoType,
                             iframeVideoLink: (mediaItems[0]?.media_unique_id?.videoType === "url") ? mediaItems[0]?.media_unique_id?.referenceURL : undefined,
@@ -672,7 +675,10 @@ const PlaceDetailsPage = () => {
                               handleImageUrl(mediaItems[1].media_unique_id?.object.url, "small_") :
                               `${baseUrl}${mediaItems[1].media_unique_id?.object.url}`
                           ) : undefined,
-                          className: styles['image'],
+                          className: `${styles['image']}${
+                            detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ? 
+                              ` ${styles['three-d-card-parent']}` : ''
+                          }`,
                           objectURL: mediaItems[1]?.media_unique_id?.objectURL || '',
                           videoType: mediaItems[1]?.videoType,
                           iframeVideoLink: (mediaItems[1]?.media_unique_id?.videoType === "url") ? mediaItems[1]?.media_unique_id?.referenceURL : undefined,

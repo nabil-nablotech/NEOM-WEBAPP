@@ -32,7 +32,7 @@ import { useDispatch } from "react-redux";
 import {setSelectedValue} from '../../store/reducers/refinedSearchReducer';
 import { MediaDetailsModal } from "./Media/MediaDetails";
 import GalleryView from './GalleryView/index';
-import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, setSearchApply } from "../../store/reducers/searchResultsReducer";
+import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, setSearchApply, toggleGalleryView, toggleShowAddSuccess, toggleShowEditSuccess } from "../../store/reducers/searchResultsReducer";
 import PlaceDetailsPage from "./Places/PlaceDetails";
 import EventDetailsPage from "./Events/EventDetails";
 import { LibraryDetailsModal } from "./Library/LibraryDetails";
@@ -130,7 +130,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { searchText, openGalleryView } = useSelector((state: RootState) => state.searchResults);
+  const { searchText, openGalleryView, showAddSuccess, showEditSuccess } = useSelector((state: RootState) => state.searchResults);
   const { options, selectedValue } = useSelector((state: RootState) => state.refinedSearch);
 
   useEffect(() => {
@@ -138,6 +138,33 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
       const newTabIndex = tabIndexBasedOnName(tabName);
       setValue(newTabIndex);
       dispatch(setSelectedValue(initialState));
+
+      /** resetters */
+
+      // 1 TO-DO
+      // if(!uniqueId) {
+      //   if(showAddSuccess) {
+      //     dispatch(toggleShowAddSuccess(false));
+      //   }
+      //   if(showEditSuccess) {
+      //     dispatch(toggleShowEditSuccess(false));
+      //   }
+      // }
+
+      // 2
+      if(!uniqueId) {
+
+        /** means only tab switch has occured from accordion.
+         * Add further parameter to this if as and when required
+         */
+        dispatch(toggleGalleryView({
+          flag: false,
+          galleryViewItemList: [],
+          galleryViewIdList: []
+        }));
+
+      }
+
     }
   }, [tabName]);
 

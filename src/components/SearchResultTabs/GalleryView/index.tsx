@@ -169,7 +169,9 @@ const GalleryView = () => {
                                                     handleImageUrl(itemObj.media_unique_id?.object.url, "small_") :
                                                     `${baseUrl}${itemObj.media_unique_id?.object.url}`
                                                  ) : undefined,
-                                                 className: styles['image'],
+                                                 className: `${styles['image']}${
+                                                    detectMediaTypeFromMediaAssociate(itemObj) === "3d" ? ` from-gallery-view` : ''
+                                                 }`,
                                                  objectURL: itemObj?.media_unique_id?.objectURL || '',
                                                 videoType: itemObj?.videoType,
                                                 iframeVideoLink: (itemObj?.media_unique_id?.videoType === "url") ? itemObj?.media_unique_id?.referenceURL : undefined,
