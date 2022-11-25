@@ -195,6 +195,7 @@ const useEvent = () => {
     if (clear) {
       obj.skip = 0;
       obj.search_one = '';
+      obj.text = [];
       delete obj.search_two;
       delete obj.search_three;
       delete obj.text;

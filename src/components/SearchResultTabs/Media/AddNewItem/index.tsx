@@ -355,7 +355,9 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
         config
       );
       formik.values.object = res.data;
-      formik.setFieldValue("title", res.data[0].name.split('.')[0]);
+      if(!formik.values.title) {
+        formik.setFieldValue("title", res.data[0].name.split('.')[0]);
+      }
       formik.setFieldValue("valid", true);
       onSuccess("Ok");
     } catch (err) {

@@ -35,9 +35,15 @@ export type MediaAttributes = {
       data: {
         attributes: {
           url: string;
+          
         };
       };
     };
+    formats : {
+      thumbnail?: any
+      small?: any
+      large?: any
+    }
     videoType: "video" | "url" | "embededCode";
     objectURL: string | null
     media_associate: {
