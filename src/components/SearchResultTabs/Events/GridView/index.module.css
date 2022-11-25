@@ -6,6 +6,9 @@
     max-height: 79vh;
     overflow-y: scroll;
 }
+.card-grid-item {
+    width: 100%;
+}
 .card-grid {
     justify-content: center;
     font-family: 'Roboto-Regular';

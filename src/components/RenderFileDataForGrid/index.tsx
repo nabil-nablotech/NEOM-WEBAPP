@@ -53,7 +53,6 @@ const RenderFileDataForGrid = ({
             {
                 fileType === 'video' &&
                 <>
-                {}
                     <Box component="div"
                         style={{
                             position: 'relative'
@@ -82,29 +81,34 @@ const RenderFileDataForGrid = ({
                             //         }}
                             //     />
                             // </> :
-                                <>
-                                    {
-                                        fileData.iframeVideoLink ?
-                                            <>
-                                                {
-                                                    fileData.iframeVideoLink.indexOf('https://www.youtube.com/watch') !== -1 ?
-                                                        <>
-                                                            <ReactPlayer
-                                                                width="100%" height="auto"
-                                                                playing={fileData.isOpened} url={fileData.iframeVideoLink}
-                                                                style={{
-                                                                    aspectRatio: '3/1.65'
-                                                                }}
-                                                            />
-                                                        </> :
-                                                        <>
-                                                            <iframe title="video-player-iframe" style={{
-                                                                width: '100%'
+                            <>
+                                {
+                                    fileData.iframeVideoLink ?
+                                        <>
+                                            {
+                                                fileData.iframeVideoLink.indexOf('https://www.youtube.com/watch') !== -1 ?
+                                                    <>
+                                                        <ReactPlayer
+                                                            width="100%" height="auto"
+                                                            playing={fileData.isOpened} url={fileData.iframeVideoLink}
+                                                            style={{
+                                                                aspectRatio: '3/1.65'
                                                             }}
+                                                        />
+                                                    </> :
+                                                    <>
+                                                        <iframe title="video-player-iframe" style={{
+                                                            width: '100%'
+                                                        }}
 
-                                                                src={fileData.iframeVideoLink.replace('/watch', '/embed')}
+                                                            src={fileData.iframeVideoLink.replace('/watch', '/embed')}
+                                                            onClick={e => {
+                                                                if (!fileData.isOpened) {
+                                                                    e.preventDefault()
+                                                                }
+                                                            }}
                                                         >
-                                                            {!fileData.isOpened && <>
+                                                            {/* {!fileData.isOpened && <>
                                                                 <PlayCircleFilledOutlinedIcon
                                                                     sx={{
                                                                         ...playIconSx
@@ -114,25 +118,69 @@ const RenderFileDataForGrid = ({
                                                                         e.preventDefault()
                                                                     }}
                                                                 />
-                                                            </>}
-                                                            </iframe>
-                                                        </>
-                                                }
-                                            </> :
-                                            fileData.staticVideoLink ?
-                                                <>
-                                                    <video width="100%" height="auto" controls={false} autoPlay={false}>
+                                                            </>} */}
+                                                        </iframe>
+                                                    </>
+                                            }
+                                        </> :
+                                        fileData.staticVideoLink ?
+                                            <>
+                                                <Box component="div" style={{
+                                                    position: 'relative'
+                                                }}>
+                                                    <video width="100%" height="100%"
+                                                        controls={fileData.isOpened ? true : false} autoPlay={false}
+                                                    >
                                                         <source
                                                             src={fileData.staticVideoLink}
-                                                            type="auto"
                                                         />
+
                                                     </video>
-                                                
-                                                </> :
-                                                <>
-                                                {fileData.objectURL ? 
-                                                    <div dangerouslySetInnerHTML={{ __html: fileData.objectURL }} />
-                                                :
+                                                    {!fileData.isOpened && <>
+                                                        <PlayCircleFilledOutlinedIcon
+                                                            sx={{
+                                                                ...playIconSx
+                                                            }}
+                                                            fontSize="large" className={`${styles['video-play-icon']}`}
+                                                            onClick={e => {
+                                                                e.preventDefault()
+                                                            }}
+                                                        />
+                                                    </>}
+                                                </Box>
+                                            </> :
+                                            <>
+                                                {fileData.objectURL ?
+                                                    <>
+                                                        {
+                                                            fileData.objectURL.indexOf('iframe') !== -1 ?
+                                                                <>
+                                                                    <div dangerouslySetInnerHTML={{ __html: fileData.objectURL }} />
+                                                                    {!fileData.isOpened && <>
+                                                                        <PlayCircleFilledOutlinedIcon
+                                                                            sx={{
+                                                                                ...playIconSx
+                                                                            }}
+                                                                            fontSize="large" className={`${styles['video-play-icon']}`}
+                                                                            onClick={e => {
+                                                                                e.preventDefault()
+                                                                            }}
+                                                                        />
+                                                                    </>}
+                                                                </> :
+                                                                <ReactPlayer
+                                                                    width="100%" height="100%"
+                                                                    playing={false}
+                                                                    url={fileData.objectURL}
+                                                                    style={{
+                                                                        aspectRatio: '3/1.65',
+                                                                        pointerEvents: 'none'
+                                                                    }}
+                                                                />
+
+                                                        }
+                                                    </>
+                                                    :
                                                     <Box component="div" className={`${styles['video-player-box']}`}>
                                                         <ReactPlayer
                                                             width="100%" height="auto"
@@ -142,9 +190,9 @@ const RenderFileDataForGrid = ({
                                                             }}
                                                         />
                                                     </Box>}
-                                                </>
-                                    }
-                                </>
+                                            </>
+                                }
+                            </>
 
                         }
                     </Box>
@@ -153,11 +201,14 @@ const RenderFileDataForGrid = ({
             {
                 fileType === '3d' &&
                 <>
-                    <Box component="div" style={{
-                        position: 'relative'
-                    }}>
+                    <Box component="div"
+                        className={fileData.className}
+                        style={{
+                            position: 'relative',
+                            width: '100%'
+                        }}>
                         <Box
-                            className={`${fileData.className} ${styles['three-d-model-box']}`}
+                            className={`${styles['three-d-model-box']} ${styles[fileData.className]} `}
                             component="div"
                         >
                             {fileData.objectURL ? parse(fileData.objectURL) : ''}
@@ -166,10 +217,13 @@ const RenderFileDataForGrid = ({
                             component="img"
                             src={ThreeDIcon}
                             sx={{
-                                width: 1 / 4,
-                                height: 1 / 4,
+                                // width: 1 / 3.6,
+                                // height: 1 / 3.6,
+                                ...playIconSx,
+                                background: 'radial-gradient(circle, rgba(255,255,255,1) 64%, transparent 75%)',
+                                padding: '2px'
                             }}
-                            className={`${styles['video-play-icon']}`}
+                            className={`${styles['three-model-play-icon']}`}
                         // onClick={e => {
                         //     e.preventDefault()
                         // }}

@@ -91,29 +91,27 @@ const GridView = (props: EventsProps) => {
                                 { isSelect ? <><Checkbox color="default" onChange={(e)=>handleChange(e, item.id)}/></> : <></> }
 
                                 <Grid item className={`${gridStyles['card-grid-item']}`} key={index} sm={12} onClick={() => handleClick(item, index)}>
-                                
-                                <Card
-                                    key={index}
-                                    /** TO-DO: 1 used since 0th data was coming null, to be fixed from backend */
-                                    img={item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ? item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''}
-                  
-                                    // img={item?.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url || ''}
-                                    title={item?.attributes?.visit_associate.data?.attributes?.place_unique_id ? `${item?.attributes?.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameEnglish} ${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic} - ${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber}` : ''}
-                                    subTitle={item?.attributes?.siteDescription || ''}
-                                    dateString={
-                                        item?.attributes?.visitDate ?
-                                            `${format(
-                                                new Date(item?.attributes?.visitDate),
-                                                "MM/dd/yyyy"
-                                            )}` : ''
-                                    }
-                                    isNew={checkIsNew(item.attributes.visitDate)}
-                                    handleClick={handleClick}
-                                    record={item}
-                                    id={item.id}
-                                    setEdit={setEdit}
-                                />
-                            </Grid>
+                                    <Card
+                                        key={index}
+                                        /** TO-DO: 1 used since 0th data was coming null, to be fixed from backend */
+                                        img={item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ? item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''}
+
+                                        title={item?.attributes?.visit_associate.data?.attributes?.place_unique_id ? `${item?.attributes?.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameEnglish} ${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic} - ${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber}` : ''}
+                                        subTitle={item?.attributes?.siteDescription || ''}
+                                        dateString={
+                                            item?.attributes?.visitDate ?
+                                                `${format(
+                                                    new Date(item?.attributes?.visitDate),
+                                                    "MM/dd/yyyy"
+                                                )}` : ''
+                                        }
+                                        isNew={checkIsNew(item.attributes.visitDate)}
+                                        handleClick={handleClick}
+                                        record={item}
+                                        id={item.id}
+                                        setEdit={setEdit}
+                                    />
+                                </Grid>
                             </Grid>
                         )
                             

@@ -5,7 +5,7 @@ import { Grid } from "@mui/material";
 import parse from "html-react-parser";
 import { GridViewCard_Places, InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
-import { baseUrl, detectMediaTypeFromMediaAssociateGraphQlRes, isImagePathInvalid, isRecordAttached, itemAddEditAccess } from "../../../../utils/services/helpers";
+import { baseUrl, detectMediaTypeFromMediaAssociateGraphQlRes, detectMediaTypeFromPlace, isImagePathInvalid, isRecordAttached, itemAddEditAccess } from "../../../../utils/services/helpers";
 import MoreOptionsComponent from "../ListView/MoreOption";
 import { useSelector } from "react-redux";
 import DetachedIcon from "../../../Icons/DetachedIcon";
@@ -65,14 +65,23 @@ export const Card = ({
               <RenderFileDataForGrid
                 fileData={{
                   alt: "",
-                  src: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? handleImageUrl(record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url, "thumbnail_") : undefined,
-                  className: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "VIDEO" ?
-                    `${gridStyles['video-card-parent']}` : record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ?
+                  src: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? (
+                    detectMediaTypeFromPlace(record) === "image" ?
+                      handleImageUrl(record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url, "small_") :
+                      `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}`
+                  ) : undefined,
+                  className: detectMediaTypeFromPlace(record) === "video" ?
+                    `${gridStyles['video-card-parent']}` : detectMediaTypeFromPlace(record) === "image" ?
                       `${gridStyles['card-image']}` : `${gridStyles['three-d-card-parent']}`,
                   objectURL: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.objectURL || '',
                   videoType: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.videoType,
-                  iframeVideoLink: (record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.videoType === "url") ? record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.referenceURL : undefined,
-                  staticVideoLink: (record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.videoType === "video") ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}` : undefined
+                  iframeVideoLink: (record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.videoType === "url")
+                    ? record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.referenceURL : undefined,
+                  staticVideoLink: (
+                    (detectMediaTypeFromPlace(record) === "video" || record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.videoType === "video") &&
+                    record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url
+                  ) ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}` : undefined,
+                  isOpened: false
                 }}
                 fileType={detectMediaTypeFromMediaAssociateGraphQlRes(record.attributes?.media_associates?.data[0]?.attributes || record)}
               />
