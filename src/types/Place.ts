@@ -19,6 +19,7 @@ export type PlaceApi = {
   period: string[];
   researchValue: string[];
   tourismValue: string[];
+  artifacts: string[];
   stateOfConservation: string[];
   recommendation: string[];
   risk: string[];

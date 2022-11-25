@@ -20,6 +20,8 @@ const CustomDrawer = ({
             <Drawer
                 anchor={origin ? origin : "left"}
                 open={isOpen}
+                hideBackdrop={true}
+                disableEnforceFocus
                 onClose={onClose}
                 style={{
                     left: 'unset'

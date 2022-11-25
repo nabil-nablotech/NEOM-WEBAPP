@@ -506,6 +506,7 @@ const PlaceDetailsPage = () => {
     siteType,
     period,
     stateOfConservation,
+    artifacts,
     risk,
     tourismValue,
     researchValue,
@@ -1056,6 +1057,34 @@ const PlaceDetailsPage = () => {
                       </Box>
                     </Grid>
                   </Grid>
+                  
+                  <Grid container className={`${styles["table-row"]}`}>
+                    <Grid
+                      item
+                      sm={5}
+                      md={4}
+                      className={`${styles["table-parameter"]}`}
+                    >
+                      Artifacts
+                    </Grid>
+                    {!isEmptyValue(artifacts) ? (
+                      artifacts.map((item: string, index: number) => (
+                        <Grid
+                          item
+                          key={index}
+                          onClick={() =>
+                            handleSearch({ artifacts: [item] })
+                          }
+                        >
+                          {item}
+                        </Grid>
+                      ))
+                    ) : (
+                      <Grid item>
+                        <NoTextPresent message={NO_TEXT} />
+                      </Grid>
+                    )}
+                  </Grid>
                   <Grid container className={`${styles["table-row"]}`}>
                     <Grid
                       item
@@ -1221,17 +1250,6 @@ const PlaceDetailsPage = () => {
                         <NoTextPresent message={NO_TEXT} />
                       </Grid>
                     )}
-                  </Grid>
-                  <Grid container className={`${styles["table-row"]}`}>
-                    <Grid
-                      item
-                      sm={5}
-                      md={4}
-                      className={`${styles["table-parameter"]}`}
-                    >
-                      Assessment
-                    </Grid>
-                    <Grid item>-</Grid>
                   </Grid>
                   <Grid container className={`${styles["table-row"]}`}>
                     <Grid
