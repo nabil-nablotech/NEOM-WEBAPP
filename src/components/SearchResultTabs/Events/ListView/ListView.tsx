@@ -373,7 +373,7 @@ const ListView = (props: EventsProps) => {
                     loading={loading ? loading : false}
                     bordered
                     // scroll={{ y: 500, scrollToFirstRowOnChange: true }}
-                    scroll={{ x: 'max-content', y: '500', scrollToFirstRowOnChange: true }}
+                    scroll={{ x: 'max-content', y: 350, scrollToFirstRowOnChange: true }}
                     style={{
                         background: "transparent",
                     }}

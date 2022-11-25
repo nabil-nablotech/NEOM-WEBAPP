@@ -96,11 +96,12 @@ const HandleUrl = ({
     //   allowFullScreen
     // ></iframe>
     <ReactPlayer
-      width="100%" height="auto"
+      width="100%" height="100%"
       playing={false}
+      controls={true}
       url={formik.values.url}
       style={{
-        aspectRatio: '3/1.65'
+        aspectRatio: '3/2'
       }}
     />
   );
@@ -276,7 +277,7 @@ allowFullScreen
                     {formik.values.submitEmbed ? (
                       <Box
                         component={"div"}
-                        className={`${styles["embed-box"]}`}
+                        className={`${styles["video-box"]}`}
                       >
                         {handleEmbed(formik.values.embedCode)}
                         <Typography
@@ -345,7 +346,7 @@ allowFullScreen
                         {formik.values.valid && (
                           <Box
                             component={"div"}
-                            className={`${styles["embed-box"]}`}
+                            className={`${styles["video-box"]}`}
                           >
                             <HandleUrl
                               formik={formik}

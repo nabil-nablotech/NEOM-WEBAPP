@@ -137,19 +137,19 @@
 .single-image.map-right-image {
     width: 90%;
 }
-.text-anchors-parent {
-    display: flex;
-    gap: 3px;
-}
+
 
 .text-anchor {
     color: unset;
     text-decoration: underline;
     cursor: pointer;
+    display: inline-block;
 }
 
 .text-anchor::after{
-    content: ','
+    content: ',';
+    width: 1px;
+    padding-inline: 2px;
 }
 
 .text-anchor:last-child::after{

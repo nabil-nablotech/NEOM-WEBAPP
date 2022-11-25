@@ -360,7 +360,7 @@ const ListView = (props: PlacesProps) => {
           loading={loading}
           rowSelection={isSelect ? rowSelection : undefined}
           bordered
-          scroll={{ x: 'max-content', y: 500 }}
+          scroll={{ x: 'max-content', y: 350 }}
           style={{
             background: "transparent",
           }}

@@ -652,7 +652,10 @@ const EventDetailsPage = () => {
                     >
                       Site Type
                     </Grid>
-                    <Grid item>
+                    <Grid item
+                      sm={9}
+                      md={8}
+                    >
                       <Box
                         component={"div"}
                         className={`${styles["text-anchors-parent"]}`}
@@ -683,7 +686,10 @@ const EventDetailsPage = () => {
                     >
                       Period
                     </Grid>
-                    <Grid item>
+                    <Grid item
+                      sm={9}
+                      md={8}
+                    >
                       {/* 
                                             to-do::
                                             Site type and period will act as a link to a quick search. For example if 
@@ -721,7 +727,7 @@ const EventDetailsPage = () => {
                       Field Narrative
                     </Grid>
                     {!isEmptyValue(fieldNarrative) ? (
-                      <Grid item>{fieldNarrative}</Grid>
+                      <Grid item sm={9} md={8}>{fieldNarrative}</Grid>
                     ) : (
                       <Grid item>
                         <NoTextPresent message={NO_TEXT} />
