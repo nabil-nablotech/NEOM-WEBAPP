@@ -1041,7 +1041,10 @@ const PlaceDetailsPage = () => {
                     >
                       Site Type
                     </Grid>
-                    <Grid item>
+                    <Grid item
+                      sm={7}
+                      md={8}
+                    >
                       <Box
                         component={"div"}
                         className={`${styles["text-anchors-parent"]}`}
@@ -1100,7 +1103,10 @@ const PlaceDetailsPage = () => {
                     >
                       Period
                     </Grid>
-                    <Grid item>
+                    <Grid item
+                      sm={7}
+                      md={8}
+                    >
                       {/* 
                                             to-do::
                                             Site type and period will act as a link to a quick search. For example if 
