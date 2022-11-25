@@ -55,13 +55,11 @@ const Header = (props: IHeader) => {
             {
               showSearch &&
               <CustomSearchField
-              handleChangeParent={(e) => {
-                dispatch(setSearchText(e.target.value));
-            }}
-            
-            shouldHandleChangeFromParent={true}
-            
-            valueFromParent={searchText}
+                handleChangeParent={(e) => {
+                  dispatch(setSearchText(e.target.value));
+                }}
+                shouldHandleChangeFromParent={true}
+                valueFromParent={searchText}
                 onKeyDown={onKeyDown}
                 handleClearSearchText={handleClearSearchText}
                 // className={`${styles["header-search"]}`}

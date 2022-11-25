@@ -186,7 +186,9 @@ const MediaDetailsPage = ({
                         <>
                             {
                                 mediaDetails?.object?.url ?
-                                    <Box className={`${styles['image']}`} component="img" alt={""} src={handleImageUrl(mediaDetails.object.url, mediaDetails?.formats?.large ?  "large_" : "small_")}
+                                    <Box className={`${styles['image']}`} component="img" alt={""} src={
+                                        handleImageUrl(mediaDetails.object.url, mediaDetails?.formats?.large ?  "large_" : mediaDetails?.formats?.small ? "small_" : "")
+                                    }
                                         style={{
                                             objectFit: (mediaDetails && (mediaDetails?.object.width / mediaDetails?.object.height > 1.5)) ? 'cover' : 'contain'
                                         }}

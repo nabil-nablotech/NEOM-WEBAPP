@@ -346,7 +346,7 @@ const LibraryTab = () => {
       <Box component="div" className={`${styles["utility-bar"]}`}>
         <Box component="div">
           {" "}
-          {showResults ? `${meta?.pagination?.total} Results | ` : null}
+          {showResults && meta?.pagination?.total ? `${meta?.pagination?.total} Results | ` : null}
           {totalCounts?.library} Total Library Items
         </Box>
         <Box component="div" className={`${libStyles["btns-flex"]}`}>

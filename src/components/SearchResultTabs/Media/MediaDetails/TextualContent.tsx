@@ -123,11 +123,20 @@ const TextualContent = ({
                                 <>
                                     {
                                         visitObj &&
-                                        <div key={index}>{visitObj?.visit_associate?.place_unique_id?.placeNameArabic} {
-                                            mediaDetails.media_associate?.visit_unique_ids[0].visitNumber ?
-                                                `Visit ${mediaDetails.media_associate?.visit_unique_ids[0].visitNumber}` :
-                                                ''
-                                        }</div>
+                                            <div key={index}>
+                                                {
+                                                    `${visitObj?.visit_associate?.place_unique_id?.placeNameEnglish ?
+                                                        visitObj?.visit_associate?.place_unique_id?.placeNameEnglish :
+                                                        ""
+                                                    }${visitObj?.visit_associate?.place_unique_id?.placeNameArabic ?
+                                                        `  ${visitObj?.visit_associate?.place_unique_id?.placeNameArabic}` :
+                                                        ""
+                                                    }${mediaDetails.media_associate?.visit_unique_ids[0].visitNumber ?
+                                                        `  Visit ${mediaDetails.media_associate?.visit_unique_ids[0].visitNumber}` :
+                                                        ''
+                                                    }`
+                                                }
+                                            </div>
                                     }
                                 </>
                             ))

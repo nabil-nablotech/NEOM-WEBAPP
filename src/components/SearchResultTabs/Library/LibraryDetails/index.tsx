@@ -346,22 +346,27 @@ const LibraryDetailsPage = ({
                     {libraryDetails.media_associate?.visit_unique_ids &&
                     libraryDetails.media_associate?.visit_unique_ids?.length > 0
                       ? libraryDetails.media_associate?.visit_unique_ids?.map(
-                          (visitObj: InventoryAssociationType_Event) => (
-                            <>
-                              {visitObj && (
+                          (visitObj: InventoryAssociationType_Event) => {
+
+                            return  <>
+                              {visitObj &&
                                 <div>
                                   {
-                                    visitObj?.visit_associate?.place_unique_id
-                                      ?.placeNameArabic
-                                  }{" "}
-                                  {libraryDetails.media_associate
-                                    ?.visit_unique_ids[0]?.visitNumber
-                                    ? `Visit ${libraryDetails.media_associate?.visit_unique_ids[0]?.visitNumber}`
-                                    : ""}
+                                    `${visitObj?.visit_associate?.place_unique_id?.placeNameEnglish ?
+                                      visitObj?.visit_associate?.place_unique_id?.placeNameEnglish :
+                                      ""
+                                    }${visitObj?.visit_associate?.place_unique_id?.placeNameArabic ?
+                                      `  ${visitObj?.visit_associate?.place_unique_id?.placeNameArabic}` :
+                                      ""
+                                    }${libraryDetails.media_associate?.visit_unique_ids[0]?.visitNumber
+                                      ? `  Visit ${libraryDetails.media_associate?.visit_unique_ids[0]?.visitNumber}`
+                                      : ""}`
+                                  }
+
                                 </div>
-                              )}
+                              }
                             </>
-                          )
+                          }
                         )
                       : RenderValueWithDefault("")}
                   </Box>
