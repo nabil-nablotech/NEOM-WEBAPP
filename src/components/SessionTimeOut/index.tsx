@@ -6,34 +6,25 @@ import { getSessionTimeout } from '../../utils/storage/storage';
 
 const SessionTimeOut = () => {
     const { clientLogout } = useLogout();
-    const [isWarningModalOpen, setWarningModalOpen] = useState(false);
-  useEffect(() => {
+    const [timeOutStatus, setTimeOutStatus] = useState(false);
     const sessionTime = Number(getSessionTimeout() || 60000);
-    const createTimeout1 = () => setTimeout(()=>{ 
-      setWarningModalOpen(true);
-    },5000)
-
-    const createTimeout2 = () => setTimeout(() => {
+  useEffect(() => {
+    let timeout = setTimeout(() => {
         clientLogout();
-    }, sessionTime)
+    },sessionTime)
 
     const listener = () => {
-      if(!isWarningModalOpen){
-        clearTimeout(timeout)
-        timeout = createTimeout1();
-      }
+      setTimeOutStatus(!timeOutStatus);
+      clearTimeout(timeout);
     } 
-
     // Initialization
-    let timeout = isWarningModalOpen  ? createTimeout2() : createTimeout1()
     addEventListeners(listener);
-
     // Cleanup
     return () => {
       removeEventListeners(listener);
       clearTimeout(timeout);
     }
-  },[isWarningModalOpen])
+  },[timeOutStatus])
   return (
     <>
     </>
@@ -41,3 +32,4 @@ const SessionTimeOut = () => {
 };
 
 export default SessionTimeOut;
+
