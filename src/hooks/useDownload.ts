@@ -13,7 +13,7 @@ const useDownload = () => {
         (state: RootState) => state.download
       );
     const dispatch = useDispatch();
-    const { loading:downloadLoading, error:downloadErrorData, data:downloadData, refetch:refetchhDownloads} = useQuery(download);
+    const { loading:downloadLoading, error:downloadErrorData, data:downloadData, refetch:refetchhDownloads} = useQuery(download, graphQlHeaders());
 
     useEffect(() => {
         fetchData();
