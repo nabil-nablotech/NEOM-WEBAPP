@@ -1,5 +1,6 @@
 import styles from "./index.module.css";
 import Box from '@mui/material/Box';
+import { getSupportEmail } from "../../utils/storage/storage";
 
 export const LinkExpired = () => {
   return <Box component="div" className={`${styles["expired-link-content"]}`}>
@@ -9,11 +10,11 @@ export const LinkExpired = () => {
     <Box component="div">
     Please contact{' '}
       <a
-        href="mailto: support@neomheritage.com?subject = Neom Heritage Support"
+        href={`mailto: ${getSupportEmail() || ''}?subject = Neom Heritage Support`}
         target={"_blank"}
         rel="noreferrer"
       >
-        support@neomheritage.com
+        {getSupportEmail() || ''}
       </a>
     </Box>
   </Box>

@@ -1,12 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+import { getSupportEmail } from "../../utils/storage/storage";
 import { RobotoNormalLicorice16px2 } from "../styledMixins";
 
 
 function AddEmbedCodeInstead() {
   return (
     <AddEmbedCodeInstead1>
-      <AddEmbedCodeInstead2>support@neomheritage.com</AddEmbedCodeInstead2>
+      <AddEmbedCodeInstead2>{getSupportEmail() || ''}</AddEmbedCodeInstead2>
     </AddEmbedCodeInstead1>
   );
 }
