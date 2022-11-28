@@ -4,7 +4,6 @@ import { ColumnsType } from "antd/lib/table";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
 import { antTablePaginationCss, DETACH_ICON_CLASSNAME, isRecordAttached, shouldAddAtttachColumnHeader, itemAddEditAccess } from '../../../../utils/services/helpers';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import { PlacesProps } from '../GridView/GridView';
@@ -291,15 +290,26 @@ const ListView = (props: PlacesProps) => {
   const { data, hasMoreData, fetchData, loading, isSelect } = props;
 
   useEffect(() => {
-    /** Needs to be done , since InfiniteSCroll needs a relation with
-     * div being scrolled. Here its tbody of ant table
+
+    /** locate last row, add id to it; such that
+     * its appearance in dom can be tracked and more data can be loaded
      */
-    const ele = document.querySelector('#places-list-parent .ant-table-body')
-    if (ele) {
-      ele.id = "places-list-div"
+    const ele = document.querySelector('#places-list-parent .ant-table-body tbody tr:last-child')
+
+    const removeEle = document.querySelector('#places-list-parent #places-row')
+
+    // reset previously added row id
+    if (removeEle) {
+
+      removeEle?.removeAttribute('id')
+      // const en = removeEle as HTMLElement
     }
 
-  }, []);
+    if (ele) {
+      ele.id = "places-row"
+    }
+
+  }, [data]);
 
   /** Effect needed to refresh the headers, 
   * when associations have changed.
@@ -326,6 +336,44 @@ const ListView = (props: PlacesProps) => {
 
   }, [isAssociationsStepOpen, associatedPlaces]);
 
+  useEffect(() => {
+
+    /** Observe if the last row has appeared in the dom,
+     * if yes then fetch the data
+     */
+    const observer = new IntersectionObserver(entries => {
+
+      entries.forEach(entry => {
+          if(data && (data.length > 0) && entry) {
+            const intersecting = entry.isIntersecting
+            
+            // const en = entry.target as HTMLElement
+            if (intersecting) {
+              fetchData()
+            } else {
+            }
+
+          }
+        }, {
+          root: (() => {
+            return document.querySelector('#places-list-parent .ant-table-tbody')
+          })(),
+          rootMargin: '0px',
+          threshold: 1.0
+        })
+      })
+      
+      observer.observe(document.getElementById("places-row") as Element)
+  
+      return () => {
+        if(observer) {
+          observer.disconnect()
+        }
+      }
+    
+
+  }, [data]);
+
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     dispatch(setSelectedKey(newSelectedRowKeys))
   };
@@ -334,54 +382,49 @@ const ListView = (props: PlacesProps) => {
     selectedKey,
     onChange: onSelectChange,
   };
-  console.log(selectedKey);
+  console.log('hex: ', hasMoreData);
   return (
     <Box component="div" id={'places-list-parent'}>
-      <InfiniteScroll
-        dataLength={data.length} //This is important field to render the next data
-        next={() => fetchData()}
+      <StyledTableWrapper
+        rowKey={"id"}
+        size="small"
+        columns={tableHeaderJson}
+        dataSource={data}
+        pagination={false}
+        loading={loading}
+        rowSelection={isSelect ? rowSelection : undefined}
+        bordered
+        scroll={{ x: 'max-content', y: 350 }}
+        style={{
+          background: "transparent",
+        }}
+        onRow={(record: any, rowIndex) => {
+          return {
+            onClick: (event: React.MouseEvent<HTMLElement>) => {
+              const target = event.target as Element;
+              const clsList = target.classList
 
-        hasMore={hasMoreData}
-        loader={loading ? <Loader /> : null}
-        endMessage={
-          <p style={{ textAlign: 'center' }}>
-            <b>END OF RESULTS</b>
-          </p>
-        }
-        scrollableTarget={'places-list-div'}
-        className={`${commonStyles['infinite-scroll-cls']}`}
-      >
-        <StyledTableWrapper
-          rowKey={"id"}
-          size="small"
-          columns={tableHeaderJson}
-          dataSource={data}
-          pagination={false}
-          loading={loading}
-          rowSelection={isSelect ? rowSelection : undefined}
-          bordered
-          scroll={{ x: 'max-content', y: 350 }}
-          style={{
-            background: "transparent",
-          }}
-          onRow={(record: any, rowIndex) => {
-            return {
-              onClick: (event: React.MouseEvent<HTMLElement>) => {
-                const target = event.target as Element;
-                const clsList = target.classList
-
-                if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
-                  event.stopPropagation();
-                  handleAttachClick(event, record)
-                } else {
-                  dispatch(setSelectedCardIndex(rowIndex || record.id))
-                  navigateTo(`/Places/${record.attributes.uniqueId}`)
-                }
-              }, // click row
-            };
-          }}
-        />
-      </InfiniteScroll>
+              if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
+                event.stopPropagation();
+                handleAttachClick(event, record)
+              } else {
+                dispatch(setSelectedCardIndex(rowIndex || record.id))
+                navigateTo(`/Places/${record.attributes.uniqueId}`)
+              }
+            }, // click row
+          };
+        }}
+      />
+      {
+        loading &&
+        <Loader />
+      }
+      {
+        !hasMoreData && !loading &&
+        <p style={{ textAlign: 'center' }}>
+          <b>END OF RESULTS</b>
+        </p>
+      }
     </Box>
   );
 }
