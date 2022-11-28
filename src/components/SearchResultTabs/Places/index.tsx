@@ -160,7 +160,7 @@ const PlacesTab = () => {
   return (
     <Box component="div" className={`${styles["main-tab-content"]}`}>
       <Box component="div" className={`${styles["utility-bar"]}`}>
-        <Box component="div">{showResults && meta?.pagination?.total ? `${meta?.pagination?.total} Results | ` : null}{totalCounts?.places} Total Places</Box>
+        <Box component="div">{showResults ? `${meta?.pagination?.total} Results | ` : null}{totalCounts?.places} Total Places</Box>
         <Box component="div" style={{ display: "flex" }}>
           <Button
             colors={[

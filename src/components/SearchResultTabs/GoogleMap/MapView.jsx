@@ -7,6 +7,8 @@ import {
 } from "@react-google-maps/api";
 import MapStyles from "./MapStyles";
 import Loader from "../../Common/Loader";
+import { useHistory } from "../../../hooks/useHistory";
+import { useParams } from "react-router-dom";
 
 const containerStyle = {
   width: "100%",
@@ -24,6 +26,9 @@ const MapView = ({ marker, filterId, zoom = 25 }) => {
   const [map, setMap] = useState(null);
   const mapRef = useRef(null)
   const [activeMarker, setActiveMarker] = useState(null);
+  const { navigateTo } = useHistory();
+  let {tabName} = useParams();
+
 
   useEffect(() => {
     if(map && marker) {
@@ -67,6 +72,17 @@ const MapView = ({ marker, filterId, zoom = 25 }) => {
     setActiveMarker(null)
   };
 
+  const handleNavigation = (uniqueId) => {
+    filterId(null);
+    setActiveMarker(null)
+    if(tabName === "Places"){
+      navigateTo(`/Places/${uniqueId}`)
+    }
+    else if(tabName === "Events"){
+      navigateTo(`/Events/${uniqueId}`)
+    }
+  };
+
   if(!isLoaded) {
     return <><Loader /></>
   }
@@ -81,7 +97,7 @@ const MapView = ({ marker, filterId, zoom = 25 }) => {
       onClick={() => handleCloseMarker()}
       ref={mapRef}
     >
-      {marker?.map(({id, name, position}, index) => (
+      {marker?.map(({id, name, position, uniqueId}, index) => (
         <Marker
           key={index}
           position={position}
@@ -92,7 +108,7 @@ const MapView = ({ marker, filterId, zoom = 25 }) => {
         >
           {activeMarker === id ? (
             <InfoWindow onCloseClick={() => handleCloseMarker()}>
-              <div>{name}</div>
+              <div onClick={() => handleNavigation(uniqueId)} >{name}</div>
             </InfoWindow>
           ) : null}
         </Marker>
