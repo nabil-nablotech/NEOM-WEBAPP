@@ -363,7 +363,9 @@ const ListView = (props: PlacesProps) => {
         })
       })
       
-      observer.observe(document.getElementById("places-row") as Element)
+      if(document.getElementById("places-row")) {
+        observer.observe(document.getElementById("places-row") as Element)
+      }
   
       return () => {
         if(observer) {
