@@ -165,9 +165,11 @@ const useEvent = () => {
     });
 
     const startDate = new Date(copiedValue?.startDate);
-    const visitStartDate = (copiedValue?.startDate && startDate?.getFullYear()) ? `${startDate?.getFullYear()}-${startDate?.getMonth() + 1}-${startDate?.getDate()}` : undefined;
+    const visitStartDate = startDate && startDate.getFullYear() && `${startDate.getFullYear()}-${zerofill(startDate.getMonth() + 1)}-${zerofill(startDate.getDate())}`;
+    // const visitStartDate = (copiedValue?.startDate && startDate?.getFullYear()) ? `${startDate?.getFullYear()}-${startDate?.getMonth() + 1}-${startDate?.getDate()}` : undefined;
     const endDate = new Date(copiedValue?.endDate);
-    const visitEndDate = (copiedValue?.endDate && endDate?.getFullYear()) ? `${endDate?.getFullYear()}-${endDate?.getMonth() + 1}-${endDate?.getDate()}` : undefined;
+    const visitEndDate = endDate && endDate.getFullYear() && `${endDate.getFullYear()}-${zerofill(endDate.getMonth() + 1)}-${zerofill(endDate.getDate())}`;
+   // const visitEndDate = (copiedValue?.endDate && endDate?.getFullYear()) ? `${endDate?.getFullYear()}-${endDate?.getMonth() + 1}-${endDate?.getDate()}` : undefined;
 
     const obj: any = {
       researchValue: copiedValue && copiedValue?.researchValue && copiedValue?.researchValue,
