@@ -180,7 +180,7 @@ const usePlace = () => {
       search_two: searchWordArray[1],
       search_three: searchWordArray[2],
       text: searchWordArray,
-      limit: MAX_FETCH_LIMIT, // only change from the original function
+      limit: limit, // only change from the original function
       skip: skip,
     };
     if (clear) {
