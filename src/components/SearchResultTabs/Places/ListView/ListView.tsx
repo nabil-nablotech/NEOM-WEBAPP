@@ -363,7 +363,9 @@ const ListView = (props: PlacesProps) => {
         })
       })
       
-      observer.observe(document.getElementById("places-row") as Element)
+      if(document.getElementById("places-row")) {
+        observer.observe(document.getElementById("places-row") as Element)
+      }
   
       return () => {
         if(observer) {
@@ -382,7 +384,7 @@ const ListView = (props: PlacesProps) => {
     selectedKey,
     onChange: onSelectChange,
   };
-  console.log('hex: ', hasMoreData);
+
   return (
     <Box component="div" id={'places-list-parent'}>
       <StyledTableWrapper

@@ -158,7 +158,6 @@ const ModalComponent = ({
   });
 
   useEffect(() => {
-    console.log('hex: ', modalState)
 
     if (modalState.editing && modalState.visible) {
       setState({
