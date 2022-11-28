@@ -6,7 +6,6 @@ import { useDispatch } from "react-redux";
 import { StyledAntTable } from '../../../StyledAntTable';
 import styled from "styled-components";
 import { antTablePaginationCss, DETACH_ICON_CLASSNAME, isEventRecordAttached, isRecordAttached, shouldAddAtttachColumnHeader, itemAddEditAccess } from '../../../../utils/services/helpers';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import { EventsProps } from '../GridView/GridView';
@@ -284,15 +283,25 @@ const ListView = (props: EventsProps) => {
     const { data, handleNext: fetchData, hasMoreData, loading, isSelect } = props;
 
     useEffect(() => {
-        /** Needs to be done , since InfiniteSCroll needs a relation with
-         * div being scrolled. Here its tbody of ant table
+        /** locate last row, add id to it; such that
+         * its appearance in dom can be tracked and more data can be loaded
          */
-        const ele = document.querySelector('#events-list-parent .ant-table-body')
-        if (ele) {
-            ele.id = "events-list-div"
+        const ele = document.querySelector('#events-list-parent .ant-table-body tbody tr:last-child')
+
+        const removeEle = document.querySelector('#events-list-parent #events-row')
+
+        // reset previously added row id
+        if (removeEle) {
+
+            removeEle?.removeAttribute('id')
+            // const en = removeEle as HTMLElement
         }
 
-    }, []);
+        if (ele) {
+            ele.id = "events-row"
+        }
+      
+    }, [data]);
 
 
     /** Effect needed to refresh the headers, 
@@ -320,6 +329,44 @@ const ListView = (props: EventsProps) => {
 
     }, [isAssociationsStepOpen, associatedEvents]);
 
+    useEffect(() => {
+
+        /** Observe if the last row has appeared in the dom,
+         * if yes then fetch the data
+         */
+        const observer = new IntersectionObserver(entries => {
+
+            entries.forEach(entry => {
+                if (data && (data.length > 0) && entry) {
+                    const intersecting = entry.isIntersecting
+
+                    // const en = entry.target as HTMLElement
+                    if (intersecting) {
+                        fetchData()
+                    } else {
+                    }
+
+                }
+            }, {
+                root: (() => {
+                    return document.querySelector('#events-list-parent .ant-table-tbody')
+                })(),
+                rootMargin: '0px',
+                threshold: 1.0
+            })
+        })
+
+        observer.observe(document.getElementById("events-row") as Element)
+
+        return () => {
+            if (observer) {
+                observer.disconnect()
+            }
+        }
+
+    }, [data]);
+    
+
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
         dispatch(setSelectedKey(newSelectedRowKeys))
     };
@@ -330,55 +377,50 @@ const ListView = (props: EventsProps) => {
     };
     return (
         <Box component="div" id={'events-list-parent'}>
-            <InfiniteScroll
-                dataLength={data.length} //This is important field to render the next data
-                next={() => fetchData()}
+            {data.length > 0 ? <StyledTableWrapper
+                // className={`${styles["table-container"]}`}
+                rowKey={"id"}
+                rowSelection={isSelect ? rowSelection : undefined}
+                onRow={(record: any, rowIndex) => {
+                    return {
+                        onClick: (event: React.MouseEvent<HTMLElement>) => {
+                            const target = event.target as Element;
+                            const clsList = target.classList
 
-                hasMore={hasMoreData}
-                loader={loading ? <Loader /> : null}
-                endMessage={
-                    <p style={{ textAlign: 'center' }}>
-                        <b>END OF RESULTS</b>
-                    </p>
-                }
-                scrollableTarget={'events-list-div'}
-                className={`${commonStyles['infinite-scroll-cls']}`}
-            >
-                {data.length > 0 ? <StyledTableWrapper
-                    // className={`${styles["table-container"]}`}
-                    rowKey={"id"}
-                    rowSelection={isSelect ? rowSelection : undefined}
-                    onRow={(record: any, rowIndex) => {
-                        return {
-                            onClick: (event: React.MouseEvent<HTMLElement>) => {
-                                const target = event.target as Element;
-                                const clsList = target.classList
+                            if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
 
-                                if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
-
-                                    event.stopPropagation();
-                                    handleAttachClick(event, record)
-                                } else {
-                                    dispatch(setSelectedCardIndex(rowIndex || record.id))
-                                    // navigate(`/Events/${record.attributes.uniqueId}`, {replace: true})
-                                    navigateTo(`/Events/${record.attributes.uniqueId}`)
-                                }
-                            }, // click row
-                        };
-                    }}
-                    size="small"
-                    columns={tableHeaderJson}
-                    dataSource={data}
-                    pagination={false}
-                    loading={loading ? loading : false}
-                    bordered
-                    // scroll={{ y: 500, scrollToFirstRowOnChange: true }}
-                    scroll={{ x: 'max-content', y: 350, scrollToFirstRowOnChange: true }}
-                    style={{
-                        background: "transparent",
-                    }}
-                ></StyledTableWrapper> : <h1>No data available</h1>}
-            </InfiniteScroll>
+                                event.stopPropagation();
+                                handleAttachClick(event, record)
+                            } else {
+                                dispatch(setSelectedCardIndex(rowIndex || record.id))
+                                // navigate(`/Events/${record.attributes.uniqueId}`, {replace: true})
+                                navigateTo(`/Events/${record.attributes.uniqueId}`)
+                            }
+                        }, // click row
+                    };
+                }}
+                size="small"
+                columns={tableHeaderJson}
+                dataSource={data}
+                pagination={false}
+                loading={loading}
+                bordered
+                // scroll={{ y: 500, scrollToFirstRowOnChange: true }}
+                scroll={{ x: 'max-content', y: 350, scrollToFirstRowOnChange: true }}
+                style={{
+                    background: "transparent",
+                }}
+            ></StyledTableWrapper> : <h1>No data available</h1>}
+            {
+                loading &&
+                <Loader />
+            }
+            {
+                !hasMoreData && !loading &&
+                <p style={{ textAlign: 'center' }}>
+                    <b>END OF RESULTS</b>
+                </p>
+            }
         </Box>
     );
 }

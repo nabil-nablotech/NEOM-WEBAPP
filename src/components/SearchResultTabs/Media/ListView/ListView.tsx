@@ -4,7 +4,6 @@ import { ColumnsType } from "antd/lib/table";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
 import { antTablePaginationCss } from "../../../../utils/services/helpers";
-import InfiniteScroll from "react-infinite-scroll-component";
 import commonStyles from "../../index.module.css";
 import { Loader } from "../../../Loader";
 import { MediaProps } from "../GridView/GridView";
@@ -265,14 +264,64 @@ const ListView = (props: MediaProps) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    /** Needs to be done , since InfiniteSCroll needs a relation with
-     * div being scrolled. Here its tbody of ant table
+    /** locate last row, add id to it; such that
+     * its appearance in dom can be tracked and more data can be loaded
      */
-    const ele = document.querySelector("#media-list-parent .ant-table-body");
-    if (ele) {
-      ele.id = "media-list-div";
+    const ele = document.querySelector('#media-list-parent .ant-table-body tbody tr:last-child')
+
+    const removeEle = document.querySelector('#media-list-parent #media-row')
+
+    // reset previously added row id
+    if (removeEle) {
+
+        removeEle?.removeAttribute('id')
+        // const en = removeEle as HTMLElement
     }
-  }, []);
+
+    if (ele) {
+        ele.id = "media-row"
+    }
+  
+}, [data]);
+
+
+  
+  useEffect(() => {
+
+    /** Observe if the last row has appeared in the dom,
+     * if yes then fetch the data
+     */
+    const observer = new IntersectionObserver(entries => {
+
+        entries.forEach(entry => {
+            if (data && (data.length > 0) && entry) {
+                const intersecting = entry.isIntersecting
+
+                // const en = entry.target as HTMLElement
+                if (intersecting) {
+                    fetchData()
+                } else {
+                }
+
+            }
+        }, {
+            root: (() => {
+                return document.querySelector('#media-list-parent .ant-table-tbody')
+            })(),
+            rootMargin: '0px',
+            threshold: 1.0
+        })
+    })
+
+    observer.observe(document.getElementById("media-row") as Element)
+
+    return () => {
+        if (observer) {
+            observer.disconnect()
+        }
+    }
+
+}, [data]);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     dispatch(setSelectedKey(newSelectedRowKeys))
@@ -285,49 +334,45 @@ const ListView = (props: MediaProps) => {
 
   return (
     <Box component="div" id={"media-list-parent"}>
-      <InfiniteScroll
-        dataLength={data.length} //This is important field to render the next data
-        next={() => fetchData()}
-        hasMore={hasMoreData}
-        loader={loading ? <Loader /> : null}
-        endMessage={
-          <p style={{ textAlign: "center" }}>
-            <b>END OF RESULTS</b>
-          </p>
-        }
-        scrollableTarget={"media-list-div"}
-        className={`${commonStyles["infinite-scroll-cls"]}`}
-      >
-        <StyledTableWrapper
-          rowKey={"id"}
-          size="small"
-          columns={tableHeaderJson}
-          dataSource={data}
-          rowSelection={isSelect ? rowSelection : undefined}
-          pagination={false}
-          loading={loading ? loading : false}
-          bordered
-          scroll={{ y: 500, scrollToFirstRowOnChange: true }}
-          style={{
-            background: "transparent",
-          }}
-          onRow={(record: any, rowIndex: number | undefined) => {
-            return {
-              onClick: (event) => {
-                // click row
-                setModalOpen(true);
+      <StyledTableWrapper
+        rowKey={"id"}
+        size="small"
+        columns={tableHeaderJson}
+        dataSource={data}
+        rowSelection={isSelect ? rowSelection : undefined}
+        pagination={false}
+        loading={loading ? loading : false}
+        bordered
+        scroll={{ y: 500, scrollToFirstRowOnChange: true }}
+        style={{
+          background: "transparent",
+        }}
+        onRow={(record: any, rowIndex: number | undefined) => {
+          return {
+            onClick: (event) => {
+              // click row
+              setModalOpen(true);
 
-                if (typeof rowIndex === "number") {
-                  dispatch(setActiveMediaItem(record))
-                  dispatch(setActiveMediaItemIndex(rowIndex))
-                  // navigate(`/Media/${record.attributes.uniqueId}`, { replace: true })
-                  navigateTo(`/Media/${record.attributes.uniqueId}`)
-                }
-              },
-            };
-          }}
-        ></StyledTableWrapper>
-      </InfiniteScroll>
+              if (typeof rowIndex === "number") {
+                dispatch(setActiveMediaItem(record))
+                dispatch(setActiveMediaItemIndex(rowIndex))
+                // navigate(`/Media/${record.attributes.uniqueId}`, { replace: true })
+                navigateTo(`/Media/${record.attributes.uniqueId}`)
+              }
+            },
+          };
+        }}
+      ></StyledTableWrapper>
+      {
+        loading &&
+        <Loader />
+      }
+      {
+        !hasMoreData && !loading &&
+        <p style={{ textAlign: 'center' }}>
+          <b>END OF RESULTS</b>
+        </p>
+      }
     </Box>
   );
 };

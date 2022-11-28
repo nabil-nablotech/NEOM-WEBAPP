@@ -4,7 +4,6 @@ import { ColumnsType } from "antd/lib/table";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
 import { antTablePaginationCss, DETACH_ICON_CLASSNAME, isRecordAttached, shouldAddAtttachColumnHeader, itemAddEditAccess } from '../../../../utils/services/helpers';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import { PlacesProps } from '../GridView/GridView';
@@ -357,7 +356,7 @@ const ListView = (props: PlacesProps) => {
           }
         }, {
           root: (() => {
-            return document.querySelector('#places-list-div .ant-table-tbody')
+            return document.querySelector('#places-list-parent .ant-table-tbody')
           })(),
           rootMargin: '0px',
           threshold: 1.0
