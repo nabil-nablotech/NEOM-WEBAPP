@@ -147,25 +147,32 @@ const ModalComponent = ({
   //         message: "",
   //     },
   // });
+  const isEditMode = modalState.editing && modalState.visible
 
   const [state, setState] = useState<AddUserState>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    role: "",
+    firstName: isEditMode ? modalState.editing?.firstName ?? '' : '',
+    lastName: isEditMode ? modalState.editing?.lastName ?? '' : '',
+    email: isEditMode ? modalState.editing?.email ?? '' : '',
+    role: isEditMode ? modalState.editing?.role : '',
     blocked: '',
   });
 
   useEffect(() => {
-    if (modalState.editing) {
+    console.log('hex: ', modalState)
+
+    if (modalState.editing && modalState.visible) {
       setState({
-        ...modalState.editing,
+        // ...modalState.editing,
         firstName: modalState.editing.firstName,
         lastName: modalState.editing.lastName,
         email: modalState.editing.email,
-        role: modalState.editing.role.id,
+        role: modalState.editing.role,
         blocked: modalState.editing.blocked ? 'inactive' : 'active'
       });
+      formik.setFieldValue('firstName', modalState.editing.firstName)
+      formik.setFieldValue('lastName', modalState.editing.lastName)
+      formik.setFieldValue('email', modalState.editing.email)
+      formik.setFieldValue('role', modalState.editing.role.id)
     } else {
       setState({
         firstName: '',
@@ -175,7 +182,8 @@ const ModalComponent = ({
         blocked: false
       });
     }
-  }, [modalState.editing]);
+  }, [modalState]);
+
   const handleSubmit = () => {
     handleOk(state);
     setState({
@@ -256,10 +264,10 @@ const ModalComponent = ({
 
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      role: "",
+      firstName: state.firstName,
+      lastName: state.lastName,
+      email: state.email,
+      role: state.role,
     },
     onSubmit: (values, { setErrors }) => {
    
