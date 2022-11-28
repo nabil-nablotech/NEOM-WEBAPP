@@ -82,6 +82,9 @@ const MapView = ({ marker, filterId, zoom = 25 }) => {
       navigateTo(`/Events/${uniqueId}`)
     }
   };
+  const changeTextColor = (e) => {
+    e.target.style.color = 'blue';
+  }
 
   if(!isLoaded) {
     return <><Loader /></>
@@ -108,7 +111,7 @@ const MapView = ({ marker, filterId, zoom = 25 }) => {
         >
           {activeMarker === id ? (
             <InfoWindow onCloseClick={() => handleCloseMarker()}>
-              <div onClick={() => handleNavigation(uniqueId)} >{name}</div>
+              <div onClick={() => handleNavigation(uniqueId)} onMouseOver={changeTextColor}>{name}</div>
             </InfoWindow>
           ) : null}
         </Marker>
