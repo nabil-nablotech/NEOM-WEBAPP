@@ -13,6 +13,7 @@ import {
   validatePassword
 } from "../../utils/services/helpers";
 import useLogin from "../../hooks/useLogin";
+import { getSupportEmail } from "../../utils/storage/storage";
 
 type stateInput = {
   email: string;
@@ -197,11 +198,11 @@ export function Login() {
             Contact{" "}
             <span>
               <a
-                href="mailto: support@neomheritage.com?subject = Neom Heritage Support"
+                href={`mailto: ${getSupportEmail() || ''}?subject = Neom Heritage Support`}
                 target={"_blank"}
                 rel="noreferrer"
               >
-                support@neomheritage.com
+                {getSupportEmail() || ''}
               </a>
             </span>
           </p>

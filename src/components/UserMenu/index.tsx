@@ -8,7 +8,7 @@ import WhiteCircle from "../../assets/images/WhiteCircle.svg";
 import useLogout from "../../hooks/useLogout";
 import { EVENTS_TAB_NAME, itemAddEditAccess, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME, stringAvatar } from "../../utils/services/helpers";
 import { RootState } from "../../store";
-import { getRole } from "../../utils/storage/storage";
+import { getRole, getSupportEmail } from "../../utils/storage/storage";
 import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import MenuList from "../MenuList";
 import { Box, LinearProgress } from "@mui/material";
@@ -91,7 +91,7 @@ function UserMenuComponent({
     {
       label: "Support",
       handleClickMenuItem: () => { },
-      render: () => <a href="mailto: support@neomheritage.com?subject = Neom Heritage Support" rel="noreferrer" target={"_blank"}>
+      render: () => <a href={`mailto: ${getSupportEmail() || 'support@neomheritage.com'}?subject = Neom Heritage Support`} rel="noreferrer" target={"_blank"}>
         Help & Support
       </a>
     },

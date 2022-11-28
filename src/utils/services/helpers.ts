@@ -1,5 +1,7 @@
 import dayjs from "dayjs";
 import styled from "styled-components";
+import * as Yup from "yup";
+import { ColumnType } from "antd/lib/table";
 import { StyledAntTable } from "../../components/StyledAntTable";
 import {
   MediaAssociateObj,
@@ -12,17 +14,15 @@ import {
   InventoryAssociationType_Event,
   tabNameProps,
 } from "../../types/SearchResultsTabsProps";
-import * as Yup from "yup";
-import { ColumnType } from "antd/lib/table";
 import { Event, EventApi } from "../../types/Event";
 import { Media, MediaApi, MediaApi2 } from "../../types/Media";
 import { Options } from "../../types/RefinedSeachTypes";
-import { getRole } from "../storage/storage";
+import { getRole, getLimit } from "../storage/storage";
 
 export const baseUrl = `${process.env.REACT_APP_STRAPI_BASE_URL}`;
 // export const baseUrl = `https://877e-59-94-75-53.in.ngrok.io`;
 export const webUrl = `${process.env.REACT_APP_STRAPI_WEB_URL}`;
-export const limit = 10;
+export const limit = Number(getLimit()) || 20;
 export const MAX_FETCH_LIMIT = 10000;
 
 export const itemAddEditAccess = getRole() === 'SuperEditor' ? true : getRole() === 'Editor' ? true : false;

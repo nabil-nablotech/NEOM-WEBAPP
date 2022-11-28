@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMeUser } from "../api/user";
 import { setUser } from "../store/reducers/loginReducers";
-import {getToken, setRole} from '../utils/storage/storage';
+import {getToken, setDefaultData, setRole} from '../utils/storage/storage';
 import { fetchSearchCount } from '../api/dashboard';
+import { fetchDefaultData } from "../api/default";
 import { setTotalCounts } from "../store/reducers/searchResultsReducer";
 import { RootState } from "../store";
 
@@ -21,6 +22,7 @@ const useAuth = () => {
     if (getToken()) {
       fetchSession();
       getSearchCount();
+      getDefaultData();
     }
   }, [edit, tabEdit]);
 
@@ -39,7 +41,6 @@ const useAuth = () => {
       
       const data = await fetchMeUser();
       await dispatch(setUser(data));
-      // await dispatch(setSearchText(''));
       setRole(data.role.name);
       return data;
     } catch (error) {
@@ -57,6 +58,13 @@ const useAuth = () => {
       return data;
     } catch (error) {
       // console.log('error', error)
+    }
+  }
+
+  const getDefaultData = async () => {
+    const data = await fetchDefaultData();
+    if (data && data?.data) {
+      setDefaultData(data.data);
     }
   }
  
