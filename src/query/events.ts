@@ -137,6 +137,7 @@ query RefineSearchEvent(
                         }
                       }
                     }
+                    objectURL
                     object {
                       data {
                         attributes {

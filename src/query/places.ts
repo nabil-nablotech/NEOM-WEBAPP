@@ -108,6 +108,7 @@ query refinedSearch(
                         }
                       }
                     }
+                    objectURL
                     object {
                       data {
                         id
