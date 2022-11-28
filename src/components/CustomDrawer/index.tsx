@@ -22,6 +22,7 @@ const CustomDrawer = ({
                 open={isOpen}
                 hideBackdrop={true}
                 disableEnforceFocus
+                variant='persistent'
                 onClose={onClose}
                 style={{
                     left: 'unset'
