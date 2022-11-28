@@ -31,6 +31,7 @@ import {
   isPlaceDetailAttached,
   detectMediaTypeFromMediaAssociate,
   itemAddEditAccess,
+  webUrl,
 } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
@@ -1308,7 +1309,7 @@ const PlaceDetailsPage = () => {
                           copyToClipboard(placeUIPath ?? "");
                         }}
                       >
-                        {placeUIPath}
+                        {`${webUrl}/${placeUIPath}`}
                       </Box>
                       <PositionedSnackbar
                         message={"Copied to clipboard"}

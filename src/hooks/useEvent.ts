@@ -280,7 +280,7 @@ const useEvent = () => {
     setPlace(data.place);
     if (!edit) {
       data.uniqueId = uniqueId;
-      data.visitUIPath = `${webUrl}/Events/${uniqueId}`;
+      data.visitUIPath = `Events/${uniqueId}`;
       createEventMuation({ variables: data })
     }
     if (edit && event?.id) {

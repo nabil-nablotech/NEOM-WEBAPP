@@ -296,7 +296,7 @@ const usePlace = () => {
     }
     if (!edit) {
       data.uniqueId = uniqueId;
-      data.placeUIPath = `${webUrl}/Places/${uniqueId}`;
+      data.placeUIPath = `Places/${uniqueId}`;
       createPlaceMutation({variables: data})
     }
     if (edit && tabData?.id) {

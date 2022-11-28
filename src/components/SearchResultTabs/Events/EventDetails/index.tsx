@@ -33,6 +33,7 @@ import {
   EVENTS_TAB_NAME,
   itemAddEditAccess,
   itemDeleteAccess,
+  webUrl
 } from "../../../../utils/services/helpers";
 import { Tooltip } from "antd";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
@@ -896,7 +897,7 @@ const EventDetailsPage = () => {
                           copyToClipboard(visitUIPath);
                         }}
                       >
-                        {visitUIPath}
+                        {`${webUrl}/${visitUIPath}`}
                       </Box>
                       <PositionedSnackbar
                         message={"Copied to clipboard"}

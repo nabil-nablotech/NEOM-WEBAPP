@@ -239,7 +239,7 @@ const useMedia = () => {
     if (!edit) {
       data.uniqueId = uniqueId;
       data.created = formatStrapiDate(new Date());
-      data.mediaUIPath = `${webUrl}/Media/${uniqueId}`;
+      data.mediaUIPath = `Media/${uniqueId}`;
       createMediaMutation({ variables: data })
     }
     if (edit && tabData?.id) {
