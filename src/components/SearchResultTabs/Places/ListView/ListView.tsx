@@ -384,7 +384,7 @@ const ListView = (props: PlacesProps) => {
     selectedKey,
     onChange: onSelectChange,
   };
-  console.log('hex: ', hasMoreData);
+
   return (
     <Box component="div" id={'places-list-parent'}>
       <StyledTableWrapper
