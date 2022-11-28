@@ -313,7 +313,9 @@ const ListView = (props: MediaProps) => {
       })
     })
 
-    observer.observe(document.getElementById("media-row") as Element)
+    if(document.getElementById("media-row")) {
+      observer.observe(document.getElementById("media-row") as Element)
+    }
 
     return () => {
       if (observer) {

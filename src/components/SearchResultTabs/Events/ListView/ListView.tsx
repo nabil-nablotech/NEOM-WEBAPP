@@ -356,7 +356,10 @@ const ListView = (props: EventsProps) => {
             })
         })
 
-        observer.observe(document.getElementById("events-row") as Element)
+        if(document.getElementById("events-row")){
+            observer.observe(document.getElementById("events-row") as Element)
+        }
+
 
         return () => {
             if (observer) {
