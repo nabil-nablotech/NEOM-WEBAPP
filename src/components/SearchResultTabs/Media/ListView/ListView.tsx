@@ -274,18 +274,18 @@ const ListView = (props: MediaProps) => {
     // reset previously added row id
     if (removeEle) {
 
-        removeEle?.removeAttribute('id')
-        // const en = removeEle as HTMLElement
+      removeEle?.removeAttribute('id')
+      // const en = removeEle as HTMLElement
     }
 
     if (ele) {
-        ele.id = "media-row"
+      ele.id = "media-row"
     }
-  
-}, [data]);
+
+  }, [data]);
 
 
-  
+
   useEffect(() => {
 
     /** Observe if the last row has appeared in the dom,
@@ -293,35 +293,35 @@ const ListView = (props: MediaProps) => {
      */
     const observer = new IntersectionObserver(entries => {
 
-        entries.forEach(entry => {
-            if (data && (data.length > 0) && entry) {
-                const intersecting = entry.isIntersecting
+      entries.forEach(entry => {
+        if (data && (data.length > 0) && entry) {
+          const intersecting = entry.isIntersecting
 
-                // const en = entry.target as HTMLElement
-                if (intersecting) {
-                    fetchData()
-                } else {
-                }
+          // const en = entry.target as HTMLElement
+          if (intersecting) {
+            fetchData()
+          } else {
+          }
 
-            }
-        }, {
-            root: (() => {
-                return document.querySelector('#media-list-parent .ant-table-tbody')
-            })(),
-            rootMargin: '0px',
-            threshold: 1.0
-        })
+        }
+      }, {
+        root: (() => {
+          return document.querySelector('#media-list-parent .ant-table-tbody')
+        })(),
+        rootMargin: '0px',
+        threshold: 1.0
+      })
     })
 
     observer.observe(document.getElementById("media-row") as Element)
 
     return () => {
-        if (observer) {
-            observer.disconnect()
-        }
+      if (observer) {
+        observer.disconnect()
+      }
     }
 
-}, [data]);
+  }, [data]);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     dispatch(setSelectedKey(newSelectedRowKeys))
