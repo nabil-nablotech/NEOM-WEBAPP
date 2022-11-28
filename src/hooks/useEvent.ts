@@ -114,6 +114,7 @@ const useEvent = () => {
           if (refineEventDataMap?.visits?.data[i]?.attributes?.latitude && refineEventDataMap?.visits?.data[i]?.attributes?.longitude)
             dummyArray.push({
               id: refineEventDataMap?.visits?.data[i].id,
+              uniqueId:refineEventDataMap?.visits?.data[i].attributes["uniqueId"],
               name: refineEventDataMap?.visits?.data[i].attributes?.visit_associate?.data?.attributes?.place_unique_id?.data?.attributes?.placeNameEnglish,
               position: {
                 lat: refineEventDataMap?.visits?.data[i]?.attributes?.latitude,

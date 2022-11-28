@@ -251,6 +251,7 @@ query RefineSearchEventMap(
     data {
       id
       attributes {
+        uniqueId
         latitude
         longitude
         visit_associate {
