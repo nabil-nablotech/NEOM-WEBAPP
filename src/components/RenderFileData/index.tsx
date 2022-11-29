@@ -10,6 +10,7 @@ import { isImagePathInvalid, NO_IMAGE } from "../../utils/services/helpers";
 import ThreeDIcon from '../../assets/images/icon-3d-model.svg';
 import parse from 'html-react-parser';
 import { playIconSx } from "../RenderFileDataForGrid";
+import fallBackImg from '../../assets/images/NoImage.png';
 
 /** component created to erender normal image -video - blob based on props */
 const RenderFileData = ({
@@ -24,6 +25,7 @@ const RenderFileData = ({
         // console.log('hex: ', fileData)
     }
 
+    console.log('fileType...', fileType)
     return (
         <>
             {
@@ -39,6 +41,11 @@ const RenderFileData = ({
                                 component="img"
                                 alt={fileData.alt ? fileData.alt : ''}
                                 src={fileData.src}
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = fallBackImg;
+                                    e.currentTarget.className= `${styles['error-image']}`
+                                }}
                             /> :
                             <NoImagePresent
                                 className="light-version"
@@ -96,6 +103,10 @@ const RenderFileData = ({
                                                                 style={{
                                                                     aspectRatio: '3/1.65'
                                                                 }}
+                                                                onError={(e) => {
+                                                                    e.currentTarget.onerror = null;
+                                                                    e.currentTarget.src = fallBackImg;
+                                                                }}
                                                             />
                                                         </> :
                                                         <>
@@ -109,6 +120,10 @@ const RenderFileData = ({
                                                                         e.preventDefault()
                                                                     }
                                                                 }}
+                                                                onError={(e) => {
+                                                                    e.currentTarget.onerror = null;
+                                                                    e.currentTarget.src = fallBackImg;
+                                                                }}
                                                         >
                                                             </iframe>
                                                         </>
@@ -120,6 +135,10 @@ const RenderFileData = ({
                                                 }}>
                                                     <video width="100%" height="100%"
                                                         controls={fileData.isOpened ? true : false} autoPlay={false}
+                                                        onError={(e) => {
+                                                            e.currentTarget.onerror = null;
+                                                            e.currentTarget.src = fallBackImg;
+                                                        }}
                                                     >
                                                         <source
                                                             src={fileData.staticVideoLink}
@@ -227,6 +246,10 @@ const RenderFileData = ({
                                                                         aspectRatio: '3/1.65',
                                                                         pointerEvents: 'none'
                                                                     }}
+                                                                    onError={(e) => {
+                                                                        e.currentTarget.onerror = null;
+                                                                        e.currentTarget.src = fallBackImg;
+                                                                    }}
                                                                 />
 
                                                         }
@@ -258,6 +281,10 @@ const RenderFileData = ({
                                                             //         />
                                                             //     </>
                                                             // }
+                                                            onError={(e) => {
+                                                                e.currentTarget.onerror = null;
+                                                                e.currentTarget.src = fallBackImg;
+                                                            }}
                                                         />
                                                     </Box>}
                                                 </>

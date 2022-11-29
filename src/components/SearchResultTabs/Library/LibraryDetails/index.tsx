@@ -28,6 +28,7 @@ import {
   baseUrl,
   copyToClipboard,
   detectLibraryRecordApiType,
+  formatBytes,
   isRecordHavingAssociations,
   itemAddEditAccess,
   itemDeleteAccess,
@@ -289,8 +290,8 @@ const LibraryDetailsPage = ({
                     </div>
                     <div>
                       Size:{" "}
-                      {RenderValueWithDefault(libraryDetails?.object?.size)}{" "}
-                      {libraryDetails?.object?.size ? "MB" : ""}
+                      {formatBytes(libraryDetails?.object?.size || 0, 2)}{" "}
+                      {/* {(libraryDetails?.object?.size) ? "MB" : ""} */}
                     </div>
                     <div>
                       <span>

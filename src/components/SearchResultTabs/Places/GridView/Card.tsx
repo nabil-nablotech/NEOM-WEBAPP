@@ -1,4 +1,4 @@
-
+import React, {useState} from 'react';
 import Box from "@mui/material/Box";
 import { Grid } from "@mui/material";
 /** indicating that we can send html later on wherever we parse */
@@ -13,6 +13,7 @@ import { modifyAssociatedPlaces } from "../../../../store/reducers/searchResults
 import { RootState } from "../../../../store";
 import { useDispatch } from "react-redux";
 import RenderFileDataForGrid from "../../../RenderFileDataForGrid";
+import fallBackSrc from '../../../../assets/images/NoImage.png';
 
 export const Card = ({
   img,
@@ -23,6 +24,7 @@ export const Card = ({
   setEdit,
   record
 }: GridViewCard_Places) => {
+  const [imageError, setImageError] = useState(false);
   const { isAssociationsStepOpen, associatedPlaces } = useSelector(
     (state: RootState) => state.searchResults
   );
@@ -36,8 +38,11 @@ export const Card = ({
     return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
   }
 
-  const dispatch = useDispatch()
-
+  const dispatch = useDispatch();
+  const media = record.attributes?.media_associates?.data.filter(x => x?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA");
+  const mediaImage = record.attributes?.media_associates?.data.filter(x => x?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && x?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE");
+  // console.log('media....', media);
+  // console.log('mediaImage....', mediaImage);
   return (
     <>
       <Box component="div" className={`${gridStyles["card-container"]}`}>
@@ -55,19 +60,27 @@ export const Card = ({
               ) ? '150px' : ''
             }}
           >
-
-            {img ? <Box
+            {img ? 
+            <Box
               className={`${gridStyles["card-image"]}`}
               component="img"
               alt={""}
               src={`${baseUrl}${img}`}
+              loading="lazy"
+              onError={(e) => {
+                e.currentTarget.onerror = null; // prevents looping
+                e.currentTarget.src=fallBackSrc;
+                e.currentTarget.width=100;
+              }}
             /> :
               <RenderFileDataForGrid
                 fileData={{
                   alt: "",
-                  src: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? (
+                  // src: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? (
+                  src: media.length > 0 ? (
                     detectMediaTypeFromPlace(record) === "image" ?
-                      handleImageUrl(record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url, "small_") :
+                      // handleImageUrl(record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url, "small_") :
+                      mediaImage[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url :
                       `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}`
                   ) : undefined,
                   className: detectMediaTypeFromPlace(record) === "video" ?
