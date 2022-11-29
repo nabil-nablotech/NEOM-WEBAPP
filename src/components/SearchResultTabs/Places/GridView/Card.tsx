@@ -73,8 +73,7 @@ export const Card = ({
 
             {/* {img ? <Box */}
             {
-              record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE"
-                ? <Box
+              detectMediaTypeFromPlace(record) === "image" ? <Box
                   className={`${gridStyles["card-image"]}`}
                   component="img"
                   alt={""}
