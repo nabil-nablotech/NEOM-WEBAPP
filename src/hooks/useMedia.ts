@@ -203,16 +203,19 @@ const useMedia = () => {
 
     if (
       (
+        payload.media_type === "IMAGE" && // first as featured-> should be applicable to only images
         (
-          (associatedPlaces.length > 0) && (associatedPlaces.every(item => !item.previousMediaPresent))
-        ) ||
-        (
-          (associatedEvents.length > 0) && (associatedEvents.every(item => !item.previousMediaPresent))
-        ) ||
-        (
-          edit &&
           (
-            tabData && tabData.featuredImage
+            (associatedPlaces.length > 0) && (associatedPlaces.every(item => !item.previousMediaPresent))
+          ) ||
+          (
+            (associatedEvents.length > 0) && (associatedEvents.every(item => !item.previousMediaPresent))
+          ) ||
+          (
+            edit &&
+            (
+              tabData && tabData.featuredImage
+            )
           )
         )
       ) 
