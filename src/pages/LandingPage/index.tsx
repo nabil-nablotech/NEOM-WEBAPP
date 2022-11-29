@@ -28,6 +28,7 @@ import LandingPageImage from "../../assets/images/LandingPage.webp";
 import MediaIcon from "../../assets/icons/media.png";
 import EventIcon from "../../assets/icons/events.png";
 import LibraryIcon from "../../assets/icons/library.png";
+import useRefinedSearch from "../../hooks/useRefinedSearchOptions";
 
 const landingPageData = {
   overlapGroup4:
@@ -70,6 +71,8 @@ function LandingPage() {
     spanText9,
   } = landingPageData;
   useAuth();
+  
+  useRefinedSearch();
   const { data } = useSelector((state: RootState) => state.login);
   const { totalCounts, searchText } = useSelector(
     (state: RootState) => state.searchResults
