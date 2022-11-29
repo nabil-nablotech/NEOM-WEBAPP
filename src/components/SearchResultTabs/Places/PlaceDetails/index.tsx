@@ -1306,7 +1306,7 @@ const PlaceDetailsPage = () => {
                         }}
                         onClick={(e) => {
                           setCopyDone(true);
-                          copyToClipboard(placeUIPath ?? "");
+                          copyToClipboard(`${webUrl}/${placeUIPath}` ?? "");
                         }}
                       >
                         {`${webUrl}/${placeUIPath}`}

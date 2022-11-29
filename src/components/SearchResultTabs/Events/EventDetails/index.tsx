@@ -894,7 +894,7 @@ const EventDetailsPage = () => {
                         }}
                         onClick={(e) => {
                           setCopyDone(true);
-                          copyToClipboard(visitUIPath);
+                          copyToClipboard(`${webUrl}/${visitUIPath}`);
                         }}
                       >
                         {`${webUrl}/${visitUIPath}`}
