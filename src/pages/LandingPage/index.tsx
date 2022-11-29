@@ -70,6 +70,8 @@ function LandingPage() {
     spanText9,
   } = landingPageData;
   useAuth();
+  
+
   const { data } = useSelector((state: RootState) => state.login);
   const { totalCounts, searchText } = useSelector(
     (state: RootState) => state.searchResults

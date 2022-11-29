@@ -28,15 +28,12 @@ import {
 } from "../../store/reducers/searchResultsReducer";
 import PositionedSnackbar from "../../components/Snackbar";
 import { EVENTS_TAB_NAME, getSingleInventoryNameFromTabName, PLACES_TAB_NAME } from "../../utils/services/helpers";
-import useRefinedSearch from "../../hooks/useRefinedSearchOptions";
 import {setSearchText, } from '../../store/reducers/searchResultsReducer';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import styles from './index.module.css'
-import { Place } from "../../types/Place";
 
 const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId?: string}>();
-  useRefinedSearch();
   const navigate = useNavigate();
   // const { searchText, activeTab, newItemWindowOpen, showAddSuccess } =
   const { searchText, showAddSuccess,deleteItemType, showEditSuccess, deleteItemSuccess,

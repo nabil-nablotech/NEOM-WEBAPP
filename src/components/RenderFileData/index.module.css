@@ -9,6 +9,10 @@
     /* border: 1px solid #fff;
     border-radius: 50%; */
 }
+.error-image {
+    width: 100%;
+    align-items: center;
+}
 .three-model-play-icon {
     position: absolute;
     top: 44%;
