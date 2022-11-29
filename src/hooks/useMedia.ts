@@ -203,11 +203,19 @@ const useMedia = () => {
 
     if (
       (
-        (associatedPlaces.length > 0) && (associatedPlaces.every(item => !item.previousMediaPresent))
-      ) ||
-      (
-        (associatedEvents.length > 0) && (associatedEvents.every(item => !item.previousMediaPresent))
-      )
+        (
+          (associatedPlaces.length > 0) && (associatedPlaces.every(item => !item.previousMediaPresent))
+        ) ||
+        (
+          (associatedEvents.length > 0) && (associatedEvents.every(item => !item.previousMediaPresent))
+        ) ||
+        (
+          edit &&
+          (
+            tabData && tabData.featuredImage
+          )
+        )
+      ) 
     ) {
 
       featuredFlag = true

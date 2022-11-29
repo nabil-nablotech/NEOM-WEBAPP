@@ -25,6 +25,8 @@ import { useDispatch } from "react-redux";
 import { RootState } from "../../../../store";
 import { modifyAssociatedEvents } from "../../../../store/reducers/searchResultsReducer";
 import RenderFileDataForGrid from "../../../RenderFileDataForGrid";
+import {cloneDeep} from 'lodash'
+import { mediaAssociate_PlaceOrEvent } from "../../../../types/Place";
 
 export const Card = ({
   img,
@@ -47,6 +49,20 @@ export const Card = ({
 
   const dispatch = useDispatch();
 
+  /**detect first featured image */
+  let featuredRecordIndex = 0
+
+  let flag = false
+
+  cloneDeep(record.attributes?.media_associates?.data)?.forEach((item: mediaAssociate_PlaceOrEvent, index: number) => {
+    if (!flag && item.attributes.media_unique_id.data.attributes.featuredImage) {
+      featuredRecordIndex = index;
+      flag = true;
+    }
+
+  })
+
+
   return (
     <>
       <Box component="div" className={`${gridStyles["card-container"]}`}>
@@ -61,7 +77,7 @@ export const Card = ({
             onClick={() => { }}
             style={{
               minHeight: isImagePathInvalid(
-                record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}` : undefined
+                record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}` : undefined
               ) ? '120px' : ''
             }}
           >
@@ -71,33 +87,37 @@ export const Card = ({
                 component="img"
                 alt={""}
                 src={`${baseUrl}${img}`}
+                // src={record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" &&
+                //   record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ?
+                //   record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''
+                //   }
               />
             ) : (
               <>
                   {
-                    record.attributes?.media_associates?.data[0]?.attributes
-                      ?.media_unique_id?.data?.attributes?.media_type?.data[0]
+                    record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes
+                      ?.media_unique_id?.data?.attributes?.media_type?.data[featuredRecordIndex]
                       ?.attributes?.categoryCode === "MEDIA"
                       ?
                       <RenderFileDataForGrid
                         fileData={{
                           alt: "",
-                          src: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? (
+                          src: record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? (
                             detectMediaTypeFromEvent(record) === "image" ?
-                              handleImageUrl(record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url, "small_") :
-                              `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}`
+                              handleImageUrl(record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ?? '', "small_") :
+                              `${baseUrl}${record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}`
                           ) : undefined,
                           className: detectMediaTypeFromEvent(record) === "video" ?
                             `${gridStyles['video-card-parent']}` : detectMediaTypeFromEvent(record) === "image" ?
                               `${gridStyles['card-image']}` : `${gridStyles['three-d-card-parent']}`,
-                          objectURL: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.objectURL || '',
-                          videoType: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.videoType,
-                          iframeVideoLink: (record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.videoType === "url")
-                            ? record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.referenceURL : undefined,
+                          objectURL: record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.objectURL || '',
+                          videoType: record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.videoType,
+                          iframeVideoLink: (record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.videoType === "url")
+                            ? record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes.referenceURL : undefined,
                           staticVideoLink: (
-                            (detectMediaTypeFromEvent(record) === "video" || record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.videoType === "video") &&
-                            record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url
-                          ) ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}` : undefined,
+                            (detectMediaTypeFromEvent(record) === "video" || record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes.videoType === "video") &&
+                            record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url
+                          ) ? `${baseUrl}${record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}` : undefined,
                           isOpened: false
                         }}
                         fileType={detectMediaTypeFromEvent(record)}
