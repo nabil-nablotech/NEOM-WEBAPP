@@ -85,6 +85,7 @@ export type MediaAssociates = {
             object: {
               data: mediaAssociates_objectData | null;
             };
+            featuredImage: boolean
           };
         };
       };
@@ -106,6 +107,25 @@ export type MediaAssociates_GalleryView = {
     };
   }[];
 };
+
+export type mediaAssociate_PlaceList = {
+  attributes: {
+    media_unique_id: {
+      data: {
+        attributes: {
+          media_type: any;
+          videoType?: 'url' | 'embededCode' | 'video';
+          objectURL?: string;
+          referenceURL?: string;
+          object: {
+            data: mediaAssociates_objectData | null;
+          };
+          featuredImage: boolean
+        };
+      };
+    };
+  };
+}
 
 export type ImageFormat = {
   ext: string
