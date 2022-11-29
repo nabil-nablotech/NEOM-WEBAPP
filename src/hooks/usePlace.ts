@@ -109,6 +109,7 @@ const usePlace = () => {
           if (refinePlaceDataMap?.places?.data[i]?.attributes?.latitude && refinePlaceDataMap?.places?.data[i]?.attributes?.longitude) {
             dummyArray.push({
               id:refinePlaceDataMap?.places?.data[i].id,
+              uniqueId:refinePlaceDataMap?.places?.data[i].attributes["uniqueId"],
               name: refinePlaceDataMap?.places?.data[i].attributes["placeNameEnglish"],
               position: {
                 lat: refinePlaceDataMap?.places?.data[i].attributes["latitude"],

@@ -199,6 +199,7 @@ query refinedSearch(
     data {
       id
       attributes {
+        uniqueId
         placeNameEnglish
         latitude
         longitude
