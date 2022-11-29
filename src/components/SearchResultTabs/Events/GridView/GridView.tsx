@@ -31,9 +31,7 @@ const GridView = (props: EventsProps) => {
     let newSelectedKey:any = [];
     const dispatch = useDispatch();
     const { navigateTo } = useHistory();
-
     const { data, handleNext, hasMoreData, loading, setEdit, isSelect } = props;
-
     if (!data) {
         return <h1>Loading...</h1>
     }
@@ -51,13 +49,11 @@ const GridView = (props: EventsProps) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>, keyId:string) => {
         if(event.target.checked){
           newSelectedKey.push(keyId);
-          dispatch(setSelectedKey(newSelectedKey))
         }else{
           let filteredData = newSelectedKey.filter((item:any)=>{return item !== keyId});
           newSelectedKey=filteredData;
-          dispatch(setSelectedKey(newSelectedKey))
         }
-    
+        dispatch(setSelectedKey([...newSelectedKey]))
     };
 
     return (

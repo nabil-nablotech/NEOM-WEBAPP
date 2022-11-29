@@ -262,7 +262,6 @@ const ListView = (props: MediaProps) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch()
-
   useEffect(() => {
     /** locate last row, add id to it; such that
      * its appearance in dom can be tracked and more data can be loaded

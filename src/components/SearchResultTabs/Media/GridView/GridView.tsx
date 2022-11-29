@@ -36,13 +36,10 @@ const GridView = (props: MediaProps) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { navigateTo } = useHistory();
-
     const { data, hasMoreData, fetchData, loading, totalData, setEdit, isSelect } = props;
-
     const { media } = useSelector(
         (state: RootState) => state.searchResults
     );
-
     if (totalData === 0) {
         return <h1>No data found</h1>
     }
@@ -50,13 +47,11 @@ const GridView = (props: MediaProps) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>, keyId: string) => {
         if (event.target.checked) {
             newSelectedKey.push(keyId);
-            dispatch(setSelectedKey(newSelectedKey))
         } else {
             let filteredData = newSelectedKey.filter((item: any) => { return item !== keyId });
             newSelectedKey = filteredData;
-            dispatch(setSelectedKey(newSelectedKey))
         }
-
+        dispatch(setSelectedKey([...newSelectedKey]))
     };
     return (
         <Box component="div" className={`${gridStyles['left-grid-box']}`}
