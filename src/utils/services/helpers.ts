@@ -20,6 +20,7 @@ import { Options } from "../../types/RefinedSeachTypes";
 import { getRole, getLimit } from "../storage/storage";
 
 export const baseUrl = `${process.env.REACT_APP_STRAPI_BASE_URL}`;
+export const baseUrlS3 = `${process.env.REACT_APP_STRAPI_S3_BASE_URL}`;
 // export const baseUrl = `https://877e-59-94-75-53.in.ngrok.io`;
 export const webUrl = `${process.env.REACT_APP_STRAPI_WEB_URL}`;
 export const limit = Number(getLimit()) || 20;

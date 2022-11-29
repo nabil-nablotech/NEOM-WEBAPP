@@ -15,7 +15,7 @@ import RenderFileData from '../../../RenderFileData';
 import { CustomMoreOptionsComponent } from '../../../CustomMoreOptionsComponent';
 import { useEffect } from 'react';
 import useMediaDetails from '../../../../hooks/useMediaDetails';
-import { baseUrl, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, copyToClipboard, MAX_FETCH_LIMIT, limit, detectMediaTypeFromMediaDetailPage } from '../../../../utils/services/helpers';
+import { baseUrl, baseUrlS3, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, MEDIA_TYPE_3D, NO_LOCATION, detectMediaRecordApiType, NO_IMAGE, toFixedFromString, MEDIA_TAB_NAME, isRecordHavingAssociations, itemAddEditAccess, itemDeleteAccess, copyToClipboard, MAX_FETCH_LIMIT, limit, detectMediaTypeFromMediaDetailPage } from '../../../../utils/services/helpers';
 
 import NoMapPresent from '../../../NoDataScreens/NoMapPresent';
 import NoImagePresent from '../../../NoDataScreens/NoImagePresent';
@@ -135,7 +135,8 @@ const MediaDetailsPage = ({
 
     const handleImageUrl = (url: string, size: string) => {
         let imagePath = url.split("/");
-        return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
+        // return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
+        return `${baseUrlS3}/${size}${imagePath[3]}`;
     }
 
     const menuItems = [
