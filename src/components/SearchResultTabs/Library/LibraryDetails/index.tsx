@@ -79,6 +79,7 @@ const LibraryDetailsPage = ({
     menuItems.push({
       label: "Delete",
       action: () => {
+
         dispatch(
           toggleDeleteConfirmationWindowOpen({
             flag: true,
@@ -86,7 +87,7 @@ const LibraryDetailsPage = ({
               ? isRecordHavingAssociations(
                   library.filter(
                     (item) =>
-                      item?.id === data?.library_unique_id?.id?.toString()
+                      item?.id === data?.id?.toString()
                   )[0]
                 )
               : false,

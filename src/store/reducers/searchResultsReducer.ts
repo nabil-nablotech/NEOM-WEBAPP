@@ -314,11 +314,14 @@ export const searchResultsSlice = createSlice({
       }
 
       if(action.payload.events.length > 0) {
-        
+
           newAssociatedEvents = action.payload.events.map(item => {
               return ({
                 ...item,
-                previousMediaPresent:  true // since this item is already assigned to a media
+                previousMediaPresent:  true, // since this item is already assigned to a media
+                placeNameEnglish: item?.visit_associate?.place_unique_id?.placeNameEnglish ?? '',
+                placeNameArabic: item?.visit_associate?.place_unique_id?.placeNameArabic ?? '',
+                placeNumber: item?.visit_associate?.place_unique_id?.placeNumber ?? '',
               })
           })
       } else {

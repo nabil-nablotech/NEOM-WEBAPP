@@ -97,6 +97,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     latitude: edit ? tabData?.latitude : null,
     longitude: edit ? tabData?.longitude : null,
     referenceURL: edit ? tabData?.referenceURL : "",
+    citation: edit ? tabData?.citation : "",
     keywords: edit && tabData?.keywords ? tabData?.keywords : [],
     object: edit && tabData?.object ? [tabData?.object] : undefined,
     mediaType: "",
@@ -432,7 +433,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
                     <StepButton color="inherit"
                       onClick={e => {
 
-                        if (index > activeStep) {
+                        if ((index > activeStep) && edit) {
                           validation(formik.values, { setErrors: formik.setErrors }, true, index)
                         } else if (index < activeStep) {
                           handleBack()

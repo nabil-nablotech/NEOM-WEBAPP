@@ -540,8 +540,6 @@ const PlaceDetailsPage = () => {
   
   })
 
-  console.log('hex: ', mediaItems)
-
   return (
     <Box component="div" className={`${styles["details-container"]}`}>
       <Grid
