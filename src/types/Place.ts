@@ -108,7 +108,7 @@ export type MediaAssociates_GalleryView = {
   }[];
 };
 
-export type mediaAssociate_PlaceList = {
+export type mediaAssociate_PlaceOrEvent = {
   attributes: {
     media_unique_id: {
       data: {

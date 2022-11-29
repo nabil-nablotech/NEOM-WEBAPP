@@ -13,7 +13,7 @@ import { modifyAssociatedPlaces } from "../../../../store/reducers/searchResults
 import { RootState } from "../../../../store";
 import { useDispatch } from "react-redux";
 import RenderFileDataForGrid from "../../../RenderFileDataForGrid";
-import { mediaAssociate_PlaceList } from "../../../../types/Place";
+import { mediaAssociate_PlaceOrEvent } from "../../../../types/Place";
 import {cloneDeep} from 'lodash'
 
 export const Card = ({
@@ -45,7 +45,7 @@ export const Card = ({
 
   let flag = false
 
-  cloneDeep(record.attributes?.media_associates?.data)?.forEach((item: mediaAssociate_PlaceList, index: number) => {
+  cloneDeep(record.attributes?.media_associates?.data)?.forEach((item: mediaAssociate_PlaceOrEvent, index: number) => {
     if (!flag && item.attributes.media_unique_id.data.attributes.featuredImage) {
       featuredRecordIndex = index;
       flag = true;
@@ -89,7 +89,7 @@ export const Card = ({
                   alt: "",
                   src: record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? (
                     detectMediaTypeFromPlace(record) === "image" ?
-                      handleImageUrl(record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url || '', "small_") :
+                      handleImageUrl(record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ?? '', "small_") :
                       `${baseUrl}${record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}`
                   ) : undefined,
                   className: detectMediaTypeFromPlace(record) === "video" ?
