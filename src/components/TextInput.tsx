@@ -116,7 +116,7 @@ export default function NTextFields(props: TextInputProps) {
         autoComplete="off"
       >
         <NeomTextInput
-          error={error}
+          error={error || Boolean(errorField)}
           id={`${
             id ? id : ''
           }`}
@@ -137,16 +137,7 @@ export default function NTextFields(props: TextInputProps) {
           multiline={multiline}
           sx={{
             ...sx,
-            ...formControlSx,
-            '& .MuiInputBase-root.MuiOutlinedInput-root input' : errorField ? {
-              border:'1px solid var(--orange-shade)',
-              borderRadius:'4px',
-              
-            } : {},
-            '& .MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-multiline' : errorField ? {
-              border: '1px solid var(--orange-shade)' ,
-              borderRadius: '4px' ,
-            } : {},
+            ...formControlSx
           }}
           InputProps={{
             ...InputProps,
