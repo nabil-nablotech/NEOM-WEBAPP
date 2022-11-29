@@ -295,12 +295,15 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
     if (!values.placeNumber) {
       currentError = "Place Number is required";
     }
+    if (values.placeNumber.length < 3) {
+      currentError = "Place Number shall be of minimum 3 characters";
+    }
 
     if (!currentError) {
       handleNext(null, values, navigateOnly);
     } else {
       if (activeStep === 0) {
-        formikObject.setErrors({ placeNumber: "Place Number is required" })
+        formikObject.setErrors({ placeNumber: currentError })
       } else {
         handleNext(null, values, navigateOnly);
       }
