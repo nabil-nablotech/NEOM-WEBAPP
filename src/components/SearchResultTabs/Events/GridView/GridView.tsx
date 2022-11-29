@@ -96,7 +96,13 @@ const GridView = (props: EventsProps) => {
                                         /** TO-DO: 1 used since 0th data was coming null, to be fixed from backend */
                                         img={item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ? item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''}
 
-                                        title={item?.attributes?.visit_associate.data?.attributes?.place_unique_id ? `${item?.attributes?.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameEnglish} ${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic} - ${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber}` : ''}
+                                        title={item?.attributes?.visit_associate.data?.attributes?.place_unique_id ? `${
+                                            item?.attributes?.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameEnglish
+                                        } ${
+                                            item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic
+                                        } ${
+                                            item?.attributes?.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameEnglish || 
+                                            item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNameArabic ? '-' : ''} ${item.attributes.visit_associate.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber}` : ''}
                                         subTitle={item?.attributes?.siteDescription || ''}
                                         dateString={
                                             item?.attributes?.visitDate ?
