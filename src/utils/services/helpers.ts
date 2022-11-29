@@ -668,6 +668,14 @@ export const isRecordHavingAssociations = (record: Media) => {
       ?.data?.length > 0
   ) {
     return true;
+  } else if(
+    record?.attributes?.media_associate?.data?.attributes?.visit_unique_ids &&
+    record?.attributes?.media_associate?.data?.attributes?.visit_unique_ids
+      ?.data &&
+    record?.attributes?.media_associate?.data?.attributes?.visit_unique_ids
+      ?.data?.length > 0
+  ) {
+    return true;
   } else return false;
 };
 
