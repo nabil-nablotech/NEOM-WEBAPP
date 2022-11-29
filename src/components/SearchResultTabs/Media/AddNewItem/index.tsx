@@ -97,6 +97,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     latitude: edit ? tabData?.latitude : null,
     longitude: edit ? tabData?.longitude : null,
     referenceURL: edit ? tabData?.referenceURL : "",
+    citation: edit ? tabData?.citation : "",
     keywords: edit && tabData?.keywords ? tabData?.keywords : [],
     object: edit && tabData?.object ? [tabData?.object] : undefined,
     mediaType: "",
