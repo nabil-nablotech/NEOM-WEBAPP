@@ -6,29 +6,15 @@ import { useSelector } from "react-redux";
 import { RobotoMediumMerino20px } from "../styledMixins";
 import WhiteCircle from "../../assets/images/WhiteCircle.svg";
 import useLogout from "../../hooks/useLogout";
-import { EVENTS_TAB_NAME, itemAddEditAccess, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME, stringAvatar } from "../../utils/services/helpers";
+import { itemAddEditAccess, stringAvatar } from "../../utils/services/helpers";
 import { RootState } from "../../store";
 import { getRole, getSupportEmail } from "../../utils/storage/storage";
-import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import MenuList from "../MenuList";
 import { Box, LinearProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setAddNewItemWindowType, setDeletePayload, toggleAddItemWindowMinimized, toggleAssociationsIconDisabled, toggleAssociationsStepOpen, toggleDeleteConfirmationWindowOpen, toggleDeleteItemSuccess, toggleEditConfirmationWindowOpen, toggleLogoutConfirmationWindowOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
-import CustomDrawer from "../CustomDrawer";
-import AddNewItem from "../../pages/AddNewItem";
-import AddNewPlace from "../SearchResultTabs/Places/AddNewItem";
-import usePlace from "../../hooks/usePlace";
-import AddNewEvent from "../SearchResultTabs/Events/AddNewItem";
-import AddNewMedia from "../SearchResultTabs/Media/AddNewItem";
-import useEvent from "../../hooks/useEvent";
-import AddNewLibraryItem from "../SearchResultTabs/Library/AddNewItem";
+import { setAddNewItemWindowType, toggleLogoutConfirmationWindowOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
 import { setEventEdit } from "../../store/reducers/eventReducer";
-import AddItemCollapsedWindow from "../AddItemCollapsedWindow";
 import { setTabEdit } from "../../store/reducers/tabEditReducer";
-import useLibrary from "../../hooks/useLibrary";
-import useMedia from "../../hooks/useMedia";
-import { ConfirmationModal } from "../ConfirmationModal";
-import { deleteRecord } from "../../api/delete";
 import iconDownload from "../../assets/images/icon-button-settings.png"
 
 /** Component for top-right header icons */
@@ -47,10 +33,6 @@ function UserMenuComponent({
   const { newItemWindowOpen, addNewItemWindowType, addItemWindowMinimized, isEditConfirmationWindowOpen,
     isDeleteConfirmationWindowOpen, deletePayload, deleteItemType, isLogoutConfirmationWindowOpen
    } = useSelector((state: RootState) => state.searchResults);
-  const { createPlace } = usePlace();
-  const { createEvent, setSearchValue, searchValue } = useEvent();
-  const { createLibrary } = useLibrary();
-  const { createMedia } = useMedia();
 
   const open = Boolean(anchorEl);
   const admin = getRole() === 'Admin';
@@ -130,17 +112,6 @@ function UserMenuComponent({
     dispatch(setTabEdit(false));
   }
 
-  const onHide = () => {
-    dispatch(toggleAddItemWindowMinimized(true))
-    dispatch(toggleNewItemWindow(false))
-  }
-  const onClose = () => {
-    
-    dispatch(toggleAssociationsIconDisabled(false))
-    dispatch(toggleAssociationsStepOpen(false))
-    dispatch(toggleNewItemWindow(false))
-  }
-
   return (
     <>
       <Box component="div" sx={{
@@ -195,91 +166,6 @@ function UserMenuComponent({
           handleClose={handleSettingsClose}
           options={menuSettingItems}
         />
-        <CustomDrawer origin="right" isOpen={newItemWindowOpen} onClose={() => dispatch(toggleNewItemWindow(!newItemWindowOpen))}>
-          {!addNewItemWindowType &&
-            <AddNewItem onClose={() => onClose()} />
-          }
-          {
-            addNewItemWindowType === PLACES_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewPlace create={createPlace} onHide={() => onHide()} />
-          }
-          {
-            addNewItemWindowType === EVENTS_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewEvent create={createEvent} setSearchValue={setSearchValue} searchValue={searchValue} onHide={() => onHide()} />
-          }
-          {
-            addNewItemWindowType === LIBRARY_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewLibraryItem create={createLibrary} onHide={() => onHide()} />
-          }
-          {
-            addNewItemWindowType === MEDIA_TAB_NAME && !addItemWindowMinimized &&
-            <AddNewMedia create={createMedia} onHide={() => onHide()} />
-          }
-        </CustomDrawer>
-        {
-          addNewItemWindowType &&
-          addItemWindowMinimized &&
-          <AddItemCollapsedWindow />
-        }
-        {
-          (
-            isEditConfirmationWindowOpen ||
-            isDeleteConfirmationWindowOpen.flag ||
-            isLogoutConfirmationWindowOpen
-          ) &&
-          <ConfirmationModal
-            type={
-              isEditConfirmationWindowOpen ? 
-              "confirm-edit" :
-              isLogoutConfirmationWindowOpen ? 
-              'confirm-logout' :
-              "confirm-delete-inventory" 
-            }
-            open={
-              isEditConfirmationWindowOpen ||
-              isDeleteConfirmationWindowOpen.flag ||
-              isLogoutConfirmationWindowOpen
-            }
-            handleClose={() => {
-              if (isEditConfirmationWindowOpen) {
-                dispatch(toggleEditConfirmationWindowOpen(false))
-              }
-              if (isDeleteConfirmationWindowOpen.flag) {
-                dispatch(toggleDeleteConfirmationWindowOpen({
-                  flag: false,
-                  isAssociatedToPlacesOrEvents: false,
-                }))
-              }
-              if(isLogoutConfirmationWindowOpen) {
-                dispatch(toggleLogoutConfirmationWindowOpen(false))
-              }
-              dispatch(setDeletePayload(null))
-            }}
-            handleDelete={
-              async () => {
-                if (deletePayload && deleteItemType) {
-
-                  const type = deleteItemType === 'Places' ? 'place' :
-                    deleteItemType === 'Events' ? 'event' :
-                      deleteItemType === 'Media' ? 'media' : 'library'
-
-                  const res: { success: boolean } = await deleteRecord(type, deletePayload.id)
-
-                  if (res.success) {
-                    /**call this on delete api success */
-                    dispatch(setDeletePayload(null))
-                    dispatch(toggleDeleteConfirmationWindowOpen({
-                      flag: false,
-                      isAssociatedToPlacesOrEvents: false,
-                    }))
-                    dispatch(toggleDeleteItemSuccess(true))
-                  }
-                  
-                }
-              }
-            }
-          />
-        }
       </Box>
     </>
   );
