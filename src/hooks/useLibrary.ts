@@ -69,7 +69,7 @@ const useLibrary = () => {
   /**
    * fetch places with two words
    */
-  const { loading, error, data, refetch:refetchLibraryItems } = useQuery(library);
+  const { loading, error, data, refetch:refetchLibraryItems } = useQuery(library, graphQlHeaders());
 
   useEffect(() => {
     if (data?.medias) {
