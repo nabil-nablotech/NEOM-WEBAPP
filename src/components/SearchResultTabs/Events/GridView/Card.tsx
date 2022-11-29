@@ -81,15 +81,16 @@ export const Card = ({
               ) ? '120px' : ''
             }}
           >
-            {detectMediaTypeFromEvent(record) === "image" ? (
+            {img ? (
               <Box
                 className={`${gridStyles["card-image"]}`}
                 component="img"
                 alt={""}
-                src={`${baseUrl}${record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" &&
-                  record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ?
-                  record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''
-                  }`}
+                src={`${baseUrl}${img}`}
+                // src={record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" &&
+                //   record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ?
+                //   record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''
+                //   }
               />
             ) : (
               <>
