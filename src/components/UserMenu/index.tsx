@@ -12,7 +12,7 @@ import { getRole, getSupportEmail } from "../../utils/storage/storage";
 import MenuList from "../MenuList";
 import { Box, LinearProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setAddNewItemWindowType, toggleLogoutConfirmationWindowOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
+import { setAddNewItemWindowType, toggleAddItemWindowMinimized, toggleLogoutConfirmationWindowOpen, toggleNewItemWindow } from "../../store/reducers/searchResultsReducer";
 import { setEventEdit } from "../../store/reducers/eventReducer";
 import { setTabEdit } from "../../store/reducers/tabEditReducer";
 import iconDownload from "../../assets/images/icon-button-settings.png"
@@ -106,10 +106,15 @@ function UserMenuComponent({
       if(addNewItemWindowType) { /** reset if already set  after add flow*/
         dispatch(setAddNewItemWindowType(null))
       }
+
+      dispatch(setEventEdit(false));
+      dispatch(setTabEdit(false));
+    } 
+
+    if (addItemWindowMinimized) {
+      dispatch(toggleAddItemWindowMinimized(false))
+      dispatch(toggleNewItemWindow(true))
     }
-    
-    dispatch(setEventEdit(false));
-    dispatch(setTabEdit(false));
   }
 
   return (
