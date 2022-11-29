@@ -137,6 +137,7 @@ query RefineSearchEvent(
                         }
                       }
                     }
+                    featuredImage
                     objectURL
                     object {
                       data {

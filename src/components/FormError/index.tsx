@@ -17,7 +17,8 @@ const FormError = ({
             ...style,
             fontSize: 'smaller',
             lineHeight: 1,
-            color: 'var(--orange-shade)'
+            color: 'var(--orange-shade)',
+            textAlign: 'left'
         }}>
             {msg}
         </Box>

@@ -514,12 +514,33 @@ const PlaceDetailsPage = () => {
     recommendation,
     placeUIPath,
     media_associates,
-    mediaItems,
+    mediaItems : unsortedMediaItems,
     libraryItems,
     visit_associates,
   } = placeData;
 
   const { latitude, longitude } = placeData;
+
+  const mediaItems: MediaAssociateObj[]  = []
+
+  /**detect first featured image */
+  let flag = false
+
+  unsortedMediaItems.forEach((item: MediaAssociateObj) => {
+
+    /** if found featuredFlag, unshift / add element to start of array;
+     * else do normal push
+     */
+    if(!flag && item.media_unique_id.featuredImage) {
+      mediaItems.unshift(item)
+      flag = true
+    } else {
+      mediaItems.push(item)
+    }
+  
+  })
+
+  console.log('hex: ', mediaItems)
 
   return (
     <Box component="div" className={`${styles["details-container"]}`}>
@@ -612,21 +633,25 @@ const PlaceDetailsPage = () => {
                 </Box>
                 <Grid
                   container
-                  className={`${styles["justify-center"]} ${styles["image-grid-gap"]}`}
-                  spacing={1}
+                  className={`${styles["justify-center"]} ${styles["image-grid-gap"]} ${styles["images-grid-container"]}`}
+                  sx={{
+                    '& .MuiGrid-root': {
+                      marginLeft: 0
+                    }
+                  }}
                 >
                   <Grid
                     item
-                    sm={6}
-                    className={`${styles["grid-item"]}`}
-                    onClick={(e) => {
-                      handleClickMediaItem(
-                        e,
-                        1,
-                        mediaItems[0]?.media_unique_id.uniqueId
-                      );
-                    }}
-                  >
+                      sm={6}
+                      className={`${styles["grid-item"]}`}
+                      onClick={(e) => {
+                        handleClickMediaItem(
+                          e,
+                          1,
+                          mediaItems[0]?.media_unique_id.uniqueId
+                        );
+                      }}
+                    >
                     {shallRenderMedia(1, mediaItems) && (
                       <RenderFileData
                           fileData={{
@@ -636,7 +661,7 @@ const PlaceDetailsPage = () => {
                                 handleImageUrl(mediaItems[0].media_unique_id?.object.url, "small_") :
                                 `${baseUrl}${mediaItems[0].media_unique_id?.object.url}`
                             ) : undefined,
-                            className: `${styles['image']}${
+                            className: `${styles['image']}  ${styles['main-image']}${
                               detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ? 
                                 ` ${styles['three-d-card-parent']}` : ''
                             }`,
@@ -652,49 +677,190 @@ const PlaceDetailsPage = () => {
                         fileType={detectMediaTypeFromMediaAssociate(
                           mediaItems[0]
                         )}
-                      />
-                    )}
-                  </Grid>
-                  <Grid
-                    item
-                    sm={6}
-                    className={`${styles["grid-item"]}`}
-                    onClick={(e) => {
-                      handleClickMediaItem(
-                        e,
-                        2,
-                        mediaItems[1]?.media_unique_id.uniqueId
-                      );
-                    }}
-                  >
-                    {shallRenderMedia(2, mediaItems) && (
-                      <RenderFileData
-                        fileData={{
-                          alt: "",
-                          src: mediaItems[1]?.media_unique_id?.object?.url ? (
-                            detectMediaTypeFromMediaAssociate(mediaItems[1]) === "image" ?
-                              handleImageUrl(mediaItems[1].media_unique_id?.object.url, "small_") :
-                              `${baseUrl}${mediaItems[1].media_unique_id?.object.url}`
-                          ) : undefined,
-                          className: `${styles['image']}${
-                            detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ? 
-                              ` ${styles['three-d-card-parent']}` : ''
-                          }`,
-                          objectURL: mediaItems[1]?.media_unique_id?.objectURL || '',
-                          videoType: mediaItems[1]?.videoType,
-                          iframeVideoLink: (mediaItems[1]?.media_unique_id?.videoType === "url") ? mediaItems[1]?.media_unique_id?.referenceURL : undefined,
-                          staticVideoLink: (
-                            (detectMediaTypeFromMediaAssociate(mediaItems[1]) === "video" || mediaItems[1]?.media_unique_id?.videoType === "video") &&
-                            mediaItems[1]?.media_unique_id?.object?.url
-                          ) ? `${baseUrl}${mediaItems[1]?.media_unique_id?.object?.url}` : undefined,
-                          isOpened: false
+                        />
+                      )}
+                    </Grid>
+                    <Grid
+                      item
+                      sm={6}
+                      className={`${styles[""]}`}
+
+                    >
+                      <Grid container
+                        spacing={1}
+                        className= {`${styles['row-1']} ${styles["side-grid-row"]}`}
+                        sx={{
+                          '& .MuiGrid-root': {
+                            marginLeft: 0
+                          }
                         }}
-                        fileType={detectMediaTypeFromMediaAssociate(
-                          mediaItems[1]
-                        )}
-                      />
-                    )}
-                  </Grid>
+                      >
+                        <Grid item
+                        className={`${styles["grid-item"]}`}
+                          sm={6}
+                          onClick={(e) => {
+                            handleClickMediaItem(
+                              e,
+                              2,
+                              mediaItems[1]?.media_unique_id.uniqueId
+                            );
+                          }}
+                        >
+                          {shallRenderMedia(2, mediaItems) && (
+                            <RenderFileData
+                              fileData={{
+                                alt: "",
+                                src: mediaItems[1]?.media_unique_id?.object?.url ? (
+                                  detectMediaTypeFromMediaAssociate(mediaItems[1]) === "image" ?
+                                    handleImageUrl(mediaItems[1].media_unique_id?.object.url, "small_") :
+                                    `${baseUrl}${mediaItems[1].media_unique_id?.object.url}`
+                                ) : undefined,
+                                className: `${styles['image']} ${styles['side-grid-image']}${detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ?
+                                  ` ${styles['three-d-card-parent']}` : ''
+                                  }`,
+                                objectURL: mediaItems[1]?.media_unique_id?.objectURL || '',
+                                videoType: mediaItems[1]?.videoType,
+                                iframeVideoLink: (mediaItems[1]?.media_unique_id?.videoType === "url") ? mediaItems[1]?.media_unique_id?.referenceURL : undefined,
+                                staticVideoLink: (
+                                  (detectMediaTypeFromMediaAssociate(mediaItems[1]) === "video" || mediaItems[1]?.media_unique_id?.videoType === "video") &&
+                                  mediaItems[1]?.media_unique_id?.object?.url
+                                ) ? `${baseUrl}${mediaItems[1]?.media_unique_id?.object?.url}` : undefined,
+                                isOpened: false
+                              }}
+                              fileType={detectMediaTypeFromMediaAssociate(
+                                mediaItems[1]
+                              )}
+                            />
+                          )}
+                        </Grid>
+                        <Grid item
+                          sm={6}
+                          className={`${styles["side-grid-container"]}`}
+                          onClick={(e) => {
+                            handleClickMediaItem(
+                              e,
+                              3,
+                              mediaItems[2]?.media_unique_id.uniqueId
+                            );
+                          }}
+                        >
+                          {shallRenderMedia(3, mediaItems) && (
+                            <RenderFileData
+                              fileData={{
+                                alt: "",
+                                src: mediaItems[2]?.media_unique_id?.object?.url ? (
+                                  detectMediaTypeFromMediaAssociate(mediaItems[2]) === "image" ?
+                                    handleImageUrl(mediaItems[2].media_unique_id?.object.url, "small_") :
+                                    `${baseUrl}${mediaItems[2].media_unique_id?.object.url}`
+                                ) : undefined,
+                                className: `${styles['image']} ${styles['side-grid-image']}${detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ?
+                                  ` ${styles['three-d-card-parent']}` : ''
+                                  }`,
+                                objectURL: mediaItems[2]?.media_unique_id?.objectURL || '',
+                                videoType: mediaItems[2]?.videoType,
+                                iframeVideoLink: (mediaItems[2]?.media_unique_id?.videoType === "url") ? mediaItems[2]?.media_unique_id?.referenceURL : undefined,
+                                staticVideoLink: (
+                                  (detectMediaTypeFromMediaAssociate(mediaItems[2]) === "video" || mediaItems[2]?.media_unique_id?.videoType === "video") &&
+                                  mediaItems[2]?.media_unique_id?.object?.url
+                                ) ? `${baseUrl}${mediaItems[2]?.media_unique_id?.object?.url}` : undefined,
+                                isOpened: false
+                              }}
+                              fileType={detectMediaTypeFromMediaAssociate(
+                                mediaItems[2]
+                              )}
+                            />
+                          )}
+                        </Grid>
+
+                      </Grid>
+                      <Grid container
+                      className={`${styles["side-grid-row"]}`}
+                        spacing={1}
+                        sx={{
+                          '& .MuiGrid-root': {
+                            marginLeft: 0
+                          }
+                        }}
+                      >
+                        <Grid item
+                        className={`${styles["grid-item"]}`}
+                          sm={6}
+                          onClick={(e) => {
+                            handleClickMediaItem(
+                              e,
+                              4,
+                              mediaItems[3]?.media_unique_id.uniqueId
+                            );
+                          }}
+                        >
+                          {shallRenderMedia(4, mediaItems) && (
+                            <RenderFileData
+                              fileData={{
+                                alt: "",
+                                src: mediaItems[3]?.media_unique_id?.object?.url ? (
+                                  detectMediaTypeFromMediaAssociate(mediaItems[3]) === "image" ?
+                                    handleImageUrl(mediaItems[3].media_unique_id?.object.url, "small_") :
+                                    `${baseUrl}${mediaItems[3].media_unique_id?.object.url}`
+                                ) : undefined,
+                                className: `${styles['image']} ${styles['side-grid-image']}${detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ?
+                                  ` ${styles['three-d-card-parent']}` : ''
+                                  }`,
+                                objectURL: mediaItems[3]?.media_unique_id?.objectURL || '',
+                                videoType: mediaItems[3]?.videoType,
+                                iframeVideoLink: (mediaItems[3]?.media_unique_id?.videoType === "url") ? mediaItems[3]?.media_unique_id?.referenceURL : undefined,
+                                staticVideoLink: (
+                                  (detectMediaTypeFromMediaAssociate(mediaItems[3]) === "video" || mediaItems[3]?.media_unique_id?.videoType === "video") &&
+                                  mediaItems[3]?.media_unique_id?.object?.url
+                                ) ? `${baseUrl}${mediaItems[3]?.media_unique_id?.object?.url}` : undefined,
+                                isOpened: false
+                              }}
+                              fileType={detectMediaTypeFromMediaAssociate(
+                                mediaItems[3]
+                              )}
+                            />
+                          )}
+                        </Grid>
+                        <Grid item
+                        className={`${styles["grid-item"]}`}
+                          sm={6}
+                          onClick={(e) => {
+                            handleClickMediaItem(
+                              e,
+                              5,
+                              mediaItems[4]?.media_unique_id.uniqueId
+                            );
+                          }}
+                        >
+                          {shallRenderMedia(5, mediaItems) && (
+                            <RenderFileData
+                              fileData={{
+                                alt: "",
+                                src: mediaItems[4]?.media_unique_id?.object?.url ? (
+                                  detectMediaTypeFromMediaAssociate(mediaItems[4]) === "image" ?
+                                    handleImageUrl(mediaItems[4].media_unique_id?.object.url, "small_") :
+                                    `${baseUrl}${mediaItems[4].media_unique_id?.object.url}`
+                                ) : undefined,
+                                className: `${styles['image']} ${styles['side-grid-image']}${detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ?
+                                  ` ${styles['three-d-card-parent']}` : ''
+                                  }`,
+                                objectURL: mediaItems[4]?.media_unique_id?.objectURL || '',
+                                videoType: mediaItems[4]?.videoType,
+                                iframeVideoLink: (mediaItems[4]?.media_unique_id?.videoType === "url") ? mediaItems[4]?.media_unique_id?.referenceURL : undefined,
+                                staticVideoLink: (
+                                  (detectMediaTypeFromMediaAssociate(mediaItems[4]) === "video" || mediaItems[4]?.media_unique_id?.videoType === "video") &&
+                                  mediaItems[4]?.media_unique_id?.object?.url
+                                ) ? `${baseUrl}${mediaItems[4]?.media_unique_id?.object?.url}` : undefined,
+                                isOpened: false
+                              }}
+                              fileType={detectMediaTypeFromMediaAssociate(
+                                mediaItems[4]
+                              )}
+                            />
+                          )}
+                        </Grid>
+
+                      </Grid>
+                    </Grid>
                   {/* <Grid
                     item
                     sm={6}

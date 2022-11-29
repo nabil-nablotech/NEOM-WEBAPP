@@ -19,7 +19,7 @@ const CustomModal_ = ({
             className={`${modalStyles['dialog-wrapper']}`}
             style={{
                 background: 'rgba(19, 16, 13, 0.9)',
-                zIndex: 333
+                zIndex: 'var(--z-index-2)'
             }}
             PaperProps={{
                 sx: {

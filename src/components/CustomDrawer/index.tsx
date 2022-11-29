@@ -11,11 +11,14 @@ const CustomDrawer = ({
 
     return (
         <Box component="div" style={{
-            zIndex: '3333'
+           
         }} sx={{
             '& .MuiModal-root.MuiDrawer-root': {
-                left: 'unset'
+                left: 'unset',
             },
+            '& .MuiPaper-root.MuiDrawer-paper': {
+                zIndex: 'var(--max-z-index)'
+            }
         }}>
             <Drawer
                 anchor={origin ? origin : "left"}
