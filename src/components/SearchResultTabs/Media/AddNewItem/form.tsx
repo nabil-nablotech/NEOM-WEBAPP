@@ -607,6 +607,26 @@ allowFullScreen
               }}
               formControlSx={commonFormControlSxStyles}
             />
+            <TextInput
+              className={`${styles["citation"]}`}
+              label="Citation"
+              name="citation"
+              multiline
+              minRows={3}
+              maxRows={3}
+              value={formik.values.citation}
+              onChange={(e) => {
+                formik.setFieldValue("citation", e.target.value);
+              }}
+              sx={{
+                ...textInputSxStyles,
+                marginBottom: "4em",
+                "& .MuiInputBase-inputMultiline": {
+                  paddingInline: "0 !important",
+                },
+              }}
+              formControlSx={commonFormControlSxStyles}
+            />
           </>
         )}
         {activeStep === 2 && (

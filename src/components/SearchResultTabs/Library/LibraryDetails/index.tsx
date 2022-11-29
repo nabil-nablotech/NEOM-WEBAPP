@@ -28,6 +28,7 @@ import {
   baseUrl,
   copyToClipboard,
   detectLibraryRecordApiType,
+  formatBytes,
   isRecordHavingAssociations,
   itemAddEditAccess,
   itemDeleteAccess,
@@ -79,6 +80,7 @@ const LibraryDetailsPage = ({
     menuItems.push({
       label: "Delete",
       action: () => {
+
         dispatch(
           toggleDeleteConfirmationWindowOpen({
             flag: true,
@@ -86,7 +88,7 @@ const LibraryDetailsPage = ({
               ? isRecordHavingAssociations(
                   library.filter(
                     (item) =>
-                      item?.id === data?.library_unique_id?.id?.toString()
+                      item?.id === data?.id?.toString()
                   )[0]
                 )
               : false,
@@ -289,8 +291,8 @@ const LibraryDetailsPage = ({
                     </div>
                     <div>
                       Size:{" "}
-                      {RenderValueWithDefault(libraryDetails?.object?.size)}{" "}
-                      {libraryDetails?.object?.size ? "MB" : ""}
+                      {formatBytes(libraryDetails?.object?.size || 0, 2)}{" "}
+                      {/* {(libraryDetails?.object?.size) ? "MB" : ""} */}
                     </div>
                     <div>
                       <span>

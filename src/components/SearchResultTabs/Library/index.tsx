@@ -245,7 +245,7 @@ const LibraryTab = () => {
       dataIndex: "attributes",
       width: 100,
       render: (value, index) =>
-        formatBytes(value.object?.data?.attributes?.size || 0),
+        formatBytes(value.object?.data?.attributes?.size || 0, 2),
     },
     {
       title: "",

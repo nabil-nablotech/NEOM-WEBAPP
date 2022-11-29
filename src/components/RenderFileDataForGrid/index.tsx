@@ -9,6 +9,7 @@ import NoImagePresent from "../NoDataScreens/NoImagePresent";
 import { isImagePathInvalid, NO_IMAGE } from "../../utils/services/helpers";
 import ThreeDIcon from '../../assets/images/icon-3d-model.svg';
 import parse from 'html-react-parser';
+import fallBackImg from '../../assets/images/NoImage.png';
 
 export const playIconSx = {
     width: 'fit-content',
@@ -38,6 +39,10 @@ const RenderFileDataForGrid = ({
                                 component="img"
                                 alt={fileData.alt ? fileData.alt : ''}
                                 src={fileData.src}
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = fallBackImg;
+                                }}
                             /> :
                             <NoImagePresent
                                 className="light-version"

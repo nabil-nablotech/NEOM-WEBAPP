@@ -72,10 +72,22 @@ const MoreOptionsComponent = ({
                 {itemDeleteAccess && <MenuItem key={2}
                     onClick={(e) => {
                         e.stopPropagation();
+
+                        /** keyToCompare is needed since this MoreOption component is used in list as well as 
+                         * details page, hence both the delete objects are different
+                         */
+                        const keyToCompare:string = record ? (
+                            record.uniqueId && record.id ? record.id : (
+                                record.id && record.attributes?.uniqueId ? record.id : (
+                                    record.id && record.media_unique_id?.id ? record.media_unique_id?.id : ''
+                                )
+                            ) 
+                        ): ''
+
                         dispatch(toggleDeleteConfirmationWindowOpen({
                             flag: true,
                             isAssociatedToPlacesOrEvents: type === "Library" ? isRecordHavingAssociations(
-                                library.filter(item => item?.id === record?.media_unique_id?.id?.toString())[0]
+                                library.filter(item => item?.id === keyToCompare.toString())[0]
                             ) : false,
                         }))
                         dispatch(setDeleteItemType(

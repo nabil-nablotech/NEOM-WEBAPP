@@ -162,6 +162,7 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
   };
 
   const handleBack = () => {
+
     if (activeStep === 0) {
       dispatch(toggleNewItemWindow(false))
       dispatch(setAddNewItemWindowType(null))
@@ -294,12 +295,15 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
     if (!values.placeNumber) {
       currentError = "Place Number is required";
     }
+    if (values.placeNumber.length < 3) {
+      currentError = "Place Number shall be of minimum 3 characters";
+    }
 
     if (!currentError) {
       handleNext(null, values, navigateOnly);
     } else {
       if (activeStep === 0) {
-        formikObject.setErrors({ placeNumber: "Place Number is required" })
+        formikObject.setErrors({ placeNumber: currentError })
       } else {
         handleNext(null, values, navigateOnly);
       }
@@ -416,8 +420,8 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
                   >
                     <StepButton color="inherit"
                       onClick={e => {
-
-                        if (index > activeStep) {
+                        
+                        if ((index > activeStep) && edit) {
                           validation(formik.values, { setErrors: formik.setErrors }, true)
                         } else if (index < activeStep) {
                           handleBack()

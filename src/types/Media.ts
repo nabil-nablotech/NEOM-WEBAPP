@@ -1,9 +1,15 @@
+import { Event } from "./Event";
 import { MediaAssociates2_MediaObject, Place } from "./Place";
 import { InventoryAssociationType_Event, InventoryAssociationType } from "./SearchResultsTabsProps";
 
 export type PlaceUnique = {
   place_unique_ids: {
     data: Place[] | null;
+  };
+};
+export type VisitUnique = {
+  visit_unique_ids: {
+    data: Event[] | null;
   };
 };
 
@@ -48,7 +54,7 @@ export type MediaAttributes = {
     objectURL: string | null
     media_associate: {
       data: {
-      attributes: PlaceUnique;
+      attributes: PlaceUnique & VisitUnique;
     }
     }
     media_type: {
@@ -63,7 +69,7 @@ export type Media = {
 export type MediaApi = {
   categoryType: string[] | []
   Author: string
-  id: string;
+  id: number;
   createdAt: string
   thumbnailUrl?: string;
   title: string;

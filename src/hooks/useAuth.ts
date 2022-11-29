@@ -7,6 +7,7 @@ import { fetchSearchCount } from '../api/dashboard';
 import { fetchDefaultData } from "../api/default";
 import { setTotalCounts } from "../store/reducers/searchResultsReducer";
 import { RootState } from "../store";
+import useRefinedSearch from "./useRefinedSearchOptions";
 
 const useAuth = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const useAuth = () => {
   );
   const { showAddSuccess, deleteItemSuccess } = useSelector((state: RootState) => state.searchResults);
   
+  useRefinedSearch();
   useEffect(() => {
     if (getToken()) {
       fetchSession();
