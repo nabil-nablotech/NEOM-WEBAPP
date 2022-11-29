@@ -514,12 +514,33 @@ const PlaceDetailsPage = () => {
     recommendation,
     placeUIPath,
     media_associates,
-    mediaItems,
+    mediaItems : unsortedMediaItems,
     libraryItems,
     visit_associates,
   } = placeData;
 
   const { latitude, longitude } = placeData;
+
+  const mediaItems: MediaAssociateObj[]  = []
+
+  /**detect first featured image */
+  let flag = false
+
+  unsortedMediaItems.forEach((item: MediaAssociateObj) => {
+
+    /** if found featuredFlag, unshift / add element to start of array;
+     * else do normal push
+     */
+    if(!flag && item.media_unique_id.featuredImage) {
+      mediaItems.unshift(item)
+      flag = true
+    } else {
+      mediaItems.push(item)
+    }
+  
+  })
+
+  console.log('hex: ', mediaItems)
 
   return (
     <Box component="div" className={`${styles["details-container"]}`}>
