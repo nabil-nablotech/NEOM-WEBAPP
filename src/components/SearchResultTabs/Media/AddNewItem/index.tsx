@@ -433,7 +433,7 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
                     <StepButton color="inherit"
                       onClick={e => {
 
-                        if (index > activeStep) {
+                        if ((index > activeStep) && edit) {
                           validation(formik.values, { setErrors: formik.setErrors }, true, index)
                         } else if (index < activeStep) {
                           handleBack()

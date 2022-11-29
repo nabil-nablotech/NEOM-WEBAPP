@@ -162,6 +162,7 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
   };
 
   const handleBack = () => {
+
     if (activeStep === 0) {
       dispatch(toggleNewItemWindow(false))
       dispatch(setAddNewItemWindowType(null))
@@ -416,8 +417,8 @@ const AddNewPlace = ({ onHide, create }: AddNewItemProps) => {
                   >
                     <StepButton color="inherit"
                       onClick={e => {
-
-                        if (index > activeStep) {
+                        
+                        if ((index > activeStep) && edit) {
                           validation(formik.values, { setErrors: formik.setErrors }, true)
                         } else if (index < activeStep) {
                           handleBack()
