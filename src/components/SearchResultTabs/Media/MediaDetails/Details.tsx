@@ -148,13 +148,14 @@ const MediaDetailsPage = ({
         }
     ]
     if (itemDeleteAccess) {
+        
         menuItems.push({
             label: "Delete",
             action: () => {
                 dispatch(toggleDeleteConfirmationWindowOpen({
                     flag: true,
                     isAssociatedToPlacesOrEvents: listToBeReferred ? isRecordHavingAssociations(
-                        listToBeReferred.filter((item: any) => item?.id === mediaDetails?.media_unique_id?.id?.toString())[0]
+                        listToBeReferred.filter((item: any) => parseInt(item?.id) === mediaDetails?.id)[0]
                     ) : false,
                 }))
                 dispatch(setDeleteItemType(MEDIA_TAB_NAME))

@@ -26,7 +26,7 @@ const usePlace = () => {
   const [mapPlaces, setMapPlaces] = useState([]);
   const [allPlaces, setAllPlaces] = useState<Place[] | []>([]);
   const { searchText, places: placeData, addNewItemWindowType, confirmOpenEdit, editPayload,
-    addItemWindowMinimized, deleteItemSuccess, deleteItemType } = useSelector(
+    addItemWindowMinimized, deleteItemSuccess, deleteItemType, successInventoryName } = useSelector(
     (state: RootState) => state.searchResults
   );
   const { selectedValue } = useSelector(

@@ -309,19 +309,27 @@ const RenderFileData = ({
                         >
                             {fileData.objectURL ? parse(fileData.objectURL) : ''}
                         </Box>
-                        <Box
-                            component="img"
-                            src={ThreeDIcon}
-                            sx={{
-                                ...playIconSx,
-                                background: 'radial-gradient(circle, rgba(255,255,255,1) 64%, transparent 75%)',
-                                padding: '2px'
+                        <Box component="div"
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                position: 'absolute'
                             }}
-                            className={`${styles['three-model-play-icon']}`}
-                        // onClick={e => {
-                        //     e.preventDefault()
-                        // }}
-                        />
+                        >
+                            <Box
+                                component="img"
+                                src={ThreeDIcon}
+                                sx={{
+                                    ...playIconSx,
+                                    background: 'radial-gradient(circle, rgba(255,255,255,1) 64%, transparent 75%)',
+                                    padding: '2px'
+                                }}
+                                className={`${styles['three-model-play-icon']}`}
+                            // onClick={e => {
+                            //     e.preventDefault()
+                            // }}
+                            />
+                        </Box>
                     </Box>
                 </>
             }

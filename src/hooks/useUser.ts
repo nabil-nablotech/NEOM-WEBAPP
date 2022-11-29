@@ -136,7 +136,7 @@ const useUser = () => {
     copyToClipboard(link);
     setShowSnackbar({
       open: true,
-      message: "Password recovery link copied",
+      message: `${recovery ? 'Password Recovery' : 'Access'} Link copied`,
       severity: "success"
     });
   };

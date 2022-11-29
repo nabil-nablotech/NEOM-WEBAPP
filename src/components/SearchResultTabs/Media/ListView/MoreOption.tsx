@@ -54,7 +54,7 @@ export const MoreOptionsComponent = ({ setEdit, record, id }: { setEdit: (payloa
             dispatch(toggleDeleteConfirmationWindowOpen({
               flag: true,
               isAssociatedToPlacesOrEvents: media ? isRecordHavingAssociations(
-                media.filter(item => item?.id === record?.media_unique_id?.id?.toString())[0]
+                media.filter(item => item?.id === record?.id?.toString())[0]
               ) : false,
             }))
             dispatch(setDeleteItemType(MEDIA_TAB_NAME))
