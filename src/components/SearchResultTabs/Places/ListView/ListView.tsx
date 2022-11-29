@@ -145,9 +145,7 @@ const StyledTableWrapper = styled(StyledAntTable)`
 `;
 
 const ListView = (props: PlacesProps) => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { navigateTo } = useHistory();
 

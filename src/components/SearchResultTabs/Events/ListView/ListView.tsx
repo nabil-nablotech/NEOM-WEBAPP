@@ -128,7 +128,6 @@ const StyledTableWrapper = styled(StyledAntTable)`
 const ListView = (props: EventsProps) => {
     const dispatch = useDispatch();
     const { navigateTo } = useHistory();
-
     const { isAssociationsStepOpen, associatedEvents, events, selectedKey } = useSelector(
         (state: RootState) => state.searchResults
     );

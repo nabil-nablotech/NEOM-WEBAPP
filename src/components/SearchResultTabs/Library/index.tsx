@@ -144,11 +144,9 @@ const StyledTableWrapper = styled(StyledAntTable)`
   }
   ${antTablePaginationCss}
 `;
-
 const LibraryTab = () => {
   const { searchApply, library, searchText, totalCounts, libararyMetaData, isSelect, selectedKey } =
     useSelector((state: RootState) => state.searchResults);
-
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
   );
