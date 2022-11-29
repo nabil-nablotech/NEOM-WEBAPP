@@ -11,7 +11,7 @@ import {
   setEventMetaData,
   setSearchText,
   toggleShowAddSuccess,
-  toggleNewItemWindow, setAddNewItemWindowType, toggleEditConfirmationWindowOpen, toggleConfirmOpenEdit, setEditPayload, resetMediaAssociation
+  toggleNewItemWindow, setAddNewItemWindowType, toggleEditConfirmationWindowOpen, toggleConfirmOpenEdit, setEditPayload, resetMediaAssociation, toggleShowEditSuccess
 } from "../store/reducers/searchResultsReducer";
 import { setEventEdit, setEventData } from '../store/reducers/eventReducer';
 import { limit, getQueryObj, generateUniqueId, webUrl, EVENTS_TAB_NAME } from '../utils/services/helpers';
@@ -37,7 +37,8 @@ const useEvent = () => {
     editPayload,
     addItemWindowMinimized,
     deleteItemSuccess,
-    deleteItemType
+    deleteItemType,
+    successInventoryName
   } = useSelector((state: RootState) => state.searchResults);
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
@@ -90,6 +91,18 @@ const useEvent = () => {
   const [createVisitAssociateMuation, { loading: visitAssociateload, error: visitAssociateErr, data: visitAssociate }] = useMutation(createVisitAssociate, graphQlHeaders());
   const { loading: refineLoading, error: refineErrorData, data: refineEventData, refetch: refineSearchEvents } = useQuery(refineEvents, graphQlHeaders());
   const { loading: refineLoadingMap, error: refineErrorDataMap, data: refineEventDataMap, refetch: refineSearchEventsMap } = useQuery(refineEventsMap, graphQlHeaders());
+
+  
+  // useEffect(() => {
+  //   console.log('hex: ', updateData, edit, successInventoryName)
+
+  //   if (updateData && edit && (successInventoryName === EVENTS_TAB_NAME)) {
+  //       dispatch(setTabEdit(false));
+  //       dispatch(setTabData({}));
+  //       dispatch(toggleShowEditSuccess(true))
+  //       if(updateData) navigate(`/Events/${updateData.updateVisit.data.attributes.uniqueId}`, {replace: true})
+  //   }
+  // }, [updateData, successInventoryName, edit])
 
   useEffect(() => {
     if (refineEventData?.visits) {
