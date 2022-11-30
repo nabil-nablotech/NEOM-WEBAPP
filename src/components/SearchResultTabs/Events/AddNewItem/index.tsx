@@ -99,10 +99,10 @@ export const stepperIconSx = {
 const AddNewEvent = ({ onHide, create, setSearchValue, searchValue }: AddNewItemProps & { searchValue:string }) => {
   let { tabName } = useParams<{ tabName?: tabNameProps }>();
 
-  const { showAddSuccess, addItemProgressState, places } = useSelector(
+  const { showAddSuccess, addItemProgressState  } = useSelector(
     (state: RootState) => state.searchResults
   );
-  const { edit, event } = useSelector(
+  const { edit, event, places } = useSelector(
     (state: RootState) => state.event
   );
   const { options } = useSelector((state: RootState) => state.refinedSearch);
@@ -327,28 +327,6 @@ const AddNewEvent = ({ onHide, create, setSearchValue, searchValue }: AddNewItem
 
     if (setSearchValue) {
       setSearchValue(e.target.value);
-
-      // let newList = !e.target.value ? places : places.filter(item => {
-
-      //   try {
-      //     return e.target.value &&
-      //     (
-      //       item.attributes.placeNameEnglish ||
-      //       item.attributes.placeNameArabic ||
-      //       item.attributes.placeNumber
-      //     ) &&
-      //     (
-      //       (item.attributes.placeNameEnglish && item.attributes.placeNameEnglish.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1) ||
-      //       (item.attributes.placeNameArabic && item.attributes.placeNameArabic?.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1) ||
-      //       (item.attributes.placeNumber && item.attributes.placeNumber?.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1)
-      //     )
-      //   } catch(e) {
-      //     console.error('hex Error while filtering places: ', e)
-      //     return true
-      //   }
-      // })
-
-      // setFilteredPlaces(newList)
       setFilteredPlaces(places)
       
     }

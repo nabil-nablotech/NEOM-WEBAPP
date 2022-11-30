@@ -13,7 +13,7 @@ import {
   toggleShowAddSuccess,
   toggleNewItemWindow, setAddNewItemWindowType, toggleEditConfirmationWindowOpen, toggleConfirmOpenEdit, setEditPayload, resetMediaAssociation, toggleShowEditSuccess
 } from "../store/reducers/searchResultsReducer";
-import { setEventEdit, setEventData } from '../store/reducers/eventReducer';
+import { setEventEdit, setEventData, setPlaces } from '../store/reducers/eventReducer';
 import { limit, getQueryObj, generateUniqueId, webUrl, EVENTS_TAB_NAME } from '../utils/services/helpers';
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 import { graphQlHeaders } from "../utils/services/interceptor";
@@ -21,6 +21,7 @@ import { Place } from "../types/Place";
 import { eventDetails } from "../api/details";
 
 import { setLatestItem, setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
+import { refinePlaces } from "../query/places";
 
 const useEvent = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -92,17 +93,24 @@ const useEvent = () => {
   const { loading: refineLoading, error: refineErrorData, data: refineEventData, refetch: refineSearchEvents } = useQuery(refineEvents, graphQlHeaders());
   const { loading: refineLoadingMap, error: refineErrorDataMap, data: refineEventDataMap, refetch: refineSearchEventsMap } = useQuery(refineEventsMap, graphQlHeaders());
 
-  
-  // useEffect(() => {
-  //   console.log('hex: ', updateData, edit, successInventoryName)
+  const { data:refinePlaceData, refetch:refineSearchPlaces} = useQuery(refinePlaces, {context: graphQlHeaders().context, onCompleted: (data) => {
+    const places = JSON.parse(JSON.stringify(data?.places.data))
 
-  //   if (updateData && edit && (successInventoryName === EVENTS_TAB_NAME)) {
-  //       dispatch(setTabEdit(false));
-  //       dispatch(setTabData({}));
-  //       dispatch(toggleShowEditSuccess(true))
-  //       if(updateData) navigate(`/Events/${updateData.updateVisit.data.attributes.uniqueId}`, {replace: true})
-  //   }
-  // }, [updateData, successInventoryName, edit])
+    places.map((x: Place) => {
+      x.label = `${x?.attributes?.placeNameEnglish}${x?.attributes?.placeNameArabic}` || '';
+      x.value = x?.id;
+      return x;
+    })
+
+    // update the data for the pagination
+      dispatch(setPlaces([...places]));
+}});
+  
+  useEffect(() => {
+    if (searchValue) {
+      refineSearchPlaces({search_one: searchValue});
+    }
+  }, [searchValue])
 
   useEffect(() => {
     if (refineEventData?.visits) {
@@ -368,7 +376,6 @@ const useEvent = () => {
       
     }
   };
-
 
   const deleteEvent = async (id: number) => {
     updateEventMuation({
