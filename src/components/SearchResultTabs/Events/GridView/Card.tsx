@@ -10,6 +10,7 @@ import gridStyles from "./index.module.css";
 import MoreIcon from "../../../../assets/images/searchResults/MoreMenu.svg";
 import {
   baseUrl,
+  baseUrlS3,
   detectMediaTypeFromEvent,
   detectMediaTypeFromMediaAssociateGraphQlRes,
   handleImageUrl,
@@ -45,7 +46,7 @@ export const Card = ({
 
   if (img) {
     let imagePath = img.split("/");
-    img = `/${imagePath[1]}/thumbnail_${imagePath[2]}`;
+    img = `${imagePath[1]}/thumbnail_${imagePath[3]}`;
   }
 
   const dispatch = useDispatch();
@@ -87,7 +88,7 @@ export const Card = ({
                 className={`${gridStyles["card-image"]}`}
                 component="img"
                 alt={""}
-                src={`${baseUrl}${img}`}
+                src={`${baseUrlS3}${img}`}
                 loading="lazy"
                 onError={(e) => {
                   e.currentTarget.onerror = null; // prevents looping

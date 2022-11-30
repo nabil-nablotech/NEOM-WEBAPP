@@ -20,6 +20,7 @@ import MoreOptionsComponent from "../ListView/MoreOption";
 import {
   antTablePaginationCss,
   baseUrl,
+  baseUrlS3,
   copyToClipboard,
   formatBytes,
   formatWebDate,
@@ -475,7 +476,7 @@ const EventDetailsPage = () => {
 
   const handleImageUrl = (url: string) => {
     let imagePath = url.split("/");
-    return `${baseUrl}/${imagePath[1]}/small_${imagePath[2]}`;
+    return `${baseUrlS3}/small_${imagePath[3]}`;
   }
 
   return (
