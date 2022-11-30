@@ -3,6 +3,7 @@ import {useQuery} from 'react-query';
 import {fetchRefinedSearchOptions} from '../api/search';
 import { Options } from "../types/RefinedSeachTypes";
 import { setOptions } from "../store/reducers/refinedSearchReducer";
+import { getToken } from "../utils/storage/storage";
 
 const useRefinedSearch = () => {
   const dispatch = useDispatch();
@@ -11,7 +12,8 @@ const useRefinedSearch = () => {
     onSuccess: (data: Options) => {
       dispatch(setOptions(data));
     },
-    retry: false
+    retry: false,
+    enabled: Boolean(getToken())
   });
   return {
     data,

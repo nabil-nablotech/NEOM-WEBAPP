@@ -5,7 +5,7 @@ import { Grid } from "@mui/material";
 import parse from "html-react-parser";
 import { GridViewCard_Places, InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
 import gridStyles from "./index.module.css";
-import { baseUrl, detectMediaTypeFromMediaAssociateGraphQlRes, detectMediaTypeFromPlace, isImagePathInvalid, isRecordAttached, itemAddEditAccess } from "../../../../utils/services/helpers";
+import { baseUrl, baseUrlS3, detectMediaTypeFromMediaAssociateGraphQlRes, detectMediaTypeFromPlace, isImagePathInvalid, isRecordAttached, itemAddEditAccess } from "../../../../utils/services/helpers";
 import MoreOptionsComponent from "../ListView/MoreOption";
 import { useSelector } from "react-redux";
 import DetachedIcon from "../../../Icons/DetachedIcon";
@@ -36,8 +36,10 @@ export const Card = ({
   }
 
   const handleImageUrl = (url: string, size: string) => {
+    // let imagePath = url.split("/");
+    // return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
     let imagePath = url.split("/");
-    return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
+    return `${baseUrlS3}/${size}${imagePath[3]}`;
   }
 
   const dispatch = useDispatch()
@@ -56,8 +58,11 @@ export const Card = ({
   })
   const media = record.attributes?.media_associates?.data.filter(x => x?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA");
   const mediaImage = record.attributes?.media_associates?.data.filter(x => x?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && x?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE");
-  // console.log('media....', media);
-  // console.log('mediaImage....', mediaImage);
+
+  if (img) {
+    let imagePath = img.split("/");
+    img = `${imagePath[1]}/thumbnail_${imagePath[3]}`;
+  }
 
   return (
     <>
@@ -81,7 +86,7 @@ export const Card = ({
               className={`${gridStyles["card-image"]}`}
               component="img"
               alt={""}
-              src={`${baseUrl}${img}`}
+              src={`${baseUrlS3}${img}`}
               loading="lazy"
               onError={(e) => {
                 e.currentTarget.onerror = null; // prevents looping
@@ -95,8 +100,8 @@ export const Card = ({
                   // src: record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? (
                   src: media.length > 0 ? (
                     detectMediaTypeFromPlace(record) === "image" ?
-                      // handleImageUrl(record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url, "small_") :
-                      mediaImage[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url :
+                      handleImageUrl(mediaImage[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url || '', "small_") :
+                      // mediaImage[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url :
                       `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}`
                   ) : undefined,
                   className: detectMediaTypeFromPlace(record) === "video" ?

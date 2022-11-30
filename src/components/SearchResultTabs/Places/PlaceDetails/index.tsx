@@ -17,6 +17,7 @@ import { ColumnsType } from "antd/lib/table";
 import {
   antTablePaginationCss,
   baseUrl,
+  baseUrlS3,
   copyToClipboard,
   formatBytes,
   formatWebDate,
@@ -193,7 +194,7 @@ const PlaceDetailsPage = () => {
 
   const handleImageUrl = (url: string, size: string) => {
     let imagePath = url.split("/");
-    return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
+    return `${baseUrlS3}/${size}${imagePath[3]}`;
   }
 
   places.forEach((placeItem: Place, inx: number) => {
@@ -313,7 +314,7 @@ const PlaceDetailsPage = () => {
                 fileData={{
                   alt: "",
                   src: value?.media_associates[0]?.media_unique_id?.object?.url
-                    ? handleImageUrl(value.media_associates[0].media_unique_id.object.url, "thumbnail_")
+                    ? handleImageUrl(value.media_associates[0].media_unique_id.object.url, "small_")
                     : undefined,
                   className:
                     value?.media_associates[0]?.media_unique_id?.media_type[0]
@@ -656,7 +657,7 @@ const PlaceDetailsPage = () => {
                             alt: "",
                             src: mediaItems[0]?.media_unique_id?.object?.url ? (
                               detectMediaTypeFromMediaAssociate(mediaItems[0]) === "image" ?
-                                handleImageUrl(mediaItems[0].media_unique_id?.object.url, "small_") :
+                                handleImageUrl(mediaItems[0].media_unique_id?.object.url, "large_") :
                                 `${baseUrl}${mediaItems[0].media_unique_id?.object.url}`
                             ) : undefined,
                             className: `${styles['image']}  ${styles['main-image']}${
@@ -710,7 +711,7 @@ const PlaceDetailsPage = () => {
                                 alt: "",
                                 src: mediaItems[1]?.media_unique_id?.object?.url ? (
                                   detectMediaTypeFromMediaAssociate(mediaItems[1]) === "image" ?
-                                    handleImageUrl(mediaItems[1].media_unique_id?.object.url, "small_") :
+                                    handleImageUrl(mediaItems[1].media_unique_id?.object.url, "medium_") :
                                     `${baseUrl}${mediaItems[1].media_unique_id?.object.url}`
                                 ) : undefined,
                                 className: `${styles['image']} ${styles['side-grid-image']}${detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ?

@@ -94,8 +94,8 @@ const GridView = (props: PlacesProps) => {
               
                   <Card
                     key={index}
-                    // img={item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ? item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''}
-                    img={item.attributes?.media_associates?.data.find(x => x?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && x?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE")?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}
+                    img={item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ? item.attributes?.media_associates?.data[1]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''}
+                    // img={item.attributes?.media_associates?.data.find(x => x?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" && x?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE")?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}
                     title={`${item.attributes?.placeNameEnglish} ${item.attributes?.placeNameArabic} ${item.attributes?.placeNameEnglish || item.attributes?.placeNameArabic ? '-' : ''} ${item.attributes?.placeNumber}`}
                     subTitle={item.attributes?.siteDescription}
                     dateString={`Last updated on ${formatDateTime(item.attributes.updatedAt)}`}

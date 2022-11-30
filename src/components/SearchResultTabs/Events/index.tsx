@@ -18,7 +18,7 @@ import MapView from '../GoogleMap/MapView';
 import ExportModal from '../../ExportModal';
 import { importContentType } from '../../../utils/export-import/import-content-type';
 import { importCsvImagesZip } from '../../../utils/export-import/import-csv-images-zip';
-import {checkSearchParameter, EVENTS_TAB_NAME} from '../../../utils/services/helpers';
+import {checkSearchParameter, EVENTS_TAB_NAME, itemAddEditAccess} from '../../../utils/services/helpers';
 import { setToggledStates,setIsSelect } from '../../../store/reducers/searchResultsReducer';
 import { useDispatch } from 'react-redux';
 import { Relation } from "../../../types/RelationType";
@@ -185,7 +185,7 @@ const PlacesTab = () => {
             <Box component="div" className={`${styles['utility-bar']}`}>
                 <Box component="div">{showResults && meta?.pagination?.total ? `${meta?.pagination?.total} Results | ` : null}{totalCounts?.events} Total Events</Box>
                 <Box component="div" style={{display:"flex"}}>
-                <Button
+                {itemAddEditAccess && <Button
             colors={[
               "transparent",
               "var(--table-black-text)",
@@ -202,14 +202,14 @@ const PlacesTab = () => {
               textAlign: "center",
             }}
             onClick={chooseZipFile}
-          />
+          />}
           <input
             type="file"
             hidden
             ref={importZipFileInputRef}
             onChange={importZipEvent}
           />
-          <Button
+          {itemAddEditAccess && <Button
             colors={[
               "transparent",
               "var(--table-black-text)",
@@ -226,7 +226,7 @@ const PlacesTab = () => {
               textAlign: "center",
             }}
             onClick={chooseImportFile}
-          />
+          />}
           <input
             type="file"
             hidden
