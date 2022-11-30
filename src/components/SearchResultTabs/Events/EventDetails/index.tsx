@@ -230,6 +230,7 @@ const EventDetailsPage = () => {
   const {
     siteDescription,
     siteType,
+    artifacts,
     period,
     fieldNarrative,
     stateOfConservation,
@@ -413,14 +414,28 @@ const EventDetailsPage = () => {
     //   handleSeeMore()
     // }
 
-    mediaGalleryLocal.forEach((item: MediaAssociateObj, index: number) => {
-      newList.push({
-        id: item.id.toString(),
-        attributes: {
-          ...item.media_unique_id
-        }
+
+    /** media details page should have all items equal to count being shown in media items section  */
+    if (mediaGallery) {
+      mediaGallery.forEach((item: MediaAssociateObj, index: number) => {
+        newList.push({
+          id: item.id.toString(),
+          attributes: {
+            ...item.media_unique_id
+          }
+        })
       })
-    })
+    } else if(mediaGalleryLocal) {
+      mediaGalleryLocal.forEach((item: MediaAssociateObj, index: number) => {
+        newList.push({
+          id: item.id.toString(),
+          attributes: {
+            ...item.media_unique_id
+          }
+        })
+      })
+    }
+
 
     dispatch(toggleGalleryView({
       flag: "from-event-details",
@@ -428,7 +443,7 @@ const EventDetailsPage = () => {
     }))
     navigateTo(`/Media/${uniqueId}`)
 
-    dispatch(setActiveMediaItem(mediaGalleryLocal[itemIndex - 1]));
+    dispatch(setActiveMediaItem(mediaGallery ? mediaGallery[itemIndex - 1] : mediaGalleryLocal[itemIndex - 1]));
     dispatch(setActiveMediaItemIndex(itemIndex - 1));
     // }
 
@@ -537,7 +552,11 @@ const EventDetailsPage = () => {
                         component="div"
                         className={`${styles["item-number"]}`}
                       >
-                        {`- ${visit_associate?.place_unique_id?.placeNumber}`}
+                        {`${
+                          visit_associate?.place_unique_id?.placeNameEnglish ||
+                          visit_associate?.place_unique_id?.placeNameArabic ?
+                          '-' : ''
+                        } ${visit_associate?.place_unique_id?.placeNumber}`}
                       </Box>
                     </Grid>
                   )}
@@ -668,6 +687,40 @@ const EventDetailsPage = () => {
                               className={`${styles["text-anchor"]}`}
                               key={index}
                               onClick={() => handleSearch({ siteType: [item] })}
+                            >
+                              {item}
+                            </Box>
+                          ))
+                        ) : (
+                          <NoTextPresent message={NO_TEXT} />
+                        )}
+                      </Box>
+                    </Grid>
+                  </Grid>
+                  <Grid container className={`${styles["table-row"]}`}>
+                    <Grid
+                      item
+                      sm={3}
+                      md={4}
+                      className={`${styles["table-parameter"]} `}
+                    >
+                      Artifacts
+                    </Grid>
+                    <Grid item
+                      sm={9}
+                      md={8}
+                    >
+                      <Box
+                        component={"div"}
+                        className={`${styles["text-anchors-parent"]}`}
+                      >
+                        {!isEmpty(artifacts) ? (
+                          artifacts.map((item: string, index: number) => (
+                            <Box
+                              component="div"
+                              className={`${styles["text-anchor"]}`}
+                              key={index}
+                              onClick={() => handleSearch({ artifacts: [item] })}
                             >
                               {item}
                             </Box>
