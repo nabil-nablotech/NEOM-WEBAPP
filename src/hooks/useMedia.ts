@@ -227,7 +227,6 @@ const useMedia = () => {
       featuredFlag = true
     }
 
-    console.log(payload, 'payload?.url.....');
     const data = {
       ...payload,
       visitNumber: parseFloat(payload.visitNumber),
@@ -249,7 +248,7 @@ const useMedia = () => {
       model: "",
       depth: "",
       modified: new Date(),
-      videoType: payload?.embedCode?.length > 0 ? 'embededCode' : ((payload?.url?.length > 0) || (payload?.objectURL?.length > 0)) ? 'url' : 'video',
+      videoType: payload?.showEmbeded ? 'embededCode' : ((payload?.url?.length > 0) || (payload?.objectURL?.length > 0) || payload?.showUrl) ? 'url' : 'video',
     }
     if (!edit) {
       data.uniqueId = uniqueId;
