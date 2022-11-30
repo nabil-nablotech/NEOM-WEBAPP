@@ -33,7 +33,7 @@ export const Card = ({
                             alt: "",
                             src: record?.attributes?.object?.data?.attributes?.url ? (
                                 detectMediaTypeFromMediaList(record) === "image" ?
-                                    handleImageUrl(record.attributes.object.data.attributes.url, record.attributes?.formats?.small ? "small_" : "") :
+                                    handleImageUrl(record.attributes.object.data.attributes.url, "small_") :
                                     `${baseUrl}${record.attributes.object.data.attributes.url}`
                             ) : undefined,
                             className: detectMediaTypeFromMediaList(record) === "video" ?
