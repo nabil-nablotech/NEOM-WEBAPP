@@ -225,7 +225,7 @@ const ListView = (props: MediaProps) => {
       key: "attributes",
       dataIndex: "attributes",
       width: 100,
-      render: (value, index) => value?.categoryType?.length > 0 ? JSON.parse(value?.categoryType)[0] : '',
+      render: (value, index) => value?.categoryType?.length > 0 ? value?.categoryType[0] : '',
     },
     {
       title: "BEARING",
