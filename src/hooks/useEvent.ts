@@ -79,13 +79,12 @@ const useEvent = () => {
     dispatch(setLatestItem({tab:'Events', data:data.createVisit.data}));
   }});
   const [updateEventMuation, { loading: updateLoading, error: updateErr, data: updateData, reset }] = useMutation(updateEvent, {context: graphQlHeaders().context, onCompleted: () => {
-    dispatch(setEventEdit(false))
+    // dispatch(setEventEdit(false))
     // dispatch(toggleShowEditSuccess(false));
     /** re-direct */
-    if(updateData?.updateVisit) {
-
-      navigate(`/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
-    }
+    // if(updateData?.updateVisit) {
+    //   navigate(`/Events/${updateData.updateVisit.data.attributes.uniqueId}`, { replace: true })
+    // }
 
   }});
   const [createVisitAssociateMuation, { loading: visitAssociateload, error: visitAssociateErr, data: visitAssociate }] = useMutation(createVisitAssociate, graphQlHeaders());
@@ -93,16 +92,15 @@ const useEvent = () => {
   const { loading: refineLoadingMap, error: refineErrorDataMap, data: refineEventDataMap, refetch: refineSearchEventsMap } = useQuery(refineEventsMap, graphQlHeaders());
 
   
-  // useEffect(() => {
-  //   console.log('hex: ', updateData, edit, successInventoryName)
+  useEffect(() => {
 
-  //   if (updateData && edit && (successInventoryName === EVENTS_TAB_NAME)) {
-  //       dispatch(setTabEdit(false));
-  //       dispatch(setTabData({}));
-  //       dispatch(toggleShowEditSuccess(true))
-  //       if(updateData) navigate(`/Events/${updateData.updateVisit.data.attributes.uniqueId}`, {replace: true})
-  //   }
-  // }, [updateData, successInventoryName, edit])
+    if (updateData && edit) {
+        dispatch(setTabEdit(false));
+        dispatch(setTabData({}));
+        dispatch(toggleShowEditSuccess(true))
+        navigate(`/Events/${updateData?.updateVisit?.data?.attributes?.uniqueId}`, {replace: true})
+    }
+  }, [updateData, edit])
 
   useEffect(() => {
     if (refineEventData?.visits) {
