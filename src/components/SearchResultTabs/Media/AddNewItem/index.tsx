@@ -102,12 +102,19 @@ const AddNewMedia = ({ onHide, create }: AddNewItemProps) => {
     object: edit && tabData?.object ? [tabData?.object] : undefined,
     mediaType: "",
     refrenceUrl: "",
-    showEmbeded: Boolean(edit && tabData?.objectURL),
+    showEmbeded: Boolean(edit && tabData?.objectURL && (tabData?.videoType === 'embededCode')),
     embedCode: edit && tabData?.objectURL,
-    submitEmbed: false,
-    showUrl: Boolean(edit && tabData?.referenceURL),
-    url: edit ? tabData?.referenceURL : "",
-    valid: false,
+    submitEmbed: edit ? true : false,
+    showUrl: Boolean(edit && (
+      tabData?.referenceURL || 
+      (
+        tabData?.objectURL && (tabData?.videoType === 'url')
+      )
+      )),
+    url: edit ? (tabData?.referenceURL ? tabData?.referenceURL :  (
+      tabData?.objectURL && (tabData?.videoType === 'url') ? tabData?.objectURL : ''
+    )): "",
+    valid: edit ? true : false,
     errorUrl: '',
     associationError: ''
   }

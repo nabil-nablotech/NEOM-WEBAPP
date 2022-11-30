@@ -257,6 +257,7 @@ mutation CreateLibrary(
   $make: String
   $model: String
   $depth: String
+  $videoType: ENUM_MEDIA_VIDEOTYPE
   $dimension: String
   $created: Date
   $modified: DateTime
@@ -279,6 +280,7 @@ mutation CreateLibrary(
       media_type: $asset_config_id
       featuredImage: $featuredImage
       objectURL: $objectURL
+      videoType: $videoType
       referenceURL: $referenceURL
       citation: $citation
       mediaUIPath: $mediaUIPath
