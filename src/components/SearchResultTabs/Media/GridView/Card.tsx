@@ -7,7 +7,7 @@ import { Grid } from '@mui/material';
 import { MoreOptionsComponent } from "../ListView/MoreOption";
 // import { usePaginatedArray } from '../../../../hooks/usePaginatedArray';
 /** indicating that we can send html later on wherever we parse */
-import { baseUrl, detectMediaTypeFromMediaList, itemAddEditAccess } from '../../../../utils/services/helpers';
+import { baseUrl, baseUrlS3, detectMediaTypeFromMediaList, itemAddEditAccess } from '../../../../utils/services/helpers';
 import RenderFileData from '../../../RenderFileData';
 
 export const Card = ({
@@ -16,8 +16,11 @@ export const Card = ({
 }: GridViewCard_Media) => {
 
     const handleImageUrl = (url: string, size: string) => {
+            // let imagePath = url.split("/");
+            // return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
         let imagePath = url.split("/");
-        return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
+        // return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
+        return `${baseUrlS3}/${size}${imagePath[3]}`;
     }
 
 

@@ -7,7 +7,7 @@ import { antTablePaginationCss } from "../../../../utils/services/helpers";
 import commonStyles from "../../index.module.css";
 import { Loader } from "../../../Loader";
 import { MediaProps } from "../GridView/GridView";
-import { baseUrl, detectMediaTypeFromMediaList, itemAddEditAccess } from '../../../../utils/services/helpers';
+import { baseUrl, baseUrlS3, detectMediaTypeFromMediaList, itemAddEditAccess } from '../../../../utils/services/helpers';
 import RenderFileData from '../../../RenderFileData';
 
 import { MoreOptionsComponent } from './MoreOption';
@@ -160,8 +160,11 @@ const ListView = (props: MediaProps) => {
   );
 
   const handleImageUrl = (url: string, size: string) => {
+    // let imagePath = url.split("/");
+    // return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
     let imagePath = url.split("/");
-    return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
+    // return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
+    return `${baseUrlS3}/${size}${imagePath[3]}`;
   }
 
   const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
@@ -222,7 +225,7 @@ const ListView = (props: MediaProps) => {
       key: "attributes",
       dataIndex: "attributes",
       width: 100,
-      render: (value, index) => value.categoryType ? value.categoryType.join(', ') : '',
+      render: (value, index) => value?.categoryType?.length > 0 ? JSON.parse(value?.categoryType)[0] : '',
     },
     {
       title: "BEARING",
