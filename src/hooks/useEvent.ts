@@ -93,7 +93,6 @@ const useEvent = () => {
 
   
   useEffect(() => {
-    console.log('hex: ', updateData, edit, successInventoryName)
 
     if (updateData && edit) {
         dispatch(setTabEdit(false));
