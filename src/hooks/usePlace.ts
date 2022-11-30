@@ -153,6 +153,7 @@ const usePlace = () => {
   }, [updateData])
 
   const fetchDataDirect = (skip: number = placeData.length, local: boolean = false, clear: boolean = false) => {
+
     // get the query from the url parameters
     const searchData = getQueryObj(search);
     // check if the search is coming from local or using link
@@ -181,7 +182,7 @@ const usePlace = () => {
       search_two: searchWordArray[1],
       search_three: searchWordArray[2],
       text: searchWordArray,
-      limit: limit, // only change from the original function
+      limit: MAX_FETCH_LIMIT, // only change from the original function
       skip: skip,
     };
     if (clear) {
@@ -194,6 +195,7 @@ const usePlace = () => {
   };
 
   const fetchData = (skip: number = placeData.length, local: boolean = false, clear: boolean = false) => {
+
     // get the query from the url parameters
     const searchData = getQueryObj(search);
     // check if the search is coming from local or using link
