@@ -414,14 +414,28 @@ const EventDetailsPage = () => {
     //   handleSeeMore()
     // }
 
-    mediaGalleryLocal.forEach((item: MediaAssociateObj, index: number) => {
-      newList.push({
-        id: item.id.toString(),
-        attributes: {
-          ...item.media_unique_id
-        }
+
+    /** media details page should have all items equal to count being shown in media items section  */
+    if (mediaGallery) {
+      mediaGallery.forEach((item: MediaAssociateObj, index: number) => {
+        newList.push({
+          id: item.id.toString(),
+          attributes: {
+            ...item.media_unique_id
+          }
+        })
       })
-    })
+    } else if(mediaGalleryLocal) {
+      mediaGalleryLocal.forEach((item: MediaAssociateObj, index: number) => {
+        newList.push({
+          id: item.id.toString(),
+          attributes: {
+            ...item.media_unique_id
+          }
+        })
+      })
+    }
+
 
     dispatch(toggleGalleryView({
       flag: "from-event-details",
@@ -429,7 +443,7 @@ const EventDetailsPage = () => {
     }))
     navigateTo(`/Media/${uniqueId}`)
 
-    dispatch(setActiveMediaItem(mediaGalleryLocal[itemIndex - 1]));
+    dispatch(setActiveMediaItem(mediaGallery ? mediaGallery[itemIndex - 1] : mediaGalleryLocal[itemIndex - 1]));
     dispatch(setActiveMediaItemIndex(itemIndex - 1));
     // }
 
