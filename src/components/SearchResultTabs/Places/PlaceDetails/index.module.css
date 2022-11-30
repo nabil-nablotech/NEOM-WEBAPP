@@ -60,6 +60,16 @@
     padding-right: 0;
 }
 
+.grid-item div[data-attr="react-player"] {
+    /* aspect-ratio: unset; */
+}
+.three-d-card-parent {
+    
+}
+.grid-item iframe {
+    width: 100%;
+}
+
 .title-section {
     margin-top: 2em;
     margin-bottom: 1em;
