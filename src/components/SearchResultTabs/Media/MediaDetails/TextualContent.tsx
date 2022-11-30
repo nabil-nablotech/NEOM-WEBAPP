@@ -131,8 +131,8 @@ const TextualContent = ({
                                                     }${visitObj?.visit_associate?.place_unique_id?.placeNameArabic ?
                                                         `  ${visitObj?.visit_associate?.place_unique_id?.placeNameArabic}` :
                                                         ""
-                                                    }${mediaDetails.media_associate?.visit_unique_ids[0].visitNumber ?
-                                                        `  Visit ${mediaDetails.media_associate?.visit_unique_ids[0].visitNumber}` :
+                                                    }${mediaDetails.media_associate?.visit_unique_ids[index].visitNumber ?
+                                                        `  Visit ${mediaDetails.media_associate?.visit_unique_ids[index].visitNumber}` :
                                                         ''
                                                     }`
                                                 }
