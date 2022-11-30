@@ -348,7 +348,7 @@ const LibraryDetailsPage = ({
                     {libraryDetails.media_associate?.visit_unique_ids &&
                     libraryDetails.media_associate?.visit_unique_ids?.length > 0
                       ? libraryDetails.media_associate?.visit_unique_ids?.map(
-                          (visitObj: InventoryAssociationType_Event) => {
+                          (visitObj: InventoryAssociationType_Event, index: number) => {
 
                             return  <>
                               {visitObj &&
@@ -360,8 +360,8 @@ const LibraryDetailsPage = ({
                                     }${visitObj?.visit_associate?.place_unique_id?.placeNameArabic ?
                                       `  ${visitObj?.visit_associate?.place_unique_id?.placeNameArabic}` :
                                       ""
-                                    }${libraryDetails.media_associate?.visit_unique_ids[0]?.visitNumber
-                                      ? `  Visit ${libraryDetails.media_associate?.visit_unique_ids[0]?.visitNumber}`
+                                    }${libraryDetails.media_associate?.visit_unique_ids[index]?.visitNumber
+                                      ? `  Visit ${libraryDetails.media_associate?.visit_unique_ids[index]?.visitNumber}`
                                       : ""}`
                                   }
 

@@ -47,8 +47,8 @@ export const Card = ({
 
   let flag = false
 
-  cloneDeep(record.attributes?.media_associates?.data)?.forEach((item: mediaAssociate_PlaceOrEvent, index: number) => {
-    if (!flag && item.attributes.media_unique_id.data.attributes.featuredImage) {
+  cloneDeep(record?.attributes?.media_associates?.data)?.forEach((item: mediaAssociate_PlaceOrEvent, index: number) => {
+    if (!flag && item?.attributes?.media_unique_id?.data?.attributes?.featuredImage) {
       featuredRecordIndex = index;
       flag = true;
     }
