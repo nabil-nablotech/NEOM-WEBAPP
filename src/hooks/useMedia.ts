@@ -54,7 +54,7 @@ const useMedia = () => {
   }});
   const [updateMediaMutation, { data: updateData, reset }] = useMutation(updateMedia, {context: graphQlHeaders().context, onCompleted: () => {
     if (associatedEvents.length == 0 && associatedPlaces.length == 0) {
-      dispatch(toggleShowEditSuccess(true));
+      // dispatch(toggleShowEditSuccess(true));
     }
   }});
   const [createMediaAssociateMutation, { data: mediaAssociate }] = useMutation(createMediaAssociate, {context: graphQlHeaders().context, onCompleted: (d) => {
@@ -94,7 +94,7 @@ const useMedia = () => {
       // || (updateData && mediaAssociate)
       ) {
       if(!showEditSuccess) {
-        dispatch(toggleShowEditSuccess(true))
+        // dispatch(toggleShowEditSuccess(true))
       }
     }
   }, [updateMediaAssociateData, mediaAssociate, updateData])
@@ -133,6 +133,9 @@ const useMedia = () => {
       }
 
       dispatch(storeAddItemProgressState(null));
+      dispatch(setTabEdit(false));
+      dispatch(setTabData({}));
+      dispatch(toggleShowEditSuccess(true))
       /** re-direct */
       navigate(`/Media/${updateData?.updateMedia.data.attributes.uniqueId}`, { replace: true })
 
