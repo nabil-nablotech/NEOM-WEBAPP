@@ -13,7 +13,6 @@ import ErrorBoundary from "./components/ErrorBoundary";
 // Redux setup
 import { store } from "./store";
 import { Provider } from "react-redux";
-import { baseUrl } from "./utils/services/helpers";
 import SessionTimeOut from "./components/SessionTimeOut";
 
 // apollo client
