@@ -230,6 +230,7 @@ const EventDetailsPage = () => {
   const {
     siteDescription,
     siteType,
+    artifacts,
     period,
     fieldNarrative,
     stateOfConservation,
@@ -537,7 +538,11 @@ const EventDetailsPage = () => {
                         component="div"
                         className={`${styles["item-number"]}`}
                       >
-                        {`- ${visit_associate?.place_unique_id?.placeNumber}`}
+                        {`${
+                          visit_associate?.place_unique_id?.placeNameEnglish ||
+                          visit_associate?.place_unique_id?.placeNameArabic ?
+                          '-' : ''
+                        } ${visit_associate?.place_unique_id?.placeNumber}`}
                       </Box>
                     </Grid>
                   )}
@@ -668,6 +673,40 @@ const EventDetailsPage = () => {
                               className={`${styles["text-anchor"]}`}
                               key={index}
                               onClick={() => handleSearch({ siteType: [item] })}
+                            >
+                              {item}
+                            </Box>
+                          ))
+                        ) : (
+                          <NoTextPresent message={NO_TEXT} />
+                        )}
+                      </Box>
+                    </Grid>
+                  </Grid>
+                  <Grid container className={`${styles["table-row"]}`}>
+                    <Grid
+                      item
+                      sm={3}
+                      md={4}
+                      className={`${styles["table-parameter"]} `}
+                    >
+                      Artifacts
+                    </Grid>
+                    <Grid item
+                      sm={9}
+                      md={8}
+                    >
+                      <Box
+                        component={"div"}
+                        className={`${styles["text-anchors-parent"]}`}
+                      >
+                        {!isEmpty(artifacts) ? (
+                          artifacts.map((item: string, index: number) => (
+                            <Box
+                              component="div"
+                              className={`${styles["text-anchor"]}`}
+                              key={index}
+                              onClick={() => handleSearch({ artifacts: [item] })}
                             >
                               {item}
                             </Box>

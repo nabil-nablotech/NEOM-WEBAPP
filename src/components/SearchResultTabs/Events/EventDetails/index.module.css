@@ -120,7 +120,7 @@
 
 .table-parameter,
 .table-parameter-value {
-    line-height: 1.5;
+    /* line-height: 1.5; */
 }
 
 .details-section {
