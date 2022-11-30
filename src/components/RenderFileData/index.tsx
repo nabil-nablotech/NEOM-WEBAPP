@@ -24,8 +24,6 @@ const RenderFileData = ({
     if(fileType === 'video') {
         // console.log('hex: ', fileData)
     }
-
-    console.log('fileType...', fileType)
     return (
         <>
             {

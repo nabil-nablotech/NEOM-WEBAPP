@@ -27,6 +27,7 @@ import { modifyAssociatedEvents } from "../../../../store/reducers/searchResults
 import RenderFileDataForGrid from "../../../RenderFileDataForGrid";
 import {cloneDeep} from 'lodash'
 import { mediaAssociate_PlaceOrEvent } from "../../../../types/Place";
+import fallBackSrc from '../../../../assets/images/NoImage.png';
 
 export const Card = ({
   img,
@@ -87,6 +88,12 @@ export const Card = ({
                 component="img"
                 alt={""}
                 src={`${baseUrl}${img}`}
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.onerror = null; // prevents looping
+                  e.currentTarget.src=fallBackSrc;
+                  e.currentTarget.width=100;
+                }}
                 // src={record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.categoryCode === "MEDIA" &&
                 //   record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.media_type?.data[0]?.attributes?.typeCode === "IMAGE" ?
                 //   record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url : ''
