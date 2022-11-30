@@ -17,6 +17,7 @@ import AddIcon from "@mui/icons-material/Add";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import {
   formatDate,
+  itemDeleteAccess,
   passwordGenerator,
 } from "../../utils/services/helpers";
 import ModalComponent from "../Modal";
@@ -459,7 +460,7 @@ export const UserManagementTable = (props: IUser) => {
           }}>
             Edit
           </MenuItem>
-          <MenuItem key={3} onClick={(e) => {
+          {itemDeleteAccess && <MenuItem key={3} onClick={(e) => {
             e.stopPropagation();
             handleClose()
             dispatch(toggleDeleteUserWindowOpen({
@@ -468,7 +469,7 @@ export const UserManagementTable = (props: IUser) => {
             }))
           }}>
             Delete
-          </MenuItem>
+          </MenuItem>}
         </Menu>
       </>
     );
