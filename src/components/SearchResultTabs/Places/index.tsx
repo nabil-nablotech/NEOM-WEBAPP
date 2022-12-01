@@ -25,6 +25,7 @@ const PlacesTab = () => {
   const { searchText, places, placeMetaData, totalCounts, searchApply, toggledStates, isSelect } = useSelector(
     (state: RootState) => state.searchResults
   );
+  
   const {selectedValue} = useSelector((state: RootState) => state.refinedSearch);
 
   const importFileInputRef: any = useRef(null);

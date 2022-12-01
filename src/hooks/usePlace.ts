@@ -17,8 +17,8 @@ import { setLatestItem, setTabData, setTabEdit } from "../store/reducers/tabEdit
 import { Place } from "../types/Place";
 import { tabNameProps } from "../types/SearchResultsTabsProps";
 
-import {limit, getQueryObj, generateUniqueId, webUrl, PLACES_TAB_NAME} from '../utils/services/helpers';
-import {graphQlHeaders} from '../utils/services/interceptor';
+import { limit, getQueryObj, generateUniqueId, webUrl, PLACES_TAB_NAME } from '../utils/services/helpers';
+import { graphQlHeaders } from '../utils/services/interceptor';
 
 
 const usePlace = () => {
@@ -26,8 +26,8 @@ const usePlace = () => {
   const [mapPlaces, setMapPlaces] = useState([]);
   const { searchText, places: placeData, addNewItemWindowType, confirmOpenEdit, editPayload,
     addItemWindowMinimized, deleteItemSuccess, deleteItemType } = useSelector(
-    (state: RootState) => state.searchResults
-  );
+      (state: RootState) => state.searchResults
+    );
   const { selectedValue } = useSelector(
     (state: RootState) => state.refinedSearch
   );
@@ -66,25 +66,40 @@ const usePlace = () => {
   /**
    * fetch places with two words
    */
-  const { loading:refineLoading, error:refineErrorData, data:refinePlaceData, refetch:refineSearchPlaces} = useQuery(refinePlaces, graphQlHeaders());
+  const { loading: refineLoading, error: refineErrorData, data: refinePlaceData, refetch: refineSearchPlaces } = useQuery(refinePlaces, graphQlHeaders());
 
-  const [createPlaceMutation, {data, loading, error}] = useMutation(addPlace, {context: graphQlHeaders().context, onCompleted: (data) => {
-    dispatch(setLatestItem({tab:'Places', data:data.createPlace.data}));
-  }});
-  const [updatePlaceMutation, {data: updateData, loading: updateLoading, error: updateErr}] = useMutation(updatePlace, graphQlHeaders());
+  const [createPlaceMutation, { data, loading, error }] = useMutation(addPlace, {
+    context: graphQlHeaders().context, onCompleted: (data) => {
+      dispatch(setLatestItem({ tab: 'Places', data: data.createPlace.data }));
+    }
+  });
+  const [updatePlaceMutation, { data: updateData, loading: updateLoading, error: updateErr }] = useMutation(updatePlace, graphQlHeaders());
 
   useEffect(() => {
     if (refinePlaceData?.places) {
-      const places = JSON.parse(JSON.stringify(refinePlaceData?.places.data))
+      let places = refinePlaceData?.places.data;
+      // places.map((x: Place) => {
+      //   x.label = `${x?.attributes?.placeNameEnglish}${x?.attributes?.placeNameArabic}` || '';
+      //   x.value = x?.id;
+      //   return x;
+      // });
 
-      places.map((x: Place) => {
-        x.label = `${x?.attributes?.placeNameEnglish}${x?.attributes?.placeNameArabic}` || '';
-        x.value = x?.id;
-        return x;
-      })
+      places = places?.map((item: any) => ({
+        ...item, attributes: {
+          ...item.attributes,
+          keywords: JSON.parse(item.attributes.keywords),
+          period: JSON.parse(item.attributes.period),
+          risk: JSON.parse(item.attributes.risk),
+          recommendation: JSON.parse(item.attributes.recommendation),
+          siteType: JSON.parse(item.attributes.siteType),
+          stateOfConservation: JSON.parse(item.attributes.stateOfConservation),
+          tourismValue: JSON.parse(item.attributes.tourismValue),
+          researchValue: JSON.parse(item.attributes.researchValue)
+        }
+      }));
 
-      // update the data for the pagination
-      if (refinePlaceData?.places?.meta.pagination.page === 1 && refinePlaceData?.places?.data.length > 0) {
+  // update the data for the pagination
+  if (refinePlaceData?.places?.meta.pagination.page === 1 && refinePlaceData?.places?.data.length > 0) {
         dispatch(setPlaces([...places]));
       } else if (places?.length > 0) {
         dispatch(setPlaces([...placeData, ...places]));
@@ -103,7 +118,7 @@ const usePlace = () => {
       for (let i = 0; i < refinePlaceData?.places?.data?.length; i++) {
         if (refinePlaceData?.places?.data[i]?.attributes?.latitude && refinePlaceData?.places?.data[i]?.attributes?.longitude) {
           dummyArray.push({
-            id:refinePlaceData?.places?.data[i].id,
+            id: refinePlaceData?.places?.data[i].id,
             name: refinePlaceData?.places?.data[i].attributes["placeNameEnglish"],
             position: {
               lat: refinePlaceData?.places?.data[i].attributes["latitude"],
@@ -123,7 +138,7 @@ const usePlace = () => {
       // dispatch(toggleShowAddSuccess(true))
 
       /** rdirect */
-      navigate(`/Places/${data.createPlace.data.attributes.uniqueId}`, {replace: true})
+      navigate(`/Places/${data.createPlace.data.attributes.uniqueId}`, { replace: true })
       /** insert in reducer */
       /** map that to screen  */
     }
@@ -131,10 +146,10 @@ const usePlace = () => {
 
   useEffect(() => {
     if (updateData && edit) {
-        dispatch(setTabEdit(false));
-        dispatch(setTabData({}));
-        dispatch(toggleShowEditSuccess(true))
-        navigate(`/Places/${updateData.updatePlace.data.attributes.uniqueId}`, {replace: true})
+      dispatch(setTabEdit(false));
+      dispatch(setTabData({}));
+      dispatch(toggleShowEditSuccess(true))
+      navigate(`/Places/${updateData.updatePlace.data.attributes.uniqueId}`, { replace: true })
     }
   }, [updateData])
 
@@ -147,22 +162,22 @@ const usePlace = () => {
     const copiedValue = local ? JSON.parse(JSON.stringify(selectedValue)) : searchData?.refinedSearch;
     const searchWordArray = text?.trim()?.split(" ") || [];
     copiedValue && Object.keys(copiedValue)?.map(x => {
-      if (copiedValue[x].length === 0) {delete copiedValue[x];}
+      if (copiedValue[x].length === 0) { delete copiedValue[x]; }
       return x;
     });
     const obj: any = {
-      researchValue: copiedValue&&copiedValue?.researchValue && copiedValue?.researchValue,
-      tourismValue: copiedValue&&copiedValue.tourismValue && copiedValue?.tourismValue,
-      stateOfConservation: copiedValue&&copiedValue?.stateOfConservation && copiedValue?.stateOfConservation,
-      recommendation: copiedValue&&copiedValue?.recommendation && copiedValue?.recommendation,
-      risk: copiedValue&&copiedValue?.risk && copiedValue?.risk,
-      period: copiedValue&&copiedValue?.period && copiedValue?.period,
-      latitude: copiedValue&&copiedValue?.latitude && parseFloat(copiedValue?.latitude),
-      longitude: copiedValue&&copiedValue?.longitude && parseFloat(copiedValue?.longitude),
-      artifacts: copiedValue&&copiedValue?.artifacts && copiedValue?.artifacts,
-      actionType: copiedValue&&copiedValue?.actionType && copiedValue?.actionType,
-      keywords: copiedValue&&copiedValue?.keyWords && copiedValue?.keyWords,
-      siteType: copiedValue&&copiedValue?.siteType && copiedValue?.siteType,
+      researchValue: copiedValue && copiedValue?.researchValue && copiedValue?.researchValue,
+      tourismValue: copiedValue && copiedValue.tourismValue && copiedValue?.tourismValue,
+      stateOfConservation: copiedValue && copiedValue?.stateOfConservation && copiedValue?.stateOfConservation,
+      recommendation: copiedValue && copiedValue?.recommendation && copiedValue?.recommendation,
+      risk: copiedValue && copiedValue?.risk && copiedValue?.risk,
+      period: copiedValue && copiedValue?.period && copiedValue?.period,
+      latitude: copiedValue && copiedValue?.latitude && parseFloat(copiedValue?.latitude),
+      longitude: copiedValue && copiedValue?.longitude && parseFloat(copiedValue?.longitude),
+      artifacts: copiedValue && copiedValue?.artifacts && copiedValue?.artifacts,
+      actionType: copiedValue && copiedValue?.actionType && copiedValue?.actionType,
+      keywords: copiedValue && copiedValue?.keyWords && copiedValue?.keyWords,
+      siteType: copiedValue && copiedValue?.siteType && copiedValue?.siteType,
       search_one: searchWordArray[0],
       search_two: searchWordArray[1],
       search_three: searchWordArray[2],
@@ -207,7 +222,7 @@ const usePlace = () => {
     if (!edit) {
       data.uniqueId = uniqueId;
       data.placeUIPath = `${webUrl}/Places/${uniqueId}`;
-      createPlaceMutation({variables: data})
+      createPlaceMutation({ variables: data })
     }
     if (edit && tabData?.id) {
       updatePlaceMutation({
@@ -237,7 +252,7 @@ const usePlace = () => {
       fetchData(0)
     }
   }, [deleteItemSuccess, deleteItemType])
-  
+
   const openEditFlow = async (payload: any) => {
     if (payload) {
       const { type, record } = payload;
@@ -254,8 +269,8 @@ const usePlace = () => {
   const setEdit = (payload: any) => {
     if (addNewItemWindowType && addItemWindowMinimized) {
       /** Detect if user comes via forced edit */
-        dispatch(toggleEditConfirmationWindowOpen(true));
-        dispatch(setEditPayload(payload));
+      dispatch(toggleEditConfirmationWindowOpen(true));
+      dispatch(setEditPayload(payload));
 
     } else {
       /** Detect if user comes via normal edit */
@@ -275,7 +290,7 @@ const usePlace = () => {
     clearSearch: clearTextSearch,
     createPlace: createPlace,
     setEdit,
-    searchData : getQueryObj(search)
+    searchData: getQueryObj(search)
   };
 };
 

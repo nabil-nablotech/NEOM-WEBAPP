@@ -6,6 +6,7 @@ import { Parser } from "json2csv";
 import * as XLSX from 'xlsx';
 import { Relation } from '../../types/RelationType';
 import JSZip from "jszip";
+import { importMetaData } from "./importMetaData";
 
 export const onImportReaderLoad = async (
   event: any,
@@ -111,7 +112,14 @@ export const onImportReaderLoad = async (
 
       /* Convert data to json data type */
       for (let j = 0; j < jsonTypes?.length; j++) {
-        jsonObject[i][jsonTypes[j]] = jsonObject[i][jsonTypes[j]] ? `[\"${jsonObject[i][jsonTypes[j]]}\"]` : [];
+        const arrayObject: String[] = [];
+        if (jsonObject[i][jsonTypes[j]]) {
+          arrayObject?.push(jsonObject[i][jsonTypes[j]]);
+        }
+        console.log(typeof arrayObject)
+        console.log(arrayObject)
+        console.log(Array.isArray(arrayObject))
+        jsonObject[i][jsonTypes[j]] = arrayObject;
       }
 
       /* Remove unnecessary columns */
@@ -124,11 +132,16 @@ export const onImportReaderLoad = async (
     }
     /* Converts back the json after it is cleared to csv */
     if (jsonObject?.length > 0) {
-      const fields = Object.keys(jsonObject[0]);
-      const opts = { fields };
-      const parser = new Parser(opts);
-      const csv = parser.parse(jsonObject);
-      requestData.data = csv;
+      for (let x = 0; x < jsonObject.length; x++) {
+        importMetaData.data[requestData.slug][x] = {...jsonObject[x]};
+      }
+
+      requestData.idField = "uniqueId";
+      requestData.data = JSON.stringify(importMetaData);
+      requestData.format = "json";
+      console.log(requestData);
+      console.log(importMetaData);
+
     }
 
     /* finally send request to the import api */
