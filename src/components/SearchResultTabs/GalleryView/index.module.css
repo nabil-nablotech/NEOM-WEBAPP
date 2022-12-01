@@ -24,6 +24,9 @@
     aspect-ratio: 3/2;
     object-fit: cover;
 }
+.media-grid-item iframe {
+    width: 100%;
+}
 .media-grid {
     gap: 1em;
     justify-content: start;

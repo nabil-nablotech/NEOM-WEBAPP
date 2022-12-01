@@ -31,6 +31,21 @@
     fill: red;
 }
 
+.direct-html-wrapper {
+    position: relative;
+}
+
+.play-preventer {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+}
+
 .video-player-box {
     width: 100%;
     height: auto;

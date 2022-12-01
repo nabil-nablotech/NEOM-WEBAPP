@@ -153,7 +153,8 @@ const RenderFileData = ({
                                                                 e.preventDefault()
                                                             }}
                                                         />
-                                                    </>}
+                                                    </>
+                                                    }
                                                 </Box> :
                                                 <>
                                                 {/* {fileData.objectURL ?
@@ -223,18 +224,24 @@ const RenderFileData = ({
                                                         {
                                                             fileData.objectURL.indexOf('iframe') !== -1 ?
                                                                 <>
-                                                                    <div dangerouslySetInnerHTML={{ __html: fileData.objectURL }} />
-                                                                    {!fileData.isOpened && <>
-                                                                        <PlayCircleFilledOutlinedIcon
-                                                                            sx={{
-                                                                                ...playIconSx
-                                                                            }}
-                                                                            fontSize="large" className={`${styles['video-play-icon']}`}
-                                                                            onClick={e => {
-                                                                                e.preventDefault()
-                                                                            }}
-                                                                        />
-                                                                    </>}
+                                                                    <Box component="div" className={`${styles['direct-html-wrapper']}`}
+                                                                        style={{
+                                                                            pointerEvents: !fileData.isOpened ? 'none' : 'all'
+                                                                        }}
+                                                                    >
+                                                                        <div dangerouslySetInnerHTML={{ __html: fileData.objectURL }} />
+                                                                        {!fileData.isOpened && <>
+                                                                            <PlayCircleFilledOutlinedIcon
+                                                                                sx={{
+                                                                                    ...playIconSx
+                                                                                }}
+                                                                                fontSize="large" className={`${styles['video-play-icon']}`}
+                                                                                onClick={e => {
+                                                                                    e.preventDefault()
+                                                                                }}
+                                                                            />
+                                                                        </>}
+                                                                    </Box>
                                                             </> :
                                                                 <ReactPlayer
                                                                     width="100%" height="100%"

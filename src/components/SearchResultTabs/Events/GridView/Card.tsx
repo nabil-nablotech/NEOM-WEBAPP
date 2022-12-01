@@ -174,6 +174,9 @@ export const Card = ({
                       associatedEvents
                     )}
                     onClick={(e) => {
+
+                      if(isEventRecordAttached(record, associatedEvents)) return
+
                       const data: InventoryAssociationType_Event = {
                         id: record.id,
                         visitNumber: record.attributes.visitNumber,

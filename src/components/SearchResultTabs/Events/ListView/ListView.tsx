@@ -238,6 +238,9 @@ const ListView = (props: EventsProps) => {
 
     const handleAttachClick = (e: any, record: Event) => {
 
+
+        if(isEventRecordAttached(record, associatedEvents)) return
+
         const data: InventoryAssociationType_Event = {
             id: record.id,
             visitNumber: record.attributes.visitNumber,
