@@ -47,7 +47,7 @@ const ExportDownload = () => {
             >
               {
                 downloadData?.downloads?.data?.length>0?downloadData?.downloads?.data.map((item:any,index:any)=>{
-                  return <ExportCard key={index} title={item.attributes.title} filePath={item.attributes.filePath} dataCount={item.attributes.dataCount} fileCount={item.attributes.fileCount} libraryCount={item.attributes.libraryCount} visitCount={item.attributes.visitCount} createdAt={item.attributes.createdAt} token={item.attributes.token} />
+                  return <ExportCard key={index} title={item.attributes.title} filePath={item.attributes.filePath} dataCount={item.attributes.dataCount} fileCount={item.attributes.fileCount} libraryCount={item.attributes.libraryCount} visitCount={item.attributes.visitCount} createdAt={item.attributes.createdAt} token={item.attributes.token} status={item.attributes.status} />
                 }):<></>
               }
             </Grid>

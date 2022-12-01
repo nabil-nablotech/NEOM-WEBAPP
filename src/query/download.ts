@@ -16,9 +16,38 @@ query searchDownloads($token: String) {
         libraryCount,
         visitCount,
         createdAt,
-        token
+        token,
+        status
       }
     }
   }
 }
+`;
+
+export const addDownload = gql`
+  mutation CreateDownload(
+    $token: String
+  ) {
+    createDownload(
+      data: {
+        title: "Title"
+        filePath: "Path"
+        dataCount: 0
+        fileCount: 0
+        libraryCount: 0
+        visitCount: 0
+        token: $token
+        status: "Pending"
+      }
+    ) {
+      data {
+        id
+        attributes {
+          title
+          token
+          status
+        }
+      }
+    }
+  }
 `;

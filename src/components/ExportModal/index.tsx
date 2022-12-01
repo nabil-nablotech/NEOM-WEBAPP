@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useMutation, useQuery } from "@apollo/client";
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import CloseIcon from '@mui/icons-material/Close';
@@ -14,6 +15,9 @@ import { baseUrl } from '../../utils/services/helpers';
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
+import { addDownload } from "../../query/download";
+import {graphQlHeaders} from '../../utils/services/interceptor';
+import { getToken } from "../../utils/storage/storage";
 import qs from 'qs';
 
 const style = {
@@ -32,18 +36,24 @@ export default function ExportModal({open, setOpen, count, path, filter}:any) {
   const [isAssets, setIsAssets] = useState(false);
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
-  const { isSelect, selectedKey } = useSelector((state: RootState) => state.searchResults);
-  const exportData = async () => {
+  const [createDownloadMutation, {data, loading, error}] = useMutation(addDownload, {context: graphQlHeaders().context, onCompleted: async (data) => {
     try {
       await client.get(
         `${baseUrl}/api/custom/${path}`,
-        { params: { filter: qs.stringify(filter), isAssets:isAssets, isSelect:isSelect, selectedKey:selectedKey } }
+        { params: { filter: qs.stringify(filter), isAssets:isAssets, isSelect:isSelect, selectedKey:selectedKey, id:data.createDownload['data'].id } }
       );
-      await handleClose();
-      await navigate('/download');
     } catch (err) {
       console.log(err);
     }
+  }});
+  const { isSelect, selectedKey } = useSelector((state: RootState) => state.searchResults);
+  const exportData = async () => {
+    let data = {
+      token:getToken()
+    }
+    handleClose();
+    navigate('/download');
+    createDownloadMutation({variables: data})
   }
 
   return (
