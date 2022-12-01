@@ -308,7 +308,7 @@ const RenderFileData = ({
                 fileType === '3d' &&
                 <>
                     <Box component="div" 
-                    className={fileData.className}
+                    className={`${fileData.className} ${styles['three-d-wrapper']}`}
                     style={{
                         position: 'relative'
                     }}>
