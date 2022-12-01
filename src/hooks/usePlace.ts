@@ -55,6 +55,7 @@ const usePlace = () => {
     }
     resetPlaces();
     // if (tabName === "Places") {
+      console.log('fetch data..... 1')
     fetchData(0);
     // }
   }, []);
@@ -73,6 +74,11 @@ const usePlace = () => {
   
   const [createPlaceMutation, {data, loading, error}] = useMutation(addPlace, {context: graphQlHeaders().context, onCompleted: (data) => {
     dispatch(setLatestItem({tab:'Places', data:data.createPlace.data}));
+    
+    console.log('fetchData..... 2')
+    fetchData(0);
+
+    navigate(`/Places/${data.createPlace.data.attributes.uniqueId}`, {replace: true})
   }});
   const [updatePlaceMutation, {data: updateData, loading: updateLoading, error: updateErr}] = useMutation(updatePlace, graphQlHeaders());
 
@@ -130,18 +136,6 @@ const usePlace = () => {
       setAllPlaces(refinePlaceDataDirect?.places?.data)
     }
   }, [refinePlaceDataDirect, refineLoadingDirect])
-
-  useEffect(() => {
-    if (data) {
-      fetchData(0);
-      // dispatch(toggleShowAddSuccess(true))
-
-      /** rdirect */
-      navigate(`/Places/${data.createPlace.data.attributes.uniqueId}`, {replace: true})
-      /** insert in reducer */
-      /** map that to screen  */
-    }
-  }, [data])
 
   useEffect(() => {
     if (updateData && edit) {
@@ -329,7 +323,7 @@ const usePlace = () => {
   useEffect(() => {
 
     /** get latest list after deleting item */
-    if (deleteItemSuccess && (deleteItemType === "Places")) {
+    if (deleteItemSuccess && (deleteItemType === "Places") && (placeSort.length === 0)) {
       fetchData(0)
     }
   }, [deleteItemSuccess, deleteItemType]);
