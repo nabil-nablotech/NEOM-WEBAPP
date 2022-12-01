@@ -240,6 +240,7 @@ const useMedia = () => {
       "categoryType": payload.categoryType && payload?.categoryType,
       object: payload?.object && payload?.object[0].id,
       fileSize: payload?.object && formatBytes(parseFloat(payload?.object[0]?.size)),
+      fileName: payload?.object && formatBytes(parseFloat(payload?.object[0]?.name)),
       storage: payload?.object && payload?.object[0]?.provider,
       dimension: payload?.object && `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
       refrenceURL: payload?.url,

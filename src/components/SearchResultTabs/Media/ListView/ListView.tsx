@@ -210,7 +210,7 @@ const ListView = (props: MediaProps) => {
       dataIndex: "attributes",
       className: "cell-title",
       width: 170,
-      render: (value: any, index: any) => value?.fileName?.substring(0, 20),
+      render: (value: any, index: any) => value?.title,
     },
     {
       title: "DESCRIPTION",
