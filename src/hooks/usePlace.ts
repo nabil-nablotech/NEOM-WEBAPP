@@ -191,6 +191,7 @@ const usePlace = () => {
       delete obj.search_two;
       delete obj.search_three;
     }
+    obj.sortBy = ["createdAt:desc"];
     refineSearchPlacesDirect(obj);
   };
 
@@ -226,6 +227,7 @@ const usePlace = () => {
       text: searchWordArray,
       limit: limit,
       skip: skip,
+      sortBy: ["createdAt:desc"]
     };
     if (clear) {
       obj.skip = 0;

@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const refinePlaces = gql`
+
 query refinedSearch(
   $text: JSON
   $search_one: String
@@ -19,6 +20,7 @@ query refinedSearch(
   $keywords: JSON
   $limit: Int
   $skip: Int
+  $sortBy: [String!]
 ) {
   places(
     pagination: { limit: $limit, start: $skip }
@@ -58,7 +60,7 @@ query refinedSearch(
         }
       ]
     }
-    sort: "createdAt:desc"
+    sort: $sortBy
   ) {
     meta {
       pagination {

@@ -314,7 +314,7 @@ const PlaceDetailsPage = () => {
                 fileData={{
                   alt: "",
                   src: value?.media_associates[0]?.media_unique_id?.object?.url
-                    ? handleImageUrl(value.media_associates[0].media_unique_id.object.url, "small_")
+                    ? handleImageUrl(value.media_associates[0].media_unique_id.object.url, "thumbnail_")
                     : undefined,
                   className:
                     value?.media_associates[0]?.media_unique_id?.media_type[0]

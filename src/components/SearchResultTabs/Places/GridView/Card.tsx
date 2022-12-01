@@ -30,10 +30,6 @@ export const Card = ({
   const { isAssociationsStepOpen, associatedPlaces } = useSelector(
     (state: RootState) => state.searchResults
   );
-  if (img) {
-    let imagePath = img.split("/");
-    img = `/${imagePath[1]}/thumbnail_${imagePath[2]}`;
-  }
 
   const handleImageUrl = (url: string, size: string) => {
     // let imagePath = url.split("/");
@@ -63,7 +59,6 @@ export const Card = ({
     let imagePath = img.split("/");
     img = `${imagePath[1]}/thumbnail_${imagePath[3]}`;
   }
-
   return (
     <>
       <Box component="div" className={`${gridStyles["card-container"]}`}>

@@ -107,7 +107,7 @@ const useEvent = () => {
   
   useEffect(() => {
     if (searchValue) {
-      refineSearchPlaces({search_one: searchValue});
+      refineSearchPlaces({search_one: searchValue, "sortBy": ["createdAt:desc"]});
     }
   }, [searchValue])
   
