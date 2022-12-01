@@ -633,16 +633,11 @@ const PlaceDetailsPage = () => {
                 <Grid
                   container
                   className={`${styles["justify-center"]} ${styles["image-grid-gap"]} ${styles["images-grid-container"]}`}
-                  sx={{
-                    '& .MuiGrid-root': {
-                      marginLeft: 0
-                    }
-                  }}
                 >
                   <Grid
                     item
                       sm={6}
-                      className={`${styles["grid-item"]}`}
+                      className={`${styles["grid-item"]} ${styles["main-grid-item"]}`}
                       onClick={(e) => {
                         handleClickMediaItem(
                           e,
@@ -682,8 +677,7 @@ const PlaceDetailsPage = () => {
                     <Grid
                       item
                       sm={6}
-                      className={`${styles[""]}`}
-
+                      className={`${styles["main-grid-item"]}`}
                     >
                       <Grid container
                         spacing={1}
@@ -695,8 +689,13 @@ const PlaceDetailsPage = () => {
                         }}
                       >
                         <Grid item
-                        className={`${styles["grid-item"]}`}
+                          className={`${styles["grid-item"]}`}
                           sm={6}
+                          sx={{
+                            '& .MuiGrid-root': {
+                              marginLeft: 0
+                            }
+                          }}
                           onClick={(e) => {
                             handleClickMediaItem(
                               e,
@@ -734,7 +733,7 @@ const PlaceDetailsPage = () => {
                         </Grid>
                         <Grid item
                           sm={6}
-                          className={`${styles["side-grid-container"]}`}
+                          className={`${styles["grid-item"]}`}
                           onClick={(e) => {
                             handleClickMediaItem(
                               e,
@@ -782,7 +781,12 @@ const PlaceDetailsPage = () => {
                         }}
                       >
                         <Grid item
-                        className={`${styles["grid-item"]}`}
+                          className={`${styles["grid-item"]}`}
+                          sx={{
+                            '& .MuiGrid-root': {
+                              paddingLeft: 0
+                            }
+                          }}
                           sm={6}
                           onClick={(e) => {
                             handleClickMediaItem(
@@ -1125,6 +1129,8 @@ const PlaceDetailsPage = () => {
                         associatedPlaces
                       )}
                       onClick={(e) => {
+
+                        if (isPlaceDetailAttached(placeData, associatedPlaces)) return
 
                         const data: InventoryAssociationType = {
                           id: Number(placeData.id),

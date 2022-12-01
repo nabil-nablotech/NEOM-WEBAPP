@@ -158,6 +158,8 @@ export const Card = ({
                     shouldShowAttachIcon={isRecordAttached(record, associatedPlaces)}
                     onClick={e => {
 
+                      if(isRecordAttached(record, associatedPlaces)) return
+                      
                       const data: InventoryAssociationType = {
                         id: Number(record.id),
                         placeNameEnglish: record.attributes.placeNameEnglish,
