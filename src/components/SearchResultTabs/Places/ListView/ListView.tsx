@@ -407,38 +407,39 @@ const ListView = (props: PlacesProps) => {
     onChange: onSelectChange,
   };
 
+  const renderTable = useMemo(() => <StyledTableWrapper
+  rowKey={"id"}
+  size="small"
+  columns={tableHeaderJson}
+  dataSource={data}
+  pagination={false}
+  loading={loading}
+  rowSelection={isSelect ? rowSelection : undefined}
+  bordered
+  scroll={{ x: 'max-content', y: 350 }}
+  style={{
+    background: "transparent",
+  }}
+  onRow={(record: any, rowIndex) => {
+    return {
+      onClick: (event: React.MouseEvent<HTMLElement>) => {
+        const target = event.target as Element;
+        const clsList = target.classList
+
+        if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
+          event.stopPropagation();
+          handleAttachClick(event, record)
+        } else {
+          dispatch(setSelectedCardIndex(rowIndex || record.id))
+          navigateTo(`/Places/${record.attributes.uniqueId}`)
+        }
+      }, // click row
+    };
+  }}
+/>, [tableHeaderJson, data])
   return (
     <Box component="div" id={'places-list-parent'}>
-      <StyledTableWrapper
-        rowKey={"id"}
-        size="small"
-        columns={tableHeaderJson}
-        dataSource={data}
-        pagination={false}
-        loading={loading}
-        rowSelection={isSelect ? rowSelection : undefined}
-        bordered
-        scroll={{ x: 'max-content', y: 350 }}
-        style={{
-          background: "transparent",
-        }}
-        onRow={(record: any, rowIndex) => {
-          return {
-            onClick: (event: React.MouseEvent<HTMLElement>) => {
-              const target = event.target as Element;
-              const clsList = target.classList
-
-              if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
-                event.stopPropagation();
-                handleAttachClick(event, record)
-              } else {
-                dispatch(setSelectedCardIndex(rowIndex || record.id))
-                navigateTo(`/Places/${record.attributes.uniqueId}`)
-              }
-            }, // click row
-          };
-        }}
-      />
+      {renderTable}
       {
         loading &&
         <Loader />
