@@ -4,7 +4,6 @@ import { ColumnsType } from "antd/lib/table";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
 import { antTablePaginationCss } from "../../../../utils/services/helpers";
-import commonStyles from "../../index.module.css";
 import { Loader } from "../../../Loader";
 import { MediaProps } from "../GridView/GridView";
 import { baseUrl, baseUrlS3, detectMediaTypeFromMediaList, itemAddEditAccess } from '../../../../utils/services/helpers';
@@ -12,19 +11,15 @@ import RenderFileData from '../../../RenderFileData';
 
 import { MoreOptionsComponent } from './MoreOption';
 import { Media, MediaAttributes } from "../../../../types/Media";
-// import {CustomModal} from '../../../CustomModal';
-// import {MediaDetailsPage} from '../DetailsPage';
-// import styles from './index.module.css';
-// import CloseIcon from '@mui/icons-material/CloseOutlined';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useMediaQuery } from 'react-responsive'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
+import { setMediaSorting } from '../../../../store/reducers/refinedSearchReducer';
 
 import { setActiveMediaItem, setActiveMediaItemIndex, setSelectedCardIndex, setSelectedKey } from '../../../../store/reducers/searchResultsReducer';
 
-import NoImagePresent from "../../../NoDataScreens/NoImagePresent";
 import { useHistory } from "../../../../hooks/useHistory";
 import styles from '../GridView/index.module.css'
 
@@ -159,6 +154,8 @@ const ListView = (props: MediaProps) => {
     (state: RootState) => state.searchResults
   );
 
+  const [featuredDirectionAsc, setFeaturedDirectionAsc] = useState(true);
+
   const handleImageUrl = (url: string, size: string) => {
     // let imagePath = url.split("/");
     // return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
@@ -169,6 +166,14 @@ const ListView = (props: MediaProps) => {
 
   const isTablet = useMediaQuery({ query: '(min-width: 575px) and (max-width: 1025px)' })
   const { navigateTo } = useHistory()
+
+  // let featuredDirectionAsc = true;
+  const handleFilter = (name: string) => {
+    
+    setFeaturedDirectionAsc(!featuredDirectionAsc);
+    dispatch(setMediaSorting([`${name}:${featuredDirectionAsc ? 'asc' : 'desc'}`]));
+  }
+
   const tableHeaderJson: ColumnsType<any> = [
     {
       title: "Image",
@@ -241,8 +246,16 @@ const ListView = (props: MediaProps) => {
       dataIndex: "attributes",
       className: "cell-bearing",
       width: isTablet ? 80 : 60,
-      sorter: (a: Media, b: Media) => {
-        return a?.attributes?.featuredImage.toString().localeCompare(b?.attributes?.featuredImage.toString())
+      // sorter: (a: Media, b: Media) => {
+      //   return a?.attributes?.featuredImage.toString().localeCompare(b?.attributes?.featuredImage.toString())
+      // },
+      sorter: true,
+      onHeaderCell: () => {
+          return {
+          onClick: () => {
+              handleFilter('featuredImage');
+          }
+          };
       },
       render: (value: any, index: any) => {
         return value.featuredImage ? 'Yes' : 'No'
@@ -261,9 +274,6 @@ const ListView = (props: MediaProps) => {
     },
   ];
 
-
-  const [isModalOpen, setModalOpen] = useState(false);
-  const navigate = useNavigate();
   const dispatch = useDispatch()
   useEffect(() => {
     /** locate last row, add id to it; such that
@@ -354,8 +364,6 @@ const ListView = (props: MediaProps) => {
         onRow={(record: any, rowIndex: number | undefined) => {
           return {
             onClick: (event) => {
-              // click row
-              setModalOpen(true);
 
               if (typeof rowIndex === "number") {
                 dispatch(setActiveMediaItem(record))

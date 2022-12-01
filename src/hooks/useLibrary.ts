@@ -18,7 +18,7 @@ const useLibrary = () => {
   const {searchText, library: libItem, associatedPlaces, associatedEvents,
     addNewItemWindowType, confirmOpenEdit, editPayload, addItemWindowMinimized, deleteItemSuccess,
     deleteItemType } = useSelector((state: RootState) => state.searchResults);
-  const { selectedValue } = useSelector(
+  const { selectedValue, libSort } = useSelector(
     (state: RootState) => state.refinedSearch
   );
 
@@ -157,6 +157,7 @@ const useLibrary = () => {
       search_three: searchWordArray[2],
       limit: limit,
       skip: skip,
+      sortBy: libSort.length > 0 ? libSort : [`createdAt:desc`]
     };
     if (clear) {
       obj.skip = 0;
@@ -237,7 +238,13 @@ const useLibrary = () => {
     if (deleteItemSuccess && (deleteItemType === "Library")) {
       fetchData(0)
     }
-  }, [deleteItemSuccess, deleteItemType])
+  }, [deleteItemSuccess, deleteItemType]);
+
+  useEffect(() => {
+    if (libSort.length > 0) {
+      fetchData(0);
+    }
+  }, [libSort]);
 
   const openEditFlow = async (payload: any) => {
     if (payload) {
