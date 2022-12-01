@@ -17,16 +17,25 @@ export const initialSelectedValue = {
   startDate: undefined,
   endDate: undefined,
   keyWords: [],
+  
 }
 
 export type RefinedSearchState = {
   options: Options | null; 
-  selectedValue: Options
+  selectedValue: Options,
+  placeSort: string[] | [];
+  eventSort: string[] | [];
+  mediaSort: string[] | [];
+  libSort: string[] | [];
 }
 
 const initialState: RefinedSearchState = {
   options: null,
-  selectedValue: initialSelectedValue
+  selectedValue: initialSelectedValue,
+  placeSort: [],
+  eventSort: [],
+  mediaSort: [],
+  libSort: [],
 };
 
 export const refinedSearchSlice = createSlice({
@@ -39,12 +48,37 @@ export const refinedSearchSlice = createSlice({
     setSelectedValue: (state, action: PayloadAction<Options>) => {
       state.selectedValue = action.payload;
     },
+    setPlaceSorting: (state, action: PayloadAction<string[]>) => {
+      const filterSort = state.placeSort.filter(x => !x.includes(action.payload[0]?.split(':')[0]));
+      state.placeSort = [...filterSort, ...action.payload];
+    },
+    setEventSorting: (state, action: PayloadAction<string[]>) => {
+      const filterSort = state.eventSort.filter(x => !x.includes(action.payload[0]?.split(':')[0]));
+      state.eventSort = [...filterSort, ...action.payload];
+    },
+    setMediaSorting: (state, action: PayloadAction<string[]>) => {
+      state.mediaSort = action.payload;
+    },
+    setLibrarySorting: (state, action: PayloadAction<string[]>) => {
+      state.libSort = action.payload;
+    },
+    resetSorting: (state, action: PayloadAction<null>) => {
+      state.eventSort = [];
+      state.placeSort = [];
+      state.mediaSort = [];
+      state.libSort = [];
+    }
   },
 });
 
 export const {
   setOptions,
-  setSelectedValue
+  setSelectedValue,
+  setPlaceSorting,
+  setEventSorting,
+  setMediaSorting,
+  setLibrarySorting,
+  resetSorting
 } = refinedSearchSlice.actions;
 
 export default refinedSearchSlice.reducer;

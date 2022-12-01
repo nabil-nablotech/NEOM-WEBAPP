@@ -159,6 +159,12 @@
     aspect-ratio: 1/1;
 }
 
+.media-player-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 3/2;
+}
+
 @media (min-width: 575px) and (max-width: 1025px) {
     .bottom-desc-main-grid ,
     .bottom-desc-main-grid div{

@@ -98,9 +98,10 @@ const SearchResults = ({ tabIndex }: SearchResultTabsProps) => {
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
     if (e.code === "Enter" && searchText.trim().length >= 3) {
       handleSubmit();
-      e.preventDefault();
+      
       dispatch(setSearchApply(true));
       navigate({
         pathname: `/${tabName}`,

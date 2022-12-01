@@ -30,10 +30,6 @@ export const Card = ({
   const { isAssociationsStepOpen, associatedPlaces } = useSelector(
     (state: RootState) => state.searchResults
   );
-  if (img) {
-    let imagePath = img.split("/");
-    img = `/${imagePath[1]}/thumbnail_${imagePath[2]}`;
-  }
 
   const handleImageUrl = (url: string, size: string) => {
     // let imagePath = url.split("/");
@@ -63,7 +59,6 @@ export const Card = ({
     let imagePath = img.split("/");
     img = `${imagePath[1]}/thumbnail_${imagePath[3]}`;
   }
-
   return (
     <>
       <Box component="div" className={`${gridStyles["card-container"]}`}>
@@ -102,7 +97,7 @@ export const Card = ({
                     detectMediaTypeFromPlace(record) === "image" ?
                       handleImageUrl(mediaImage[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url || '', "small_") :
                       // mediaImage[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url :
-                      `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}`
+                      `${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}`
                   ) : undefined,
                   className: detectMediaTypeFromPlace(record) === "video" ?
                     `${gridStyles['video-card-parent']}` : detectMediaTypeFromPlace(record) === "image" ?
@@ -114,7 +109,7 @@ export const Card = ({
                   staticVideoLink: (
                     (detectMediaTypeFromPlace(record) === "video" || record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes.videoType === "video") &&
                     record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url
-                  ) ? `${baseUrl}${record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}` : undefined,
+                  ) ? `${record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}` : undefined,
                   isOpened: false
                 }}
                 fileType={detectMediaTypeFromMediaAssociateGraphQlRes(record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes || record)}
@@ -163,6 +158,8 @@ export const Card = ({
                     shouldShowAttachIcon={isRecordAttached(record, associatedPlaces)}
                     onClick={e => {
 
+                      if(isRecordAttached(record, associatedPlaces)) return
+                      
                       const data: InventoryAssociationType = {
                         id: Number(record.id),
                         placeNameEnglish: record.attributes.placeNameEnglish,

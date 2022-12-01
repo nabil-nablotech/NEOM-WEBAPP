@@ -604,6 +604,8 @@ const EventDetailsPage = () => {
                       )}
                       onClick={(e) => {
 
+                        if(isEventDetailAttached(eventDetails, associatedEvents)) return
+
                         const data: InventoryAssociationType_Event = {
                           id: eventDetails.id ? eventDetails.id.toString() : "",
                           visitNumber: eventDetails.visitNumber,
@@ -1117,7 +1119,7 @@ const EventDetailsPage = () => {
                                 itemObj.media_unique_id?.media_type[0]?.typeCode?.toLowerCase() ===
                                   "video" &&
                                   itemObj.media_unique_id.videoType === "video"
-                                  ? `${baseUrl}${itemObj.media_unique_id.object?.url}`
+                                  ? `${itemObj.media_unique_id.object?.url}`
                                   : undefined,
                             }}
                             fileType={detectMediaTypeFromMediaAssociate(

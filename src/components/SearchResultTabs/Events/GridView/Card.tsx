@@ -79,7 +79,9 @@ export const Card = ({
             onClick={() => { }}
             style={{
               minHeight: isImagePathInvalid(
-                record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}` : undefined
+                record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ?
+                `${baseUrl}${record.attributes?.media_associates?.data[0]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}` : 
+                undefined
               ) ? '120px' : ''
             }}
           >
@@ -113,7 +115,7 @@ export const Card = ({
                           src: record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ? (
                             detectMediaTypeFromEvent(record) === "image" ?
                               handleImageUrl(record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url ?? '', "small_") :
-                              `${baseUrl}${record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}`
+                              `${record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url}`
                           ) : undefined,
                           className: detectMediaTypeFromEvent(record) === "video" ?
                             `${gridStyles['video-card-parent']}` : detectMediaTypeFromEvent(record) === "image" ?
@@ -125,7 +127,7 @@ export const Card = ({
                           staticVideoLink: (
                             (detectMediaTypeFromEvent(record) === "video" || record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes.videoType === "video") &&
                             record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes?.object?.data?.attributes?.url
-                          ) ? `${baseUrl}${record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}` : undefined,
+                          ) ? `${record.attributes?.media_associates?.data[featuredRecordIndex]?.attributes?.media_unique_id?.data?.attributes.object?.data?.attributes?.url}` : undefined,
                           isOpened: false
                         }}
                         fileType={detectMediaTypeFromEvent(record)}
@@ -174,6 +176,9 @@ export const Card = ({
                       associatedEvents
                     )}
                     onClick={(e) => {
+
+                      if(isEventRecordAttached(record, associatedEvents)) return
+
                       const data: InventoryAssociationType_Event = {
                         id: record.id,
                         visitNumber: record.attributes.visitNumber,

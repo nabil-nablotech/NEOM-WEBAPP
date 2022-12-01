@@ -16,7 +16,7 @@ import {
   tabNameProps,
   TabPanelProps,
 } from "../../types/SearchResultsTabsProps";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import PlacesTab from "./Places";
 import EventsTab from "./Events";
@@ -29,10 +29,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import RefinedSearchInputs from "../RefinedSearchInputs";
 import { EVENTS_TAB_NAME, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME, tabIndexBasedOnName } from "../../utils/services/helpers";
 import { useDispatch } from "react-redux";
-import {setSelectedValue} from '../../store/reducers/refinedSearchReducer';
+import {setSelectedValue, resetSorting} from '../../store/reducers/refinedSearchReducer';
 import { MediaDetailsModal } from "./Media/MediaDetails";
 import GalleryView from './GalleryView/index';
-import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, setSearchApply, toggleGalleryView, toggleShowAddSuccess, toggleShowEditSuccess } from "../../store/reducers/searchResultsReducer";
+import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, setHistoryRedux, setSearchApply, toggleGalleryView } from "../../store/reducers/searchResultsReducer";
 import PlaceDetailsPage from "./Places/PlaceDetails";
 import EventDetailsPage from "./Events/EventDetails";
 import { LibraryDetailsModal } from "./Library/LibraryDetails";
@@ -106,7 +106,6 @@ const Label = ({ img, label }: LabelProps) => {
   );
 };
 
-const today: Date = new Date();
 const initialState = {
   stateOfConservation: [],
   period: [],
@@ -127,17 +126,19 @@ const initialState = {
 const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => {
   const [value, setValue] = React.useState(0);
   let { tabName, uniqueId } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
-
+  const location = useLocation()
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { searchText, openGalleryView, showAddSuccess, showEditSuccess } = useSelector((state: RootState) => state.searchResults);
+  const { searchText, openGalleryView, showAddSuccess, history } = useSelector((state: RootState) => state.searchResults);
   const { options, selectedValue } = useSelector((state: RootState) => state.refinedSearch);
+  const { edit } = useSelector((state: RootState) => state.tabEdit);
 
   useEffect(() => {
     if (tabName) {
       const newTabIndex = tabIndexBasedOnName(tabName);
       setValue(newTabIndex);
       dispatch(setSelectedValue(initialState));
+      dispatch(resetSorting(null));
 
       /** resetters */
 
@@ -167,6 +168,22 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
 
     }
   }, [tabName]);
+
+  useEffect(() => {
+    /** from whichever url edit flag is toggled, that flag should be the last flag in the history array */
+    if (edit) {
+
+      let newArr = [...history]
+
+      const currentUrl = `${location.pathname}${location.search ? location.search : ''}`
+
+      if(newArr.length === 0) {
+        dispatch(setHistoryRedux([currentUrl]))
+      } else if(newArr[newArr.length-1] !== currentUrl) {
+        dispatch(setHistoryRedux([...history, currentUrl]))
+      }
+    }
+  }, [edit])
 
   const handleTextChange =(e: SelectChangeEvent<string | string[]> | ChangeEvent<HTMLInputElement>, checked?: Boolean) => {
     e.preventDefault();

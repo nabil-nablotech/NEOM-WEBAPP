@@ -1,13 +1,12 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Box } from "@mui/material";
 import { ColumnsType } from "antd/lib/table";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
 import { antTablePaginationCss, DETACH_ICON_CLASSNAME, isRecordAttached, shouldAddAtttachColumnHeader, itemAddEditAccess } from '../../../../utils/services/helpers';
-import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import { PlacesProps } from '../GridView/GridView';
-import { FieldOption, Place } from "../../../../types/Place";
+import { Place } from "../../../../types/Place";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import DetachedIcon from "../../../Icons/DetachedIcon";
@@ -15,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { modifyAssociatedPlaces, setSelectedCardIndex, setSelectedKey } from "../../../../store/reducers/searchResultsReducer";
 import MoreOptionsComponent from './MoreOption';
 import { InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
-import { useNavigate } from "react-router-dom";
+import { setPlaceSorting } from "../../../../store/reducers/refinedSearchReducer";
 import { useHistory } from "../../../../hooks/useHistory";
 
 const StyledTableWrapper = styled(StyledAntTable)`
@@ -146,12 +145,27 @@ const StyledTableWrapper = styled(StyledAntTable)`
 
 const ListView = (props: PlacesProps) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { navigateTo } = useHistory();
-
   const { isAssociationsStepOpen, associatedPlaces, selectedKey } = useSelector(
     (state: RootState) => state.searchResults
   );
+  const { data, hasMoreData, fetchData, loading, isSelect } = props;
+  
+  let nameDirectionAsc = false;
+  let numberDirectionAsc = false;
+  const handleFilter = async (name: string) => {
+    let direction = true;
+    if (name === 'placeNameEnglish') {
+      nameDirectionAsc = !nameDirectionAsc;
+      direction = nameDirectionAsc;
+    }
+    if (name === 'placeNumber') {
+      numberDirectionAsc = !numberDirectionAsc;
+      direction = numberDirectionAsc;
+    }
+   
+    await dispatch(setPlaceSorting([`${name}:${direction ? 'asc' : 'desc'}`]));
+  }
 
   const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([
     {
@@ -159,13 +173,14 @@ const ListView = (props: PlacesProps) => {
       key: `attributes.placeNameEnglish`,
       dataIndex: "attributes",
       className: 'cell-name',
-      sorter: {
-        compare: (a: { attributes: { placeNameEnglish: string; } }, b: { attributes: { placeNameEnglish: string; } }) => {
-          return a.attributes.placeNameEnglish.localeCompare(b.attributes.placeNameEnglish)
-        },
-        multiple: 2
+      sorter: true,
+      onHeaderCell: (column) => {
+        return {
+          onClick: (e) => {
+            handleFilter('placeNameEnglish');
+          }
+        };
       },
-      filterMultiple: true,
       render: (value: any, index: number) => {
         return `${value.placeNameEnglish} ${value.placeNameArabic}`
       }
@@ -175,13 +190,21 @@ const ListView = (props: PlacesProps) => {
       key: `attributes.placeNumber`,
       dataIndex: "attributes",
       className: 'cell-number',
-      sorter: {
-        compare: (a: { attributes: { placeNumber: string; } }, b: { attributes: { placeNumber: string; } }) => {
-          return a.attributes.placeNumber.localeCompare(b.attributes.placeNumber)
-        },
-        multiple: 1
+      sorter: true,
+      onHeaderCell: (column) => {
+        return {
+          onClick: (e) => {
+            handleFilter('placeNumber');
+          }
+        };
       },
-      filterMultiple: true,
+      // sorter: {
+      //   compare: (a: { attributes: { placeNumber: string; } }, b: { attributes: { placeNumber: string; } }) => {
+      //     return a.attributes.placeNumber.localeCompare(b.attributes.placeNumber)
+      //   },
+      //   multiple: 1
+      // },
+      // filterMultiple: true,
       render: (value: any, index: number) => value.placeNumber
     },
     {
@@ -245,6 +268,9 @@ const ListView = (props: PlacesProps) => {
   ])
 
   const handleAttachClick = (e: any, record: Place) => {
+
+    if(isRecordAttached(record, associatedPlaces)) return
+
     const data: InventoryAssociationType = {
       id: Number(record.id),
       placeNameEnglish: record.attributes.placeNameEnglish,
@@ -284,8 +310,6 @@ const ListView = (props: PlacesProps) => {
     }
   }), [associatedPlaces]
   )
-
-  const { data, hasMoreData, fetchData, loading, isSelect } = props;
 
   useEffect(() => {
 
@@ -347,7 +371,7 @@ const ListView = (props: PlacesProps) => {
             
             // const en = entry.target as HTMLElement
             if (intersecting) {
-              fetchData()
+              fetchData();
             } else {
             }
 
@@ -383,38 +407,39 @@ const ListView = (props: PlacesProps) => {
     onChange: onSelectChange,
   };
 
+  const renderTable = useMemo(() => <StyledTableWrapper
+  rowKey={"id"}
+  size="small"
+  columns={tableHeaderJson}
+  dataSource={data}
+  pagination={false}
+  loading={loading}
+  rowSelection={isSelect ? rowSelection : undefined}
+  bordered
+  scroll={{ x: 'max-content', y: 350 }}
+  style={{
+    background: "transparent",
+  }}
+  onRow={(record: any, rowIndex) => {
+    return {
+      onClick: (event: React.MouseEvent<HTMLElement>) => {
+        const target = event.target as Element;
+        const clsList = target.classList
+
+        if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
+          event.stopPropagation();
+          handleAttachClick(event, record)
+        } else {
+          dispatch(setSelectedCardIndex(rowIndex || record.id))
+          navigateTo(`/Places/${record.attributes.uniqueId}`)
+        }
+      }, // click row
+    };
+  }}
+/>, [tableHeaderJson, data])
   return (
     <Box component="div" id={'places-list-parent'}>
-      <StyledTableWrapper
-        rowKey={"id"}
-        size="small"
-        columns={tableHeaderJson}
-        dataSource={data}
-        pagination={false}
-        loading={loading}
-        rowSelection={isSelect ? rowSelection : undefined}
-        bordered
-        scroll={{ x: 'max-content', y: 350 }}
-        style={{
-          background: "transparent",
-        }}
-        onRow={(record: any, rowIndex) => {
-          return {
-            onClick: (event: React.MouseEvent<HTMLElement>) => {
-              const target = event.target as Element;
-              const clsList = target.classList
-
-              if ([...clsList].includes(DETACH_ICON_CLASSNAME)) {
-                event.stopPropagation();
-                handleAttachClick(event, record)
-              } else {
-                dispatch(setSelectedCardIndex(rowIndex || record.id))
-                navigateTo(`/Places/${record.attributes.uniqueId}`)
-              }
-            }, // click row
-          };
-        }}
-      />
+      {renderTable}
       {
         loading &&
         <Loader />

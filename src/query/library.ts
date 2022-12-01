@@ -8,6 +8,7 @@ query librarySearchList(
   $text: JSON
   $limit: Int
   $skip: Int
+  $sortBy: [String!]
 ) {
   medias(
     pagination: { limit: $limit, start: $skip }
@@ -45,7 +46,7 @@ query librarySearchList(
         }
       ]
     }
-    sort: "createdAt:desc"
+    sort: $sortBy
   ) {
     meta {
       pagination {

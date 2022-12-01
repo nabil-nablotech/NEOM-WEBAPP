@@ -10,7 +10,6 @@ import {
   setPlaces,
   setPlaceMetaData,
   setSearchText,
-  toggleShowAddSuccess,
   toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, toggleEditConfirmationWindowOpen, setEditPayload, toggleConfirmOpenEdit, resetMediaAssociation
 } from "../store/reducers/searchResultsReducer";
 import { setLatestItem, setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
@@ -23,13 +22,14 @@ import {graphQlHeaders} from '../utils/services/interceptor';
 
 const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
+  const [directionAsc, setDirectionAsc] = useState(true);
   const [mapPlaces, setMapPlaces] = useState([]);
   const [allPlaces, setAllPlaces] = useState<Place[] | []>([]);
   const { searchText, places: placeData, addNewItemWindowType, confirmOpenEdit, editPayload,
     addItemWindowMinimized, deleteItemSuccess, deleteItemType, successInventoryName } = useSelector(
     (state: RootState) => state.searchResults
   );
-  const { selectedValue } = useSelector(
+  const { selectedValue, placeSort } = useSelector(
     (state: RootState) => state.refinedSearch
   );
 
@@ -55,6 +55,7 @@ const usePlace = () => {
     }
     resetPlaces();
     // if (tabName === "Places") {
+      console.log('fetch data..... 1')
     fetchData(0);
     // }
   }, []);
@@ -73,6 +74,11 @@ const usePlace = () => {
   
   const [createPlaceMutation, {data, loading, error}] = useMutation(addPlace, {context: graphQlHeaders().context, onCompleted: (data) => {
     dispatch(setLatestItem({tab:'Places', data:data.createPlace.data}));
+    
+    console.log('fetchData..... 2')
+    fetchData(0);
+
+    navigate(`/Places/${data.createPlace.data.attributes.uniqueId}`, {replace: true})
   }});
   const [updatePlaceMutation, {data: updateData, loading: updateLoading, error: updateErr}] = useMutation(updatePlace, graphQlHeaders());
 
@@ -132,18 +138,6 @@ const usePlace = () => {
   }, [refinePlaceDataDirect, refineLoadingDirect])
 
   useEffect(() => {
-    if (data) {
-      fetchData(0);
-      // dispatch(toggleShowAddSuccess(true))
-
-      /** rdirect */
-      navigate(`/Places/${data.createPlace.data.attributes.uniqueId}`, {replace: true})
-      /** insert in reducer */
-      /** map that to screen  */
-    }
-  }, [data])
-
-  useEffect(() => {
     if (updateData && edit) {
         dispatch(setTabEdit(false));
         dispatch(setTabData({}));
@@ -191,11 +185,12 @@ const usePlace = () => {
       delete obj.search_two;
       delete obj.search_three;
     }
+    obj.sortBy = ["createdAt:desc"];
     refineSearchPlacesDirect(obj);
   };
 
-  const fetchData = (skip: number = placeData.length, local: boolean = false, clear: boolean = false) => {
 
+  const fetchData = (skip: number = placeData.length, local: boolean = false, clear: boolean = false) => {
     // get the query from the url parameters
     const searchData = getQueryObj(search);
     // check if the search is coming from local or using link
@@ -207,6 +202,7 @@ const usePlace = () => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
+
     const obj: any = {
       researchValue: copiedValue&&copiedValue?.researchValue && copiedValue?.researchValue,
       tourismValue: copiedValue&&copiedValue.tourismValue && copiedValue?.tourismValue,
@@ -226,6 +222,7 @@ const usePlace = () => {
       text: searchWordArray,
       limit: limit,
       skip: skip,
+      sortBy: placeSort.length > 0 ? placeSort : [`createdAt:desc`]
     };
     if (clear) {
       obj.skip = 0;
@@ -326,10 +323,16 @@ const usePlace = () => {
   useEffect(() => {
 
     /** get latest list after deleting item */
-    if (deleteItemSuccess && (deleteItemType === "Places")) {
+    if (deleteItemSuccess && (deleteItemType === "Places") && (placeSort.length === 0)) {
       fetchData(0)
     }
-  }, [deleteItemSuccess, deleteItemType])
+  }, [deleteItemSuccess, deleteItemType]);
+
+  useEffect(() => {
+    if (placeSort.length > 0) {
+      fetchData(0);
+    }
+  }, [placeSort])
   
   const openEditFlow = async (payload: any) => {
     if (payload) {

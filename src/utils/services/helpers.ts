@@ -738,5 +738,5 @@ export const allowedVideoFormats = ['webm', 'mp4', 'ogg']
 
 export const handleImageUrl = (url: string, size: string) => {
     let imagePath = url.split("/");
-    return `${baseUrl}/${imagePath[1]}/${size}${imagePath[2]}`;
+    return `${baseUrlS3}/${size}${imagePath[3]}`;
 }

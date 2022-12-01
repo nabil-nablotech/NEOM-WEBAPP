@@ -156,6 +156,10 @@ const PlacesTab = () => {
     }
   };
 
+  const fetchData = () => {
+    fetchPlaces()
+  }
+
   const showResults = checkSearchParameter(searchText, selectedValue) && searchApply;
   return (
     <Box component="div" className={`${styles["main-tab-content"]}`}>
@@ -297,7 +301,7 @@ const PlacesTab = () => {
                           return item.id === isFilter;
                         })
                   }
-                  fetchData={fetchPlaces}
+                  fetchData={fetchData}
                   hasMoreData={hasMoreData}
                   isSelect = {isSelect}
                 />
@@ -337,7 +341,7 @@ const PlacesTab = () => {
                         return item.id === isFilter;
                       })
                 }
-                fetchData={fetchPlaces}
+                fetchData={fetchData}
                 hasMoreData={hasMoreData}
                 isSelect = {isSelect}
               />
@@ -357,3 +361,4 @@ const PlacesTab = () => {
 };
 
 export default PlacesTab;
+

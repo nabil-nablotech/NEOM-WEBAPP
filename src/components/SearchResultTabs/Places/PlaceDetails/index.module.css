@@ -38,10 +38,35 @@
     flex-wrap: wrap;
 }
 
+.main-grid-item {
+    padding: 10px;
+    position: relative;
+}
+
+.main-grid-item:first-child > div:nth-child(1) {
+    min-height: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.main-grid-item iframe {
+    height: 100%;
+    aspect-ratio: 1/1;
+}
+
+.side-grid-row .grid-item:nth-child(1) {
+    padding-left: 0;
+}
+
 .main-image {
     width: 100%;
     height: 100%;
-    padding: 10px;
+}
+
+.image {
+    width: 100%;
 }
 
 .side-grid-image {
@@ -64,8 +89,10 @@
     /* aspect-ratio: unset; */
 }
 .three-d-card-parent {
-    
+    width: 100%;
+    height: 100%;
 }
+
 .grid-item iframe {
     width: 100%;
 }

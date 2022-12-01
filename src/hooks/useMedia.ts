@@ -25,7 +25,7 @@ const useMedia = () => {
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { selectedValue } = useSelector((state: RootState) => state.refinedSearch);
+  const { selectedValue, mediaSort } = useSelector((state: RootState) => state.refinedSearch);
 
   useEffect(() => {
     resetMedia();
@@ -54,7 +54,7 @@ const useMedia = () => {
   }});
   const [updateMediaMutation, { data: updateData, reset }] = useMutation(updateMedia, {context: graphQlHeaders().context, onCompleted: () => {
     if (associatedEvents.length == 0 && associatedPlaces.length == 0) {
-      dispatch(toggleShowEditSuccess(true));
+      // dispatch(toggleShowEditSuccess(true));
     }
   }});
   const [createMediaAssociateMutation, { data: mediaAssociate }] = useMutation(createMediaAssociate, {context: graphQlHeaders().context, onCompleted: (d) => {
@@ -94,7 +94,7 @@ const useMedia = () => {
       // || (updateData && mediaAssociate)
       ) {
       if(!showEditSuccess) {
-        dispatch(toggleShowEditSuccess(true))
+        // dispatch(toggleShowEditSuccess(true))
       }
     }
   }, [updateMediaAssociateData, mediaAssociate, updateData])
@@ -133,6 +133,9 @@ const useMedia = () => {
       }
 
       dispatch(storeAddItemProgressState(null));
+      dispatch(setTabEdit(false));
+      dispatch(setTabData({}));
+      dispatch(toggleShowEditSuccess(true))
       /** re-direct */
       navigate(`/Media/${updateData?.updateMedia.data.attributes.uniqueId}`, { replace: true })
 
@@ -167,6 +170,7 @@ const useMedia = () => {
       text: searchWordArray,
       limit: fetchLimit,
       skip: skip,
+      sortBy: mediaSort.length > 0 ? mediaSort : [`createdAt:desc`]
     };
     if (clear) {
       obj.skip = 0;
@@ -224,7 +228,6 @@ const useMedia = () => {
       featuredFlag = true
     }
 
-    console.log(payload, 'payload?.url.....');
     const data = {
       ...payload,
       visitNumber: parseFloat(payload.visitNumber),
@@ -238,6 +241,7 @@ const useMedia = () => {
       "categoryType": payload.categoryType && payload?.categoryType,
       object: payload?.object && payload?.object[0].id,
       fileSize: payload?.object && formatBytes(parseFloat(payload?.object[0]?.size)),
+      fileName: payload?.object && payload?.object[0]?.name,
       storage: payload?.object && payload?.object[0]?.provider,
       dimension: payload?.object && `${payload?.object[0]?.height}x${payload?.object[0]?.width}`,
       refrenceURL: payload?.url,
@@ -246,7 +250,7 @@ const useMedia = () => {
       model: "",
       depth: "",
       modified: new Date(),
-      videoType: payload?.embedCode?.length > 0 ? 'embededCode' : ((payload?.url?.length > 0) || (payload?.objectURL?.length > 0)) ? 'url' : 'video',
+      videoType: payload?.showEmbeded ? 'embededCode' : ((payload?.url?.length > 0) || (payload?.objectURL?.length > 0) || payload?.showUrl) ? 'url' : 'video',
     }
     if (!edit) {
       data.uniqueId = uniqueId;
@@ -287,6 +291,12 @@ const useMedia = () => {
       fetchData(0)
     }
   }, [deleteItemSuccess, deleteItemType])
+
+  useEffect(() => {
+    if (mediaSort.length > 0) {
+      fetchData(0);
+    }
+  }, [mediaSort])
 
   const openEditFlow = async (payload: any) => {
     if (payload) {
