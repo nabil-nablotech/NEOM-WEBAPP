@@ -1130,6 +1130,8 @@ const PlaceDetailsPage = () => {
                       )}
                       onClick={(e) => {
 
+                        if (isPlaceDetailAttached(placeData, associatedPlaces)) return
+
                         const data: InventoryAssociationType = {
                           id: Number(placeData.id),
                           placeNameEnglish: placeData.placeNameEnglish,

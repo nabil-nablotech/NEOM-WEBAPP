@@ -604,6 +604,8 @@ const EventDetailsPage = () => {
                       )}
                       onClick={(e) => {
 
+                        if(isEventDetailAttached(eventDetails, associatedEvents)) return
+
                         const data: InventoryAssociationType_Event = {
                           id: eventDetails.id ? eventDetails.id.toString() : "",
                           visitNumber: eventDetails.visitNumber,
