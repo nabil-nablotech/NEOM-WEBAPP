@@ -245,11 +245,12 @@ const RenderFileData = ({
                                                             </> :
                                                                 <ReactPlayer
                                                                     width="100%" height="100%"
-                                                                    playing={false}
+                                                                    playing={fileData.isOpened}
                                                                     url={fileData.objectURL}
+                                                                    controls={fileData.isOpened}
                                                                     style={{
                                                                         aspectRatio: '3/1.65',
-                                                                        pointerEvents: 'none'
+                                                                        pointerEvents:  !fileData.isOpened ? 'none' : 'all'
                                                                     }}
                                                                     onError={(e) => {
                                                                         e.currentTarget.onerror = null;
@@ -263,9 +264,12 @@ const RenderFileData = ({
                                                     <Box component="div" className={`${styles['video-player-box']}`}>
                                                         <ReactPlayer
                                                             width="100%" height="auto"
-                                                            playing={fileData.isOpened} url={fileData.src}
+                                                            url={fileData.src}
+                                                            playing={fileData.isOpened}
+                                                            controls={fileData.isOpened}
                                                             style={{
-                                                                aspectRatio: '3/1.65'
+                                                                aspectRatio: '3/1.65',
+                                                                pointerEvents: !fileData.isOpened ? 'none' : 'all'
                                                             }}
                                                             // playIcon={
                                                             //     <>

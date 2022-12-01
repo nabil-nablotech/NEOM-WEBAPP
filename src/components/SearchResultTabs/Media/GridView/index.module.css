@@ -49,6 +49,7 @@
 }
 .card-image-wrapper iframe {
     width: 100%;
+    height: 100%;
     aspect-ratio: 3/2;
 }
 .card-checkbox {

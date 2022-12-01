@@ -167,7 +167,7 @@ const GalleryView = () => {
                                                 src: itemObj?.media_unique_id?.object?.url ? (
                                                     detectMediaTypeFromMediaAssociate(itemObj) === "image" ?
                                                     handleImageUrl(itemObj.media_unique_id?.object.url, "small_") :
-                                                    `${baseUrl}${itemObj.media_unique_id?.object.url}`
+                                                    `${itemObj.media_unique_id?.object.url}`
                                                  ) : undefined,
                                                  className: `${styles['image']}${
                                                     detectMediaTypeFromMediaAssociate(itemObj) === "3d" ? ` from-gallery-view` : ''
@@ -178,7 +178,7 @@ const GalleryView = () => {
                                                 staticVideoLink: (
                                                     (detectMediaTypeFromMediaAssociate(itemObj) === "video" || itemObj?.media_unique_id?.videoType === "video") &&
                                                     itemObj?.media_unique_id?.object?.url
-                                                ) ? `${baseUrl}${itemObj?.media_unique_id?.object?.url}` : undefined,
+                                                ) ? `${itemObj?.media_unique_id?.object?.url}` : undefined,
                                                 isOpened :false
                                             }}
                                             fileType={detectMediaTypeFromMediaAssociate(itemObj)}

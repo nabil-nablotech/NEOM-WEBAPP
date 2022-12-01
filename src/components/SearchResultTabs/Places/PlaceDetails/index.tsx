@@ -338,7 +338,7 @@ const PlaceDetailsPage = () => {
                   staticVideoLink:
                     value?.media_associates[0]?.media_unique_id?.videoType ===
                       "video"
-                      ? `${baseUrl}${value?.media_associates[0]?.media_unique_id?.object?.url}`
+                      ? `${value?.media_associates[0]?.media_unique_id?.object?.url}`
                       : undefined,
                 }}
                 fileType={detectMediaTypeFromMediaAssociate(
@@ -653,7 +653,7 @@ const PlaceDetailsPage = () => {
                             src: mediaItems[0]?.media_unique_id?.object?.url ? (
                               detectMediaTypeFromMediaAssociate(mediaItems[0]) === "image" ?
                                 handleImageUrl(mediaItems[0].media_unique_id?.object.url, "large_") :
-                                `${baseUrl}${mediaItems[0].media_unique_id?.object.url}`
+                                `${mediaItems[0].media_unique_id?.object.url}`
                             ) : undefined,
                             className: `${styles['image']}  ${styles['main-image']}${
                               detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ? 
@@ -665,7 +665,7 @@ const PlaceDetailsPage = () => {
                             staticVideoLink: (
                               (detectMediaTypeFromMediaAssociate(mediaItems[0]) === "video" || mediaItems[0]?.media_unique_id?.videoType === "video") &&
                               mediaItems[0]?.media_unique_id?.object?.url
-                            ) ? `${baseUrl}${mediaItems[0]?.media_unique_id?.object?.url}` : undefined,
+                            ) ? `${mediaItems[0]?.media_unique_id?.object?.url}` : undefined,
                             isOpened: false
                           }}
                         fileType={detectMediaTypeFromMediaAssociate(
@@ -711,7 +711,7 @@ const PlaceDetailsPage = () => {
                                 src: mediaItems[1]?.media_unique_id?.object?.url ? (
                                   detectMediaTypeFromMediaAssociate(mediaItems[1]) === "image" ?
                                     handleImageUrl(mediaItems[1].media_unique_id?.object.url, "medium_") :
-                                    `${baseUrl}${mediaItems[1].media_unique_id?.object.url}`
+                                    `${mediaItems[1].media_unique_id?.object.url}`
                                 ) : undefined,
                                 className: `${styles['image']} ${styles['side-grid-image']}${detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ?
                                   ` ${styles['three-d-card-parent']}` : ''
@@ -722,7 +722,7 @@ const PlaceDetailsPage = () => {
                                 staticVideoLink: (
                                   (detectMediaTypeFromMediaAssociate(mediaItems[1]) === "video" || mediaItems[1]?.media_unique_id?.videoType === "video") &&
                                   mediaItems[1]?.media_unique_id?.object?.url
-                                ) ? `${baseUrl}${mediaItems[1]?.media_unique_id?.object?.url}` : undefined,
+                                ) ? `${mediaItems[1]?.media_unique_id?.object?.url}` : undefined,
                                 isOpened: false
                               }}
                               fileType={detectMediaTypeFromMediaAssociate(
@@ -749,7 +749,7 @@ const PlaceDetailsPage = () => {
                                 src: mediaItems[2]?.media_unique_id?.object?.url ? (
                                   detectMediaTypeFromMediaAssociate(mediaItems[2]) === "image" ?
                                     handleImageUrl(mediaItems[2].media_unique_id?.object.url, "small_") :
-                                    `${baseUrl}${mediaItems[2].media_unique_id?.object.url}`
+                                    `${mediaItems[2].media_unique_id?.object.url}`
                                 ) : undefined,
                                 className: `${styles['image']} ${styles['side-grid-image']}${detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ?
                                   ` ${styles['three-d-card-parent']}` : ''
@@ -760,7 +760,7 @@ const PlaceDetailsPage = () => {
                                 staticVideoLink: (
                                   (detectMediaTypeFromMediaAssociate(mediaItems[2]) === "video" || mediaItems[2]?.media_unique_id?.videoType === "video") &&
                                   mediaItems[2]?.media_unique_id?.object?.url
-                                ) ? `${baseUrl}${mediaItems[2]?.media_unique_id?.object?.url}` : undefined,
+                                ) ? `${mediaItems[2]?.media_unique_id?.object?.url}` : undefined,
                                 isOpened: false
                               }}
                               fileType={detectMediaTypeFromMediaAssociate(
@@ -803,7 +803,7 @@ const PlaceDetailsPage = () => {
                                 src: mediaItems[3]?.media_unique_id?.object?.url ? (
                                   detectMediaTypeFromMediaAssociate(mediaItems[3]) === "image" ?
                                     handleImageUrl(mediaItems[3].media_unique_id?.object.url, "small_") :
-                                    `${baseUrl}${mediaItems[3].media_unique_id?.object.url}`
+                                    `${mediaItems[3].media_unique_id?.object.url}`
                                 ) : undefined,
                                 className: `${styles['image']} ${styles['side-grid-image']}${detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ?
                                   ` ${styles['three-d-card-parent']}` : ''
@@ -814,7 +814,7 @@ const PlaceDetailsPage = () => {
                                 staticVideoLink: (
                                   (detectMediaTypeFromMediaAssociate(mediaItems[3]) === "video" || mediaItems[3]?.media_unique_id?.videoType === "video") &&
                                   mediaItems[3]?.media_unique_id?.object?.url
-                                ) ? `${baseUrl}${mediaItems[3]?.media_unique_id?.object?.url}` : undefined,
+                                ) ? `${mediaItems[3]?.media_unique_id?.object?.url}` : undefined,
                                 isOpened: false
                               }}
                               fileType={detectMediaTypeFromMediaAssociate(
@@ -841,7 +841,7 @@ const PlaceDetailsPage = () => {
                                 src: mediaItems[4]?.media_unique_id?.object?.url ? (
                                   detectMediaTypeFromMediaAssociate(mediaItems[4]) === "image" ?
                                     handleImageUrl(mediaItems[4].media_unique_id?.object.url, "small_") :
-                                    `${baseUrl}${mediaItems[4].media_unique_id?.object.url}`
+                                    `${mediaItems[4].media_unique_id?.object.url}`
                                 ) : undefined,
                                 className: `${styles['image']} ${styles['side-grid-image']}${detectMediaTypeFromMediaAssociate(mediaItems[0]) === "3d" ?
                                   ` ${styles['three-d-card-parent']}` : ''
@@ -852,7 +852,7 @@ const PlaceDetailsPage = () => {
                                 staticVideoLink: (
                                   (detectMediaTypeFromMediaAssociate(mediaItems[4]) === "video" || mediaItems[4]?.media_unique_id?.videoType === "video") &&
                                   mediaItems[4]?.media_unique_id?.object?.url
-                                ) ? `${baseUrl}${mediaItems[4]?.media_unique_id?.object?.url}` : undefined,
+                                ) ? `${mediaItems[4]?.media_unique_id?.object?.url}` : undefined,
                                 isOpened: false
                               }}
                               fileType={detectMediaTypeFromMediaAssociate(
