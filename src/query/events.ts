@@ -51,6 +51,7 @@ query RefineSearchEvent(
   $skip: Int
   $startDate: Date
   $endDate: Date
+  $sortBy: [String!]
 )
 {
   visits(
@@ -92,7 +93,7 @@ query RefineSearchEvent(
         }
       ]
     }
-    sort: "createdAt:desc"
+    sort: $sortBy
   ) {
     meta {
       pagination {

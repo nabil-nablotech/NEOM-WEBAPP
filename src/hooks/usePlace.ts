@@ -5,12 +5,11 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { placeDetails } from "../api/details";
 import { addPlace, refinePlaces, updatePlace, refinePlacesMap } from "../query/places";
 import { RootState } from "../store";
-import { initialSelectedValue, setSelectedValue, setSorting } from "../store/reducers/refinedSearchReducer";
+import { initialSelectedValue, setSelectedValue } from "../store/reducers/refinedSearchReducer";
 import {
   setPlaces,
   setPlaceMetaData,
   setSearchText,
-  toggleShowAddSuccess,
   toggleNewItemWindow, setAddNewItemWindowType, toggleShowEditSuccess, toggleEditConfirmationWindowOpen, setEditPayload, toggleConfirmOpenEdit, resetMediaAssociation
 } from "../store/reducers/searchResultsReducer";
 import { setLatestItem, setTabData, setTabEdit } from "../store/reducers/tabEditReducer";
@@ -30,7 +29,7 @@ const usePlace = () => {
     addItemWindowMinimized, deleteItemSuccess, deleteItemType, successInventoryName } = useSelector(
     (state: RootState) => state.searchResults
   );
-  const { selectedValue, sort } = useSelector(
+  const { selectedValue, placeSort } = useSelector(
     (state: RootState) => state.refinedSearch
   );
 
@@ -229,7 +228,7 @@ const usePlace = () => {
       text: searchWordArray,
       limit: limit,
       skip: skip,
-      sortBy: sort.length > 0 ? sort : [`createdAt:desc`]
+      sortBy: placeSort.length > 0 ? placeSort : [`createdAt:desc`]
     };
     if (clear) {
       obj.skip = 0;
@@ -336,10 +335,10 @@ const usePlace = () => {
   }, [deleteItemSuccess, deleteItemType]);
 
   useEffect(() => {
-    if (sort.length > 0) {
+    if (placeSort.length > 0) {
       fetchData(0);
     }
-  }, [sort])
+  }, [placeSort])
   
   const openEditFlow = async (payload: any) => {
     if (payload) {

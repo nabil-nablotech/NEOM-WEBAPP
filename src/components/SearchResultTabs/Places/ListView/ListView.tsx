@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { modifyAssociatedPlaces, setSelectedCardIndex, setSelectedKey } from "../../../../store/reducers/searchResultsReducer";
 import MoreOptionsComponent from './MoreOption';
 import { InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
-import { setSorting } from "../../../../store/reducers/refinedSearchReducer";
+import { setPlaceSorting } from "../../../../store/reducers/refinedSearchReducer";
 import { useHistory } from "../../../../hooks/useHistory";
 
 const StyledTableWrapper = styled(StyledAntTable)`
@@ -149,7 +149,6 @@ const ListView = (props: PlacesProps) => {
   const { isAssociationsStepOpen, associatedPlaces, selectedKey } = useSelector(
     (state: RootState) => state.searchResults
   );
-  const {sort} = useSelector((state: RootState) => state.refinedSearch);
   const { data, hasMoreData, fetchData, loading, isSelect } = props;
   
   let nameDirectionAsc = false;
@@ -165,7 +164,7 @@ const ListView = (props: PlacesProps) => {
       direction = numberDirectionAsc;
     }
    
-    await dispatch(setSorting([`${name}:${direction ? 'asc' : 'desc'}`]));
+    await dispatch(setPlaceSorting([`${name}:${direction ? 'asc' : 'desc'}`]));
   }
 
   const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([

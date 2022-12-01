@@ -23,13 +23,15 @@ export const initialSelectedValue = {
 export type RefinedSearchState = {
   options: Options | null; 
   selectedValue: Options,
-  sort: string[] | [];
+  placeSort: string[] | [];
+  eventSort: string[] | [];
 }
 
 const initialState: RefinedSearchState = {
   options: null,
   selectedValue: initialSelectedValue,
-  sort: [],
+  placeSort: [],
+  eventSort: [],
 };
 
 export const refinedSearchSlice = createSlice({
@@ -42,9 +44,17 @@ export const refinedSearchSlice = createSlice({
     setSelectedValue: (state, action: PayloadAction<Options>) => {
       state.selectedValue = action.payload;
     },
-    setSorting: (state, action: PayloadAction<string[]>) => {
-      const filterSort = state.sort.filter(x => !x.includes(action.payload[0]?.split(':')[0]));
-      state.sort = [...filterSort, ...action.payload];
+    setPlaceSorting: (state, action: PayloadAction<string[]>) => {
+      const filterSort = state.placeSort.filter(x => !x.includes(action.payload[0]?.split(':')[0]));
+      state.placeSort = [...filterSort, ...action.payload];
+    },
+    setEventSorting: (state, action: PayloadAction<string[]>) => {
+      const filterSort = state.eventSort.filter(x => !x.includes(action.payload[0]?.split(':')[0]));
+      state.eventSort = [...filterSort, ...action.payload];
+    },
+    resetSorting: (state, action: PayloadAction<null>) => {
+      state.eventSort = [];
+      state.placeSort = [];
     }
   },
 });
@@ -52,7 +62,9 @@ export const refinedSearchSlice = createSlice({
 export const {
   setOptions,
   setSelectedValue,
-  setSorting
+  setPlaceSorting,
+  setEventSorting,
+  resetSorting
 } = refinedSearchSlice.actions;
 
 export default refinedSearchSlice.reducer;

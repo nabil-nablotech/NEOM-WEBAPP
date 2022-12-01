@@ -41,7 +41,7 @@ const useEvent = () => {
     deleteItemType,
     successInventoryName
   } = useSelector((state: RootState) => state.searchResults);
-  const { selectedValue } = useSelector(
+  const { selectedValue, eventSort } = useSelector(
     (state: RootState) => state.refinedSearch
   );
   const { edit, event  } = useSelector(
@@ -223,6 +223,7 @@ const useEvent = () => {
       text: searchWordArray,
       limit: limit,
       skip: skip,
+      sortBy: eventSort.length > 0 ? eventSort : [`createdAt:desc`]
     };
 
     if (clear) {
@@ -343,6 +344,12 @@ const useEvent = () => {
       fetchData(0)
     }
   }, [deleteItemSuccess, deleteItemType])
+
+  useEffect(() => {
+    if (eventSort.length > 0) {
+      fetchData(0);
+    }
+  }, [eventSort])
 
   const openEditFlow = async (payload: any) => {
     if (payload) {

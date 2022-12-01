@@ -17,6 +17,7 @@ import DetachedIcon from '../../../Icons/DetachedIcon';
 import { RootState } from '../../../../store';
 import { useSelector } from 'react-redux';
 import { useHistory } from '../../../../hooks/useHistory';
+import { setEventSorting } from '../../../../store/reducers/refinedSearchReducer';
 
 const StyledTableWrapper = styled(StyledAntTable)`
     td
@@ -131,6 +132,21 @@ const ListView = (props: EventsProps) => {
     const { isAssociationsStepOpen, associatedEvents, events, selectedKey } = useSelector(
         (state: RootState) => state.searchResults
     );
+    
+    let nameDirectionAsc = false;
+    let numberDirectionAsc = false;
+    const handleFilter = async (name: string) => {
+        let direction = true;
+        if (name === 'visit_associate.place_unique_id.placeNameEnglish') {
+          nameDirectionAsc = !nameDirectionAsc;
+          direction = nameDirectionAsc;
+        }
+        if (name === 'visit_associate.place_unique_id.placeNumber') {
+          numberDirectionAsc = !numberDirectionAsc;
+          direction = numberDirectionAsc;
+        }
+        await dispatch(setEventSorting([`${name}:${direction ? 'asc' : 'desc'}`]));
+      }
 
     const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([
         {
@@ -138,11 +154,19 @@ const ListView = (props: EventsProps) => {
             key: `attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish`,
             dataIndex: "attributes",
             className: 'cell-name',
-            sorter: {
-                compare: (a: Event, b: Event) => {
-                    return a.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish.localeCompare(b.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish);
-                },
-                multiple: 2,
+            // sorter: {
+            //     compare: (a: Event, b: Event) => {
+            //         return a.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish.localeCompare(b.attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNameEnglish);
+            //     },
+            //     multiple: 2,
+            // },
+            sorter: true,
+            onHeaderCell: (column) => {
+                return {
+                onClick: (e) => {
+                    handleFilter('visit_associate.place_unique_id.placeNameEnglish');
+                }
+                };
             },
             width: 110,
             render: (value: any, index: number) => {
@@ -155,11 +179,19 @@ const ListView = (props: EventsProps) => {
             key: `attributes.visit_associate.data.attributes.place_unique_id.data.attributes.placeNumber`,
             dataIndex: "attributes",
             className: 'cell-number',
-            sorter: {
-                compare: (a: Event, b: Event) => {
-                    return a?.attributes?.visit_associate?.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber.localeCompare(b?.attributes?.visit_associate?.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber);
-                },
-                multiple: 1,
+            // sorter: {
+            //     compare: (a: Event, b: Event) => {
+            //         return a?.attributes?.visit_associate?.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber.localeCompare(b?.attributes?.visit_associate?.data?.attributes?.place_unique_id?.data?.attributes?.placeNumber);
+            //     },
+            //     multiple: 1,
+            // },
+            sorter: true,
+            onHeaderCell: (column) => {
+                return {
+                onClick: (e) => {
+                    handleFilter('visit_associate.place_unique_id.placeNumber');
+                }
+                };
             },
             render: (value: any, index: number) => value.visit_associate.data?.attributes.place_unique_id.data?.attributes.placeNumber || '',
             filterMultiple: true
