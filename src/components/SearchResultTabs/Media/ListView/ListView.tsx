@@ -103,6 +103,10 @@ const StyledTableWrapper = styled(StyledAntTable)`
     min-width: unset;
   }
 
+  .ant-table-cell iframe {
+    height :100%;
+  }
+
   @media (min-width: 575px) and (max-width: 1025px) {
     .ant-table-thead
       > tr
@@ -195,7 +199,7 @@ const ListView = (props: MediaProps) => {
                 objectURL: value.objectURL || '',
                 videoType: value.videoType,
                 iframeVideoLink: (value.videoType === "url") ? value.referenceURL : undefined,
-                staticVideoLink: (detectMediaTypeFromMediaList({ attributes: value, id: index.toString() }) === "video" && value.videoType === "video") ? `${baseUrl}${value.object?.data?.attributes?.url}` : undefined
+                staticVideoLink: (detectMediaTypeFromMediaList({ attributes: value, id: index.toString() }) === "video" && value.videoType === "video") ? `${value.object?.data?.attributes?.url}` : undefined
               }}
               fileType={detectMediaTypeFromMediaList({ attributes: value, id: index.toString() })}
             />

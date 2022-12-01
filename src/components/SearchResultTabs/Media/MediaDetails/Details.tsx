@@ -217,7 +217,7 @@ const MediaDetailsPage = ({
                                 src: mediaDetails?.object?.url ? (
                                   detectMediaTypeFromMediaDetailPage(mediaDetails) === "image" ?
                                     handleImageUrl(mediaDetails?.object.url, "small_") :
-                                    `${baseUrl}${mediaDetails?.object.url}`
+                                    `${mediaDetails?.object.url}`
                                 ) : undefined,
                                 className: styles['image'],
                                 objectURL: mediaDetails?.objectURL || '',
@@ -226,7 +226,7 @@ const MediaDetailsPage = ({
                                 staticVideoLink: (
                                   (detectMediaTypeFromMediaDetailPage(mediaDetails) === "video" || mediaDetails?.videoType === "video") &&
                                   mediaDetails?.object?.url
-                                ) ? `${baseUrl}${mediaDetails?.object?.url}` : undefined,
+                                ) ? `${mediaDetails?.object?.url}` : undefined,
                                 isOpened: true
                               }}
                             fileType="video"

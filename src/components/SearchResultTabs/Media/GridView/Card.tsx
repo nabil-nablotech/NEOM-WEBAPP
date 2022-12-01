@@ -34,7 +34,7 @@ export const Card = ({
                             src: record?.attributes?.object?.data?.attributes?.url ? (
                                 detectMediaTypeFromMediaList(record) === "image" ?
                                     handleImageUrl(record.attributes.object.data.attributes.url, "small_") :
-                                    `${baseUrl}${record.attributes.object.data.attributes.url}`
+                                    `${record.attributes.object.data.attributes.url}`
                             ) : undefined,
                             className: detectMediaTypeFromMediaList(record) === "video" ?
                                 `${styles['video-card-parent']}` : detectMediaTypeFromMediaList(record) === "image" ?
@@ -45,7 +45,7 @@ export const Card = ({
                             staticVideoLink: (
                                 (detectMediaTypeFromMediaList(record) === "video" || record?.attributes.videoType === "video") &&
                                 record?.attributes.object?.data?.attributes?.url
-                            ) ? `${baseUrl}${record?.attributes.object?.data?.attributes?.url}` : undefined,
+                            ) ? `${record?.attributes.object?.data?.attributes?.url}` : undefined,
                             isOpened: false
                         }}
                         fileType={detectMediaTypeFromMediaList(record)}
