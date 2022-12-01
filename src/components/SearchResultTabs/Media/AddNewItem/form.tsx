@@ -260,8 +260,7 @@ allowFullScreen
                   title={"Drag and drop your file here"}
                   existingImageUrl={
                     (formik.values?.object && formik.values?.object.length > 0 && formik.values?.object[0]?.url)
-                      ? `${baseUrl}${formik.values?.object[0]?.url}`
-                      // ? `${formik.values?.object[0]?.url}`
+                      ? `${formik.values?.object[0]?.url}`
                       : ""
                   }
                   handleDelete={(file: UploadFile<any>) => {
@@ -367,8 +366,8 @@ allowFullScreen
                           <>
                             <video width="338" height="190" controls preload="metadata">
                               <source
-                                src={`${baseUrl}${formik.values.object[0].url}`}
-                                // src={`${formik.values.object[0].url}#t=0.5`}
+                                // src={`${baseUrl}${formik.values.object[0].url}`}
+                                src={`${formik.values.object[0].url}#t=0.5`}
                               // type="video/mp4"
                               />
 
