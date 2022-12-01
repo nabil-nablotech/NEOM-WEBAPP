@@ -146,7 +146,7 @@ const ListView = (props: EventsProps) => {
           direction = numberDirectionAsc;
         }
         await dispatch(setEventSorting([`${name}:${direction ? 'asc' : 'desc'}`]));
-      }
+    }
 
     const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([
         {

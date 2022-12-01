@@ -25,7 +25,7 @@ const useMedia = () => {
   let { tabName } = useParams<{ tabName?: tabNameProps, uniqueId: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { selectedValue } = useSelector((state: RootState) => state.refinedSearch);
+  const { selectedValue, mediaSort } = useSelector((state: RootState) => state.refinedSearch);
 
   useEffect(() => {
     resetMedia();
@@ -170,6 +170,7 @@ const useMedia = () => {
       text: searchWordArray,
       limit: fetchLimit,
       skip: skip,
+      sortBy: mediaSort.length > 0 ? mediaSort : [`createdAt:desc`]
     };
     if (clear) {
       obj.skip = 0;
@@ -290,6 +291,12 @@ const useMedia = () => {
       fetchData(0)
     }
   }, [deleteItemSuccess, deleteItemType])
+
+  useEffect(() => {
+    if (mediaSort.length > 0) {
+      fetchData(0);
+    }
+  }, [mediaSort])
 
   const openEditFlow = async (payload: any) => {
     if (payload) {

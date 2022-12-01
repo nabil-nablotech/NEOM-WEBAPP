@@ -25,6 +25,8 @@ export type RefinedSearchState = {
   selectedValue: Options,
   placeSort: string[] | [];
   eventSort: string[] | [];
+  mediaSort: string[] | [];
+  libSort: string[] | [];
 }
 
 const initialState: RefinedSearchState = {
@@ -32,6 +34,8 @@ const initialState: RefinedSearchState = {
   selectedValue: initialSelectedValue,
   placeSort: [],
   eventSort: [],
+  mediaSort: [],
+  libSort: [],
 };
 
 export const refinedSearchSlice = createSlice({
@@ -52,9 +56,17 @@ export const refinedSearchSlice = createSlice({
       const filterSort = state.eventSort.filter(x => !x.includes(action.payload[0]?.split(':')[0]));
       state.eventSort = [...filterSort, ...action.payload];
     },
+    setMediaSorting: (state, action: PayloadAction<string[]>) => {
+      state.mediaSort = action.payload;
+    },
+    setLibrarySorting: (state, action: PayloadAction<string[]>) => {
+      state.libSort = action.payload;
+    },
     resetSorting: (state, action: PayloadAction<null>) => {
       state.eventSort = [];
       state.placeSort = [];
+      state.mediaSort = [];
+      state.libSort = [];
     }
   },
 });
@@ -64,6 +76,8 @@ export const {
   setSelectedValue,
   setPlaceSorting,
   setEventSorting,
+  setMediaSorting,
+  setLibrarySorting,
   resetSorting
 } = refinedSearchSlice.actions;
 

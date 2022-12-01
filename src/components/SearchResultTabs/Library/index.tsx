@@ -26,14 +26,12 @@ import { Media } from "../../../types/Media";
 import { HtmlTooltip } from "../../../components/Tooltip";
 import { Typography } from "@mui/material";
 import { setSelectedCardIndex, setIsSelect, setSelectedKey } from "../../../store/reducers/searchResultsReducer";
+import { setLibrarySorting } from "../../../store/reducers/refinedSearchReducer";
 
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import ExportModal from "../../ExportModal";
 import { useMediaQuery } from "react-responsive";
 import { useHistory } from "../../../hooks/useHistory";
-
-let viewWidths = ["20vw", "20vw", "20vw", "20vw", "5vw"];
 
 const StyledTableWrapper = styled(StyledAntTable)`
   td {
@@ -156,18 +154,33 @@ const LibraryTab = () => {
 
   const dispatch = useDispatch();
   const { navigateTo } = useHistory();
+  const [nameDirectionAsc, setNameDirectionAsc] = useState(true);
 
   const { fetchLibraryItems, hasMoreData, loading, setEdit, searchData } =
     useLibrary();
+
+    const handleFilter = (name: string) => {
+    
+      setNameDirectionAsc(!nameDirectionAsc);
+      dispatch(setLibrarySorting([`${name}:${nameDirectionAsc ? 'asc' : 'desc'}`]));
+    }
   const tableHeaderJson: ColumnsType<any> = [
     {
       title: "NAME",
       key: "attributes",
       dataIndex: "attributes",
       width: 200,
-      sorter: (a, b) =>
-        a?.attributes?.title?.localeCompare(b?.attributes?.title),
-      defaultSortOrder: "ascend",
+      sorter: true,
+      onHeaderCell: () => {
+        return {
+        onClick: () => {
+            handleFilter('title');
+        }
+        };
+    },
+      // sorter: (a, b) =>
+      //   a?.attributes?.title?.localeCompare(b?.attributes?.title),
+      // defaultSortOrder: "ascend",
       className: "name-column",
       render: (value: any, record: any) => (
         <Box

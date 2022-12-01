@@ -97,6 +97,7 @@ export const media = gql`
 `;
 
 export const refineMedia = gql`
+
 query RefinedMediaSearch(
   $text: JSON
   $search_one: String
@@ -109,6 +110,7 @@ query RefinedMediaSearch(
   $keywords: JSON
   $limit: Int
   $skip: Int
+  $sortBy: [String!]
 ) {
   medias(
     pagination: { limit: $limit, start: $skip }
@@ -142,7 +144,7 @@ query RefinedMediaSearch(
         }
       ]
     }
-    sort: "createdAt:desc"
+    sort: $sortBy
   ) {
     meta {
       pagination {
