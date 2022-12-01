@@ -10,6 +10,7 @@ export interface Download {
     libraryCount: number,
     visitCount: number,
     createdAt: Date,
-    token: string
+    token: string,
+    status: string
 }
   

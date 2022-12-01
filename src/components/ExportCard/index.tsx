@@ -18,7 +18,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   maxWidth: 751,
 }));
 
-const ExportCard = ({ title, filePath, dataCount, fileCount, libraryCount, visitCount, createdAt, token }: Download) => {
+const ExportCard = ({ title, filePath, dataCount, fileCount, libraryCount, visitCount, createdAt, token , status }: Download) => {
 const { size, elapsed, percentage, download, cancel, error, isInProgress } = useDownloader();
 const handleClick = async (filePath:string) =>{
     await download(`${process.env.REACT_APP_STRAPI_BASE_URL+''+filePath}`, `data_${Date.now()}.zip`);
@@ -45,6 +45,7 @@ const handleClick = async (filePath:string) =>{
                             {formatDateTimeZone(createdAt.toString())}
                     </Grid>
                 </Grid>
+
                 {/* <Grid item xs={12} sm={6} md={6} component="div"className={`${styles["grid-two"]}`}>
                     <Grid xs={12} component="div" className={`${styles["box-heading"]}`}>
                             Your download is being created
@@ -53,7 +54,7 @@ const handleClick = async (filePath:string) =>{
                             This may take a while. You can come back later.
                     </Grid>
                 </Grid> */}
-                <Grid item xs={12} sm={6} md={6} component="div"className={`${styles["grid-two"]}`}>
+                {status==='Completed'?<Grid item xs={12} sm={6} md={6} component="div"className={`${styles["grid-two"]}`}>
                     <Grid item xs={12} display="flex" justifyContent="flex-end" >
                         <Button
                             variant="text"
@@ -79,7 +80,21 @@ const handleClick = async (filePath:string) =>{
                             DOWNLOAD
                         </Button>                        
                     </Grid>
-                </Grid>
+                </Grid>:<Grid item xs={12} sm={6} md={6} component="div"className={`${styles["grid-two"]}`}>
+                    <Grid item xs={12} display="flex" justifyContent="flex-end" >
+                        <div 
+                            style={{                                
+                                color:"#FFCC00",
+                                padding: "1em 10px",
+                                lineHeight: "2",
+                                height: "100%",
+                                textAlign: "center",
+                                fontSize: "1rem",
+                            }}>
+                                PENDING
+                        </div>
+                    </Grid>
+                </Grid>}
             </Grid>
             
         </StyledPaper>
