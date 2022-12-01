@@ -54,7 +54,7 @@ const useMedia = () => {
   }});
   const [updateMediaMutation, { data: updateData, reset }] = useMutation(updateMedia, {context: graphQlHeaders().context, onCompleted: () => {
     if (associatedEvents.length == 0 && associatedPlaces.length == 0) {
-      dispatch(toggleShowEditSuccess(true));
+      // dispatch(toggleShowEditSuccess(true));
     }
   }});
   const [createMediaAssociateMutation, { data: mediaAssociate }] = useMutation(createMediaAssociate, {context: graphQlHeaders().context, onCompleted: (d) => {
@@ -94,7 +94,7 @@ const useMedia = () => {
       // || (updateData && mediaAssociate)
       ) {
       if(!showEditSuccess) {
-        dispatch(toggleShowEditSuccess(true))
+        // dispatch(toggleShowEditSuccess(true))
       }
     }
   }, [updateMediaAssociateData, mediaAssociate, updateData])
@@ -133,6 +133,9 @@ const useMedia = () => {
       }
 
       dispatch(storeAddItemProgressState(null));
+      dispatch(setTabEdit(false));
+      dispatch(setTabData({}));
+      dispatch(toggleShowEditSuccess(true))
       /** re-direct */
       navigate(`/Media/${updateData?.updateMedia.data.attributes.uniqueId}`, { replace: true })
 
@@ -224,7 +227,6 @@ const useMedia = () => {
       featuredFlag = true
     }
 
-    console.log(payload, 'payload?.url.....');
     const data = {
       ...payload,
       visitNumber: parseFloat(payload.visitNumber),
@@ -246,7 +248,7 @@ const useMedia = () => {
       model: "",
       depth: "",
       modified: new Date(),
-      videoType: payload?.embedCode?.length > 0 ? 'embededCode' : ((payload?.url?.length > 0) || (payload?.objectURL?.length > 0)) ? 'url' : 'video',
+      videoType: payload?.showEmbeded ? 'embededCode' : ((payload?.url?.length > 0) || (payload?.objectURL?.length > 0) || payload?.showUrl) ? 'url' : 'video',
     }
     if (!edit) {
       data.uniqueId = uniqueId;
