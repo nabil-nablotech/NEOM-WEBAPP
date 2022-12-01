@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { placeDetails } from "../api/details";
 import { addPlace, refinePlaces, updatePlace, refinePlacesMap } from "../query/places";
 import { RootState } from "../store";
-import { initialSelectedValue, setSelectedValue } from "../store/reducers/refinedSearchReducer";
+import { initialSelectedValue, setSelectedValue, setSorting } from "../store/reducers/refinedSearchReducer";
 import {
   setPlaces,
   setPlaceMetaData,
@@ -23,13 +23,14 @@ import {graphQlHeaders} from '../utils/services/interceptor';
 
 const usePlace = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
+  const [directionAsc, setDirectionAsc] = useState(true);
   const [mapPlaces, setMapPlaces] = useState([]);
   const [allPlaces, setAllPlaces] = useState<Place[] | []>([]);
   const { searchText, places: placeData, addNewItemWindowType, confirmOpenEdit, editPayload,
     addItemWindowMinimized, deleteItemSuccess, deleteItemType, successInventoryName } = useSelector(
     (state: RootState) => state.searchResults
   );
-  const { selectedValue } = useSelector(
+  const { selectedValue, sort } = useSelector(
     (state: RootState) => state.refinedSearch
   );
 
@@ -195,8 +196,8 @@ const usePlace = () => {
     refineSearchPlacesDirect(obj);
   };
 
-  const fetchData = (skip: number = placeData.length, local: boolean = false, clear: boolean = false) => {
 
+  const fetchData = (skip: number = placeData.length, local: boolean = false, clear: boolean = false) => {
     // get the query from the url parameters
     const searchData = getQueryObj(search);
     // check if the search is coming from local or using link
@@ -208,6 +209,7 @@ const usePlace = () => {
       if (copiedValue[x].length === 0) {delete copiedValue[x];}
       return x;
     });
+
     const obj: any = {
       researchValue: copiedValue&&copiedValue?.researchValue && copiedValue?.researchValue,
       tourismValue: copiedValue&&copiedValue.tourismValue && copiedValue?.tourismValue,
@@ -227,7 +229,7 @@ const usePlace = () => {
       text: searchWordArray,
       limit: limit,
       skip: skip,
-      sortBy: ["createdAt:desc"]
+      sortBy: sort.length > 0 ? sort : [`createdAt:desc`]
     };
     if (clear) {
       obj.skip = 0;
@@ -331,7 +333,13 @@ const usePlace = () => {
     if (deleteItemSuccess && (deleteItemType === "Places")) {
       fetchData(0)
     }
-  }, [deleteItemSuccess, deleteItemType])
+  }, [deleteItemSuccess, deleteItemType]);
+
+  useEffect(() => {
+    if (sort.length > 0) {
+      fetchData(0);
+    }
+  }, [sort])
   
   const openEditFlow = async (payload: any) => {
     if (payload) {

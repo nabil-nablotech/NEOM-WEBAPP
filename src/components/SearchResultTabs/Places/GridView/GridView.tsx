@@ -15,7 +15,6 @@ import { tabNameProps } from "../../../../types/SearchResultsTabsProps";
 import { Media } from "../../../../types/Media";
 import { Event } from "../../../../types/Event";
 import { useHistory } from "../../../../hooks/useHistory";
-import { useState } from "react";
 
 export type PlacesProps = {
   data: Place[];

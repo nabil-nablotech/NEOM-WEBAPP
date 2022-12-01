@@ -1,13 +1,12 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Box } from "@mui/material";
 import { ColumnsType } from "antd/lib/table";
 import { StyledAntTable } from "../../../StyledAntTable";
 import styled from "styled-components";
 import { antTablePaginationCss, DETACH_ICON_CLASSNAME, isRecordAttached, shouldAddAtttachColumnHeader, itemAddEditAccess } from '../../../../utils/services/helpers';
-import commonStyles from '../../index.module.css';
 import { Loader } from '../../../Loader';
 import { PlacesProps } from '../GridView/GridView';
-import { FieldOption, Place } from "../../../../types/Place";
+import { Place } from "../../../../types/Place";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import DetachedIcon from "../../../Icons/DetachedIcon";
@@ -15,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { modifyAssociatedPlaces, setSelectedCardIndex, setSelectedKey } from "../../../../store/reducers/searchResultsReducer";
 import MoreOptionsComponent from './MoreOption';
 import { InventoryAssociationType } from "../../../../types/SearchResultsTabsProps";
-import { useNavigate } from "react-router-dom";
+import { setSorting } from "../../../../store/reducers/refinedSearchReducer";
 import { useHistory } from "../../../../hooks/useHistory";
 
 const StyledTableWrapper = styled(StyledAntTable)`
@@ -146,12 +145,28 @@ const StyledTableWrapper = styled(StyledAntTable)`
 
 const ListView = (props: PlacesProps) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { navigateTo } = useHistory();
-
   const { isAssociationsStepOpen, associatedPlaces, selectedKey } = useSelector(
     (state: RootState) => state.searchResults
   );
+  const {sort} = useSelector((state: RootState) => state.refinedSearch);
+  const { data, hasMoreData, fetchData, loading, isSelect } = props;
+  
+  let nameDirectionAsc = false;
+  let numberDirectionAsc = false;
+  const handleFilter = async (name: string) => {
+    let direction = true;
+    if (name === 'placeNameEnglish') {
+      nameDirectionAsc = !nameDirectionAsc;
+      direction = nameDirectionAsc;
+    }
+    if (name === 'placeNumber') {
+      numberDirectionAsc = !numberDirectionAsc;
+      direction = numberDirectionAsc;
+    }
+   
+    await dispatch(setSorting([`${name}:${direction ? 'asc' : 'desc'}`]));
+  }
 
   const [tableHeaderJson, setTableHeaderJson] = useState<ColumnsType<any>>([
     {
@@ -159,13 +174,14 @@ const ListView = (props: PlacesProps) => {
       key: `attributes.placeNameEnglish`,
       dataIndex: "attributes",
       className: 'cell-name',
-      sorter: {
-        compare: (a: { attributes: { placeNameEnglish: string; } }, b: { attributes: { placeNameEnglish: string; } }) => {
-          return a.attributes.placeNameEnglish.localeCompare(b.attributes.placeNameEnglish)
-        },
-        multiple: 2
+      sorter: true,
+      onHeaderCell: (column) => {
+        return {
+          onClick: (e) => {
+            handleFilter('placeNameEnglish');
+          }
+        };
       },
-      filterMultiple: true,
       render: (value: any, index: number) => {
         return `${value.placeNameEnglish} ${value.placeNameArabic}`
       }
@@ -175,13 +191,21 @@ const ListView = (props: PlacesProps) => {
       key: `attributes.placeNumber`,
       dataIndex: "attributes",
       className: 'cell-number',
-      sorter: {
-        compare: (a: { attributes: { placeNumber: string; } }, b: { attributes: { placeNumber: string; } }) => {
-          return a.attributes.placeNumber.localeCompare(b.attributes.placeNumber)
-        },
-        multiple: 1
+      sorter: true,
+      onHeaderCell: (column) => {
+        return {
+          onClick: (e) => {
+            handleFilter('placeNumber');
+          }
+        };
       },
-      filterMultiple: true,
+      // sorter: {
+      //   compare: (a: { attributes: { placeNumber: string; } }, b: { attributes: { placeNumber: string; } }) => {
+      //     return a.attributes.placeNumber.localeCompare(b.attributes.placeNumber)
+      //   },
+      //   multiple: 1
+      // },
+      // filterMultiple: true,
       render: (value: any, index: number) => value.placeNumber
     },
     {
@@ -285,8 +309,6 @@ const ListView = (props: PlacesProps) => {
   }), [associatedPlaces]
   )
 
-  const { data, hasMoreData, fetchData, loading, isSelect } = props;
-
   useEffect(() => {
 
     /** locate last row, add id to it; such that
@@ -347,7 +369,7 @@ const ListView = (props: PlacesProps) => {
             
             // const en = entry.target as HTMLElement
             if (intersecting) {
-              fetchData()
+              fetchData();
             } else {
             }
 

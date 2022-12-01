@@ -17,16 +17,19 @@ export const initialSelectedValue = {
   startDate: undefined,
   endDate: undefined,
   keyWords: [],
+  
 }
 
 export type RefinedSearchState = {
   options: Options | null; 
-  selectedValue: Options
+  selectedValue: Options,
+  sort: string[] | [];
 }
 
 const initialState: RefinedSearchState = {
   options: null,
-  selectedValue: initialSelectedValue
+  selectedValue: initialSelectedValue,
+  sort: [],
 };
 
 export const refinedSearchSlice = createSlice({
@@ -39,12 +42,17 @@ export const refinedSearchSlice = createSlice({
     setSelectedValue: (state, action: PayloadAction<Options>) => {
       state.selectedValue = action.payload;
     },
+    setSorting: (state, action: PayloadAction<string[]>) => {
+      const filterSort = state.sort.filter(x => !x.includes(action.payload[0].split(':')[0]));
+      state.sort = [...filterSort, ...action.payload];
+    }
   },
 });
 
 export const {
   setOptions,
-  setSelectedValue
+  setSelectedValue,
+  setSorting
 } = refinedSearchSlice.actions;
 
 export default refinedSearchSlice.reducer;
