@@ -43,7 +43,7 @@ export const refinedSearchSlice = createSlice({
       state.selectedValue = action.payload;
     },
     setSorting: (state, action: PayloadAction<string[]>) => {
-      const filterSort = state.sort.filter(x => !x.includes(action.payload[0].split(':')[0]));
+      const filterSort = state.sort.filter(x => !x.includes(action.payload[0]?.split(':')[0]));
       state.sort = [...filterSort, ...action.payload];
     }
   },

@@ -29,7 +29,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import RefinedSearchInputs from "../RefinedSearchInputs";
 import { EVENTS_TAB_NAME, LIBRARY_TAB_NAME, MEDIA_TAB_NAME, PLACES_TAB_NAME, tabIndexBasedOnName } from "../../utils/services/helpers";
 import { useDispatch } from "react-redux";
-import {setSelectedValue} from '../../store/reducers/refinedSearchReducer';
+import {setSelectedValue, setSorting} from '../../store/reducers/refinedSearchReducer';
 import { MediaDetailsModal } from "./Media/MediaDetails";
 import GalleryView from './GalleryView/index';
 import { setActiveMediaItem, setActiveMediaItemIndex, setActivePlaceItem, setActivePlaceItemIndex, setHistoryRedux, setSearchApply, toggleGalleryView } from "../../store/reducers/searchResultsReducer";
@@ -106,7 +106,6 @@ const Label = ({ img, label }: LabelProps) => {
   );
 };
 
-const today: Date = new Date();
 const initialState = {
   stateOfConservation: [],
   period: [],
@@ -139,6 +138,7 @@ const SearchResultTabs = ({ tabIndex, handleSubmit }: SearchResultTabsProps) => 
       const newTabIndex = tabIndexBasedOnName(tabName);
       setValue(newTabIndex);
       dispatch(setSelectedValue(initialState));
+      dispatch(setSorting([]));
 
       /** resetters */
 
