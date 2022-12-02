@@ -1504,6 +1504,7 @@ const PlaceDetailsPage = () => {
                         marker={[
                           {
                             id: 0,
+                            uniqueId: placeData.uniqueId,
                             name: `${placeNameEnglish}`,
                             position: {
                               lat: latitude,
