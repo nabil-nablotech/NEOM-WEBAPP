@@ -29,7 +29,7 @@ export const Navigation = () => {
     },{
       path: "/download",
       element: (
-        <AdminRoute path={"/download"} component={ExportDownload} />
+        <PrivateRoute path={"/download"} component={ExportDownload} />
       ),
     },
     {

@@ -30,7 +30,6 @@ function CustomSearchField(props: {
     searchText = valueFromParent
   }
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-
     if(shouldHandleChangeFromParent && handleChangeParent) {
       handleChangeParent(e)
     }

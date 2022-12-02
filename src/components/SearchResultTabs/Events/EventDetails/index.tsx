@@ -977,6 +977,7 @@ const EventDetailsPage = () => {
                         marker={[
                           {
                             id: "1",
+                            uniqueId:eventDetails.uniqueId,
                             name: eventDetails?.visit_associate?.place_unique_id
                               ?.placeNameEnglish,
                             position: {
